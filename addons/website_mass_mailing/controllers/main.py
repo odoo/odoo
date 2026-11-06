@@ -23,7 +23,8 @@ class MassMailController(main.MassMailController):
         """
         mailing_list_su = request.env['mailing.list'].browse(int(list_id)).sudo()
         if request.env.user._is_internal() and not mailing_list_su.exists().active:
-            return {'is_subscriber': False, 'value': '', 'warn_missing_list': True}
+            return {'is_subscriber': False, 'value': '', 'warn_missing_list': True, 'can_subscribe': True}
+        can_subscribe = self._can_subscribe(mailing_list_su)
         value = self._get_value(subscription_type)
         fname = self._get_fname(subscription_type)
         is_subscriber = False
@@ -32,7 +33,7 @@ class MassMailController(main.MassMailController):
                 [('list_id', 'in', [int(list_id)]), (f'contact_id.{fname}', '=', value), ('opt_out', '=', False)])
             is_subscriber = contacts_count > 0
 
-        return {'is_subscriber': is_subscriber, 'value': value, 'warn_missing_list': False}
+        return {'is_subscriber': is_subscriber, 'value': value, 'warn_missing_list': False, 'can_subscribe': can_subscribe}
 
     def _get_value(self, subscription_type):
         value = None
@@ -72,6 +73,13 @@ class MassMailController(main.MassMailController):
             'toast_type': 'success',
             'toast_content': _("Thanks for subscribing!"),
         }
+
+    @staticmethod
+    def _can_subscribe(mailing_list_su):
+        """Public visitors may only subscribe to lists shown in preferences."""
+        if not mailing_list_su.exists():
+            return True
+        return mailing_list_su.is_public or not request.env.user._is_public()
 
     @staticmethod
     def subscribe_to_newsletter(subscription_type, value, list_id, fname, address_name=None):
