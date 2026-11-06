@@ -255,7 +255,7 @@ class ResCompany(models.Model):
             else:
                 company.l10n_fr_pdp_flow_10_start_date = None
 
-    @api.depends('l10n_fr_pdp_send_to_ppf', 'account_fiscal_country_id', 'account_peppol_edi_user')
+    @api.depends('l10n_fr_pdp_send_to_ppf', 'account_fiscal_country_id', 'account_peppol_edi_user', 'account_peppol_proxy_state')
     def _compute_l10n_fr_f10_enable_reporting(self):
         changed_companies = self.browse()
         for company in self:
@@ -263,6 +263,7 @@ class ResCompany(models.Model):
             company.l10n_fr_f10_enable_reporting = (
                 company.l10n_fr_pdp_send_to_ppf
                 and company.account_peppol_edi_user
+                and company.account_peppol_proxy_state == 'receiver'
                 and company.account_fiscal_country_id.code == 'FR'
                 and company.currency_id == self.env.ref('base.EUR')
             )

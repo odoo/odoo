@@ -15,8 +15,11 @@
                     </div>
 
                     <group name="pdp_registration">
-                        <div colspan="2" class="text-muted mb-3">
+                        <div colspan="2" class="text-muted mb-3" invisible="pdp_sender_only_available">
                             Send invoices and receive bills automatically on the French e-Invoicing network.
+                        </div>
+                        <div colspan="2" class="text-muted mb-3" invisible="not pdp_sender_only_available">
+                            Send invoices/credit notes automatically on the French e-Invoicing network. Your current receiving platform will remain unchanged.
                         </div>
 
                         <!-- business fields -->
@@ -88,6 +91,11 @@
                             <span invisible="'company_pdp_annuaire_warning' not in warnings">Migrate to Odoo (Demo)</span>
                         </span>
                     </button>
+                    <button name="button_register_pdp_sender"
+                            type="object"
+                            class="btn-secondary"
+                            string="Sender Only"
+                            invisible="pdp_kyc_status != 'success' or not pdp_sender_only_available"/>
                     <button name="button_deregister_pdp_participant"
                             string="Cancel Registration"
                             type="object"

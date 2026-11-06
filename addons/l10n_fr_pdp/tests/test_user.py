@@ -1,5 +1,7 @@
+import json
 from contextlib import contextmanager
 from requests import PreparedRequest, Response, Session
+from unittest.mock import patch
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged
@@ -38,6 +40,9 @@ class TestPdpUser(TestL10nFrPdpCommon):
 
         url = r.path_url
         responses = cls._get_mock_responses()
+
+        if url == '/api/pdp/1/connect' and (connect_params := cls.env.context.get('connect_params')) is not None:
+            connect_params.update(json.loads(r.body)['params'])
 
         if url not in responses:
             return super()._request_handler(s, r, **kw)
@@ -158,6 +163,36 @@ class TestPdpUser(TestL10nFrPdpCommon):
         with self._set_context({'participant_state': 'receiver'}):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
+
+    def test_pdp_create_participant_sender_only(self):
+        self.proxy_user.unlink()
+        connect_params = {}
+        annuaire_participant = {
+            'identifier': '000000000',
+            'platform_id': 'other-platform',
+            'platform_name': 'Other Platform',
+        }
+
+        with (
+            patch(
+                'odoo.addons.l10n_fr_pdp.models.res_partner.ResPartner._pdp_annuaire_lookup_participant',
+                return_value=annuaire_participant,
+            ),
+            self._set_context({'connect_params': connect_params}),
+        ):
+            wizard = self.env['pdp.registration'].create(self._get_participant_vals())
+            self.assertTrue(wizard.pdp_sender_only_available)
+            wizard.button_register_pdp_sender()
+
+        self.assertRecordValues(self.env.company, [{
+            'account_peppol_proxy_state': 'sender',
+            'pdp_identifier': '000000000',
+            'peppol_eas': '0225',
+            'peppol_endpoint': '000000000',
+        }])
+        self.assertEqual(connect_params['peppol_identifier'], '0225:000000000')
+        self.assertTrue(connect_params['sender_only'])
+        self.assertFalse(connect_params['mobility_registration'])
 
     def test_pdp_create_reject_participant(self):
         # the account_peppol_proxy_state should change to rejected
