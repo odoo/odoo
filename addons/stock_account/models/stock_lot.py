@@ -26,7 +26,7 @@ class StockLot(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
-        lots = self.with_context(owners=[False, self.env.company.partner_id.id])
+        lots = self.with_context(owners=[False, company_id.partner_id.id])
         total_value_by_lot_id = defaultdict(float)
         valued_quantity_by_lot_id = defaultdict(float)
 
@@ -41,7 +41,11 @@ class StockLot(models.Model):
                 qty_available = lot.with_context(warehouse_id=False).product_qty
                 if valuated_product.uom_id.is_zero(qty_valued):
                     continue
-                elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
+                elif (
+                    valuated_product.cost_method == 'standard'
+                    or valuated_product.uom_id.is_zero(qty_available)
+                    or (valuated_product.cost_method == 'average' and not at_date)
+                ):
                     total_value = lot.standard_price * qty_valued
                     total_value_by_lot_id[lot.id] += company.currency_id._convert(total_value, self.env.company.currency_id)
                     valued_quantity_by_lot_id[lot.id] += qty_valued
