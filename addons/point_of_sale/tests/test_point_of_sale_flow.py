@@ -142,8 +142,10 @@ class TestPointOfSaleFlow(CommonPosTest):
     def test_backend_order_refund_flow(self):
         """ The purpose of this test is to test the basic flow of
         refunding orders from the backend. More precisely making sure:
+        - The refund order has the correct session and currency
         - We do not refund more than the initial order's quantity"""
         self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
 
         order, _ = self.create_backend_pos_order({
             'line_data': [
@@ -156,6 +158,9 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         refund_action = order.refund()
         refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        self.assertEqual(refund.currency_id, current_session.currency_id)
+        self.assertEqual(refund.session_id, current_session)
 
         with Form(refund) as refund_form:
             with refund_form.lines.edit(0) as line:
