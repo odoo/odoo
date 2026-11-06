@@ -144,3 +144,29 @@ class TestPosAccountingStock(TestPosAccounting, ValuationReconciliationTestCommo
         self.assertEqual(order.account_move.state, 'posted')
         product_21_qty = self.product_21.qty_available
         self.assertEqual(product_21_qty, start_product_21_qty)
+
+    def test_closing_entry_by_product_cogs_posted_once(self):
+        product = self.env['product.product'].create({
+            'name': 'Real Time Product',
+            'is_storable': True,
+            'list_price': 10,
+            'standard_price': 4,
+            'taxes_id': [(6, 0, [self.tax_6.id])],
+            'categ_id': self.stock_account_product_categ.id,
+            'available_in_pos': True,
+        })
+        self.adjust_inventory([product], [10])
+        expense_account = product._get_product_accounts()['expense']
+        stock_account = self.stock_account_product_categ.property_stock_valuation_account_id
+
+        for by_product in (False, True):
+            self.pos_config.use_closing_entry_by_product = by_product
+            session = self.open_pos_session()
+            self.create_pos_order(
+                payment_method=[[self.bank_pm, {'amount': 10.6}]],
+                products=[[product, {}]],
+            )
+            self.close_session()
+            lines = session.move_ids.line_ids
+            self.assertRecordValues(lines.filtered(lambda l: l.account_id == expense_account), [{'balance': 4.0}])
+            self.assertRecordValues(lines.filtered(lambda l: l.account_id == stock_account), [{'balance': -4.0}])
