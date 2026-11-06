@@ -11,7 +11,7 @@ class LinkPreviewController(http.Controller):
         if not request.env["mail.link.preview"]._is_link_preview_enabled():
             return
         guest = request.env["mail.guest"]._get_guest_from_context()
-        # sudo: public may come here
+        # sudo: mail.message - public has no read access, only the author (checked below) can request previews
         message = guest.env["mail.message"].sudo().search([("id", "=", int(message_id))])
         if not message:
             return

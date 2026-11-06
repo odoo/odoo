@@ -478,7 +478,12 @@ class DiscussChannel(models.Model):
 
     @api.depends("message_ids")
     def _compute_message_count(self):
-        domain = self._get_message_domain() & Domain("message_type", "not in", ("user_notification", "notification")) & self.env["mail.message"]._get_search_domain_share()
+        domain = (
+            self._get_message_domain()
+            & Domain("message_type", "not in", ("user_notification", "notification"))
+            & self.env["mail.message"]._get_search_domain_share()
+        )
+        # sudo: mail.message - count does not depend on ACLs (public has none), restricted to shared messages
         read_group_res = self.env["mail.message"].sudo()._read_group(
             domain,
             groupby=["res_id"],
@@ -2063,11 +2068,9 @@ class DiscussChannel(models.Model):
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
-        # sudo: public may go through this code - last message should not be impacted by ACLs
-        # but use share domain to avoid internal info leaks
-        Message = self.env['mail.message']
-        if self.env.user._is_public():
-            Message = Message.sudo()
+        # sudo: mail.message - public has no access, restrict to shared messages (not needed when already sudo)
+        restrict_share = self.env.user._is_public() and not self.env.su
+        Message = self.env['mail.message'].sudo() if restrict_share else self.env['mail.message']
         if not self.ids:
             return Message
         # Build the subquery, we know the model and must inject the same
@@ -2078,7 +2081,7 @@ class DiscussChannel(models.Model):
         domain = Domain("res_id", "in", self.ids) & self._get_correlated_message_domain(
             SQL("discuss_channel.id")
         )
-        if self.env.user._is_public():
+        if restrict_share:
             domain &= Message._get_search_domain_share()
         messages_query = Message._search(domain, order='id desc', limit=1)
         sql = SQL(

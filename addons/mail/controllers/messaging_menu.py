@@ -63,10 +63,12 @@ class MessagingMenuController(WebclientController):
             return
         domain_by_tab_id = self.get_menu_counter_domain_by_tab_id(filter_id_by_tab_id)
         # One search per tab: ORing the tab domains prevents the use of their indexes.
+        # public has no bookmark nor notification (and no access on messages)
+        is_public = self.env.user._is_public()
         for tab_id, domain in domain_by_tab_id.items():
             store.add_model_values(
                 "MessagingMenuTab",
-                {"init_counter_ids": self.env["mail.message"].search(domain).ids},
+                {"init_counter_ids": [] if is_public else self.env["mail.message"].search(domain).ids},
                 id_data={"id": tab_id},
             )
 

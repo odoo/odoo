@@ -341,14 +341,13 @@ class MailMessage(models.Model):
         if not mids:
             self.linked_message_ids = self.env["mail.message"]
             return
-        # for public, limit to accessible records + share domain; for other
-        # remove any potential sudo from the env as linked messages are user input, returning them
-        # as sudo could lead to users being able to read any arbitrary message through this feature.
-        # Only allowed messages for the current user are acceptable.
+        # linked messages come from user input: never return messages the current user cannot access,
+        # otherwise users could read any arbitrary message through this feature
         if self.env.user._is_public():
-            # sequential check, but already existing code, and public should not
-            # go through thousands of linked messages
-            linked_messages = self.sudo().search(Domain("id", "in", mids) & SHARE_DOMAIN)._get_with_access()
+            # sudo: mail.message - public has no access, restrict to shared messages then check access
+            linked_messages = self.sudo().search(
+                Domain("id", "in", mids) & self._get_search_domain_share()
+            )._get_with_access()
         else:
             linked_messages = self.sudo(False).search(Domain("id", "in", mids))
         for message in self:

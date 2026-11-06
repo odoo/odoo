@@ -273,8 +273,9 @@ class MailController(http.Controller):
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context
     def mail_thread_message_redirect(self, message_id, **kwargs):
+        # sudo: mail.message - public has no read access, check access below without leaking model / res_id
         message_su = request.env['mail.message'].sudo().search(
-            Domain('id', '=', message_id) & request.env["mail.message"]._get_search_domain_share()
+            Domain('id', '=', message_id) & request.env['mail.message']._get_search_domain_share()
         )
         message = message_su._get_with_access()
         if not message:

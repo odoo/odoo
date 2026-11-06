@@ -804,7 +804,11 @@ class DiscussChannelMember(models.Model):
         if self.invitation_sent_dt:
             # Reading the channel is showing up: the invitation is no longer pending.
             self.invitation_sent_dt = False
-        domain = self.channel_id._get_message_domain() & Domain("id", "<=", last_message_id) & self.env['mail.message']._get_search_domain_share()
+        domain = (
+            self.channel_id._get_message_domain()
+            & Domain("id", "<=", last_message_id)
+            & self.env['mail.message']._get_search_domain_share()
+        )
         # sudo: technical method, actual ACL should not impact mark as read, but
         # include share domain to avoid leaking message IDs
         last_message = self.env['mail.message'].sudo().search(domain, order="id DESC", limit=1)
