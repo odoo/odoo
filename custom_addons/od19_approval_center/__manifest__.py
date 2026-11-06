@@ -1,7 +1,7 @@
 {
     "name": "OD19 Approval Center",
     "summary": "Config-driven, view-only approval visibility across modules",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Productivity",
     "author": "The Auto-Info Co., Ltd.",
     "license": "LGPL-3",

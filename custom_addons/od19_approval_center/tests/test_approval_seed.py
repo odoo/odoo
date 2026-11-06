@@ -17,13 +17,14 @@ class TestApprovalSeed(TransactionCase):
         post_init_hook(self.env)
         self.assertEqual(Source.search_count([]), before)
 
-    def test_expense_source_has_two_steps(self):
+    def test_expense_source_is_tier_without_steps(self):
         post_init_hook(self.env)
         source = self.env["od19.approval.source"].search(
             [("model_name", "=", "hr.expense")], limit=1
         )
         self.assertTrue(source, "hr.expense source should be seeded")
-        self.assertEqual(len(source.step_ids), 2)
+        self.assertEqual(source.strategy, "tier_validation")
+        self.assertEqual(len(source.step_ids), 0)
         self.assertEqual(source.sla_days, 3)
 
     def test_missing_models_are_skipped(self):

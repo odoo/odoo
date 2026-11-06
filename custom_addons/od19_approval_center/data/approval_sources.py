@@ -17,16 +17,9 @@ APPROVAL_SOURCES = [
         "submitted_date_field": "create_date",
         "rejected_states": "refused",
         "success_states": "approved,posted,in_payment,paid",
-        "strategy": "field",
+        "strategy": "tier_validation",
         "sla_days": 3,
-        "steps": [
-            {"sequence": 10, "label": "อนุมัติชั้นที่ 1 (First approval)",
-             "state_field": "state", "state_value": "submitted",
-             "approver_field": "first_approver_id", "approver_kind": "employee"},
-            {"sequence": 20, "label": "อนุมัติชั้นที่ 2 (Second approval)",
-             "state_field": "second_approval_state", "state_value": "pending",
-             "approver_field": "second_approver_id", "approver_kind": "employee"},
-        ],
+        "steps": [],
     },
     {
         "name": "ใบขอซื้อ (Purchase Request)",
