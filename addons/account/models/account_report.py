@@ -418,7 +418,6 @@ class AccountReportLine(models.Model):
         required=True,
         recursive=True,
         precompute=True,
-        index=True,
         ondelete='cascade'
     )
     hierarchy_level = fields.Integer(
@@ -656,7 +655,7 @@ class AccountReportExpression(models.Model):
     _description = "Accounting Report Expression"
     _rec_name = 'report_line_name'
 
-    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, index=True, ondelete='cascade')
+    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, ondelete='cascade')
     report_line_name = fields.Char(string="Report Line Name", related="report_line_id.name")
     label = fields.Char(string="Label", required=True, copy=True)
     engine = fields.Selection(
@@ -1034,7 +1033,7 @@ class AccountReportColumn(models.Model):
     name = fields.Char(string="Name", translate=True, required=True)
     expression_label = fields.Char(string="Expression Label", required=True)
     sequence = fields.Integer(string="Sequence")
-    report_id = fields.Many2one(string="Report", comodel_name='account.report', index='btree_not_null', required=True, ondelete='cascade')
+    report_id = fields.Many2one(string="Report", comodel_name='account.report', required=True, ondelete='cascade')
     sortable = fields.Boolean(string="Sortable")
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
     blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")

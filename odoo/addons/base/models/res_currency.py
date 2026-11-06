@@ -421,7 +421,7 @@ class ResCurrencyRate(models.Model):
         aggregator="avg",
         help="Exchange rate from the company currency to this currency",
     )
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, index=True, ondelete="cascade")
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company.root_id)
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute="_compute_company_currency_id")

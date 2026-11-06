@@ -44,7 +44,7 @@ class HrAttendance(models.Model):
     is_manager = fields.Boolean(compute="_compute_is_manager")
     is_own = fields.Boolean(compute="_compute_is_manager")
     can_edit = fields.Boolean(compute="_compute_can_edit")
-    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True, index=True)
+    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     date = fields.Date(string="Date", compute='_compute_date', store=True, index=True, precompute=True, required=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
@@ -110,6 +110,8 @@ class HrAttendance(models.Model):
     overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
     # set to True on surviving output records when their source is modified or deleted
     source_stale = fields.Boolean(default=False, copy=False, export_string_translation=False)
+
+    _check_in_check_out_employee_id = models.Index('(check_in, check_out, employee_id)')
 
     @api.depends('date')
     def _compute_day_of_date(self):
@@ -725,13 +727,6 @@ class HrAttendance(models.Model):
                 time_to_float(stop - start) / attendance_duration
             ) * attendance.break_duration
         return break_duration
-
-    def init(self):
-        super().init()
-        self.env.cr.execute("""
-            CREATE INDEX IF NOT EXISTS hr_attendance_check_in_check_out_employee_id
-            ON hr_attendance (check_in, check_out, employee_id);
-        """)
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         """Apply the time rule results through ``hr.time.rule._apply_attendance_output``."""

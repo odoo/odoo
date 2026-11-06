@@ -43,7 +43,6 @@ class PaymentMethod(models.Model):
         comodel_name="payment.provider",
         ondelete="cascade",
         required=True,
-        index=True,
     )
     active = fields.Boolean(string="Active")
     image = fields.Image(

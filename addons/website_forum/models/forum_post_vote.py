@@ -11,7 +11,7 @@ class ForumPostVote(models.Model):
 
     post_id = fields.Many2one(
         'forum.post', string='Post',
-        ondelete='cascade', required=True, index=True)
+        ondelete='cascade', required=True)
     user_id = fields.Many2one(
         'res.users', string='User', required=True,
         default=lambda self: self.env.uid, ondelete='cascade')

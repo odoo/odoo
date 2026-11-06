@@ -16,8 +16,8 @@ class CrmRevealView(models.Model):
     _order = 'id desc'
 
     reveal_ip = fields.Char(string='IP Address')
-    reveal_rule_id = fields.Many2one('crm.reveal.rule', string='Lead Generation Rule', index='btree_not_null')
-    reveal_state = fields.Selection([('to_process', 'To Process'), ('not_found', 'Not Found')], default='to_process', string="State", index=True)
+    reveal_rule_id = fields.Many2one('crm.reveal.rule', string='Lead Generation Rule')
+    reveal_state = fields.Selection([('to_process', 'To Process'), ('not_found', 'Not Found')], default='to_process', string="State")
     create_date = fields.Datetime(index=True)
 
     _ip_rule_id = models.UniqueIndex("(reveal_rule_id,reveal_ip)")

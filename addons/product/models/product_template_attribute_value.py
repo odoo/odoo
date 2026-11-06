@@ -32,7 +32,7 @@ class ProductTemplateAttributeValue(models.Model):
         required=True, ondelete='cascade', index=True)
     attribute_line_id = fields.Many2one(
         comodel_name='product.template.attribute.line',
-        required=True, ondelete='cascade', index=True)
+        required=True, ondelete='cascade')
     # configuration fields: the price_extra and the exclusion rules
     price_extra = fields.Float(
         string="Extra Price",

@@ -9,7 +9,6 @@ class CustomerProductReference(models.Model):
 
     product_id = fields.Many2one(
         comodel_name='product.product',
-        index=True,
         required=True,
         ondelete='cascade',
     )

@@ -5,6 +5,7 @@ from collections import defaultdict
 from typing import TYPE_CHECKING
 
 from odoo.tests.common import TransactionCase, no_retry
+from odoo.tools.sql import make_index_name
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -80,18 +81,16 @@ BTREE_INDEX_IGNORE_MODELS = {  # model._name
 # str(field): name of <SQL object (index/constraint)> that's covering
 BTREE_INDEX_IGNORE_FIELDS = {
     'ir.attachment.res_id': 'ir_attachment_res_idx',  # usually accessed with `res_model` in the domain
-    'mail.message.res_id': 'mail_message_model_res_id_idx',  # usually accessed with `model` in the domain
+    'mail.message.res_id': 'mail_message_model_res_id_id_idx',  # usually accessed with `model` in the domain
     'mail.presence.guest_id': 'mail_presence_guest_unique',
     'mail.presence.user_id': 'mail_presence_user_unique',
     'forum.tag.forum_id': 'forum_tag_forum_id_posts_count_idx',
     'res.users.company_id': None,  # only linted for auth_totp.wizard, not needed.
 }
 
-# Indexes/constraints that are allowed to have duplicates
-INDEX_DUPLICATES_IGNORE = {
-   'res_users_test_uninstall_res_user_exclude_constraint',
-   'res_users_test_uninstall_res_user_exclude_constraint_l_558b4cf8',  # _test_uninstall_res_user_exclude_constraint_looooooooooooong_name
-   'res_users_test_uninstall_res_user_unique_constraint',
+# Fields whose own btree index is allowed to be covered by another index
+INDEX_COVERED_IGNORE = {
+    'stock.location.parent_path',  # the ORM requires `parent_path` to be indexed (see `_check_parent_path`)
 }
 
 
@@ -120,7 +119,14 @@ class TestIndexMeta(TransactionCase):
             if table_object is not None and table_object not in model_class._table_objects:
                 missing_table_objects.append(table_object)
 
-        if missing_fields or missing_table_objects:
+        missing_covered_fields = []
+        for field_full_name in INDEX_COVERED_IGNORE:
+            model_name, field_name = field_full_name.rsplit('.', 1)
+            # single app testing: the model might not be present in the current registry
+            if model_name in self.registry and field_name not in self.registry[model_name]._fields:
+                missing_covered_fields.append(field_full_name)
+
+        if missing_fields or missing_table_objects or missing_covered_fields:
             msg_parts = []
             if missing_fields:
                 msg_parts.append(
@@ -131,6 +137,11 @@ class TestIndexMeta(TransactionCase):
                 msg_parts.append(
                     "The following indexes/constraints no longer exist and must be removed from `BTREE_INDEX_IGNORE_FIELDS`:\n"
                     + "\n".join(f"  - {obj}" for obj in missing_table_objects)
+                )
+            if missing_covered_fields:
+                msg_parts.append(
+                    "The following fields no longer exist and must be removed from `INDEX_COVERED_IGNORE`:\n"
+                    + "\n".join(f"  - {fname}" for fname in missing_covered_fields)
                 )
             self.fail("\n\n".join(msg_parts))
 
@@ -173,10 +184,11 @@ class TestTableObjects(TransactionCase):
 class TestIndex(TransactionCase):
 
     @functools.cached_property
-    def _leading_index_columns(self) -> dict[str, set[str]]:
+    def _leading_index_columns(self) -> dict[tuple[str, str], list[str]]:
         """
-        Map table -> columns, for those columns which are covered by
-        a non-partial index or unique constraint as the first (leading) or only index key.
+        Map (table, column) -> names of the indexes (including unique constraints,
+        excluding the primary key) having this column as first (leading) or only key.
+        Partial indexes and non-btree indexes are skipped: they can't serve all lookups.
         """
         self.addCleanup(
             self.__dict__.pop,
@@ -184,22 +196,26 @@ class TestIndex(TransactionCase):
             None,
         )
         self.env.cr.execute("""
-            SELECT c.relname AS table_name,
-                   ARRAY_AGG(DISTINCT a.attname) AS column_names
+            SELECT c.relname,
+                   a.attname,
+                   ARRAY_AGG(ic.relname ORDER BY ic.relname)
               FROM pg_index i
               JOIN pg_class c ON c.oid = i.indrelid
+              JOIN pg_class ic ON ic.oid = i.indexrelid
+              JOIN pg_am am ON am.oid = ic.relam
               JOIN pg_attribute a
                    ON a.attrelid = c.oid
                    AND a.attnum = i.indkey[0]        -- first key
              WHERE i.indisvalid
                AND NOT i.indisprimary                -- not the pkey
+               AND am.amname = 'btree'
                AND c.relnamespace = current_schema::regnamespace
                AND i.indpred IS NULL                 -- not partial
-             GROUP BY c.relname
+             GROUP BY c.relname, a.attname
         """)
         return {
-            table_name: set(column_names)
-            for table_name, column_names in self.env.cr.fetchall()
+            (table_name, column_name): index_names
+            for table_name, column_name, index_names in self.env.cr.fetchall()
         }
 
     def should_ignore(self, field: Many2one) -> bool:
@@ -220,35 +236,39 @@ class TestIndex(TransactionCase):
             # ignore special cases
             or str(field) in BTREE_INDEX_IGNORE_FIELDS
             # ignore indirectly indexed columns
-            or field.name in self._leading_index_columns.get(model._table, set())
+            or (model._table, field.name) in self._leading_index_columns
             # ignore fields from test modules
             or (field._modules and all('test' in module for module in field._modules))
         )
 
-    def test_no_duplicated_index(self):
+    def test_no_index_covered_by_another_index(self):
         """
-        Ensure no index is duplicated by another index, a unique constraint or unique index.
+        Ensure no field btree index (including `btree_not_null`) is redundant with
+        another index: a unique constraint or index on the same column, or a
+        multi-column btree index having it as first column
+        (e.g. `(partner_id)` vs `(partner_id, company_id)`).
         """
-        self.env.cr.execute("""
-            SELECT indrelid::regclass::text,
-                   ARRAY_AGG(indexrelid::regclass::text ORDER BY indexrelid::regclass::text)
-              FROM pg_index
-              JOIN pg_class ON pg_class.oid = indrelid
-             WHERE relnamespace = current_schema::regnamespace
-               AND indexrelid::regclass::text NOT IN %s
-             GROUP BY indrelid, SUBSTRING(pg_get_indexdef(indexrelid) FROM ' USING .*')
-            HAVING COUNT(*) > 1
-             ORDER BY 1
-        """, (tuple(INDEX_DUPLICATES_IGNORE),))
-        duplicates = [
-            f"{table_name}: {', '.join(index_names)}"
-            for table_name, index_names in self.env.cr.fetchall()
-        ]
-        if duplicates:
+        redundant = []
+        for model in self.registry.values():
+            if not model._auto or model._abstract:
+                continue
+            for field in model._fields.values():
+                if not (field.store and field.column_type and field.index in BTREE_INDEX_PY_DEFS):
+                    continue
+                own_index = make_index_name(model._table, field.name)
+                covering = [
+                    name
+                    for name in self._leading_index_columns.get((model._table, field.name), ())
+                    if name != own_index
+                ]
+                if covering and str(field) not in INDEX_COVERED_IGNORE:
+                    redundant.append(f"{field} is covered by {', '.join(covering)}")
+        if redundant:
             msg = (
-                "These indexes are identical. Note that a UNIQUE constraint already creates an index, "
-                "so a separate `index=True` on the same column(s) is redundant. "
-                "Remove all but one:\n" + "\n".join(f"  - {d}" for d in duplicates)
+                "The following field indexes are redundant: the field is already the first "
+                "column of another index or unique constraint, which serves the same lookups. "
+                "Remove `index=` from the field.\n"
+                + "\n".join(f"  - {r}" for r in sorted(redundant))
             )
             self.fail(msg)
 

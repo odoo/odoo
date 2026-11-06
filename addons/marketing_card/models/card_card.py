@@ -14,7 +14,7 @@ class CardCard(models.Model):
 
     active = fields.Boolean('Active', default=True)
     lang = fields.Selection(string='Language', selection=_lang_get, required=True)
-    campaign_id = fields.Many2one('card.campaign', required=True, index=True, ondelete="cascade")
+    campaign_id = fields.Many2one('card.campaign', required=True, ondelete="cascade")
     res_model = fields.Selection(related='campaign_id.res_model')
     res_id = fields.Many2oneReference('Record ID', model_field='res_model', required=True)
     image = fields.Image()

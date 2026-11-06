@@ -10,7 +10,7 @@ class CalendarFilters(models.Model):
     _description = 'Calendar Filter'
 
     active = fields.Boolean('Active', default=True)  # Whether or not the partner filter is activated for user_id
-    user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user, index=True, ondelete='cascade')
+    user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', 'Employee', required=True, index=True)
 
     _user_id_partner_id_unique = models.Constraint(

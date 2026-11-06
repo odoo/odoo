@@ -12,7 +12,7 @@ class MailPollVote(models.Model):
 
     guest_id = fields.Many2one("mail.guest", ondelete="cascade")
     is_self_vote = fields.Boolean(compute="_compute_is_self_vote", search="_search_is_self_vote")
-    option_id = fields.Many2one("mail.poll.option", ondelete="cascade", required=True, index=True)
+    option_id = fields.Many2one("mail.poll.option", ondelete="cascade", required=True)
     user_id = fields.Many2one("res.users", ondelete="cascade")
 
     _check_user_or_guest_set = models.Constraint(
