@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
     )
     sale_line_warn_msg = fields.Text(string="Sales Order Line Warning")
     reinvoice_policy = fields.Selection(
-        selection=[("no", "No"), ("cost", "At cost"), ("sales_price", "At Sales price")],
+        selection=[("no", "No"), ("cost", "At cost"), ("sales_price", "At Sales price"), ("cost_markup", "At % markup")],
         string="Re-Invoice Costs",
         default="no",
         compute="_compute_reinvoice_policy",
@@ -36,6 +36,7 @@ class ProductTemplate(models.Model):
         help="Validated expenses, vendor bills, or stock pickings (set up to track costs) can be"
         " invoiced to the customer at either cost or sales price.",
     )
+    percent_markup = fields.Float()
     visible_reinvoice_policy = fields.Boolean(
         string="Re-Invoice Policy visible", compute="_compute_visible_reinvoice_policy"
     )

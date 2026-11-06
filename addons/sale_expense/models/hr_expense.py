@@ -36,7 +36,7 @@ class HrExpense(models.Model):
     @api.depends('product_id.reinvoice_policy')
     def _compute_can_be_reinvoiced(self):
         for expense in self:
-            expense.can_be_reinvoiced = expense.product_id.reinvoice_policy in ['sales_price', 'cost']
+            expense.can_be_reinvoiced = expense.product_id.reinvoice_policy in ['sales_price', 'cost', 'cost_markup']
 
     @api.depends('can_be_reinvoiced')
     def _compute_sale_order_id(self):

@@ -30,7 +30,7 @@
                     </group>
                 </t>
                 <group name="expense_info" string="Expenses, Services &amp; Materials" invisible="not visible_reinvoice_policy">
-                    <field name="reinvoice_policy" widget="radio"/>
+                    <field name="reinvoice_policy"/>
                 </group>
             </group>
             <group name="group_general" position="inside">
@@ -40,6 +40,14 @@
                     <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
                 </div>
             </group>
+            <label for="list_price" position="before">
+                <field
+                    name="percent_markup"
+                    class="w-auto o_input_6ch"
+                    widget="percentage"
+                    invisible="reinvoice_policy != 'cost_markup'"
+                    required="reinvoice_policy == 'cost_markup'"/>
+            </label>
         </field>
     </record>
 
