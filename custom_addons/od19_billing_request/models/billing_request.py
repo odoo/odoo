@@ -232,11 +232,59 @@ class Od19BillingRequest(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get("name") or vals.get("name") == "/":
-                direction = vals.get("direction") or "ar"
-                vals["name"] = self._od19_get_billing_request_sequence(
-                    direction
-                ).next_by_id()
+                vals["name"] = self._od19_build_request_name(vals)
         return super().create(vals_list)
+
+    @api.model
+    def _od19_build_request_name(self, vals):
+        """Return the document number for a new request.
+
+        A request opened from a transfer mirrors the transfer reference so both
+        documents stay aligned; every other origin keeps the running sequence.
+        """
+        direction = vals.get("direction") or "ar"
+        reference = self._od19_origin_transfer_reference(vals.get("origin_ref"))
+        if reference:
+            name = self._od19_format_transfer_name(reference, direction.upper())
+            if name:
+                return self._od19_unique_name(name)
+        return self._od19_get_billing_request_sequence(direction).next_by_id()
+
+    @api.model
+    def _od19_origin_transfer_reference(self, origin_ref):
+        """Return the reference name when the origin is a transfer, else False."""
+        if not origin_ref:
+            return False
+        model_name, _, res_id = str(origin_ref).partition(",")
+        if model_name != "stock.picking" or not res_id.isdigit():
+            return False
+        picking = self.env["stock.picking"].sudo().browse(int(res_id)).exists()
+        if not picking.name or picking.name == "/":
+            return False
+        return picking.name
+
+    @api.model
+    def _od19_format_transfer_name(self, reference, direction):
+        """Format a transfer reference as a billing-request number.
+
+        ``WH/IA/IN/00008`` -> ``BRI/AP/WII/00008``: the direction, the first
+        letter of every reference segment, then the transfer's own number.
+        """
+        parts = [part for part in reference.split("/") if part]
+        if len(parts) < 2:
+            return False
+        initials = "".join(part[0] for part in parts[:-1]).upper()
+        return "BRI/%s/%s/%s" % (direction, initials, parts[-1])
+
+    @api.model
+    def _od19_unique_name(self, name):
+        """Append -2, -3, ... so a re-opened transfer keeps a distinct number."""
+        candidate = name
+        suffix = 1
+        while self.search_count([("name", "=", candidate)]):
+            suffix += 1
+            candidate = "%s-%s" % (name, suffix)
+        return candidate
 
     # ------------------------------------------------------------------
     # Document pull contract (od19.document.pull.mixin)

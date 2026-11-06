@@ -3,7 +3,7 @@
 
 {
     "name": "OD19 Billing Request (คำขอเปิดบิลกลาง)",
-    "version": "19.0.1.4.0",
+    "version": "19.0.1.5.0",
     "category": "Accounting",
     "summary": "Unified AR/AP billing request from IN/OUT/SO/PO",
     "author": "TRAE",
