@@ -11,7 +11,12 @@ from odoo.http import request
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _inherit = ["product.product", "website.structured_data.mixin", "website.trackable.mixin"]
+    _inherit = [
+        "product.product",
+        "website.located.mixin",
+        "website.structured_data.mixin",
+        "website.trackable.mixin",
+    ]
     _website_track_field = "product_id"
     _mail_post_access = "read"
 
@@ -27,12 +32,6 @@ class ProductProduct(models.Model):
         relation="product_product_image_rel",
         compute="_compute_variant_image_ids",
         store=True,
-    )
-
-    website_url = fields.Char(
-        string="Website URL",
-        help="The full URL to access the document through the website.",
-        compute="_compute_product_website_url",
     )
 
     # === COMPUTE METHODS ===#
@@ -54,9 +53,8 @@ class ProductProduct(models.Model):
                 )
             )
 
-    @api.depends_context("lang")
     @api.depends("product_tmpl_id.website_url", "product_template_attribute_value_ids")
-    def _compute_product_website_url(self):
+    def _compute_website_url(self):
         slug = self.env["ir.http"]._slug
         for product in self:
             url = urlparse(product.product_tmpl_id.website_url)
