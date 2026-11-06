@@ -42,8 +42,12 @@ class SaleReport(models.Model):
     def _select_pos_dict(self, table: TableSQL):
         order_rate = self._case_value_or_one(table.order_id.currency_rate)
         rate = SQL("%s / %s", table.consolidation_rate, order_rate)
+        subtotal = SQL("SIGN(%s) * SIGN(%s) * ABS(%s)", table.qty, table.price_unit, table.price_subtotal)
         return {
             'id': SQL("-MIN(%s)", table.id),
+            'margin': SQL('SUM((%s - COALESCE(%s, 0)) / %s)', subtotal, table.total_cost, order_rate),
+            'margin_percent': SQL('MAX(CASE COALESCE(%s, 0) WHEN 0 THEN 0 ELSE (%s - COALESCE(%s, 0)) / (%s) END)', subtotal, subtotal, table.total_cost, subtotal),
+            'purchase_price': SQL('SUM(%s / %s)', table.total_cost, order_rate),
             'product_id': SQL("%s", table.product_id),
             'product_uom_id': SQL("%s", table.product_id.uom_id),
             'product_uom_qty': SQL("SUM(%s)", table.qty),
