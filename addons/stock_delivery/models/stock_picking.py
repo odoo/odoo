@@ -270,3 +270,21 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def _is_eu_import(self):
+        """
+        Determines if the picking is an import into the EU where you need to provide M-PID, NS-PID and S-PID.
+        The requirements are:
+            - Shipment origin is outside the European Union
+            - Shipment destination is within the European Union
+            - Shipment is identified as Business-to-Consumer (B2C)
+            - Shipment is designated as a sale transaction ("For Sale")
+            - Shipment has a total value <= €150 (not checked due to the risk of inaccurate conversion)
+        """
+        self.ensure_one()
+        europe_countries = self.env.ref('base.europe').country_ids
+        source_country = self.picking_type_id.warehouse_id.partner_id.country_id
+        destination_country = self.partner_id.country_id
+        if not source_country or not destination_country:
+            return False
+        return source_country not in europe_countries and destination_country in europe_countries and not bool(self.partner_id.vat) and not self.is_return_picking
