@@ -175,6 +175,20 @@ class TestPosDataLoading(CommonPosTest):
         self.assertTrue(result.get('pos.config'),
             "Outdated record (ts=0) should be returned in incremental load")
 
+    def test_load_data_incremental_without_model_filter(self):
+        session = self._get_session()
+        full_data = session.load_data()
+        categories = full_data['pos.category']['records']
+        self.assertTrue(categories)
+        cached_records = {
+            str(record['id']): fields.Datetime.from_string(record['write_date']).timestamp()
+            for record in categories
+        }
+
+        data = session.load_data({'records': {'pos.category': cached_records}})
+        self.assertFalse(data['pos.category']['records'])
+        self.assertTrue(data['pos.config']['records'])
+
     # -------------------------------------------------------------------------
     # to_remove mechanic
     # -------------------------------------------------------------------------
