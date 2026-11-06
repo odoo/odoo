@@ -110,13 +110,13 @@ export class CallDebriefTimeline extends Component {
         return `width: ${width}%;`;
     }
 
-    _stylePositionMediaProgress(media) {
-        if (!this.props.totalDuration || !media || !media.duration) {
+    _stylePositionSegmentProgress(segment) {
+        if (!this.props.totalDuration || !segment || !segment.duration) {
             return `width: 0%;`;
         }
         const currentTime = this.props.currentTime || 0;
-        const playedDuration = Math.max(0, Math.min(currentTime - media.startSec, media.duration));
-        const width = (playedDuration / media.duration) * 100;
+        const timeFromSegmentStart = Math.max(0, Math.min(currentTime - segment.startSec, segment.duration));
+        const width = (timeFromSegmentStart / segment.duration) * 100;
         return `width: ${width}%;`;
     }
 
