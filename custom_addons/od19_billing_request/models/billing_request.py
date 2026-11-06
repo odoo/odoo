@@ -76,7 +76,7 @@ class Od19BillingRequest(models.Model):
     )
     origin_model = fields.Char(
         string="Origin Model",
-        compute="_compute_origin_info",
+        compute="_compute_origin_model",
         store=True,
     )
     partner_id = fields.Many2one(
@@ -162,10 +162,18 @@ class Od19BillingRequest(models.Model):
             request.department_id = employee.department_id if employee else False
 
     @api.depends("origin_ref")
-    def _compute_origin_info(self):
+    def _compute_origin_model(self):
+        # Separate compute from ``partner_id`` (an editable computed field):
+        # sharing one method would let Odoo protect this field against
+        # recomputation whenever ``partner_id`` is provided in the values.
         for request in self:
             origin = request.origin_ref
             request.origin_model = origin._name if origin else False
+
+    @api.depends("origin_ref")
+    def _compute_origin_info(self):
+        for request in self:
+            origin = request.origin_ref
             if origin and not request.partner_id:
                 request.partner_id = getattr(origin, "partner_id", False)
 

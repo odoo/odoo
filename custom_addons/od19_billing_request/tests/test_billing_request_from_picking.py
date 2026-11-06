@@ -64,7 +64,6 @@ class TestBillingRequestFromPicking(TransactionCase):
         )
         self.env["stock.move"].create(
             {
-                "name": self.product.name,
                 "product_id": self.product.id,
                 "product_uom_qty": qty,
                 "product_uom": self.product.uom_id.id,
