@@ -963,19 +963,21 @@ class ProductTemplate(models.Model):
                 code_prefix = f'[{template.default_code}] '
                 template.display_name = f'{code_prefix}{template.name}'
 
-    @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if self.env.context.get('search_product_product', bool(value)):
             if operator in Domain.NEGATIVE_OPERATORS:
-                domain = Domain.AND([domain, [('product_variant_ids', operator, value)]])
+                domain = Domain.AND([
+                    domain,
+                    [('product_variant_ids', operator, value)]
+                ])
             else:
-                query = SQL(
-                    """((%s) UNION ALL (%s))""",
-                    self._search(domain).select(),
-                    self._search([("product_variant_ids", operator, value)]).select(),
-                )
-                domain = [('id', 'in', query)]
+                barcode_operator = 'in' if operator == 'in' else '='
+                domain = Domain.OR([
+                    domain,
+                    [('product_variant_ids', operator, value)],
+                    [('barcode', barcode_operator, value)],
+                ])
         return domain
 
     @api.model
@@ -1783,20 +1785,25 @@ class ProductTemplate(models.Model):
     def _get_product_placeholder_filename(self):
         return 'product/static/img/placeholder_thumbnail.png'
 
-    def get_single_product_variant(self):
+    def get_single_product_variant(self, product=None):
         """ Method used by the product configurator to check if the product is configurable or not.
 
         We need to open the product configurator if the product:
         - is configurable (see has_configurable_attributes)
         - has optional products (method is extended in sale to return optional products info)
 
+        :param product.product|None product: A specific variant of `self` to use, e.g. one that
+        was identified from a search term (barcode). When provided, it is
+        used as-is instead of checking whether `self` only has one variant.
         Note: self.ensure_one()
         """
         self.ensure_one()
-        if self.product_variant_count == 1 and not self.has_configurable_attributes:
+        if not product and self.product_variant_count == 1 and not self.has_configurable_attributes:
+            product = self.product_variant_id
+        if product and not self.attribute_line_ids.value_ids.filtered('is_custom'):
             return {
-                'product_id': self.product_variant_id.id,
-                'product_name': self.product_variant_id.display_name,
+                'product_id': product.id,
+                'product_name': product.display_name,
             }
         return {}
 
