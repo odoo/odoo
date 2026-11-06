@@ -711,9 +711,23 @@ class IrAttachment(models.Model):
 
         self_sudo = self.sudo().with_context(active_test=False)
         ordered = bool(order)
+        fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
         if limit is None:
+<<<<<<< 6a8a345b106c25a7c653f641e3f96bfa2c798c8b
             records = self_sudo.search_fetch(
                 domain, SECURITY_FIELDS, order=order).sudo(False)
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+            records = self.sudo().with_context(active_test=False).search_fetch(
+                domain, SECURITY_FIELDS, order=order).sudo(False)
+=======
+            query = super()._search(
+                domain,
+                order=order,
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+>>>>>>> fa0d9ae4268acf34a96463997243179feca46d1d
             return records._filtered_access('read')[offset:]._as_query(ordered)
         # Fetch by small batches
         sub_offset = 0
@@ -723,13 +737,21 @@ class IrAttachment(models.Model):
             # By default, order by model to batch access checks.
             order = 'res_model nulls first, id'
         while len(result) < limit:
+<<<<<<< 6a8a345b106c25a7c653f641e3f96bfa2c798c8b
             records = self_sudo.search_fetch(
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+            records = self.sudo().with_context(active_test=False).search_fetch(
+=======
+            query = super()._search(
+>>>>>>> fa0d9ae4268acf34a96463997243179feca46d1d
                 domain,
-                SECURITY_FIELDS,
                 offset=sub_offset,
                 limit=PREFETCH_MAX,
                 order=order,
-            ).sudo(False)
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
             result.extend(records._filtered_access('read')._ids)
             if len(records) < PREFETCH_MAX:
                 # There are no more records
