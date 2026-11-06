@@ -8,6 +8,8 @@ from http import HTTPStatus
 from socket import gethostbyname
 from unittest.mock import patch
 
+import psycopg2
+
 import odoo
 from odoo.http import content_disposition, root
 from odoo.tests import Like, tagged
@@ -169,6 +171,42 @@ class TestHttpMisc(TestHttpBase):
         with mute_logger('werkzeug'):
             response = self.url_open('/' + 'a' * 95536)
         self.assertIn(response.status_code, (HTTPStatus.NOT_FOUND, HTTPStatus.REQUEST_URI_TOO_LONG))
+
+    def test_misc11_primary_database_unreachable(self):
+        cursor = self.registry.cursor
+
+        def primary_down_cursor(readonly=False):
+            if not readonly:
+                # Simulate a primary database that refuses new connections.
+                raise psycopg2.OperationalError("FATAL:  the database system is shutting down\n")
+            return cursor(readonly=readonly)
+
+        self.authenticate('demo', 'demo')
+
+        with patch.object(self.registry, 'cursor', primary_down_cursor):
+
+            # http controller
+            with self.assertLogs('odoo.http', 'WARNING') as capture:
+                res_http = self.url_open('/test_http/greeting-public?readonly=0')
+            self.assertEqual(res_http.status_code, HTTPStatus.SERVICE_UNAVAILABLE)
+            self.assertEqual(res_http.text, Like("<!DOCTYPE html>...There was an error connecting to the database..."))
+            self.assertEqual(capture.output, [
+                Like("WARNING:odoo.http:Database or registry unusable...Traceback...FATAL:  the database system is shutting down..."),
+            ])
+
+            # jsonrpc controller
+            with self.assertLogs('odoo.http', 'WARNING') as capture:
+                res_jsonrpc = self.url_open('/web/dataset/call_kw', json={'params': {
+                'model': 'res.partner',
+                'method': 'write',
+                'args': [self.partner_demo.ids, {'name': 'Marc Demo'}],
+                'kwargs': {},
+            }})
+            self.assertEqual(res_jsonrpc.status_code, HTTPStatus.OK)
+            self.assertEqual(res_jsonrpc.json()['error']['data']['name'], 'werkzeug.exceptions.ServiceUnavailable')
+            self.assertEqual(capture.output, [
+                Like("WARNING:odoo.http:Database or registry unusable...Traceback...FATAL:  the database system is shutting down..."),
+            ])
 
 
 @tagged('post_install', '-at_install')
