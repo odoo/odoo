@@ -186,6 +186,7 @@ class Attendee(models.Model):
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_ids,
+                    mail_server_id=mail_template.mail_server_id.id,
                     force_send=False,
                 )
         # batch sending at the end
