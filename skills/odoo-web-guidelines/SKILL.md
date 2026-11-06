@@ -36,5 +36,6 @@ touching instead of loading whole files.
 | [Tests (odoo-guidelines)](../odoo-guidelines/guidelines/tests.md#tests) | running Hoot tests through `WebSuite` (`--test-tags /<module>:WebSuite`) |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
+| [No comment unless the code cannot show why](../odoo-guidelines/guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
 
 To add a guideline, follow [AUTHORING.md](AUTHORING.md).

@@ -47,6 +47,7 @@ touching instead of loading whole files.
 | [Run the postcommit hooks a test depends on](guidelines/tests.md#run-the-postcommit-hooks-a-test-depends-on) | a test of a webhook, a sync, or anything else queued on `cr.postcommit` |
 | [Clear the cache before acting as a restricted user](guidelines/tests.md#clear-the-cache-before-acting-as-a-restricted-user) | a test that calls code with `with_user`, `with_company` or `@users` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
+| [No comment unless the code cannot show why](guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
 | [Changes in a stable version](guidelines/stable.md#changes-in-a-stable-version) | any change targeting a released branch rather than master |
 
 To add or restructure a guideline, follow [AUTHORING.md](AUTHORING.md).
