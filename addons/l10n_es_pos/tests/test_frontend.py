@@ -100,7 +100,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         """This test make sure that the invoice generated in spanish PoS are not proforma invoices when no certificate exists"""
 
         # Make sure there is no certificate
-        self.assertEqual(self.env['certificate.certificate'].search_count([]), 0)
+        self.assertTrue(self.env["ir.module.module"]._get("certificate").state == "uninstalled" or self.env['certificate.certificate'].search_count([]) == 0)
         self.partner_a.write({
             'vat': "ESA12345674",
             'country_id': self.env.ref("base.es").id,
