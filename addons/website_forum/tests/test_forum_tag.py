@@ -38,3 +38,13 @@ class TestForumTag(TestForumCommon):
 
         # Sanity check
         self.tags[0].with_user(self.user_employee).sudo().follower_ids
+
+    def test_tag_website_url_unsaved(self):
+        """An unsaved tag must not be slugged."""
+        new_tag = self.env['forum.tag'].new({'name': 'New tag', 'forum_id': self.forum.id})
+        self.assertEqual(new_tag.website_url, '#')
+        tag = self.env['forum.tag'].create({'name': 'Saved tag', 'forum_id': self.forum.id})
+        self.assertEqual(
+            tag.website_url,
+            f'/forum/{self.env["ir.http"]._slug(self.forum)}/tag/{self.env["ir.http"]._slug(tag)}/questions',
+        )

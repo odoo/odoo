@@ -10,7 +10,8 @@ class ResPartnerGrade(models.Model):
     def _compute_website_url(self):
         super()._compute_website_url()
         for grade in self:
-            grade.website_url = "/partners/grade/%s" % (self.env['ir.http']._slug(grade))
+            if grade.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                grade.website_url = "/partners/grade/%s" % (self.env['ir.http']._slug(grade))
 
     def _default_is_published(self):
         return True

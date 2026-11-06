@@ -72,8 +72,10 @@ class ForumTag(models.Model):
 
     @api.depends("forum_id", "forum_id.name", "name")
     def _compute_website_url(self):
+        super()._compute_website_url()
         for tag in self:
-            tag.website_url = f'/forum/{self.env["ir.http"]._slug(tag.forum_id)}/tag/{self.env["ir.http"]._slug(tag)}/questions'
+            if tag.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                tag.website_url = f'/forum/{self.env["ir.http"]._slug(tag.forum_id)}/tag/{self.env["ir.http"]._slug(tag)}/questions'
 
     @api.model_create_multi
     def create(self, vals_list):
