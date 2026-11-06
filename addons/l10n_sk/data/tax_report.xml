@@ -442,49 +442,6 @@ line 1 (sk_01) and its VAT label,
                 <field name="name@sk">VII. Odpočítateľná DPH (daň na vstupe)</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="sk_deductible_total" model="account.report.line">
-                        <field name="name">Total - Deductions (general, specific, custom, postponed)</field>
-                        <field name="name@sk">Celkom - Odpočty (všeobecné, konkrétne, colné, odložené)</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="children_ids">
-                            <record id="sk_deductible_total_18" model="account.report.line">
-                                <field name="name">Total VAT deduction, reduced VAT (§ 27 para. 2) (Lines 18, 20, 22, 23a)</field>
-                                <field name="name@sk">Celkový odpočet DPH, znížená DPH (§ 27 ods. 2) (riadky 18, 20, 22, 23a)</field>
-                                <field name="code">sk_18_total</field>
-                                <field name="expression_ids">
-                                    <record id="sk_deductible_total_18_vat" model="account.report.expression">
-                                        <field name="label">vat</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">sk_18.vat + sk_20.vat + sk_22.vat + sk_23a.vat</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="sk_deductible_total_18a" model="account.report.line">
-                                <field name="name">Total VAT deduction, reduced VAT reduced VAT (§ 27 para. 3) (Lines 18a, 20a, 22a, 23b)</field>
-                                <field name="name@sk">Celkový odpočet DPH, znížená DPH (§ 27 ods. 3) (riadky 18a, 20a, 22a, 23b)</field>
-                                <field name="code">sk_18a_total</field>
-                                <field name="expression_ids">
-                                    <record id="sk_deductible_total_18a_vat" model="account.report.expression">
-                                        <field name="label">vat</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">sk_18a.vat + sk_20a.vat + sk_22a.vat + sk_23b.vat</field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="sk_deductible_total_19" model="account.report.line">
-                                <field name="name">Total VAT deduction, basic VAT (Lines 19, 21, 23, 23c)</field>
-                                <field name="name@sk">Celkový odpočet DPH, základná DPH (riadky 19, 21, 23, 23c)</field>
-                                <field name="code">sk_19_total</field>
-                                <field name="expression_ids">
-                                    <record id="sk_deductible_total_19_vat" model="account.report.expression">
-                                        <field name="label">vat</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">sk_19.vat + sk_21.vat + sk_23.vat + sk_23c.vat</field>
-                                    </record>
-                                </field>
-                            </record>
-                        </field>
-                    </record>
                     <record id="sk_deductible_general" model="account.report.line">
                         <field name="name">1. General Deductions (§49 to 52 and §54 to 54d)</field>
                         <field name="name@sk">1. Všeobecné zrážky (§49 až 52 a §54 až 54d)</field>
@@ -781,7 +738,7 @@ line 1 (sk_01) and its VAT label,
                             <record id="sk_final_32_calcul" model="account.report.expression">
                                 <field name="label">calcul</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">sk_17.vat - sk_18_total.vat - sk_18a_total.vat - sk_19_total.vat
+                                <field name="formula">sk_17.vat - sk_18.vat - sk_18a.vat - sk_19.vat
                                     + sk_24.vat + sk_26.vat + sk_28.vat + sk_29.vat - sk_30.vat - sk_31.vat</field>
                             </record>
                             <record id="sk_final_32_vat" model="account.report.expression">
