@@ -139,6 +139,7 @@ describe("many2many_tags_banks widget", () => {
                         [false, "form"],
                     ],
                     domain: [],
+                    context: { default_partner_id: 1 },
                     target: "current",
                 });
                 expect(options).toEqual({ newWindow: false });
