@@ -6,7 +6,7 @@ import {
 } from "@stock/widgets/popover_widget";
 import { registry } from "@web/core/registry";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 class MrpBomPopover extends PopoverComponent {
     static template = "mrp.bomPopover";
@@ -26,7 +26,7 @@ class MrpBomPopover extends PopoverComponent {
     setup() {
         super.setup();
 
-        this.actionService = useService("action");
+        this.actionService = usePlugin(ActionPlugin);
     }
 
     async _openBomOverview() {
