@@ -868,16 +868,64 @@ export class Thread extends Record {
                 ...tmpData,
                 body: await generateEmojisOnHtml(body),
                 isPending: true,
+                postParams: params,
                 thread: this,
             });
             this.messages.push(tmpMsg);
             this.onNewSelfMessage(tmpMsg);
+            return this._sendPendingMessage(tmpMsg);
         }
-        const data = await this.store.doMessagePost(params, tmpMsg);
+        const data = await this.store.doMessagePost(params);
+        if (!data) {
+            return;
+        }
+        return this._insertPostedMessage(data);
+    }
+
+    /**
+     * @param {import("models").Message} tmpMsg
+     * @returns {Promise<import("models").Message|undefined>} the posted message
+     */
+    async _sendPendingMessage(tmpMsg) {
+        const data = await this._doPendingMessagePost(tmpMsg);
         if (!data) {
             return;
         }
         return this._insertPostedMessage(data, tmpMsg);
+    }
+
+    /**
+     * @param {import("models").Message} tmpMsg
+     * @returns {Promise<Object|undefined>} the result of the post, undefined when it failed
+     */
+    _doPendingMessagePost(tmpMsg) {
+        const params = tmpMsg.postParams;
+        const attachments = tmpMsg.attachment_ids;
+        if (attachments.length) {
+            Object.assign(params.post_data, {
+                attachment_ids: attachments.map(({ id }) => id),
+                attachment_tokens: attachments.map(({ ownership_token }) => ownership_token),
+            });
+        } else {
+            delete params.post_data.attachment_ids;
+            delete params.post_data.attachment_tokens;
+        }
+        return this.store.doMessagePost(params, tmpMsg);
+    }
+
+    /**
+     * Post again the given message that failed to be posted, after the
+     * messages posted meanwhile, with the changes made in edition.
+     *
+     * @param {import("models").Message} tmpMsg
+     * @returns {Promise<import("models").Message|undefined>} the posted message
+     */
+    async repostMessage(tmpMsg) {
+        tmpMsg.postFailRedo = undefined;
+        tmpMsg.postFailMessage = undefined;
+        this.messages.delete(tmpMsg);
+        this.messages.add(tmpMsg);
+        return this._sendPendingMessage(tmpMsg);
     }
 
     /**
