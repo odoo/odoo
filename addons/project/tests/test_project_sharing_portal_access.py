@@ -128,6 +128,29 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         self.assertIn(f'href="http://localhost:{config["http_port"]}/web/signup', str(mail_partner.body), 'The message link should contain the url to register to the portal')
         self.assertIn('token=', str(mail_partner.body), 'The message link should contain a personalized token to register to the portal')
 
+    def test_display_follow_button(self):
+        """ The follow button is displayed for internal users (e.g. customer
+        preview) and for portal users with Edit access, but not for portal
+        users with limited access. """
+        for user in (self.user_projectuser, self.user_portal):
+            task = self.task_portal.with_user(user).sudo()
+            task.invalidate_recordset(['display_follow_button'])
+            self.assertTrue(
+                task.display_follow_button,
+                "The follow button should be displayed on the shared project's task.",
+            )
+
+        # Switch the portal user to limited access on the same project.
+        self.project_portal.collaborator_ids.filtered(
+            lambda collaborator: collaborator.partner_id == self.user_portal.partner_id
+        ).limited_access = True
+        task = self.task_portal.with_user(self.user_portal).sudo()
+        task.invalidate_recordset(['display_follow_button'])
+        self.assertFalse(
+            task.display_follow_button,
+            "The follow button should not be displayed for a portal user with limited access.",
+        )
+
 
 class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
