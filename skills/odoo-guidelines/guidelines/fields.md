@@ -3,8 +3,11 @@
 - Relational suffixes: `Many2one` → `_id`, `One2many`/`Many2many` → `_ids`.
 - `index=True` on fields that are both searched and selective (many distinct
   values). An index on a low-cardinality field (a boolean, a state) is wasted
-  space and slows every write. `index` also accepts
-  a type (`'btree_not_null'`, `'trigram'` for `like` searches); multi-column or
+  space and slows every write. A searched field that is empty on most rows
+  (a `Many2one` set on few records) takes `index='btree_not_null'`: the index
+  skips the empty rows and still serves `=`, `in` and the foreign key check of
+  a delete, but not a search for empty values. `index` also accepts
+  `'trigram'` for `like` searches; multi-column or
   custom indexes are model attributes (`_x_idx = models.Index("(a, b)")`,
   `models.UniqueIndex`; the attribute name must start with `_`).
 - Restrict sensitive fields with the `groups` attribute (comma-separated external
