@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        กลุ่มผู้อนุมัติชั้นที่ 3 (CEO) สำหรับสายอนุมัติค่าใช้จ่าย
+        ใช้เป็น reviewer_group_id ของ tier.definition ชั้น CEO
+        บทบาท (res.users.role) ที่ผูกกลุ่มนี้ถูกประกาศใน od19_role_catalog
+    -->
+    <record id="group_od19_expense_ceo_approver" model="res.groups">
+        <field name="name">Expense CEO Approver</field>
+        <field name="comment">ผู้อนุมัติค่าใช้จ่ายชั้นที่ 3 (CEO)</field>
+    </record>
+
+</odoo>

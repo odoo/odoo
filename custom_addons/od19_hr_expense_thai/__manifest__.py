@@ -2,7 +2,7 @@
 {
     'name': 'HR Expense Thai Localization',
     'author': 'OD19',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Human Resources/Expenses',
     'summary': 'Thai HR expense extensions: cash reimbursement, multi-tier approval',
     'depends': [
@@ -12,6 +12,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/hr_expense_security.xml',
         'views/hr_expense_views.xml',
     ],
     'installable': True,
