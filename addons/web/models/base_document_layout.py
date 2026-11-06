@@ -69,6 +69,8 @@ class BaseDocumentLayout(models.TransientModel):
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
 
+    custom_header_height = fields.Integer(related='company_id.custom_header_height', readonly=False)
+
     external_report_layout_id = fields.Many2one(related='company_id.external_report_layout_id', readonly=False)
 
     font = fields.Selection(related='company_id.font', readonly=False)
@@ -119,7 +121,7 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
 
-    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details', 'custom_header_height')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
         styles = self._get_asset_style()
@@ -327,3 +329,12 @@ class BaseDocumentLayout(models.TransientModel):
         # but when company details is empty we want to put the info of the company
         for record in self:
             record.is_company_details_empty = not html2plaintext(record.company_details or '')
+
+    @api.onchange('report_layout_id')
+    def _onchange_report_layout_id_header_height(self):
+        for wizard in self:
+            if wizard.report_layout_id.view_id.key == 'web.external_layout_wave':
+                wizard.custom_header_height = 230
+            else:
+                # Default for Folder, Standard, Boxed, Bold, Striped, and Bubble
+                wizard.custom_header_height = 174
