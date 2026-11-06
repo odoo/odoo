@@ -43,10 +43,21 @@ class HrTimeRule(models.Model):
     def _apply_attendance_output(self, excess, deficit, active_iv=None):
         """Write the time rule results on attendances (``hr.time.rule._apply_output``).
 
-        ``hr_holidays_attendance`` extends it to credit or deduct allocations.
+        ``hr_holidays_attendance`` extends it to credit or deduct allocations. The attendances
+        split or reclassified by the rules get a message in their chatter
+        (``hr.attendance._log_time_rule_split``).
 
         :return: the result of ``_apply_output``: ``(new_records, all_source_ids, excess_alloc,
             deficit_alloc)``
         :rtype: tuple
         """
-        return self._apply_output(excess, deficit, active_iv=active_iv)
+        sources = self.env['hr.attendance'].sudo().union(
+            source for by_source in excess.values() for source in by_source
+        )
+        previous_values = {
+            source: (source.work_entry_type_id, source.time_rule_id, source.check_out)
+            for source in sources
+        }
+        result = self._apply_output(excess, deficit, active_iv=active_iv)
+        sources._log_time_rule_split(result[0], previous_values)
+        return result
