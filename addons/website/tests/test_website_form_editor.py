@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, timedelta
+
+from lxml import html
+
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import HttpCase, TransactionCase, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -114,6 +118,7 @@ class TestWebsiteForm(TransactionCase):
                 test_cr.commit()
                 return res
             WebsiteFormController.insert_record = dummy_insert_record
+            WebsiteFormController._verify_website_form = lambda model_name, values: None
             request.params = {
                 'model_name': 'res.partner',
                 'name': 'test partner',
@@ -205,3 +210,148 @@ class TestWebsiteForm(TransactionCase):
             authorized_fields,
             "Reference fields must not be offered in the website form builder.",
         )
+
+
+@tagged('post_install', '-at_install')
+class TestWebsiteFormSignature(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.model_res_partner').website_form_access = True
+        cls.env['ir.model.fields'].formbuilder_whitelist('res.partner', ['name', 'function', 'ref', 'street', 'city', 'zip', 'website', 'email'])
+        view = cls.env['ir.ui.view'].create({
+            'name': 'Form',
+            'type': 'qweb',
+            'arch': """
+                <t t-call="website.layout">
+                    <span data-for="test_form" t-att-data-values="{'function': 'Manager'}"/>
+                    <form id="test_form" action="/website/form/" data-model_name="res.partner">
+                        <input class="s_website_form_input" name="name" required="1"/>
+                        <select class="s_website_form_input" name="Department">
+                            <option value="Sales"/>
+                            <option>Support</option>
+                        </select>
+                        <select class="s_website_form_input" name="Country">
+                            <option value=""/>
+                        </select>
+                        <select class="s_website_form_input" name="country_id">
+                            <option value=""/>
+                            <option value="1">Belgium</option>
+                            <option value="2">Singapore</option>
+                        </select>
+                        <!-- Disabled by its script when it has no state of the selected country -->
+                        <select class="s_website_form_input" name="state_id" required="1" data-link-state-to-country="true">
+                            <option value=""/>
+                            <option value="10" data-country-id="1">Brussels</option>
+                        </select>
+                        <input type="checkbox" class="s_website_form_input" name="Topics" value="Price, quote"/>
+                        <input type="checkbox" class="s_website_form_input" name="Topics" value="Delivery"/>
+                        <div class="s_website_form_field" data-visibility-dependency="Department"
+                            data-visibility-comparator="selected" data-visibility-condition="Support">
+                            <input class="s_website_form_input" name="street"/>
+                        </div>
+                        <div class="s_website_form_field" data-visibility-dependency="Topics"
+                            data-visibility-comparator="contains" data-visibility-condition='["Price, quote"]'>
+                            <input class="s_website_form_input" name="city"/>
+                        </div>
+                        <div class="s_website_form_field" data-visibility-dependency="name" data-visibility-comparator="contains">
+                            <input class="s_website_form_input" name="zip"/>
+                        </div>
+                        <div class="s_website_form_field s_website_form_field_hidden">
+                            <input class="s_website_form_input" name="website" value="https://www.odoo.com"/>
+                        </div>
+                        <input type="hidden" class="s_website_form_input" name="function"/>
+                        <input type="hidden" class="s_website_form_input" name="ref" value="WEB"/>
+                        <div class="s_website_form_field" data-requirement-comparator="substring"
+                            data-requirement-condition='[{"requirement_text": "Odoo"}]'>
+                            <textarea class="s_website_form_input" name="Message" minlength="5" maxlength="10"/>
+                        </div>
+                        <input type="email" class="s_website_form_input" name="email"/>
+                        <div class="s_website_form_field" data-requirement-comparator="greater" data-requirement-condition="17">
+                            <input type="number" class="s_website_form_input" name="Age" step="1"/>
+                        </div>
+                        <div class="s_website_form_field" data-requirement-comparator="after" data-requirement-condition="today">
+                            <input class="s_website_form_input" name="Date"/>
+                        </div>
+                        <div class="s_website_form_field s_website_form_custom s_website_form_field_hidden">
+                            <div class="s_website_form_date">
+                                <input class="s_website_form_input" name="Birthday" value="1700000000"/>
+                            </div>
+                        </div>
+                        <input type="file" class="s_website_form_input" name="Photo [image]" accept="image/*" data-max-file-size="1"/>
+                    </form>
+                </t>
+            """,
+        })
+        cls.env['website.page'].create({'url': '/test-form-signature', 'view_id': view.id, 'is_published': True})
+
+    def submit(self, values, model_name='res.partner', files=None):
+        page = html.fromstring(self.url_open('/test-form-signature').content)
+        signature = page.xpath('//form[@id="test_form"]/input[@name="website_form_signature"]/@value')[0]
+        return self.url_open(f'/website/form/{model_name}', data={'website_form_signature': signature, **values}, files=files).json()
+
+    def test_submit_signed_form(self):
+        result = self.submit({
+            'name': 'Demo',
+            'Department': 'Sales',
+            'Topics': 'Price, quote,Delivery',
+            'Country': 'Belgium',  # an option loaded in the browser
+            'country_id': '2',  # without state
+            'street': 'Street of a hidden field',
+            'city': 'Brussels',
+            'zip': '1000',  # visible, as its rule has no condition
+            'function': 'Forged',
+            'ref': 'Forged',
+            'website': 'https://forged.com',
+            'Message': 'Odoo\r\nrocks',  # 10 characters, as counted by the browsers
+            'email': "o'brien@example.com",
+            'Age': '18',
+            'Date': (date.today() + timedelta(days=2)).strftime('%m/%d/%Y'),
+            'Birthday': '01/01/2000',
+        }, files={'Photo [image][0][0]': ('photo.png', b'photo', 'image/png')})
+        partner = self.env['res.partner'].browse(result['id'])
+        self.assertRecordValues(partner, [{
+            'name': 'Demo',
+            'street': False,
+            'city': 'Brussels',
+            'zip': '1000',
+            'function': 'Manager',
+            'ref': 'WEB',
+            'website': 'https://www.odoo.com',
+            'email': "o'brien@example.com",
+        }])
+        # The default date of the hidden field, as displayed by its date picker
+        self.assertIn('Birthday : 11/14/2023', ''.join(partner.message_ids.mapped('body')))
+        result = self.submit({'name': 'Demo', 'Department': 'Support', 'street': 'Street', 'city': 'Brussels', 'state_id': '10'})
+        self.assertRecordValues(self.env['res.partner'].browse(result['id']), [{'street': 'Street', 'city': False}])
+
+    def test_submit_forged_form(self):
+        # Check form submission without signature.
+        self.assertIn('error', self.url_open('/website/form/res.partner', data={'name': 'Forged'}).json())
+        self.assertIn('error', self.submit({'name': 'Forged'}, model_name='mail.mail'))
+        for values, files in [
+            ({'website_form_signature': 'forged'}, None),
+            ({'phone': '+32 123'}, None),  # not an input of the form
+            ({'Department': 'Admin'}, None),  # not an option of the input
+            ({'Department': 'Sales,Support'}, None),  # several options of a single choice
+            ({'Topics': 'Delivery,Admin'}, None), # Admin is not an allowed checkbox option
+            ({'name': ''}, None),  # required
+            ({'country_id': ''}, None),  # the state of any country is required
+            ({'country_id': '1'}, None),  # the state of the country is required
+            ({'Message': 'Hello you'}, None),  # requirement
+            ({'Message': 'Odoo'}, None),  # min length
+            ({'Message': 'Odoo rocks!'}, None),  # max length
+            ({'email': 'forged'}, None),
+            ({'Age': '17'}, None),
+            ({'Age': 'eighteen'}, None),
+            ({'Age': '18.5'}, None),  # step
+            ({'Date': (date.today() - timedelta(days=2)).strftime('%m/%d/%Y')}, None),
+            ({}, {'Photo [image][0][0]': ('forged.txt', b'forged', 'text/plain')}),
+            ({}, {'Photo [image][0][0]': ('forged.png', b'0' * 1_000_001, 'image/png')}),
+            ({}, {'Photo [image][0][0]': ('photo.png', b'photo', 'image/png'), 'Photo [image][0][1]': ('forged.png', b'forged', 'image/png')}),
+            ({'Photo [image]': 'forged'}, None),
+        ]:
+            with self.subTest(values=values, files=files):
+                self.assertIn('error', self.submit({'name': 'Forged', 'country_id': '2', **values}, files=files))
+        self.assertFalse(self.env['res.partner'].search([('name', '=', 'Forged')]))

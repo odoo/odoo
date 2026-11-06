@@ -3,9 +3,11 @@ import re
 
 from collections import OrderedDict
 
+from lxml import etree
+
 from odoo import models
 from odoo.http import request
-from odoo.addons.website.tools import add_form_signature
+from odoo.addons.website.tools import sign_website_forms
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
@@ -41,9 +43,21 @@ class IrQweb(models.AbstractModel):
 
     def _get_template(self, template):
         element, document, ref = super()._get_template(template)
-        if self.env.context.get('website_id'):
-            add_form_signature(element, self.sudo().env)
+        if self.env.context.get('website_id') and not self.env.context.get('edit_translations'):
+            # Sign the website forms once rendered, as their content can be
+            # dynamic, e.g. the values set by their `data-for` element.
+            for form in element.xpath('.//form[contains(@action, "/website/form/")]'):
+                data_for = element.xpath('string(.//*[@data-for=$id]/@t-att-data-values)', id=form.get('id', '')) or 'None'
+                # The element replacing the form takes its directives, to keep the `t-if` chains.
+                wrapper = etree.Element('t', {key: form.attrib.pop(key) for key in ('t-foreach', 't-as', 't-if', 't-elif', 't-else') if key in form.attrib})
+                wrapper.tail, form.tail = form.tail, None
+                form.addprevious(wrapper)
+                etree.SubElement(wrapper, 't', {'t-set': 'website_form_html'}).append(form)
+                etree.SubElement(wrapper, 't', {'t-out': f"env['ir.qweb']._sign_website_forms(website_form_html, {data_for})"})
         return element, document, ref
+
+    def _sign_website_forms(self, content, data_for):
+        return sign_website_forms(str(content), self.sudo().env, data_for)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):

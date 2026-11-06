@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from unittest.mock import patch
 
 from odoo.api import Environment
 from odoo.fields import Command
@@ -11,6 +12,7 @@ import unittest
 from odoo.tests.common import new_test_user
 
 from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruitment
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -113,6 +115,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             response = WebsiteHrRecruitmentController.jobs()
         self.assertEqual(response.status, '200 OK')
 
+    @patch.object(WebsiteForm, '_verify_website_form', lambda self, model_name, values: None)
     def test_apply_job(self):
         """ Test a user can apply to a job via the website form and add extra information inside custom field """
         research_and_development_department = self.env['hr.department'].create({
@@ -153,6 +156,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             "One message in the chatter should contain the extra information filled in by the applicant"
         )
 
+    @patch.object(WebsiteForm, '_verify_website_form', lambda self, model_name, values: None)
     def test_apply_job_with_skills(self):
         """ The skills posted with the website form are linked to the applicant.
 
@@ -218,6 +222,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertIn(skill_type.id, offered_types)
         self.assertNotIn(certification_type.id, offered_types)
 
+    @patch.object(WebsiteForm, '_verify_website_form', lambda self, model_name, values: None)
     def test_apply_job_does_not_update_existing_user(self):
         internal_user = new_test_user(
             self.env,
