@@ -123,7 +123,6 @@ class ResConfigSettings(models.TransientModel):
     pos_use_closing_entry_by_product = fields.Boolean(related='pos_config_id.use_closing_entry_by_product', readonly=False)
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
     pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
-    group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
     pos_use_fast_payment = fields.Boolean(related='pos_config_id.use_fast_payment', readonly=False)
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
     pos_iface_printbill = fields.Boolean(related='pos_config_id.iface_printbill', readonly=False)
@@ -175,9 +174,6 @@ class ResConfigSettings(models.TransientModel):
 
                 if vals.get('pos_use_pricelist'):
                     vals['group_product_pricelist'] = True
-
-                if vals.get('pos_use_presets') is not None:
-                    vals["group_pos_preset"] = bool(self.env["pos.config"].search_count([("use_presets", "=", True), ("id", "!=", pos_config_id)])) or vals['pos_use_presets']
 
                 for field in self._fields.values():
                     if field.name == 'pos_config_id':
