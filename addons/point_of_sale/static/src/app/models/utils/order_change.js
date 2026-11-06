@@ -87,8 +87,9 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
                 if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
-                    lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
-                    noteupdated[lineKey] = lineDetails;
+                    const noteDetails = { ...lineDetails };
+                    noteDetails.quantity = oldChanges[relatedKey].quantity || 0;
+                    noteupdated[lineKey] = noteDetails;
                 }
 
                 if (!orderline.skip_change) {
