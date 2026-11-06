@@ -234,6 +234,62 @@ test("Alt+F should move focus to the first toolbar button when focus is not on t
 });
 
 test.tags("desktop");
+test("should display the title of the focused toolbar button as a tooltip", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-tooltip", 0);
+
+    await press(["alt", "f"]);
+    expect(".o-we-toolbar button[name='font_type']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Select text style')");
+
+    await press("ArrowRight");
+    const focusedTitle = document.activeElement.title;
+    expect(focusedTitle).not.toBe("Select text style");
+    await waitFor(`.o-tooltip:contains('${focusedTitle}')`);
+    await expectElementCount(".o-tooltip", 1);
+
+    await press("Escape");
+    expect(el).toBeFocused();
+    await expectElementCount(".o-tooltip", 0);
+});
+
+test.tags("desktop");
+test("should not display a tooltip when a toolbar button is focused by a click", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar button[name='font_type']").click();
+    await expectElementCount(".o_font_type_selector_menu", 1);
+    await expectElementCount(".o-tooltip", 0);
+});
+
+test.tags("desktop");
+test("should display the title of the focused toolbar dropdown item as a tooltip", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+
+    await click("button[name='list_selector']");
+    await expectElementCount(".o-we-toolbar-dropdown button[name='bulleted_list']", 1);
+    await expectElementCount(".o-tooltip", 0);
+
+    await press("Tab");
+    expect("button[name='bulleted_list']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Bulleted list')");
+
+    await press("Tab");
+    expect("button[name='numbered_list']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Numbered list')");
+    await expectElementCount(".o-tooltip", 1);
+
+    // Escape moves the focus back to the toolbar button
+    await press("Escape");
+    expect("button[name='list_selector']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Toggle List')");
+    await expectElementCount(".o-tooltip", 1);
+});
+
+test.tags("desktop");
 test("should move focus from toolbar to editable on escape", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");

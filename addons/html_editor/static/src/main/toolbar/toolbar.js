@@ -3,6 +3,7 @@ import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
+import { useFocusTooltip } from "@html_editor/toolbar_dropdown_hook";
 
 const componentButtonSchema = {
     Component: t.component(),
@@ -48,6 +49,7 @@ export class Toolbar extends Component {
     setup() {
         this.state = proxy(this.props.state);
         this.shouldFocusFirstButton = false;
+        useFocusTooltip(this.toolbarEl);
 
         useHotkey("alt+f", () => this.focusFirstToolbarButton(), {
             bypassEditableProtection: true,
