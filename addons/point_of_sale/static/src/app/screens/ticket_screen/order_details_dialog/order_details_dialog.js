@@ -96,7 +96,12 @@ export class OrderDetailsDialog extends Component {
         let email = this.order.email;
         let phone = this.order.mobile;
         if (partner) {
-            address = [partner.street, partner.zip && partner.city, partner.country_id?.name]
+            address = [
+                partner.street,
+                partner.street2,
+                partner.zip && partner.city,
+                partner.country_id?.name,
+            ]
                 .filter(Boolean)
                 .join(", ");
             name = partner.name || name;
