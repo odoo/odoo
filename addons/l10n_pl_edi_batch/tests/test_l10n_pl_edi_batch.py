@@ -261,7 +261,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
 
     @freeze_time('2026-03-15 12:00:00')
     def test_request_date_types(self):
-        # The batch export filters by PermanentStorage: an invoice isn't in a window before KSeF stores it
+        # The batch export filters by the day KSeF received the invoice, as the single-invoice download does
         encryption_data = {'raw_symmetric_key': 'S0VZ', 'encrypted_symmetric_key': 'RU5D', 'raw_iv': 'SVY='}
         with (
             patch.object(KsefApiServiceBatch, '_create_encryption_data', return_value=encryption_data),
@@ -275,7 +275,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'encryption': {'encryptedSymmetricKey': 'RU5D', 'initializationVector': 'SVY='},
             'filters': {
                 'dateRange': {
-                    'dateType': 'PermanentStorage',
+                    'dateType': 'Invoicing',
                     'from': '2026-03-08T00:00:00.000Z',
                     'to': '2026-03-15T12:00:00.000Z',
                 },
@@ -284,7 +284,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         })
         self.assertRecordValues(batch, [{'name': '20260315-EX-1', 'state': 'requested'}])
 
-        # The single-invoice download of l10n_pl_edi keeps filtering by Invoicing
+        # The single-invoice download of l10n_pl_edi filters by Invoicing too
         with self._mock_ksef({'invoices': [], 'hasMore': False}) as mock_request:
             self.env['account.move'].with_company(self.company)._fetch_bills_metadata(KsefApiService(self.company))
         mock_request.assert_called_once()
@@ -732,7 +732,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'packageExpirationDate': (now + timedelta(days=1)).isoformat() + '+00:00',
             'package': {
                 'isTruncated': True,
-                'lastPermanentStorageDate': '2026-03-05T10:00:00+00:00',
+                'lastInvoicingDate': '2026-03-05T10:00:00+00:00',
                 'parts': [{'ordinalNumber': 1, 'url': 'https://ksef.test/part-001.zip.aes', 'method': 'get'}],
             },
         }

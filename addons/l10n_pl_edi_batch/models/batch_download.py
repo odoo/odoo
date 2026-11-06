@@ -434,14 +434,14 @@ class BatchDownload(models.Model):
         self.env.ref('l10n_pl_edi_batch.ir_cron_import').sudo()._trigger()
 
     def _request_rest_if_truncated(self):
-        """ KSeF stops a package at 10,000 invoices, in storage order. A truncated batch then ends where its
+        """ KSeF stops a package at 10,000 invoices, in the order it received them. A truncated batch then ends where its
             package does, and the rest of its window is requested right away: the historic date already moved
             back, so the historic cron would only ask for the same window again, truncated the same way. """
         self.ensure_one()
         package = (self.content or {}).get('package', {})
         if not package.get('isTruncated'):
             return
-        last_date = parse(package['lastPermanentStorageDate']).astimezone(timezone.utc).replace(tzinfo=None)
+        last_date = parse(package['lastInvoicingDate']).astimezone(timezone.utc).replace(tzinfo=None)
         date_to = self.date_to
         self.date_to = last_date
         self._request(self.company_id, last_date, date_to)

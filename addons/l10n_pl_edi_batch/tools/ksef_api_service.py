@@ -99,7 +99,7 @@ class KsefApiServiceBatch(KsefApiService):
                 },
                 'filters': {
                     'dateRange': {
-                        'dateType': 'PermanentStorage',
+                        'dateType': 'Invoicing',
                         'from': date_from.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
                         'to': date_to.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
                     },
