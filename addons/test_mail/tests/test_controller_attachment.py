@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
 import odoo
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
@@ -121,6 +123,51 @@ class TestAttachmentController(MailControllerAttachmentCommon):
                     self._upload_attachment(record, kwargs)
                 )
                 self.assertEqual(attachment.company_id, expected_company)
+
+    def test_attachment_delete_marks_message_edited_once(self):
+        """Test removing the attachments of an edited message keeps one edited span in its body,
+        holding the date of the last change."""
+        thread = self.env["mail.test.simple"].create({"name": "Test"})
+        self._authenticate_pseudo_user(self.user_employee)
+        IrAttachment = self.env["ir.attachment"].with_user(self.user_employee)
+        edited_span = '<span class="o-mail-Message-edited" data-o-datetime="%(datetime)s"></span>'
+        for body, expected_body in (
+            ("Edited", "<p>Edited %(edited_span)s</p>"),
+            ("", "%(edited_span)s"),
+        ):
+            attachments = IrAttachment.create([
+                {"name": name, "res_id": 0, "res_model": "mail.compose.message"} for name in "AB"
+            ])
+            message = thread.with_user(self.user_employee).message_post(
+                attachment_ids=attachments.ids,
+                body="Posted",
+                message_type="comment",
+            )
+            with self.subTest(body=body):
+                with freeze_time("2025-04-08 10:00:00"):
+                    self.make_jsonrpc_request(
+                        "/mail/message/update_content",
+                        {
+                            "message_id": message.id,
+                            "update_data": {
+                                "attachment_ids": attachments.ids,
+                                "attachment_tokens": [
+                                    a._get_ownership_token() for a in attachments
+                                ],
+                                "body": body,
+                            },
+                        },
+                    )
+                for datetime, attachment in zip(
+                    ("2025-04-08 11:00:00", "2025-04-08 12:00:00"),
+                    attachments,
+                ):
+                    with freeze_time(datetime):
+                        self._delete_attachment(attachment, token=True)
+                    self.assertEqual(
+                        message.body,
+                        expected_body % {"edited_span": edited_span % {"datetime": datetime}},
+                    )
 
     def test_delete_non_comment_message_attachment(self):
         msg = self.env["mail.message"].with_user(self.user_employee).create({
