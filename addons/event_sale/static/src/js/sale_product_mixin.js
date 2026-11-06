@@ -53,9 +53,7 @@ const eventSaleProductMixin = () => ({
                         // wizard popup closed or 'Discard' button triggered
                         if (!this.props.record.data.event_ticket_id) {
                             // remove product if event configuration was cancelled.
-                            this.props.record.update({
-                                [this.props.name]: undefined,
-                            });
+                            this.props.record.update({ ["product_template_id"]: undefined });
                         }
                     } else {
                         const eventConfiguration = closeInfo.eventConfiguration;
