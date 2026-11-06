@@ -100,17 +100,18 @@ export class PartnerSuggestionPlugin extends Plugin {
     /** @param {string} cleanedTerm */
     searchPartners(cleanedTerm) {
         const thread = this.deps.getThread();
-        const suggestions = [];
+        const partners = [];
         for (const partner of this.getPartners()) {
             const name = thread?.getPersonaName(partner) ?? partner.displayName;
             if (
                 (name && normalize(name).includes(cleanedTerm)) ||
                 (partner.email && normalize(partner.email).includes(cleanedTerm))
             ) {
-                suggestions.push(partner);
+                partners.push(partner);
             }
         }
-        suggestions.push(
+        return [
+            ...this.store.sortPartnerSuggestions(partners, cleanedTerm, thread),
             ...this.store.specialMentions.filter(
                 (special) =>
                     thread &&
@@ -118,9 +119,8 @@ export class PartnerSuggestionPlugin extends Plugin {
                     cleanedTerm.length >= Math.min(4, special.label.length) &&
                     (special.label.startsWith(cleanedTerm) ||
                         normalize(special.description).includes(cleanedTerm))
-            )
-        );
-        return this.store.sortPartnerSuggestions(suggestions, cleanedTerm, thread);
+            ),
+        ];
     }
 
     /** @param {string} cleanedTerm */

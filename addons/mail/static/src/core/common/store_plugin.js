@@ -864,7 +864,7 @@ export class Store extends BaseStore {
     }
 
     /**
-     * @param {Array<import("models").ResPartner|SpecialMention>} partners
+     * @param {import("models").ResPartner[]} partners
      * @param {string} [searchTerm]
      * @param {import("models").Thread} [thread]
      */
@@ -873,9 +873,6 @@ export class Store extends BaseStore {
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = this.sortPartnerSuggestionsContext(thread);
         return partners.sort((p1, p2) => {
-            if (p1.isSpecial || p2.isSpecial) {
-                return 0;
-            }
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     store: this,
