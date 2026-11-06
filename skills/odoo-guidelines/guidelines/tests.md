@@ -27,3 +27,39 @@
 - Tours: a step that triggers a page unload must set `expectUnloadPage: true`,
   and the last step must leave the client in a stable state (no pending edits
   or in-flight requests) to avoid teardown race conditions.
+
+# Freeze the cursor time with mock_datetime_and_now
+
+A test that checks `create_date`, `write_date`, or any value the code takes from
+`self.env.cr.now()` sets the time with `self.mock_datetime_and_now(dt)`, not with
+`freeze_time` alone.
+
+`freeze_time` moves `datetime.now()`, not the cursor. The cursor of a `TransactionCase`
+asks PostgreSQL for `now()` once per transaction, and that transaction lasts the whole
+test class: under `freeze_time`, records still get the real time at which the class
+started, the same for every test of the class. `mock_datetime_and_now` freezes both.
+
+The two clocks also differ with no `freeze_time` at all: `self.env.cr.now()` is the
+time at which the class started, while `datetime.now()` and `date.today()` give the
+time of the test. A test that compares a Python `date.today()` with a `create_date` or
+a `cr.now()` value passes while both fall on the same day, and fails when the class
+starts before midnight and the test runs after it: such a test also sets the time with
+`mock_datetime_and_now`, so both clocks agree.
+
+```python
+# bad: datetime.now() is in 2024, create_date stays on the real clock
+with freeze_time("2024-01-01 10:00:00"):
+    book = self.env["library.book"].create({"name": "Dune"})
+
+# good: both clocks say 2024-01-01 10:00:00
+with self.mock_datetime_and_now("2024-01-01 10:00:00"):
+    book = self.env["library.book"].create({"name": "Dune"})
+```
+
+`now()` written in an SQL query still answers the real time under
+`mock_datetime_and_now`: the code under test passes `self.env.cr.now()` as a query
+parameter instead.
+
+Not needed for what a request of an `HttpCase` writes (a tour, `url_open`): that
+request runs on a test cursor that takes its time from `datetime.now()`, which
+`freeze_time` moves.
