@@ -424,6 +424,10 @@ test("join most popular channel from empty channel tab", async () => {
             Command.create({ partner_id: partner2 }),
         ],
     });
+    pyEnv["discuss.channel"].create({
+        name: "Sales",
+        channel_member_ids: [Command.create({ partner_id: partner1 })],
+    });
     mockService("action", {
         doAction(action) {
             expect.step("mail.discuss_channel_action");
@@ -437,12 +441,16 @@ test("join most popular channel from empty channel tab", async () => {
     await waitFor(
         ".o-mail-MessagingMenuEmptyChannel-popularChannels :text('2 followers'):count(1)"
     );
+    await waitFor(".o-mail-MessagingMenuEmptyChannel-popularChannels :text(Sales):count(1)");
+    await waitFor(".o-mail-MessagingMenuEmptyChannel-popularChannels :text('1 follower'):count(1)");
     await contains("button:text('Find more channels'):count(1)").click();
     await expect.waitForSteps(["mail.discuss_channel_action"]);
     await waitForNone(".o-mail-MessagingMenu");
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await waitFor("button:text(Follow):count(1)");
-    await contains("button:text(Follow):count(1)").click();
+    await waitFor("button:text(Follow):count(2)");
+    await contains(
+        ".o-mail-MessagingMenuEmptyChannel-popularChannels:has(:text(General)) button:text(Follow):count(1)"
+    ).click();
     await waitFor(".o-mail-NotificationItem-name:text(General):count(1)");
 });
 
