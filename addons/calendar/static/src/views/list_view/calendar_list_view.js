@@ -14,17 +14,17 @@ export class CalendarListModel extends listView.Model {
      */
     async load(params = {}) {
         const filters = params?.context?.calendar_filters;
-        const emptyDomain = Array.isArray(params?.domain) && params.domain.length == 0;
-        if (filters && emptyDomain) {
-            const selectedPartnerIds = await this.orm.call(
+        // Apply selected calendar attendees only when the action has no domain.
+        if (filters && params.domain && !this.env.searchModel.globalDomain.length) {
+            this.selectedPartnerIds ??= this.orm.call(
                 "res.users",
                 "get_selected_calendars_partner_ids",
                 [[user.userId], filters["user"]]
             );
-            // Filter attendees to be shown if 'everybody' filter isn't active.
-            if (!filters["all"]) {
-                params.domain.push(["partner_ids", "in", selectedPartnerIds]);
-            }
+            params = {
+                ...params,
+                domain: [...params.domain, ["partner_ids", "in", await this.selectedPartnerIds]],
+            };
         }
         return super.load(params);
     }

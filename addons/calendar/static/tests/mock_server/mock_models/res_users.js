@@ -64,4 +64,24 @@ export class ResUsers extends mailModels.ResUsers {
         }
         return activities;
     }
+
+    /**
+     * Simulates `get_selected_calendars_partner_ids` on `res.users`.
+     */
+    get_selected_calendars_partner_ids(ids, include_user = true) {
+        const [user] = this.browse(ids);
+        const partnerIds = this.env["calendar.filters"]
+            .search_read(
+                [
+                    ["user_id", "=", user.id],
+                    ["partner_checked", "=", true],
+                ],
+                ["partner_id"]
+            )
+            .map((filter) => filter.partner_id[0]);
+        if (include_user) {
+            partnerIds.push(this.env.user.partner_id);
+        }
+        return partnerIds;
+    }
 }
