@@ -98,3 +98,29 @@ class TestStockReplenish(TestStockCommon):
         self.productA.write({"categ_id": product_categoryA.id, 'is_storable': True})
         wizard = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.productA.product_tmpl_id.id))
         self.assertIn(route.id, wizard._values['allowed_route_ids'])
+
+    def test_orderpoint_deadline_timezone(self):
+        """
+        Tests that the lead_horizon_date is on the same day even with a timezone
+        that is different from UTC
+        """
+        self.env.company.partner_id.tz = 'Australia/Sydney'
+        self.productA.is_storable = True
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Sydney RR',
+            'product_id': self.productA.id,
+            'product_min_qty': 0,
+            'product_max_qty': 10,
+        })
+
+        with freeze_time('2026-11-03 14:00:00'):
+            orderpoint.invalidate_recordset(['lead_horizon_date', 'lead_days'])
+            self.assertEqual(
+                orderpoint.lead_horizon_date, fields.Date.from_string('2026-11-04'),
+                "lead_horizon_date should be Sydney's current calendar day (Nov 4th), not UTC's (Nov 3rd)",
+            )
+            deadline = orderpoint._get_orderpoint_procurement_date()
+            self.assertEqual(
+                deadline, fields.Datetime.from_string('2026-11-04 01:00:00'),
+                "Deadline should be noon Nov 4th in Sydney time, stored as naive UTC",
+            )
