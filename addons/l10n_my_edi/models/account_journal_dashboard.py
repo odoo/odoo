@@ -19,6 +19,7 @@ class AccountJournal(models.Model):
             'context': {
                 'display_consolidate_invoice_button': True,
                 'l10n_my_edi_display_sync_button': self.type == 'purchase',
+                'search_default_groupby_issuance_month': self.type == 'purchase',
                 'journal_id': self.id,
                 'search_default_journal_id': self.id,
             }
