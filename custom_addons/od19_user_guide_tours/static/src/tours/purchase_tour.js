@@ -166,7 +166,7 @@ registry.category("web_tour.tours").add("od19_purchase_approval_tour", {
         {
             trigger: "button[name='action_od19_submit_for_approval']",
             content: markup(_t(
-                "Click <b>Submit for Approval</b>. If the order exceeds the budget, " +
+                "Click <b>Submit</b>. If the order exceeds the budget, " +
                 "a <b>warning</b> will be shown (no hard block)."
             )),
             tooltipPosition: "left",

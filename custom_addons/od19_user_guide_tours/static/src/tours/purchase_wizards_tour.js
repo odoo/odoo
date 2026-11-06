@@ -74,14 +74,14 @@ registry.category("web_tour.tours").add("od19_purchase_wizards_tour", {
             trigger: ".o_list_renderer, .o_form_view",
             content: markup(_t(
                 "Enter the order lines and <b>Confirm</b> the order. Once the order is confirmed, " +
-                "the <b>Create Vendor Bill</b> button becomes available."
+                "the <b>Create Bill</b> button becomes available."
             )),
             run: "click",
         },
         {
             trigger: ".o_list_renderer, .o_form_view",
             content: markup(_t(
-                "Click <b>Create Vendor Bill</b> to generate the vendor bill from the received " +
+                "Click <b>Create Bill</b> to generate the vendor bill from the received " +
                 "quantities. The bill is created as a <b>draft</b> so accounting can verify the " +
                 "invoice number and date before posting."
             )),
@@ -94,7 +94,7 @@ registry.category("web_tour.tours").add("od19_purchase_wizards_tour", {
             trigger: ".o_list_renderer",
             content: markup(_t(
                 "Purchase Wizards complete! <b>Trade Discount</b> speeds up order pricing and " +
-                "<b>Create Vendor Bill</b> turns a confirmed order into a draft vendor bill."
+                "<b>Create Bill</b> turns a confirmed order into a draft vendor bill."
             )),
             run: "click",
         },

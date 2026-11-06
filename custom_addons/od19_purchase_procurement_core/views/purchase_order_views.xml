@@ -22,13 +22,23 @@
             <xpath expr="//header" position="inside">
                 <button name="action_od19_submit_for_approval"
                         type="object"
-                        string="Submit for Approval"
-                        invisible="od19_approval_state != 'draft'"/>
+                        string="Submit"
+                        class="oe_highlight"
+                        invisible="od19_approval_state != 'draft' or state not in ('draft', 'sent')"/>
                 <button name="action_od19_approve"
                         type="object"
                         string="Approve"
+                        class="oe_highlight"
                         groups="purchase.group_purchase_manager,od19_purchase_procurement_core.group_purchase_director"
                         invisible="od19_approval_state != 'submitted'"/>
+            </xpath>
+            <!-- Keep the core Confirm Order buttons hidden until the procurement
+                 approval is granted; clicking earlier fails server-side. -->
+            <xpath expr="//button[@id='draft_confirm']" position="attributes">
+                <attribute name="invisible">state != 'draft' or od19_approval_state != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@id='bid_confirm']" position="attributes">
+                <attribute name="invisible">state != 'sent' or od19_approval_state != 'approved'</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']" position="after">
                 <field name="od19_procurement_purpose"/>

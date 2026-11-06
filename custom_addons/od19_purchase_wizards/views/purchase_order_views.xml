@@ -13,11 +13,10 @@
                         type="object"
                         string="Trade Discount"
                         invisible="state != 'draft'"
-                        class="oe_highlight"
                         groups="purchase.group_purchase_user"/>
                 <button name="action_od19_create_vendor_bill"
                         type="object"
-                        string="Create Vendor Bill"
+                        string="Create Bill"
                         invisible="state not in ('purchase', 'done')"
                         class="oe_highlight"
                         groups="account.group_account_invoice"/>
