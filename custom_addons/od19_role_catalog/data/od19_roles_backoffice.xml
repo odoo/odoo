@@ -49,6 +49,17 @@
             ]"/>
         </record>
 
+        <!-- ผู้อนุมัติค่าใช้จ่ายชั้น CEO -->
+        <record id="role_expense_ceo_approver" model="res.users.role">
+            <field name="name">ผู้อนุมัติค่าใช้จ่าย (CEO)</field>
+            <field name="sequence">74</field>
+            <field name="group_privilege_id" ref="od19_security_roles.od19_role_privilege"/>
+            <field name="implied_ids" eval="[
+                Command.link(ref('od19_hr_expense_thai.group_od19_expense_ceo_approver')),
+                Command.link(ref('hr_expense.group_hr_expense_user')),
+            ]"/>
+        </record>
+
         <!-- ============ H. ISO / Quality / Risk ============ -->
         <!--
             หมายเหตุ: โมดูล ISO ปัจจุบันให้สิทธิ์ระดับผู้จัดการ (write/unlink) แก่

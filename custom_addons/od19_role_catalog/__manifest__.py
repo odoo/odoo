@@ -1,9 +1,9 @@
 {
     "name": "OD19 Role Catalog (Business Roles)",
     "author": "OD19",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Administration",
-    "summary": "Business role definitions (~43 res.users.role) grouped under the OD19 Roles privilege",
+    "summary": "Business role definitions (~44 res.users.role) grouped under the OD19 Roles privilege",
     "description": """
 OD19 Role Catalog (Business Roles)
 ==================================
@@ -44,6 +44,7 @@ without the next module upgrade overwriting their changes.
         "document_knowledge",
         "helpdesk_mgmt",
         # OD19 business modules that own the referenced groups
+        "od19_hr_expense_thai",
         "od19_currency_rate_bot",
         "od19_dashboard",
         "od19_document_sign",

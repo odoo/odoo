@@ -89,6 +89,9 @@ ROLE_MATRIX = {
     "role_meeting_room_manager": {
         "od19_meeting_room_booking.group_meeting_room_manager",
     },
+    "role_expense_ceo_approver": {
+        "od19_hr_expense_thai.group_od19_expense_ceo_approver",
+    },
     # H. ISO / Quality / Risk
     "role_document_controller": {"base.group_user", "base.group_system"},
     "role_internal_auditor": {"base.group_user", "base.group_system"},
@@ -141,7 +144,7 @@ class TestRoleCatalog(TransactionCase):
         return self.env.ref("od19_role_catalog.%s" % xml_id)
 
     def test_all_roles_are_loaded(self):
-        """บทบาททุกตัวใน matrix ต้องโหลดได้ (43 บทบาท)"""
+        """บทบาททุกตัวใน matrix ต้องโหลดได้ (44 บทบาท)"""
         missing = []
         for xml_id in ROLE_MATRIX:
             if not self.env.ref(
@@ -149,7 +152,7 @@ class TestRoleCatalog(TransactionCase):
             ):
                 missing.append(xml_id)
         self.assertFalse(missing, "บทบาทที่โหลดไม่สำเร็จ: %s" % ", ".join(missing))
-        self.assertEqual(len(ROLE_MATRIX), 43, "Role Matrix ต้องมี 43 บทบาท")
+        self.assertEqual(len(ROLE_MATRIX), 44, "Role Matrix ต้องมี 44 บทบาท")
 
     def test_roles_belong_to_od19_privilege(self):
         """บทบาททุกตัวต้องอยู่ใต้ privilege OD19 Roles"""
