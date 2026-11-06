@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.ActivityButton">
         <button class="o-mail-ActivityButton btn btn-link btn-link-inline d-flex" t-on-click.stop="this.onClick" t-ref="this.buttonRef" t-att-aria-label="this.title" t-att-title="this.title">
-            <i class="oi oi-lg" t-att-class="this.buttonClass" t-att-data-icon="this.buttonIcon" role="img"/>
+            <i class="oi oi-lg" t-att-class="this.buttonClass" t-att-data-icon="this.buttonIcon" aria-hidden="true"/>
         </button>
     </t>
 </templates>
