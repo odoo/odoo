@@ -30,6 +30,8 @@ touching instead of loading whole files.
 | [End `_order` on a unique field](guidelines/orm.md#end-_order-on-a-unique-field) | setting a model's `_order`, or fixing records that come back in a random order |
 | [Methods and extension points](guidelines/orm.md#methods-and-extension-points) | adding a model method, or one another module will override |
 | [Transactions and exceptions](guidelines/orm.md#transactions-and-exceptions) | cursors, commits, savepoints, `try`/`except` |
+| [Call `super()` in an override, change only what differs](guidelines/orm.md#call-super-in-an-override-change-only-what-differs) | overriding a method that another module defines |
+| [Put what every path needs in `create`, `write` or `@api.ondelete`](guidelines/orm.md#put-what-every-path-needs-in-create-write-or-apiondelete) | adding what must happen on each creation, change or deletion of a record |
 | [Fields](guidelines/fields.md#fields) | declaring or modifying field definitions |
 | [Controllers](guidelines/controllers.md#controllers) | touching `controllers/` or `@route` |
 | [Views, actions and data records](guidelines/xml.md#views-actions-and-data-records) | touching `views/`, `data/`, or any XML records |
