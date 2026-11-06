@@ -2524,3 +2524,14 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             'journal_id': company_2_data['default_journal_bank'].id,
         })
         self.assertIn(company_2_data['company'], company_2_pm.outstanding_account_id.company_ids)
+
+    def test_invoice_payments_widget_two_payment_methods(self):
+        """
+        Tests that the number payments is correct after invoicing with multiple payments
+        """
+        self.open_pos_session()
+        order = self._create_invoiced_order([(self.cash_pm, 5), (self.bank_pm, 7.1)])
+
+        payments = order.account_move.invoice_payments_widget['content']
+        self.assertEqual(len(payments), 2)
+        self.assertEqual(sorted(p['amount'] for p in payments), [5, 7.1])
