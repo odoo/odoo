@@ -214,13 +214,13 @@
                                         <i class="oi oi-2x oi-fw oi-filled me-2 mt-1" data-icon="calendar_today"/>
                                         <div t-if="attendee">
                                             <span t-field="attendee.event_begin_date" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "medium"}'/><br/>
                                             <span class="me-1">to</span><span t-field="attendee.event_end_date" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "medium"}'/>
                                         </div>
                                         <div t-elif="event.is_one_day">
                                             <span t-field="event.date_begin" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'/><br/>
+                                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'/><br/>
                                             <span class="me-1">from</span><span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
                                             <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
@@ -228,9 +228,9 @@
                                         </div>
                                         <div t-else="">
                                             <span t-field="event.date_begin" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "medium"}'/><br/>
                                             <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "medium"}'/>
                                         </div>
                                     </div>
                                 </div>
@@ -333,14 +333,14 @@
             <div class="text-center o_event_badge_font_small">
                 <t t-if="attendee">
                     <span itemprop="startDate" t-field="attendee.event_begin_date"
-                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'
                         class="fw-bold"/>
                     <span itemprop="startDateTime" t-field="attendee.event_begin_date"
                         class="fw-bold"
                         t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
                     <span class="oi o_event_badge_font_faded" data-icon="arrow_forward"/>
                     <span itemprop="endDate" t-field="attendee.event_end_date"
-                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'
                         class="fw-bold"/>
                     <span itemprop="endDateTime" t-field="attendee.event_end_date"
                         class="fw-bold"
@@ -348,7 +348,7 @@
                 </t>
                 <t t-else="">
                     <span itemprop="startDate" t-field="event.date_begin"
-                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'
                         class="fw-bold"/>
                     <span itemprop="startDateTime" t-field="event.date_begin"
                         class="fw-bold"
@@ -356,7 +356,7 @@
                     <span class="oi o_event_badge_font_faded" data-icon="arrow_forward"/>
                     <span t-if="not event.is_one_day"
                         itemprop="endDate" t-field="event.date_end"
-                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                        t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz, "format": "medium"}'
                         class="fw-bold"/>
                     <span itemprop="endDateTime" t-field="event.date_end"
                         class="fw-bold"
