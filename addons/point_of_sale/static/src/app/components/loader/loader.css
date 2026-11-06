@@ -1,15 +1,34 @@
 .pos-loader {
-    background-color: #222;
+    background-color: $body-bg;
     position: absolute;
     left: 0px;
     top: 0px;
     width: 100%;
     height: 100%;
+<<<<<<< baa1add2dd7efe57c38955cd35c90455450a53eb:addons/point_of_sale/static/src/app/components/loader/loader.css
     z-index: 100001; /* 1 more than the debug widget... */
+||||||| dd797414fa250a039c6bf494cfb281d67b4bf83c:addons/point_of_sale/static/src/app/components/loader/loader.scss
+    z-index: 100001; // 1 more than the debug widget...
+=======
+    z-index: 100001; // 1 more than the debug widget...
+    display: flex;
+    align-items: center;
+    justify-content: center;
+>>>>>>> 4bac487d8694f67e0f96902b26e9fee9927a7e17:addons/point_of_sale/static/src/app/components/loader/loader.scss
     text-align: center;
+<<<<<<< baa1add2dd7efe57c38955cd35c90455450a53eb:addons/point_of_sale/static/src/app/components/loader/loader.css
     font-family: Lato, sans-serif;
     color: var(--gray-700);
     transition: opacity 0.8s;
+||||||| dd797414fa250a039c6bf494cfb281d67b4bf83c:addons/point_of_sale/static/src/app/components/loader/loader.scss
+    font-family: Lato;
+    color: $gray-700;
+    transition: opacity 0.8s;
+=======
+    font-family: Lato;
+    color: $o-gray-600;
+    transition: opacity 0.3s ease-out;
+>>>>>>> 4bac487d8694f67e0f96902b26e9fee9927a7e17:addons/point_of_sale/static/src/app/components/loader/loader.scss
 
     .pos-error {
       text-align: left;
@@ -20,14 +39,49 @@
       top: 20%;
     }
 
-    .loader-feedback {
-        width: 400px;
-        height: 160px;
-        margin: -60px -200px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        text-align: center;
+    .pos-loader-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .pos-loader-logo {
+        width: 72px;
+        height: 72px;
+        animation: pos-loader-breathe 1.8s ease-in-out infinite;
+    }
+
+    .pos-loader-bar {
+        position: relative;
+        width: 140px;
+        height: 3px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: $o-gray-200;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 40%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #985184, #f78613);
+            animation: pos-loader-slide 1.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+    }
+
+    .pos-loader-message {
+        min-height: 1.5em;
+        max-width: 320px;
+        margin: 0;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.6s;
+
+        &.visible {
+            opacity: 1;
+        }
     }
 
     h1 {
@@ -46,12 +100,21 @@
         cursor: pointer;
 
         :active {
+<<<<<<< baa1add2dd7efe57c38955cd35c90455450a53eb:addons/point_of_sale/static/src/app/components/loader/loader.css
             color: #222;
             background: var(--gray-700);
+||||||| dd797414fa250a039c6bf494cfb281d67b4bf83c:addons/point_of_sale/static/src/app/components/loader/loader.scss
+            color: #222;
+            background: $gray-700;
+=======
+            color: $body-bg;
+            background: $gray-700;
+>>>>>>> 4bac487d8694f67e0f96902b26e9fee9927a7e17:addons/point_of_sale/static/src/app/components/loader/loader.scss
         }
     }
 }
 
+<<<<<<< baa1add2dd7efe57c38955cd35c90455450a53eb:addons/point_of_sale/static/src/app/components/loader/loader.css
 /* loader animation */
 .lds-ellipsis {
     display: inline-block;
@@ -88,23 +151,67 @@
     0% {
         transform: scale(0);
     }
-    100% {
-        transform: scale(1);
-    }
+||||||| dd797414fa250a039c6bf494cfb281d67b4bf83c:addons/point_of_sale/static/src/app/components/loader/loader.scss
+// loader animation
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 60px;
 }
-@keyframes lds-ellipsis3 {
+.lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
     0% {
-        transform: scale(1);
-    }
-    100% {
         transform: scale(0);
     }
+=======
+@keyframes pos-loader-breathe {
+    0%,
+>>>>>>> 4bac487d8694f67e0f96902b26e9fee9927a7e17:addons/point_of_sale/static/src/app/components/loader/loader.scss
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.06);
+    }
 }
-@keyframes lds-ellipsis2 {
+
+@keyframes pos-loader-slide {
     0% {
-        transform: translate(0, 0);
+        transform: translateX(-100%);
     }
     100% {
-        transform: translate(24px, 0);
+        transform: translateX(250%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pos-loader .pos-loader-logo,
+    .pos-loader .pos-loader-bar::after {
+        animation-duration: 3.6s;
     }
 }
