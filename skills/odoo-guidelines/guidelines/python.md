@@ -20,7 +20,8 @@ is enforced.
 - Method-name patterns: compute `_compute_<field>`, search `_search_<field>`,
   default `_default_<field>`, selection `_selection_<field>`, onchange
   `_onchange_<field>`, constraint `_check_<name>`, object action `action_*`
-  (acts on one record, so start it with `self.ensure_one()`).
+  (start it with `self.ensure_one()` when it needs a single record, such as
+  one that opens its form).
 - Model body order: private attrs (`_name`, `_description`, `_inherit`) → default
   methods → field declarations → `models.Constraint`/`models.Index` attributes
   (core also places these right after the private attrs) → compute/inverse/search
