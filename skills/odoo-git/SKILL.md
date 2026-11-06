@@ -136,12 +136,47 @@ a question; a missing section is a review round trip.
 ## Branches and pull requests
 
 - Target: a bug affecting supported stable versions goes to the oldest
-  affected supported stable version where the fix meets stable policy. Find
-  the oldest affected version by checking the older stable branches for the
-  faulty code; ask the author which versions are still supported when
-  unsure. Fix bugs specific to master on master. A feature or any unstable
-  change goes to master; a localization goes to either. A fix merged in a
-  stable version is forward-ported to the newer versions by the bots.
+  affected supported stable version where the fix meets stable policy, not
+  to the version where the bug was reported or seen. Fix bugs specific to
+  master on master. A feature or any unstable change goes to master; a
+  localization goes to either. A fix merged in a stable version is
+  forward-ported to the newer versions by the bots; nothing ports it to an
+  older one.
+- Find the oldest affected version from git:
+  - List the supported versions first. `git ls-remote --heads <remote>`,
+    `<remote>` being the remote of the Odoo repository, shows the version
+    branches that exist (`N.0`, `saas-N.M`, `master`; ignore `staging.*`
+    and `tmp.*`), so a branch created since you last looked is not
+    missed; it also shows dead versions, so ask the author which ones are
+    still supported. Never take the list from memory nor from the
+    branches the clone has fetched, and fetch each supported one with
+    its destination, which a clone with a narrow refspec needs to keep
+    it: `git fetch <remote> 18.0:refs/remotes/<remote>/18.0 ...`.
+  - When the faulty line is known, find the commit that brought it:
+    `git blame -L <start>,<end> <remote>/<version> -- <file>`, or `git
+    log -S'<faulty line>' <remote>/<version> -- <file>` when blame lands
+    on a later edit of the line. Keep the `-- <file>`: it limits
+    `git log -S` to the history of that file, a few seconds instead of
+    many minutes over the whole history. The oldest version that has
+    that commit is the oldest supported branch listed by `git branch -r
+    --contains <sha> --list '<remote>/*'`: it only sees the branches the
+    clone has. A forward-port is a new commit on each version, and the
+    commit found on a recent version is often one. Its `X-original-commit`
+    trailer names an older copy or the original: follow the trailers until a
+    commit has none, and run the command on that commit. When a trailer
+    names a commit that no fetched branch contains (the clone does not
+    have it, or the command lists nothing), the original is on a
+    version that was not fetched, a dead one older than the supported
+    ones or between two of them: run the command on the last commit of
+    the chain that a fetched branch contains. Then look for the faulty
+    code on the supported version below the one found, and go down one
+    version at a time while it is there; the oldest version that has it
+    is the target. An original on a dead version, a move, a reformat or
+    a backport made by hand can all leave the faulty code there.
+  - Only when no commit is found this way, try to reproduce the bug on
+    the oldest supported version that has the feature, then on the next
+    one up, and stop at the first version where it reproduces: that
+    version is the target. The newer ones need no check.
 - One pull request per patch: never open the same patch against several
   branches. If the forward-port needs manual help, do it in the forward-port
   PR the bot opened.
