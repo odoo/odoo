@@ -374,3 +374,34 @@ class TestReturnPicking(TestStockCommon):
         # 2 exchanged products received: both on-hand and forecasted quantities should be 10
         self.assertEqual(self.productA.qty_available, 10)
         self.assertEqual(self.productA.virtual_available, 10)
+
+    def test_return_all_move_uom_different_from_product_uom(self):
+        """ "Return All" must convert the delivered and already returned quantities
+        when the move UoM differs from the product UoM. """
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_ids': [Command.create({
+                'name': self.UnitA.name,
+                'product_id': self.UnitA.id,
+                'product_uom_qty': 2,
+                'product_uom': self.uom_dozen.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+        picking_out.action_confirm()
+        picking_out.move_ids.quantity = 2
+        picking_out.move_ids.picked = True
+        picking_out.button_validate()
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking_out.id, active_model='stock.picking').create({})
+        return_wizard.product_return_moves.quantity = 6
+        return_picking = self.PickingObj.browse(return_wizard.action_create_returns()['res_id'])
+        return_picking.move_ids.picked = True
+        return_picking.button_validate()
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking_out.id, active_model='stock.picking').create({})
+        return_picking = self.PickingObj.browse(return_wizard.action_create_returns_all()['res_id'])
+        self.assertRecordValues(return_picking.move_ids, [{'product_uom_qty': 18, 'product_uom': self.uom_unit.id}])
