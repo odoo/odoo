@@ -2,6 +2,7 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 
 patch(PosStore.prototype, {
     /**
@@ -111,6 +112,25 @@ patch(PosStore.prototype, {
             ...Object.values(categories),
             ...("generalNote" in orderChanges ? [{ count: 1, name: _t("Message") }] : []),
         ];
+    },
+    //@override
+    async sendOrderInPreparation(order, cancelled = false) {
+        let categoryCount = [];
+        if (!cancelled) {
+            categoryCount = this.categoryCount;
+        }
+        const result = await super.sendOrderInPreparation(order, cancelled);
+
+        if (result && this.config.module_pos_restaurant && categoryCount.length) {
+            const categorySummary = formatList(
+                categoryCount.map((cat) => `${cat.count} ${cat.name}`)
+            );
+            this.notification.add(_t("%s, sent to the kitchen", categorySummary), {
+                type: "success",
+                sticky: false,
+            });
+        }
+        return result;
     },
     createNewOrder() {
         const order = super.createNewOrder(...arguments);

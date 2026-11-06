@@ -1758,6 +1758,7 @@ export class PosStore extends Reactive {
         if (isPrinted && !this.config["<-pos_preparation_display.display.pos_config_ids"]?.length) {
             await this.syncAllOrders({ orders: [order] });
         }
+        return isPrinted;
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
