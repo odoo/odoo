@@ -19,16 +19,6 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             "self_ordering_service_mode": "counter",
         })
         self.env.company.point_of_sale_update_stock_quantities = "real"
-        self.tiered = self.env["product.product"].create({
-            "name": "Tiered Product",
-            "type": "consu",
-            "is_storable": True,
-            "available_in_pos": True,
-            "self_order_available": True,
-            "list_price": 1000.0,
-            "taxes_id": False,
-            "pos_categ_ids": [(4, self.env["pos.category"].search([], limit=1).id)],
-        })
         tier_attribute = self.env["product.attribute"].create({
             "name": "Tier",
             "display_type": "radio",
@@ -39,13 +29,21 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             {"name": "Budget", "attribute_id": tier_attribute.id},
             {"name": "Free", "attribute_id": tier_attribute.id},
         ])
-        self.env["product.template.attribute.line"].create({
-            "product_tmpl_id": self.tiered.product_tmpl_id.id,
-            "attribute_id": tier_attribute.id,
-            "value_ids": [(6, 0, [premium_val.id, budget_val.id, free_val.id])],
+        self.tiered = self.env["product.template"].create({
+            "name": "Tiered Product",
+            "type": "consu",
+            "is_storable": True,
+            "available_in_pos": True,
+            "self_order_available": True,
+            "list_price": 1000.0,
+            "taxes_id": False,
+            "pos_categ_ids": [(4, self.env["pos.category"].search([], limit=1).id)],
+            "attribute_line_ids": [(0, 0, {
+                "attribute_id": tier_attribute.id,
+                "value_ids": [(6, 0, [premium_val.id, budget_val.id, free_val.id])],
+            })],
         })
-
-        ptavs = self.tiered.product_tmpl_id.attribute_line_ids.product_template_value_ids
+        ptavs = self.tiered.attribute_line_ids.product_template_value_ids
         self.premium_ptav = ptavs.filtered(lambda p: p.product_attribute_value_id == premium_val)
         self.budget_ptav = ptavs.filtered(lambda p: p.product_attribute_value_id == budget_val)
         self.free_ptav = ptavs.filtered(lambda p: p.product_attribute_value_id == free_val)
@@ -54,7 +52,7 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
         self.budget_ptav.price_extra = -900.0
         self.free_ptav.price_extra = -1000.0
 
-        self.premium_variant = self.tiered.product_tmpl_id.product_variant_ids.filtered(
+        self.premium_variant = self.tiered.product_variant_ids.filtered(
             lambda v: v.product_template_attribute_value_ids == self.premium_ptav
         )
 
@@ -152,11 +150,11 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             {"name": "Plain", "attribute_id": option_attribute.id},
         ])
         self.env["product.template.attribute.line"].create({
-            "product_tmpl_id": self.tiered.product_tmpl_id.id,
+            "product_tmpl_id": self.tiered.id,
             "attribute_id": option_attribute.id,
             "value_ids": [(6, 0, [extra_val.id, plain_val.id])],
         })
-        option_line = self.tiered.product_tmpl_id.attribute_line_ids.filtered(
+        option_line = self.tiered.attribute_line_ids.filtered(
             lambda al: al.attribute_id == option_attribute,
         )
         extra_ptav = option_line.product_template_value_ids.filtered(lambda p: p.product_attribute_value_id == extra_val)
@@ -202,11 +200,11 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             {"name": "Large", "attribute_id": size_attribute.id},
         ])
         self.env["product.template.attribute.line"].create({
-            "product_tmpl_id": self.tiered.product_tmpl_id.id,
+            "product_tmpl_id": self.tiered.id,
             "attribute_id": size_attribute.id,
             "value_ids": [(6, 0, [small_val.id, large_val.id])],
         })
-        size_ptavs = self.tiered.product_tmpl_id.attribute_line_ids.filtered(
+        size_ptavs = self.tiered.attribute_line_ids.filtered(
             lambda al: al.attribute_id == size_attribute,
         ).product_template_value_ids
 
@@ -231,18 +229,18 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             {"name": "Free Discount", "attribute_id": option_attribute.id},
         ])
         self.env["product.template.attribute.line"].create({
-            "product_tmpl_id": self.tiered.product_tmpl_id.id,
+            "product_tmpl_id": self.tiered.id,
             "attribute_id": option_attribute.id,
             "value_ids": [(6, 0, [standard_val.id, discount_val.id])],
         })
-        option_ptavs = self.tiered.product_tmpl_id.attribute_line_ids.filtered(
+        option_ptavs = self.tiered.attribute_line_ids.filtered(
             lambda al: al.attribute_id == option_attribute,
         ).product_template_value_ids
         discount_ptav = option_ptavs.filtered(lambda p: p.product_attribute_value_id == discount_val)
         discount_ptav.write({
             "price_extra": -50.0,
             "exclude_for": [(0, 0, {
-                "product_tmpl_id": self.tiered.product_tmpl_id.id,
+                "product_tmpl_id": self.tiered.id,
                 "value_ids": [(6, 0, self.premium_ptav.ids)],
             })],
         })
@@ -255,7 +253,7 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
                          "no order is created from an excluded combination")
 
         # The exclusion only targets Premium: the same value stays orderable on Budget.
-        budget_variant = self.tiered.product_tmpl_id.product_variant_ids.filtered(
+        budget_variant = self.tiered.product_variant_ids.filtered(
             lambda v: v.product_template_attribute_value_ids == self.budget_ptav,
         )
         order = self._post_order([self.budget_ptav.id, discount_ptav.id], budget_variant)
@@ -273,21 +271,21 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             "attribute_id": option_attribute.id,
         })
         self.env["product.template.attribute.line"].create({
-            "product_tmpl_id": self.tiered.product_tmpl_id.id,
+            "product_tmpl_id": self.tiered.id,
             "attribute_id": option_attribute.id,
             "value_ids": [(6, 0, discount_val.ids)],
         })
-        discount_ptav = self.tiered.product_tmpl_id.attribute_line_ids.filtered(
+        discount_ptav = self.tiered.attribute_line_ids.filtered(
             lambda al: al.attribute_id == option_attribute,
         ).product_template_value_ids
         discount_ptav.write({
             "price_extra": -1100.0,
             "exclude_for": [(0, 0, {
-                "product_tmpl_id": self.tiered.product_tmpl_id.id,
+                "product_tmpl_id": self.tiered.id,
                 "value_ids": [(6, 0, self.premium_ptav.ids)],
             })],
         })
-        budget_variant = self.tiered.product_tmpl_id.product_variant_ids.filtered(
+        budget_variant = self.tiered.product_variant_ids.filtered(
             lambda v: v.product_template_attribute_value_ids == self.budget_ptav,
         )
 
