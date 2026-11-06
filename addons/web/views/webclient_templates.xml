@@ -193,8 +193,8 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                     </div>
                     <div class="input-group mb-1">
                         <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
-                        <button type="button" class="btn btn-sm border border-start-0 o_show_password">
-                            <i class="oi" data-icon="visibility"/>
+                        <button type="button" class="btn btn-sm border border-start-0 o_show_password" aria-label="Show password">
+                            <i class="oi" data-icon="visibility" aria-hidden="true"/>
                         </button>
                     </div>
                 </div>

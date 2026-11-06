@@ -29,3 +29,14 @@ test("input type changes on clicking the eye icon", async () => {
     await click(showEl);
     expect("input").toHaveAttribute("type", "password");
 });
+
+test("the eye button is named after the action it performs", async () => {
+    await startInteractions(template);
+    const showEl = queryOne(".o_show_password");
+    expect(showEl).toHaveAttribute("aria-label", "Show password");
+    await click(showEl);
+    expect(showEl).toHaveAttribute("aria-label", "Hide password");
+    await click(showEl);
+    expect(showEl).toHaveAttribute("aria-label", "Show password");
+    expect(showEl).not.toHaveAttribute("aria-pressed");
+});
