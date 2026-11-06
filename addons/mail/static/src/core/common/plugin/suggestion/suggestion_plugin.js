@@ -57,7 +57,13 @@ export class MailSuggestionPlugin extends Plugin {
      * }}
      */
     deps;
-    /** @type {{ position: number|undefined, source: SuggestionSource|undefined }} */
+    /**
+     * @type {{
+     *   node: Text|undefined,
+     *   position: number|undefined,
+     *   source: SuggestionSource|undefined,
+     * }}
+     */
     detection;
     /** Set after the attachment, whose commits come from the initial content, not from typing. */
     isAttached = false;
@@ -84,7 +90,7 @@ export class MailSuggestionPlugin extends Plugin {
 
     setup() {
         this.deps = this.config.composerPluginDependencies;
-        this.detection = proxy({ position: undefined, source: undefined });
+        this.detection = proxy({ node: undefined, position: undefined, source: undefined });
         this.listProps = proxy({
             class: "o-mail-Composer-suggestionList",
             isLoading: false,
@@ -134,7 +140,7 @@ export class MailSuggestionPlugin extends Plugin {
     }
 
     clearSearch() {
-        Object.assign(this.detection, { position: undefined, source: undefined });
+        Object.assign(this.detection, { node: undefined, position: undefined, source: undefined });
         this.search.reset();
         if (this.overlay.isOpen) {
             this.overlay.close();
@@ -172,7 +178,7 @@ export class MailSuggestionPlugin extends Plugin {
             candidatePositions.push(index);
         }
         // keep the current delimiter if it is still valid
-        if (this.detection.position !== undefined && this.detection.position < start) {
+        if (this.detection.node === node && this.detection.position < start) {
             candidatePositions.push(this.detection.position);
         }
         const sources = this.getSources();
@@ -204,7 +210,11 @@ export class MailSuggestionPlugin extends Plugin {
             if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                 continue;
             }
-            Object.assign(this.detection, { position: candidatePosition, source: candidateSource });
+            Object.assign(this.detection, {
+                node,
+                position: candidatePosition,
+                source: candidateSource,
+            });
             this.search.searchTerm = text.substring(
                 candidatePosition + candidateSource.delimiter.length,
                 start
