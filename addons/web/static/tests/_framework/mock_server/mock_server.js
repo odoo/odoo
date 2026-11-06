@@ -71,7 +71,6 @@ const { DateTime } = luxon;
  * @typedef {[RegExp, Record<string, string>]} RouteMatcher
  *
  * @typedef {{
- *  final?: boolean;
  *  pure?: boolean;
  * }} RouteOptions
  *
@@ -551,8 +550,7 @@ export class MockServer {
                 "/web/dataset/call_button",
                 "/web/dataset/call_button/<path:path>",
             ],
-            this.callKw,
-            { final: true }
+            this.callKw
         );
         this._onRoute(["/web/dataset/resequence"], this.resequence);
         this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage);
@@ -798,10 +796,10 @@ export class MockServer {
                 );
             }
         } else {
-            for (const [callback, routeParams, { final, pure }] of listeners) {
+            for (const [callback, routeParams, { pure }] of listeners) {
                 try {
                     const callbackResult = await callback.call(this, request, routeParams);
-                    if (result instanceof Error) {
+                    if (callbackResult instanceof Error) {
                         error = callbackResult;
                     } else {
                         result = callbackResult;
@@ -809,13 +807,15 @@ export class MockServer {
                 } catch (err) {
                     error = err instanceof Error ? err : new Error(err);
                 }
-                if (final || error || (result !== null && result !== undefined)) {
+                if (error || result !== undefined) {
                     if (pure || result instanceof Response) {
                         jsonRpcParams = null;
                     }
                     break;
                 }
             }
+            // A request no handler answered gets the server's `None`
+            result ??= null;
         }
 
         // We have several scenarios at this point:
@@ -1230,7 +1230,7 @@ export class MockServer {
         const ormListeners = this._findOrmListeners(params);
         while (ormListeners.length) {
             const result = await callNextOrmCallback();
-            if (result !== null && result !== undefined) {
+            if (result !== undefined) {
                 return result;
             }
         }
@@ -1481,6 +1481,10 @@ export async function makeMockServer() {
  */
 /**
  * Registers an RPC handler on the current/future {@link MockServer} instance.
+ *
+ * Matching handlers are called from the most recently registered one: returning
+ * `undefined` passes the request to the next handler, while any other value
+ * (including `null`, i.e. a server-side `None`) is used as the response.
  *
  * @type {MockServer["_onRpc"]}
  */
