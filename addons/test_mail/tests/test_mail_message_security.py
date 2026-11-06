@@ -540,6 +540,20 @@ class TestMailMessageAccess(MessageAccessCommon):
             messages_all.with_user(self.user_portal).fetch(['subject'])
         messages_all.with_user(self.user_admin).fetch(['subject'])
 
+    def test_access_read_orphan(self):
+        """ Message of a removed document is not accessible, and does not crash
+        access check of other messages checked in batch. """
+        record, removed = self.env['mail.test.access.custo'].create([{'name': 'Open'}, {'name': 'Removed'}])
+        removed_id = removed.id
+        removed.unlink()
+        message = record.message_post(body='Valid', subtype_id=self.env.ref('mail.mt_comment').id)
+        orphan = self.env['mail.message'].create({
+            'body': 'Orphan', 'model': 'mail.test.access.custo', 'res_id': removed_id,
+        })
+        messages_su = (message + orphan).with_user(self.user_employee).sudo()
+        self.assertFalse(messages_su[1]._get_with_access())
+        self.assertEqual(messages_su[0]._get_with_access(), message)
+
     def test_access_read_portal(self):
         """ Read access check for portal users """
         for msg, msg_vals, should_crash, reason in [
