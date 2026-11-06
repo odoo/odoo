@@ -1,4 +1,5 @@
 import {
+    after,
     animationFrame,
     beforeEach,
     describe,
@@ -187,4 +188,39 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
         [secondDoc, "SCRIPT", "text/javascript", "file1.js"],
         [secondDoc, "SCRIPT", "text/javascript", "file2.js"],
     ]);
+});
+
+describe("cache shared by 2 tests", () => {
+    const globalCache = new Map();
+
+    beforeEach(() => {
+        patchWithCleanup(assets, { globalCache });
+    });
+
+    test("loadBundle: bundle still pending at the end of the test", async () => {
+        mockFetch((route) => {
+            expect.step(`fetch bundle: ${route.pathname}`);
+            // Simulate a response that comes after the end of the test.
+            return new Promise(() => {});
+        });
+
+        loadBundle("test.bundle");
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/test.bundle"]);
+    });
+
+    test("loadBundle: load bundle left pending by the previous test", async () => {
+        after(() => globalCache.clear());
+        stepOnAssetAppended(document);
+
+        loadBundle("test.bundle");
+        await animationFrame();
+        expect.verifySteps([
+            "fetch bundle: /web/bundle/test.bundle",
+            [document, "LINK", "text/css", "file1.css"],
+            [document, "LINK", "text/css", "file2.css"],
+            [document, "SCRIPT", "text/javascript", "file1.js"],
+            [document, "SCRIPT", "text/javascript", "file2.js"],
+        ]);
+    });
 });
