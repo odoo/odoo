@@ -773,8 +773,10 @@ class Message(models.Model):
         if not (self.env.su or self.env.user.has_group('base.group_user')):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
-        record_changed = 'model' in vals or 'res_id' in vals
-        if record_changed or 'message_type' in vals:
+        record_changed = {'message_type', 'model', 'res_id'} & vals.keys()
+        if record_changed and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify 'model', 'res_id' and 'message_type' fields."))
+        if record_changed:
             self._invalidate_documents()
         res = super(Message, self).write(vals)
         if vals.get('attachment_ids'):
