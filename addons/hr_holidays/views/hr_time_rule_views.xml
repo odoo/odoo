@@ -32,10 +32,10 @@
         <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
         <field name="arch" type="xml">
             <!-- extend existing "Set Excess/Deficit to" tooltips with leave-specific constraints -->
-            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Excess')]/sup" position="attributes">
+            <xpath expr="//span[hasclass('o_form_label')][@invisible=&quot;threshold_operator == 'less_than'&quot;]/sup" position="attributes">
                 <attribute name="data-tooltip">The time off type created for the excess. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
             </xpath>
-            <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]/sup" position="attributes">
+            <xpath expr="//span[hasclass('o_form_label')][@invisible=&quot;threshold_operator != 'less_than'&quot;]/sup" position="attributes">
                 <attribute name="data-tooltip">The time off type created for the deficit. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
             </xpath>
 
