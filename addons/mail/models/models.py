@@ -159,21 +159,21 @@ class Base(models.AbstractModel):
             return 'user_id'
         return False
 
-    def _mail_get_default_author(self, use_responsible=True):
+    def _mail_get_default_author(self):
         """ Author (res.partner) to use when sending an email from a template
-        that does not define any sender.
+        that does not define any sender ('Send From').
 
         When no real user is involved (superuser e.g. OdooBot in crons, or
-        public user e.g. website payment flow) and ``use_responsible`` is set
-        (see ``mail.template.email_from_responsible``), use the record
-        responsible, then its company, so that customers do not receive emails
-        from OdooBot. Otherwise the current user is the author.
+        public user e.g. website payment flow), use the record responsible,
+        then its company, so that customers do not receive emails from
+        OdooBot. Otherwise the current user is the author. To keep the current
+        user (e.g. OdooBot) in all cases, set the template sender to
+        ``{{ user.email_formatted }}``.
 
-        :param bool use_responsible: allow using the record responsible;
         :return: for each record ID in self, a <res.partner> singleton
         """
         user = self.env.user
-        if not (use_responsible and (user._is_superuser() or user._is_public())):
+        if not (user._is_superuser() or user._is_public()):
             return dict.fromkeys(self.ids, user.partner_id)
         responsible_fname = self._mail_get_responsible_field()
         companies = self._mail_get_companies(default=self.env.company)
