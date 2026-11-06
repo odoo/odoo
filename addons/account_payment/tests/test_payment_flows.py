@@ -104,6 +104,55 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
 
+    def _invoice_transaction(self, payment_method_id):
+        """Make a direct payment of `self.invoice` through `/invoice/transaction/<id>`."""
+        route_values = self._prepare_transaction_values(payment_method_id, None, 'direct')
+        for key in ('currency_id', 'partner_id', 'reference_prefix'):
+            route_values.pop(key)  # The route takes these values from the invoice
+        route_values['access_token'] = self.invoice._portal_ensure_token()
+        return self._portal_transaction(
+            tx_route=f'/invoice/transaction/{self.invoice.id}', **route_values
+        )
+
+    def test_invoice_transaction_accepts_available_payment_option(self):
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = self._invoice_transaction(self.payment_method_id)
+        self.assertTrue(self._get_tx(processing_values['reference']))
+
+    @mute_logger('odoo.http')
+    def test_invoice_transaction_rejects_unavailable_provider(self):
+        self.provider.available_currency_ids = self.currency_usd  # The invoice is in EUR
+        with self.assertRaisesRegex(JsonRpcException, 'ValidationError'):
+            self._invoice_transaction(self.payment_method_id)
+
+    @mute_logger('odoo.http')
+    def test_invoice_transaction_rejects_unavailable_payment_method(self):
+        self.payment_method.supported_currency_ids = self.currency_usd  # The invoice is in EUR
+        with self.assertRaisesRegex(JsonRpcException, 'ValidationError'):
+            self._invoice_transaction(self.payment_method_id)
+
+    @mute_logger('odoo.http')
+    def test_overdue_invoices_transaction_rejects_unavailable_payment_method(self):
+        partner = self.env['res.partner'].create({'name': 'Overdue Partner'})
+        self.env['res.users'].create({
+            'login': 'overdue_user',
+            'password': 'overdue_user',
+            'group_ids': [Command.set(self.env.ref('account.group_account_manager').ids)],
+            'partner_id': partner.id,
+        })
+        invoice = self.init_invoice('out_invoice', partner, amounts=[100.0], currency=self.currency)
+        invoice.invoice_date_due = invoice.invoice_date - timedelta(days=10)
+        invoice.action_post()
+        self.payment_method.supported_currency_ids = self.currency_usd  # The invoice is in EUR
+        self.authenticate('overdue_user', 'overdue_user')
+        route_values = self._prepare_transaction_values(self.payment_method_id, None, 'direct')
+        for key in ('currency_id', 'partner_id', 'reference_prefix', 'access_token'):
+            route_values.pop(key)  # The route takes these values from the overdue invoices
+        with self.assertRaisesRegex(JsonRpcException, 'ValidationError'):
+            self._portal_transaction(
+                tx_route='/invoice/transaction/overdue', payment_reference=None, **route_values
+            )
+
     def test_public_user_new_company(self):
         """ Test that the payment of an invoice is correctly processed when
         using public user with a new company. """
