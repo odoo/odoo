@@ -81,9 +81,16 @@ export class CaptionPlugin extends Plugin {
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
                 figures = [closestElement(root, "figure")];
             } else {
+<<<<<<< b412eec5d18b0622fcaa020cf4e24a79b3c1d776
                 figures = [...root.querySelectorAll("figure")].filter(
                     (figure) => figure.querySelectorAll("img").length === 1
                 );
+||||||| 0698aa417ff81c5612abbcec60228647d113b1e8
+                figures = [...root.querySelectorAll("figure")]
+                    .filter(figure => figure.querySelectorAll("img").length === 1);
+=======
+                figures = this.getSingleImageFigures(root);
+>>>>>>> 62dbf502b52e4ec1592ecb8dd541ae68e109989b
             }
             figures.forEach((figure) => {
                 const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
@@ -123,9 +130,16 @@ export class CaptionPlugin extends Plugin {
     };
 
     setup() {
+<<<<<<< b412eec5d18b0622fcaa020cf4e24a79b3c1d776
         const figures = [...this.editable.querySelectorAll("figure")].filter(
             (figure) => figure.querySelectorAll("img").length === 1
         );
+||||||| 0698aa417ff81c5612abbcec60228647d113b1e8
+        const figures = [...this.editable.querySelectorAll("figure")]
+            .filter(figure => figure.querySelectorAll("img").length === 1);
+=======
+        const figures = this.getSingleImageFigures(this.editable);
+>>>>>>> 62dbf502b52e4ec1592ecb8dd541ae68e109989b
         for (const figure of figures) {
             const image = figure.querySelector("img");
             figure.before(image);
@@ -152,9 +166,16 @@ export class CaptionPlugin extends Plugin {
     }
 
     cleanForSave(root) {
+<<<<<<< b412eec5d18b0622fcaa020cf4e24a79b3c1d776
         const figures = [...root.querySelectorAll("figure")].filter(
             (figure) => figure.querySelectorAll("img").length === 1
         );
+||||||| 0698aa417ff81c5612abbcec60228647d113b1e8
+        const figures = [...root.querySelectorAll("figure")]
+            .filter(figure => figure.querySelectorAll("img").length === 1);
+=======
+        const figures = this.getSingleImageFigures(root);
+>>>>>>> 62dbf502b52e4ec1592ecb8dd541ae68e109989b
         for (const figure of figures) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");
@@ -173,6 +194,14 @@ export class CaptionPlugin extends Plugin {
 
     getCaptionId() {
         return "" + Math.floor(Math.random() * Date.now());
+    }
+
+    getSingleImageFigures(root) {
+        return [...root.querySelectorAll("figure")].filter(
+            (figure) =>
+                figure.querySelectorAll("img").length === 1 &&
+                figure.querySelectorAll("figure:has(img)").length == 0
+        );
     }
 
     hasImageCaption(image) {
