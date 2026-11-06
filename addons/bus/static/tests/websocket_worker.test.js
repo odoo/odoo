@@ -106,6 +106,60 @@ test("disconnect event is sent when stopping the worker", async () => {
     await expect.waitForSteps(["broadcast BUS:DISCONNECT"]);
 });
 
+test("connection is reset when the connection check gets no answer", async () => {
+    patchWithCleanup(WebsocketWorker.prototype, { enableCheckInterval: true });
+    const worker = await startWebSocketWorker((type) => {
+        if (["BUS:DISCONNECT", "BUS:RECONNECTING"].includes(type)) {
+            asyncStep(`broadcast ${type}`);
+        }
+    });
+    worker.websocket.send = () => {};
+    await advanceTime(worker.CONNECTION_CHECK_DELAY + worker.CONNECTION_CHECK_PONG_TIMEOUT + 1000);
+    await waitForSteps(["broadcast BUS:DISCONNECT", "broadcast BUS:RECONNECTING"]);
+});
+
+test("stopping the worker cancels a pending connection check", async () => {
+    patchWithCleanup(WebsocketWorker.prototype, { enableCheckInterval: true });
+    const worker = await startWebSocketWorker((type) => {
+        if (["BUS:RECONNECTING", "BUS:CONNECT"].includes(type)) {
+            asyncStep(`broadcast ${type}`);
+        }
+    });
+    await waitForSteps(["broadcast BUS:CONNECT"]);
+    worker.websocket.send = (message) => {
+        if (message instanceof Uint8Array) {
+            asyncStep("connection check sent");
+        }
+    };
+    await advanceTime(worker.CONNECTION_CHECK_DELAY + 1000);
+    await waitForSteps(["connection check sent"]);
+    worker._stop();
+    await advanceTime(worker.CONNECTION_CHECK_PONG_TIMEOUT + 1000);
+    expect(worker.websocket).toBe(null);
+    await waitForSteps([]);
+});
+
+test("connection is kept when the connection check is answered", async () => {
+    patchWithCleanup(WebsocketWorker.prototype, { enableCheckInterval: true });
+    const worker = await startWebSocketWorker((type) => {
+        if (type === "BUS:DISCONNECT") {
+            asyncStep(`broadcast ${type}`);
+        }
+    });
+    patchWithCleanup(worker.websocket, {
+        send(message) {
+            if (message instanceof Uint8Array) {
+                asyncStep("connection check answered");
+                setTimeout(() =>
+                    this.dispatchEvent(new MessageEvent("message", { data: new Uint8Array([0]) }))
+                );
+            }
+        },
+    });
+    await advanceTime(worker.CONNECTION_CHECK_DELAY + worker.CONNECTION_CHECK_PONG_TIMEOUT + 1000);
+    await waitForSteps(["connection check answered"]);
+});
+
 test("check connection health during inactivity", async () => {
     const ogSocket = window.WebSocket;
     let waitingForCheck = true;
