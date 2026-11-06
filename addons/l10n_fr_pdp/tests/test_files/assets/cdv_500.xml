@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns3:CrossDomainAcknowledgementAndResponse xmlns="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" xmlns:ns2="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:ns3="urn:un:unece:uncefact:data:standard:CrossDomainAcknowledgementAndResponse:100" xmlns:ns4="urn:un:unece:uncefact:data:standard:QualifiedDataType:100">
+  <ns3:ExchangedDocumentContext>
+    <ns2:GuidelineSpecifiedDocumentContextParameter>
+      <ns2:ID>urn.cpro.gouv.fr:1p0:CDV:flux</ns2:ID>
+    </ns2:GuidelineSpecifiedDocumentContextParameter>
+  </ns3:ExchangedDocumentContext>
+  <ns3:ExchangedDocument>
+    <ns2:ID>_dummy_</ns2:ID>
+    <ns2:Name>_dummy_</ns2:Name>
+    <ns2:IssueDateTime>
+      <DateTimeString format="204">20261110101730</DateTimeString>
+    </ns2:IssueDateTime>
+    <ns2:SenderTradeParty>
+      <ns2:GlobalID schemeID="0238">0000</ns2:GlobalID>
+      <ns2:Name>PPF</ns2:Name>
+      <ns2:RoleCode>DFH</ns2:RoleCode>
+    </ns2:SenderTradeParty>
+    <ns2:IssuerTradeParty>
+      <ns2:GlobalID schemeID="0238">0000</ns2:GlobalID>
+      <ns2:Name>PPF</ns2:Name>
+      <ns2:RoleCode>DFH</ns2:RoleCode>
+    </ns2:IssuerTradeParty>
+    <ns2:RecipientTradeParty/>
+  </ns3:ExchangedDocument>
+  <ns3:AcknowledgementDocument>
+    <ns2:MultipleReferencesIndicator>
+      <Indicator>false</Indicator>
+    </ns2:MultipleReferencesIndicator>
+    <ns2:IssueDateTime>
+      <DateTimeString format="204">20261110101659</DateTimeString>
+    </ns2:IssueDateTime>
+    <ns2:ReferenceReferencedDocument>
+      <ns2:IssuerAssignedID>_dummy_</ns2:IssuerAssignedID>
+      <ns2:TypeCode>303</ns2:TypeCode>
+      <ns2:ReceiptDateTime>
+        <DateTimeString format="204">20261110101659</DateTimeString>
+      </ns2:ReceiptDateTime>
+      <ns2:ReferenceTypeCode>urn.cpro.gouv.fr:1p0:CDV:flux</ns2:ReferenceTypeCode>
+      <ns2:ProcessConditionCode>500</ns2:ProcessConditionCode>
+      <ns2:ProcessCondition>Recevable</ns2:ProcessCondition>
+    </ns2:ReferenceReferencedDocument>
+  </ns3:AcknowledgementDocument>
+</ns3:CrossDomainAcknowledgementAndResponse>

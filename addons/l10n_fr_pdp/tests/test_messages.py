@@ -1,4 +1,6 @@
 import json
+import requests
+
 from base64 import b64encode
 from contextlib import contextmanager
 from requests import PreparedRequest, Response, Session
@@ -1067,3 +1069,65 @@ class TestPdpMessageFacturX(TestPdpMessage):
             'peppol_move_state': 'done',
             'peppol_is_sent': True,
         }])
+
+    def test_pdp_import_flow1_500_and_501(self):
+        move = self._create_french_invoice()
+        move.action_post()
+        move.peppol_message_uuid = FAKE_UUID[0]
+        move.peppol_move_state = 'done'
+
+        self.proxy_user._pdp_import_tax_extract(
+            FAKE_UUID[1],
+            {
+                "filename": "",
+                "enc_key": "",
+                "document": "",
+                "state": "done",
+                "error": False,
+                "direction": "outgoing",
+                "document_type": "Invoice",
+                "flow_id": "FFE0111A_PPF262_PPF2620111000000000060018",
+                "flow_number": "1",
+                "ref_status_code": False,
+                "origin_ref_status_code": False,
+                "origin_ppf_message_uuid": "e92b25f7-f0ba-4e1b-91af-83ce90b31b03",
+                "origin_peppol_message_uuid": FAKE_UUID[0],
+                "origin_peppol_lifecycle_uuid": False,
+            },
+            move,
+        )
+
+        ProxyUser = self.env['account_edi_proxy_client.user'].with_context(
+            tracking_disable=False, mail_notrack=False,
+        )
+
+        cdv_500 = file_open(f'{FILE_PATH}/cdv_500.xml', mode='rb').read()
+        with patch.object(requests.sessions.Session, 'send', self._get_ppf_document_request_handler(FAKE_UUID[0], cdv_500)):
+            ProxyUser._cron_pdp_get_regulatory_documents()
+
+        self.assertRecordValues(move.peppol_response_ids, [{
+            'peppol_state': 'done',
+            'pdp_flow_number': '1',
+            'response_code': 'AB',
+            'pdp_ppf_state': False,
+            'move_id': move.id,
+        }])
+
+        self.assertEqual(move.pdp_ppf_move_state, 'sent')
+        messages_before_501 = move.message_ids
+        responses_before_501 = move.peppol_response_ids
+
+        cdv_501 = file_open(f'{FILE_PATH}/cdv_501.xml', mode='rb').read()
+        with patch.object(requests.sessions.Session, 'send', self._get_ppf_document_request_handler(FAKE_UUID[0], cdv_501)):
+            ProxyUser._cron_pdp_get_regulatory_documents()
+
+        self.assertRecordValues(move.peppol_response_ids - responses_before_501, [{
+            'peppol_state': 'done',
+            'pdp_flow_number': '1',
+            'response_code': 'RE',
+            'pdp_ppf_state': False,
+            'move_id': move.id,
+        }])
+
+        self.assertEqual(move.pdp_ppf_move_state, 'sent')  # unchanged
+        self.assertFalse(move.message_ids - messages_before_501)  # unchanged
