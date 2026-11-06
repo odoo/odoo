@@ -593,6 +593,7 @@ class ProductPricelistItem(models.Model):
 
         if self.compute_price == 'fixed':
             price = product.uom_id._compute_price(self.fixed_price, uom)
+            price = self._convert_price(price, self.currency_id, **kwargs)
 
             if self.applied_on == '0_product_variant':
                 # If a fixed price was defined for a specific variant, only extra prices from
