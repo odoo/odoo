@@ -10,6 +10,7 @@ import { loadBundle } from "@web/core/assets";
 import { renderToElement } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
+import { convertWebpImages } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -145,6 +146,10 @@ export class MassMailingHtmlField extends HtmlField {
             const $editable = this.wysiwyg.getEditable();
             this.wysiwyg.odooEditor.historyPauseSteps();
             await this.wysiwyg.cleanForSave();
+            // Keep the png images after the history revert below.
+            this.wysiwyg.odooEditor.observerUnactive('convertWebpImages');
+            await convertWebpImages($editable[0]);
+            this.wysiwyg.odooEditor.observerActive('convertWebpImages');
             if (args.length) {
                 await super.commitChanges({ ...args[0], urgent: true });
             } else {
