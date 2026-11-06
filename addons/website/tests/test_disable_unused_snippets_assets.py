@@ -43,7 +43,7 @@ class TestDisableSnippetsAssets(TransactionCase):
 
         # New snippet
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'css')
-        s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'scss')
+        s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'css')
         self.assertEqual(s_image_gallery_000.active, False)
         self.assertEqual(s_image_gallery_002.active, True)
 
@@ -90,7 +90,7 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.assertEqual(s_masonry_block_001_scss.active, True)
 
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'css')
-        s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'scss')
+        s_image_gallery_002 = self._get_snippet_asset('s_image_gallery', '002', 'css')
         self.assertEqual(s_image_gallery_000.active, True)
         self.assertEqual(s_image_gallery_002.active, True)
 

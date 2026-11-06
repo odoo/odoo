@@ -16,13 +16,13 @@ Odoo Web tours.
     'assets': {
         'web.assets_backend': [
             ('include', 'web_tour.assets'),
-            'web_tour/static/src/tour_pointer/tour_pointer.scss',
+            'web_tour/static/src/tour_pointer/tour_pointer.css',
             'web_tour/static/src/views/**/*',
             'web_tour/static/src/widgets/**/*',
         ],
         'web.assets_frontend': [
             ('include', 'web_tour.assets'),
-            'web_tour/static/src/tour_pointer/tour_pointer.scss',
+            'web_tour/static/src/tour_pointer/tour_pointer.css',
         ],
         'web.assets_unit_tests': [
             ('include', 'web_tour.recorder'),

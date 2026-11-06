@@ -143,7 +143,7 @@
 
             # Adding error handler back since they are removed in the prod bundle
             'web/static/src/core/errors/error_handlers.js',
-            'web/static/src/core/dialog/dialog.scss',
+            'web/static/src/core/dialog/dialog.css',
             'point_of_sale/static/src/backend/views/**/*',
             'point_of_sale/static/src/backend/print_receipt/**/*',
 
@@ -216,7 +216,7 @@
             "web/static/src/scss/ui.scss",
 
             ('remove', 'web/static/src/core/errors/error_handlers.js'),  # error handling in PoS is different from the webclient
-            ('remove', '/web/static/src/core/dialog/dialog.scss'),
+            ('remove', '/web/static/src/core/dialog/dialog.css'),
             'web/static/src/core/currency.js',
             # barcode scanner
             'barcodes/static/src/barcode_plugin.js',
