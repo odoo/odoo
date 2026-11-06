@@ -52,7 +52,7 @@
         </xpath>
 
         <!-- Dropdown divider -->
-        <xpath expr="//DropdownItem" position="before">
+        <xpath expr="//CheckboxItem" position="before">
             <div t-if="option[0] == '1_canceled' and (this.currentValue != '04_waiting_normal' or this.uiService.isSmall)" role="separator" class="dropdown-divider"/>
         </xpath>
     </t>
