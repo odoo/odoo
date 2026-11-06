@@ -33,7 +33,6 @@ import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/t
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { rgbaToHex } from "@web/core/utils/colors";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -1367,25 +1366,21 @@ export class TablePlugin extends Plugin {
             return null;
         }
 
-        const firstStyle = getComputedStyle(selectedTds[0]);
-        const backgroundColor = firstStyle.backgroundColor;
-        const backgroundImage = firstStyle.backgroundImage;
-        // If the first selected cell doesn't have any background style, we
-        // consider that there's no common background style.
-        if (backgroundImage === "none" && backgroundColor === "rgba(0, 0, 0, 0)") {
-            return null;
-        }
-
-        const allSameStyle = selectedTds.slice(1).every((td) => {
-            const s = getComputedStyle(td);
-            return s.backgroundColor === backgroundColor && s.backgroundImage === backgroundImage;
-        });
+        const backgroundColor = this.dependencies.color.getElementColors(
+            selectedTds[0]
+        ).backgroundColor;
+        const allSameStyle = selectedTds
+            .slice(1)
+            .every(
+                (td) =>
+                    this.dependencies.color.getElementColors(td).backgroundColor === backgroundColor
+            );
 
         if (!allSameStyle) {
             return "#00000000";
         }
 
-        return backgroundImage !== "none" ? backgroundImage : rgbaToHex(backgroundColor);
+        return backgroundColor;
     }
 
     adjustTargetedNodes(targetedNodes) {
