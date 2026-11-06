@@ -96,6 +96,16 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 '_text': f"#{code}#{default_content}",
             })
 
+        # [BR-FR-MAP-03] For VAT payment based on invoice,
+        # add legal note (BT-22) and description code (BT-8)
+        if any(base_line['tax_ids'].tax_exigibility == 'on_invoice' for base_line in vals['base_lines']):
+            document_node['cbc:Note'].append({
+                '_text': "Option pour le paiement de la taxe d'après les débits"
+            })
+            document_node['cac:InvoicePeriod'] = {
+                'cbc:DescriptionCode': {'_text': 3}
+            }
+
         # [BR-FR-MAP-18] EN16931 caps the Note (BT-22) to 1024 characters.
         for note in document_node['cbc:Note']:
             if isinstance(note['_text'], str):
