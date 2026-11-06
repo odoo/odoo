@@ -225,7 +225,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
                 wizard.action_send_and_print()
 
                 # no wkhtmltopdf in tests: the hook doesn't embed the XML, so put it in the PDF here
-                xml_content = base64.b64decode(invoice.ubl_cii_xml_file)
+                xml_content = invoice.ubl_cii_xml_id.raw.content
                 pdf_bytes = self._get_pdf_bytes(xml_content, filename='factur-x.xml')
                 invoice.invoice_pdf_report_file = base64.b64encode(pdf_bytes).decode()
 
