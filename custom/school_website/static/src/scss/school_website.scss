@@ -405,3 +405,80 @@ header .o_nav_link_btn:hover {
 .hover-white:hover {
     color: #ffffff !important;
 }
+
+
+/* ========================================================
+   ABOUT US PAGE ENHANCEMENTS
+   ======================================================== */
+.harvard-about-hero {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    padding: 6rem 1rem 5rem;
+    color: #ffffff;
+}
+
+.harvard-about-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(16, 28, 48, 0.92) 0%, rgba(30, 41, 59, 0.88) 50%, rgba(165, 28, 48, 0.85) 100%);
+    z-index: 1;
+}
+
+.harvard-about-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.harvard-pillar-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    height: 100%;
+}
+
+.harvard-pillar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+    border-color: rgba(165, 28, 48, 0.3);
+}
+
+.harvard-pillar-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    background: rgba(165, 28, 48, 0.08);
+    color: var(--harvard-crimson);
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.harvard-pillar-card:hover .harvard-pillar-icon {
+    transform: scale(1.1);
+    background-color: var(--harvard-crimson);
+    color: #ffffff;
+}
+
+.harvard-feature-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.harvard-feature-item:hover {
+    transform: translateX(6px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.harvard-veritas-card {
+    border-left: 4px solid var(--harvard-crimson);
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
