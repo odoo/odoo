@@ -1735,17 +1735,16 @@ class PosOrder(models.Model):
             session._reconcile_partial_reversal_move(orders, invoice, move)
 
         name_str = " - ".join(self.mapped('name')) if len(self) > 1 else self.name
-        all_payment_lines = self.env['account.move.line']
-        payment_term_lines = invoice.line_ids.filtered(
+        payment_term_lines = iter(invoice.line_ids.filtered(
             lambda line: line.display_type == 'payment_term',
-        )
+        ))
 
         for session, payments in total_payments_by_session.items():
             for payment in payments:
                 metadata = payment['metadata']
                 pm = metadata['payment_method_id']
 
-                all_payment_lines |= pm._create_payment_line(
+                payment_line = pm._create_payment_line(
                     session,
                     metadata['amount'],
                     self.partner_id.property_account_receivable_id,
@@ -1755,10 +1754,11 @@ class PosOrder(models.Model):
                     metadata['amount_currency'],
                 )
 
-        to_reconcile = (payment_term_lines | all_payment_lines).filtered(
-            lambda line: not line.reconciled,
-        )
-        to_reconcile.with_context(skip_invoice_sync=True).reconcile()
+                to_reconcile = (next(payment_term_lines) + payment_line).filtered(
+                    lambda line: not line.reconciled,
+                )
+                if len(to_reconcile) > 1:
+                    to_reconcile.with_context(skip_invoice_sync=True).reconcile()
 
         body = _("This invoice has been created from the point of sale session:%s",
             Markup().join(Markup("%s ") % order._get_html_link() for order in self),
