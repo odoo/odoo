@@ -3,6 +3,7 @@ import re
 import requests
 
 from urllib import parse
+from stdnum.util import get_cc_module
 
 from odoo import _, api, fields, models
 
@@ -82,7 +83,7 @@ class ResPartner(models.Model):
         if siren := self._l10n_fr_pdp_get_siren():
             return '0002', siren
 
-        partner_vat = self.vat or ''
+        partner_vat = self._l10n_fr_pdp_get_normalized_vat(self.vat, country_code) or ''
         if country_code == 'WF' and self.name:
             return '0227', country_code + self.name[:16]
         if (
@@ -234,3 +235,12 @@ class ResPartner(models.Model):
             # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
             # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
             partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+
+    @api.model
+    def _l10n_fr_pdp_get_normalized_vat(self, vat, country_code):
+        countries_formatter = {
+            'CH': get_cc_module('ch', 'vat').compact,
+        }
+
+        formatter = countries_formatter.get((country_code or '').upper())
+        return formatter(vat) if vat and formatter else vat
