@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import UserError
@@ -512,3 +513,94 @@ class TestAccountMove(TestStockValuationCommon):
                 },
             ]
         )
+
+    @freeze_time("2026-10-19")
+    def test_set_cogs_on_locked_invoice_posts_adjustment(self):
+        """
+        When the value of a stock move backing a COGS line changes after the
+        customer invoice is in a locked period, the locked entry must be left
+        untouched and the difference posted in an open period instead of
+        raising a lock date error.
+        """
+        self.env['account.lock_exception'].search([]).sudo().unlink()
+        product = self.product_standard_auto
+        accounts = product._get_product_accounts()
+        stock_account = accounts['stock_valuation']
+        expense_account = accounts['expense']
+
+        # Receipt, so we have a real stock move to back the COGS lines
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        receipt.button_validate()
+        stock_move = receipt.move_ids
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': fields.Date.from_string('2026-10-18'),
+            'date': fields.Date.from_string('2026-10-18'),
+            'invoice_line_ids': [Command.create({
+                'product_id': product.id,
+                'quantity': 1.0,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        invoice.action_post()
+        invoice_line = invoice.invoice_line_ids
+        cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'account_id': stock_account.id, 'balance': -10.0},
+            {'account_id': expense_account.id, 'balance': 10.0},
+        ])
+
+        # Lock the period containing the invoice
+        self.env.company.sudo().write({
+            'fiscalyear_lock_date': fields.Date.from_string('2026-10-18'),
+        })
+
+        # The backing stock move is now worth more (e.g. vendor bill at a higher price)
+        invoice_line.cogs_move_ids = stock_move
+        stock_move_cls = self.env.registry['stock.move']
+
+        def adjustment_lines():
+            return self.env['account.move.line'].search([
+                ('display_type', '=', 'cogs'),
+                ('cogs_origin_id', '=', invoice_line.id),
+                ('move_id', '!=', invoice.id),
+            ])
+
+        with patch.object(stock_move_cls, '_get_price_unit', return_value=15.0):
+            cogs_lines._set_cogs()
+
+        # Locked invoice is untouched
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'balance': -10.0},
+            {'balance': 10.0},
+        ])
+        # One adjustment entry, in the open period, carrying only the delta
+        adjustments = adjustment_lines()
+        self.assertEqual(len(adjustments.move_id), 1)
+        self.assertEqual(adjustments.move_id.state, 'posted')
+        self.assertGreater(adjustments.move_id.date, fields.Date.from_string('2026-10-18'))
+        self.assertRecordValues(adjustments.sorted('balance'), [
+            {'account_id': stock_account.id, 'balance': -5.0},
+            {'account_id': expense_account.id, 'balance': 5.0},
+        ])
+
+        # Second price change: total COGS must converge on the new target (20),
+        # i.e. the earlier adjustment must not be double counted.
+        with patch.object(stock_move_cls, '_get_price_unit', return_value=20.0):
+            cogs_lines._set_cogs()
+
+        all_lines = cogs_lines + adjustment_lines()
+        self.assertEqual(sum(all_lines.filtered(lambda l: l.account_id == expense_account).mapped('balance')), 20.0)
+        self.assertEqual(sum(all_lines.filtered(lambda l: l.account_id == stock_account).mapped('balance')), -20.0)
