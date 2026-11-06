@@ -989,7 +989,19 @@ export class StaticList extends DataPoint {
         const fieldNames = orderBy.map((o) => o.name);
         const resIds = this._getResIdsToLoad(currentIds, fieldNames);
         if (resIds.length) {
-            const activeFields = pick(this.activeFields, ...fieldNames);
+            // those records only load the fields used to sort, so their modifiers may reference
+            // fields that aren't loaded and can't be evaluated
+            const activeFields = {};
+            for (const [fieldName, activeField] of Object.entries(
+                pick(this.activeFields, ...fieldNames)
+            )) {
+                activeFields[fieldName] = {
+                    ...activeField,
+                    invisible: false,
+                    readonly: false,
+                    required: false,
+                };
+            }
             const config = { ...this.config, resIds, activeFields };
             const records = await this.model._loadRecords(config);
             for (const record of records) {
