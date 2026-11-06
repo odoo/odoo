@@ -27,7 +27,7 @@ class ReportController(http.Controller):
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report = request.env['ir.actions.report']
         context = dict(request.env.context)
-
+        context['allowed_company_ids'] = request.env.user.company_ids.ids
         if docids:
             docids = [int(i) for i in docids.split(',') if i.isdigit()]
         if data.get('options'):
