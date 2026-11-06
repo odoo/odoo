@@ -128,7 +128,17 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
         with file_open('l10n_hr_edi/tests/flows/out_invoice.xml', 'r') as f:
             expected_invoice_xml = f.read()
 
+<<<<<<< d71d1a0c407654317711bc40eab786f834327bad
         with self.assertRequests([
+||||||| cea744bb72199a0d20d5f46b340cabb19df56fdb
+        with patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
+        ), self.assertRequests([
+=======
+        with patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant_formats_accepted', return_value=None
+        ), self.assertRequests([
+>>>>>>> abcd0dacbdf4f1191639daba0952b9bf2c0b416f
             (
                 # Request 1: Send invoice
                 self._build_request(
@@ -196,7 +206,17 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
         with file_open('l10n_hr_edi/tests/flows/out_invoice.xml', 'r') as f:
             expected_invoice_xml = f.read()
 
+<<<<<<< d71d1a0c407654317711bc40eab786f834327bad
         with self.assertRaisesRegex(UserError, r"MER service returned an error: Username '12513': Korisničko ime i lozinka nisu ispravni\.\. Trace ID: 4f701362-96cc-49c6-a297-854e740ad719\."):
+||||||| cea744bb72199a0d20d5f46b340cabb19df56fdb
+        with patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
+        ), self.assertRaisesRegex(UserError, r"MER service returned an error: Username '12513': Korisničko ime i lozinka nisu ispravni\.\. Trace ID: 4f701362-96cc-49c6-a297-854e740ad719\."):
+=======
+        with patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant_formats_accepted', return_value=None
+        ), self.assertRaisesRegex(UserError, r"MER service returned an error: Username '12513': Korisničko ime i lozinka nisu ispravni\.\. Trace ID: 4f701362-96cc-49c6-a297-854e740ad719\."):
+>>>>>>> abcd0dacbdf4f1191639daba0952b9bf2c0b416f
             with self.assertRequests([
                 (
                     # Request 1: Send invoice - error should be triggered
