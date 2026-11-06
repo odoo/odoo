@@ -290,6 +290,42 @@ class TestBatchPicking(TransactionCase):
         new_all_db_picking = self.env['stock.picking'].search([])
         self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
 
+    def test_wave_split_move_multi_steps(self):
+        """ Split a move of the second step of a delivery, whose previous step is done.
+        Both moves are reserved and must stay assigned. """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        product = self.env['product.product'].create({
+            'name': 'Lot Product',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        lot1, lot2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': product.id},
+            {'name': 'lot2', 'product_id': product.id},
+        ])
+        for lot in (lot1, lot2):
+            self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 5.0, lot_id=lot)
+        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            product, 10, product.uom_id, self.customer_location, 'test', 'test', warehouse.company_id,
+            {'warehouse_id': warehouse, 'group_id': self.env['procurement.group'].create({'name': 'test'})},
+        )])
+        pick_move = self.env['stock.move'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse.pick_type_id.id)])
+        pick_move.picking_id.action_assign()
+        pick_move.picked = True
+        pick_move.picking_id.button_validate()
+        ship_move = pick_move.move_dest_ids
+        self.assertEqual(ship_move.state, 'assigned')
+        self.assertEqual(len(ship_move.move_line_ids), 2)
+
+        ship_move.move_line_ids[0]._add_to_wave()
+        ship_moves = self.env['stock.move'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse.out_type_id.id)])
+        self.assertEqual(len(ship_moves), 2)
+        self.assertRecordValues(ship_moves, [
+            {'product_uom_qty': 5, 'quantity': 5, 'state': 'assigned'},
+            {'product_uom_qty': 5, 'quantity': 5, 'state': 'assigned'},
+        ])
+
     def test_wave_split_move_uom(self):
         self.uom_dozen = self.env.ref('uom.product_uom_dozen')
         sns = self.env['stock.lot'].create([{
