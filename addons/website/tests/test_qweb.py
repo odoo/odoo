@@ -174,6 +174,15 @@ class TestQweb(TransactionCaseWithUserDemo):
             'cookies_allowed': True,
         })
 
+        # fill ir.cache, then clear all the caches to simulate a new worker
+        env['ir.qweb']._render('base.testing_content', {'doc': 'warmup'})
+        env['ir.qweb'].with_context(website_id=False)._render('base.testing_content', {'doc': 'warmup'})
+        with MockRequest(env, website=website) as request:
+            request.env['ir.qweb']._render('base.testing_content', {'doc': 'warmup'})
+        env.transaction.invalidate_ormcache('templates')
+        env.transaction.invalidate_ormcache('stable')
+        env.invalidate_all()
+
         # add some website information in cache (default website, lang...)
         env['ir.qweb']._render('base.testing_unused')
         with MockRequest(env, website=website) as request:
@@ -550,6 +559,13 @@ class TestQwebDataSnippet(TransactionCase):
         self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
 
     def test_call_query_count_snippets_template(self):
+        # fill ir.cache, then clear all the caches to simulate a new worker
+        with MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
+            request.env['ir.ui.view'].render_public_asset('website.snippets')
+        self.env.transaction.invalidate_ormcache('templates')
+        self.env.transaction.invalidate_ormcache('stable')
+        self.env.invalidate_all()
+
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
             with MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
@@ -572,13 +588,9 @@ class TestQwebDataSnippet(TransactionCase):
         ):
             t_call_snippets += 2
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
-        get_root_view = 1  # determine the root views
-        # website_sale adds one more root view.
-        if 'website_sale' in installed_modules:
-            get_root_view += 1
-        combine_views = 3  # Queries performed to execute the read combine
+        ir_cache = 1 + t_call_snippets  # compiled code read from ir.cache, in batch for each level of t-calls
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + ir_cache
         self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)

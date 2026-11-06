@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.fields import Domain
 
 
 class IrUiView(models.Model):
@@ -43,3 +44,12 @@ class IrUiView(models.Model):
             'point_of_sale.pos_sale_details_receipt',
             'point_of_sale.pos_sale_details_receipt_product_line',
         ]
+
+
+class IrQweb(models.AbstractModel):
+    _inherit = 'ir.qweb'
+
+    def _get_pregenerate_views_domain(self):
+        # the POS receipts are rendered by the frontend (OWL expressions)
+        xml_ids = self.env['ir.ui.view']._get_xml_ids_to_load()
+        return super()._get_pregenerate_views_domain() & Domain('key', 'not in', xml_ids)

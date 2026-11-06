@@ -117,3 +117,8 @@ class IrQweb(models.AbstractModel):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m[1], url_adapter(m[2])), atts['style'])
         return atts
+
+    def _pregenerate_view_caches(self):
+        super(IrQweb, self.with_context(website_id=None))._pregenerate_view_caches()
+        for website in self.env['website'].get_all():
+            super(IrQweb, self.with_context(website_id=website.id))._pregenerate_view_caches()
