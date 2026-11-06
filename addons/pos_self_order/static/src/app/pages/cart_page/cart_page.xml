@@ -77,7 +77,11 @@
                                 <t t-if="this.orderNote">Order note</t>
                                 <t t-else="">Add an order note</t>
                             </div>
-                            <div t-if="this.orderNote" class="text-muted mt-1" t-out="this.orderNote"/>
+                            <div t-if="this.orderNote">
+                                <t t-foreach="this.orderNote.split('\n')" t-as="subNote" t-key="subNote_index">
+                                    <div class="d-inline text-break text-muted" t-out="subNote"/><br/>
+                                </t>
+                            </div>
                             <div t-else="" class="text-muted small">Utensils, special instructions, etc.</div>
                         </div>
                         <span class="d-flex align-items-center justify-content-center" style="width: 2.2rem; height: 2.2rem;">

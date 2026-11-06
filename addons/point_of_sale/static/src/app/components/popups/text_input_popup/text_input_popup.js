@@ -12,6 +12,7 @@ export class TextInputPopup extends Component {
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),
         removeNewLines: t.boolean().optional(),
+        maxLength: t.number().optional(),
         getPayload: t.function(),
         close: t.function(),
     });
