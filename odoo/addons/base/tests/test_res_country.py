@@ -74,3 +74,23 @@ class TestResCountryForm(TransactionCase):
         country_form.name = 'a country'
         country_form.code = 'ZX'
         country_form.save()
+
+
+@tagged('-at_install', 'post_install')
+class TestResCountry(TransactionCase):
+    def test_search_name_longer_than_code(self):
+        """A name longer than the code size should not match the code of
+        another country made of its first characters (GERMANY vs GE)
+        """
+        Country = self.env['res.country']
+        germany = self.env.ref('base.de')
+        georgia = self.env.ref('base.ge')
+        germany.name = 'GERMANY'
+
+        self.assertEqual(Country.name_search('GERMANY', operator='='), [(germany.id, 'GERMANY')])
+        self.assertEqual(Country.search([('display_name', 'in', ['GERMANY'])]), germany)
+        self.assertIn(georgia, Country.search([('display_name', '!=', 'GERMANY')]))
+
+        result = self.env['res.partner'].load(['name', 'country_id'], [['Partner A', 'GERMANY']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(self.env['res.partner'].browse(result['ids']).country_id, germany)
