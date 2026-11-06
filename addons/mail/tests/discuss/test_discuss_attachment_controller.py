@@ -2,6 +2,8 @@
 
 import json
 
+from freezegun import freeze_time
+
 import odoo
 from odoo.addons.bus.models.bus import json_dump
 from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
@@ -137,6 +139,43 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                         {"access_token": tokens[attachment.id], "attachment_id": attachment.id},
                     )
                 self.assertFalse((posted + added).exists())
+
+    def test_attachment_delete_marks_message_edited_once(self):
+        """Test removing the attachments of an edited message keeps one edited span in its body,
+        holding the date of the last change."""
+        channel = self.env["discuss.channel"].create({"name": "Group", "channel_type": "group"})
+        channel._add_members(users=self.user_employee)
+        self._authenticate_pseudo_user(self.user_employee)
+        IrAttachment = self.env["ir.attachment"].with_user(self.user_employee)
+        span = '<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 %s:00:00"></span>'
+        for body, expected_body in (("Edited", "<p>Edited %s</p>"), ("", "%s")):
+            attachments = IrAttachment.create([
+                {"name": name, "res_id": 0, "res_model": "mail.compose.message"} for name in "AB"
+            ])
+            message = channel.with_user(self.user_employee).message_post(
+                attachment_ids=attachments.ids,
+                body="Posted",
+                message_type="comment",
+            )
+            with self.subTest(body=body):
+                with freeze_time("2025-04-08 10:00:00"):
+                    self.make_jsonrpc_request(
+                        "/mail/message/update_content",
+                        {
+                            "message_id": message.id,
+                            "update_data": {
+                                "attachment_ids": attachments.ids,
+                                "attachment_tokens": [
+                                    a._get_ownership_token() for a in attachments
+                                ],
+                                "body": body,
+                            },
+                        },
+                    )
+                for hour, attachment in zip((11, 12), attachments):
+                    with freeze_time(f"2025-04-08 {hour}:00:00"):
+                        self._delete_attachment(attachment, token=True)
+                    self.assertEqual(message.body, expected_body % (span % hour))
 
     def test_attachment_ownership_sent_to_author(self):
         """Test the ownership token of an attachment is sent to the author of the message, and not
