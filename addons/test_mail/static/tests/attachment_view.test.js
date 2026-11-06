@@ -26,7 +26,10 @@ let popoutIframe, popoutWindow;
 
 beforeEach(() => {
     popoutIframe = document.createElement("iframe");
+    const eventTarget = new EventTarget();
     popoutWindow = {
+        addEventListener: (...args) => eventTarget.addEventListener(...args),
+        removeEventListener: (...args) => eventTarget.removeEventListener(...args),
         closed: false,
         get document() {
             const doc = popoutIframe.contentDocument;
@@ -45,8 +48,12 @@ beforeEach(() => {
             return doc;
         },
         close: () => {
+            if (popoutWindow.closed) {
+                return;
+            }
             popoutWindow.closed = true;
             popoutIframe.remove(popoutAttachmentViewBody());
+            eventTarget.dispatchEvent(new Event("pagehide"));
         },
     };
 });
