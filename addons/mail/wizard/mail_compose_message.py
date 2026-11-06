@@ -404,9 +404,7 @@ class MailComposeMessage(models.TransientModel):
                 # The composer has a single email_from, so record responsible only works for single-record posts (no batch/mass mode);
                 if rendering_mode and composer.model in self.env and composer.res_ids:
                     record = self.env[composer.model].browse(composer._evaluate_res_ids()[0])
-                    author = record._mail_get_default_author(
-                        use_responsible=composer.template_id.email_from_responsible,
-                    )[record.id]
+                    author = record._mail_get_default_author()[record.id]
                     composer.email_from = author.email_formatted
                     updated_author_id = author.id
                 # batch / mass mode: keep current user, as no single responsible
