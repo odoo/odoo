@@ -4,6 +4,12 @@
  * libsass. Every bundle including this file emits its own values: light,
  * dark and print bundles each follow their variables.
  */
+
+/* The check mark of Bootstrap's checked checkboxes, drawn with another color */
+@function o-check-mark-image($color) {
+    @return escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"));
+}
+
 :root,
 :host {
     --o-action: #{$o-action};
@@ -17,6 +23,8 @@
     --o-brand-primary: #{$o-brand-primary};
     --o-brand-secondary: #{$o-brand-secondary};
     --o-bs-border-color: #{$border-color};
+    --o-bs-dropdown-divider-bg: #{$dropdown-divider-bg};
+    --o-bs-input-border-color: #{$input-border-color};
     --o-bs-input-color: #{$input-color};
     --o-btn-outline-secondary-active-background: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'active-background')};
     --o-btn-outline-secondary-active-border: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'active-border')};
@@ -101,6 +109,7 @@
     --o-list-footer-font-weight: #{$o-list-footer-font-weight};
     --o-main-color-muted: #{$o-main-color-muted};
     --o-main-favorite-color: #{$o-main-favorite-color};
+    --o-main-favorite-color-contrast: #{color-contrast($o-main-favorite-color)};
     --o-main-link-color: #{$o-main-link-color};
     --o-main-text-color: #{$o-main-text-color};
     --o-modal-animation-duration: #{$o-modal-animation-duration};
@@ -151,6 +160,7 @@
 
     /* Bootstrap variables that Bootstrap does not expose itself */
     --o-bs-alert-link-font-weight: #{$alert-link-font-weight};
+    --o-bs-badge-font-size: #{$badge-font-size};
     --o-bs-badge-font-weight: #{$badge-font-weight};
     --o-bs-black: #{$black};
     --o-bs-blue-400: #{$blue-400};
@@ -169,6 +179,7 @@
     --o-bs-btn-focus-width: #{$btn-focus-width};
     --o-bs-btn-font-size: #{$btn-font-size};
     --o-bs-btn-font-size-lg: #{$btn-font-size-lg};
+    --o-bs-btn-font-size-sm: #{$btn-font-size-sm};
     --o-bs-btn-line-height: #{$btn-line-height};
     --o-bs-btn-link-disabled-color: #{$btn-link-disabled-color};
     --o-bs-btn-link-focus-shadow-rgb: #{$btn-link-focus-shadow-rgb};
@@ -190,6 +201,8 @@
     --o-bs-carousel-dark-control-icon-filter: #{$carousel-dark-control-icon-filter};
     --o-bs-carousel-dark-indicator-active-bg: #{$carousel-dark-indicator-active-bg};
     --o-bs-carousel-indicator-active-bg: #{$carousel-indicator-active-bg};
+    --o-bs-carousel-indicator-height: #{$carousel-indicator-height};
+    --o-bs-carousel-indicator-hit-area-height: #{$carousel-indicator-hit-area-height};
     --o-bs-carousel-indicator-spacer: #{$carousel-indicator-spacer};
     --o-bs-component-active-bg: #{$component-active-bg};
     --o-bs-component-active-color: #{$component-active-color};
@@ -216,6 +229,8 @@
     --o-bs-dropdown-padding-y: #{$dropdown-padding-y};
     --o-bs-focus-ring-blur: #{$focus-ring-blur};
     --o-bs-focus-ring-box-shadow: #{$focus-ring-box-shadow};
+    --o-bs-focus-ring-color: #{$focus-ring-color};
+    --o-bs-focus-ring-width: #{$focus-ring-width};
     --o-bs-font-size-4: #{map-get($font-sizes, 4)};
     --o-bs-font-size-base: #{$font-size-base};
     --o-bs-font-size-lg: #{$font-size-lg};
@@ -225,6 +240,7 @@
     --o-bs-font-weight-medium: #{$font-weight-medium};
     --o-bs-font-weight-normal: #{$font-weight-normal};
     --o-bs-font-weight-semibold: #{$font-weight-semibold};
+    --o-bs-form-check-input-checked-bg-color: #{$form-check-input-checked-bg-color};
     --o-bs-form-check-padding-start: #{$form-check-padding-start};
     --o-bs-form-feedback-invalid-color: #{$form-feedback-invalid-color};
     --o-bs-form-switch-width: #{$form-switch-width};
@@ -251,9 +267,11 @@
     --o-bs-input-focus-border-color: #{$input-focus-border-color};
     --o-bs-input-focus-box-shadow: #{$input-focus-box-shadow};
     --o-bs-input-font-size: #{$input-font-size};
+    --o-bs-input-font-size-lg: #{$input-font-size-lg};
     --o-bs-input-font-weight: #{$input-font-weight};
     --o-bs-input-group-addon-padding-x: #{$input-group-addon-padding-x};
     --o-bs-input-height: #{$input-height};
+    --o-bs-input-height-lg: #{$input-height-lg};
     --o-bs-input-line-height: #{$input-line-height};
     --o-bs-input-padding-x: #{$input-padding-x};
     --o-bs-input-padding-y: #{$input-padding-y};
@@ -269,6 +287,7 @@
     --o-bs-list-group-bg: #{$list-group-bg};
     --o-bs-list-group-hover-bg: #{$list-group-hover-bg};
     --o-bs-list-group-item-padding-x: #{$list-group-item-padding-x};
+    --o-bs-list-group-item-padding-y: #{$list-group-item-padding-y};
     --o-bs-modal-content-bg: #{$modal-content-bg};
     --o-bs-modal-dialog-margin: #{$modal-dialog-margin};
     --o-bs-modal-dialog-margin-y-sm-up: #{$modal-dialog-margin-y-sm-up};
@@ -288,6 +307,8 @@
     --o-bs-pink-200: #{$pink-200};
     --o-bs-pink-300: #{$pink-300};
     --o-bs-popover-bg: #{$popover-bg};
+    --o-bs-popover-border-color: #{$popover-border-color};
+    --o-bs-popover-inner-border-radius: #{$popover-inner-border-radius};
     --o-bs-primary-bg-subtle: #{$primary-bg-subtle};
     --o-bs-primary-text-emphasis: #{$primary-text-emphasis};
     --o-bs-purple-200: #{$purple-200};
@@ -362,6 +383,13 @@
     --o-bs-success-contrast: #{color-contrast($success)};
     --o-bs-warning-contrast: #{color-contrast($warning)};
     --o-component-active-border-contrast: #{color-contrast($o-component-active-border)};
+    --o-gray-300-contrast: #{color-contrast($o-gray-300)};
     --o-gray-400-contrast: #{color-contrast($o-gray-400)};
     --o-view-background-color-contrast: #{color-contrast($o-view-background-color)};
+
+    /* Images that Sass draws with a color of the theme */
+    --o-check-mark-black-image: #{o-check-mark-image($black)};
+    --o-check-mark-danger-image: #{o-check-mark-image($danger)};
+    --o-check-mark-form-check-checked-image: #{o-check-mark-image($form-check-input-checked-bg-color)};
+    --o-crossed-out-image: #{str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='39' height='39'><line y2='0' x2='39' y1='39' x1='0' style='stroke:#{map-get($theme-colors, 'danger')};stroke-width:2'/><line y2='1' x2='40' y1='40' x1='1' style='stroke:rgb(255,255,255);stroke-width:1'/></svg>"), "#", "%23")};
 }

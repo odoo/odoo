@@ -7,18 +7,21 @@
     border-color: transparent;
 }
 
-$poll-color-opacity-map: (
-    "secondary": 0.2,
-    "o-action": 0.2,
-    "o-brand-primary": 0.4
-);
-$poll-check-opacity-map: (
-    "secondary": 0.5,
-    "o-action": 1,
-    "o-brand-primary": 1
-);
-@include o-mail-poll();
+/* Stronger backgrounds, a fainter check icon on the neutral state, an opaque border on the winning option */
+.o-mail-Poll {
+    --poll-bg-opacity: 0.2;
+    --poll-check-opacity: 0.5;
+
+    &.o-ongoing .o-mail-PollOption.o-selected,
+    &.o-ongoing.o-isShowingResults .o-mail-PollOption.o-hasVotes {
+        --poll-bg-opacity: 0.2;
+    }
+
+    &:not(.o-ongoing) .o-mail-PollOption.o-winningOption {
+        --poll-bg-opacity: 0.4;
+    }
+}
 
 .o-mail-Poll:not(.o-ongoing) .o-mail-PollOption.o-winningOption {
-    --poll-border-color: rgba(var(--poll-bg-r), var(--poll-bg-g), var(--poll-bg-b), 1);
+    --poll-border-color: rgb(from var(--poll-bg) r g b);
 }

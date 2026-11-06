@@ -24,23 +24,23 @@
 /* ------------------------------------------------------------------------------ */
 
 :root {
-    @include print-variable(o-input-border-color, $o-form-lightsecondary);
-    @include print-variable(o-caret-color, $input-color);
+    --o-input-border-color: var(--o-form-lightsecondary);
+    --o-caret-color: var(--o-bs-input-color);
 }
 
 .o_required_modifier {
-    @include print-variable(o-input-border-color, $o-input-border-required);
-    @include print-variable(o-caret-color, $o-input-border-required);
+    --o-input-border-color: var(--o-input-border-required);
+    --o-caret-color: var(--o-input-border-required);
 }
 
 .o_field_widget:focus-within {
-    @include print-variable(o-input-border-color, $o-action);
-    @include print-variable(o-caret-color, $o-action);
+    --o-input-border-color: var(--o-action);
+    --o-caret-color: var(--o-action);
 }
 
 .o_field_invalid {
-    @include print-variable(o-input-border-color, var(--danger));
-    @include print-variable(o-caret-color, var(--danger));
+    --o-input-border-color: var(--danger);
+    --o-caret-color: var(--danger);
 }
 
 /* ------------------------------------------------------------------------------ */
@@ -50,7 +50,7 @@
 .o_input {
     border: var(--border-width) solid var(--o-input-border-color);
     border-width: 0 0 var(--border-width) 0;
-    padding: var(--o-input-padding-y) $o-input-padding-x;
+    padding: var(--o-input-padding-y) var(--o-input-padding-x);
     background-color: var(--o-input-background-color, var(--o-bs-input-bg));
 
     &:placeholder-shown {
@@ -67,7 +67,7 @@
 /* Invalid */
 .o_field_invalid:not(:focus-within) {
     &.o_input, > .o_input, &.o_form_label {
-        color: o-text-color('danger');
+        color: var(--o-text-color-danger);
     }
 
     &:not(.o_form_label) {
@@ -94,7 +94,7 @@
     text-align: inherit;
     display: var(--fieldWidget-display, inline-block);
 
-    &:not(.o_form_label .o_field_widget.o_readonly_modifier, h1 .o_field_widget, h2 .o_field_widget):not(.alert *) {
+    &:not(.o_form_label .o_field_widget.o_readonly_modifier, h1 .o_field_widget, .h1 .o_field_widget, h2 .o_field_widget, .h2 .o_field_widget):not(.alert *) {
         margin-bottom: var(--fieldWidget-margin-bottom);
     }
 
@@ -114,14 +114,14 @@
     /* Dropdowns inputs */
     .o_input_dropdown {
         .o_input, > input {
-            padding-right: ($caret-width * 2.5) + $o-input-padding-x;
+            padding-right: calc(var(--o-bs-caret-width) * 2.5 + var(--o-input-padding-x));
         }
 
         .o_dropdown_button {
             position: absolute;
             top: var(--o-input-padding-y);
             left: auto;
-            right: $o-input-padding-x;
+            right: var(--o-input-padding-x);
             pointer-events: none;
         }
     }

@@ -1,18 +1,18 @@
 /* = Search Bar
    ============================================================================ */
 
-.o_searchview_facet {
-    @keyframes animate {
-        from {
-            opacity: .5;
-            transform: translateY(20%);
-        }
+@keyframes animate {
+    from {
+        opacity: .5;
+        transform: translateY(20%);
     }
+}
 
+.o_searchview_facet {
     animation: animate .25s ease-out;
 
     &:not(.o_facet_groupby):hover {
-        box-shadow: 0 0 0 1px $border-color;
+        box-shadow: 0 0 0 1px var(--o-border-color, var(--o-bs-border-color));
     }
 
     .btn, .btn:focus {
@@ -37,11 +37,11 @@
 
     .o_facet_favorite {
         background-color: color-mix(in srgb, var(--o-view-background-color) 75%, var(--o-main-favorite-color));
-        color: darken($o-main-favorite-color, 20%);
+        color: hsl(from var(--o-main-favorite-color) h s calc(l - 20));
 
         .o_facet_overlay {
             background-color: var(--o-main-favorite-color);
-            color: color-contrast($o-main-favorite-color);
+            color: var(--o-main-favorite-color-contrast);
         }
     }
 }

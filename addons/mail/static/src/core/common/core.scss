@@ -356,44 +356,6 @@ $o-mail-utilities: map-merge(
     background-color: color-mix(in srgb, color-mix(in srgb, var(--white) 15%, var(--gray-100)) 97.5%, var(--o-action)) !important;
 }
 
-/* see `@mixin button-variant`, this is the implementation without requiring `.btn` classname */
-@mixin o-mention-variant(
-    $background,
-    $outline,
-    $color: color-contrast($background),
-    $hover-background: if($color == $color-contrast-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount)),
-    $hover-outline: if($color == $color-contrast-light, shade-color($outline, $btn-hover-border-shade-amount), tint-color($outline, $btn-hover-border-tint-amount)),
-    $hover-color: color-contrast($hover-background),
-    $active-background: if($color == $color-contrast-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount)),
-    $active-outline: if($color == $color-contrast-light, shade-color($outline, $btn-active-border-shade-amount), tint-color($outline, $btn-active-border-tint-amount)),
-    $active-color: color-contrast($active-background),
-    $disabled-background: $background,
-    $disabled-outline: $outline,
-    $disabled-color: color-contrast($disabled-background)
-) {
-    color: #{$color} !important;
-    background-color: #{$background};
-    outline-color: #{$outline};
-    &:hover {
-        color: #{$hover-color};
-        background-color: #{$hover-background};
-        outline-color: #{$hover-outline};
-    }
-    &:focus {
-        box-shadow: #{to-rgb(mix($color, $outline, 15%))};
-    }
-    &:active {
-        color: #{$active-color};
-        background-color: #{$active-background};
-        outline-color: #{$active-outline};
-    }
-    &:disabled {
-        color: #{$disabled-color};
-        background-color: #{$disabled-background};
-        outline-color: #{$disabled-outline};
-    }
-}
-
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed, a.o_record_redirect_transformed {
     user-select: none;
     border-radius: var(--o-bs-btn-border-radius-lg);
@@ -403,14 +365,23 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redire
     outline-offset: -1px;
     font-weight: var(--o-bs-font-weight-bold);
     display: inline-block;
+    /* the colors of `@mixin button-variant`, without requiring the `.btn` classname */
+    color: var(--o-mail-mention-color) !important;
+    background-color: var(--o-mail-mention-bg);
+    outline-color: var(--o-mail-mention-outline-color);
 }
 
-a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed, a.o_record_redirect_transformed {
-    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
+a.o_mail_redirect:hover, a.o_channel_redirect:hover, a.o_message_redirect_transformed:hover, a.o_record_redirect_transformed:hover {
+    background-color: var(--o-mail-redirect-hover-bg);
+    outline-color: var(--o-mail-redirect-hover-outline-color);
+}
+
+a.o_mail_redirect:active, a.o_channel_redirect:active, a.o-discuss-mention:active, a.o_message_redirect_transformed:active, a.o_record_redirect_transformed:active {
+    background-color: var(--o-mail-mention-active-bg);
+    outline-color: var(--o-mail-mention-active-outline-color);
 }
 
 a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
     cursor: default !important;
 }
 

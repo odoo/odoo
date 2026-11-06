@@ -24,11 +24,11 @@
         /* to avoid this workaround. */
         &.o_is_microsoft_edge {
             @media (min-resolution: 1.5dppx) and (max-resolution: 1.51dppx) {
-                $o-we-sidebar-width-for-edge: $o-we-sidebar-width - 5px;
-                width: $o-we-sidebar-width-for-edge;
+                --o-we-sidebar-width-for-edge: calc(var(--o-we-sidebar-width) - 5px);
+                width: var(--o-we-sidebar-width-for-edge);
 
                 .o_hb_snippets_menu {
-                    width: $o-we-sidebar-width-for-edge;
+                    width: var(--o-we-sidebar-width-for-edge);
                 }
             }
         }

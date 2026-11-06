@@ -1,7 +1,3 @@
-$o-fe-handle-edge-size: 16px !default;
-$o-fe-handle-border-width: 2px !default;
-$o-fe-color-active-background-color: var(--background-color) !default;
-
 .o_fp_color_item.selected,
 .o_fp_handles {
     --o-fe-handles-bg-color: #FFFFFF;
@@ -82,6 +78,8 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 
 .o_fp_handles {
   --o-fe-handles-accent-color: #01bad2;
+  --o-fe-handle-edge-size: 16px;
+  --o-fe-handle-border-width: 2px;
   --o-fe-handle-inside-line-width: 3px;
   --o-fe-rotation-handle-distance: 22px;
   border-color: inherit;
@@ -116,14 +114,14 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 
       &.o_fp_side_x {
         &::before {
-          width: $o-fe-handle-border-width;
+          width: var(--o-fe-handle-border-width);
           margin: 0 auto;
         }
       }
 
       &.o_fp_side_y {
         &::before {
-          height: $o-fe-handle-border-width;
+          height: var(--o-fe-handle-border-width);
           margin: auto 0;
         }
       }
@@ -131,117 +129,117 @@ $o-fe-color-active-background-color: var(--background-color) !default;
     }
 
     &.o_fp_side_y {
-      height: $o-fe-handle-edge-size;
+      height: var(--o-fe-handle-edge-size);
       &:active, &:hover {
         .o_fp_handle_indicator {
-          width: $o-fe-handle-edge-size * 2;
-          height: $o-fe-handle-edge-size ;
-          outline-offset: -($o-fe-handle-edge-size * 0.6);
+          width: calc(var(--o-fe-handle-edge-size) * 2);
+          height: var(--o-fe-handle-edge-size);
+          outline-offset: calc(var(--o-fe-handle-edge-size) * -0.6);
         }
       }
     }
 
     &.o_fp_side_x {
-      width: $o-fe-handle-edge-size;
+      width: var(--o-fe-handle-edge-size);
       &:active, &:hover {
         .o_fp_handle_indicator {
-          height: $o-fe-handle-edge-size * 2;
-          width: $o-fe-handle-edge-size ;
-          outline-offset: -($o-fe-handle-edge-size * 0.6);
+          height: calc(var(--o-fe-handle-edge-size) * 2);
+          width: var(--o-fe-handle-edge-size);
+          outline-offset: calc(var(--o-fe-handle-edge-size) * -0.6);
 
         }
       }
     }
 
     &.w {
-      inset: $o-fe-handle-border-width * -0.5 auto $o-fe-handle-border-width * -0.5 $o-fe-handle-border-width * -0.5;
+      inset: calc(var(--o-fe-handle-border-width) * -0.5) auto calc(var(--o-fe-handle-border-width) * -0.5) calc(var(--o-fe-handle-border-width) * -0.5);
       transform: translateX(-50%);
       cursor: ew-resize;
      .o_fp_handle_indicator{
-        inset: $o-fe-handle-border-width*2 0 $o-fe-handle-border-width*2 0;
+        inset: calc(var(--o-fe-handle-border-width) * 2) 0 calc(var(--o-fe-handle-border-width) * 2) 0;
       }
     }
 
     &.e {
-      inset: $o-fe-handle-border-width * -0.5 $o-fe-handle-border-width * -0.5 $o-fe-handle-border-width * -0.5 auto;
+      inset: calc(var(--o-fe-handle-border-width) * -0.5) calc(var(--o-fe-handle-border-width) * -0.5) calc(var(--o-fe-handle-border-width) * -0.5) auto;
       transform: translateX(50%);
       cursor: ew-resize;
 
       .o_fp_handle_indicator{
-        inset: $o-fe-handle-border-width*2 0 $o-fe-handle-border-width*2 0;
+        inset: calc(var(--o-fe-handle-border-width) * 2) 0 calc(var(--o-fe-handle-border-width) * 2) 0;
       }
     }
 
     &.n {
-      inset: $o-fe-handle-border-width *-1 $o-fe-handle-border-width *-1 auto $o-fe-handle-border-width *-1;
+      inset: calc(var(--o-fe-handle-border-width) * -1) calc(var(--o-fe-handle-border-width) * -1) auto calc(var(--o-fe-handle-border-width) * -1);
       cursor: ns-resize;
       transform: translateY(-50%);
 
       .o_fp_handle_indicator{
-        inset: $o-fe-handle-border-width * 0.5 0 0 0;
+        inset: calc(var(--o-fe-handle-border-width) * 0.5) 0 0 0;
       }
 
       &:before {
-        transform: translateY($o-fe-handle-border-width * 0.5);
+        transform: translateY(calc(var(--o-fe-handle-border-width) * 0.5));
       }
     }
 
     &.s {
-      inset: auto $o-fe-handle-border-width *-1 $o-fe-handle-border-width *-1 $o-fe-handle-border-width *-1;
+      inset: auto calc(var(--o-fe-handle-border-width) * -1) calc(var(--o-fe-handle-border-width) * -1) calc(var(--o-fe-handle-border-width) * -1);
       cursor: ns-resize;
       transform: translateY(50%);
 
       .o_fp_handle_indicator{
-       inset: $o-fe-handle-border-width *-1 0 0 0;
+       inset: calc(var(--o-fe-handle-border-width) * -1) 0 0 0;
       }
 
 
       &:before {
-        transform: translateY($o-fe-handle-border-width * -0.5);
+        transform: translateY(calc(var(--o-fe-handle-border-width) * -0.5));
       }
     }
 
     &.ne {
-      inset: $o-fe-handle-border-width * 0.5 $o-fe-handle-border-width * 0.5 auto auto;
+      inset: calc(var(--o-fe-handle-border-width) * 0.5) calc(var(--o-fe-handle-border-width) * 0.5) auto auto;
       transform: translate(50%, -50%);
       cursor: nesw-resize;
       .o_fp_handle_indicator{
-        inset: $o-fe-handle-border-width*-2 0 0 ($o-fe-handle-edge-size*-0.5)+$o-fe-handle-border-width;
+        inset: calc(var(--o-fe-handle-border-width) * -2) 0 0 calc(var(--o-fe-handle-edge-size) * -0.5 + var(--o-fe-handle-border-width));
       }
     }
 
     &.se {
-      inset: auto $o-fe-handle-border-width * 0.5 $o-fe-handle-border-width * 0.5 auto;
+      inset: auto calc(var(--o-fe-handle-border-width) * 0.5) calc(var(--o-fe-handle-border-width) * 0.5) auto;
       transform: translate(50%, 50%);
       cursor: nwse-resize;
 
       .o_fp_handle_indicator{
-       inset: $o-fe-handle-border-width 0 0 ($o-fe-handle-edge-size*-0.5)+$o-fe-handle-border-width;
+       inset: var(--o-fe-handle-border-width) 0 0 calc(var(--o-fe-handle-edge-size) * -0.5 + var(--o-fe-handle-border-width));
       }
     }
 
     &.sw {
-      inset: auto auto $o-fe-handle-border-width * 0.5 $o-fe-handle-border-width * -0.5;
+      inset: auto auto calc(var(--o-fe-handle-border-width) * 0.5) calc(var(--o-fe-handle-border-width) * -0.5);
       transform: translate(-50%, 50%);
       cursor: nesw-resize;
 
       .o_fp_handle_indicator{
-        inset: $o-fe-handle-border-width 0 0 ($o-fe-handle-edge-size*-0.5);
+        inset: var(--o-fe-handle-border-width) 0 0 calc(var(--o-fe-handle-edge-size) * -0.5);
       }
     }
 
     &.nw {
-      inset: $o-fe-handle-border-width * 0.5 auto auto $o-fe-handle-border-width * -0.5;
+      inset: calc(var(--o-fe-handle-border-width) * 0.5) auto auto calc(var(--o-fe-handle-border-width) * -0.5);
       transform: translate(-50%, -50%);
       cursor: nwse-resize;
       .o_fp_handle_indicator{
-        inset: $o-fe-handle-border-width*-2 0 0 ($o-fe-handle-edge-size*-0.5);
+        inset: calc(var(--o-fe-handle-border-width) * -2) 0 0 calc(var(--o-fe-handle-edge-size) * -0.5);
       }
     }
 
 
     &.o_fp_line {
-      width: $o-fe-handle-edge-size;
+      width: var(--o-fe-handle-edge-size);
       top: 50%;
       transform: translateY(-50%);
 
@@ -249,7 +247,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
         left: 0;
         cursor: ew-resize;
         .o_fp_handle_indicator{
-          inset: 0 0 0 $o-fe-handle-edge-size*-1;
+          inset: 0 0 0 calc(var(--o-fe-handle-edge-size) * -1);
         }
       }
 
@@ -257,7 +255,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
         right: 0;
         cursor: ew-resize;
         .o_fp_handle_indicator{
-          inset: 0 $o-fe-handle-edge-size*-1 0 0;
+          inset: 0 calc(var(--o-fe-handle-edge-size) * -1) 0 0;
         }
       }
 
@@ -271,20 +269,20 @@ $o-fe-color-active-background-color: var(--background-color) !default;
     .o_fp_handle_indicator {
       position: absolute;
       display: block;
-      width: $o-fe-handle-edge-size;
-      height: $o-fe-handle-edge-size;
+      width: var(--o-fe-handle-edge-size);
+      height: var(--o-fe-handle-edge-size);
       margin: auto;
-      border: solid $o-fe-handle-border-width var(--o-fe-handles-accent-color);
-      border-radius: $o-fe-handle-edge-size;
+      border: solid var(--o-fe-handle-border-width) var(--o-fe-handles-accent-color);
+      border-radius: var(--o-fe-handle-edge-size);
       background: var(--o-fe-handles-bg-color);
       outline: var(--o-fe-handle-inside-line-width) solid var(--o-fe-handles-bg-color);
-      outline-offset: -($o-fe-handle-edge-size * 0.5);
+      outline-offset: calc(var(--o-fe-handle-edge-size) * -0.5);
       transition: all .2s ease-in-out;
 
       &::before {
         content: '';
         position: absolute;
-        inset: $o-fe-handle-edge-size * -0.5;
+        inset: calc(var(--o-fe-handle-edge-size) * -0.5);
         display: block;
         border-radius: inherit;
       }
@@ -413,7 +411,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
       transition: all .2s ease-in-out;
        width: 24px;
        border-radius: 999rem;
-       border: $o-fe-handle-border-width solid var(--o-fe-handles-accent-color);
+       border: var(--o-fe-handle-border-width) solid var(--o-fe-handles-accent-color);
        background: var(--o-fe-handles-bg-color);
        height: 24px;
        font-size: 12px;
@@ -505,10 +503,6 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 .o_fp_animate_transition {
     transition: transform 0.2s ease-out;
 }
-.o_fp_shape.text {
-
-}
-
 .o_fp_text_content{
      word-wrap: break-word;
      overflow-wrap: break-word;

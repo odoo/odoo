@@ -223,6 +223,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/core/common/core.dark.scss',
             'mail/static/src/**/*.dark.scss',
             'mail/static/src/**/*.dark.css',
+            # rules that only the light theme needs
+            ('remove', 'mail/static/src/**/*.light.css'),
         ],
         "web.assets_frontend": [
             "mail/static/src/scss/css_variables.scss",
@@ -318,6 +320,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/common/**/*.dark.scss',
             'mail/static/src/**/common/**/*.dark.css',
             'mail/static/src/**/public_web/**/*.dark.css',
+            # rules that only the light theme needs
+            ('remove', 'mail/static/src/**/*.light.css'),
         ],
         'mail.assets_markdown': [
             'mail/static/src/markdown_assets/mail_markdown_assets.css',

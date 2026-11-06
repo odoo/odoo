@@ -8,7 +8,7 @@
         transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
 
         &.show {
-            --#{$prefix}btn-active-border-color: var(--o-btn-outline-secondary-active-border);
+            --btn-active-border-color: var(--o-btn-outline-secondary-active-border);
 
             color: var(--o-btn-outline-secondary-active-color);
             background-color: var(--o-btn-outline-secondary-active-background);
@@ -44,6 +44,7 @@
 
         &:after {
             content: "arrow_drop_down";
+            /* eslint-disable-next-line css/font-family-fallbacks -- icon font */
             font-family: 'Material Symbols Outlined';
             display: inline-block;
             margin-left: auto;
@@ -109,7 +110,7 @@
     }
 
     .dropdown-item.o-dropdown-item-indent {
-        --#{$prefix}dropdown-item-padding-x: calc(var(--o-bs-dropdown-item-padding-x) * 1.5);
+        --dropdown-item-padding-x: calc(var(--o-bs-dropdown-item-padding-x) * 1.5);
     }
 }
 

@@ -8,6 +8,8 @@
     --o-border-color: #{o-color('300')};
     --o-border-color: #{fade-currentColor()};
 
+    --o-theme-headings-font: #{inspect($o-theme-headings-font)};
+
     /* Height of the nav of the mobile mega menu, whose dropdown behaves as
        offcanvas */
     --o-mega-menu-nav-height: 3rem;
@@ -1094,6 +1096,10 @@ font[class*='bg-'] {
 $-o-carousel-indicators-dots-size: .75rem;
 $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer-5));
 
+:root {
+    --o-carousel-indicators-dots-size: #{$-o-carousel-indicators-dots-size};
+}
+
 %o_horizontal_controllers {
     pointer-events: none;
 
@@ -1903,6 +1909,10 @@ $-transition-duration: 200ms;
 }
 
 $zindex-website-header: $zindex-fixed !default;
+
+:root {
+    --o-zindex-website-header: #{$zindex-website-header};
+}
 
 header {
     &#top {

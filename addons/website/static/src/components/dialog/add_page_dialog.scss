@@ -8,7 +8,7 @@
         .list-group {
             --list-group-active-bg: var(--o-brand-primary);
             --list-group-active-border-color: var(--o-brand-primary);
-            --list-group-active-color: #{color-contrast($o-brand-primary)};
+            --list-group-active-color: var(--o-brand-primary-contrast);
 
             @media screen and (min-width: 768px), print and (min-width: 188mm) {
                 min-width: 200px;
@@ -30,12 +30,13 @@
     }
 
     .o_page_template {
-        $-iframe-width: 1024;
-        $-preview-width-lg: 408; /* Empirically obtained */
+        --o-page-template-iframe-width: 1024px;
+        --o-page-template-preview-width-lg: 408px; /* Empirically obtained */
+
         box-shadow: 0 0 1rem rgba(0, 0, 0, 0.16);
 
         @media screen and (min-width: 768px) and (max-width: 991.98px), print and (min-width: 188mm) and (max-width: 189.98mm) {
-            width: #{$-preview-width-lg}px;
+            width: var(--o-page-template-preview-width-lg);
         }
 
         .o_page_template_preview {
@@ -49,7 +50,7 @@
                 /* Width is fixed; the actual scale is set inline by */
                 /* adjustHeight() so the iframe fits the live column width */
                 /* (the bootstrap col class controls the column width). */
-                width: #{$-iframe-width}px;
+                width: var(--o-page-template-iframe-width);
                 transform-origin: 0 0;
             }
 

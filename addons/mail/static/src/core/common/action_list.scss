@@ -35,24 +35,6 @@
             }
         }
 
-        /* The call theme looks dark, which the dark theme already provides. */
-        @if $o-webclient-color-scheme != dark {
-            &.o-discussCallTheme {
-                --gradient: transparent;
-                color: #FFF !important;
-
-                &:not(.o-hasBtnBg) {
-                    background-color: transparent !important;
-                }
-                &.o-hasBtnBg:hover {
-                    filter: brightness(1.3);
-                }
-                &.o-dropdown-item:hover {
-                    backdrop-filter: brightness(1.3);
-                }
-            }
-        }
-
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
                 opacity: var(--o-mail-ActionList-Button-opacity);
@@ -160,19 +142,6 @@
             padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x) !important;
             font-size: var(--o-bs-h5-font-size) !important;
             font-weight: var(--o-font-weight-medium) !important;
-        }
-    }
-
-    @if $o-webclient-color-scheme != dark {
-        & button.o-discussCallTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
-            background-color: var(--gray-800);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-
-            &.active {
-                /* Same colors as the dark theme. */
-                background-color: #17373b !important;
-                border-color: #03f9e3 !important;
-            }
         }
     }
 

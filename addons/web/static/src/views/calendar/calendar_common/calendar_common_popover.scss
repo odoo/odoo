@@ -14,16 +14,15 @@
         z-index: 1;
 
         .o_popover:has(&) {
-            $-margin-top: calc(var(--o-bs-spacer-5) * 3);
-
+            --CwPopover-margin-top: calc(var(--o-bs-spacer-5) * 3);
             --popover-border-radius: var(--o-bs-spacer-2) var(--o-bs-spacer-2) 0 0;
-            --CwPopover-max-height: calc(100dvh - #{$-margin-top});
+            --CwPopover-max-height: calc(100dvh - var(--CwPopover-margin-top));
             --CwPopover-max-width: auto;
             --CwPopover-width: 100%;
 
             /* !important is mandatory to override default popover positioning */
             inset: 0 !important;
-            margin-top: $-margin-top;
+            margin-top: var(--CwPopover-margin-top);
 
             &::before {
                 content: '';
@@ -62,8 +61,8 @@
     }
 
     .o_popover_header {
-        border-top-left-radius: $popover-inner-border-radius;
-        border-top-right-radius: $popover-inner-border-radius;
+        border-top-left-radius: var(--o-bs-popover-inner-border-radius);
+        border-top-right-radius: var(--o-bs-popover-inner-border-radius);
     }
 
     .o_field_widget:not(.o_field_properties) {

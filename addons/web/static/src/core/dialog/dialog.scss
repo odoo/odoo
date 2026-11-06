@@ -47,12 +47,11 @@
         --modal-header-border-width: 0;
         --modal-footer-border-width: 0;
 
-        $_halfPadding: calc(var(--modal-padding) * 0.5);
-
         --modal-padding: var(--Dialog-padding, var(--o-bs-spacer-3));
+        --Dialog-halfPadding: calc(var(--modal-padding) * 0.5);
         --modal-header-padding-x: var(--modal-padding);
         --modal-header-padding-y: var(--modal-padding);
-        --modal-header-padding: var(--modal-padding) var(--modal-padding) #{$_halfPadding};
+        --modal-header-padding: var(--modal-padding) var(--modal-padding) var(--Dialog-halfPadding);
         
         &.o_modal_no_body_padding .modal-body {
             padding: 0;
@@ -64,7 +63,7 @@
 
         &.o_modal_body_padding {
             .modal-body {
-                padding: #{$_halfPadding} var(--modal-padding);
+                padding: var(--Dialog-halfPadding) var(--modal-padding);
             }
 
             @media screen and (min-width: 576px), print and (min-width: 100mm) {
@@ -74,7 +73,7 @@
 
         @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
             .modal-dialog {
-                --modal-margin: #{$modal-dialog-margin * 4 $modal-dialog-margin * 2};
+                --modal-margin: calc(var(--o-bs-modal-dialog-margin) * 4) calc(var(--o-bs-modal-dialog-margin) * 2);
 
                 display: flex;
                 margin: 0;
@@ -99,7 +98,7 @@
             --modal-margin: 0;
             --modal-border-width: 0;
             --modal-border-radius: 0;
-            --modal-box-shadow: #{$border-width * -1 0 0 $border-color};
+            --modal-box-shadow: calc(var(--o-bs-border-width) * -1) 0 0 var(--o-border-color, var(--o-bs-border-color));
 
             overflow: visible;
 
@@ -110,17 +109,17 @@
             .modal-header {
                 button[data-icon="arrow_back"], .o_expand_button {
                     /* Use BS default btn-close padding logic */
-                    padding: calc(var(--#{$prefix}modal-header-padding-y) * .5) calc(var(--#{$prefix}modal-header-padding-x) * .5);
+                    padding: calc(var(--modal-header-padding-y) * .5) calc(var(--modal-header-padding-x) * .5);
                 }
 
                 .o_expand_button {
                     /* Use BS default btn-close margin logic */
-                    margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x)) calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto;
+                    margin: calc(-.5 * var(--modal-header-padding-y)) calc(-.5 * var(--modal-header-padding-x)) calc(-.5 * var(--modal-header-padding-y)) auto;
                 }
 
                 button[data-icon="arrow_back"] {
                     /* Invert BS default btn-close margin logic */
-                    margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x));
+                    margin: calc(-.5 * var(--modal-header-padding-y)) auto calc(-.5 * var(--modal-header-padding-y)) calc(-.5 * var(--modal-header-padding-x));
                 }
             }
 

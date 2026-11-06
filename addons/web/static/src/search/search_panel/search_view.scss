@@ -2,11 +2,11 @@
     --SearchBar-background-color: var(--o-bs-input-focus-bg);
 
     background-color: var(--SearchBar-background-color);
-    border: $input-border-width solid $input-border-color;
+    border: var(--border-width) solid var(--o-border-color, var(--o-bs-input-border-color));
 
     &:focus-within {
         border-color: var(--o-bs-input-focus-border-color);
-        color: $input-focus-color;
+        color: var(--body-color);
 
         + .o_searchview_dropdown_toggler {
             border-top-color: var(--o-bs-input-focus-border-color);
@@ -56,7 +56,7 @@
             color: white;
 
             &:active {
-                background-color: darken($o-brand-primary, 10%);
+                background-color: hsl(from var(--o-brand-primary) h s calc(l - 10));
             }
         }
     }

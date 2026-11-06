@@ -2,15 +2,15 @@
 .o_wslides_fs_main {
     position: absolute;
     inset: 0;
-    z-index: $zindex-website-header + 1;
-    background-image: linear-gradient(120deg, $o-wslides-color-dark2, $o-wslides-color-dark3);
+    z-index: calc(var(--o-zindex-website-header) + 1);
+    background-image: linear-gradient(120deg, var(--o-wslides-color-dark2), var(--o-wslides-color-dark3));
 
     .o_wslides_slide_fs_header {
-        background-image: linear-gradient(-6deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
+        background-image: linear-gradient(-6deg, var(--o-wslides-color-dark1), var(--o-wslides-color-dark2));
         height: 50px;
 
         > div > a {
-            background-color: rgba($o-wslides-color-dark3, 0.5);
+            background-color: color-mix(in srgb, var(--o-wslides-color-dark3) 50%, transparent);
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none!important;
 
@@ -23,11 +23,11 @@
             }
 
             &:hover {
-                background-color: rgba($o-wslides-color-dark3, 0.2);
+                background-color: color-mix(in srgb, var(--o-wslides-color-dark3) 20%, transparent);
             }
 
             &.active{
-                background-color: $o-wslides-color-dark1;
+                background-color: var(--o-wslides-color-dark1);
                 color: #fff;
             }
         }
@@ -38,12 +38,12 @@
     }
 
     .o_wslides_fs_sidebar {
-        background-image: linear-gradient(160deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
+        background-image: linear-gradient(160deg, var(--o-wslides-color-dark1), var(--o-wslides-color-dark2));
         position: relative;
         z-index: var(--o-bs-zindex-fixed);
 
         .o_wslides_fs_sidebar_content {
-            min-width: $o-wslides-fs-side-width;
+            min-width: var(--o-wslides-fs-side-width);
         }
 
         .o_wslides_fs_toggle_sidebar {
@@ -66,7 +66,7 @@
         }
 
         @media (min-width: 576px) {
-            width: $o-wslides-fs-side-width;
+            width: var(--o-wslides-fs-side-width);
 
             &.o_wslides_fs_sidebar_hidden {
                 width: 0;
@@ -87,7 +87,7 @@
         }
 
         .o_wslides_fs_sidebar_section {
-            background-color: rgba($o-wslides-color-dark3, 0.3);
+            background-color: color-mix(in srgb, var(--o-wslides-color-dark3) 30%, transparent);
             margin-bottom: 1px;
         }
 
@@ -96,7 +96,7 @@
 
             &.active {
                 box-shadow: inset 2px 0 0 var(--primary);
-                background-color: rgba($o-wslides-color-dark3, 0.5);
+                background-color: color-mix(in srgb, var(--o-wslides-color-dark3) 50%, transparent);
 
                 &, a {
                     color: white;

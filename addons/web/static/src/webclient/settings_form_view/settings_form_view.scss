@@ -38,15 +38,6 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
    cursor: pointer;
 }
 
-/* MIXINS */
-@mixin o-base-settings-horizontal-padding($padding-base: $input-btn-padding-y-sm) {
-   padding: $padding-base var(--o-horizontal-padding);
-
-   @media screen and (min-width: 1200px), print and (min-width: 220mm) {
-       padding-left: calc(var(--o-horizontal-padding) * 2);;
-   }
-}
-
 /* Use a very specif selector to overwrite generic form-view rules */
 .o_form_view.o_base_settings_view .o_form_renderer.o_form_nosheet {
    display: flex;
@@ -121,21 +112,28 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
                }
            }
             .o_page_invalid {
-                color: o-text-color('danger') !important;
+                color: var(--o-text-color-danger) !important;
                 background-color: var(--o-input-invalid-bg) !important;
             }
        }
 
        .settings {
+           /* The left padding of the titles and headers doubles on large screens */
+           --o-settings-padding-left: var(--o-horizontal-padding);
+
            position: relative;
            flex: 1 1 100%;
            background-color: var(--o-view-background-color);
            overflow: auto;
 
+           @media screen and (min-width: 1200px), print and (min-width: 220mm) { /* media-breakpoint-up(xl) */
+               --o-settings-padding-left: calc(var(--o-horizontal-padding) * 2);
+           }
+
            > .app_settings_block {
                h2 {
                    margin: 0 0 !important;
-                   @include o-base-settings-horizontal-padding(.7rem);
+                   padding: .7rem var(--o-horizontal-padding) .7rem var(--o-settings-padding-left);
                    background-color: var(--settings__title-bg);
                    font-size: 15px;
 
@@ -146,7 +144,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
 
                h3 {
                    margin: 0 0 !important;
-                   @include o-base-settings-horizontal-padding(.7rem);
+                   padding: .7rem var(--o-horizontal-padding) .7rem var(--o-settings-padding-left);
                    font-weight: 400;
                    font-size: 13px;
                }
@@ -154,7 +152,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
                .o_settings_container {
                    max-width: var(--o-bs-breakpoint-lg); /* Provide a maximum container size to ensure readability */
                    @media screen and (min-width: 768px), print and (min-width: 188mm) {
-                        @include o-base-settings-horizontal-padding(0);
+                        padding: 0 var(--o-horizontal-padding) 0 var(--o-settings-padding-left);
                    }
                    margin-bottom: 24px;
                }
@@ -164,7 +162,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
                display: flex;
                align-items: center;
                margin-bottom: 10px;
-               @include o-base-settings-horizontal-padding(.8rem);
+               padding: .8rem var(--o-horizontal-padding) .8rem var(--o-settings-padding-left);
                background-color: var(--gray-200);
 
                .icon {
@@ -179,7 +177,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
            }
 
            .app_settings_header {
-               @include o-base-settings-horizontal-padding(0);
+               padding: 0 var(--o-horizontal-padding) 0 var(--o-settings-padding-left);
            }
 
            .highlighter {
