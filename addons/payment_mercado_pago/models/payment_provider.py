@@ -120,7 +120,7 @@ class PaymentProvider(models.Model):
     def write(self, vals):
         """Override of `payment` to lock the connection mode while an account is connected.
 
-        :raise UserError: If `is_live` is changed without supplying new credentials.
+        :raise UserError: If `is_live` is changed without supplying new credentials
         """
         if "is_live" in vals and "mercado_pago_access_token" not in vals:
             if any(
@@ -276,8 +276,8 @@ class PaymentProvider(models.Model):
 
         if is_proxy_request:
             # The context carries the mode during onboarding, before `is_live` is set.
-            test_mode = self.env.context.get("mercado_pago_test_mode", not self.is_live)
-            base_url = const.TEST_PROXY_URL if test_mode else const.PROXY_URL
+            is_live = not self.env.context.get("mercado_pago_test_mode", not self.is_live)
+            base_url = const.PROXY_URL if is_live else const.TEST_PROXY_URL
             return urljoin(base_url, endpoint)
 
         return urljoin("https://api.mercadopago.com", endpoint)
@@ -305,7 +305,7 @@ class PaymentProvider(models.Model):
         if method == "POST" and idempotency_key:
             headers["X-Idempotency-Key"] = idempotency_key
         if not is_proxy_request and not is_refresh_token_request:
-            # The onboarding verification passes the new token before it is stored.
+            # The onboarding verification passes the new token before it is stored
             access_token = (
                 self.env.context.get("mercado_pago_access_token")
                 or self._mercado_pago_fetch_access_token()
