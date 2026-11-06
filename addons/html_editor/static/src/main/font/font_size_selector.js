@@ -9,6 +9,7 @@ import {
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
+import { getToolbarAriaLabel } from "@html_editor/main/toolbar/toolbar";
 
 export const MAX_FONT_SIZE = 144;
 
@@ -116,6 +117,10 @@ export class FontSizeSelector extends Component {
                 fontSizeMenuItemToFocus.focus();
             }
         }
+    }
+
+    get ariaLabel() {
+        return getToolbarAriaLabel(this.props.title, this.state.displayName);
     }
 
     onSelected(item) {
