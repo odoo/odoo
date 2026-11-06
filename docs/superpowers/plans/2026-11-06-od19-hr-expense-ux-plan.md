@@ -5,7 +5,7 @@
 **Goal:** ทำให้พนักงานยื่นใบเบิกได้ง่าย (≤ 4 ขั้น) ผ่าน wizard ฝั่ง backend พร้อมรองรับ **Mileage** (ค่าเดินทางตามระยะทาง) และ **สมุดรถพนักงาน** (`od19.employee.vehicle`) ที่จดจำรถและเติมอัตโนมัติในครั้งถัดไป
 
 **Architecture:**
-- **Mileage + สมุดรถ** อยู่ในโมดูลเดิม `od19_hr_expense_enhanced` (ไม่มี dependency ใหม่) — ใช้กลไก `hr.expense` core: UoM = กม., `quantity` = ระยะทาง, `price_unit` = อัตรา/กม. → `total_amount` = คำนวณให้เอง
+- **Mileage + สมุดรถ** อยู่ในโมดูลเดิม `od19_hr_expense_enhanced` (ไม่มี dependency ใหม่) — ใช้กลไก `hr.expense` core: UoM = กม., `quantity` = ระยะทาง (กม.), `total_amount` = ระยะทาง × อัตรา/กม. (ฟิลด์ที่ตั้งค่าได้) → core คำนวณ `price_unit` ให้เอง (ดู §กลไกที่ยืนยันจากโค้ดจริง)
 - **Wizard + Kanban สถานะ** อยู่ในโมดูลใหม่ `od19_hr_expense_portal` (ตามสเปก §5) — Phase 2 ทำเฉพาะฝั่ง backend; portal/template เป็น Phase 3
 - อัตรา Mileage ตั้งค่าที่ระดับบริษัท (`res.company.od19_mileage_rate`) ตามแบบแผนเดียวกับเบี้ยเลี้ยง ม.42(3)
 - **ไม่แตะ Odoo core** และไม่เปลี่ยนโครงสร้างข้อมูล core
@@ -30,6 +30,7 @@
 | C3 | **Mileage ไม่มี VAT / ไม่หัก WHT** | บังคับ `tax_ids` ว่างเมื่อ `od19_is_mileage` (แบบเดียวกับ payment certificate ของเดิม) |
 | C4 | **นิยาม "รถล่าสุด"** | เรียง `od19_last_used_date desc, id desc` (สเปก §K9) |
 | C5 | **สำเนาข้อมูลรถ ณ เวลาที่เบิก** | เก็บ `od19_mileage_vehicle_type` + `od19_mileage_plate` เป็น Char snapshot บน `hr.expense` |
+| C6 | **กลไก Mileage กับ `hr.expense` core** | `price_unit` เป็น readonly+computed เขียนทับไม่ได้ → ตั้ง `quantity = กม.` + `total_amount = กม. × อัตรา` (core คำนวณ `price_unit` ให้เองเฉพาะสินค้าไม่มีต้นทุน — กรณีหมวด Mileage) |
 
 ---
 
@@ -63,7 +64,10 @@
 
 ## กลไกที่ยืนยันจากโค้ดจริง (ใช้อ้างอิงตอน implement)
 
-- `hr.expense` core: `total_amount` เป็น computed จาก `quantity * price_unit` → Mileage ตั้ง `quantity = กม.`, `price_unit = อัตรา/กม.` แล้วยอดถูกต้องเอง (อย่าเขียนทับ `total_amount`)
+- `hr.expense` core (Odoo 19): `price_unit` เป็น **readonly + computed** (`_compute_price_unit`) → **เขียนทับไม่ได้** (ค่าจะถูกคำนวณใหม่ทับ)
+- `total_amount` = `compute='_compute_total_amount', inverse='_inverse_total_amount', precompute=True, store=True, readonly=False` → **เป็นฟิลด์ที่ผู้ใช้ตั้งค่าได้** (source of truth ฝั่ง UI)
+- สินค้าที่ไม่มีต้นทุน (`product_has_cost = False` ซึ่งเป็นกรณีหมวด Mileage): `_compute_total_amount_currency` ถูก skip → `total_amount_currency`/`total_amount` เก็บค่าที่ป้อน; core ตั้ง `price_unit = round(total_amount / quantity)` เอง (บรรทัด `_compute_price_unit` else-branch)
+- **Mileage จึงต้องตั้ง `quantity = ระยะทาง (กม.)` + `total_amount = ระยะทาง × อัตรา`** (ไม่ใช่ `price_unit`) แล้ว core จะได้ `price_unit = อัตรา/กม.` ให้เอง
 - `hr.expense.product_id` → core เติม `account_id` (บัญชีค่าใช้จ่าย) และ `_compute_tax_ids` ของ enhanced เติม `tax_ids` จาก `product.supplier_taxes_id`
 - `od19_hr_expense_enhanced` มีแบบแผน `_compute_od19_per_diem` + `@api.constrains` + `res.company._od19_per_diem_rate()` เป็นต้นแบบสำหรับ Mileage
 - `od19_hr_expense_enhanced/models/hr_expense.py::create` เติม `first_approver_id` จากแผนก — ใช้แพตเทิร์นเดียวกันในการเติมรถล่าสุด
@@ -125,11 +129,15 @@
           expense.od19_mileage_rate = (
               expense.company_id.od19_mileage_rate if expense.od19_is_mileage else 0.0)
 
-  @api.onchange('od19_mileage_distance_km', 'od19_mileage_rate')
+  @api.onchange('od19_is_mileage', 'od19_mileage_distance_km', 'od19_mileage_rate')
   def _onchange_od19_mileage_amount(self):
       if self.od19_is_mileage:
-          self.quantity = self.od19_mileage_distance_km or 0.0
-          self.price_unit = self.od19_mileage_rate or 0.0
+          distance = self.od19_mileage_distance_km or 0.0
+          rate = self.od19_mileage_rate or 0.0
+          self.quantity = distance
+          # ⚠️ price_unit เป็น readonly+computed ใน core → ตั้ง total_amount แทน
+          # core จะคำนวณ price_unit = round(total_amount / quantity) = rate ให้เอง
+          self.total_amount = distance * rate
 
   @api.constrains('od19_is_mileage', 'tax_ids')
   def _check_od19_mileage_has_no_tax(self):
@@ -323,8 +331,8 @@
 - Create: `custom_addons/od19_hr_expense_portal/tests/test_quick_create.py`
 - Modify: `tests/__init__.py` ของทั้ง 2 โมดูล (**ห้ามทับ import เดิม**)
 
-- [ ] **Step 1: T9 Mileage amount**
-  company `od19_mileage_rate = 5.0`; สร้าง expense `od19_is_mileage=True`, `od19_mileage_distance_km=20` → `action` onchange/หรือ set quantity → assert `total_amount == 100.0`; แก้ระยะทางเป็น 30 → assert `150.0`
+- [ ] **Step 1: T9 Mileage amount (ใช้ `Form` เพื่อกระตุ้น onchange จริง)**
+  company `od19_mileage_rate = 5.0`; เปิด `Form(self.env['hr.expense'])` ตั้ง `od19_is_mileage=True` แล้ว `od19_mileage_distance_km=20` → assert `quantity == 20`, `total_amount == 100.0`, `price_unit == 5.0`; แก้ระยะทางเป็น 30 → assert `total_amount == 150.0`
 - [ ] **Step 2: T10 Mileage ไม่มี VAT**
   assert `tax_ids` ว่างเมื่อ `od19_is_mileage`; และ `@constrains` โยน `ValidationError` ถ้าใส่ `tax_ids`
 - [ ] **Step 3: T11 สมุดรถ**
