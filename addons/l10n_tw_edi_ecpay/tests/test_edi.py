@@ -41,6 +41,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         cls.partner_b.write({
             'phone': '+886 123 456 789',
             'vat': '24153791',
+            'email': 'partner_b@example.com',
             'street': 'street七美',
             'city': '信義區',
             'state_id': cls.env.ref('base.state_tw_klc').id,
@@ -400,9 +401,14 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         This tests the following flow for B2B invoices: a buyer is created, then an invoice is successfully sent
         to the ECpay platform, and then pass validation.
         """
+        self.buyer_calls = []
         send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
         with patch(CALL_API_METHOD, new=self._test_10_mock):
             send_and_print.action_send_and_print()
+
+        # An unknown buyer must be created once the update reported it does not exist.
+        self.assertEqual(len(self.buyer_calls), 1)
+        self.assertEqual(self.buyer_calls[0]["Action"], "Add")
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -419,12 +425,21 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
     @freeze_time("2025-01-06 15:00:00")
     def test_11_basic_submission_b2b_partner_exists(self):
         """
-        This tests the following flow for B2B invoices: the buyer already exists, then an invoice is successfully
-        sent to the ECpay platform, and then pass validation.
+        This tests the following flow for B2B invoices: the buyer already exists, so its data is updated, then an
+        invoice is successfully sent to the ECpay platform, and then pass validation.
         """
+        self.buyer_calls = []
+        self.partner_b.ref = "CUST-0042"
         send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
         with patch(CALL_API_METHOD, new=self._test_11_mock):
             send_and_print.action_send_and_print()
+
+        # An existing buyer must be updated, so that the data edited in Odoo is reflected on Ecpay.
+        self.assertEqual(len(self.buyer_calls), 1)
+        self.assertEqual(self.buyer_calls[0]["Identifier"], self.partner_b.vat)
+        self.assertEqual(self.buyer_calls[0]["CustomerNumber"], "CUST-0042")
+        # The invoice is addressed to the company itself, so there is no person in charge to send.
+        self.assertNotIn("SalesName", self.buyer_calls[0])
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -439,13 +454,49 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         self.assertTrue(self.basic_invoice_b2b.l10n_tw_edi_file)
 
     @freeze_time("2025-01-06 15:00:00")
+    def test_11_basic_submission_b2b_child_contact(self):
+        """
+        This tests that when a B2B invoice is addressed to a contact of the company, the company data is sent for the
+        buyer while the contact data is only used as the contact information.
+        """
+        self.buyer_calls = []
+        self.partner_b.ref = "CUST-0042"
+        contact = self.env['res.partner'].create({
+            'name': 'partner_b contact',
+            'parent_id': self.partner_b.id,
+            'type': 'invoice',
+            'email': 'contact@example.com',
+            'phone': '+886 987 654 321',
+            'ref': 'CONTACT-0001',
+            'street': 'street八德',
+            'city': '中正區',
+            'state_id': self.env.ref('base.state_tw_tpc').id,
+            'country_id': self.env.ref('base.tw').id,
+        })
+        invoice = self.init_invoice('out_invoice', partner=contact, products=self.product_a, post=True)
+        send_and_print = self.create_send_and_print(invoice)
+        with patch(CALL_API_METHOD, new=self._test_11_mock):
+            send_and_print.action_send_and_print()
+
+        self.assertEqual(len(self.buyer_calls), 1)
+        buyer_data = self.buyer_calls[0]
+        self.assertEqual(buyer_data["Identifier"], self.partner_b.vat)
+        self.assertEqual(buyer_data["CompanyName"], self.partner_b.name)
+        self.assertEqual(buyer_data["EmailAddress"], self.partner_b.email)
+        self.assertEqual(buyer_data["TelephoneNumber"], "0123456789")
+        self.assertEqual(buyer_data["Address"], self.partner_b.address_inline)
+        self.assertEqual(buyer_data["ContactAddress"], contact.address_inline)
+        self.assertEqual(buyer_data["CustomerNumber"], "CUST-0042")
+        self.assertEqual(buyer_data["SalesName"], contact.name)
+
+    @freeze_time("2025-01-06 15:00:00")
     def test_12_basic_submission_b2b_partner_creation_failed(self):
         """
         This tests the following flow for B2B invoices: creating the buyer failed, invoice should not be created.
         """
         send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
         with patch(CALL_API_METHOD, new=self._test_12_mock):
-            with self.assertRaises(UserError):
+            with self.assertRaisesRegex(UserError, "B2B營業人資料新增失敗"):
                 send_and_print.action_send_and_print()
 
     @freeze_time("2025-01-13 15:00:00")
@@ -522,6 +573,85 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
 
         json_data = credit_note._l10n_tw_edi_generate_issue_allowance_json()
         self.assertEqual(json_data.get("InvoiceDate"), "2026-01-06")
+
+    @freeze_time("2025-01-06 15:00:00")
+    def test_15_basic_submission_b2b_batch(self):
+        """
+        This tests that when sending several B2B invoices at once, the buyer is synced once per contact instead of
+        once per invoice.
+        """
+        self.buyer_calls = []
+        contact = self.env['res.partner'].create({
+            'name': 'partner_b contact',
+            'parent_id': self.partner_b.id,
+            'email': 'contact@example.com',
+        })
+        invoices = self.basic_invoice_b2b
+        for partner in (self.partner_b, contact):
+            invoices += self.init_invoice('out_invoice', partner=partner, products=self.product_a, post=True)
+        with patch(CALL_API_METHOD, new=self._test_11_mock):
+            self.env['account.move.send']._generate_and_send_invoices(invoices)
+
+        # The two invoices of the company share the same buyer, the contact has its own one.
+        self.assertEqual(len(self.buyer_calls), 2)
+        self.assertEqual(sorted(call.get("SalesName", "") for call in self.buyer_calls), ["", contact.name])
+
+    @freeze_time("2025-01-06 15:00:00")
+    def test_16_b2b_buyer_reference_too_long(self):
+        """
+        This tests that a customer reference longer than what Ecpay accepts is not sent, so it does not block the
+        invoicing.
+        """
+        self.buyer_calls = []
+        self.partner_b.ref = "CUSTOMER-REFERENCE-0042"
+        send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
+        with patch(CALL_API_METHOD, new=self._test_11_mock):
+            send_and_print.action_send_and_print()
+
+        self.assertEqual(len(self.buyer_calls), 1)
+        self.assertNotIn("CustomerNumber", self.buyer_calls[0])
+        self.assertEqual(self.basic_invoice_b2b.l10n_tw_edi_state, 'valid')
+
+    @freeze_time("2025-01-06 15:00:00")
+    def test_17_b2b_buyer_email_required(self):
+        """
+        This tests that a B2B invoice requires an email on the company or, failing that, on the invoiced contact.
+        """
+        self.partner_b.email = False
+        send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
+        with self.assertRaisesRegex(UserError, "Please fill in the company email for B2B Ecpay invoice creation."):
+            send_and_print.action_send_and_print()
+
+        # The email of the invoiced contact is used when the company has none.
+        self.buyer_calls = []
+        contact = self.env['res.partner'].create({
+            'name': 'partner_b contact',
+            'parent_id': self.partner_b.id,
+            'email': 'contact@example.com',
+        })
+        invoice = self.init_invoice('out_invoice', partner=contact, products=self.product_a, post=True)
+        send_and_print = self.create_send_and_print(invoice)
+        with patch(CALL_API_METHOD, new=self._test_11_mock):
+            send_and_print.action_send_and_print()
+
+        self.assertEqual(self.buyer_calls[0]["EmailAddress"], contact.email)
+        self.assertEqual(invoice.l10n_tw_edi_state, 'valid')
+
+    @freeze_time("2025-01-06 15:00:00")
+    def test_18_b2b_buyer_reference_refused(self):
+        """
+        This tests that when Ecpay refuses the customer reference, the user is asked to fix the reference instead of
+        getting the raw Ecpay error.
+        """
+        self.partner_b.ref = "CUST-0042"
+        for rtn_code in (6160054, 6160056):
+            with self.subTest(rtn_code=rtn_code):
+                send_and_print = self.create_send_and_print(self.basic_invoice_b2b)
+                with (
+                    patch(CALL_API_METHOD, new=self._test_18_mock(rtn_code)),
+                    self.assertRaisesRegex(UserError, "already used by another customer on Ecpay"),
+                ):
+                    send_and_print.action_send_and_print()
 
     # -------------------------------------------------------------------------
     # Patched methods
@@ -741,6 +871,12 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "CompanyName": "Test Company",
             }
         elif endpoint == "/MaintainMerchantCustomerData":
+            if json_data["Action"] == "Update":
+                return {
+                    "RtnCode": 6160050,
+                    "RtnMsg": "B2B營業人資料+資料不存在",
+                }
+            self.buyer_calls.append(json_data)
             return {
                 "RtnCode": 1,
                 "RtnMsg": "新增成功",
@@ -773,18 +909,34 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 "CompanyName": "Test Company",
             }
         elif endpoint == "/MaintainMerchantCustomerData":
+            if json_data["Action"] != "Update":
+                raise UserError('An existing buyer must be updated, not created.')
+            self.buyer_calls.append(json_data)
             return {
-                "RtnCode": 6160052,
-                "RtnMsg": "新增成功",
+                "RtnCode": 1,
+                "RtnMsg": "更新成功",
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, json_data))
 
     def _test_12_mock(self, endpoint, json_data, company_id, is_b2b=False):
         if endpoint == "/MaintainMerchantCustomerData":
+            # The buyer is unknown, so it is created, but the creation fails.
+            if json_data["Action"] == "Update":
+                return {
+                    "RtnCode": 6160050,
+                    "RtnMsg": "B2B營業人資料+資料不存在",
+                }
             return {
                 "RtnCode": 6160051,
-                "RtnMsg": "新增成功",
+                "RtnMsg": "B2B營業人資料新增失敗",
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, json_data))
+
+    def _test_18_mock(self, rtn_code):
+        def mock(endpoint, json_data, company_id, is_b2b=False):
+            if endpoint == "/MaintainMerchantCustomerData":
+                return {"RtnCode": rtn_code, "RtnMsg": "Customer number error"}
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, json_data))
+        return mock
