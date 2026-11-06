@@ -769,8 +769,7 @@ class AccountChartTemplate(models.AbstractModel):
                 journal.loss_account_id = journal.loss_account_id or company.default_cash_difference_expense_account_id
 
         # Set newly created journals as defaults for the company
-        if not company.tax_cash_basis_journal_id:
-            company.tax_cash_basis_journal_id = self.ref('caba', raise_if_not_found=False)
+        company._ensure_tax_cash_basis_journal()
         if not company.currency_exchange_journal_id:
             company.currency_exchange_journal_id = self.ref('exch', raise_if_not_found=False)
 
@@ -814,8 +813,12 @@ class AccountChartTemplate(models.AbstractModel):
             )
             sudoed_products_purchase._force_default_purchase_tax(company)
 
-        # Display caba fields if there are caba taxes
-        if not company.parent_id and self.env['account.tax'].search_count([('tax_exigibility', '=', 'on_payment')], limit=1):
+        # Enable cash basis if the company has cash basis taxes
+        # The chart is loaded in sudo, so the search must be restricted to the company
+        if not company.parent_id and self.env['account.tax'].search_count([
+            *self.env['account.tax']._check_company_domain(company),
+            ('tax_exigibility', '=', 'on_payment'),
+        ], limit=1):
             company.tax_exigibility = True
 
         # Set default transfer account on the internal transfer reconciliation model
@@ -1189,7 +1192,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Miscellaneous Operations'),
                 'type': 'general',
                 'code': _('MISC'),
-                'show_on_dashboard': False,
+                'show_on_dashboard': True,
                 'sequence': 9,
             },
             "exch": {
@@ -1198,24 +1201,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'code': _('EXCH'),
                 'show_on_dashboard': False,
             },
-            "caba": {
-                'name': _('Cash Basis Taxes'),
-                'type': 'general',
-                'code': _('CABA'),
-                'show_on_dashboard': False,
-            },
             "bank": {
                 'name': _('Bank'),
                 'type': 'bank',
                 'show_on_dashboard': True,
                 'sequence': 7,
-            },
-            "inventory_valuation": {
-                'name': _('Inventory Valuation'),
-                'code': 'STJ',
-                'type': 'general',
-                'sequence': 10,
-                'show_on_dashboard': False,
             },
         }
 
@@ -1223,7 +1213,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_account_res_company(self, template_code):
         return {
             self.env.company.id: {
-                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_journal_id': 'general',
             },
         }
 

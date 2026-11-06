@@ -907,6 +907,9 @@ class ResCompany(models.Model):
 
         companies = super().write(vals)
 
+        if vals.get('tax_exigibility'):
+            self._ensure_tax_cash_basis_journal()
+
         # We revoke all active exceptions affecting the changed lock dates and recreate them (with the updated lock dates)
         changed_soft_lock_fields = [field for field in SOFT_LOCK_DATE_FIELDS if field in vals]
         for company in self:
@@ -916,6 +919,41 @@ class ResCompany(models.Model):
             active_exceptions._recreate()
 
         return companies
+
+    def _ensure_tax_cash_basis_journal(self):
+        """ Create the Cash Basis Taxes journal once cash basis is enabled, and set it on the company.
+        Branches use the journal of their root company.
+        """
+        for company in self.filtered(lambda c: c.tax_exigibility and not c.tax_cash_basis_journal_id):
+            root = company.root_id
+            if not root.tax_cash_basis_journal_id:
+                journal = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(root),
+                    ('code', '=', 'CABA'),
+                    ('type', '=', 'general'),
+                ], limit=1)
+                if not journal:
+                    journal = self.env['account.journal'].create({
+                        'name': _("Cash Basis Taxes"),
+                        'code': 'CABA',
+                        'type': 'general',
+                        'show_on_dashboard': False,
+                        'company_id': root.id,
+                    })
+                    # The name is created in the current language only, translate it in all installed languages
+                    journal.update_field_translations('name', {
+                        lang: self.with_context(lang=lang).env._("Cash Basis Taxes")
+                        for lang, _name in self.env['res.lang'].get_installed()
+                    })
+                    # Same xml id as the journal formerly created by the chart template, so that it gets translated
+                    # with the chart records into the languages installed later
+                    self.env['ir.model.data']._update_xmlids([{
+                        'xml_id': f"account.{root.id}_caba",
+                        'record': journal,
+                        'noupdate': True,
+                    }])
+                root.tax_cash_basis_journal_id = journal
+            company.tax_cash_basis_journal_id = root.tax_cash_basis_journal_id
 
     @api.model
     def setting_init_bank_account_action(self):
