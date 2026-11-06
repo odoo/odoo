@@ -28,6 +28,7 @@ touching instead of loading whole files.
 | [Recordsets, domains and context](guidelines/orm.md#recordsets-domains-and-context) | reading records, building domains, passing context |
 | [Computes, onchange and constraints](guidelines/orm.md#computes-onchange-and-constraints) | computes, onchange, constraints, indexes, `create` overrides |
 | [Methods and extension points](guidelines/orm.md#methods-and-extension-points) | adding a model method, or one another module will override |
+| [Set a state, never flip it](guidelines/orm.md#set-a-state-never-flip-it) | adding a method or a button that changes a state (archive, publish, favorite, follow) |
 | [Transactions and exceptions](guidelines/orm.md#transactions-and-exceptions) | cursors, commits, savepoints, `try`/`except` |
 | [Fields](guidelines/fields.md#fields) | declaring or modifying field definitions |
 | [Controllers](guidelines/controllers.md#controllers) | touching `controllers/` or `@route` |
