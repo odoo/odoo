@@ -580,6 +580,12 @@ export class FormController extends Component {
         if (!this.model.root) {
             return;
         }
+        if (this.env.inDialog && this.model.root.isNew) {
+            // A new record inside a dialog cannot be reopened after a real
+            // unload, so an urgent save would only queue an offline save that
+            // replays a duplicate (orphan) record and drops its x2many values.
+            return;
+        }
         const succeeded = await this.model.root.urgentSave();
         if (!succeeded) {
             ev.preventDefault();
