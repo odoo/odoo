@@ -122,3 +122,62 @@ useOnChange(
 
 Code that still calls these hooks keeps them until its own migration: a change that only
 touches nearby lines does not have to convert them.
+
+# Order concurrent calls with the concurrency helpers
+
+When a call can start before the previous one has ended and the calls or their answers
+change the same state (a request on each key in a search, or on each save), order the
+calls with a helper of `@web/core/utils/concurrency` (or `useSequential` in mail),
+never with a promise chain kept by hand. Calls that share no state, such as starring two
+different records, need no helper: a `Mutex` would only queue them for nothing.
+
+- `KeepLast` when only the last answer matters, as for a search: `add(promise)` returns
+  a promise that never settles when a newer promise is added before `promise` settled.
+- `Mutex` when every call must run, one after the other, as for a save: `exec(fn)`
+  starts `fn` once the previous call has settled, resolved or rejected.
+- `useSequential` of `@mail/utils/common/hooks`, in mail, for a search whose stale
+  requests need not be sent: it runs one call at a time, keeps only the last call that
+  waits, and resolves the dropped ones with `undefined`. The call already running still
+  resolves with its own answer, so the caller checks that its search is still the
+  current one before it shows the answer.
+
+```js
+// bad: after one failed request, no later request is ever sent
+this.lastSave = this.lastSave.then(() => this.saveQuantity(quantity));
+
+// good
+return this.saveMutex.exec(() => this.saveQuantity(quantity));
+```
+
+Without a helper, the answers come back in any order: the screen shows the answer of an
+older request, or two calls change the same state at once. A chain kept by hand rewrites
+`Mutex`, and a `then` with no rejection handler stops it for good at the first error.
+
+Never let `Mutex.exec` wait for a `KeepLast` promise added outside of it: once a newer
+call adds its own promise, the first one never settles, and the mutex stays locked. When
+the calls must run one after the other and only the last answer matters, as for saves
+that each return a new total, put the `KeepLast` around the mutex instead: the mutex
+runs every call, and the older answers are dropped outside of it (`exec` resolves with
+the value that `fn` returns).
+
+```js
+// bad: the saves run at once, and the mutex stays locked once a newer save adds its promise
+const totalPromise = this.keepLast.add(this.saveQuantity(quantity));
+await this.saveMutex.exec(() => totalPromise);
+
+// good
+const total = await this.keepLast.add(this.saveMutex.exec(() => this.saveQuantity(quantity)));
+```
+
+# JavaScript formatting
+
+- Format: 4-space indent, 100-column lines, double quotes, semicolons, as set by the
+  `prettier/prettier` rule of the eslint config of the web tooling (`addons/web/tooling`).
+  Apply it with `eslint --fix` once `addons/web/tooling/enable.sh` has installed that
+  config at the repository root, never with `prettier` alone: without those options it
+  uses its own defaults (2 spaces, 80 columns) and reflows the whole file.
+- A file that the eslint config ignores keeps its own format: only the lines you write
+  follow the one above. The exception is the modules that `test_lint/tests/test_eslint.py`
+  lints with the config of the web tooling (`point_of_sale`, `pos_*`, `*_pos`, `*_pos_*`,
+  `iot`, `iot_*`, `obox`, `obox_*`): runbot checks the format of all their files, the
+  ignored ones too, so format their files with `eslint --no-ignore --fix`.
