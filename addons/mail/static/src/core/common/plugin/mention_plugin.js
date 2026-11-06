@@ -1,12 +1,21 @@
 import { Plugin } from "@html_editor/plugin";
 import { generatePartnerMentionElement } from "@mail/utils/common/format";
 
-const MENTION_SELECTOR = "a.o_mail_redirect, a.o-discuss-mention";
+export const MENTION_SELECTOR = "a.o_mail_redirect, a.o-discuss-mention";
 /** Fields needed to know whether a record can be mentioned. */
 const MENTIONED_RECORD_FIELDS = {
     "res.partner": ["name", "partner_share"],
     "res.role": ["name", "user_ids_count"],
 };
+
+/**
+ * Special mentions (e.g. @everyone) have no record.
+ *
+ * @param {HTMLAnchorElement} mentionEl
+ */
+function isRecordMention(mentionEl) {
+    return Object.hasOwn(MENTIONED_RECORD_FIELDS, mentionEl.dataset.oeModel ?? "");
+}
 
 /**
  * Turns an inserted mention (e.g. pasted) into text when it would not notify, and gives the
@@ -61,13 +70,12 @@ export class MentionPlugin extends Plugin {
      */
     insertMention(mentionEl) {
         const { oeId, oeModel } = mentionEl.dataset;
-        const isRecordMention = Object.hasOwn(MENTIONED_RECORD_FIELDS, oeModel ?? "");
-        const record = isRecordMention
+        const record = isRecordMention(mentionEl)
             ? this.services["mail.store"][oeModel].get(Number(oeId))
             : undefined;
-        const isKnown = !isRecordMention || record?.name !== undefined;
+        const isKnown = !isRecordMention(mentionEl) || record?.name !== undefined;
         if (isKnown && !this.isNotifyingMention(mentionEl, record)) {
-            mentionEl.replaceWith(this.document.createTextNode(mentionEl.textContent));
+            this.unlinkMention(mentionEl);
             return;
         }
         this.insertedMentions.add(mentionEl);
@@ -143,14 +151,10 @@ export class MentionPlugin extends Plugin {
         );
     }
 
-    /**
-     * Special mentions (e.g. @everyone) have no record.
-     *
-     * @param {HTMLAnchorElement} mentionEl
-     */
+    /** @param {HTMLAnchorElement} mentionEl */
     fetchMentionedRecord(mentionEl) {
         const { oeId, oeModel } = mentionEl.dataset;
-        if (!Object.hasOwn(MENTIONED_RECORD_FIELDS, oeModel ?? "")) {
+        if (!isRecordMention(mentionEl)) {
             return Promise.resolve();
         }
         const store = this.services["mail.store"];
