@@ -227,23 +227,31 @@ export const textHighlightFactory = {
  *
  * @param {HTMLElement} highlightEl
  * @param {String} highlightID
+ * @param {Text[]} [textNodes]
  */
-export function makeHighlightSvgs(highlightEl, highlightID) {
+export function makeHighlightSvgs(highlightEl, highlightID, textNodes) {
+    return withoutAnimationTransforms(highlightEl, () =>
+        makeUntransformedHighlightSvgs(highlightEl, highlightID, textNodes)
+    );
+}
+
+function makeUntransformedHighlightSvgs(highlightEl, highlightID, textNodes) {
     const style = window.getComputedStyle(highlightEl);
     if (!style.getPropertyValue("--text-highlight-width")) {
         // The default value for `--text-highlight-width` is 0.1em.
-        highlightEl.style.setProperty(
+        (highlightEl.closest(".o_text_highlight") || highlightEl).style.setProperty(
             "--text-highlight-width",
             `${Math.round(parseFloat(style.fontSize) * 0.1)}px`
         );
     }
 
-    const textNodes = descendants(highlightEl).filter((el) => el.nodeType === Node.TEXT_NODE);
-    const rects = textNodes.map((node) => getTextnodeRects(node, 0, node.length)).flat();
+    const nodes =
+        textNodes || descendants(highlightEl).filter((el) => el.nodeType === Node.TEXT_NODE);
+    const rects = nodes.map((node) => getTextnodeRects(node, 0, node.length)).flat();
     const finalRects = rectToBatch(rects).map((rects) => getBiggestBoxFromBoxes(rects));
 
     const sizePerChar = memoize(() => {
-        const numberOfChar = textNodes.reduce(
+        const numberOfChar = nodes.reduce(
             (acc, node) => acc + node.textContent.replaceAll(/\s/g, "").length,
             0
         );
@@ -252,10 +260,10 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const numberOfCharPerWidth = memoize((width) => Math.round(width / sizePerChar()));
 
     const containerRect = highlightEl.getBoundingClientRect();
-    // Note: We cannot use `getClientRects()` as we want to be able to draw
-    // text highlights in the snippet/page dialogs where iframe is scaled.
     const inPreviewIframe =
         highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
+    // offsetWidth is unscaled; containerRect.width includes the preview scale.
+    // Their ratio converts viewport measurements to local SVG coordinates.
     const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
     const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
     const firstRect = highlightEl.getClientRects()[0];
@@ -280,11 +288,31 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     }
     return svgs;
 }
+/**
+ * Keep each text run and its highlight in the same animation.
+ */
+export function getTextHighlightGroups(highlightEl) {
+    const groups = [];
+    for (const node of descendants(highlightEl).filter((el) => el.nodeType === Node.TEXT_NODE)) {
+        const animatedEl = node.parentElement.closest(".o_animated_text");
+        const container = animatedEl && highlightEl.contains(animatedEl) ? animatedEl : highlightEl;
+        const previous = groups.at(-1);
+        if (previous?.container === container) {
+            previous.textNodes.push(node);
+        } else {
+            groups.push({ container, textNodes: [node] });
+        }
+    }
+    return groups;
+}
+
 export function applyTextHighlight(highlightEl, highlightID) {
-    const svgs = makeHighlightSvgs(highlightEl, highlightID);
-    for (const svg of svgs.toReversed()) {
-        highlightEl.insertAdjacentElement("afterbegin", svg);
-        adaptHighlightPosition(highlightEl, svg);
+    for (const { container, textNodes } of getTextHighlightGroups(highlightEl)) {
+        const svgs = makeHighlightSvgs(container, highlightID, textNodes);
+        for (const svg of svgs.toReversed()) {
+            container.insertAdjacentElement("afterbegin", svg);
+            adaptHighlightPosition(container, svg);
+        }
     }
 }
 
@@ -298,8 +326,12 @@ export function adaptHighlightPosition(highlightEl, svg) {
     // Reposition element in RTL to what was intended because
     // safari positionning work differently than other browsers
     if ("rtlIntendedRightPosition" in svg.dataset) {
-        const rightPositionDelta = svg.getBoundingClientRect().right - parseFloat(svg.dataset.rtlIntendedRightPosition);
-        svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
+        withoutAnimationTransforms(highlightEl, () => {
+            const rightPositionDelta =
+                svg.getBoundingClientRect().right -
+                parseFloat(svg.dataset.rtlIntendedRightPosition);
+            svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
+        });
     }
 }
 
@@ -497,4 +529,26 @@ export function closestToObserve(el, topEl = el.ownerDocument.body) {
 export function getObservedEls(el) {
     const closestToObserveEl = closestToObserve(el);
     return closestToObserveEl ? [closestToObserveEl, el] : [el];
+}
+
+/**
+ * Measure layout without animation transforms, preserving inline styles and
+ * animation timing. Restore the transforms before the browser paints.
+ */
+function withoutAnimationTransforms(el, callback) {
+    const selector = ".o_animate.o_animating, .o_animate.o_animate_in_dropdown";
+    if (!el.closest(selector) && !el.querySelector(selector)) {
+        return callback();
+    }
+    const wrapperEl = el.closest("#wrapwrap");
+    const className = "o_wanim_no_transform";
+    if (!wrapperEl || wrapperEl.classList.contains(className)) {
+        return callback();
+    }
+    wrapperEl.classList.add(className);
+    try {
+        return callback();
+    } finally {
+        wrapperEl.classList.remove(className);
+    }
 }
