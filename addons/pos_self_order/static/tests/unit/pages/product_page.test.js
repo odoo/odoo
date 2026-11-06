@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -243,4 +243,25 @@ test("multi attributes are optional and can be selected together", async () => {
     await Utils.selectAttributeValue("Attribute Val 2");
 
     expect(comp.getSelectedAttributesValues()).toEqual([201, 202]);
+});
+
+test("selecting a value scrolls to the next missing attribute, or to the end", async () => {
+    const store = await setupSelfPosEnv();
+    const productTemplate = store.models["product.template"].get(103);
+    await mountWithCleanup(ProductPage, { props: { productTemplate } });
+    patchWithCleanup(Element.prototype, {
+        scrollIntoView() {
+            expect.step(`scroll to ${this.id}`);
+        },
+        scrollTo() {
+            expect.step(`scroll to ${this.id}`);
+        },
+    });
+
+    await Utils.selectNthAttributeValue(1, "Size");
+    expect.verifySteps(["scroll to 101"]); // Packaging
+    await Utils.selectNthAttributeValue(1, "Packaging");
+    expect.verifySteps(["scroll to o-self-scroll-container"]);
+    await Utils.selectNthAttributeValue(2, "Size");
+    expect.verifySteps(["scroll to o-self-scroll-container"]);
 });
