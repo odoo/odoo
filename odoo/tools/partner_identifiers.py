@@ -30,6 +30,7 @@ from odoo.tools.partner_identifier_validation import (
     th_branch_code_validate,
     it_cuc_validate,
     at_en_validate,
+    at_steuernummer_validate,
 )
 
 from odoo.addons.base.models.res_country import (
@@ -502,6 +503,13 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'validation_function': at_en_validate,
         'countries': ['AT'],
     },
+    'AT_STEUERNUMMER': {
+        'label': _lt('Steuernummer'),
+        'help': _lt('Austrian Steuernummer/Abgabenkontonummer (FBN).'),
+        'placeholder': '59-119/9013',
+        'examples': ['59-119/9013', '591199013'],
+        'category': 'TIN',
+        'validation_function': at_steuernummer_validate,
         'countries': ['AT'],
     },
     'AU_ACN': {
