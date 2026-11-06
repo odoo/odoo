@@ -41,6 +41,7 @@ export class ComboPage extends Component {
         if (history.state?.selectedCombos?.length) {
             this.applyPreselectedCombos(history.state.selectedCombos);
         }
+        this.selectSingleItem();
     }
 
     get selectedChoice() {
@@ -213,6 +214,19 @@ export class ComboPage extends Component {
             }
             return line.product_template_value_ids.some((a) => !(isKiosk && a.is_custom));
         });
+    }
+
+    selectSingleItem() {
+        const choice = this.selectedChoice;
+        if (!choice || choice.qty_free === 0 || choice.combo_item_ids.length !== 1) {
+            return;
+        }
+        const items = this.comboItems;
+        if (items.length === 1 && this.hasAttribute(items[0].product_id)) {
+            if (!this.hasSelectedItems) {
+                this.selectItem(items[0]);
+            }
+        }
     }
 
     getSelectedItems(choiceState = undefined) {
@@ -409,6 +423,16 @@ export class ComboPage extends Component {
                 }
             }
             this.currentChoiceState.displayAttributesOfItem = false;
+            const choice = this.selectedChoice;
+            if (choice.qty_free > 0 && choice.combo_item_ids.length === 1) {
+                if (this.state.selectedChoiceIndex === 0) {
+                    this.goBack();
+                    return;
+                }
+                this.currentChoiceState.selectedItems = {};
+                this.currentChoiceState.selectedItemsOrder = [];
+                this.state.selectedChoiceIndex -= 1;
+            }
         } else {
             this.state.selectedChoiceIndex = Math.max(0, this.state.selectedChoiceIndex - 1);
         }
@@ -466,6 +490,7 @@ export class ComboPage extends Component {
                 this.state.showResume = true;
             } else {
                 this.state.selectedChoiceIndex += 1;
+                this.selectSingleItem();
             }
             newSectionDisplayed = true;
         }
@@ -504,6 +529,7 @@ export class ComboPage extends Component {
         this.state.showResume = false;
         this.state.selectedChoiceIndex = choiceIndex;
         this.currentChoiceState.displayAttributesOfItem = false;
+        this.selectSingleItem();
         this.resetScrollPosition();
     }
 
@@ -583,16 +609,35 @@ export class ComboPage extends Component {
         );
     }
 
+    getFixedComboSelection() {
+        // Fixed choices (a single item without attributes) are not shown as a
+        // selection step, so they have to be added to the selection explicitly.
+        return this.props.productTemplate.combo_ids
+            .filter(
+                (c) =>
+                    c.qty_max <= 1 &&
+                    c.combo_item_ids.length === 1 &&
+                    c.combo_item_ids[0].product_id.attribute_line_ids.length === 0 &&
+                    c.combo_item_ids[0].product_id.self_order_available &&
+                    !this.selfOrder.isProductSnoozed(c.combo_item_ids[0].product_id.product_tmpl_id)
+            )
+            .map((c) => ({
+                combo_item_id: c.combo_item_ids[0],
+                qty: 1,
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            }));
+    }
+
     addToCart() {
         const productTemplate = this.props.productTemplate;
-        this.selfOrder.addToCart(
-            productTemplate,
-            this.state.qty,
-            "",
-            {},
-            {},
-            this.getComboSelection()
-        );
+        this.selfOrder.addToCart(productTemplate, this.state.qty, "", {}, {}, [
+            ...this.getComboSelection(),
+            ...this.getFixedComboSelection(),
+        ]);
         this.selfOrder.applyPendingComboConversion();
         const historyState = history.state || {};
         if (productTemplate.pos_optional_product_ids.length && !historyState.redirectPage) {
@@ -612,7 +657,7 @@ export class ComboPage extends Component {
         return computeTotalComboPrice(
             this.selfOrder,
             this.props.productTemplate,
-            this.getComboSelection(),
+            [...this.getComboSelection(), ...this.getFixedComboSelection()],
             this.state.qty
         );
     }
