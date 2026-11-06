@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
-import { Component, useProps, t } from "@odoo/owl";
+import { Component, useProps, t, usePlugin } from "@odoo/owl";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 export class BomOverviewLine extends Component {
     static template = "mrp.BomOverviewLine";
@@ -19,8 +20,8 @@ export class BomOverviewLine extends Component {
     });
 
     setup() {
-        this.actionService = useService("action");
-        this.ormService = useService("orm");
+        this.actionPlugin = usePlugin(ActionPlugin);
+        this.ormPlugin = usePlugin(ORM);
         this.formatFloat = formatFloat;
         this.formatFloatTime = formatFloatTime;
         this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
@@ -36,7 +37,7 @@ export class BomOverviewLine extends Component {
     }
 
     async goToAction(id, model) {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             type: "ir.actions.act_window",
             res_model: model,
             res_id: id,
@@ -52,7 +53,7 @@ export class BomOverviewLine extends Component {
         if (this.data.type == "operation") {
             return;
         }
-        const action = await this.ormService.call(
+        const action = await this.ormPlugin.call(
             this.data.link_model,
             this.forecastAction,
             [[this.data.link_id]],
@@ -64,11 +65,11 @@ export class BomOverviewLine extends Component {
         if (this.props.currentWarehouseId) {
             action.context["warehouse_id"] = this.props.currentWarehouseId;
         }
-        return this.actionService.doAction(action);
+        return this.actionPlugin.doAction(action);
     }
 
     async goToAttachment() {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             name: _t("Attachments"),
             type: "ir.actions.act_window",
             res_model: "product.document",

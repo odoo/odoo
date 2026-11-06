@@ -1,9 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, t, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { getStateDecorator } from "./mo_overview_colors";
 import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 export class MoOverviewLine extends Component {
     props = useProps({
@@ -50,8 +51,8 @@ export class MoOverviewLine extends Component {
     static template = "mrp.MoOverviewLine";
 
     setup() {
-        this.actionService = useService("action");
-        this.ormService = useService("orm");
+        this.actionPlugin = usePlugin(ActionPlugin);
+        this.ormPlugin = usePlugin(ORM);
         this.formatFloat = (val) => formatFloat(val, { digits: [false, this.data.uom_precision || undefined] });
         this.formatFloatTime = formatFloatTime;
         this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
@@ -62,7 +63,7 @@ export class MoOverviewLine extends Component {
     async openForm() {
         const model = this.data.level === 0 ? this.data.product_model : this.data.model;
         const id = this.data.level === 0 ? this.data.product_id : this.data.id;
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             type: "ir.actions.act_window",
             res_model: model,
             res_id: id,
@@ -75,7 +76,7 @@ export class MoOverviewLine extends Component {
     }
 
     async openForecast() {
-        const action = await this.ormService.call(
+        const action = await this.ormPlugin.call(
             this.data.product_model,
             this.forecastAction,
             [[this.data.product_id]],
@@ -84,11 +85,11 @@ export class MoOverviewLine extends Component {
             active_model: this.data.product_model,
             active_id: this.data.product_id,
         };
-        return this.actionService.doAction(action);
+        return this.actionPlugin.doAction(action);
     }
 
     async openReplenish() {
-        return this.actionService.doAction("stock.action_product_replenish", {
+        return this.actionPlugin.doAction("stock.action_product_replenish", {
             additionalContext: { default_product_id: this.data.product_id, default_quantity: this.data.replenish_quantity || this.data.quantity },
             onClose: (closeInfo) => {
                 if (closeInfo?.done) {
@@ -100,7 +101,7 @@ export class MoOverviewLine extends Component {
     }
 
     async openWorkorder() {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             name: this.data.name,
             type: "ir.actions.act_window",
             res_model: "mrp.workorder",

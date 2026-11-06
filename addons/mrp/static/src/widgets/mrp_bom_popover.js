@@ -6,7 +6,7 @@ import {
 } from "@stock/widgets/popover_widget";
 import { registry } from "@web/core/registry";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 class MrpBomPopover extends PopoverComponent {
     static template = "mrp.bomPopover";
@@ -26,11 +26,11 @@ class MrpBomPopover extends PopoverComponent {
     setup() {
         super.setup();
 
-        this.actionService = useService("action");
+        this.actionPlugin = usePlugin(ActionPlugin);
     }
 
     async _openBomOverview() {
-        return this.actionService.doAction("mrp.action_report_mrp_bom", {
+        return this.actionPlugin.doAction("mrp.action_report_mrp_bom", {
             additionalContext: {
                 active_id: this.mrpProps.bom_id,
                 active_model: "mrp.bom",
@@ -40,7 +40,7 @@ class MrpBomPopover extends PopoverComponent {
     }
 
     async goToAction(id, model) {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             type: "ir.actions.act_window",
             res_model: model,
             res_id: id,
