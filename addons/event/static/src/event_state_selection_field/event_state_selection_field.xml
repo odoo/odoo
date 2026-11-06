@@ -5,7 +5,7 @@
             <attribute name="menuClass" separator=" + " add="' event_state_selection_menu'"></attribute>
         </xpath>
         <!-- Dropdown Divider -->
-        <xpath expr="//DropdownItem" position="before">
+        <xpath expr="//CheckboxItem" position="before">
             <div t-if="option[0] == 'cancel'" role="separator" class="dropdown-divider"/>
         </xpath>
     </t>
