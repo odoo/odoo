@@ -13,6 +13,7 @@ class PosCategory(models.Model):
     _description = "Point of Sale Category"
     _inherit = ['pos.load.mixin']
     _rec_name = 'complete_name'
+    _rec_names_search = ('complete_name', 'name')
     _order = "sequence, name"
 
     @api.constrains('parent_id')
@@ -64,6 +65,15 @@ class PosCategory(models.Model):
                 category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
             else:
                 category.complete_name = category.name
+
+    # complete_name is stored in a single language: build the display name from the translated names
+    @api.depends_context('lang')
+    def _compute_display_name(self):
+        for category in self:
+            if category.parent_id:
+                category.display_name = '%s / %s' % (category.parent_id.display_name, category.name)
+            else:
+                category.display_name = category.name
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open_or_linked_to_pos(self):
