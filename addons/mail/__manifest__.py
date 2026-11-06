@@ -323,7 +323,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/markdown_assets/mail_markdown_assets.css',
         ],
         'im_livechat.assets_embed_core': [
-            ("include", "html_editor.assets_editor"),
             'mail/static/src/model/**/*',
             # ensure core.scss before any other style
             "mail/static/src/core/common/core.scss",
@@ -355,6 +354,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'bus/static/src/workers/bus_worker_script.js'),
             ('remove', 'bus/static/src/services/assets_watchdog_plugin.js'),
             ('remove', 'bus/static/src/simple_notification_plugin.js'),
+            ('include', 'html_editor.assets_editor'),
             ('include', 'im_livechat.assets_embed_core'),
         ],
         'im_livechat.assets_embed_cors': [
