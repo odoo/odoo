@@ -4,6 +4,7 @@ from . import (
     test_access_rights,
     test_accrued_sale_orders,
     test_analytic_to_sale_to_invoice,
+    test_benchmark,
     test_common,
     test_controllers,
     test_credit_limit,

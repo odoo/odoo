@@ -1,5 +1,6 @@
 from . import test_auto_waving
 from . import test_batch_picking
+from . import test_benchmark
 from . import test_generate_serial_numbers
 from . import test_immediate
 from . import test_inventory

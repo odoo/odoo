@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="benchmark_service_product" model="populate.blueprint">
+        <field name="name">Benchmark: Service Product</field>
+        <field name="definition_xml" type="xml">
+            <create model="product.product" count="1" id="service_product" scale="False">
+                <field name="name" eval="'Benchmark Service'"/>
+                <field name="type" eval="'service'"/>
+            </create>
+        </field>
+    </record>
+
     <!--
         ==========================================================
         BENCHMARK 1: Deep Product Catalog — 1 category with 10,000 products
