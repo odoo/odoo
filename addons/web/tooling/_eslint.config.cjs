@@ -164,6 +164,8 @@ module.exports = [
             "**/im_livechat/static/src/core/web/notification_item.css",
             "**/mail/static/src/core/common/poll.css",
             "**/web/static/src/core/datetime/datetime_picker.css",
+            "**/web/static/src/views/calendar/calendar_renderer.css",
+            "**/web/static/src/views/calendar/calendar_year/calendar_year_popover.css",
             "**/web/static/src/views/fields/statusbar/statusbar_field.css",
         ],
         plugins: { css },
