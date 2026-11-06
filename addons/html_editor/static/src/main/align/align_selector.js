@@ -4,6 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
+    useFocusTooltip,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -28,6 +29,7 @@ export class AlignSelector extends Component {
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.alignSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+        useFocusTooltip(this.menuRef);
     }
 
     get ariaLabel() {

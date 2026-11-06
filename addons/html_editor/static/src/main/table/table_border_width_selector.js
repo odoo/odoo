@@ -2,7 +2,7 @@ import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
-import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
+import { useDropdownAutoVisibility, useFocusTooltip } from "@html_editor/toolbar_dropdown_hook";
 
 export class TableBorderWidthSelector extends Component {
     static template = "html_editor.TableBorderWidthSelector";
@@ -19,6 +19,7 @@ export class TableBorderWidthSelector extends Component {
         this.state = proxy(this.props.getDisplay());
         this.menuRef = signal.ref();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+        useFocusTooltip(this.menuRef);
     }
 
     onSelected(item) {
