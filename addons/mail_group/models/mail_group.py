@@ -277,6 +277,15 @@ class MailGroup(models.Model):
         """Add the method to make the mail gateway flow work with this model."""
         return
 
+    def _notify_get_reply_to(self, default=None, author_id=False):
+        """ Name the reply-to after the group instead of the author """
+        reply_to = super()._notify_get_reply_to(default=default, author_id=author_id)
+        for group in self.sudo().filtered('alias_email'):
+            formatted_email = tools.formataddr((group.name, group.alias_email))
+            # same 68 chars limit as '_notify_get_reply_to_formatted_email'
+            reply_to[group.id] = formatted_email if len(formatted_email) <= 68 else group.alias_email
+        return reply_to
+
     def message_post(self, body='', subject=None, email_from=None, author_id=None, **kwargs):
         """ Custom posting process. This model does not inherit from ``mail.thread``
         but uses the mail gateway so few methods should be defined.

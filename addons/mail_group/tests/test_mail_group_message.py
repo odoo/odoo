@@ -101,6 +101,37 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(len(mails), len(self.test_group.member_ids) - 1)
         self.assertNotIn(self.test_group_member_1.email, mails.mapped('email_to'), 'Should not have send the email to the original author')
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_email_reply_to_group(self):
+        """ Test that the reply-to of emails sent to members is named after the
+        group, not after the author, as replying reaches the whole group. """
+        self.test_group.write({'moderation': False})
+        group_reply_to = f'"Test group" <{self.test_group.alias_email}>'
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, self.email_from_unknown,
+                self.test_group.alias_id.display_name,
+                subject='Test subject', target_model='mail.group')
+
+        message = self.env['mail.group.message'].search([('subject', '=', 'Test subject')])
+        self.assertEqual(message.mail_message_id.reply_to, group_reply_to)
+        mails = self.env['mail.mail'].search([('mail_message_id', '=', message.mail_message_id.id)])
+        self.assertEqual(len(mails), len(self.test_group.member_ids))
+        self.assertEqual(set(mails.mapped('reply_to')), {group_reply_to})
+        self.assertEqual(set(mails.mapped('email_from')), {self.email_from_unknown})
+
+        # name too long to fit in the header: only keep the group email
+        self.test_group.name = 'A Mailing List With A Name Way Too Long For The Reply-To'
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, self.email_from_unknown,
+                self.test_group.alias_id.display_name,
+                subject='Test long name', target_model='mail.group')
+
+        message = self.env['mail.group.message'].search([('subject', '=', 'Test long name')])
+        self.assertEqual(message.mail_message_id.reply_to, self.test_group.alias_email)
+
     @mute_logger('odoo.addons.base.models.ir_access')
     def test_mail_group_message_security_groups(self):
         user_group = self.env.ref('base.group_partner_manager')
