@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od19_expense_quick_create_form" model="ir.ui.view">
+        <field name="name">od19.expense.quick.create.form</field>
+        <field name="model">od19.expense.quick.create</field>
+        <field name="arch" type="xml">
+            <form string="ยื่นใบเบิกค่าใช้จ่าย">
+                <group>
+                    <group name="step1" string="1. ข้อมูลเบื้องต้น">
+                        <field name="expense_category_id"/>
+                        <field name="employee_id"/>
+                        <field name="expense_date"/>
+                        <field name="description"/>
+                    </group>
+                    <group name="step2" string="2. จำนวนเงิน">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="od19_is_mileage" invisible="1"/>
+                        <field name="amount" invisible="od19_is_mileage"/>
+                        <field name="distance_km" invisible="not od19_is_mileage"/>
+                        <field name="vehicle_id" invisible="not od19_is_mileage"
+                               domain="[('employee_id', '=', employee_id)]"/>
+                        <field name="od19_mileage_rate" invisible="not od19_is_mileage"/>
+                        <field name="total_amount"/>
+                    </group>
+                </group>
+                <group name="step3" string="3. รายละเอียดการเดินทาง"
+                       invisible="not od19_is_mileage">
+                    <field name="origin"/>
+                    <field name="destination"/>
+                </group>
+                <group name="step4" string="4. การส่ง">
+                    <field name="submit_now"/>
+                </group>
+                <footer>
+                    <button name="action_create_expense" string="ยื่นใบเบิก"
+                            type="object" class="btn-primary"/>
+                    <button string="ยกเลิก" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_expense_quick_create" model="ir.actions.act_window">
+        <field name="name">ยื่นใบเบิกค่าใช้จ่าย</field>
+        <field name="res_model">od19.expense.quick.create</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_od19_expense_quick_create"
+              name="ยื่นใบเบิกค่าใช้จ่าย"
+              parent="hr_expense.menu_hr_expense_root"
+              action="action_od19_expense_quick_create"
+              sequence="1"
+              groups="base.group_user"/>
+
+</odoo>
