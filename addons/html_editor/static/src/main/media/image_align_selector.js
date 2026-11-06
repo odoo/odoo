@@ -1,6 +1,7 @@
 import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
+    useFocusTooltip,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
@@ -27,6 +28,7 @@ export class ImageAlignSelector extends Component {
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.imageAlignSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+        useFocusTooltip(this.menuRef);
     }
 
     get ariaLabel() {
