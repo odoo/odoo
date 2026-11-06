@@ -199,21 +199,33 @@
                         </page>
                         <page string="Interactivity" name="interactivity">
                             <group>
-                                <group name="event_track_cta_group">
-                                    <field name="website_cta"/>
-                                    <field name="website_cta_title" placeholder="e.g. Get Yours Now!"
-                                        invisible="not website_cta"
-                                        required="website_cta"/>
-                                    <field name="website_cta_url" placeholder="e.g. http://www.example.com"
-                                        invisible="not website_cta"
-                                        required="website_cta"/>
-                                    <label for="website_cta_delay"
-                                        invisible="not website_cta"/>
-                                    <div invisible="not website_cta">
-                                        <field name="website_cta_delay" class="oe_inline"
-                                            required="website_cta"/> minutes after Track start
+                                <setting string="Call-to-Action Button"
+                                         help="A button shown on the Tracks page while attendees watch to send them somewhere at the right moment,
+                                               e.g. a discount on the next event.">
+                                    <field name="website_cta" class="oe_inline"/>
+                                    <div class="content-group" invisible="not website_cta">
+                                        <div class="row mt16">
+                                            <label for="website_cta_title" class="col-lg-3 o_light_label"/>
+                                            <field name="website_cta_title" class="oe_inline"
+                                                   placeholder="e.g. Get 20% off!"
+                                                   required="website_cta"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="website_cta_url" class="col-lg-3 o_light_label"/>
+                                            <field name="website_cta_url" class="oe_inline"
+                                                   placeholder="e.g. https://www.example.com/offer"
+                                                   required="website_cta"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="website_cta_delay" class="col-lg-3 o_light_label"/>
+                                            <div class="col-lg-9">
+                                                <field name="website_cta_delay" class="oe_inline o_input_5ch"
+                                                       required="website_cta"/>
+                                                <span class="ms-2">minutes after Track starts</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </group>
+                                </setting>
                             </group>
                         </page>
                     </notebook>
