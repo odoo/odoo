@@ -1,6 +1,8 @@
 import { isBlock } from "@html_editor/utils/blocks";
 import { blendColors } from "@html_editor/utils/color";
 import { getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
+import { backgroundImageCssToParts } from "@html_editor/utils/image";
+import { loadImage, loadImageInfo } from "@html_editor/utils/image_processing";
 
 function parentsGet(node, root = undefined) {
     const parents = [];
@@ -838,6 +840,7 @@ function enforceImagesResponsivity(element) {
  *                            specificity: number;}>
  */
 export async function toInline(element, cssRules) {
+    await waitUntilImagesLoaded(element);
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of element.querySelectorAll(".card-img-top")) {
         imgTop.style.setProperty("height", _getHeight(imgTop) + "px");
@@ -1523,6 +1526,57 @@ async function webpToPng(editable) {
         tempImage.remove();
     }
 }
+/**
+ * Turns the webp images into png ones saved by `savePendingImages`, as most
+ * mail clients cannot display webp.
+ *
+ * @param {HTMLElement} element
+ */
+export async function convertWebpImages(element) {
+    const selector = 'img[src*=".webp"], [style*="background-image"][style*=".webp"]';
+    for (const el of element.querySelectorAll(selector)) {
+        const isBackground = !el.matches("img");
+        const src = isBackground
+            ? backgroundImageCssToParts(el.style.backgroundImage).url?.slice(5, -2)
+            : el.getAttribute("src");
+        // Keep the images from other sites, the browser cannot read them back.
+        if (new URL(src, window.location.href).origin !== window.location.origin) {
+            continue;
+        }
+        await loadImageInfo(el, src);
+        const { originalId, mimetype, mimetypeBeforeConversion } = el.dataset;
+        // Keep the format picked in the image options.
+        if (mimetype && mimetype !== "image/webp" && mimetype !== mimetypeBeforeConversion) {
+            continue;
+        }
+        // Only an img can be saved as a new attachment.
+        if (!originalId && isBackground) {
+            continue;
+        }
+        let dataURL;
+        try {
+            const image = new Image();
+            image.src = src;
+            await image.decode();
+            const canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            canvas.getContext("2d").drawImage(image, 0, 0);
+            dataURL = canvas.toDataURL("image/png");
+        } catch {
+            // Keep the images that the browser cannot load or read back.
+            continue;
+        }
+        el.dataset.mimetype = "image/png";
+        el.dataset.fileName = "image.png";
+        if (isBackground) {
+            el.dataset.bgSrc = dataURL;
+        } else {
+            el.setAttribute("src", dataURL);
+        }
+        el.classList.add(originalId ? "o_modified_image_to_save" : "o_b64_image_to_save");
+    }
+}
 
 //--------------------------------------------------------------------------
 // Private
@@ -2105,4 +2159,12 @@ function correctBorderAttributes(style) {
         return style;
     }
     return style.trim().replace(/;?$/, "; border-style: solid;");
+}
+
+function waitUntilImagesLoaded(root) {
+    const promises = [];
+    for (const img of root.querySelectorAll('img[src]:not([src=""])')) {
+        promises.push(loadImage(img.getAttribute("src")));
+    }
+    return Promise.allSettled(promises);
 }
