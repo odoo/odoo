@@ -2,6 +2,7 @@ import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messagi
 
 import { Component, types, untrack, useEffect, useProps } from "@odoo/owl";
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuEmptyChannel extends Component {
@@ -17,6 +18,14 @@ export class MessagingMenuEmptyChannel extends Component {
         useEffect(() => {
             untrack(() => this.store.fetchMostPopularChannelsFetcher.fetch());
         });
+    }
+
+    /** @param {import("models").DiscussChannel} channel */
+    getFollowersText(channel) {
+        if (channel.member_count === 1) {
+            return _t("1 follower");
+        }
+        return _t("%(count)s followers", { count: channel.member_count });
     }
 
     onClickFindMoreChannels() {
