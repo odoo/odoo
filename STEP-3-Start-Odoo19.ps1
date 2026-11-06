@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     STEP-3 : Start Odoo 19 + Nginx + Cloudflare DDNS (สคริปต์ start ตัวเดียวของโปรเจกต์)
 
