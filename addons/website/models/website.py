@@ -208,19 +208,10 @@ class Website(models.CachedModel):
 
     def _compute_menu(self):
         # prefetch all accessible menus at once
-        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
+        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids))
 
         for website in self:
             menus = all_menus.filtered(lambda m: m.website_id == website)
-
-            # add the child menu without contained into menu with a website
-            for menu in all_menus.filtered(lambda m: not m.website_id):
-                parent = menu.parent_id
-                while parent:
-                    if parent.website_id == website:
-                        menus += menu
-                        break
-                    parent = parent.parent_id
 
             # use field parent_id (1 query) to determine field child_id (2 queries by level)"
             children = dict.fromkeys(menus, ())
