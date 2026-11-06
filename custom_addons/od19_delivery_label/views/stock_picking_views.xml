@@ -7,7 +7,15 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="project_id" readonly="1"/>
-                <field name="od19_department_code" required="1" placeholder="เช่น IA, BA, TA, DES, FA"/>
+                <!-- Only outgoing deliveries need the DEPT code (it feeds the
+                     label FM-PU-12 and the WH/{DEPT}/OUT/... reference).  The
+                     model constraint ``_check_od19_department_code`` enforces
+                     the same rule server-side; requiring it in the view for
+                     incoming/internal pickings blocked the Validate button. -->
+                <field name="picking_type_code" invisible="1"/>
+                <field name="od19_department_code"
+                       required="picking_type_code == 'outgoing'"
+                       placeholder="เช่น IA, BA, TA, DES, FA"/>
             </xpath>
             <!-- Add a notebook page for delivery label info -->
             <xpath expr="//notebook" position="inside">
