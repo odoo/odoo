@@ -177,26 +177,7 @@ export class MailSuggestionPlugin extends Plugin {
         }
         const sources = this.getSources();
         for (const candidatePosition of candidatePositions) {
-            if (candidatePosition < 0 || candidatePosition >= text.length) {
-                continue;
-            }
-
-            const findAppropriateSource = () => {
-                let goodCandidate;
-                for (const source of sources) {
-                    const { allowedPosition, delimiter } = source;
-                    if (
-                        text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
-                        (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
-                        (!goodCandidate || delimiter.length > goodCandidate.delimiter.length) // delimiter is more specific
-                    ) {
-                        goodCandidate = source;
-                    }
-                }
-                return goodCandidate;
-            };
-
-            const candidateSource = findAppropriateSource();
+            const candidateSource = this.findSource(sources, text, candidatePosition);
             if (!candidateSource) {
                 continue;
             }
@@ -239,6 +220,28 @@ export class MailSuggestionPlugin extends Plugin {
             return;
         }
         return this.searchSuggestions(term).length === 0 ? false : undefined;
+    }
+
+    /**
+     * The source with the longest delimiter typed at the given position.
+     *
+     * @param {SuggestionSource[]} sources
+     * @param {string} text
+     * @param {number} position
+     */
+    findSource(sources, text, position) {
+        let bestSource;
+        for (const source of sources) {
+            const { allowedPosition, delimiter } = source;
+            if (
+                text.startsWith(delimiter, position) &&
+                (allowedPosition === undefined || allowedPosition === position) &&
+                (!bestSource || delimiter.length > bestSource.delimiter.length)
+            ) {
+                bestSource = source;
+            }
+        }
+        return bestSource;
     }
 
     /**
