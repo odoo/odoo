@@ -81,7 +81,7 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         })
 
         user.with_user(user).restart_microsoft_synchronization()
-        event.with_user(user)._sync_odoo2microsoft(self.microsoft_service)
+        event.with_user(user)._sync_odoo2microsoft()
         microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
         self.assertMicrosoftEventPatched(event.microsoft_id, {
             'id': event.microsoft_id,
