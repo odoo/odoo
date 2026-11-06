@@ -88,9 +88,9 @@ class BusResult:
     :param channel: the bus channel
     :param str type: the notification type
     :param payload: the notification payload
-    When a payload dict is provided, only the specified keys and values are
-    checked against the actual notification; extra keys in the actual payload
-    are ignored.
+    When a payload is provided, it must be equal to the whole payload of the
+    actual notification (the `__store_version__` keys aside, unless
+    `show_store_versioning` is set). Without payload, any payload matches.
     """
 
     def __init__(self, channel, type=None, payload=None):
