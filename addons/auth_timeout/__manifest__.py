@@ -15,6 +15,10 @@
             "auth_timeout/static/src/services/check_identity/*",
             "auth_timeout/static/src/scss/auth_timeout.scss",
         ],
+        "web.assets_unit_tests": [
+            "auth_timeout/static/tests/**/*",
+            ("remove", "auth_timeout/static/tests/tours/**/*"),
+        ],
         "web.assets_tests": [
             "auth_timeout/static/tests/tours/**/*",
         ],

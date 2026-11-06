@@ -241,7 +241,8 @@ export const checkIdentityService = {
                 bus_service.send("update_presence", { inactivity_period: presence.getInactivityPeriod() });
             };
             // Immediately send a presence on bus connect
-            bus_service.addEventListener("connect", () => updatePresence(), { once: true });
+            bus_service.addEventListener("BUS:CONNECT", () => updatePresence());
+            bus_service.addEventListener("BUS:RECONNECT", () => updatePresence());
             const startInactivityTimer = () => {
                 inactivityTimer = setTimeout(
                     async () => {
