@@ -13,7 +13,7 @@ from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tests import tagged
 from odoo.tools import (
     is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
-    email_domain_normalize, email_normalize, email_split, email_split_and_format, html2plaintext,
+    html_keep_url, email_domain_normalize, email_normalize, email_split, email_split_and_format, html2plaintext,
     misc, formataddr, email_anonymize,
     prepend_html_content,
     config,
@@ -342,11 +342,33 @@ class TestHtmlTools(BaseCase):
             ("First \nSecond \nThird\n \nParagraph\n\r--\nSignature paragraph", 'div',
              "<div><p>First <br/>Second <br/>Third</p><p>Paragraph</p><p>--<br/>Signature paragraph</p></div>"),
             ("First<p>It should be escaped</p>\nSignature", False,
-             "<p>First&lt;p&gt;It should be escaped&lt;/p&gt;<br/>Signature</p>")
+             "<p>First&lt;p&gt;It should be escaped&lt;/p&gt;<br/>Signature</p>"),
+            ("Visit https://www.odoo.com/a?b=1&c=2.\nSignature", False,
+             '<p>Visit <a href="https://www.odoo.com/a?b=1&amp;c=2" target="_blank" rel="noreferrer noopener">'
+             'https://www.odoo.com/a?b=1&amp;c=2</a>.<br/>Signature</p>'),
         ]
         for content, container_tag, expected in cases:
             html = plaintext2html(content, container_tag)
             self.assertEqual(html, expected, 'plaintext2html is broken')
+
+    def test_html_keep_url(self):
+        link = '<a href="%s" target="_blank" rel="noreferrer noopener">%s</a>'
+        cases = [
+            ('Visit https://www.odoo.com.', 'Visit %s.' % (link % (('https://www.odoo.com',) * 2))),
+            ('Is it https://www.odoo.com/page?', 'Is it %s?' % (link % (('https://www.odoo.com/page',) * 2))),
+            ('See https://www.odoo.com, then', 'See %s, then' % (link % (('https://www.odoo.com',) * 2))),
+            ('(see https://www.odoo.com/web#id=42).',
+             '(see %s).' % (link % (('https://www.odoo.com/web#id=42',) * 2))),
+            # punctuation inside the url is kept
+            ('https://www.odoo.com/shop?search=a.b,c&page=2',
+             link % (('https://www.odoo.com/shop?search=a.b,c&page=2',) * 2)),
+            # so is a closing parenthesis the url opens
+            ('(https://en.wikipedia.org/wiki/Odoo_(software)).',
+             '(%s).' % (link % (('https://en.wikipedia.org/wiki/Odoo_(software)',) * 2))),
+        ]
+        for content, expected in cases:
+            with self.subTest(content=content):
+                self.assertEqual(html_keep_url(content), expected)
 
     def test_html_html_to_inner_content(self):
         cases = [
