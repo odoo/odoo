@@ -65,8 +65,14 @@
                         </page>
                         <page string="Evidence / หลักฐาน" name="evidence">
                             <field name="evidence_ok" invisible="1"/>
-                            <field name="evidence_ids">
-                                <list editable="bottom">
+                            <!-- Open the evidence form (which holds the
+                                 ``attachment_ids`` upload widget) instead of an
+                                 inline editable list: an evidence can only be
+                                 verified once an attachment is present, and the
+                                 file widget cannot be used in an inline list. -->
+                            <field name="evidence_ids"
+                                   context="{'default_billing_request_id': id}">
+                                <list>
                                     <field name="name"/>
                                     <field name="evidence_type_id"/>
                                     <field name="is_verified"/>
@@ -169,5 +175,30 @@
         <field name="domain">[('state', '=', 'submitted')]</field>
         <field name="context">{'search_default_group_direction': 1}</field>
         <field name="search_view_id" ref="view_od19_billing_request_search"/>
+    </record>
+
+    <!-- ============ EVIDENCE LINK (extends od19_sales_billing_evidence) ============ -->
+    <!-- ``billing_request_id`` is added by this module, so the field must be
+         injected into the evidence views declared in the dependency module. -->
+    <record id="view_od19_billing_evidence_form_request" model="ir.ui.view">
+        <field name="name">od19.billing.evidence.form.od19.billing.request</field>
+        <field name="model">od19.billing.evidence</field>
+        <field name="inherit_id" ref="od19_sales_billing_evidence.view_od19_billing_evidence_form"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_id" position="after">
+                <field name="billing_request_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_od19_billing_evidence_tree_request" model="ir.ui.view">
+        <field name="name">od19.billing.evidence.tree.od19.billing.request</field>
+        <field name="model">od19.billing.evidence</field>
+        <field name="inherit_id" ref="od19_sales_billing_evidence.view_od19_billing_evidence_tree"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_id" position="after">
+                <field name="billing_request_id"/>
+            </field>
+        </field>
     </record>
 </odoo>
