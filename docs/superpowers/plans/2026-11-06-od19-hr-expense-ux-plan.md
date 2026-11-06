@@ -31,6 +31,8 @@
 | C4 | **นิยาม "รถล่าสุด"** | เรียง `od19_last_used_date desc, id desc` (สเปก §K9) |
 | C5 | **สำเนาข้อมูลรถ ณ เวลาที่เบิก** | เก็บ `od19_mileage_vehicle_type` + `od19_mileage_plate` เป็น Char snapshot บน `hr.expense` |
 | C6 | **กลไก Mileage กับ `hr.expense` core** | `price_unit` เป็น readonly+computed เขียนทับไม่ได้ → ตั้ง `quantity = กม.` + `total_amount = กม. × อัตรา` (core คำนวณ `price_unit` ให้เองเฉพาะสินค้าไม่มีต้นทุน — กรณีหมวด Mileage) |
+| C7 | **ตัวกำหนดว่าเป็น Mileage** | ใช้ **ธงที่หมวดค่าใช้จ่าย**: เพิ่ม `od19_is_mileage_category` (Boolean) บน `product.template` ใน `od19_hr_expense_enhanced`; wizard ใช้ `compute` (read-only) อ่านค่าจากหมวดที่เลือก |
+| C8 | **หมวด Mileage ต้องเป็นสินค้าไม่มีต้นทุน** | `product_has_cost = not is_zero(standard_price)` → ต้องมีสินค้าหมวด **`standard_price = 0`** + UoM = กม. (สินค้า core `expense_product_mileage` มี `standard_price = 1.0` จึงใช้ไม่ได้) → สร้างสินค้าใหม่ใน `data/od19_expense_category_data.xml` |
 
 ---
 
@@ -39,6 +41,9 @@
 | ไฟล์ | บทบาท | การเปลี่ยนแปลง |
 |---|---|---|
 | `custom_addons/od19_hr_expense_enhanced/models/od19_employee_vehicle.py` | โมเดลสมุดรถ `od19.employee.vehicle` | **สร้างใหม่** |
+| `custom_addons/od19_hr_expense_enhanced/models/product_template.py` | ธง `od19_is_mileage_category` บนสินค้า/หมวดค่าใช้จ่าย | **สร้างใหม่** |
+| `custom_addons/od19_hr_expense_enhanced/views/product_template_views.xml` | ช่องติ๊กธงในฟอร์มสินค้า | **สร้างใหม่** |
+| `custom_addons/od19_hr_expense_enhanced/data/od19_expense_category_data.xml` | สินค้าหมวด "ค่าเดินทางตามระยะทาง" (ราคาทุน 0, หน่วย กม.) | **สร้างใหม่** |
 | `custom_addons/od19_hr_expense_enhanced/models/hr_expense.py` | ฟิลด์/ลอจิก Mileage + autofill รถ | แก้ |
 | `custom_addons/od19_hr_expense_enhanced/models/res_company.py` | `od19_mileage_rate` | แก้ |
 | `custom_addons/od19_hr_expense_enhanced/models/__init__.py` | import โมเดลใหม่ | แก้ |
@@ -238,6 +243,52 @@
 
 ---
 
+## Task 2B: หมวดค่าใช้จ่าย Mileage (`od19_hr_expense_enhanced`)
+
+**เหตุผล:** wizard รู้ว่าเป็น Mileage จาก **ธงบนหมวดค่าใช้จ่าย** (C7) และกลไกคำนวณต้องใช้สินค้า **ไม่มีต้นทุน** (C8)
+
+**Files:**
+- Create: `models/product_template.py`, `views/product_template_views.xml`, `data/od19_expense_category_data.xml`
+- Modify: `models/__init__.py`, `__manifest__.py`
+
+- [ ] **Step 1: ธงบนสินค้า**
+  ```python
+  class ProductTemplate(models.Model):
+      _inherit = 'product.template'
+
+      od19_is_mileage_category = fields.Boolean(
+          string='Mileage Category / หมวดค่าเดินทางตามระยะทาง',
+          help='Tick when expenses of this category are reimbursed per kilometre.',
+      )
+  ```
+
+- [ ] **Step 2: ช่องติ๊กในฟอร์มสินค้า**
+  `views/product_template_views.xml` inherit `hr_expense.view_product_hr_expense_form` แล้ววาง `<field name="od19_is_mileage_category"/>` ต่อจาก `can_be_expensed` (ให้ติ๊กเฉพาะเมื่อ `can_be_expensed`)
+
+- [ ] **Step 3: สินค้าหมวด Mileage (ราคาทุน 0)**
+  `data/od19_expense_category_data.xml` (`noupdate="1"`) สร้าง `product.product`:
+  ```xml
+  <record id="od19_expense_product_mileage" model="product.product">
+      <field name="name">ค่าเดินทางตามระยะทาง / Mileage</field>
+      <field name="type">service</field>
+      <field name="standard_price">0.0</field>
+      <field name="uom_id" ref="uom.product_uom_km"/>
+      <field name="default_code">MIL-KM</field>
+      <field name="can_be_expensed" eval="True"/>
+      <field name="od19_is_mileage_category" eval="True"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="True"/>
+      <field name="categ_id" ref="product.product_category_expenses"/>
+  </record>
+  ```
+
+- [ ] **Step 4: bootstrap + static**
+  - `models/__init__.py`: เพิ่ม `from . import product_template`
+  - `__manifest__.py`: เพิ่ม `views/product_template_views.xml` (หลัง views อื่น) + `data/od19_expense_category_data.xml` (ท้ายสุด) และ bump version `19.0.1.3.0` → `19.0.1.4.0`
+  - `python -m py_compile` + ตรวจ XML well-formed
+
+---
+
 ## Task 3: โมดูลใหม่ `od19_hr_expense_portal` + Wizard ยื่นเบิก
 
 **Files:**
@@ -260,20 +311,28 @@
           domain="[('can_be_expensed','=',True)]", string='Category / หมวดค่าใช้จ่าย')
       employee_id = fields.Many2one('hr.employee', required=True,
           default=lambda s: s.env.user.employee_id)
-      expense_date = fields.Date(default=fields.Date.context_today)
-      od19_is_mileage = fields.Boolean(related='expense_category_id.od19_is_mileage_category')
+      expense_date = fields.Date(default=fields.Date.context_today, required=True)
+      description = fields.Char()
+      currency_id = fields.Many2one('res.currency', default=lambda s: s.env.company.currency_id.id)
+      od19_is_mileage = fields.Boolean(compute='_compute_od19_is_mileage')   # C7: read-only from category
       amount = fields.Monetary(currency_field='currency_id')
       distance_km = fields.Float()
       vehicle_id = fields.Many2one('od19.employee.vehicle')
       origin = fields.Char(); destination = fields.Char()
-      description = fields.Char()
-      currency_id = fields.Many2one('res.currency', default=lambda s: s.env.company.currency_id.id)
       submit_now = fields.Boolean(default=True)
 
+      @api.depends('expense_category_id')
+      def _compute_od19_is_mileage(self):
+          for wiz in self:
+              wiz.od19_is_mileage = wiz.expense_category_id.od19_is_mileage_category
+
       def action_create_expense(self):
-          # สร้าง hr.expense (draft) แล้ว submit ตาม submit_now; คืน action เปิดใบที่สร้าง
+          # สร้าง hr.expense (draft): ตั้ง product_id/date/employee/description
+          # - ถ้า Mileage: od19_is_mileage=True + ระยะทาง/รถ/ต้นทาง-ปลายทาง + quantity=กม. + total_amount=กม.×อัตรา (C6)
+          # - ถ้าไม่ใช่: total_amount = amount
+          # แล้ว submit ตาม submit_now (เรียก hr.expense.action_submit) และคืน action เปิดใบที่สร้าง
   ```
-  > การแมป category → `product_id`, ระยะทาง → `quantity`, อัตรา → `price_unit`, snapshot รถ — ทำใน `action_create_expense()` โดยเรียกใช้ลอจิก Task 1/2 (อย่าซ้ำลอจิก)
+  > ⚠️ ใช้ `compute` (ไม่ใช่ `related`) เพื่อกันไม่ให้ wizard เขียนค่ากลับไปที่สินค้า; การแมปค่าลง `hr.expense` ทำใน `action_create_expense()` โดยอ้างผลลัพธ์เดียวกับ Task 1 (อย่าซ้ำลอจิกคำนวณ — ตั้ง `quantity`/`total_amount` แล้วให้ core คำนวณ `price_unit` เอง)
 
 - [ ] **Step 3: views (ฟอร์ม wizard) + menu**
   ฟอร์ม 4 กลุ่ม: (1) หมวด/พนักงาน/วันที่ (2) จำนวนเงิน หรือ ระยะทาง+รถ (invisible ตาม `od19_is_mileage`) (3) ต้นทาง/ปลายทาง + รายละเอียด (4) `submit_now`
