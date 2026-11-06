@@ -42,7 +42,7 @@
     --TourPointer__offset: 8px;
     --TourPointer__scale: 1.12;
     --TourPointer__color: var(--o-enterprise-color);
-    --TourPointer__color-accent: #{lighten($o-enterprise-color, 7%)};
+    --TourPointer__color-accent: hsl(from var(--o-enterprise-color) h s min(l + 7, 100));
     --TourPointer__border-width: 1px;
     --TourPointer__border-color-rgb: 255, 255, 255;
     --TourPointer__border-color: rgba(var(--TourPointer__border-color-rgb), 1);
@@ -93,8 +93,8 @@
     .o_tour_pointer_content {
         transition: color 0s ease var(--TourPointer__expand-duration);
         line-height: var(--body-line-height);
-        @include font-size($font-size-base);
-        font-family: $font-family-sans-serif;
+        font-size: var(--body-font-size);
+        font-family: var(--font-sans-serif);
         font-weight: normal;
     }
 

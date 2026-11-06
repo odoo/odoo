@@ -102,8 +102,8 @@
             }
 
             .media_iframe_video {
-                // 70% because the carousel controls are each 15% and the user
-                // must be able to click on the video buttons.
+                /* 70% because the carousel controls are each 15% and the user
+                   must be able to click on the video buttons. */
                 width: 70%;
                 height: 100%;
             }
@@ -114,7 +114,7 @@
         }
 
         > .container-fluid {
-            // keep image with a link centered with "full" content width.
+            /* keep image with a link centered with "full" content width. */
             .carousel-item > a {
                 margin-right: auto;
                 margin-left: auto;
@@ -130,13 +130,11 @@
         }
 
         .carousel-indicators {
-            $-mask-margin: 3rem;
-            $-left-mask-gradient: transparent, #000 $-mask-margin;
-            $-right-mask-gradient: #000 calc(100% - #{$-mask-margin}), transparent;
+            --ImageGallery__indicators-mask-margin: 3rem;
 
             align-items: center;
             min-width: 0;
-            overflow: auto hidden; // Force hidden on Y for mobile.
+            overflow: auto hidden; /* Force hidden on Y for mobile. */
             justify-content: flex-start;
             flex-wrap: nowrap;
             scrollbar-width: none;
@@ -146,13 +144,13 @@
             }
 
             &.o_faded_left {
-                mask: linear-gradient(to right, $-left-mask-gradient);
+                mask: linear-gradient(to right, transparent, #000 var(--ImageGallery__indicators-mask-margin));
             }
             &.o_faded_right {
-                mask: linear-gradient(to right, $-right-mask-gradient);
+                mask: linear-gradient(to right, #000 calc(100% - var(--ImageGallery__indicators-mask-margin)), transparent);
             }
             &.o_faded_left.o_faded_right {
-                mask: linear-gradient(to right, $-left-mask-gradient, $-right-mask-gradient);
+                mask: linear-gradient(to right, transparent, #000 var(--ImageGallery__indicators-mask-margin), #000 calc(100% - var(--ImageGallery__indicators-mask-margin)), transparent);
             }
         }
 
@@ -170,17 +168,17 @@
             background-size: 50%;
         }
         .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
-            height: $-o-carousel-controllers-size;
+            height: var(--CarouselControllers-size, var(--o-bs-spacer-5));
         }
         .carousel-control-prev-icon, .carousel-control-next-icon,
         &.s_image_gallery_controllers_outside .o_carousel_pause_icon {
-            width: $-o-carousel-controllers-size;
+            width: var(--CarouselControllers-size, var(--o-bs-spacer-5));
         }
         &:not(.s_image_gallery_controllers_outside) .o_carousel_pause_icon {
-            width: MIN(#{$-o-carousel-controllers-size}, 100%);
+            width: MIN(var(--CarouselControllers-size, var(--o-bs-spacer-5)), 100%);
         }
 
-        // Pause button
+        /* Pause button */
         .o_carousel_pause {
             padding: 0;
 
@@ -207,12 +205,12 @@
             filter: var(--o-bs-carousel-dark-control-icon-filter);
         }
 
-        // Pause button - Hidden
+        /* Pause button - Hidden */
         .o_carousel_pause_btn_hidden .o_carousel_pause {
             display: none;
         }
 
-        // Arrows - Default
+        /* Arrows - Default */
         &.s_image_gallery_arrows_default {
             .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                 &:hover {
@@ -229,7 +227,7 @@
             }
         }
 
-        // Arrows - Boxed / Rounded
+        /* Arrows - Boxed / Rounded */
         &.s_image_gallery_arrows_boxed, &.s_image_gallery_arrows_rounded {
             .carousel-control-prev-icon, .carousel-control-next-icon {
                 border-radius: var(--o-bs-btn-border-radius);
@@ -245,21 +243,21 @@
             }
         }
 
-        // Arrows - Rounded
+        /* Arrows - Rounded */
         &.s_image_gallery_arrows_rounded {
             .carousel-control-prev-icon, .carousel-control-next-icon {
                 border-radius: var(--border-radius-pill);
             }
         }
 
-        // Arrows - Hidden
+        /* Arrows - Hidden */
         &.s_image_gallery_arrows_hidden {
             .carousel-control-prev-icon, .carousel-control-next-icon {
                 display: none;
             }
         }
 
-        // Indicators
+        /* Indicators */
         .carousel-indicators {
             > button:focus-visible {
                 position: relative;
@@ -275,23 +273,23 @@
             }
         }
 
-        // Indicators - Bars
+        /* Indicators - Bars */
         &.s_image_gallery_indicators_bars {
-            // Border-top + border-bottom + indicator height.
-            --image-gallery-indicators-height: #{2* $carousel-indicator-hit-area-height + $carousel-indicator-height};
+            /* Border-top + border-bottom + indicator height. */
+            --image-gallery-indicators-height: calc(2 * var(--o-bs-carousel-indicator-hit-area-height) + var(--o-bs-carousel-indicator-height));
 
             .carousel-indicators > button img {
                 display: none;
             }
         }
 
-        // Indicators - Squared Miniatures / Rounded Miniatures
+        /* Indicators - Squared Miniatures / Rounded Miniatures */
         &.s_image_gallery_indicators_squared, &.s_image_gallery_indicators_rounded {
-            --image-gallery-indicators-height: #{$-o-carousel-controllers-size};
+            --image-gallery-indicators-height: var(--CarouselControllers-size, var(--o-bs-spacer-5));
 
             .carousel-indicators > button {
-                width: $-o-carousel-controllers-size;
-                height: $-o-carousel-controllers-size;
+                width: var(--CarouselControllers-size, var(--o-bs-spacer-5));
+                height: var(--CarouselControllers-size, var(--o-bs-spacer-5));
                 border: 0;
                 background-size: cover;
                 background-position: center;
@@ -323,28 +321,28 @@
             }
         }
 
-        // Indicators - Rounded Miniatures
+        /* Indicators - Rounded Miniatures */
         &.s_image_gallery_indicators_rounded .carousel-indicators > button {
             border-radius: var(--border-radius-pill);
         }
 
-        // Indicators - Dots
+        /* Indicators - Dots */
         &.s_image_gallery_indicators_dots {
-            --image-gallery-indicators-height: #{$-o-carousel-indicators-dots-size};
+            --image-gallery-indicators-height: var(--o-carousel-indicators-dots-size);
 
             .carousel-indicators > button {
-                width: $-o-carousel-indicators-dots-size;
-                height: $-o-carousel-indicators-dots-size;
+                width: var(--o-carousel-indicators-dots-size);
+                height: var(--o-carousel-indicators-dots-size);
                 border: 0;
                 border-radius: var(--border-radius-pill);
                 transform: scale(.5);
-                transition: opacity .6s ease, transform .6s ease; // $carousel-indicator-transition values
+                transition: opacity .6s ease, transform .6s ease; /* $carousel-indicator-transition values */
 
                 img {
                     display: none;
                 }
 
-                // Increases the click area for easier navigation.
+                /* Increases the click area for easier navigation. */
                 &:before {
                     position: absolute;
                     inset: calc(var(--o-bs-carousel-indicator-spacer) * -4);
@@ -359,9 +357,9 @@
             }
         }
 
-        // Indicators - Numbers
+        /* Indicators - Numbers */
         &.s_image_gallery_indicators_numbers {
-            --image-gallery-indicators-height: 1.5rem; // line height
+            --image-gallery-indicators-height: 1.5rem; /* line height */
 
             .carousel-indicators {
                 flex-wrap: wrap;
@@ -419,36 +417,36 @@
             }
         }
 
-        // Indicators - Hidden
+        /* Indicators - Hidden */
         &.s_image_gallery_indicators_hidden .carousel-indicators {
             display: none;
         }
 
-        // Style - Classic
+        /* Style - Classic */
         &:not(.s_image_gallery_controllers_outside, .s_image_gallery_controllers_indicators_outside) {
             .o_carousel_pause {
-                // 1rem = indicators margin-bottom
+                /* 1rem = indicators margin-bottom */
                 height: calc(var(--image-gallery-indicators-height) + 2* 1rem);
             }
         }
 
-        // Style - Classic / Indicators outside
+        /* Style - Classic / Indicators outside */
         &:not(.s_image_gallery_controllers_outside) .o_carousel_pause {
             position: absolute;
             bottom: 0;
             width: var(--o-bs-carousel-control-width);
         }
 
-        // Style - Indicators outside / Outside
+        /* Style - Indicators outside / Outside */
         &.s_image_gallery_controllers_indicators_outside:where(:not(.s_image_gallery_indicators_hidden)),
         &.s_image_gallery_controllers_outside {
 
             .carousel-inner {
-                padding-bottom: calc(#{$-o-carousel-controllers-size} + var(--o-bs-spacer-2));
+                padding-bottom: calc(var(--CarouselControllers-size, var(--o-bs-spacer-5)) + var(--o-bs-spacer-2));
             }
 
             .o_carousel_controllers {
-                height: $-o-carousel-controllers-size;
+                height: var(--CarouselControllers-size, var(--o-bs-spacer-5));
             }
 
             &.s_image_gallery_indicators_numbers .o_carousel_controllers {
@@ -456,7 +454,7 @@
             }
         }
 
-        // Style - Indicators outside
+        /* Style - Indicators outside */
         &.s_image_gallery_controllers_indicators_outside {
             .o_carousel_controllers {
                 justify-content: center;
@@ -464,13 +462,13 @@
 
             &:not(.s_image_gallery_indicators_hidden) {
                 .carousel-control-prev, .carousel-control-next {
-                    bottom: calc(#{$-o-carousel-controllers-size} + var(--o-bs-spacer-2));
+                    bottom: calc(var(--CarouselControllers-size, var(--o-bs-spacer-5)) + var(--o-bs-spacer-2));
                 }
             }
 
             .carousel-indicators {
                 bottom: 0;
-                height: $-o-carousel-controllers-size;
+                height: var(--CarouselControllers-size, var(--o-bs-spacer-5));
                 margin-bottom: 0;
             }
 
@@ -489,7 +487,7 @@
             }
         }
 
-        // Style - Outside
+        /* Style - Outside */
         &.s_image_gallery_controllers_outside {
             .o_carousel_controllers {
                 position: absolute;
@@ -519,7 +517,7 @@
             }
         }
 
-        // Style - Arrows left
+        /* Style - Arrows left */
         &.s_image_gallery_controllers_outside_arrows_left {
             .o_carousel_controllers {
                 justify-content: start;
@@ -535,7 +533,7 @@
             }
         }
 
-        // Style - Arrows right
+        /* Style - Arrows right */
         &.s_image_gallery_controllers_outside_arrows_right {
             .carousel-control-prev, .carousel-control-next {
                 order: 2;
@@ -604,8 +602,8 @@
             }
 
             .carousel-control-prev-icon, .carousel-control-next-icon {
-                width: $-o-carousel-controllers-size;
-                height: $-o-carousel-controllers-size;
+                width: var(--CarouselControllers-size, var(--o-bs-spacer-5));
+                height: var(--CarouselControllers-size, var(--o-bs-spacer-5));
                 background-size: 50%;
                 background-color: var(--o-bs-carousel-dark-indicator-active-bg);
                 border-radius: var(--o-bs-btn-border-radius);

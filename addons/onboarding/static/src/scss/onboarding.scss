@@ -1,7 +1,39 @@
+/* = Animations */
+/* ------------------------------------------------------------------------ */
+@keyframes o_onboarding_slideInUp {
+    from {
+        transform: translate3d(0, 20%, 0);
+        opacity: 0;
+    }
+}
+
+@keyframes o_onboarding_slideInUpDownOut {
+    25%, 85% { transform: translate3d(0, -80%, 0); opacity: 1; }
+    0%, 100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes o_onboarding_zoomIn {
+    from {
+        transform: scale3d(0.8, 0.8, 0.8);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes o_onboarding_fadeIn {
+    10%, 66% { opacity: 0; }
+    0%, 100% { opacity: 1; }
+}
+
+@keyframes o_onboarding_fadeInOut {
+    10%, 66% { opacity: 1; }
+    0%, 100% { opacity: 0; }
+}
+
 /* = Onboarding Panel */
 /* ============================================================================ */
-$o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
-
 .o_onboarding_container {
     transition: height 0.4s;
 
@@ -14,7 +46,7 @@ $o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
 }
 
 .o_onboarding_main {
-    background: linear-gradient(0deg, #{$o-gray-200} 0%, #{$o-gray-100} 100%);
+    background: linear-gradient(0deg, var(--o-gray-200) 0%, var(--o-gray-100) 100%);
 
     .o_onboarding_wrap {
         overflow-x: auto;
@@ -34,6 +66,8 @@ $o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
     /* = Step Design */
     /* ------------------------------------------------------------------------ */
     .o_onboarding_step {
+        --o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4);
+
         flex: 1 1 0;
 
         @for $i from 1 through 5 {
@@ -69,7 +103,7 @@ $o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
         }
 
         .o_onboarding_step_content {
-            width: $o-onboarding-step-width;
+            width: var(--o-onboarding-step-width);
         }
 
         .o_onboarding_step_side img {            
@@ -78,7 +112,7 @@ $o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
         }
 
         .o_onboarding_step_action {
-            min-width: calc(#{$o-onboarding-step-width} * .5);
+            min-width: calc(var(--o-onboarding-step-width) * .5);
             border: var(--border-width) solid var(--o-onboarding-color-blue);
             color: var(--o-onboarding-color-blue);
         }
@@ -94,12 +128,12 @@ $o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
         /* -------------------------------------------------------------------- */
         &[data-step-state="not_done"] {
             .o_onboarding_step_content_info {
-                animation: o_onboarding_zoomIn ($o-onboarding-base-time * 1.5) both;
+                animation: o_onboarding_zoomIn calc(var(--o-onboarding-base-time) * 1.5) both;
                 animation-delay: var(--o-onboarding-animation-delay, 0);
             }
 
             .o_onboarding_step_action {
-                animation: o_onboarding_slideInUp ($o-onboarding-base-time * 2) both;
+                animation: o_onboarding_slideInUp calc(var(--o-onboarding-base-time) * 2) both;
                 animation-delay: var(--o-onboarding-animation-delay, 0);
             }
         }
@@ -108,50 +142,16 @@ $o-onboarding-step-width: calc(var(--o-bs-container-max-width-lg) / 4) !default;
         /* -------------------------------------------------------------------- */
         &[data-step-state="just_done"] {
             .o_onboarding_step_content_info {
-                animation: o_onboarding_fadeIn ($o-onboarding-base-time * 3);
+                animation: o_onboarding_fadeIn calc(var(--o-onboarding-base-time) * 3);
             }
 
             .o_onboarding_step_action__done {
-                animation: bounceIn ($o-onboarding-base-time * 2);
+                animation: bounceIn calc(var(--o-onboarding-base-time) * 2);
             }
 
             .o_onboarding_confetti {
-                animation: o_onboarding_fadeInOut ($o-onboarding-base-time * 3) ease 0s 1 forwards;
+                animation: o_onboarding_fadeInOut calc(var(--o-onboarding-base-time) * 3) ease 0s 1 forwards;
             }
         }
-    }
-
-    /* = Animations */
-    /* ------------------------------------------------------------------------ */
-    @keyframes o_onboarding_slideInUp {
-        from {
-            transform: translate3d(0, 20%, 0);
-            opacity: 0;
-        }
-    }
-
-    @keyframes o_onboarding_slideInUpDownOut {
-        25%, 85% { transform: translate3d(0, -80%, 0); opacity: 1; }
-        0%, 100% { transform: translate3d(0, 0, 0); }
-    }
-
-    @keyframes o_onboarding_zoomIn {
-        from {
-            transform: scale3d(0.8, 0.8, 0.8);
-            opacity: 0;
-        }
-        50% {
-            opacity: 1;
-        }
-    }
-
-    @keyframes o_onboarding_fadeIn {
-        10%, 66% { opacity: 0; }
-        0%, 100% { opacity: 1; }
-    }
-
-    @keyframes o_onboarding_fadeInOut {
-        10%, 66% { opacity: 1; }
-        0%, 100% { opacity: 0; }
     }
 }

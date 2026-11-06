@@ -6,15 +6,15 @@
         position: relative;
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
-            flex: 0 0 percentage(1/3);
+            flex: 0 0 calc(100% / 3);
         }
 
         @media screen and (min-width: 992px), print and (min-width: 190mm) {
-            flex: 0 0 percentage(1/5);
+            flex: 0 0 calc(100% / 5);
         }
 
         @media screen and (min-width: 1200px), print and (min-width: 220mm) {
-            flex: 0 0 percentage(1/6);
+            flex: 0 0 calc(100% / 6);
         }
 
         .o_product_image_size {

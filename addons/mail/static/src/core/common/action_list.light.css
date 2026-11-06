@@ -1,0 +1,28 @@
+/* The call theme looks dark, which the dark theme already provides. */
+.o-mail-ActionList {
+    & button.o-discussCallTheme {
+        --gradient: transparent;
+        color: #FFF !important;
+
+        &:not(.o-hasBtnBg) {
+            background-color: transparent !important;
+        }
+        &.o-hasBtnBg:hover {
+            filter: brightness(1.3);
+        }
+        &.o-dropdown-item:hover {
+            backdrop-filter: brightness(1.3);
+        }
+    }
+
+    & button.o-discussCallTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
+        background-color: var(--gray-800);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        &.active {
+            /* Same colors as the dark theme. */
+            background-color: #17373b !important;
+            border-color: #03f9e3 !important;
+        }
+    }
+}

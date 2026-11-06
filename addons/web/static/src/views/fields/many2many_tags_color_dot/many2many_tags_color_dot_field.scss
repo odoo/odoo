@@ -1,9 +1,11 @@
 .o_field_many2many_tags_color_dot .o_tag {
-    $basic-bg: $o-gray-300;
-    $basic-text: $o-main-text-color;
+    --Many2ManyTagsColorDot-basic-bg: var(--o-gray-300);
+    --Many2ManyTagsColorDot-basic-text: var(--o-main-text-color);
 
     &, &::after {
-        @include o-print-color($basic-bg, background-color, bg-opacity);
-        @include o-print-color($basic-text, color, text-opacity);
+        --background-color: rgb(from var(--Many2ManyTagsColorDot-basic-bg) r g b / var(--bg-opacity, 1));
+        background-color: var(--background-color) !important;
+        --color: rgb(from var(--Many2ManyTagsColorDot-basic-text) r g b / var(--text-opacity, 1));
+        color: var(--color) !important;
     }
 }

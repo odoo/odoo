@@ -3,9 +3,9 @@
     --Notebook-padding-x: 0;
     --Notebook-sidebar-size: 250px;
     --Notebook__link-border-color: transparent;
-    --Notebook__link-border-color--active: #{$border-color};
+    --Notebook__link-border-color--active: var(--o-border-color, var(--o-bs-border-color));
     --Notebook__link-border-color--hover: var(--gray-200);
-    --Notebook__link-border-top-color--active: #{$border-color};
+    --Notebook__link-border-top-color--active: var(--o-border-color, var(--o-bs-border-color));
 
     .o_notebook_headers {
         margin: 0 var(--Notebook-margin-x, 0);
@@ -61,7 +61,7 @@
         }
 
         &:focus-visible, &.active:focus-visible {
-            box-shadow: inset 0 0 var(--o-bs-focus-ring-blur) $focus-ring-width $focus-ring-color;
+            box-shadow: inset 0 0 var(--o-bs-focus-ring-blur) var(--o-bs-focus-ring-width) var(--o-bs-focus-ring-color);
         }
 
         &:hover {
@@ -69,7 +69,7 @@
         }
 
         &.o_page_invalid {
-            color: o-text-color('danger') !important;
+            color: var(--o-text-color-danger) !important;
             background-color: var(--o-input-invalid-bg) !important;
         }
     }

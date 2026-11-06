@@ -1,7 +1,7 @@
-$o-we-ace-color: #2F3129 !default;
-
 .o_resource_editor {
-    background: $o-we-ace-color;
+    --o-we-ace-color: #2F3129;
+
+    background: var(--o-we-ace-color);
     color: white;
     display: flex;
     flex-flow: column nowrap;
@@ -37,7 +37,7 @@ $o-we-ace-color: #2F3129 !default;
     #resource-editor-id {
         flex: 0 0 auto;
         padding: calc(var(--o-bs-grid-gutter-width) / 4) calc(var(--o-bs-grid-gutter-width) / 2);
-        background-color: lighten($o-we-ace-color, 10%);
+        background-color: hsl(from var(--o-we-ace-color) h s calc(l + 10));
 
         .o_resource_editor_resource_info {
             color: #ebecee;
@@ -45,30 +45,28 @@ $o-we-ace-color: #2F3129 !default;
     }
 
     #resource-editor {
-        @mixin ace-line-error-mixin {
-            content: "";
-            z-index: 1000;
-            display: flex;
-            background-color: var(--o-we-color-danger);
-            color: white;
-            font-size: 1.2em;
-            align-items: center;
-            justify-content: center;
-            cursor: help;
-        }
-
         flex: 1 1 auto;
         .ace_gutter {
             .ace_gutter-cell.o_error {
                 position: relative;
 
+                &::before, &::after {
+                    content: "";
+                    z-index: 1000;
+                    display: flex;
+                    background-color: var(--o-we-color-danger);
+                    color: white;
+                    font-size: 1.2em;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: help;
+                }
                 &::before {
                     position: absolute;
                     top: -100vh;
                     left: auto;
                     bottom: -100vh;
                     right: 0;
-                    @include ace-line-error-mixin;
                     width: 2px;
                 }
                 &::after {
@@ -77,7 +75,6 @@ $o-we-ace-color: #2F3129 !default;
                     left: 0;
                     bottom: -100%;
                     right: 0;
-                    @include ace-line-error-mixin;
                     font-family: var(--icon-font-family, "Material Symbols Outlined");
                     content: "warning";
                 }

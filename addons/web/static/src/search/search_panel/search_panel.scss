@@ -15,11 +15,11 @@
    SearchPanel + SearchPanel in bottomsheet */
 .o_search_panel_section {
     .o_search_panel_filter_value_checkbox:checked {
-        background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$black}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"));
+        background-image: var(--o-check-mark-black-image);
     }
 
     .list-group-item {
-        border-radius: var(--SearchPanelHeader-border-radius, var(--#{$prefix}border-radius));
+        border-radius: var(--SearchPanelHeader-border-radius, var(--border-radius));
     }
 
     .o_search_panel_counter {
@@ -28,7 +28,7 @@
 
     .o_bottom_sheet & {
         .list-group {
-            --#{$prefix}list-group-bg: transparent;
+            --list-group-bg: transparent;
         }
 
         .o_search_panel_category_value, .o_search_panel_filter_value {

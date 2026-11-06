@@ -30,6 +30,22 @@ $o-mail-discussMainBgColor: if($o-webclient-color-scheme == dark, mix($gray-100,
     }
 }
 
+/*
+ * Colors of the mention and redirect links, from the arguments of the button-variant() implementation
+ * they used: the base and active colors of every link, and the hover colors of the redirect links (the
+ * mentions keep their base colors on hover).
+ */
+@mixin o-mail-mention-colors($background, $outline, $color, $hover-background, $hover-outline) {
+    $-light-text: $color == $color-contrast-light;
+    --o-mail-mention-color: #{$color};
+    --o-mail-mention-bg: #{$background};
+    --o-mail-mention-outline-color: #{$outline};
+    --o-mail-mention-active-bg: #{if($-light-text, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount))};
+    --o-mail-mention-active-outline-color: #{if($-light-text, shade-color($outline, $btn-active-border-shade-amount), tint-color($outline, $btn-active-border-tint-amount))};
+    --o-mail-redirect-hover-bg: #{$hover-background};
+    --o-mail-redirect-hover-outline-color: #{$hover-outline};
+}
+
 :root,
 :host {
     --o-mail-Avatar-size: #{$o-mail-Avatar-size};
@@ -58,6 +74,11 @@ $o-mail-discussMainBgColor: if($o-webclient-color-scheme == dark, mix($gray-100,
     --o-mail-NavigableList-zIndex: #{$o-mail-NavigableList-zIndex};
 
     @include o-mail-bubble-tints(if($o-webclient-color-scheme == dark, $gray-100, $o-view-background-color));
+    @if $o-webclient-color-scheme == dark {
+        @include o-mail-mention-colors(rgba(lighten($o-action, 5%), .15), rgba(lighten($o-action, 15%), .15), lighten($o-action, 35%), rgba(lighten($o-action, 5%), .25), rgba(lighten($o-action, 15%), .35));
+    } @else {
+        @include o-mail-mention-colors(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5));
+    }
 }
 
 /* Fainter on the main discuss background than on the page, which contrasts less with them. */

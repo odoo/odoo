@@ -4,11 +4,11 @@
     }
 
     .progress {
-        --progress-bg: #{fade-currentColor(20%)};
+        --progress-bg: color-mix(in srgb, currentColor 20%, transparent);
         --progress-font-size: var(--o-bs-font-size-base);
     }
 
-    // Options
+    /* Options */
     &.s_progress_bar_label_inline {
         .progress {
             --progress-height: 1.6em;
@@ -17,7 +17,7 @@
 
     &.s_progress_bar_label_below {
         .s_progress_bar_text {
-            //Default alignment, can be override by the user
+            /* Default alignment, can be override by the user */
             text-align: right;
         }
     }

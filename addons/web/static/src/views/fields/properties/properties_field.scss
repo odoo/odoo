@@ -14,7 +14,7 @@
 .o_property_field_popover {
     .o_input,
     .o_dropdown_button {
-        @include print-variable(o-input-border-color, $o-form-lightsecondary);
+        --o-input-border-color: var(--o-form-lightsecondary);
         color: var(--o-main-text-color) !important;
     }
     .o_dropdown_button {
@@ -29,9 +29,9 @@
         .dropdown:focus ~ .o_dropdown_button,
         .dropdown:focus-within ~ .o_dropdown_button,
         .o_dropdown_button:focus {
-            @include print-variable(o-input-border-color, $o-action);
+            --o-input-border-color: var(--o-action);
             * {
-                @include print-variable(o-input-border-color, $o-action);
+                --o-input-border-color: var(--o-action);
             }
         }
     }
@@ -141,6 +141,6 @@
 .o_field_properties div:not([columns="1"]) .o_property_drag_group {
     /* highlight effect on the group is activated only in multi-columns */
     box-sizing: border-box;
-    background-color: #{tint-color($o-action, 90%)};
+    background-color: color-mix(in srgb, var(--o-white) 90%, var(--o-action));
     border: 1px solid var(--o-action);
 }

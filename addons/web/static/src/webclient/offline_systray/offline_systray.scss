@@ -1,5 +1,3 @@
-$o-offline-separator-color: invert($popover-bg, 10%) !default;
-
 .o_offline_systray {
     .spinner-border {
         --spinner-height: 0.8em;
@@ -17,7 +15,9 @@ $o-offline-separator-color: invert($popover-bg, 10%) !default;
     }
 
     .o_horizontal_separator {
-        box-shadow: 0 var(--border-width) 0 $o-offline-separator-color;
+        --o-offline-separator-color: color-mix(in srgb, rgb(from var(--o-bs-popover-bg) calc(255 - r) calc(255 - g) calc(255 - b)) 10%, var(--o-bs-popover-bg));
+
+        box-shadow: 0 var(--border-width) 0 var(--o-offline-separator-color);
     }
 
     .o_cursor_auto {

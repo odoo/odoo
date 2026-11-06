@@ -4,7 +4,7 @@
 
     .s_announcement_scroll_marquee_item {
         white-space: preserve nowrap;
-        caret-color: transparent; // o_not_editable doesn't hide the caret on Firefox
+        caret-color: transparent; /* o_not_editable doesn't hide the caret on Firefox */
 
         @media (prefers-reduced-motion: reduce) {
             & {
@@ -13,9 +13,9 @@
         }
     }
 
-    // Item options
+    /* Item options */
     .s_announcement_scroll_heading_family .s_announcement_scroll_marquee_item {
-        font-family: $o-theme-headings-font;
+        font-family: var(--o-theme-headings-font);
         font-weight: var(--o-bs-headings-font-weight);
     }
     &.s_announcement_scroll_direction_right {
@@ -25,11 +25,11 @@
         --marquee-animation: none;
     }
 
-    // Animation states, only when ready
+    /* Animation states, only when ready */
     &.s_announcement_scroll_ready {
 
-        // Base behavior: once the snippet is ready, the animation is going in
-        // the base direction.
+        /* Base behavior: once the snippet is ready, the animation is going in
+           the base direction. */
         .s_announcement_scroll_marquee_item {
             --marquee-animation-time: calc((25s - var(--marquee-animation-speed) * 2) * var(--marquee-item-size) * .001);
 
@@ -42,8 +42,8 @@
             --marquee-animation-hover-multiplier: 2;
         }
 
-        // Hover effects, only when not scrolling and on devices that support
-        // hover.
+        /* Hover effects, only when not scrolling and on devices that support
+           hover. */
         @media (hover: hover) {
             &:where(:hover:not(.s_announcement_scroll_page_scrolling)) {
                 &.s_announcement_scroll_hover_pause .s_announcement_scroll_marquee_item {
@@ -58,7 +58,7 @@
             }
         }
 
-        // Parallax effects: disabling the CSS animation while scrolling
+        /* Parallax effects: disabling the CSS animation while scrolling */
         &:where(.s_announcement_scroll_page_scrolling) {
             &.s_announcement_scroll_parallax .s_announcement_scroll_marquee_item {
                 animation-play-state: paused;

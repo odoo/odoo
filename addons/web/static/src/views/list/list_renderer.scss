@@ -2,7 +2,7 @@
 .o_list_renderer {
     --ListRenderer-table-padding-x: var(--o-bs-table-cell-padding-x-sm);
     --ListRenderer-thead-padding-y: var(--o-bs-spacer-4);
-    --ListRenderer-thead-bg-color: linear-gradient(to bottom, #{$o-webclient-background-color}, color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent) );
+    --ListRenderer-thead-bg-color: linear-gradient(to bottom, var(--o-webclient-background-color), color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent) );
     --ListRendererGrouped__th-bg-color: color-mix(in srgb, var(--o-view-background-color) 50%, transparent);
     --ListRenderer-thead-border-end-color: var(--border-color);
     --ListRenderer-tfoot-bg-color: var(--o-list-footer-bg-color);
@@ -325,7 +325,7 @@
                 .o_pager_next {
                     max-height: 30px;
                     padding: 0 5px !important;
-                    background-color: lighten($o-brand-lightsecondary, 10%);
+                    background-color: hsl(from var(--o-brand-lightsecondary) h s calc(l + 10));
                     display: flex;
                     align-items: center;
                     &:hover {
@@ -579,10 +579,9 @@
             border-bottom-width: var(--ListRenderer-data-row-border-bottom-width, 1px);
 
             &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
-                $-focus-bg: rgba(var(--emphasis-color-rgb), #{$table-hover-bg-factor * 2});
-
-                --table-accent-bg: #{$-focus-bg};
-                --table-striped-bg: var(--ListRenderer-data-row-focused-striped-bg, #{$-focus-bg});
+                --ListRenderer-data-row-focused-bg: rgba(var(--emphasis-color-rgb), calc(var(--o-bs-table-hover-bg-factor) * 2));
+                --table-accent-bg: var(--ListRenderer-data-row-focused-bg);
+                --table-striped-bg: var(--ListRenderer-data-row-focused-striped-bg, var(--ListRenderer-data-row-focused-bg));
             }
         }
 
@@ -625,7 +624,7 @@
         }
 
         .o_invalid_optional_columns_button {
-            color: o-text-color('danger');
+            color: var(--o-text-color-danger);
             background-color: var(--o-input-invalid-bg);
         }
     }
@@ -633,7 +632,7 @@
 
 .o_optional_columns_dropdown .dropdown-item {
     &.o_invalid_dropdown_item {
-        color: o-text-color('danger');
+        color: var(--o-text-color-danger);
     }
 
     .o-checkbox .text-truncate {

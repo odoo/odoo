@@ -4,7 +4,7 @@
 
     max-width: var(--o-search-bar-menu-max-width);
     .o_dropdown_container {
-        border-color: $dropdown-divider-bg !important;
+        border-color: var(--o-bs-dropdown-divider-bg) !important;
         min-width: 200px;
     }
 
@@ -38,11 +38,11 @@
 }
 
 .o_searchview_dropdown_toggler {
-    --#{$prefix}btn-hover-border-color: var(--btn-border-color);
-    --#{$prefix}btn-disabled-border-color: #{$input-border-color};
-    --#{$prefix}btn-disabled-opacity: 1;
+    --btn-hover-border-color: var(--btn-border-color);
+    --btn-disabled-border-color: var(--o-bs-input-border-color);
+    --btn-disabled-opacity: 1;
 
     &.o-dropdown.btn-outline-secondary.show {
-        --#{$prefix}btn-active-border-color: var(--o-bs-input-focus-border-color);
+        --btn-active-border-color: var(--o-bs-input-focus-border-color);
     }
 }
