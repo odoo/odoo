@@ -16,6 +16,19 @@
         <field name="context">{'pivot_measures': ['quantity_product_uom', 'value'], 'pivot_column_groupby': ['order_partner_id'], 'pivot_row_groupby': ['date:month', 'picking_id', 'product_id']}</field>
     </record>
 
+    <record id="filter_stock_move_abc_report" model="ir.filters">
+        <field name="name">ABC report</field>
+        <field name="model_id">stock.move</field>
+        <field name="domain">[
+            ('company_id', '=', allowed_company_ids[0]),
+            ('state', '!=', 'cancel'),
+            ('location_id.usage', 'in', ['internal', 'transit']),
+            ('location_dest_id.usage', 'not in', ['internal', 'transit'])
+        ]</field>
+        <field name="action_id" ref="stock.stock_move_action"/>
+        <field name="context">{'pivot_measures': ['value', 'quantity'], 'pivot_column_groupby': [], 'pivot_row_groupby': ['product_abc_category', 'product_id']}</field>
+    </record>
+
     <record model="ir.ui.view" id="stock_move_view_list">
         <field name="name">stock.move.view.list.inherit.stock.account</field>
         <field name="inherit_id" ref="stock.view_move_tree"/>
