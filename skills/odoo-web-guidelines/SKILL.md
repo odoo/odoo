@@ -26,5 +26,6 @@ touching instead of loading whole files.
 | [Avoid patching JavaScript code](guidelines/javascript.md#avoid-patching-javascript-code) | extending or overriding behaviour that already exists |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
+| [No comment unless the code cannot show why](../odoo-guidelines/guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
 
 To add a guideline, follow [AUTHORING.md](AUTHORING.md).

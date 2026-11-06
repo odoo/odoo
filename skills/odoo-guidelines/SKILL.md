@@ -39,6 +39,7 @@ touching instead of loading whole files.
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
+| [No comment unless the code cannot show why](guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
 | [Changes in a stable version](guidelines/stable.md#changes-in-a-stable-version) | any change targeting a released branch rather than master |
 
 To add or restructure a guideline, follow [AUTHORING.md](AUTHORING.md).
