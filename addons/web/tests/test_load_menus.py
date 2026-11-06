@@ -70,7 +70,7 @@ class LoadMenusTests(HttpCase):
                 'actionModel': False,
                 'actionPath': False,
                 'appID': False,
-                'backgroundImage': None,
+                'homeMenuCustomization': None,
                 'children': [self.menu.id],
                 'id': 'root',
                 'name': 'root',
