@@ -23,6 +23,7 @@ touching instead of loading whole files.
 | --- | --- |
 | [Organize files by feature](guidelines/javascript.md#organize-files-by-feature-not-by-type) | creating a file, or deciding where new code lives |
 | [Avoid getters](guidelines/javascript.md#avoid-getters) | adding a computed value to a class or a component |
+| [Name a value for what it holds](guidelines/javascript.md#name-a-value-for-what-it-holds) | naming a variable, a function or a prop, changing what one holds, or writing a JSDoc |
 | [Avoid patching JavaScript code](guidelines/javascript.md#avoid-patching-javascript-code) | extending or overriding behaviour that already exists |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
