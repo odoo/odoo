@@ -20,7 +20,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the 'Title' snippet was inserted in the forum cover.",
-            trigger: ":iframe #oe_structure_website_forum_header_2 .s_title",
+            trigger: ":iframe #custom_forum_header_bottom .s_title",
         },
         // Add a snippet with drag and drop.
         {
