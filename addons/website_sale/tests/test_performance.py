@@ -379,6 +379,49 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
         )
 
 
+# PREVENT SALE
+
+
+class TestWebsiteSalePerformancePreventZeroPriceSale(TestWebsiteSalePerformanceNoPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # The zero price check reuses the prices computed for the page: no extra query expected
+        cls.website.write({"prevent_sale": True, "prevent_sale_for": "zero_price"})
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
+class TestWebsiteSalePerformancePreventZeroPriceSaleWithPricelist(
+    TestWebsiteSalePerformancePreventZeroPriceSale, TestWebsiteSalePerformanceWithPricelist
+):
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
 # TODO test when heavy product is set as rental/recurring
 # TODO test with enable uoms (& multiple uoms on products)
-# TODO test with prevent zero price sale
