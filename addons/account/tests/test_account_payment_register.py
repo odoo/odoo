@@ -2437,3 +2437,16 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         ).create({})
 
         self.assertEqual(register_wizard.currency_id, self.company_data['currency'])
+
+    def test_unlink_bill_with_leftover_register_payment_wizard(self):
+        bill = self._create_invoice(move_type='in_invoice')
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=bill.ids,
+        ).create({})
+        self.assertTrue(wizard.line_ids)
+
+        bill.unlink()
+
+        self.assertFalse(bill.exists())
+        self.assertFalse(wizard.exists())

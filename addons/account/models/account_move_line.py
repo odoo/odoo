@@ -2356,6 +2356,10 @@ class AccountMoveLine(models.Model):
             if line.move_id.inalterable_hash:
                 raise UserError(_('You cannot delete journal items belonging to a locked journal entry.'))
 
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.env['account.payment.register'].search([('line_ids', 'in', self.ids)])
+
     def unlink(self):
         if not self:
             return True
