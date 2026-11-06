@@ -182,7 +182,7 @@
             <div t-if="event.is_one_day" class="card bg-transparent d-inline-flex align-items-end flex-row flex-grow-1 w-lg-100 gap-2 p-2 p-md-3">
                 <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                 <div class="small">
-                    <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                    <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                     <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                     <i class="fa fa-long-arrow-right mx-1 text-muted" role="img"/>
                     <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
@@ -196,7 +196,7 @@
                         <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
                             <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                             <div class="small">
-                                <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                                <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                                 <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                             </div>
                         </div>
@@ -206,7 +206,7 @@
                         <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
                             <time t-field="event.date_end" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
                             <div class="small">
-                                <time t-field="event.date_end" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                                <time t-field="event.date_end" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM y', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
                                 <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                             </div>
                         </div>
