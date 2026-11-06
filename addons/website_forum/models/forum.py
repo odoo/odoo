@@ -622,7 +622,7 @@ class Post(models.Model):
                 else:
                     body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post
-                obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
+                obj_id.sudo().message_post(body=body, subtype_xmlid=subtype_xmlid)
         if 'active' in vals:
             answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
             if answers:
@@ -633,14 +633,15 @@ class Post(models.Model):
         for post in self:
             tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
+            post_sudo = post.sudo()
             if post.state == 'active' and post.parent_id:
-                post.parent_id.message_post_with_view(
+                post_sudo.parent_id.message_post_with_view(
                     'website_forum.forum_post_template_new_answer',
                     subject=_('Re: %s', post.parent_id.name),
                     partner_ids=[(4, p.id) for p in tag_partners],
                     subtype_id=self.env['ir.model.data']._xmlid_to_res_id('website_forum.mt_answer_new'))
             elif post.state == 'active' and not post.parent_id:
-                post.message_post_with_view(
+                post_sudo.message_post_with_view(
                     'website_forum.forum_post_template_new_question',
                     subject=post.name,
                     partner_ids=[(4, p.id) for p in tag_partners],
@@ -648,10 +649,10 @@ class Post(models.Model):
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
-                partners = post.sudo().message_partner_ids | tag_partners
+                partners = post_sudo.message_partner_ids | tag_partners
                 partners = partners.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
 
-                post.message_post_with_view(
+                post_sudo.message_post_with_view(
                     'website_forum.forum_post_template_validation',
                     subject=post.name,
                     partner_ids=partners.ids,
@@ -945,6 +946,8 @@ class Post(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
+        if not all(self.mapped('can_comment')):
+            raise AccessError(_('%d karma required to comment.', self.karma_comment))
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
             if self.parent_id:
@@ -959,8 +962,6 @@ class Post(models.Model):
                 kwargs['partner_ids'] = partner_ids
 
             self.ensure_one()
-            if not self.can_comment:
-                raise AccessError(_('%d karma required to comment.', self.karma_comment))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)
