@@ -1,12 +1,14 @@
-import { useService } from "@web/core/utils/hooks";
 
 import { KanbanController } from "@web/views/kanban/kanban_controller";
+import { usePlugin } from "@odoo/owl";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 export class MrpWorkorderKanbanController extends KanbanController {
     async setup() {
         super.setup();
-        this.action = useService("action");
-        this.orm = useService("orm");
+        this.action = usePlugin(ActionPlugin);
+        this.orm = usePlugin(ORM);
     }
 
     async selectOrdersToPlan() {
