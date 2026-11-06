@@ -8,6 +8,7 @@ patch(shortLabels, {
             ...super.getShortLabels(),
             margin: _t("M:"),
             margin_percent: _t("M%:"),
+            coefficient: _t("C:"),
         };
     },
 });
