@@ -576,7 +576,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 registry.uninstalling_modules = set(removing_modules)
                 if not imported_modules:
                     for name in removing_modules:
-                        if (uninstall_hook := graph[name].manifest.get('uninstall_hook')):
+                        if (uninstall_hook := graph[name].info.get('uninstall_hook')):
                             py_module = sys.modules[f'odoo.addons.{name}']
                             getattr(py_module, uninstall_hook)(env)
                             env.flush_all()
