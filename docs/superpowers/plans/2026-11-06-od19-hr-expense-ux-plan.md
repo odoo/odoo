@@ -390,13 +390,13 @@
 - Create: `custom_addons/od19_hr_expense_portal/tests/test_quick_create.py`
 - Modify: `tests/__init__.py` ของทั้ง 2 โมดูล (**ห้ามทับ import เดิม**)
 
-- [ ] **Step 1: T9 Mileage amount (ใช้ `Form` เพื่อกระตุ้น onchange จริง)**
+- [x] **Step 1: T9 Mileage amount (ใช้ `Form` เพื่อกระตุ้น onchange จริง)**
   company `od19_mileage_rate = 5.0`; เปิด `Form(self.env['hr.expense'])` ตั้ง `od19_is_mileage=True` แล้ว `od19_mileage_distance_km=20` → assert `quantity == 20`, `total_amount == 100.0`, `price_unit == 5.0`; แก้ระยะทางเป็น 30 → assert `total_amount == 150.0`
-- [ ] **Step 2: T10 Mileage ไม่มี VAT**
+- [x] **Step 2: T10 Mileage ไม่มี VAT**
   assert `tax_ids` ว่างเมื่อ `od19_is_mileage`; และ `@constrains` โยน `ValidationError` ถ้าใส่ `tax_ids`
-- [ ] **Step 3: T11 สมุดรถ**
+- [x] **Step 3: T11 สมุดรถ**
   สร้างรถ 2 คันของพนักงานคนเดียว (คันหนึ่ง `od19_last_used_date` ใหม่กว่า) → เปิดใบเบิก Mileage ใหม่ → `od19_mileage_vehicle_id` = คันล่าสุด; สร้างรถใหม่ผ่านใบเบิก → บันทึกเข้าสมุดรถ; ir.rule: พนักงานอื่นมองไม่เห็นรถเรา
-- [ ] **Step 4: wizard test**
+- [x] **Step 4: wizard test**
   สร้างผ่าน wizard → ได้ `hr.expense` 1 ใบ, `state` ตาม `submit_now`, ค่ารวมถูกต้อง
 - [ ] **Step 5: ให้ผู้ใช้รันเทสต์**
   ```powershell
@@ -408,8 +408,10 @@
 
 ## Task 6: อัปเดตเอกสาร/รีจิสทรี
 
-- [ ] อัปเดตสเปก §11 หากมีการเบี่ยงจากแผน (เช่น ชื่อฟิลด์จริง)
-- [ ] หากมี tour/registry ที่อ้าง HR Expense อยู่ ให้ปรับข้อความให้ตรง (ถ้าเกี่ยวข้อง)
+- [x] อัปเดตสเปก §11 หากมีการเบี่ยงจากแผน (เช่น ชื่อฟิลด์จริง)
+  → เพิ่มหัวข้อ **§11.1 บันทึก as-built (Phase 2)** และแก้กลไก Mileage ใน §15 (ใช้ `quantity` + `total_amount`; core คำนวณ `price_unit`)
+- [x] หากมี tour/registry ที่อ้าง HR Expense อยู่ ให้ปรับข้อความให้ตรง (ถ้าเกี่ยวข้อง)
+  → ตรวจแล้ว: `od19_user_guide_tours/.../hr_expense_tour.js` อ้าง flow อนุมัติ 2 ชั้นเดิม (`action_approve_first/second`) ซึ่งเป็นขอบเขตของ Phase 1 (คนละ branch) — **ไม่แก้ใน branch นี้** เพื่อไม่ให้ปนโดเมนงาน
 
 ---
 
