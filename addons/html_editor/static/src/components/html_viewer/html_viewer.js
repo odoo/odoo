@@ -18,7 +18,7 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
-import { TABLE_WRAPPER_SELECTOR, wrapTableInScrollContainer } from "@html_editor/utils/table";
+import { TABLE_WRAPPER_SELECTOR, wrapReadonlyTables } from "@html_editor/utils/table";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
 
@@ -152,21 +152,8 @@ export class HtmlViewer extends Component {
 
     processReadonlyContent(container) {
         this.applyReadonlyAttributes(container);
-        this.wrapTables(container);
+        wrapReadonlyTables(container);
         this.addDomListener(container, "copy", fillClipboardWithSelection);
-    }
-
-    /**
-     * The wrapper is not saved, so the viewer adds it like the editor does.
-     *
-     * @param {HTMLElement} container
-     */
-    wrapTables(container) {
-        for (const table of container.querySelectorAll(".o_table")) {
-            if (!table.closest(TABLE_WRAPPER_SELECTOR)) {
-                wrapTableInScrollContainer(table);
-            }
-        }
     }
 
     /**
