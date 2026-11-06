@@ -24,6 +24,8 @@ touching instead of loading whole files.
 | [Organize files by feature](guidelines/javascript.md#organize-files-by-feature-not-by-type) | creating a file, or deciding where new code lives |
 | [Avoid getters](guidelines/javascript.md#avoid-getters) | adding a computed value to a class or a component |
 | [Avoid patching JavaScript code](guidelines/javascript.md#avoid-patching-javascript-code) | extending or overriding behaviour that already exists |
+| [Use `window` members directly](guidelines/javascript.md#use-window-members-directly-not-the-browser-object) | writing `browser.`, or importing from `@web/core/browser/browser` |
+| [Pair every absence check with a positive one](guidelines/tests.md#pair-every-absence-check-with-a-positive-one) | asserting in a Hoot test or a tour that an element is absent |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
 
