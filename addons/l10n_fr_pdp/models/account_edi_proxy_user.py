@@ -150,7 +150,7 @@ class AccountEdiProxyClientUser(models.Model):
         return f'0225:{company.pdp_identifier}'
 
     @handle_demo
-    def _register_proxy_user(self, company, proxy_type, edi_mode):
+    def _register_proxy_user(self, company, proxy_type, edi_mode, sender_only=False):
         """ Override to avoid using the deprecated route on IAP """
         if proxy_type != 'pdp':
             return super()._register_proxy_user(company, proxy_type, edi_mode)
@@ -172,7 +172,8 @@ class AccountEdiProxyClientUser(models.Model):
                     'peppol_identifier': peppol_identifier,
                     'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
                     'auth_url_hash': company.pdp_authentication_uuid,
-                    'mobility_registration': True,
+                    'mobility_registration': not sender_only,  # no platform migration needed for sender-only registration
+                    'sender_only': sender_only,
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
@@ -197,6 +198,14 @@ class AccountEdiProxyClientUser(models.Model):
             supported_types.update(self.company_id._pdp_supported_document_types())
         return supported_types
 
+    def _check_company_on_peppol(self, company, edi_identification):
+        if self.proxy_type != 'pdp':
+            return super()._check_company_on_peppol(company, edi_identification)
+
+        annuaire_info = company.partner_id._pdp_annuaire_lookup_participant(edi_identification)
+        if not annuaire_info or annuaire_info.get('identifier') != company.pdp_identifier or not annuaire_info.get('platform_id'):
+            raise UserError(self.env._("The identifier must have an active, exact entry in the annuaire before reception can be migrated to Odoo."))
+
     @handle_demo
     def _peppol_register_receiver(self):
         self.ensure_one()
@@ -214,12 +223,39 @@ class AccountEdiProxyClientUser(models.Model):
         datetime_in_1_hour = fields.Datetime.add(fields.Datetime.now(), hours=1)
         self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=datetime_in_1_hour)
 
+    def _peppol_register_sender_as_receiver(self):
+        self.ensure_one()
+        if self.proxy_type != 'pdp':
+            return super()._peppol_register_sender_as_receiver()
+
+        super()._peppol_register_sender_as_receiver()
+
+        # receiver setup
+        params = {
+            'company_details': self._get_company_details(),
+            'supported_identifiers': list(self._get_peppol_supported_document_types())
+        }
+        self._call_peppol_proxy(
+            endpoint=self._get_peppol_proxy_endpoint('1/register_receiver'),
+            params=params,
+        )
+        self.company_id.account_peppol_proxy_state = 'sender'
+        return
+
     def _peppol_process_participant_status(self, proxy_user):
         self.ensure_one()
         super()._peppol_process_participant_status(proxy_user)
 
         if self.proxy_type != 'pdp':
             return
+
+        if (
+            self.company_id.account_peppol_proxy_state == 'sender'
+            and (proxy_user.get('mobility') or {}).get('direction') == 'to_odoo'
+        ):
+            self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(
+                at=fields.Datetime.add(fields.Datetime.now(), hours=1),
+            )
 
         if annuaire_start_date := proxy_user.get('annuaire_line_start_date'):
             company = self.sudo().company_id
@@ -962,9 +998,9 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_pdp_get_regulatory_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ('sender', 'receiver')), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_get_regulatory_documents()
 
     def _cron_pdp_send_lifecycles(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ('sender', 'receiver')), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_send_lifecycles()

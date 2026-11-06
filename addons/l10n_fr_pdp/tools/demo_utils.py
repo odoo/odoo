@@ -29,9 +29,9 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
     }[endpoint](self, endpoint, params=params)
 
 
-def _mock_register_proxy_user(func, self, company, proxy_type, edi_mode):
+def _mock_register_proxy_user(func, self, company, proxy_type, edi_mode, sender_only=False):
     # The function already has some special logic to create an edi user.
-    edi_user = func(self, company, proxy_type, edi_mode)
+    edi_user = func(self, company, proxy_type, edi_mode, sender_only=sender_only)
     if edi_user.proxy_type != 'pdp':
         return edi_user
 
@@ -62,8 +62,14 @@ def _mock_peppol_register_receiver(func, self):
 
 
 def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
-    peppol_eas = edi_identification.partition(":")[0]
-    return {'in_annuaire': peppol_eas == '0225'}
+    peppol_eas, _separator, identifier = edi_identification.partition(":")
+    return {
+        'in_annuaire': peppol_eas == '0225',
+        'platform_id': 'demo_platform',
+        'platform_name': 'Demo Platform',
+        'identifier': identifier,
+        'receiver_on_odoo': False,
+    }
 
 
 def _mock_get_peppol_verification_state(func, self, peppol_endpoint, peppol_eas, invoice_edi_format):

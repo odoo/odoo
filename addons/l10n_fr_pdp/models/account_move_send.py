@@ -29,7 +29,7 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol' and company._get_peppol_proxy_type() == 'pdp':
-            return company.account_peppol_proxy_state == 'receiver'
+            return company.account_peppol_proxy_state in ('sender', 'receiver')
         return super()._is_applicable_to_company(method, company)
 
     def _get_peppol_document_params(self, partner, invoice, invoice_data):
