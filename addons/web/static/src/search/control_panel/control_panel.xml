@@ -75,9 +75,9 @@
                     <t t-if="this.env.config.viewSwitcherEntries?.length > 1">
                         <div t-if="this.uiService.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
                             <Dropdown menuClass="{o_cp_switch_buttons: true, o_custom_bottom_sheet: true }">
-                                <button class="btn btn-secondary" data-available-offline="">
+                                <button class="btn btn-secondary" data-available-offline="" aria-label="Switch view">
                                     <t t-set="activeView" t-value="this.env.config.viewSwitcherEntries.find((view) => view.active)"/>
-                                    <i class="oi oi-fw" t-att-data-icon="activeView.icon" data-tooltip="Switch view" />
+                                    <i class="oi oi-fw" t-att-data-icon="activeView.icon" data-tooltip="Switch view" aria-hidden="true"/>
                                 </button>
                                 <t t-set-slot="content">
                                     <t t-foreach="this.env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
