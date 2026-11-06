@@ -42,6 +42,8 @@ export class Attachment extends FileModelMixin(Record) {
     thread = fields.One("mail.thread", { inverse: "attachments" });
     /** @type {number} */
     file_size;
+    /** @type {number} upload progress (between 0 and 1) while uploading */
+    uploadProgress;
     /** @type {string} */
     raw_access_token;
     res_name;
@@ -121,6 +123,11 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     get isDeletable() {
+        const pendingMessage = this.message_ids.find((m) => m.isPending);
+        if (pendingMessage) {
+            // cancel the upload, the message is posted when the others are done
+            return this.uploading && pendingMessage.allowsEdition;
+        }
         if (this.message_ids.length && this.store.self_user?.share !== false) {
             return this.message_ids.some((m) => m.editable);
         }
