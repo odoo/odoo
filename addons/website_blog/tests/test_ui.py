@@ -2,8 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+<<<<<<< 9ef8d62331b128bcd288528e4639e0901d85fcc8
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from datetime import datetime
+||||||| a7a38b444d8d72a0e5585bc57ac904d2ccc1927e
+=======
+from datetime import datetime, timedelta
+>>>>>>> c22c82fd654bf3d9327a379499db4962162689b4
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -52,6 +57,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
+<<<<<<< 9ef8d62331b128bcd288528e4639e0901d85fcc8
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
@@ -103,3 +109,25 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
         self.start_tour("/blog", "blog_tags_with_date", login="admin")
+||||||| a7a38b444d8d72a0e5585bc57ac904d2ccc1927e
+=======
+
+    def test_blog_feed_only_lists_published_posts(self):
+        blog = self.env['blog.blog'].create({'name': 'Feed Blog'})
+        now = datetime.now()
+        self.env['blog.post'].create([{
+            'name': 'Past Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now - timedelta(days=1),
+        }, {
+            'name': 'Future Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now + timedelta(days=1),
+        }])
+
+        res = self.url_open(f'/blog/{blog.id}/feed')
+        self.assertIn('Past Post', res.text)
+        self.assertNotIn('Future Post', res.text)
+>>>>>>> c22c82fd654bf3d9327a379499db4962162689b4
