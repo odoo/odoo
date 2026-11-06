@@ -664,7 +664,7 @@ export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => 
  * Narrow-dedup: if `fetch` resolves to `false` for some term, the next term
  * that starts with it skips the fetch (a narrower query cannot have results
  * when the broader one had none). Resolve to anything else to disable this for
- * the current bookmark; call `reset()` to drop it (e.g. on context change).
+ * the current bookmark. It is dropped when the deps change and on `reset()`.
  */
 export class SearchState {
     /**
@@ -753,6 +753,12 @@ export class SearchState {
                 self.run();
             },
             () => new Promise((resolve) => requestAnimationFrame(resolve))
+        );
+        useOnChange(
+            () => self.deps,
+            () => {
+                self.lastEmptyTerm = undefined;
+            }
         );
         useOnChange(
             () => [self.searchTerm, ...self.deps],
