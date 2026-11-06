@@ -5,6 +5,7 @@ import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolb
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownPreview,
+    useFocusTooltip,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -34,6 +35,7 @@ export class AlignSelector extends Component {
             menuRef: this.menuRef,
             previewableOperation: this.props.previewableOperation,
         });
+        useFocusTooltip(this.menuRef);
     }
 
     ariaLabel = computed(() => {

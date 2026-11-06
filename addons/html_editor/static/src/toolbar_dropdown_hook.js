@@ -1,4 +1,6 @@
 import { proxy, untrack, useEffect, useListener } from "@odoo/owl";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { Tooltip } from "@web/core/tooltip/tooltip";
 
 export function useDropdownAutoVisibility(overlayState, popoverRef) {
     if (!overlayState) {
@@ -79,4 +81,41 @@ export function useToolbarDropdownPreview({ dropdown, menuRef, previewableOperat
         },
         revert: revertPreview,
     };
+}
+
+/**
+ * The `title` of an element is only displayed by the browser on hover: this
+ * hook displays it as a tooltip when an element inside the given container
+ * gets the focus from the keyboard as well. It is not displayed when the
+ * focus comes from a pointer, as the native tooltip is then displayed on
+ * hover.
+ *
+ * @param {() => HTMLElement | null} containerRef
+ */
+export function useFocusTooltip(containerRef) {
+    const tooltip = usePopover(Tooltip, { closeOnEscape: false, setActiveElement: false });
+    // Whether the next focus comes from a pointer. It is only valid for the
+    // focus given by the pointer down: it is reset when the pointer is
+    // released anywhere, and once used, as the pointer may be released in
+    // another document (e.g. the iframe of the editable).
+    let isPointerFocus = false;
+    const resetPointerFocus = () => {
+        isPointerFocus = false;
+    };
+    useListener(containerRef, "pointerdown", () => {
+        isPointerFocus = true;
+    });
+    useListener(document, "pointerup", resetPointerFocus, { capture: true });
+    useListener(document, "pointercancel", resetPointerFocus, { capture: true });
+    useListener(containerRef, "focusin", (ev) => {
+        const isFocusedByPointer = isPointerFocus;
+        isPointerFocus = false;
+        tooltip.close();
+        const el = ev.target.closest("[title]");
+        if (isFocusedByPointer || !el?.title || !ev.currentTarget.contains(el)) {
+            return;
+        }
+        tooltip.open(el, { tooltip: el.title });
+    });
+    useListener(containerRef, "focusout", () => tooltip.close());
 }

@@ -5,6 +5,7 @@ import { PreviewableDropdownItem } from "@html_editor/main/toolbar/previewable_d
 import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
+    useFocusTooltip,
     useToolbarDropdownPreview,
 } from "@html_editor/toolbar_dropdown_hook";
 
@@ -29,6 +30,7 @@ export class TableBorderWidthSelector extends Component {
             menuRef: this.menuRef,
             previewableOperation: this.props.previewableOperation,
         });
+        useFocusTooltip(this.menuRef);
     }
 
     ariaLabel = computed(() => getToolbarAriaLabel(this.props.title, this.state.displayName));
