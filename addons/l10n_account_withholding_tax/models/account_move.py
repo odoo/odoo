@@ -77,11 +77,9 @@ class AccountMove(models.Model):
                         ('matched_debit_ids', 'debit_move_id', 'debit_amount_currency')
                     )
                     for counterpart_move, partials in line[partial_fname].grouped(lambda p: p[counterpart_line_fname].move_id).items():
-                        ratio = sum(
-                            partial[amount_fname] / counterpart_amount
-                            for partial in partials
-                            if (counterpart_amount := partial[counterpart_line_fname].amount_currency)
-                        )
+                        # The counterpart's withholdings cover all its lines on this account, not only the matched one
+                        counterpart_amount = sum(counterpart_move.line_ids.filtered(lambda move_line: move_line.account_id == line.account_id).mapped('amount_currency'))
+                        ratio = sum(partials.mapped(amount_fname)) / counterpart_amount if counterpart_amount else 0.0
                         withholding_deducted_currency += sum(
                             wth_line.currency_id._convert(
                                 from_amount=-wth_line.amount_currency * ratio,
