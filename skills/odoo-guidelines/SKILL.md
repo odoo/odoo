@@ -27,6 +27,7 @@ touching instead of loading whole files.
 | [Translate only static literals](guidelines/python.md#translate-only-static-literals) | user-facing strings in Python |
 | [Recordsets, domains and context](guidelines/orm.md#recordsets-domains-and-context) | reading records, building domains, passing context |
 | [Computes, onchange and constraints](guidelines/orm.md#computes-onchange-and-constraints) | computes, onchange, constraints, indexes, `create` overrides |
+| [End `_order` on a unique field](guidelines/orm.md#end-_order-on-a-unique-field) | setting a model's `_order`, or fixing records that come back in a random order |
 | [Methods and extension points](guidelines/orm.md#methods-and-extension-points) | adding a model method, or one another module will override |
 | [Transactions and exceptions](guidelines/orm.md#transactions-and-exceptions) | cursors, commits, savepoints, `try`/`except` |
 | [Fields](guidelines/fields.md#fields) | declaring or modifying field definitions |
