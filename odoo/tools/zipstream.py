@@ -52,7 +52,7 @@ over the network.
 # data descriptor values and an additional pointer (numeric offset from
 # the beginning of the archive) where to find the local file header.
 #
-# After the central directory comes three structures that let contain
+# After the central directory comes three structures that contain
 # pointers (numeric offset from the beginning of the archive) where to
 # find the start of the Central Directory, and the start of the Zip64
 # Central Directory.
@@ -123,9 +123,7 @@ class ZipAttachment(typing.TypedDict):
     """
 
     raw: BinaryValue
-    """
-    
-    """
+    # TODO: docstring
 
     write_date: dt.datetime
     """
@@ -135,7 +133,33 @@ class ZipAttachment(typing.TypedDict):
     """
 
 
-def generate_zip(
+def guess_zip_size(attachments: Iterable['IrAttachment | ZipAttachment']) -> int:
+    # TODO: docstring
+    count_z32 = [att for att in attachments if att['raw'].size <= MAX_INT32]
+    count_z64 = len(attachments) - count_z32
+
+    headers_len = (
+        len(attachments) * struct.calcsize(LocalFileHeader._struct)
+      + len(attachments) * struct.calcsize(CentralDirectoryFileHeader._struct)
+      + struct.calcsize(EndOfCentralDirectory._struct)
+      + count_z32 * struct.calcsize(DataDescriptor._struct)
+      + count_z64 * struct.calcsize(DataDescriptor._struct_64)
+    )
+
+    if count_z64:
+        headers_len += struct.calcsize(EndOfCentralDirectory64._struct)
+        headers_len += struct.calcsize(EndOfCentralDirectoryLocator._struct)
+        # extra field, "+ 4" for the "<HH" header of extra field, "* 2"
+        # cause once per LocalFileHeader and CentralDirectoryFileHeader
+        headers_len += 2 * count_z64 * (struct.calcsize(Zip64._struct) + 4)
+
+    # assume no file gets compressed
+    content_len = sum(attach['raw'].size for attach in attachments)
+
+    return headers_len + content_len
+
+
+def stream_zip(
     attachments: Iterable['IrAttachment | ZipAttachment'],
     user_timezone: dt.timezone = dt.UTC,
 ) -> Iterator[bytes]:
