@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_training_category_view_list" model="ir.ui.view">
+        <field name="name">fleet_training.category.list</field>
+        <field name="model">fleet_training.category</field>
+        <field name="arch" type="xml">
+            <list string="Categories" editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_fleet_training_category" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">fleet_training.category</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="fleet_training_tag_view_list" model="ir.ui.view">
+        <field name="name">fleet_training.tag.list</field>
+        <field name="model">fleet_training.tag</field>
+        <field name="arch" type="xml">
+            <list string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_fleet_training_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">fleet_training.tag</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_fleet_training_configuration"
+              name="Configuration"
+              parent="menu_fleet_training_root"
+              sequence="100"/>
+    <menuitem id="menu_fleet_training_categories"
+              name="Categories"
+              parent="menu_fleet_training_configuration"
+              action="action_fleet_training_category"
+              sequence="10"/>
+    <menuitem id="menu_fleet_training_tags"
+              name="Tags"
+              parent="menu_fleet_training_configuration"
+              action="action_fleet_training_tag"
+              sequence="20"/>
+</odoo>

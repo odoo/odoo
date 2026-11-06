@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Categories -->
+    <record id="demo_category_suv" model="fleet_training.category">
+        <field name="name">SUV</field>
+    </record>
+    <record id="demo_category_sedan" model="fleet_training.category">
+        <field name="name">Sedan</field>
+    </record>
+    <record id="demo_category_hatchback" model="fleet_training.category">
+        <field name="name">Hatchback</field>
+    </record>
+
+    <!-- Tags -->
+    <record id="demo_tag_company_car" model="fleet_training.tag">
+        <field name="name">Company Car</field>
+        <field name="color">4</field>
+    </record>
+    <record id="demo_tag_leased" model="fleet_training.tag">
+        <field name="name">Leased</field>
+        <field name="color">2</field>
+    </record>
+
+    <!-- Drivers -->
+    <record id="demo_driver_ravi" model="fleet_training.driver">
+        <field name="name">Ravi Sharma</field>
+        <field name="license_number">DL-0420110012345</field>
+        <field name="phone">+91 98765 43210</field>
+        <field name="email">ravi.sharma@example.com</field>
+        <field name="hire_date" eval="(DateTime.now() - relativedelta(years=3)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="demo_driver_anita" model="fleet_training.driver">
+        <field name="name">Anita Verma</field>
+        <field name="license_number">MH-1220180067890</field>
+        <field name="phone">+91 91234 56789</field>
+        <field name="email">anita.verma@example.com</field>
+        <field name="hire_date" eval="(DateTime.now() - relativedelta(years=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="demo_driver_suresh" model="fleet_training.driver">
+        <field name="name">Suresh Iyer</field>
+        <field name="license_number">KA-0520150054321</field>
+    </record>
+
+    <!-- Vehicles -->
+    <record id="demo_vehicle_nexon" model="fleet_training.vehicle">
+        <field name="name">Fleet-001</field>
+        <field name="license_plate">KA01AB1234</field>
+        <field name="vin_sn">MAT625512N1234567</field>
+        <field name="color">White</field>
+        <field name="category_id" ref="demo_category_hatchback"/>
+        <field name="driver_id" ref="demo_driver_ravi"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_company_car'))]"/>
+        <field name="model_year">2022</field>
+        <field name="seats">5</field>
+        <field name="acquisition_date" eval="(DateTime.now() - relativedelta(years=2)).strftime('%Y-%m-%d')"/>
+        <field name="insurance_expiry_date" eval="(DateTime.now() + relativedelta(days=20)).strftime('%Y-%m-%d')"/>
+        <field name="state">assigned</field>
+        <field name="notes">Tata Nexon - primary sales team vehicle.</field>
+    </record>
+
+    <record id="demo_vehicle_xuv700" model="fleet_training.vehicle">
+        <field name="name">Fleet-002</field>
+        <field name="license_plate">KA01AC5678</field>
+        <field name="vin_sn">MA1TA2GEJN1234568</field>
+        <field name="color">Grey</field>
+        <field name="category_id" ref="demo_category_suv"/>
+        <field name="driver_id" ref="demo_driver_anita"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_leased'))]"/>
+        <field name="model_year">2023</field>
+        <field name="seats">7</field>
+        <field name="acquisition_date" eval="(DateTime.now() - relativedelta(years=1)).strftime('%Y-%m-%d')"/>
+        <field name="insurance_expiry_date" eval="(DateTime.now() + relativedelta(days=200)).strftime('%Y-%m-%d')"/>
+        <field name="state">assigned</field>
+        <field name="notes">Mahindra XUV700 - executive transport.</field>
+    </record>
+
+    <record id="demo_vehicle_creta" model="fleet_training.vehicle">
+        <field name="name">Fleet-003</field>
+        <field name="license_plate">KA01AD9012</field>
+        <field name="color">Red</field>
+        <field name="category_id" ref="demo_category_sedan"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_company_car'))]"/>
+        <field name="model_year">2021</field>
+        <field name="seats">5</field>
+        <field name="acquisition_date" eval="(DateTime.now() - relativedelta(years=4)).strftime('%Y-%m-%d')"/>
+        <field name="state">available</field>
+        <field name="notes">Hyundai Creta - pool vehicle, currently unassigned.</field>
+    </record>
+
+    <record id="demo_vehicle_innova" model="fleet_training.vehicle">
+        <field name="name">Fleet-004</field>
+        <field name="license_plate">KA01AE3456</field>
+        <field name="color">Silver</field>
+        <field name="category_id" ref="demo_category_suv"/>
+        <field name="driver_id" ref="demo_driver_suresh"/>
+        <field name="model_year">2020</field>
+        <field name="seats">8</field>
+        <field name="acquisition_date" eval="(DateTime.now() - relativedelta(years=5)).strftime('%Y-%m-%d')"/>
+        <field name="state">maintenance</field>
+        <field name="notes">Toyota Innova Crysta - airport transfers, currently in service.</field>
+    </record>
+
+    <!-- Maintenance history -->
+    <record id="demo_maintenance_innova_service" model="fleet_training.maintenance">
+        <field name="vehicle_id" ref="demo_vehicle_innova"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+        <field name="maintenance_type">service</field>
+        <field name="odometer">68000</field>
+        <field name="cost">4200</field>
+        <field name="description">Periodic service: oil change, brake inspection, AC service.</field>
+    </record>
+
+    <record id="demo_maintenance_nexon_tires" model="fleet_training.maintenance">
+        <field name="vehicle_id" ref="demo_vehicle_nexon"/>
+        <field name="date" eval="(DateTime.now() - relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+        <field name="maintenance_type">tires</field>
+        <field name="odometer">21000</field>
+        <field name="cost">18000</field>
+        <field name="description">Replaced all four tires.</field>
+    </record>
+
+</odoo>
