@@ -51,6 +51,11 @@ class ResPartnerBank(models.Model):
     def _compute_display_qr_setting(self):
         self.display_qr_setting = False
 
+    @api.model
+    def _get_lock_trust_fields(self):
+        # EXTENDS account
+        return super()._get_lock_trust_fields() | {'proxy_type', 'proxy_value'}
+
     # CRC16 calculation with polynomial 0x1021 and initial value 0xFFFF
     def _get_crc16(self, data, poly=0x1021, init=0xFFFF):
         crc = init
