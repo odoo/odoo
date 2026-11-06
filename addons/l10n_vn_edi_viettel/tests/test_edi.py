@@ -344,6 +344,20 @@ class TestVNEDI(AccountTestInvoicingCommon):
         self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], "0.50")
 
     @freeze_time('2024-01-01')
+    def test_invoice_foreign_currency_manual_rate(self):
+        """ The rate sent to SInvoice must be the one of the invoice, even if it differs from the currency rates """
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            currency=self.other_currency,
+        )
+        invoice.invoice_currency_rate = 0.4  # 1 EUR = 2.50 VND, instead of 0.50 VND from the currency rates
+        invoice.action_post()
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], "2.50")
+
+    @freeze_time('2024-01-01')
     def test_send_and_print(self):
         """ Test the send & print settings and flows.
 
