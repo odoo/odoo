@@ -167,5 +167,11 @@ a question; a missing section is a review round trip.
   [Changes in a stable version](../odoo-guidelines/guidelines/stable.md#changes-in-a-stable-version)
   of odoo-guidelines; a PR description explains why, as the commit message
   does, and links the relevant task, ticket, or issue when one exists.
-- A bug fix comes with a test that reproduces it when one is possible.
+- A bug fix comes with a test that reproduces it when one is possible. Run
+  it once on the code without the fix and see it fail: a test that passes
+  either way proves nothing. The same holds for an existing test said to
+  cover the case: it counts only if it fails once the fix is undone. A
+  flaky test that the fix makes stable is not the reproduction: without
+  the fix it only goes back to flaky, which the CI reads as noise. Add a
+  test that fails every time without the fix.
 - An external contributor signs the CLA in the PR, once.
