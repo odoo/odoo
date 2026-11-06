@@ -32,7 +32,10 @@ class PaymentProvider(models.Model):
         string="Razorpay Key Secret", copy=False, groups="base.group_system"
     )
     razorpay_webhook_secret = fields.Char(
-        string="Razorpay Webhook Secret", copy=False, groups="base.group_system"
+        string="Razorpay Webhook Secret",
+        required_if_provider="razorpay",
+        copy=False,
+        groups="base.group_system",
     )
 
     # OAuth fields
