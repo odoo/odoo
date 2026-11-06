@@ -613,7 +613,7 @@ export class DiscussChannel extends models.ServerModel {
                 "self_member_id",
                 (memberRes) => {
                     memberRes.from_method("_store_member_fields");
-                    memberRes.extend(["custom_notifications"]);
+                    memberRes.extend(["custom_notifications", "is_favorite"]);
                     memberRes.extend(["last_interest_dt", "message_unread_counter"]);
                     memberRes.attr("message_unread_counter_bus_id", bus_last_id);
                     memberRes.extend(["mute_until_dt", "new_message_separator"]);
@@ -626,6 +626,38 @@ export class DiscussChannel extends models.ServerModel {
                 { only_data: true }
             );
         }
+    }
+
+    _store_channel_last_message_fields(res) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        const lastMessageIds = this.map(
+            (channel) =>
+                MailMessage._filter([
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", channel.id],
+                ]).sort((a, b) => b.id - a.id)[0]
+        )
+            .filter(Boolean)
+            .map((message) => message.id);
+        res.store.add(MailMessage.browse(lastMessageIds), "_store_message_fields");
+        res.attr("last_message_fetched", true);
+    }
+
+    _store_channel_last_needaction_fields(res) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        const lastNeedactionMessageIds = this.map((channel) =>
+            MailMessage._filter([
+                ["model", "=", "discuss.channel"],
+                ["res_id", "=", channel.id],
+            ])
+                .sort((a, b) => b.id - a.id)
+                .find((message) => MailMessage._needaction(message))
+        )
+            .filter(Boolean)
+            .map((message) => message.id);
+        res.store.add(MailMessage.browse(lastNeedactionMessageIds), "_store_message_fields");
     }
 
     _store_open_chat_window_fields(res) {

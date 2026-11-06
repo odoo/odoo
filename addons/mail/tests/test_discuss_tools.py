@@ -416,6 +416,24 @@ class TestDiscussTools(MailCase):
         data = store._build_result()
         self.assertEqual({"res.users": [{"id": user_a.id, "_DELETE": True}]}, data)
 
+    def test_398_delayed_add_after_delete_keeps_record(self):
+        """Test that an add after a delete is not merged into an add before it."""
+        user_a = new_test_user(self.env, "test_user_398@example.com")
+        store = Store()
+        store.add(user_a, ["name"])
+        store.delete(user_a)
+        store.add(user_a, ["name"])
+        data = store._build_result()
+        self.assertEqual({"res.users": [{"id": user_a.id, "name": user_a.name}]}, data)
+
+    def test_399_delayed_add_records_as_keyword(self):
+        """Test that an add with records given as keyword is still added."""
+        user_a = new_test_user(self.env, "test_user_399@example.com")
+        store = Store()
+        store.add(records=user_a, fields=["name"])
+        data = store._build_result()
+        self.assertEqual({"res.users": [{"id": user_a.id, "name": user_a.name}]}, data)
+
     # 4xx Tests many command modes
 
     def test_450_replace_clear_existing_data(self):

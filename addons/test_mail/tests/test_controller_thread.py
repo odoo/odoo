@@ -236,3 +236,43 @@ class TestMessageController(MailControllerThreadCommon):
                 result = self.make_jsonrpc_request("/mail/read_subscription_data", {"follower_id": follower.id})
                 self.assertIn(subtype_public.id, result["subtype_ids"])
                 self.assertEqual(subtype_internal.id in result["subtype_ids"], internal_expected)
+
+    def test_inbox_fields_scoped_to_inbox_fetch(self):
+        chatter_record = self.env["res.partner"].create({"name": "Chatter Partner"})
+        chatter_record.message_post(
+            body="chatter message", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        inbox_record = self.env["res.partner"].create({"name": "Inbox Partner"})
+        inbox_record.message_post(
+            body="inbox notification",
+            message_type="comment",
+            partner_ids=[self.partner_employee.id],
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        res = self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    [
+                        "/mail/thread/messages",
+                        {"thread_model": "res.partner", "thread_id": chatter_record.id},
+                    ],
+                    [
+                        "/mail/messaging_menu/mail.message/load_more",
+                        {"tab_id": "notification", "limit": 20},
+                    ],
+                ],
+            },
+        )
+        threads = {t["id"]: t for t in res["mail.thread"]}
+        chatter = threads[chatter_record.id]
+        inbox = threads[inbox_record.id]
+        for field in (
+            "message_needaction_counter",
+            "message_needaction_counter_bus_id",
+            "module_icon",
+            "selfFollower",
+        ):
+            self.assertIn(field, inbox, f"inbox record must get {field}")
+            self.assertNotIn(field, chatter, f"{field} must not reach the chatter fetch")

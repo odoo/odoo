@@ -89,9 +89,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #      chat, channel, meeting and livechat tabs:
     #       - search_fetch discuss_channel
     #   1: read group member (prefetch _compute_self_member_id)
-    #   1: search discuss_channel (last message of each channel, add_channels_last_message)
+    #   1: search discuss_channel (last message of each channel, _store_channel_last_message_fields)
     #   1: search mail_message (_compute_message_needaction)
-    #   1: search discuss_channel (add_channels_last_needaction)
+    #   1: search discuss_channel (last needaction message of each channel)
     #   36: channel _to_store_defaults:
     #       - read group member (_compute_invited_member_ids)
     #       - fetch discuss_channel_member (invited member)
@@ -203,8 +203,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel_res_groups_rel (group_ids)
     #       - fetch res_groups (group_public_id)
     #       - _compute_message_unread
-    #   1: search discuss_channel (last message of every channel of the request, _get_last_messages)
-    #   23: store add message:
+    #   1: search discuss_channel (last message of the chat hub channels, _get_last_messages)
+    #   17: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - search mail_message (_filter_accessible_from_query, ordered)
@@ -221,15 +221,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_notification
     #       - search rating_rating
     #       - fetch mail_notification
-    #       - search discuss_call_history (call_history_ids)
     #       - fetch mail_message_subtype
-    #       - fetch res_partner (OdooBot, author of the call message)
-    #       - search res_users (OdooBot partner.user_ids)
-    #       - fetch res_users (OdooBot)
-    #       - fetch discuss_call_history
-    #       - search mail_call_artifact
     #   1: select the current db snapshot
-    _query_count_init_messaging_with_chat_hub = 57
+    _query_count_init_messaging_with_chat_hub = 51
     # Queries for _query_count_page_load (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -260,7 +254,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel_member (self member, tab domains)
     #   1: search discuss_channel (chat hub channel ids)
     #   1: read group member (prefetch _compute_self_member_id, chat hub channels)
-    #   1: search discuss_channel (last message of every channel of the request, _get_last_messages)
     #   24: store add channel, once for the channels of both fetches:
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -289,7 +282,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel_res_groups_rel (group_ids)
     #       - fetch res_groups (group_public_id)
     #       - _compute_message_unread
-    #   22: store add message:
+    #   1: search discuss_channel (last message of the chat hub channels, _get_last_messages)
+    #   16: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - search mail_message (_filter_accessible_from_query, ordered)
@@ -305,15 +299,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_link_preview
     #       - search mail_notification
     #       - search rating_rating
-    #       - search discuss_call_history (call_history_ids)
     #       - fetch mail_message_subtype
-    #       - fetch res_partner (OdooBot, author of the call message)
-    #       - search res_users (OdooBot partner.user_ids)
-    #       - fetch res_users (OdooBot)
-    #       - fetch discuss_call_history
-    #       - search mail_call_artifact
     #   1: select the current db snapshot
-    _query_count_page_load = 71
+    _query_count_page_load = 65
     # Queries for _query_count_open_channel (in order):
     #   1: fetch res_users (current user)
     #   1: search discuss_channel JOIN member (_search_is_member, first occurrence)
@@ -374,31 +362,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users (current user)
     #       - search mail_message (_resolve_messages)
     #       - search mail_notification (set_message_done)
-    #   9: mail.thread:
-    #       - search res_partner (_get_thread_with_access)
-    #       - read group mail_followers (followersCount)
-    #       - search_fetch mail_followers (selfFollower)
-    #       - read group mail_followers (recipientsCount)
-    #       - read group mail_message (has_pinned_messages)
-    #       - search_fetch mail_scheduled_message (scheduledMessages)
-    #       - search_fetch mail_activity (activities)
-    #         [enterprise] search whatsapp_template (canSendWhatsapp)
-    #       - search ir_attachment (attachments)
-    #       - search_fetch mail_followers (followers)
-    #   1: search_fetch mail_followers (recipients)
-    #   10: suggestedRecipients:
-    #       - search_fetch mail_message (message_ids)
-    #       - search mail_message (_filter_accessible_from_query)
-    #       - search mail_message (_filter_accessible_from_query, ordered)
-    #       - fetch mail_message
-    #       - search mail_followers (message_follower_ids)
-    #       - fetch res_partner (author of the last message)
-    #       - search mail_alias_domain
-    #       - fetch mail_alias_domain
-    #       - search mail_alias
-    #       - search res_users (partner.user_ids)
-    #   15: store add message:
+    #   1: search res_partner (_get_thread_with_access)
+    #   17: store add message (of /mail/thread/messages, added before the thread):
     #       - search mail_message_reaction
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - fetch mail_message
     #       - search mail_message_schedule
     #       - search mail_message_res_partner_bookmarked_rel
     #       - search message_attachment_rel
@@ -413,8 +381,27 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search res_users (author)
     #       - fetch res_users (author)
     #       - fetch mail_message_subtype
+    #   8: store add thread:
+    #       - read group mail_followers (followersCount)
+    #       - search_fetch mail_followers (selfFollower)
+    #       - read group mail_followers (recipientsCount)
+    #       - read group mail_message (has_pinned_messages)
+    #       - search_fetch mail_scheduled_message (scheduledMessages)
+    #       - search_fetch mail_activity (activities)
+    #         [enterprise] search whatsapp_template (canSendWhatsapp)
+    #       - search ir_attachment (attachments)
+    #       - search_fetch mail_followers (followers)
+    #   1: search_fetch mail_followers (recipients)
+    #   7: suggestedRecipients:
+    #       - search_fetch mail_message (message_ids)
+    #       - search mail_message (_filter_accessible_from_query)
+    #       - search mail_followers (message_follower_ids)
+    #       - search mail_alias_domain
+    #       - fetch mail_alias_domain
+    #       - search mail_alias
+    #       - search res_users (partner.user_ids)
     #   1: select the current db snapshot
-    _query_count_open_chatter = 42
+    _query_count_open_chatter = 41
 
     def setUp(self):
         super().setUp()
@@ -998,18 +985,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         with their last message."""
         partner_1 = self.users[1].partner_id
         return {
-            "discuss.call.history": [
-                {
-                    "duration_hour": self.channel_channel_group_1.call_history_ids.duration_hour,
-                    "end_dt": False,
-                    "has_recording": False,
-                    "id": self.channel_channel_group_1.call_history_ids.id,
-                },
-            ],
             "discuss.channel": self._filter_channels_fields(
-                self._expected_result_for_channel(
-                    self.channel_channel_group_1, last_message_fetched=True
-                ),
+                self._expected_result_for_channel(self.channel_channel_group_1),
                 self._expected_result_for_channel(self.channel_general, last_message_fetched=True),
                 self._expected_result_for_channel(
                     self.channel_channel_public_1, last_message_fetched=True
@@ -1033,19 +1010,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "mail.message": self._filter_messages_fields(
                 self._expected_result_for_message(self.channel_general),
                 self._expected_result_for_message(self.channel_channel_public_1),
-                self._expected_result_for_message(self.channel_channel_group_1),
             ),
             "mail.notification": [
                 self._expected_result_for_notification(self.channel_channel_public_1),
             ],
             "mail.message.subtype": [
                 {"description": False, "id": self.env.ref("mail.mt_note").id},
-                {"description": False, "id": self.env.ref("mail.mt_important_notification").id},
             ],
             "mail.thread": self._filter_threads_fields(
                 self._expected_result_for_thread(self.channel_general),
                 self._expected_result_for_thread(self.channel_channel_public_1),
-                self._expected_result_for_thread(self.channel_channel_group_1),
             ),
             "res.groups": [{"full_name": "Role / User", "id": self.env.ref("base.group_user").id}],
             "res.partner": self._filter_partners_fields(
@@ -1058,13 +1032,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
                 self._expected_result_for_persona(self.users[2]),
                 self._expected_result_for_persona(self.users[15]),
-                self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
                 self._res_for_user(self.users[0]),
                 self._res_for_user(self.users[2]),
                 self._res_for_user(self.users[15]),
-                self._res_for_user(self.user_root),
             ),
             "hr.employee": [
                 self._res_for_employee(self.users[0].employee_ids[0]),

@@ -208,6 +208,43 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 self.assertFalse(thread_data["hasReadAccess"])
                 self.assertFalse(thread_data["hasWriteAccess"])
 
+    def test_thread_rating_data_public_user(self):
+        """Thread rating data must not leak to a public user fetching
+        via token through the mail fetch route."""
+        record = self.env["mail.test.rating"].create({"name": "Rated record"})
+        record.message_post(
+            body="public comment",
+            message_type="comment",
+            rating_value=5,
+            subtype_xmlid="mail.mt_comment",
+        )
+
+        def get_thread(access_params):
+            result = self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "/mail/thread/messages",
+                            {
+                                "thread_model": record._name,
+                                "thread_id": record.id,
+                                "access_params": access_params,
+                            },
+                        ]
+                    ]
+                },
+            )
+            return result["mail.thread"][0]
+
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        internal_thread = get_thread(None)
+        self._authenticate_pseudo_user(self.user_public)
+        portal_thread = get_thread({"token": record._portal_ensure_token()})
+        rating_fields = {"rating_avg", "rating_count", "rating_stats"}
+        self.assertEqual(set(internal_thread) & rating_fields, rating_fields)
+        self.assertEqual(set(portal_thread) & rating_fields, set())
+
     def test_message_post_sanitizes_post_data(self):
         """Only internal users with direct posting ACL can pass custom
         `message_type`/`subtype_xmlid`; everyone else gets `comment`/`mail.mt_comment`."""

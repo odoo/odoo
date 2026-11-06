@@ -63,17 +63,6 @@ registerStoreHandler(
 );
 
 registerStoreHandler(
-    "/im_livechat/looking_for_help",
-    function store_im_livechat_looking_for_help(store) {
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        for (const channelId of DiscussChannel.search([["livechat_status", "=", "need_help"]])) {
-            store.request_channel_ids.add(channelId);
-        }
-    }
-);
-
-registerStoreHandler(
     "/im_livechat/session/data",
     function store_im_livechat_session_data(store, { channel_id }) {
         if (!channel_id) {

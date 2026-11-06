@@ -3,7 +3,6 @@
 from werkzeug.exceptions import BadRequest
 
 from odoo.fields import Domain
-from odoo.http import request
 
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store
@@ -101,7 +100,21 @@ class MessagingMenuController(WebclientController):
             fetch_params={"limit": limit, "search_term": search_term},
         )
         if messages:
-            request.update_context(add_inbox_fields=True)
+            store.add(messages, "_store_message_inbox_fields")
+            # sudo: bus.bus: reading non-sensitive last id
+            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+            for records in messages._records_by_model_name().values():
+                if not isinstance(records, self.env.registry["mail.thread"]):
+                    continue
+                store.add(
+                    records,
+                    lambda res: (
+                        # sudo: mail.thread: users can read their own message_needaction_counter on the thread
+                        res.attr("message_needaction_counter", sudo=True),
+                        res.attr("message_needaction_counter_bus_id", bus_last_id),
+                    ),
+                    as_thread=True,
+                )
         store.resolve_data_request(
             lambda res: res.attr("is_fully_loaded", len(messages) < limit),
         )
