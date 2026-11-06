@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account.ApplyTaxOnLines">
+        <div t-if="this.isVisible" class="d-flex btn-group">
+            <button type="button"
+                    class="o_selection_badge btn btn-sm btn-secondary btn-outline-secondary mb-1"
+                    t-att-data-tooltip="this.buttonTooltip"
+                    t-on-click="(ev) => this.openTaxDialog(ev.currentTarget)">
+                <t t-out="this.buttonLabel"/>
+            </button>
+        </div>
+    </t>
+</templates>

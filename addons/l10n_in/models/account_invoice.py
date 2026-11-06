@@ -5,7 +5,7 @@ import re
 from contextlib import contextmanager
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import _, Command, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
@@ -652,3 +652,17 @@ class AccountMove(models.Model):
             return self.env._("Bill of Supply")
 
         return self.env._("Invoice")
+
+    def _get_applied_tax(self):
+        self.ensure_one()
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        tcs_taxes = product_lines.tax_ids.filtered(lambda tax: tax.l10n_in_tax_type == 'tcs')
+        return tcs_taxes.filtered(lambda tax: all(tax in line.tax_ids for line in product_lines))[:1]
+
+    def _get_tax_popover_domain(self):
+        if self.country_code == 'IN':
+            return [
+                *self.env['account.tax']._check_company_domain(self.company_id or self.env.company),
+                ('l10n_in_tax_type', '=', 'tcs'),
+            ]
+        return super()._get_tax_popover_domain()

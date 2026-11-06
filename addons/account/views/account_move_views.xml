@@ -1235,8 +1235,9 @@
                                     </div>
                                 </div>
                             </group>
-                            <div>
-                                <field name="document_tax_mode" id="document_tax_mode_mobile" class="tax_mode_badge d-md-none" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" required="move_type != 'entry'"/>
+                            <div class="d-flex flex-wrap gap-2 d-md-none">
+                                <widget name="account_apply_tax_on_lines" id="account_apply_tax_on_lines_mobile" invisible="move_type == 'entry'" readonly="state != 'draft'"/>
+                                <field name="document_tax_mode" id="document_tax_mode_mobile" class="tax_mode_badge" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" required="move_type != 'entry'"/>
                             </div>
                         </group>
                         <notebook>
@@ -1245,7 +1246,10 @@
                                   string="Invoice Lines"
                                   invisible="move_type == 'entry'">
                                 <div class="position-relative document_tax_mode">
-                                    <field name="document_tax_mode" id="document_tax_mode" class="overlap_badge_tab tax_mode_badge d-none d-md-block" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" required="move_type != 'entry'"/>
+                                    <div class="overlap_badge_tab gap-2 d-none d-md-flex">
+                                        <widget name="account_apply_tax_on_lines" id="account_apply_tax_on_lines" readonly="state != 'draft'"/>
+                                        <field name="document_tax_mode" id="document_tax_mode" class="tax_mode_badge" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" required="move_type != 'entry'"/>
+                                    </div>
                                 </div>
                                 <field name="invoice_line_ids"
                                        widget="product_label_section_and_note_field_o2m"
