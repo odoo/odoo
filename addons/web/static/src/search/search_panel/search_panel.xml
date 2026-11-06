@@ -58,8 +58,8 @@
          t-ref="this.root">
         <div t-if="!this.uiService.isSmall" class="d-flex align-items-center">
 
-            <button class="btn btn-light btn-sm ms-auto p-2 lh-1" t-on-click="this.toggleSidebar">
-                <i class="oi" data-icon="left_panel_close"/>
+            <button class="btn btn-light btn-sm ms-auto p-2 lh-1" t-on-click="this.toggleSidebar" aria-label="Collapse search panel">
+                <i class="oi" data-icon="left_panel_close" aria-hidden="true"/>
             </button>
         </div>
         <div t-if="!this.sections or this.sections.length === 0" class="o_search_panel_empty_state me-3">
@@ -203,7 +203,7 @@
                         }"
                     t-att-data-tooltip="value.display_name"
                     >
-                    <button class="o_toggle_fold btn flex-shrink-0 border-0 py-0 px-1 text-center" t-att-class="{'o_toggle_fold_with_children' : value.childrenIds.length}"
+                    <button class="o_toggle_fold btn flex-shrink-0 border-0 py-0 px-1 text-center" t-att-class="{'o_toggle_fold_with_children' : value.childrenIds.length}" aria-hidden="true"
                     tabindex="-1">
                         <i
                             t-if="value.childrenIds.length"

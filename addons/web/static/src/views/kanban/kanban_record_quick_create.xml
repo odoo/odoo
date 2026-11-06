@@ -20,8 +20,8 @@
                     Edit
                 </button>
                 <span class="flex-grow-1"></span>
-                <button class="btn btn-secondary o_kanban_cancel" t-on-click="() => this.cancel(true)" data-available-offline="">
-                    <i class="oi oi-filled" data-icon="delete" />
+                <button class="btn btn-secondary o_kanban_cancel" t-on-click="() => this.cancel(true)" data-available-offline="" aria-label="Discard">
+                    <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                 </button>
             </div>
         </div>

@@ -22,11 +22,11 @@
                             t-on-blur="() => this.state.hasInputFocused = false"
                             t-on-keydown="this.onInputKeydown"
                         />
-                        <button class="btn btn-secondary text-success o_kanban_add" type="button" t-on-click="this.validate">
-                            <i class="oi" data-icon="check"/>
+                        <button class="btn btn-secondary text-success o_kanban_add" type="button" t-on-click="this.validate" aria-label="Add">
+                            <i class="oi" data-icon="check" aria-hidden="true"/>
                         </button>
-                        <button class="btn btn-secondary text-danger o_kanban_remove" type="button" t-on-click="this.fold">
-                            <i class="oi" data-icon="close"/>
+                        <button class="btn btn-secondary text-danger o_kanban_remove" type="button" t-on-click="this.fold" aria-label="Cancel">
+                            <i class="oi" data-icon="close" aria-hidden="true"/>
                         </button>
                     </div>
                 </div>

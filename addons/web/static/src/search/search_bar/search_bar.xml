@@ -96,9 +96,11 @@
                 <t t-if="item.isParent">
                     <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
                         href="#"
+                        aria-label="Show options"
+                        t-att-aria-expanded="item.isExpanded ? 'true' : 'false'"
                         t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
                         >
-                        <i class="oi" t-attf-data-icon="{{ item.isExpanded ? 'arrow_drop_down' : 'arrow_right' }}"/>
+                        <i class="oi" t-attf-data-icon="{{ item.isExpanded ? 'arrow_drop_down' : 'arrow_right' }}" aria-hidden="true"/>
                     </a>
                 </t>
                 <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
