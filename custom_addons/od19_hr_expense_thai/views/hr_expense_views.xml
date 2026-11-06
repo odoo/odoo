@@ -12,29 +12,11 @@
                 <field name="thai_expense_type"/>
             </field>
             <field name="employee_id" position="after">
-                <field name="first_approval_date"/>
-                <field name="second_approver_id"/>
-                <field name="second_approval_date"/>
-                <field name="second_approval_state"/>
                 <field name="reimbursement_date"/>
                 <field name="od19_reimbursement_payment_id"
                        invisible="not od19_reimbursement_payment_id"/>
             </field>
             <xpath expr="//header" position="inside">
-                <button name="action_approve_first"
-                        string="Approve (L1)"
-                        type="object"
-                        class="btn-primary"
-                        invisible="state != 'submitted'"/>
-                <button name="action_approve_second"
-                        string="Approve (L2)"
-                        type="object"
-                        class="btn-primary"
-                        invisible="second_approval_state != 'pending'"/>
-                <button name="action_refuse_second"
-                        string="Refuse (L2)"
-                        type="object"
-                        invisible="second_approval_state != 'pending'"/>
                 <button name="action_mark_reimbursed"
                         string="Reimburse Employee"
                         type="object"

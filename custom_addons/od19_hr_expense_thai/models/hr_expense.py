@@ -66,55 +66,6 @@ class HrExpense(models.Model):
         for expense in self:
             expense.require_second_approval = expense.total_amount > threshold
 
-    def action_approve_first(self):
-        """First level approval."""
-        for expense in self:
-            if expense.state not in ('submitted',):
-                raise UserError(_('Only submitted expenses can be approved.'))
-            approver = expense.first_approver_id
-            if approver and approver.user_id and approver.user_id != self.env.user:
-                raise UserError(_(
-                    'Only the designated first approver (%s) can approve this '
-                    'expense.'
-                ) % approver.display_name)
-            expense.first_approver_id = self.env.user.employee_id
-            expense.first_approval_date = fields.Date.context_today(expense)
-            if expense.require_second_approval:
-                expense.second_approval_state = 'pending'
-            else:
-                # Expenses below the threshold only need one approval, so the
-                # second step is marked as approved right away. Approve
-                # directly instead of routing through ``action_approve_second``,
-                # which would reject the first approver for being the same user
-                # as the second approver.
-                expense.second_approval_state = 'approved'
-                expense.action_approve()
-
-    def action_approve_second(self):
-        """Second level approval."""
-        for expense in self:
-            if expense.second_approval_state == 'approved':
-                raise UserError(_('This expense has already been approved.'))
-            if (
-                expense.first_approver_id
-                and expense.first_approver_id.user_id == self.env.user
-            ):
-                raise UserError(_(
-                    'The second approver must be different from the first '
-                    'approver.'
-                ))
-            expense.second_approver_id = self.env.user.employee_id
-            expense.second_approval_date = fields.Date.context_today(expense)
-            expense.second_approval_state = 'approved'
-            # Call standard approve
-            expense.action_approve()
-
-    def action_refuse_second(self):
-        """Second level refusal."""
-        for expense in self:
-            expense.second_approval_state = 'refused'
-            expense.action_refuse()
-
     def action_mark_reimbursed(self):
         """Reimburse an employee-paid expense with a real payment.
 
