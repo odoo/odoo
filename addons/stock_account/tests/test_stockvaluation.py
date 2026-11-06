@@ -6,6 +6,8 @@ from datetime import timedelta
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
 from odoo.tests import Form, TransactionCase
+from unittest.mock import patch
+
 from odoo import Command
 
 
@@ -148,6 +150,85 @@ class TestStockValuationBase(TransactionCase):
         return out_move.with_context(svl=True)
 
 class TestStockValuation(TestStockValuationBase):
+    def _make_layers_for_accounting_batches(self, count=1001):
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 1, unit_cost=5)
+        outgoing = self._make_out_move(self.product1, count + 1)
+        layers = self.env['stock.valuation.layer'].create([{
+            'product_id': self.product1.id,
+            'company_id': self.env.company.id,
+            'quantity': 0,
+            'unit_cost': 0,
+            'value': 1,
+            'stock_move_id': outgoing.id,
+            'stock_valuation_layer_id': outgoing.stock_valuation_layer_ids.id,
+            'description': 'Negative inventory correction',
+        } for _ in range(count)])
+        return outgoing, layers
+
+    def test_accounting_batches_skip_empty_batch_and_reconcile_after_posting(self):
+        outgoing, layers = self._make_layers_for_accounting_batches(count=2001)
+        # An empty first batch must not prevent posting the following batches.
+        zero_layers = layers[:1000]
+        zero_layers.write({'value': 0})
+        valued_layers = layers[1000:]
+        model = self.env.registry['account.move']
+        original_create = model.create
+        original_reconcile = model._stock_account_anglo_saxon_reconcile_valuation
+        created_ids = []
+        creation_sizes = []
+        reconciliation_counts = []
+
+        def capture_create(moves, values):
+            created = original_create(moves, values)
+            creation_sizes.append(len(created))
+            created_ids.extend(created.ids)
+            return created
+
+        def capture_reconcile(invoices, product=False):
+            # Posting also invokes this hook on journal entries with no product filter.
+            if product:
+                journals = self.env['account.move'].browse(created_ids)
+                self.assertEqual(set(journals.mapped('state')), {'posted'})
+                reconciliation_counts.append(len(journals))
+            return original_reconcile(invoices, product=product)
+
+        with patch.object(model, 'create', capture_create), patch.object(
+            model, '_stock_account_anglo_saxon_reconcile_valuation', capture_reconcile,
+        ):
+            layers._validate_accounting_entries()
+        self.assertEqual(creation_sizes, [1000, 1])
+        self.assertEqual(reconciliation_counts, [len(valued_layers)])
+        self.assertFalse(zero_layers.account_move_id)
+        journals = layers.account_move_id
+        self.assertEqual(len(journals), len(valued_layers))
+        self.assertEqual(set(journals.mapped('state')), {'posted'})
+        valuation_lines = journals.line_ids.filtered(lambda line: line.account_id == self.stock_valuation_account)
+        self.assertEqual(sum(valuation_lines.mapped('balance')), len(valued_layers))
+        self.assertEqual(sum(journals.line_ids.mapped('balance')), 0)
+        self.assertEqual(journals.stock_move_id, outgoing)
+
+    def test_accounting_batches_rollback_on_late_failure(self):
+        outgoing, layers = self._make_layers_for_accounting_batches()
+        model = self.env.registry['account.move']
+        original_create = model.create
+        calls = []
+        before = self.env['account.move'].search_count([('stock_move_id', '=', outgoing.id)])
+
+        def fail_later_batch(moves, values):
+            calls.append(len(values))
+            if len(calls) == 2:
+                raise RuntimeError('Failure after the first posted batch')
+            return original_create(moves, values)
+
+        with self.assertRaisesRegex(RuntimeError, 'Failure after the first posted batch'):
+            with self.cr.savepoint(), patch.object(model, 'create', fail_later_batch):
+                layers._validate_accounting_entries()
+        self.env.invalidate_all()
+        self.assertFalse(layers.account_move_id)
+        self.assertEqual(self.env['account.move'].search_count([('stock_move_id', '=', outgoing.id)]), before)
+
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,
         price change updates the stock value based on current stock level.
