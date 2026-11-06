@@ -6,7 +6,7 @@ import { session } from "@web/session";
 import { router } from "@web/core/browser/router";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/core/network/http";
 import { redirect } from "@web/core/utils/urls";
 import { useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";

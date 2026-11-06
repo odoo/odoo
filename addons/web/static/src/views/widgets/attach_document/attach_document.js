@@ -2,6 +2,7 @@ import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
+import { post } from "@web/core/network/http";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component, t, useProps } from "@odoo/owl";
 
@@ -19,7 +20,6 @@ export class AttachDocumentWidget extends Component {
     });
 
     setup() {
-        this.http = useService("http");
         this.notification = useService("notification");
         this.fileInput = document.createElement("input");
         this.fileInput.type = "file";
@@ -35,7 +35,7 @@ export class AttachDocumentWidget extends Component {
                 return null;
             }
         }
-        const fileData = await this.http.post(
+        const fileData = await post(
             "/web/binary/upload_attachment",
             {
                 csrf_token: odoo.csrf_token,

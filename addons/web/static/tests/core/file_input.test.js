@@ -3,6 +3,7 @@ import {
     contains,
     mockService,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -16,12 +17,9 @@ import { session } from "@web/session";
 // Helpers
 // -----------------------------------------------------------------------------
 
-async function createFileInput({ mockPost, mockAdd, props }) {
+async function createFileInput({ mockAdd, props }) {
     mockService("notification", {
         add: mockAdd || (() => {}),
-    });
-    mockService("http", {
-        post: mockPost || (() => {}),
     });
     await mountWithCleanup(FileInput, { props });
 }
@@ -37,17 +35,15 @@ beforeEach(() => {
 test("Upload a file: default props", async () => {
     expect.assertions(5);
 
-    await createFileInput({
-        mockPost: (route, params) => {
-            expect(params).toEqual({
-                csrf_token: "dummy",
-                ufile: [],
-            });
-            expect.step(route);
-            return "[]";
-        },
-        props: {},
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        expect(Object.fromEntries(await request.formData())).toEqual({
+            csrf_token: "dummy",
+            ufile: "",
+        });
+        expect.step(new URL(request.url).pathname);
+        return "[]";
     });
+    await createFileInput({ props: {} });
 
     expect(".o_file_input").toHaveText("Choose File", {
         message: "File input total text should match its given inner element's text",
@@ -68,6 +64,16 @@ test("Upload a file: default props", async () => {
 test("Upload a file: custom attachment", async () => {
     expect.assertions(5);
 
+    onRpc("/web/binary/upload", async (request) => {
+        expect(Object.fromEntries(await request.formData())).toEqual({
+            id: "5",
+            model: "res.model",
+            csrf_token: "dummy",
+            ufile: "",
+        });
+        expect.step(new URL(request.url).pathname);
+        return "[]";
+    });
     await createFileInput({
         props: {
             acceptedFileExtensions: ".png",
@@ -80,16 +86,6 @@ test("Upload a file: custom attachment", async () => {
                     message: "'files' property should be an empty array",
                 });
             },
-        },
-        mockPost: (route, params) => {
-            expect(params).toEqual({
-                id: 5,
-                model: "res.model",
-                csrf_token: "dummy",
-                ufile: [],
-            });
-            expect.step(route);
-            return "[]";
         },
     });
 
@@ -116,13 +112,16 @@ test("Hidden file input", async () => {
 });
 
 test("uploading the same file twice triggers the onChange twice", async () => {
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        const formData = await request.formData();
+        return JSON.stringify([{ name: formData.get("ufile").name }]);
+    });
     await createFileInput({
         props: {
             onUpload(files) {
                 expect.step(files[0].name);
             },
         },
-        mockPost: (_, params) => JSON.stringify([{ name: params.ufile[0].name }]),
     });
 
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
@@ -146,7 +145,6 @@ test("uploading a file that is too heavy will send a notification", async () => 
                 expect.step(files[0].name);
             },
         },
-        mockPost: (_, params) => JSON.stringify([{ name: params.ufile[0].name }]),
         mockAdd: (message) => {
             expect.step("notification");
             // Message is a bit weird because values (2 and 4 bytes) are simplified to 2 decimals in regards to megabytes
@@ -165,15 +163,11 @@ test("uploading a file that is too heavy will send a notification", async () => 
 
 test("Upload button is disabled if attachment upload is not finished", async () => {
     const uploadedPromise = Promise.withResolvers();
-    await createFileInput({
-        mockPost: async (route) => {
-            if (route === "/web/binary/upload_attachment") {
-                await uploadedPromise.promise;
-            }
-            return "[]";
-        },
-        props: {},
+    onRpc("/web/binary/upload_attachment", async () => {
+        await uploadedPromise.promise;
+        return "[]";
     });
+    await createFileInput({ props: {} });
     //enable button
     await contains(".o_file_input input", { visible: false }).click();
     await setInputFiles([]);
@@ -192,6 +186,10 @@ test("Upload button is disabled if attachment upload is not finished", async () 
 });
 
 test("support preprocessing of files via props", async () => {
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        const formData = await request.formData();
+        return JSON.stringify([{ name: formData.get("ufile").name }]);
+    });
     await createFileInput({
         props: {
             onWillUploadFiles(files) {
@@ -199,7 +197,6 @@ test("support preprocessing of files via props", async () => {
                 return files;
             },
         },
-        mockPost: (route, params) => JSON.stringify([{ name: params.ufile[0].name }]),
     });
 
     await contains(".o_file_input input", { visible: false }).click();
@@ -210,7 +207,7 @@ test("support preprocessing of files via props", async () => {
 });
 
 test("an upload that ends after the component is destroyed does not call onUpload", async () => {
-    // The FileInput posts through the http service, which is not protected
+    // The FileInput posts through the http helpers, which are not protected
     // against a destroyed component. A dialog that closes while the upload is
     // in flight must not have its onUpload callback fired afterwards: the
     // owner of that callback (e.g. a many2many_binary field) is gone, and its
@@ -227,11 +224,9 @@ test("an upload that ends after the component is destroyed does not call onUploa
         }
     }
     mockService("notification", { add: () => {} });
-    mockService("http", {
-        post: async () => {
-            await uploadedPromise.promise;
-            return "[]";
-        },
+    onRpc("/web/binary/upload_attachment", async () => {
+        await uploadedPromise.promise;
+        return "[]";
     });
     const parent = await mountWithCleanup(Parent);
 
