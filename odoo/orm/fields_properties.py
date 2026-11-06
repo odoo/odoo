@@ -981,7 +981,6 @@ class PropertiesDefinition(Field[list[dict], list[dict]]):
     definition. """
     type = 'properties_definition'
     _column_type = ('jsonb', 'jsonb')
-    copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
     properties_fields: tuple[Property, ...] = ()  # List of Properties fields using that definition
@@ -1006,6 +1005,19 @@ class PropertiesDefinition(Field[list[dict], list[dict]]):
         if not self._setup_done:
             self.properties_fields = ()  # reset in case of re-setup
         return super().setup(model)
+
+    def copy(self, record):
+        """ Return the definition of ``record`` with new property names.
+
+        The names identify the properties (e.g. in the values stored on the
+        children), so the duplicated container must not share them with the
+        original one, otherwise both definitions would be mixed up.
+        """
+        definition = [
+            {**property_definition, 'name': Properties.generate_property_name()}
+            for property_definition in record[self.name]
+        ]
+        return self.convert_to_write(definition, record)
 
     def set_properties_visibility(self, definition, property_names, hidden: bool):
         """
