@@ -815,8 +815,8 @@ class ProductTemplate(models.Model):
             if pricelist_item_sudo._show_discount_on_shop():
                 applied_price_rules_sudo = PricelistItemSudo.browse(pricelist_rule_ids)
                 base_rule = PricelistItemSudo
-                for rule_sudo in applied_price_rules_sudo:
-                    if not rule_sudo._show_discount_on_shop():
+                for rule_sudo in applied_price_rules_sudo[1:]:
+                    if not rule_sudo.is_plain_discount:
                         base_rule = rule_sudo
                         break
 
