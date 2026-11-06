@@ -83,12 +83,11 @@
             <replace_media_option
                 t-att-selector="replaceMediaOptionSelector"
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>
-            <font_awesome_option selector="span.oi, i.oi, .social_media_img" exclude="[data-oe-xpath]"/>
+            <icon_option selector="span.oi, i.oi, .social_media_img" exclude="[data-oe-xpath]"/>
             <video_size_option selector=".media_iframe_video"/>
             <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
             <image_pop_up_option selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img"/>
-            <image_and_fa_option
-                template="html_builder.ImageAndFaOption"
+            <image_and_icon_option
                 selector="span.oi, i.oi, img"
                 t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
             <dynamic_svg_option t-att-selector="this.dynamicSVGSelector"/>
