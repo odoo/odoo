@@ -664,3 +664,32 @@ export function addTestTerminals(store, count = 2) {
     store.paymentMethods.initDefaults();
     return terminals;
 }
+
+/**
+ * Multi-currency setup for a POS in USD: XTA is worth 15 USD (1 Ⓐ = 15 $) and XTB
+ * is worth 15 times less than USD (1 $ = 15 Ⓑ).
+ */
+export function setupMultiCurrency(store) {
+    const usd = store.config.currency_id;
+    const createCurrency = (id, name, symbol, rate) =>
+        store.models["res.currency"].create({
+            id,
+            name,
+            symbol,
+            position: "before",
+            rounding: 0.01,
+            rate,
+            decimal_places: 2,
+        });
+    const xta = createCurrency(1000, "XTA", "Ⓐ", 1 / 15);
+    const xtb = createCurrency(1001, "XTB", "Ⓑ", 15);
+    return { usd, xta, xtb };
+}
+
+export async function createOrderWithPrice(store, price) {
+    const { template } = createTestProduct(store, { price, taxes_id: [] });
+    const order = store.addNewOrder();
+    order.pricelist_id = false;
+    await store.addLineToOrder({ product_tmpl_id: template, qty: 1 }, order);
+    return order;
+}

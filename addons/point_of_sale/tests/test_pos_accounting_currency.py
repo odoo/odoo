@@ -74,6 +74,47 @@ class TestPosMultiCurrencyPayment(TestPosAccounting):
         self.assertEqual(move.amount_residual, 0.0)
         self.assertTrue(all(line.reconciled for line in term_lines))
 
+    def test_session_closing_with_foreign_bank_payment_settling_the_order(self):
+        """ The POS books the exact amount due in the company currency when a payment
+        settles the order in the foreign currency, so amount != amount_currency converted.
+
+        1 foreign currency = 15 company currency: the 21.20 due in the company currency
+        is 1.41333 in the foreign currency, rounded to 1.41 (= 21.15 in the company
+        currency). The POS sends amount=21.20 and amount_currency=1.41.
+        """
+        fx_currency = self.setup_other_currency('CHF', rates=[('1900-01-01', 1 / 15)])
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.bank_pm, {
+                'amount': 21.2,
+                'foreign_currency_id': fx_currency.id,
+                'amount_currency': 1.41,
+            }]],
+            products=[[self.product_6, {}], [self.product_6, {}]],
+        )
+        self.close_session()
+
+        payment = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
+        self.assertEqual(payment.currency_id, fx_currency)
+        self.assertEqual(payment.amount, 1.41)
+
+        move = session.move_ids
+        term_lines = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertEqual(term_lines.balance, 21.2)
+        self.assertEqual(move.amount_residual, 0.0)
+
+        exchange_move = term_lines.exchange_move_ids
+        self.assertEqual(len(exchange_move), 1)
+        self.assertRecordValues(exchange_move.line_ids.sorted('balance'), [
+            {'account_id': term_lines.account_id.id, 'balance': -0.05},
+            {'account_id': self.env.company.expense_currency_exchange_account_id.id, 'balance': 0.05},
+        ])
+
+        receivable_lines = (move | payment.move_id | exchange_move).line_ids.filtered(
+            lambda line: line.account_id == term_lines.account_id,
+        )
+        self.assertTrue(all(line.reconciled for line in receivable_lines))
+
     def test_cash_out_keeps_its_sign(self):
         session = self.open_pos_session()
         session.try_cash_in_out('out', 10, 'test out', False)

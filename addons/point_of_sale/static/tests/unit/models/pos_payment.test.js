@@ -1,6 +1,12 @@
-import { expect, freezeTime, mockDate, test } from "@odoo/hoot";
+import { describe, expect, freezeTime, mockDate, test } from "@odoo/hoot";
 import { definePosModels } from "../data/generate_model_definitions";
-import { createPaymentLine, getFilledOrder, setupPosEnv } from "../utils";
+import {
+    createOrderWithPrice,
+    createPaymentLine,
+    getFilledOrder,
+    setupMultiCurrency,
+    setupPosEnv,
+} from "../utils";
 
 const { DateTime } = luxon;
 
@@ -193,27 +199,137 @@ test("adjustAmount", async () => {
     expect(paymentline.getAmount()).toBe(35); // 10 + 20 + 5
 });
 
-test("setAmount: config currency differs from company currency", async () => {
-    // Company in USD, Sales Journal (hence config and order) in EUR at 0.87
-    const store = await setupPosEnv();
-    const usd = store.models["res.currency"].get(1);
-    const eur = store.models["res.currency"].get(125);
-    store.config.currency_id = eur;
-    const cash = store.models["pos.payment.method"].get(1);
-    cash.currency_ids = [usd, eur];
-    const order = await getFilledOrder(store);
-    expect(order.totalDue).toBe(595);
+describe("setAmount", () => {
+    // 1 Ⓐ = 15 $, see setupMultiCurrency
+    const setup = async () => {
+        const store = await setupPosEnv();
+        const { xta } = setupMultiCurrency(store);
+        const order = await createOrderWithPrice(store, 136.57);
+        const card = store.models["pos.payment.method"].get(2);
+        return { store, order, card, xta };
+    };
 
-    expect(eur.convert(595)).toBe(595);
-    expect(usd.convert(595)).toBe(683.91);
+    test("in the POS currency", async () => {
+        const { store, order, card } = await setup();
+        const line = createPaymentLine(store, order, card, { amount: 0 });
 
-    const eurLine = createPaymentLine(store, order, cash, { foreign_currency_id: eur });
-    eurLine.setAmount(595);
-    expect(eurLine.amount).toBe(595);
-    expect(eurLine.amount_currency).toBe(595);
+        line.setAmount("12.344");
+        expect(line.amount).toBe(12.34);
+        expect(line.amount_currency).toBe(12.34);
 
-    const usdLine = createPaymentLine(store, order, cash, { foreign_currency_id: usd });
-    usdLine.setAmount(683.91, usd);
-    expect(usdLine.amount).toBe(595);
-    expect(usdLine.amount_currency).toBe(683.91);
+        line.setAmount("abc");
+        expect(line.amount).toBe(0);
+        expect(line.amount_currency).toBe(0);
+    });
+
+    test("in the POS currency on a foreign currency line", async () => {
+        const { store, order, card, xta } = await setup();
+        const line = createPaymentLine(store, order, card, {
+            amount: 0,
+            foreign_currency_id: xta.id,
+        });
+
+        line.setAmount(30);
+        expect(line.amount).toBe(30);
+        expect(line.amount_currency).toBe(2);
+    });
+
+    test("in a foreign currency", async () => {
+        const { store, order, card, xta } = await setup();
+        const line = createPaymentLine(store, order, card, {
+            amount: 0,
+            foreign_currency_id: xta.id,
+        });
+
+        line.setAmount("2.344", xta);
+        expect(line.amount_currency).toBe(2.34);
+        expect(line.amount).toBe(35.1);
+
+        line.setAmount("abc", xta);
+        expect(line.amount_currency).toBe(0);
+        expect(line.amount).toBe(0);
+    });
+
+    test("in a foreign currency, settling the order books the amount left to pay", async () => {
+        const { store, order, card, xta } = await setup();
+        const line = createPaymentLine(store, order, card, {
+            amount: 0,
+            foreign_currency_id: xta.id,
+        });
+
+        // Not enough: converted amount
+        line.setAmount(9.09, xta);
+        expect(line.amount).toBe(136.35);
+
+        // Exactly the 9.10 Ⓐ due: 136.50 $ converted, booked as the 136.57 $ due
+        line.setAmount(9.1, xta);
+        expect(line.amount).toBe(136.57);
+        expect(order.amountPaid).toBe(136.57);
+
+        // Too much: converted amount, the rest is change
+        line.setAmount(9.11, xta);
+        expect(line.amount).toBe(136.65);
+        expect(order.change).toBe(-0.08);
+    });
+
+    test("in a foreign currency, settling the order on a pending line", async () => {
+        const { store, order, card, xta } = await setup();
+        const line = createPaymentLine(store, order, card, {
+            amount: 0,
+            foreign_currency_id: xta.id,
+        });
+        line.setPaymentStatus("pending");
+
+        // Exactly the 9.10 Ⓐ due, typed while the terminal payment is pending:
+        // 136.50 $ converted, booked as the 136.57 $ due
+        line.setAmount(9.1, xta);
+        line.setPaymentStatus("done");
+
+        expect(line.amount).toBe(136.57);
+        expect(order.remainingDue).toBe(0);
+    });
+
+    test("in a foreign currency, settling the order after other lines", async () => {
+        const { store, order, card, xta } = await setup();
+        createPaymentLine(store, order, card, { amount: 100 });
+        const line = createPaymentLine(store, order, card, {
+            amount: 0,
+            foreign_currency_id: xta.id,
+        });
+
+        // Not enough: 36.57 $ left = 2.438 Ⓐ, rounded to 2.44 Ⓐ
+        line.setAmount(2.43, xta);
+        expect(line.amount).toBe(36.45);
+
+        // Exactly the 2.44 Ⓐ due: 36.60 $ converted, booked as the 36.57 $ due
+        line.setAmount(2.44, xta);
+        expect(line.amount).toBe(36.57);
+        expect(order.amountPaid).toBe(136.57);
+        expect(order.change).toBe(0);
+    });
+
+    test("setAmount: config currency differs from company currency", async () => {
+        // Company in USD, Sales Journal (hence config and order) in EUR at 0.87
+        const store = await setupPosEnv();
+        const usd = store.models["res.currency"].get(1);
+        const eur = store.models["res.currency"].get(125);
+        store.config.currency_id = eur;
+        const cash = store.models["pos.payment.method"].get(1);
+        cash.currency_ids = [usd, eur];
+        const order = await getFilledOrder(store);
+        expect(order.totalDue).toBe(595);
+
+        expect(eur.convert(595)).toBe(595);
+        expect(usd.convert(595)).toBe(683.91);
+
+        const eurLine = createPaymentLine(store, order, cash, { foreign_currency_id: eur });
+        eurLine.setAmount(595);
+        expect(eurLine.amount).toBe(595);
+        expect(eurLine.amount_currency).toBe(595);
+
+        const usdLine = createPaymentLine(store, order, cash, { foreign_currency_id: usd });
+        usdLine.setAmount(683.91, usd);
+        expect(usdLine.amount).toBe(595);
+        expect(usdLine.amount_currency).toBe(683.91);
+    });
 });
