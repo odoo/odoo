@@ -72,7 +72,7 @@
 
                         <div t-if="this.state.signMode === 'auto'" class="o_web_sign_auto_select_style col-auto">
                             <Dropdown>
-                                <button type="button" class="btn btn-link oi o-dropdown-caret" data-icon="text_fields"/>
+                                <button type="button" class="btn btn-link o-dropdown-caret" aria-label="Select font"><i class="oi" data-icon="text_fields" aria-hidden="true"/></button>
                                 <t t-set-slot="content">
                                     <t t-foreach="this.fonts" t-as="font" t-key="font_index">
                                         <DropdownItem onSelected="() => this.onSelectFont(font_index)">
@@ -84,12 +84,12 @@
                         </div>
 
                         <div t-if="this.state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto">
-                            <a role="button" href="#" t-on-click.prevent="this.onClickSignDrawClear" class="btn btn-link oi oi-filled" data-icon="delete"/>
+                            <a role="button" href="#" t-on-click.prevent="this.onClickSignDrawClear" class="btn btn-link" aria-label="Clear signature"><i class="oi oi-filled" data-icon="delete" aria-hidden="true"/></a>
                         </div>
 
                         <div t-if="this.state.signMode === 'load'" class="o_web_sign_load_file col-auto">
                             <button type="button" id="loadFileXml" t-on-click="this.uploadFile"
-                                class="btn btn-link oi" data-icon="upload" />
+                                class="btn btn-link" aria-label="Upload signature image"><i class="oi" data-icon="upload" aria-hidden="true"/></button>
                             <input t-ref="this.signInputLoad" type="file" accept="image/png, image/jpeg" role="button" name="files[]" class="d-none" t-on-change="this.onChangeSignLoadInput"/>
                         </div>
                     </div>

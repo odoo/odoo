@@ -9,16 +9,16 @@
 
         <div t-if="collapsedBreadcrumbs.length || previousBreadcrumb" class="o_breadcrumb d-flex flex-row flex-md-column min-w-0">
             <t t-if="this.uiService.isSmall">
-                <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected" data-available-offline="">
-                    <i class="oi oi-fw" data-icon="arrow_back"/>
+                <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected" data-available-offline="" aria-label="Back">
+                    <i class="oi oi-fw" data-icon="arrow_back" aria-hidden="true"/>
                 </button>
             </t>
             <t t-else="">
                 <ol class="breadcrumb flex-nowrap text-nowrap lh-sm">
                     <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex">
                         <Dropdown>
-                            <button class="btn btn-light btn-sm px-1 p-0 lh-1">
-                                <i class="oi align-middle" data-icon="more_horiz"/>
+                            <button class="btn btn-light btn-sm px-1 p-0 lh-1" aria-label="Previous pages">
+                                <i class="oi align-middle" data-icon="more_horiz" aria-hidden="true"/>
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">

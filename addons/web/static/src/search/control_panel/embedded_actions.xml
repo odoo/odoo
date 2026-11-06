@@ -27,8 +27,8 @@
 
     <t t-name="web.EmbeddedActionsDropdown">
         <Dropdown menuClass="'o_embedded_actions_dropdown_menu'">
-            <button name="openEmbeddedActions" class="btn btn-secondary">
-                <i class="oi oi-fw" data-icon="tune"/>
+            <button name="openEmbeddedActions" class="btn btn-secondary" aria-label="Manage actions">
+                <i class="oi oi-fw" data-icon="tune" aria-hidden="true"/>
             </button>
             <t t-set-slot="content">
                 <t t-foreach="this.props.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
