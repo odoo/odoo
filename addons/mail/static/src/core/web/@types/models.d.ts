@@ -36,4 +36,8 @@ declare module "models" {
         openRecordActionRequest: Readonly<object>;
         recipientsFullyLoaded: Readonly<boolean>;
     }
+    export interface ThreadOpenOptions {
+        /** Open the record of the thread in a new browser tab. */
+        newWindow?: boolean;
+    }
 }

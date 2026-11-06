@@ -184,6 +184,11 @@
             --mail-SearchInput-bgColor: var(--o-view-background-color);
         }
 
+        /* Set into the tinted panel, like its search inputs, rather than a tinted pill. */
+        .o-mail-Composer:not(.o-editing) {
+            --mail-Composer-bg: var(--o-view-background-color);
+        }
+
         /* Centered with the panel actions, under the top padding of the header of the panel. */
         .o-mail-ActionPanel-headerRow {
             min-height: calc(
