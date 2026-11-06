@@ -9,6 +9,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 _logger = logging.getLogger(__name__)
@@ -22,6 +23,17 @@ ROLES = {
 
 
 class KsefApiServiceBatch(KsefApiService):
+    def _make_request(self, method, endpoint, is_auth_retry=False, **kwargs):
+        """ Log each KSeF call and its answer at debug level; never the headers, which carry the token. """
+        _logger.debug("KSeF request %s %s\n%s", method, endpoint, self.pretty_json(kwargs.get('json')))
+        try:
+            response = super()._make_request(method, endpoint, is_auth_retry=is_auth_retry, **kwargs)
+        except UserError as e:
+            _logger.debug("KSeF error %s %s: %s", method, endpoint, e)
+            raise
+        _logger.debug("KSeF answer %s %s %s\n%s", method, endpoint, response.status_code, response.text)
+        return response
+
     @staticmethod
     def b64(value):
         if not value:
@@ -62,7 +74,6 @@ class KsefApiServiceBatch(KsefApiService):
     def download_batch_status(self, name):
         response = self._make_request('GET', f'{self.api_url}/invoices/exports/{name}')
         json_response = response.json()
-        _logger.debug("KSeF batch %s status response:\n%s", name, self.pretty_json(json_response))
 
         return {
             'name': name,
