@@ -680,3 +680,7 @@ def get_gateway():
     if gw:
         return gw[0]
     return None
+
+
+def get_log_path():
+    return "/var/log/odoo/odoo-server.log" if IS_RPI else str(path_file('odoo.log'))
