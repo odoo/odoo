@@ -8,14 +8,14 @@ class PeppolRejectionWizard(models.TransientModel):
 
     move_ids = fields.Many2many(
         comodel_name='account.move',
-        required=True,
+        ui_required=True,
     )
     reason_ids = fields.Many2many(
         comodel_name='account.peppol.clarification',
         relation='account_peppol_rejection_reason_rel',
         default=lambda self: self.env.ref('account_peppol.peppol_clarification_reason_unr', raise_if_not_found=False),
         ui_domain="[('list_identifier', '=', 'OPStatusReason')]",
-        required=True,
+        ui_required=True,
         string='Rejection reasons',
         help="The reasons to reject the received PEPPOL document. "
         "These will be sent to the document's sender.",

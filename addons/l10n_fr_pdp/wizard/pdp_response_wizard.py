@@ -11,7 +11,7 @@ class PdpResponseWizard(models.TransientModel):
 
     move_ids = fields.Many2many(
         comodel_name='account.move',
-        required=True,
+        ui_required=True,
     )
     status = fields.Selection(
         selection=[

@@ -128,7 +128,7 @@ class Website(models.CachedModel):
 
     language_ids = fields.Many2many(
         'res.lang', 'website_lang_rel', 'website_id', 'lang_id', string="Languages",
-        default=_active_languages, required=True)
+        default=_active_languages, ui_required=True)
     language_count = fields.Integer('Number of languages', compute='_compute_language_count')
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
