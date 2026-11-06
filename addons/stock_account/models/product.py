@@ -1075,13 +1075,17 @@ class ProductCategory(models.Model):
         SVL = self.env['stock.valuation.layer']
 
         if 'property_cost_method' in vals or 'property_valuation' in vals:
-            categ_products = self.env['product.product'].search([('categ_id', 'in', self.ids)])
-            if any(p.lot_valuated and p.stock_valuation_layer_ids for p in categ_products):
-                raise UserError(_("You cannot change the costing method of product valuated by lot/serial number."))
             # When the cost method or the valuation are changed on a product category, we empty
             # out and replenish the stock for each impacted products.
             new_cost_method = vals.get('property_cost_method')
             new_valuation = vals.get('property_valuation')
+            changed_categories = self.filtered(lambda c:
+                (new_cost_method and new_cost_method != c.property_cost_method)
+                or (new_valuation and new_valuation != c.property_valuation),
+            )
+            categ_products = self.env['product.product'].search([('categ_id', 'in', changed_categories.ids)])
+            if any(p.lot_valuated and p.stock_valuation_layer_ids for p in categ_products):
+                raise UserError(_("You cannot change the costing method of product valuated by lot/serial number."))
 
             for product_category in self:
                 valuation_impacted = False
