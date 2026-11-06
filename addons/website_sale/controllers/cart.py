@@ -135,6 +135,12 @@ class Cart(PaymentPortal):
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(self._get_product_user_error(product))
 
+        if kwargs.pop("combo_item_id", None):
+            raise UserError(self.env._("You cannot add a combo item separately from its combo."))
+
+        if kwargs.pop("linked_line_id", None):
+            raise UserError(self.env._("Linked lines must be added to the cart with their parent."))
+
         def check_selected_combo_items(combo_product, linked_products):
             combo_item_products = [
                 linked_product for linked_product in linked_products or []
@@ -164,7 +170,7 @@ class Cart(PaymentPortal):
         values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
             product_id=product_id,
             quantity=quantity,
-            uom_id=uom_id,
+            uom_id=uom_id if product.type != "combo" else None,
             product_custom_attribute_values=product_custom_attribute_values,
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs,
@@ -199,7 +205,9 @@ class Cart(PaymentPortal):
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
                     product_id=product_data["product_id"],
                     quantity=product_data["quantity"],
-                    uom_id=product_data.get("uom_id"),
+                    uom_id=product_data.get("uom_id")
+                    if (product_sudo.type != "combo" and not product_data.get("combo_item_id"))
+                    else None,
                     product_custom_attribute_values=product_data["product_custom_attribute_values"],
                     no_variant_attribute_value_ids=[
                         int(value_id) for value_id in product_data["no_variant_attribute_value_ids"]
