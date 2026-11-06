@@ -67,3 +67,66 @@ class TestHrExpenseTierValidation(TransactionCase):
                          self.env.ref("od19_hr_expense_thai.group_od19_expense_ceo_approver"))
         self.assertTrue(all(defs.mapped("approve_sequence")))
         self.assertTrue(all(defs.mapped("has_forward")))
+
+    def _submitted_expense(self, amount=1500.0):
+        expense = self.env["hr.expense"].create({
+            "name": "Tier Flow Expense",
+            "product_id": self.product.id,
+            "total_amount": amount,
+            "employee_id": self.employee.id,
+            "payment_mode": "own_account",
+        })
+        # เซ็ตตรง ๆ เพื่อเลี่ยง auto-validation ของ core (_can_be_autovalidated)
+        expense.approval_state = "submitted"
+        return expense
+
+    def test_request_validation_creates_three_reviews(self):
+        """การขออนุมัติต้องสร้าง review 3 รายการ เรียงตามลำดับชั้น"""
+        expense = self._submitted_expense()
+        expense.request_validation()
+        self.assertEqual(len(expense.review_ids), 3)
+        self.assertEqual(
+            expense.review_ids.sorted("sequence").mapped("sequence"), [1, 2, 3]
+        )
+        self.assertEqual(expense.validation_status, "waiting")
+
+    def test_cannot_approve_out_of_order(self):
+        """CEO อนุมัติก่อนลำดับไม่ได้: ต้องหยุดที่ review แรกที่ไม่ใช่ของตน"""
+        ceo = self._make_user(
+            "tier_ceo", ["od19_hr_expense_thai.group_od19_expense_ceo_approver"]
+        )
+        expense = self._submitted_expense()
+        expense.request_validation()
+        expense.with_user(ceo).validate_tier()
+        self.assertEqual(expense.validation_status, "waiting")
+        self.assertEqual(expense.approval_state, "submitted")
+
+    def test_full_three_level_approval_flow(self):
+        """อนุมัติครบ 3 ชั้นตามลำดับ แล้ว validation_status = validated"""
+        manager = self._make_user(
+            "tier_manager", ["hr_expense.group_hr_expense_manager"]
+        )
+        accountant = self._make_user(
+            "tier_accountant", ["account.group_account_manager"]
+        )
+        ceo = self._make_user(
+            "tier_ceo2", ["od19_hr_expense_thai.group_od19_expense_ceo_approver"]
+        )
+        expense = self._submitted_expense()
+        expense.request_validation()
+
+        expense.with_user(manager).validate_tier()
+        self.assertEqual(expense.validation_status, "waiting")
+
+        expense.with_user(accountant).validate_tier()
+        self.assertEqual(expense.validation_status, "waiting")
+
+        expense.with_user(ceo).validate_tier()
+        self.assertEqual(expense.validation_status, "validated")
+
+    def test_write_blocked_while_under_validation(self):
+        """ห้ามแก้ไขเอกสารระหว่างอยู่ภายใต้การอนุมัติ"""
+        expense = self._submitted_expense()
+        expense.request_validation()
+        with self.assertRaises(Exception):
+            expense.write({"name": "Hacked"})
