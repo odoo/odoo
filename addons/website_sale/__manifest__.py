@@ -153,7 +153,7 @@
             "website_sale/static/src/js/client_actions/**/*",
             "website_sale/static/src/js/tours/tour_utils.js",
             "website_sale/static/src/js/website_sale_video_field_preview.js",
-            "website_sale/static/src/scss/website_sale_backend.scss",
+            "website_sale/static/src/scss/website_sale_backend.css",
             "website_sale/static/src/js/tours/website_sale_shop.js",
             "website_sale/static/src/js/product_image/**/*",
             "website_sale/static/src/xml/website_sale.xml",

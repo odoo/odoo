@@ -75,7 +75,7 @@
             'project/static/src/js/tours/project.js',
             'project/static/src/scss/project_dashboard.css',
             'project/static/src/scss/project_form.css',
-            'project/static/src/scss/project_widgets.scss',
+            'project/static/src/scss/project_widgets.css',
             'project/static/src/xml/**/*',
             'project/static/src/webclient/**/*',
             ('remove', 'project/static/src/views/project_task_activity/**'),
@@ -206,7 +206,7 @@
 
             # To be able to launch tour js in project sharing
             ('include', 'web_tour.assets'),
-            'web_tour/static/src/tour_pointer/tour_pointer.scss',
+            'web_tour/static/src/tour_pointer/tour_pointer.css',
 
             ('include', 'html_editor.assets_editor'),
             'html_editor/static/src/backend/**/*',

@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 import { scrollTo } from "@web/core/utils/scrolling";
 
-// Same page size as the document layout preview (iframe_wrapper_field.scss).
+// Same page size as the document layout preview (iframe_wrapper_field.css).
 const PAGE_WIDTH = 1040;
 const PAGE_HEIGHT = 1464;
 

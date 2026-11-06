@@ -119,7 +119,7 @@
             'stock/static/src/stock_forecasted/forecasted_graph.*',
         ],
         'web.assets_frontend': [
-            'stock/static/src/scss/stock_traceability_report.scss',
+            'stock/static/src/scss/stock_traceability_report.css',
         ],
         'web.assets_tests': [
             'stock/static/tests/tours/*.js',
