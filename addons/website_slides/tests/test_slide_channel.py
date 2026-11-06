@@ -3,6 +3,7 @@
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.exceptions import UserError
 from odoo.tests.common import HttpCase, users
+from odoo.tools import mute_logger
 from unittest.mock import patch
 
 
@@ -298,6 +299,20 @@ class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
 
         slide = self.channel.slide_ids.filtered(lambda slide: slide.name == 'memory_record_for_computed_fields')
         self.assertFalse(slide)
+
+    @mute_logger('odoo.addons.website_slides.controllers.main')
+    def test_add_slide_publish_without_rights(self):
+        """ A user allowed to upload but not to publish cannot create a published slide """
+        self.channel.upload_group_ids = self.env.ref('base.group_portal')
+        self.authenticate('user_portal', 'user_portal')
+        res = self.make_jsonrpc_request('/slides/add_slide', {
+            'channel_id': self.channel.id,
+            'name': 'Forged Slide',
+            'slide_category': 'article',
+            'is_published': True,
+        })
+        self.assertIn('error', res)
+        self.assertFalse(self.env['slide.slide'].search([('name', '=', 'Forged Slide')]))
 
     def test_unlink_slide_channel(self):
         self.assertTrue(self.channel.slide_content_ids.mapped('question_ids').exists(),
