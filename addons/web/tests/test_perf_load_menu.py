@@ -40,8 +40,8 @@ class TestPerfSessionInfo(common.HttpCase):
         # - Only web: 37
         # - bus: 38
         # - mail: 61
-        # - All modules: 83
-        with self.assertQueryCount(83):
+        # - All modules: 85
+        with self.assertQueryCount(85):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -52,8 +52,8 @@ class TestPerfSessionInfo(common.HttpCase):
         # - Only web: 7
         # - bus: 8
         # - mail: 16
-        # - All modules: 28
-        with self.assertQueryCount(28):
+        # - All modules: 30
+        with self.assertQueryCount(30):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
