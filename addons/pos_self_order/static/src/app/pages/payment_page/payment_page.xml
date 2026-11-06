@@ -58,15 +58,13 @@
                                 <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                             </div>
                         </t>
+                        <div class="o_self_footer container d-flex justify-content-between align-items-center position-relative p-0">
+                            <button class="btn btn-secondary btn-lg" t-if="(this.state.selection || this.state.paymentMethodType !== 'terminal' || this.selfOrder.paymentError) and !this.state.paymentCancelled" t-on-click="this.back">Back</button>
+                            <button class="btn btn-primary btn-lg" t-if="!this.state.selection and this.selfOrder.paymentError" t-on-click="this.startPayment">Retry</button>
+                        </div>
                     </div>
                </div>
             </div>
-
-            <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">
-                <button class="btn btn-secondary btn-lg" t-if="(this.state.selection || this.state.paymentMethodType !== 'terminal' || this.selfOrder.paymentError) and !this.state.paymentCancelled" t-on-click="this.back">Back</button>
-                <button class="btn btn-primary btn-lg" t-if="!this.state.selection and this.selfOrder.paymentError" t-on-click="this.startPayment">Retry</button>
-            </div>
-
         </div>
     </t>
 </templates>
