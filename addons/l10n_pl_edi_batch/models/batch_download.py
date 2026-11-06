@@ -110,8 +110,8 @@ class BatchDownload(models.Model):
             return 'failed'
         elif code == KSEF_IN_PROGRESS:
             return 'requested'
-        elif code == KSEF_READY and self.parts_ids:
-            parts_missing = self.parts_ids.filtered(lambda part: not part.with_context(bin_size=True).decrypted_file)
+        elif code == KSEF_READY and self.part_ids:
+            parts_missing = self.part_ids.filtered(lambda part: not part.with_context(bin_size=True).decrypted_file)
             return 'downloading' if parts_missing else 'downloaded'
         return 'done'
 
@@ -218,18 +218,18 @@ class BatchDownload(models.Model):
 
         for company in companies:
             try:
-                method(self, company)
+                method(company)
                 self._commit()
             except KSeFRateLimitError as e:
                 self._rollback()
-                current_retry_at = fields.Datetime.now() + timedelta(seconds=e.retry_after)
+                current_retry_at = fields.Datetime.now() + timedelta(seconds=e.retry_after or 60)
                 retry_at = min(retry_at, current_retry_at) if retry_at else current_retry_at
+                _logger.info(
+                    "KSeF rate limit reached for company %s, running %s again at %s",
+                    company.display_name, cron_xmlid, retry_at,
+                )
 
         if retry_at:
-            _logger.info(
-                "KSeF rate limit reached for company %s, running %s again at %s",
-                company.display_name, cron_xmlid, retry_at,
-            )
             self.env.ref(cron_xmlid)._trigger(at=retry_at)
 
     @api.model
@@ -294,7 +294,6 @@ class BatchDownload(models.Model):
                 service = Service(company)
                 data = service.download_batch_status(batch.name)
                 code = data['content'].get('status', {}).get('code') or KSEF_IN_PROGRESS
-
                 state = batch._compute_state_by_code(code)
                 if state == 'downloading':
                     self.env.ref('l10n_pl_edi_batch.ir_cron_download')._trigger()
@@ -303,7 +302,7 @@ class BatchDownload(models.Model):
                         package = (data.get('content') or {}).get('package', {})
                         if package.get('isTruncated'):
                             last_date = parse(package['lastInvoicingDate']).astimezone(timezone.utc).replace(tzinfo=None)
-                            old_date_to = self.date_to
+                            old_date_to = batch.date_to
                             data['date_to'] = last_date
                             self._create_batch_download(batch.company_id, last_date, old_date_to)
                 elif state == 'requested':
@@ -312,170 +311,130 @@ class BatchDownload(models.Model):
 
                 batch.update(data)
 
-    def _get_wait(self):
-        """ A batch waits `10 * 2 ** retry_count` seconds after its last write before its next try. """
-        self.ensure_one()
-        return timedelta(seconds=10 * 2 ** self.retry_count)
+        self._run_for_all_companies(check_status, 'l10n_pl_edi_batch.ir_cron_check_status')
+
+    @api.model
+    def _cron_download(self):
+        def do_download(company):
+            if batch := self.search([('company_id', '=', company.id), ('state', '=', 'downloading')], order='date_to desc', limit=1):
+                missing_parts = batch.part_ids.with_context(bin_size=True).filtered(lambda part: not part.decrypted_file)
+                try:
+                    missing_parts[:1].download()
+                except UserError as e:
+                    if batch._raise_retry_count(str(e)):
+                        self._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_download')  # retry
+                    return
+                if batch.state == 'downloading':
+                    self.env['ir.cron']._notify_progress(done=1, remaining=len(missing_parts) - 1)
+                else:
+                    self.env.ref('l10n_pl_edi_batch.ir_cron_import')._trigger()
+        self._run_for_all_companies(do_download, 'l10n_pl_edi_batch.ir_cron_download')
+
+    @api.model
+    def _cron_import(self):
+
+        def do_import(company):
+            batches = self.search([('company_id', '=', company.id), ('state', '=', 'downloaded')], order='date_to desc')
+            if not batches:
+                return
+            batch = batches[:1]
+            if not batch.part_ids:
+                return
+            if not all(batch.part_ids.with_context(bin_size=True).mapped('decrypted_file')):
+                raise UserError(self.env._("The KSeF batch %s must be fully downloaded before importing it.", batch.name))
+
+            AccountMove = self.env['account.move'].with_company(batch.company_id)
+            with tempfile.TemporaryFile(mode='w+b') as zip_stream:
+                # merge
+                for part in batch.part_ids.sorted('part_number'):
+                    content = base64.b64decode(part.decrypted_file)
+                    zip_stream.write(content)
+                zip_stream.seek(0)
+
+                # unzip
+                try:
+                    zip_file = zipfile.ZipFile(zip_stream, 'r')
+                except zipfile.BadZipFile as e:
+                    batch.part_ids.decrypted_file = False
+                    batch.part_ids.invalidate_recordset(['decrypted_file'])
+                    batch._raise_retry_count(self.env._("The KSeF batch ZIP is corrupt: %s", e))
+                    batch._trigger_cron_when_due('l10n_pl_edi_batch.download')  # retry
+                    return
+
+                with zip_file:
+                    # exclude already imported files
+                    ksef_numbers = {
+                        name.removesuffix('.xml')
+                        for name in zip_file.namelist()
+                        if name.endswith('.xml')
+                    }
+                    existing_ksef_numbers = set(AccountMove.search([
+                        ('l10n_pl_edi_number', 'in', ksef_numbers),
+                        ('company_id', '=', batch.company_id.id),
+                        ('move_type', '=', 'in_invoice'),
+                    ]).mapped('l10n_pl_edi_number'))
+
+                    # loop over zipped files
+                    for ksef_number in (ksef_numbers - existing_ksef_numbers):
+
+                        # create the move and the attachment
+                        move = AccountMove.create([{'move_type': 'in_invoice'}])
+                        attachment = self.env['ir.attachment'].create({
+                            'name': ksef_number,
+                            'mimetype': 'application/xml',
+                            'company_id': batch.company_id.id,
+                            'res_model': move._name,
+                            'res_id': move.id,
+                            'raw': zip_file.read(ksef_number + '.xml'),
+                        })
+
+                        # import
+                        move.message_post(
+                            body=self.env._("KSeF bill %s has been attached for import", ksef_number),
+                            attachment_ids=attachment.ids,
+                        )
+
+                        # if successful
+                        if move.invoice_line_ids:
+                            attachment.write({
+                                'description': self.env._('KSeF Received Bill XML'),
+                                'res_field': 'l10n_pl_edi_attachment_file',
+                            })
+                            move.write({
+                                'l10n_pl_edi_number': ksef_number,
+                                'l10n_pl_edi_status': 'fetched',
+                                'l10n_pl_edi_attachment_id': attachment.id,
+                            })
+                            move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
+                            self._commit()
+
+                batch.part_ids.unlink()
+
+            self.env['ir.cron']._notify_progress(done=1, remaining=len(batches) - 1)
+
+        self._run_for_all_companies(do_import, 'l10n_pl_edi_batch.ir_cron_import')
 
     def _trigger_cron_when_due(self, cron_ref):
         """ Run the cron once the batch, just written, is due again. """
-        self.env.ref(cron_ref)._trigger(at=fields.Datetime.now() + self._get_wait())
+        self.env.ref(cron_ref)._trigger(at=fields.Datetime.now() + timedelta(seconds=10 * 2 ** self.retry_count))
 
-    def _count_retry(self, error, cron_ref):
+    def _raise_retry_count(self, error):
         """ Count a retry, and run the cron again once the batch is due. After the last retry, or once the package
             expired with parts still missing, the batch fails with `error`. """
         self.ensure_one()
         self.retry_count += 1
-        if self.state == 'failed':
+        if failed := (self.state == 'failed'):
             self.content = {
                 **(self.content or {}),
                 'status': {'code': ODOO_ERROR, 'description': "Odoo Error", 'details': [error]},
             }
-        else:
-            self._trigger_cron_when_due(cron_ref)
-
-    def _trigger_next_window(self):
-        """ A finished historic batch has the historic cron request the next window right away. """
-        self.ensure_one()
-        if self.kind == 'historic' and self.state in ('done', 'failed'):
-            self.env.ref('l10n_pl_edi_batch.ir_cron_request_historic')._trigger()
-
-
-
-    @api.model
-    @ksef_cron('l10n_pl_edi_batch.ir_cron_download')
-    def _cron_download(self):
-        """ Download one missing part of the first due downloading batch, today batches first, and commit.
-            Odoo runs the cron again right away while parts are left.
-            A failed download counts a retry, and the batch is tried again once due; after the last retry, the
-            batch fails with the download error. """
-        ResCompany = self.env['res.company']
-        due_batches = self._get_due_batches('downloading')
-        for batch in due_batches:
-            if not ResCompany._with_locked_records(batch, allow_raising=False):
-                continue
-            missing_parts = batch.part_ids.with_context(bin_size=True).filtered(lambda part: not part.decrypted_file)
-            if error := self._try(missing_parts[:1].download):
-                _logger.warning("KSeF batch %s: %s", batch.name, error)
-                batch._count_retry(str(error), 'l10n_pl_edi_batch.ir_cron_download')
-            if batch.state == 'downloaded':
-                self.env.ref('l10n_pl_edi_batch.ir_cron_import')._trigger()
-            batch._trigger_next_window()
-            self._commit()
-            downloading_batches = due_batches.filtered(lambda batch: batch.state == 'downloading')
-            remaining_parts = downloading_batches.part_ids.with_context(bin_size=True).filtered(
-                lambda part: not part.decrypted_file
-            )
-            self.env['ir.cron']._notify_progress(done=1, remaining=len(remaining_parts))
-            return
-
-    @api.model
-    @ksef_cron('l10n_pl_edi_batch.ir_cron_import')
-    def _cron_import(self):
-        """ Import the bills of the first due downloaded batch, today batches first, and commit. Odoo runs the cron
-            again right away while batches are left. Once a historic batch is done or failed, the historic cron
-            requests the next window.
-            No retries: the import is deterministic, and the standard import already catches the errors of each XML
-            (see `_import_bill`). """
-        ResCompany = self.env['res.company']
-        due_batches = self._get_due_batches('downloaded')
-        for batch in due_batches:
-            if not ResCompany._with_locked_records(batch, allow_raising=False):
-                continue
-            batch.import_bills()
-            batch._trigger_next_window()
-            self._commit()
-            remaining_batches = due_batches.filtered(lambda batch: batch.state == 'downloaded')
-            self.env['ir.cron']._notify_progress(done=1, remaining=len(remaining_batches))
-            return
+        return failed
 
     def action_trigger_check_status(self):
-        """ Run the status cron now; it checks the requested batches that are due. """
         self.env.ref('l10n_pl_edi_batch.ir_cron_check_status').sudo()._trigger()
 
     def action_trigger_download(self):
-        """ Run the download cron now; it downloads the parts of the batches that are due. """
         self.env.ref('l10n_pl_edi_batch.ir_cron_download').sudo()._trigger()
 
     def action_trigger_import(self):
-        """ Run the import cron now; it imports the bills of the downloaded batches. """
         self.env.ref('l10n_pl_edi_batch.ir_cron_import').sudo()._trigger()
-
-
-    def check_status(self):
-        companies = self.mapped('company_id')
-        if len(companies) != 1:
-            raise ValueError("You must request KSeF status only for batches belonging to the same company")
-        service = Service(companies[0])
-        for record in self:
-            data = service.download_batch_status(record.name)
-            record.update(data)
-
-    def import_bills(self):
-        """ Join the parts into the ZIP, and turn each XML into a vendor bill, one commit per bill.
-            The XMLs are never kept on the batch: if the run stops, the next one starts again from the parts,
-            skipping the bills already created. The parts are deleted at the end: the batch is then done.
-        """
-        for record in self:
-            if not record.part_ids:
-                # Already imported, or nothing to import (0 invoices)
-                continue
-            # bin_size: only check the parts have a file, without loading it
-            if not all(record.part_ids.with_context(bin_size=True).mapped('decrypted_file')):
-                raise UserError(self.env._("All the parts of KSeF batch %s must be downloaded before importing it.", record.name))
-            with tempfile.TemporaryFile(mode='w+b') as zip_stream:
-                for part in record.part_ids.sorted('part_number'):
-                    zip_stream.write(base64.b64decode(part.decrypted_file))
-                zip_stream.seek(0)
-                try:
-                    zip_file = zipfile.ZipFile(zip_stream, 'r')
-                except zipfile.BadZipFile as e:
-                    # KSeF keeps the package until it expires: download the parts again
-                    record.part_ids.decrypted_file = False
-                    record.part_ids.invalidate_recordset(['decrypted_file'])
-                    record._count_retry(self.env._("The KSeF batch ZIP is corrupt: %s", e), 'l10n_pl_edi_batch.ir_cron_download')
-                    continue
-                with zip_file:
-                    for xml_name in zip_file.namelist():
-                        if not xml_name.endswith('.xml'):
-                            continue
-                        record._import_bill(xml_name, zip_file.read(xml_name))
-                        self._commit()
-            record.part_ids.unlink()
-
-    def _import_bill(self, xml_name, xml_content):
-        """ Create the vendor bill of one KSeF XML and import it, unless a bill with its KSeF number exists.
-            The standard import catches the errors of the XML: an unreadable one is only logged
-            (`ir.attachment._decode_edi_xml`), a decoder error is posted in the bill's chatter
-            (`account.move._extend_with_attachments`). Either way, the bill stays empty with its XML attached, and
-            the next XML is imported. """
-        self.ensure_one()
-        AccountMove = self.env['account.move'].with_company(self.company_id)
-        ksef_number = xml_name.removesuffix('.xml')
-        if AccountMove.search_count([
-            ('l10n_pl_edi_number', '=', ksef_number),
-            ('company_id', '=', self.company_id.id),
-            ('move_type', '=', 'in_invoice'),
-        ], limit=1):
-            return
-        move = AccountMove.create([{'move_type': 'in_invoice'}])
-        attachment = self.env['ir.attachment'].create({
-            'name': xml_name,
-            'mimetype': 'application/xml',
-            'company_id': self.company_id.id,
-            'res_model': move._name,
-            'res_id': move.id,
-            'raw': xml_content,
-        })
-        # Posting the attachment imports it (account.move._message_post_after_hook)
-        move.message_post(body=self.env._("KSeF bill %s has been attached", xml_name), attachment_ids=attachment.ids)
-        attachment.write({
-            'description': self.env._('KSeF Received Bill XML'),
-            'res_field': 'l10n_pl_edi_attachment_file',
-        })
-        move.write({
-            'l10n_pl_edi_number': ksef_number,
-            'l10n_pl_edi_status': 'fetched',
-            'l10n_pl_edi_attachment_id': attachment.id,
-        })
-        move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
