@@ -5,6 +5,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { renderToMarkup } from "@web/core/utils/render";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
+import { MENTION_SELECTOR } from "@mail/core/common/plugin/mention_plugin";
 import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
 import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/partner_suggestion_plugin";
 import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion/suggestion_plugin";
@@ -135,8 +136,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
         };
         config.resources = {
             ...config.resources,
-            selectors_for_feff_providers: () =>
-                "a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention",
+            selectors_for_feff_providers: () => `${MENTION_SELECTOR}, a.o_channel_redirect`,
         };
         return config;
     }
