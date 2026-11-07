@@ -53,7 +53,7 @@ export class SoundEffects {
         if (!soundEffect.audio.paused) {
             soundEffect.audio.pause();
         }
-        soundEffect.audio.currentTime = 0;
+        this._rewind(soundEffect.audio);
         soundEffect.audio.loop = loop;
         soundEffect.audio.volume = volume ?? soundEffect.defaultVolume ?? 1;
         Promise.resolve(soundEffect.audio.play()).catch(() => {});
@@ -67,15 +67,33 @@ export class SoundEffects {
         if (soundEffect) {
             if (soundEffect.audio) {
                 soundEffect.audio.pause();
-                soundEffect.audio.currentTime = 0;
+                this._rewind(soundEffect.audio);
             }
         } else {
             for (const soundEffect of Object.values(this.soundEffects)) {
                 if (soundEffect.audio) {
                     soundEffect.audio.pause();
-                    soundEffect.audio.currentTime = 0;
+                    this._rewind(soundEffect.audio);
                 }
             }
+        }
+    }
+
+    /**
+     * Rewinds the audio, unless it cannot be seeked: iOS/iPadOS only loads
+     * media on playback, and throws when seeking before that.
+     *
+     * @param {HTMLAudioElement} audio
+     */
+    _rewind(audio) {
+        if (audio.readyState === audio.HAVE_NOTHING || audio.currentTime === 0) {
+            return;
+        }
+        try {
+            audio.currentTime = 0;
+        } catch {
+            // Seeking may still be refused: playing from the current position
+            // is better than not playing at all.
         }
     }
 }
