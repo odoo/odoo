@@ -23,7 +23,9 @@
                 <button string="Fetch Symbols"
                         type="object"
                         name="action_fetch_symbols"
-                        class="btn btn-primary"/>
+                        class="btn btn-primary"
+                        noSaveDialog="true"
+                        invisible="not l10n_vn_edi_username or not l10n_vn_edi_password"/>
             </xpath>
         </field>
     </record>
