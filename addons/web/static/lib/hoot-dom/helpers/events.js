@@ -1260,7 +1260,14 @@ async function _hover(target, options, hoverOptions) {
     const pointerTarget = getPointerTarget(target, options, hoverOptions.originalTarget);
     const position = target && getPosition(target, options);
 
-    const previousPT = runTime.pointerTarget;
+    let previousPT = runTime.pointerTarget;
+    if (previousPT && !previousPT.ownerDocument?.defaultView) {
+        // Previous target belongs to a discarded document (e.g. a reloaded or
+        // removed iframe): it cannot receive events nor be used as a related
+        // target (Chrome >= 156 crashes the renderer in that case).
+        previousPT = null;
+        runTime.canStartDrag = false;
+    }
     const previousPosition = runTime.position;
 
     const isDifferentTarget = previousPT !== pointerTarget;

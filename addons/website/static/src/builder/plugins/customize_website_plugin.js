@@ -46,7 +46,13 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
+    static dependencies = [
+        "builderActions",
+        "savePlugin",
+        "edit_interaction",
+        "websiteBridge",
+        "history",
+    ];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -357,8 +363,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     })
                     .finally(() => this.services.ui.unblock());
             };
-            await blockedApply(value);
-            this.dependencies.domObserver.stageCustomMutation({
+            await this.dependencies.history.stage({
                 apply: () => blockedApply(value),
                 revert: () => blockedApply(oldValue),
             });
@@ -373,7 +378,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 "ir.ui.view",
                 "render_public_asset",
                 [`${key}`, {}],
-                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() }
             );
         }
         return this.getTemplateKey(key);
@@ -510,7 +515,7 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "domObserver", "customizeWebsite", "media"];
+    static dependencies = ["builderActions", "customizeWebsite", "media", "history"];
     setup() {
         this.canTimeout = false;
     }
@@ -549,8 +554,7 @@ export class ToggleBodyBgImageAction extends BuilderAction {
         };
     }
     async applyConfig(oldConfig, newConfig) {
-        await this.applyConfigWithLoader(newConfig);
-        this.dependencies.domObserver.stageCustomMutation({
+        await this.dependencies.history.stage({
             apply: () => this.applyConfigWithLoader(newConfig),
             revert: () => this.applyConfigWithLoader(oldConfig),
         });
@@ -600,9 +604,9 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
     static dependencies = [
         "overlayButtons",
-        "domObserver",
         "backgroundPositionOption",
         "customizeWebsite",
+        "history",
     ];
     setup() {
         this.withLoadingEffect = false;
@@ -644,7 +648,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                 this.dependencies.customizeWebsite.getWebsiteVariableValue(
                     "body-image-background-position"
                 ) || "";
-            this.dependencies.domObserver.applyCustomMutation({
+            this.dependencies.history.stage({
                 apply: () => setBackgroundPosition(bgPosition),
                 revert: () => setBackgroundPosition(currentPosition),
             });
@@ -838,7 +842,7 @@ export class WebsiteConfigAction extends BuilderAction {
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["customizeWebsite", "history"];
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
@@ -854,17 +858,12 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         if (!isPreviewing) {
             const viewsToApply = params["views"] || [];
-            let undoApplyCallback;
-            this.dependencies.domObserver.applyCustomMutation({
+            let revert;
+            this.dependencies.history.stage({
                 apply: () => {
-                    undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
-                        viewsToApply,
-                        true
-                    );
+                    revert = this.dependencies.customizeWebsite.setViewsOnSave(viewsToApply, true);
                 },
-                revert: () => {
-                    undoApplyCallback();
-                },
+                revert: () => revert(),
             });
         }
     }
@@ -874,17 +873,12 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         if (!isPreviewing) {
             const viewsToClean = params["views"] || [];
-            let undoCleanCallback;
-            this.dependencies.domObserver.applyCustomMutation({
+            let revert;
+            this.dependencies.history.stage({
                 apply: () => {
-                    undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
-                        viewsToClean,
-                        false
-                    );
+                    revert = this.dependencies.customizeWebsite.setViewsOnSave(viewsToClean, false);
                 },
-                revert: () => {
-                    undoCleanCallback();
-                },
+                revert: () => revert(),
             });
         }
     }
