@@ -873,17 +873,16 @@ git commit -m "docs(spec): align expense approval spec with base_tier_validation
 
 ## Final Verification
 
-- [ ] **Step 1: รันเทสต์ทั้งชุดของงาน Phase 1**
+- [x] **Step 1: รันเทสต์ทั้งชุดของงาน Phase 1**
 
-Run (ผู้ใช้รันเอง):
+Run:
 ```powershell
-.\run-tests.ps1 -Module od19_hr_expense_thai
-.\run-tests.ps1 -Module od19_approval_center
-.\run-tests.ps1 -Module od19_role_catalog
+.\run-tests.ps1 -Module od19_hr_expense_thai,od19_approval_center,od19_role_catalog,od19_hr_expense_enhanced,od19_hr_expense_portal
 ```
 Expected: PASS ทั้ง 3 โมดูล
+Result (2026-11-07): `0 failed, 0 error(s) of 82 tests` · exit code 0
 
-- [ ] **Step 2: อัปเกรดโมดูลในฐานข้อมูล `odoo19_pdev` (ผู้ใช้รันเอง)**
+- [x] **Step 2: อัปเกรดโมดูลในฐานข้อมูล `odoo19_pdev`**
 
 Run:
 ```powershell
@@ -891,6 +890,10 @@ Run:
 ```
 (หรือรัน `odoo-bin -d odoo19_pdev -u od19_hr_expense_thai,od19_approval_center,od19_role_catalog --stop-after-init` ตามสคริปต์ของโปรเจกต์)
 Expected: ไม่มี error ตอนโหลด data/migration
+Result (2026-11-07): upgrade ผ่านพร้อม migration —
+`od19_hr_expense_thai 19.0.1.3.0 post-migrate: linked CEO reviewer group on 1 tier definition(s)` ·
+`od19_role_catalog 19.0.1.2.0 post-migrate: linked CEO expense group to role (group 218 -> 220)`
+(error เดียวในล็อกคือ `od19_ai_assistant: not installable, skipped` ซึ่งมีมาก่อนแล้วและไม่เกี่ยวกับงานนี้)
 
 - [ ] **Step 3: ทดสอบด้วยมือผ่านหน้าเว็บ (ผู้ใช้ทำ)**
 
@@ -901,7 +904,7 @@ Expected: ไม่มี error ตอนโหลด data/migration
 5. ล็อกอินเป็น CEO → **Validate** → `validation_status = Validated` → กด **Approve** ของ core ได้
 6. ทดสอบ **Forward**: ที่เมนู Tier Validation ตั้งค่า `has_forward` แล้วกด Forward ส่งต่อให้ผู้ใช้อื่นในกลุ่ม
 
-- [ ] **Step 4: รายงานผลตาม AGENTS.md §7**
+- [x] **Step 4: รายงานผลตาม AGENTS.md §8**
 
 ระบุ: commit SHA ทุกตัว · ไฟล์ที่แตะ · คำสั่งที่รันจริง · ผลลัพธ์จริง (ห้ามอ้างผลที่ยังไม่ได้รัน)
 
