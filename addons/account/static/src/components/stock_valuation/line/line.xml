@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="account.StockValuationReport.InventoryValuationLine">
-        <tr t-att-class="this.cssClass">
-            <td class="line_name w-50" t-on-click="this.onClick">
+        <tr t-att-class="this.cssClass" >
+            <td class="line_name w-50" t-on-click="this.onClickToggle"
+                t-att-class="this.hasSublines ? 'clickable cursor-pointer' : ''"
+            >
                 <div class="wrapper">
+                    <i t-if="this.hasSublines"
+                        class="btn btn_foldable oi"
+                        tabindex="-1"
+                        t-att-data-icon="this.state.displaySublines ? 'arrow_drop_down' : 'arrow_right'"
+                    />
                     <t t-if="this.label">
-                        <a t-if="this.props.onClickMethod" href="#" style="white-space: pre-line" t-out="this.label"/>
+                        <a t-if="this.props.onClickMethod" t-on-click.stop="this.onClick" href="#" style="white-space: pre-line" t-out="this.label"/>
                         <span t-else="" style="white-space: pre-line" t-out="this.label"/>
                     </t>
                 </div>
             </td>
-            <td class="w-25">
+            <td class="w-25 line_cell numeric">
                 <div t-if="this.formattedValue" t-out="this.formattedValue"/>
                 <div t-elif="this.debit" t-out="this.debit"/>
             </td>
-            <td class="w-25">
+            <td class="w-25 line_cell numeric">
                 <div t-if="this.credit" t-out="this.credit"/>
-            </td>
-            <td t-on-click="this.onClickToggle">
-                <button t-attf-class="btn btn_foldable#{this.props.sublines ? '' : '_empty'}"
-                        t-att-tabindex="this.props.lines ? 0 : -1">
-                    <i t-if="this.hasSublines"
-                        class="oi"
-                        t-att-data-icon="this.state.displaySublines ? 'folder_open' : 'folder'"/>
-                </button>
             </td>
         </tr>
         <t t-if="this.state.displaySublines &amp;&amp; this.hasSublines">
