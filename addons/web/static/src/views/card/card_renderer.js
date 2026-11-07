@@ -81,6 +81,7 @@ export class CardRenderer extends Component {
     };
     props = useProps({
         archInfo: t.any(),
+        className: t.string().optional(),
         Compiler: t.any().optional(),
         readonly: t.any().optional(),
         record: t.any(),
@@ -135,6 +136,9 @@ export class CardRenderer extends Component {
         const { archInfo } = this.props;
         const classes = ["o_card_record d-flex"];
         classes.push(archInfo.cardClassName);
+        if (this.props.className) {
+            classes.push(this.props.className);
+        }
         return classes.join(" ");
     }
 
