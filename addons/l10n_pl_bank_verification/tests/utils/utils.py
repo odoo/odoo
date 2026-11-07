@@ -1,7 +1,7 @@
 import json
+import requests.exceptions
 
 from odoo.tools import file_open
-
 
 # Load file content once for all tests
 with file_open('l10n_pl_bank_verification/tests/utils/fake_response.json') as file:
@@ -9,16 +9,22 @@ with file_open('l10n_pl_bank_verification/tests/utils/fake_response.json') as fi
 
 
 class FakeResponse:
-    def __init__(self, endpoint):
-        self.status_code, self.content = self._get_content(self._sanitize_endpoint(endpoint))
+    def __init__(self, combinations):
+        self.status_code, self.content = self._get_content(combinations)
 
-    def _sanitize_endpoint(self, endpoint):
-        # We need to sort endpoints in asc order for testing
-        parts = endpoint.split('/')
-        nips = parts.pop(-1).split(',')
-        nips.sort()
-        return '/'.join(parts + [','.join(nips)])
+    def _get_content(self, combinations):
+        data = []
+        for vat, account in combinations:
+            content = file_content[f'{vat}:{account}']
+            if content['status_code'] != 200:
+                return content['status_code'], json.dumps(content['content']).encode()
+            data.append(content['content'])
 
-    def _get_content(self, endpoint):
-        data = file_content[endpoint]
-        return data['status_code'], json.dumps(data['content']).encode()
+        return 200, json.dumps(data).encode()
+
+    def raise_for_status(self):
+        if self.status_code != 200:
+            raise requests.exceptions.RequestException()
+
+    def json(self):
+        return json.loads(self.content.decode())
