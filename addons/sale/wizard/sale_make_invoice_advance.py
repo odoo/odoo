@@ -131,8 +131,19 @@ class SaleAdvancePaymentInv(models.TransientModel):
             sale_orders = wizard.sale_order_ids
             wizard.amount_invoiced = sum(sale_orders.mapped("amount_invoiced"))
             wizard.amount_paid = sum(sale_orders.mapped("amount_paid"))
-            wizard.amount_to_invoice = sum(sale_orders.mapped("amount_to_invoice"))
             wizard.amount_total = sum(sale_orders.mapped("amount_total"))
+            amount_to_invoice = 0
+            for line in sale_orders.order_line:
+                if line.product_uom_qty:
+                    uom_qty_to_consider = (
+                        line.qty_delivered
+                        if line.product_id.invoice_policy == "delivery"
+                        else line.product_uom_qty
+                    )
+                    qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
+                    unit_price_total = line.price_total / line.product_uom_qty
+                    amount_to_invoice += unit_price_total * qty_to_invoice
+            wizard.amount_to_invoice = amount_to_invoice
 
     # === ONCHANGE METHODS ===#
 
