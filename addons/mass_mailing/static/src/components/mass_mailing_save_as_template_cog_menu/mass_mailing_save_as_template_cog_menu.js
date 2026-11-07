@@ -90,9 +90,9 @@ export const MassMailingSaveAsTemplateCogMenuItem = {
         const env = useEnv();
         return (
             env.searchModel.resModel === "mailing.mailing" &&
+            env.config.viewType == "form" &&
             env.model.root.data?.mailing_type === "mail" &&
             !env.model.root.data?.is_template &&
-            env.config.viewType == "form" &&
             env.config.actionType === "ir.actions.act_window"
         );
     },
