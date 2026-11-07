@@ -44,9 +44,9 @@ test("simplest layout", async () => {
     await waitFor(".o-mail-AttachmentCard-image:count(1)");
     expect(".o-mail-AttachmentCard-image:first").toHaveClass("o_image"); // required for mimetype.scss style
     expect(".o-mail-AttachmentCard-image:first").toHaveAttribute("data-mimetype", "text/plain"); // required for mimetype.scss style
-    await waitFor(".o-mail-AttachmentButtons button:count(2)");
-    await waitFor(".o-mail-Attachment-unlink:count(1)");
     await waitFor(".o-mail-AttachmentButtons button[title='Download']:count(1)");
+    await click(".o-mail-AttachmentButtons button[title='More Actions']");
+    await waitFor(".dropdown-item:text('Remove'):count(1)");
 });
 
 test("layout with card details and filename and extension", async () => {
@@ -102,7 +102,7 @@ test("link-type attachment should have open button instead of download button", 
     await waitFor(".o-mail-AttachmentCard:eq(0):text('url.example'):count(1)");
     await waitFor(".o-mail-AttachmentCard:eq(1):text('test.txt'):count(1)");
     await waitFor(
-        ".o-mail-AttachmentContainer:eq(0) .o-mail-AttachmentButtons a[title='Open Link']:count(1)"
+        ".o-mail-AttachmentContainer:eq(0) .o-mail-AttachmentButtons button[title='Open Link']:count(1)"
     );
     await waitForNone(
         ".o-mail-AttachmentContainer:eq(0) .o-mail-AttachmentButtons button[title='Download']"
@@ -110,7 +110,6 @@ test("link-type attachment should have open button instead of download button", 
     await waitFor(
         ".o-mail-AttachmentContainer:eq(1) .o-mail-AttachmentButtons button[title='Download']:count(1)"
     );
-    await waitFor(`.o-mail-AttachmentButtons a[title='Open Link'][target='_blank']:count(1)`);
 });
 
 test("clicking on the delete attachment button multiple times should do the rpc only once", async () => {
@@ -133,11 +132,12 @@ test("clicking on the delete attachment button multiple times should do the rpc 
     onRpcBefore("/mail/attachment/delete", () => expect.step("attachment_unlink"));
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Attachment-unlink");
+    await click(".o-mail-AttachmentContainer [title='More Actions']");
+    await click(".dropdown-item:text('Remove')");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
     await click(".modal-footer .btn-primary");
-    await waitForNone(".o-mail-Attachment-unlink");
+    await waitForNone(".o-mail-AttachmentContainer");
     await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
 });
 
@@ -162,11 +162,11 @@ test("clicking on the delete attachment button multiple times in composer should
     await waitFor(
         ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt):count(1)"
     );
-    await click(".o-mail-Attachment-unlink");
-    await click(".o-mail-Attachment-unlink");
+    await click(".o-mail-Composer .o-mail-AttachmentContainer [title='Remove']");
+    await click(".o-mail-Composer .o-mail-AttachmentContainer [title='Remove']");
     resolveDelete();
     // Let the pending deletion settle, so any extra rpc has been registered.
-    await waitForNone(".o-mail-Attachment-unlink");
+    await waitForNone(".o-mail-Composer .o-mail-AttachmentContainer");
     await expect.waitForSteps(["attachment_unlink"]); // The unlink method must be called once
 });
 
@@ -523,9 +523,9 @@ test("check actions in mobile view", async () => {
     await openDiscuss(channelId);
     mockUserAgent("android");
     expect(isMobileOS()).toBe(true);
-    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await waitFor(".o-mail-AttachmentContainer [title='Download']:count(1)");
+    await click(".o-mail-AttachmentContainer [title='More Actions']");
     await waitFor(".dropdown-item:text('Remove'):count(1)");
-    await waitFor(".dropdown-item:text('Download'):count(1)");
 });
 
 test("view and play audio attachment", async () => {
