@@ -2714,3 +2714,45 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "No event should be created on Oct 26 (the UTC boundary date)",
         )
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_prevent_creating_contact_for_meeting_rooms(self):
+        initial_partner_number = self.env['res.partner'].search_count([])
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'organizer': {'email': self.organizer_user.partner_id.email, 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Real Partner',
+                'email': 'real.partner@example.com',
+                'responseStatus': 'needsAction',
+            }, {
+                'displayName': 'Meeting Room',
+                'email': 'meetingroom@resource.calendar.google.com',
+                'resource': True,
+            }, {
+                'displayName': self.private_partner.name,
+                'email': self.private_partner.email,
+            }],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels',
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels',
+            },
+        }
+        self.env["calendar.event"]._sync_google2odoo(GoogleEvent([values]), self.organizer_user.primary_calendar_id)
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        #  Check that the meeting room has been ignored
+        self.assertTrue(event, "An event should have been created")
+        self.assertEqual(initial_partner_number + 1, self.env['res.partner'].search_count([]), "Only 1 partner should have been created")
+        self.assertTrue(bool(self.env['res.partner'].search([('email', '=', 'real.partner@example.com')])), "The real partner should have been created")
+        self.assertFalse(bool(self.env['res.partner'].search([('email', '=', 'meetingroom@resource.calendar.google.com')])), "The meeting room should have been ignored")
+        self.assertEqual(len(event.partner_ids), 2, "Only humans should attend the event")
+        self.assertTrue(event.partner_ids.search([('email', '=', 'real.partner@example.com')]), 'Real partner should be an attendee of the event')
+        self.assertTrue(self.private_partner in event.partner_ids, 'Private partner should be an attendee of the event')
+        self.assertGoogleAPINotCalled()
