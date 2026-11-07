@@ -1,6 +1,7 @@
 import { Component, useProps, t } from "@odoo/owl";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { formatFloat } from "@web/core/utils/numbers";
 
 export class ProductCard extends Component {
@@ -19,6 +20,17 @@ export class ProductCard extends Component {
         productCartQty: t.or([t.number(), t.literal(undefined)]).optional(),
         isComboPopup: t.boolean().optional(false),
     });
+
+    setup() {
+        this.pos = usePos();
+    }
+
+    get snoozeLabel() {
+        if (this.props.available) {
+            return "";
+        }
+        return this.pos.getProductSnoozeLabel(this.props.product);
+    }
 
     get productQty() {
         const productUnit = this.props.product.models["decimal.precision"].find(
