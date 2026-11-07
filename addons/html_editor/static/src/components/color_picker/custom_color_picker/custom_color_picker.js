@@ -42,6 +42,7 @@ export class CustomColorPicker extends Component {
         defaultOpacity: t.number().optional(100),
         setOnCloseCallback: t.function().optional(),
         setOperationCallbacks: t.function().optional(),
+        close: t.function().optional(),
     });
 
     elRef = signal.ref();
@@ -188,6 +189,10 @@ export class CustomColorPicker extends Component {
     setLastFocusedSliderEl(el) {
         this.lastFocusedSliderEl = el;
         document.activeElement.blur();
+    }
+    applyAndClose() {
+        this._colorSelected(this.hexDisplay.value);
+        this.props.close();
     }
 
     get el() {
