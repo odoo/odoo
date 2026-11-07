@@ -5084,8 +5084,21 @@ class MailThread(models.AbstractModel):
                     last_div_element = (
                         children[-1] if children[-1].tag in ["div", "p"] else tree
                     )
+<<<<<<< 07b9fe7764f6c1e8ab83a42001e3652abc98542b
                     last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
                     etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited", "data-o-datetime": fields.Datetime.to_string(fields.Datetime.now())})
+||||||| 66af69fda24a7b0dc7b036bf1678b8850862c247
+                    last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
+                    etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
+=======
+                    if len(last_div_element):
+                        last_child = last_div_element[-1]
+                        if last_child.tail and not last_child.tail.endswith(" "):
+                            last_child.tail += " "
+                    elif last_div_element.text and not last_div_element.text.endswith(" "):
+                        last_div_element.text += " "
+                    etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
+>>>>>>> 07a816ab9b12a4725af65b5c27e2c682e9ae1545
                     msg_values["body"] = (
                         # markup: it is considered safe, as coming from html.fragment_fromstring
                         (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
