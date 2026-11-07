@@ -3,8 +3,20 @@ from base64 import b64decode, b64encode
 
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tools import BinaryBytes
+from odoo.tools import BinaryBytes, misc
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+
+ZATCA_RESPONSES = {
+    "accepted": {"status_code": 200},
+    "warning": {
+        "status_code": 200,
+        "validationResults": {
+            "warningMessages": [{"code": "W1", "message": "Minor issue"}]
+        },
+    },
+    "rejected": {"error": "Invalid VAT number", "rejected": True},
+    "unknown": {"error": "Timeout waiting for ZATCA", "excepted": True},
+}
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -111,6 +123,7 @@ class TestSaEdiCommon(AccountTestInvoicingCommon):
         """Create a Saudi individual partner for simplified invoices."""
         return cls.env['res.partner'].create({
             'name': 'Mohammed Ali',
+            'email': 'mohammed.ali@example.com',
             'ref': 'Mohammed Ali',
             'lang': 'en_US',
             'country_id': cls.saudi_arabia.id,
@@ -361,11 +374,11 @@ class TestSaEdiCommon(AccountTestInvoicingCommon):
 
         return self.env['account.move'].browse(reversal['res_id'])
 
-    def _get_invoice_document(self):
+    def _get_invoice_document(self, simplified=False):
         invoice = self._create_test_invoice(
             invoice_date='2025-01-15',
             invoice_date_due='2025-01-15',
-            partner_id=self.partner_sa_simplified,
+            partner_id=self.partner_sa_simplified if simplified else self.partner_sa,
             invoice_line_ids=[{
                 'product_id': self.product_burger.id,
                 'price_unit': self.product_burger.standard_price,
@@ -387,3 +400,19 @@ class TestSaEdiCommon(AccountTestInvoicingCommon):
                 data.setdefault('clearedInvoice', b64encode(signed_xml).decode())
             return data
         return _mock_submit
+
+    def _get_zatca_response(self, simplified, expected_state):
+        """
+        Returns a _l10n_sa_submit_einvoice-shaped response based on the expected state
+        and whether the invoice is simplified or standard.
+        """
+        response = dict(ZATCA_RESPONSES[expected_state])
+        if not simplified and expected_state in ('accepted', 'warning'):
+            # For standard invoice submissions, we receive QR code from ZATCA itself,
+            # to simulate this in tests, we use a static cleared invoice XML file from sandbox.
+            xml_content = misc.file_open(
+                f"addons/{self.test_module}/tests/compliance/standard/cleared_invoice.xml",
+                "rb",
+            ).read()
+            response["clearedInvoice"] = b64encode(xml_content).decode()
+        return response
