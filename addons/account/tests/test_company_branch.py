@@ -370,3 +370,26 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             'amount_total_in_currency_signed': 25,
             'amount_total_signed': 12.5,
         }])
+
+    def test_move_company_with_shared_journal_and_several_branches_selected(self):
+        """ The company of a new invoice is the active one when the journal is shared with it
+        from a parent, whichever other companies are selected. """
+        journal = self.env['account.journal'].search([
+            ('company_id', '=', self.root_company.id),
+            ('type', '=', 'sale'),
+        ], limit=1)
+        self.assertTrue(journal)
+        for allowed_companies, active_company in (
+            (self.branch_a + self.branch_b, self.branch_b),
+            (self.branch_b + self.branch_a, self.branch_b),
+            (self.root_company + self.branch_a + self.branch_b, self.branch_b),
+            (self.branch_a + self.branch_b, self.branch_a),
+        ):
+            with self.subTest(allowed=allowed_companies.mapped('name'), active=active_company.name):
+                move_form = Form(
+                    self.env['account.move']
+                    .with_context(allowed_company_ids=allowed_companies.ids, default_move_type='out_invoice')
+                    .with_company(active_company)
+                )
+                move_form.journal_id = journal
+                self.assertEqual(move_form.company_id, active_company)
