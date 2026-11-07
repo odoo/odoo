@@ -37,6 +37,8 @@ export const WORKER_STATE = Object.freeze({
     IDLE: "IDLE",
     CONNECTING: "CONNECTING",
 });
+// Application-level ping/pong payload (browsers don't expose websocket ping/pong).
+const PING_PONG_MESSAGE = new Uint8Array([0x00]);
 const MAXIMUM_RECONNECT_DELAY = 120_000;
 // Don't wait to reconnect: keep-alive shouldn't be noticed, and the closing
 // handshake was aborted because the client explicitly tried to connect while
@@ -59,6 +61,7 @@ export class WebsocketWorker {
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 30000;
     CONNECTION_CHECK_DELAY = 60_000;
+    CONNECTION_CHECK_PONG_TIMEOUT = 15_000;
 
     constructor(name) {
         this.name = name;
@@ -358,6 +361,7 @@ export class WebsocketWorker {
      */
     _onWebsocketClose({ code, reason }) {
         clearInterval(this._connectionCheckInterval);
+        clearTimeout(this._connectionCheckPongTimeout);
         this._logDebug("_onWebsocketClose", code, reason);
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
@@ -410,6 +414,11 @@ export class WebsocketWorker {
      */
     _onWebsocketMessage(messageEv) {
         this._restartConnectionCheckInterval();
+        clearTimeout(this._connectionCheckPongTimeout);
+        if (typeof messageEv.data !== "string") {
+            this._logDebug("connection_check_pong");
+            return;
+        }
         const notifications = JSON.parse(messageEv.data);
         this._logDebug("_onWebsocketMessage", notifications);
         this.lastNotificationId = notifications[notifications.length - 1].id;
@@ -454,23 +463,39 @@ export class WebsocketWorker {
     }
 
     /**
-     * Sends a custom application-level message to perform a connection check
-     * on the WebSocket.
-     *
-     * Browsers rely on the OS's TCP mechanism, which can take minutes or
-     * hours to detect a dead connection. Sending data triggers an immediate
-     * I/O operation, quickly revealing any network-level failure. This must be
-     * implemented at the application level because the browser WebSocket API
-     * does not expose the built-in ping/pong mechanism.
+     * Application-level ping/pong, as the browser does not expose the
+     * websocket one. A dead connection (e.g. after a network change) is
+     * otherwise only detected after the kernel retransmission timeout.
+     * If the server does not answer in time, reconnect.
      */
     _restartConnectionCheckInterval() {
         clearInterval(this._connectionCheckInterval);
         this._connectionCheckInterval = setInterval(() => {
             if (this._isWebsocketConnected()) {
-                this.websocket.send(new Uint8Array([0x00]));
+                this.websocket.send(PING_PONG_MESSAGE);
                 this._logDebug("connection_checked");
+                clearTimeout(this._connectionCheckPongTimeout);
+                this._connectionCheckPongTimeout = setTimeout(
+                    () => this._onConnectionCheckTimeout(),
+                    this.CONNECTION_CHECK_PONG_TIMEOUT
+                );
             }
         }, this.CONNECTION_CHECK_DELAY);
+    }
+
+    /**
+     * The server did not answer the connection check: drop the socket without
+     * waiting for its closing handshake and reconnect.
+     */
+    _onConnectionCheckTimeout() {
+        this._logDebug("connection_check_timeout");
+        this._removeWebsocketListeners();
+        this.websocket?.close();
+        this.websocket = null;
+        this._onWebsocketClose({
+            code: WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,
+            reason: "CONNECTION_CHECK_TIMEOUT",
+        });
     }
 
     /**
@@ -554,6 +579,8 @@ export class WebsocketWorker {
     _stop() {
         this._logDebug("_stop");
         clearTimeout(this.connectTimeout);
+        clearInterval(this._connectionCheckInterval);
+        clearTimeout(this._connectionCheckPongTimeout);
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
