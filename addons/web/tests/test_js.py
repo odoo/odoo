@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 import logging
 import re
 from contextlib import suppress
@@ -66,6 +67,21 @@ class HootCommon(odoo.tests.HttpCase):
         if len(assets) == 0:
             self.fail("No assets found in the given test bundle")
         return assets
+
+    def _split_test_modules(self, env):
+        if any(sign == '+' for sign, _ in _get_filters(self._test_params)):
+            # the parameters select tests regardless of the modules
+            return None
+        assets = env['ir.qweb']._get_asset_content('web.assets_unit_tests')[0]
+        test_files = collections.Counter(
+            RE_ASSET_ADDON.match(asset['url'])[1]
+            for asset in assets
+            if asset['filename'].endswith('.test.js')
+        )
+        # each module's unit tests are a top-level HOOT suite `@module`, the
+        # largest suites (by number of test files) first
+        modules = sorted((m for m in self._test_modules if m in test_files), key=lambda m: -test_files[m])
+        return [[module] for module in modules]
 
     def _get_hoot_module_filters(self, addons_from_asset_bundle, available_modules):
         module_filter = ''
