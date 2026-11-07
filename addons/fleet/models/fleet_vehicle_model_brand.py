@@ -40,7 +40,7 @@ class FleetVehicleModelBrand(models.Model):
     def action_open_brand_form(self):
         self.ensure_one()
         return {
-            'name': _('Manufacturer'),
+            'name': _('Brand'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'fleet.vehicle.model.brand',
