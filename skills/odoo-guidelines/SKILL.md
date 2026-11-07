@@ -39,6 +39,7 @@ touching instead of loading whole files.
 | [Batch ORM calls](guidelines/performance.md#batch-orm-calls) | ORM calls (`create`/`search*`/aggregates) inside a loop |
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
+| [Freeze the cursor time with mock_datetime_and_now](guidelines/tests.md#freeze-the-cursor-time-with-mock_datetime_and_now) | a test that uses `freeze_time`, or checks `create_date`, `write_date` or a value taken from `cr.now()` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
 | [Changes in a stable version](guidelines/stable.md#changes-in-a-stable-version) | any change targeting a released branch rather than master |
 
