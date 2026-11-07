@@ -7,11 +7,16 @@ from contextlib import ExitStack
 from typing import Literal
 from urllib.parse import urlsplit
 
+import lxml.html
+
 from odoo import api, fields, models
 from odoo.http import request
 from odoo.http.session import session_store, update_session_token
 
-from ..paper_muncher import PaperMuncherServer, paper_muncher
+from odoo.addons.base_report_paper_muncher.paper_muncher import (
+    PaperMuncherServer,
+    paper_muncher,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -78,26 +83,51 @@ class IrActionsReport(models.Model):
         if not isinstance(bodies, (list, tuple)):
             bodies = list(bodies)
 
-        names = [f'pipe:/paper-muncher/{i}.html' for i in range(len(bodies))]
+        headers = footers = None
+        if paper_muncher().has_capability('per-input-decoration'):
+            headers = self._split_paper_muncher_decoration(header, 'minimal_layout_report_headers', len(bodies))
+            footers = self._split_paper_muncher_decoration(footer, 'minimal_layout_report_footers', len(bodies))
+
+        inputs = []
+        for i in range(len(bodies)):
+            inputs.append(f'pipe:/paper-muncher/{i}.html')
+            if headers:
+                inputs += ['--header', f'pipe:/paper-muncher/header-{i}.html']
+            if footers:
+                inputs += ['--footer', f'pipe:/paper-muncher/footer-{i}.html']
+
+        dpi = float(specific_paperformat_args.get('data-report-dpi', paperformat.dpi))
+        # wkhtmltopdf lays CSS px out at ~76/dpi with smart shrinking, and at its
+        # zoom (96/dpi) with --disable-smart-shrinking.
+        scale = (96 if paperformat.disable_shrinking else 76) / dpi
+
         extra_args = [
-            '--scale', f'{76 / float(specific_paperformat_args.get('data-report-dpi', paperformat.dpi))}x',
+            '--scale', f'{scale}x',
             '--margins', f'0mm {paperformat.margin_right}mm 0mm {paperformat.margin_left}mm',
             '--header-size', f'{specific_paperformat_args.get('data-report-margin-top', paperformat.margin_top)}mm',
             '--footer-size', f'{specific_paperformat_args.get('data-report-margin-bottom', paperformat.margin_bottom)}mm',
         ]
 
-        if header:
+        if header and not headers:
             extra_args += ['--header', 'pipe:/paper-muncher/header.html']
 
-        if footer:
+        if footer and not footers:
             extra_args += ['--footer', 'pipe:/paper-muncher/footer.html']
+
+        extra_args.append('--sandboxed')
 
         if landscape or specific_paperformat_args.get('data-report-landscape', False):
             extra_args += ['--orientation', 'landscape']
         elif paperformat and paperformat.orientation:
             extra_args += ['--orientation', paperformat.orientation.lower()]
+        features = []
         if os.getenv('ODOO_PAPER_MUNCHER_FEATURE') == '1':
-            extra_args += ['--feature', '*=on']  # activate all experimental/optional features
+            features.append('*=on')  # activate all experimental/optional features
+        else:
+            features += [f'{feature}=on' for feature in paper_muncher().features]
+        if features:
+            # NOTE: a single --feature option, repeating it would override the previous one
+            extra_args += ['--feature', *features]
         if paperformat and paperformat.format:
             if paperformat.format != 'custom':
                 extra_args += ['--paper', paperformat.format]
@@ -130,11 +160,30 @@ class IrActionsReport(models.Model):
                 wsgi_environ['HTTP_X_ODOO_DATABASE'] = self.env.cr.dbname
 
             with PaperMuncherServer(
-                args=[paper_muncher().bin, *names, '-o', 'pipe:/paper-muncher/output.pdf', *extra_args],
+                args=[paper_muncher().bin, *inputs, '-o', 'pipe:/paper-muncher/output.pdf', *extra_args],
                 os_env=os_env,
                 wsgi_environ=wsgi_environ,
             ) as server:
-                return server.serve(bodies, header, footer)  # TODO: ir.config_parameter
+                return server.serve(bodies, headers or header, footers or footer)  # TODO: ir.config_parameter
+
+    @api.model
+    def _split_paper_muncher_decoration(self, html: str | None, container_id: str, count: int) -> list[str] | None:
+        """Server-side equivalent of the ``subst()`` script of ``web.minimal_layout``,
+        which paper-muncher does not run: one header/footer document per body.
+
+        :returns: ``None`` when the decoration cannot be matched with the bodies.
+        """
+        if not html:
+            return None
+        root = lxml.html.document_fromstring(html)
+        container = root.get_element_by_id(container_id, None)
+        if container is None or len(container) != count:
+            return None
+        documents = []
+        for child in list(container):
+            container[:] = [child]
+            documents.append(lxml.html.tostring(root, encoding='unicode', doctype='<!DOCTYPE html>'))
+        return documents
 
     def _run_pdf_engine_without_processing(
             self,

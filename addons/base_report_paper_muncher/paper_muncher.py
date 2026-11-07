@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 from collections.abc import Sequence
+from dataclasses import dataclass
 from email.utils import format_datetime
 from functools import cache
 from io import DEFAULT_BUFFER_SIZE, BytesIO
@@ -36,8 +37,27 @@ WRITE_TIMEOUT = 15  # seconds
 SERVE_TIMEOUT = 15 * 60  # 15 minutes
 CHUNK_SIZE = 8192  # 8kiB, buffer size of paper-muncher
 MAX_INCOMPLETE_EVENT_SIZE = 8192  # 8kiB
-MIN_REQUIRED_VERSION = '0.6'  # keep in sync with README.md
-GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(header|footer|\.|[0-9]+)\.(?:html|xhtml|xml)$')
+
+
+@dataclass(frozen=True)
+class Capability:
+    since: str
+    features: tuple[str, ...] = ()
+
+
+CAPABILITIES = {
+    'baseline': Capability('0.6'),  # minimum supported version, keep in sync with README.md
+    'per-input-decoration': Capability('0.10'),  # --header/--footer given after each input
+    # Report templates rely on these wkhtmltopdf behaviors. Only enabled when the binary
+    # has them: an unknown --feature makes paper-muncher fail.
+    'wkhtmltopdf-media-zero-viewport': Capability('0.10', features=(
+        'wkhtmltopdf-quirks-media-zero-viewport',
+    )),
+    'wkhtmltopdf-media-screen': Capability('0.10', features=(
+        'wkhtmltopdf-quirks-media-screen',
+    )),
+}
+GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(?:(?P<kind>header|footer)-(?P<index>[0-9]+)|(?P<name>header|footer|\.|[0-9]+))\.(?:html|xhtml|xml)$')
 
 
 class PaperMuncherServer:
@@ -98,8 +118,8 @@ class PaperMuncherServer:
     def serve(
         self,
         documents: Sequence[str],
-        header: str = '',
-        footer: str = '',
+        header: str | Sequence[str] = '',
+        footer: str | Sequence[str] = '',
         *,
         timeout: int = SERVE_TIMEOUT,
     ):
@@ -177,9 +197,11 @@ class PaperMuncherServer:
     def _process_request(self):
         if self._request.method == b'GET' and (match := GET_DOCUMENT_RE.match(self._request.target)):
             response, bytes_sent = self._handle_get((
-                     self._header if match[1] == b'header'
-                else self._footer if match[1] == b'footer'
-                else self._documents[int(match[1])]
+                     self._header[int(match['index'])] if match['kind'] == b'header'
+                else self._footer[int(match['index'])] if match['kind'] == b'footer'
+                else self._header if match['name'] == b'header'
+                else self._footer if match['name'] == b'footer'
+                else self._documents[int(match['name'])]
             ).encode())
         elif self._request.method == b'PUT' and self._request.target == b'/paper-muncher/output.pdf':
             response, bytes_sent = self._handle_put(self._request_body)
@@ -369,6 +391,15 @@ class PaperMuncherInfo(NamedTuple):
     state: Literal['ok', 'install']
     bin: str
     version: tuple[str, ...]
+    capabilities: frozenset[str] = frozenset()
+
+    def has_capability(self, capability: str) -> bool:
+        assert capability in CAPABILITIES, capability
+        return capability in self.capabilities
+
+    @property
+    def features(self) -> list[str]:
+        return sorted({feature for name in self.capabilities for feature in CAPABILITIES[name].features})
 
 
 def extract_version(output: bytes) -> str:
@@ -376,6 +407,10 @@ def extract_version(output: bytes) -> str:
     if not match:
         raise ValueError(f"Could not find version in output: {output!r}")
     return match[1].decode()
+
+
+def _capabilities(version: tuple[str, ...]) -> frozenset[str]:
+    return frozenset(name for name, capability in CAPABILITIES.items() if version >= parse_version(capability.since))
 
 
 @cache
@@ -399,10 +434,11 @@ def paper_muncher() -> PaperMuncherInfo:
                      exc_info=_logger.isEnabledFor(logging.DEBUG))
         return PaperMuncherInfo(state='install', bin=bin_path, version=version)
 
-    if version < parse_version(MIN_REQUIRED_VERSION):
+    capabilities = _capabilities(version)
+    if 'baseline' not in capabilities:
         _logger.info("Your paper-muncher version %s is too old, please upgrade to at least %s",
-                     version_str, MIN_REQUIRED_VERSION)
+                     version_str, CAPABILITIES['baseline'].since)
         return PaperMuncherInfo(state='install', bin=bin_path, version=version)
 
     _logger.info("Will use the paper-muncher binary at %s (version %s)", bin_path, version_str)
-    return PaperMuncherInfo(state='ok', bin=bin_path, version=version)
+    return PaperMuncherInfo(state='ok', bin=bin_path, version=version, capabilities=capabilities)
