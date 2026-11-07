@@ -316,7 +316,11 @@ class ProductProduct(models.Model):
             "image_1920": image,
             "product_tmpl_id": self.product_tmpl_id.id,
             "attribute_value_ids": [Command.set(self.product_template_attribute_value_ids.ids)],
-            "sequence": self.variant_image_ids.sorted("sequence")[:1].sequence - 1,
+            # Insert the new image before the first variant image if it exists, otherwise after the
+            # first template image (to avoid overriding it).
+            "sequence": self.variant_image_ids.sorted("sequence")[:1].sequence - 1
+            if self.variant_image_ids
+            else self.product_template_image_ids.sorted("sequence")[:1].sequence + 1,
         })
 
     def _set_main_image_from_extra_images(self):
