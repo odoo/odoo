@@ -12,7 +12,8 @@ class MrpProduction(models.Model):
     def _compute_project_id(self):
         if not self.env.context.get('from_project_action'):
             for production in self:
-                production.project_id = production.bom_id.project_id
+                if production.bom_id.project_id:
+                    production.project_id = production.bom_id.project_id
 
     def action_generate_bom(self):
         action = super().action_generate_bom()
