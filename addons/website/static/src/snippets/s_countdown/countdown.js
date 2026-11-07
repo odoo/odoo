@@ -79,7 +79,7 @@ export class Countdown extends Interaction {
      * @returns {boolean}
      * @todo remove legacy code with version 23.0: vxml 001 was introduced with
      * 20.0, countdown snippets don't stay that long.
-     * 
+     *
      */
     get isV001() {
         return this.el.dataset.vxml === "001";
@@ -314,10 +314,15 @@ export class Countdown extends Interaction {
                 } else {
                     this.setValue(this.countItemNbsEls[index], metric.nb);
                 }
+                this.countItemEls[index].classList.toggle(
+                    "o_countdown_seconds",
+                    metric.nbSeconds === 1
+                );
                 this.countItemEls[index].classList.remove("d-none");
             }
         } else {
             for (const val of this.timeDiff) {
+                val.canvas.classList.toggle("o_countdown_seconds", val.nbSeconds === 1);
                 const canvas = val.canvas.querySelector("canvas");
                 const ctx = canvas.getContext("2d");
                 const dpr = window.devicePixelRatio || 1;
