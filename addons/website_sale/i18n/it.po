@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:36+0000\n"
-"PO-Revision-Date: 2026-07-20 09:15+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-05 12:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_sale/it/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -4436,6 +4436,12 @@ msgid "Link URL"
 msgstr "URL collegamento"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "Linked lines must be added to the cart with their parent."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List"
@@ -6557,6 +6563,8 @@ msgid ""
 "Some products in your cart are not available for purchase in your country. "
 "Please remove them or contact us."
 msgstr ""
+"Alcuni prodotti nel tuo carrello non sono disponibili per gli acquisti nel "
+"tuo Paese. Ti preghiamo di rimuoverli o di contattarci."
 
 #. module: website_sale
 #. odoo-python
@@ -6920,6 +6928,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Il numero di articoli combo selezionati deve corrispondere al numero di "
+"scelte combo disponibili."
 
 #. module: website_sale
 #. odoo-python
@@ -7071,13 +7081,15 @@ msgstr "Questo prodotto non è (più) disponibile in questa unità di misura."
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "This product is not available for purchase in your country."
-msgstr ""
+msgstr "Questo prodotto non è disponibile per gli acquisti nel tuo Paese."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "This product is part of a combo and can't be updated individually."
 msgstr ""
+"Questo prodotto fa parte di una combo e non può essere aggiornato "
+"singolarmente."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -7740,6 +7752,12 @@ msgstr ""
 "Non è possibile utilizzare un video come immagine principale del prodotto."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "You cannot add a combo item separately from its combo."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -7826,7 +7844,7 @@ msgstr "Codici postali"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Zip or City"
-msgstr ""
+msgstr "CAP o città"
 
 #. module: website_sale
 #. odoo-javascript
