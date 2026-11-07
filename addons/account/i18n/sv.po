@@ -41,8 +41,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-10-27 13:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-11-05 12:09+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/account/"
 "sv/>\n"
@@ -1310,7 +1310,7 @@ msgstr "<span class=\"o_stat_text\">Verifikation</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verifikationsrader</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2549,7 +2549,7 @@ msgid ""
 "                should receive this periodically from your bank."
 msgstr ""
 "Ett kontoutdrag är en sammanfattning av alla finansiella transaktioner\n"
-"                som skett på ett bankkonto under en viss tidsperiod. Du\n"
+"                som skett på ett bankkonto under en viss tid. Du\n"
 "                bör få regelbundna utdrag från din bank."
 
 #. module: account
@@ -2562,7 +2562,7 @@ msgid ""
 msgstr ""
 "Ett kreditkontoutdrag är en sammanställning av alla finansiella "
 "transaktioner\n"
-"                som skett på ett kreditkonto under en viss tidsperiod. Du\n"
+"                som skett på ett kreditkonto under en viss tid. Du\n"
 "                bör få regelbundna utdrag från din bank."
 
 #. module: account
@@ -2897,7 +2897,7 @@ msgstr "Antal kontorörelser"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
 msgid "Account Move Line"
-msgstr ""
+msgstr "Verifikationsrad"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2972,7 +2972,7 @@ msgstr "Avstämning av konton"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
-msgstr ""
+msgstr "Rad i avstämningsmodell"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -4206,8 +4206,8 @@ msgstr ""
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
 msgstr ""
-"Alla verifikat på ett konto med leverantörsskulder måste ha ett "
-"förfallodatum och vice versa."
+"Alla verifikationsrader på ett konto för skulder måste ha ett förfallodatum "
+"och vice versa."
 
 #. module: account
 #. odoo-python
@@ -4215,8 +4215,8 @@ msgstr ""
 msgid ""
 "Any journal item on a receivable account must have a due date and vice versa."
 msgstr ""
-"Alla verifikat på ett konto med kundfordringar måste ha ett förfallodatum "
-"och vice versa."
+"Alla verifikationsrader på ett konto för fordringar måste ha ett "
+"förfallodatum och vice versa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4614,7 +4614,7 @@ msgstr "Tillbaka till leverantörsfaktura"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "Tillbaka till kreditfaktura"
 
 #. module: account
 #. odoo-javascript
@@ -4626,7 +4626,7 @@ msgstr "Tillbaka till faktura"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Tillbaka till återbetalning"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5135,7 +5135,7 @@ msgstr "Blockerad"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr "Brödtexten är densamma som i mallen"
+msgstr "Innehållet i brödtexten är detsamma som i mallen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5711,7 +5711,7 @@ msgstr "Markera"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Check Partner(s) Email(s)"
-msgstr "Kontrollera partners e-postadresser"
+msgstr "Kontrollera partners e-post"
 
 #. module: account
 #. odoo-python
@@ -8313,8 +8313,8 @@ msgid ""
 "During perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
-"Enligt den ständiga värderingen så innehåller detta konto prisskillnaden "
-"mellan standardpriset och fakturapriset."
+"Vid löpande värdering så innehåller detta konto prisskillnaden mellan "
+"standardpriset och fakturapriset."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -8466,6 +8466,8 @@ msgid ""
 "Email addresses that should receive invoices copy/return reminders. Separate "
 "entries with ';'."
 msgstr ""
+"E-postadresser som bör få kopior av fakturor/påminnelser om deklarationer. "
+"Separeras med ';'."
 
 #. module: account
 #. odoo-javascript
@@ -9099,7 +9101,7 @@ msgstr "Skattelandskoder"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
 msgid "Fiscal Country Code of the Company"
-msgstr ""
+msgstr "Företagets skatterättsliga hemvistkod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -9658,13 +9660,13 @@ msgstr "Varor"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr "Varor levererade, ej fakturerade (ständig värdering)"
+msgstr "Varor levererade, ej fakturerade (löpande värdering)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr "Varor fakturerade, ej levererade (ständig värdering)"
+msgstr "Varor fakturerade, ej levererade (löpande värdering)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -11063,7 +11065,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Invoice generated but not sent."
-msgstr ""
+msgstr "Faktura skapades men skickades inte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11776,7 +11778,7 @@ msgstr "Etikett på kassakvitton"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
 msgid "Label sanitize"
-msgstr ""
+msgstr "Rensa etikett"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_land
@@ -13126,6 +13128,9 @@ msgid ""
 "No valid sending method could be applied, so this invoice was not sent "
 "automatically. Please configure a sending method and send it manually."
 msgstr ""
+"Ingen giltig försändelsemetod kunde tillämpas, fakturan skickades inte "
+"automatiskt. Vänligen konfigurera en försändelsemetod och skicka den "
+"manuellt."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -13544,7 +13549,7 @@ msgstr "Betalningar online"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Only Accounting managers can create foreign taxes."
-msgstr ""
+msgstr "Endast bokföringsadministratörer kan skapa utländska skatter."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -18030,8 +18035,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-kod med två tecken.\n"
-"Fältet används för snabbsökning."
+"ISO-landskod angiven med två tecken.\n"
+"Fältet kan användas för snabbsökning."
 
 #. module: account
 #. odoo-python
@@ -18066,6 +18071,8 @@ msgid ""
 "The account code can only contain alphanumeric characters and dots. (account "
 "code: %s)"
 msgstr ""
+"Kontokoden får endast innehålla alfanumeriska tecken och punkter. (kontokod: "
+"%s)"
 
 #. module: account
 #. odoo-python
@@ -18199,6 +18206,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_tax.py:0
 msgid "The cash basis transition account needs to allow reconciliation."
 msgstr ""
@@ -18435,6 +18443,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is using taxes (%(tax_names)s) from a different company."
 msgstr ""
+"Verifikationen använder skatter (%(tax_names)s) från ett annat företag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -18447,7 +18456,7 @@ msgid ""
 "validation."
 msgstr ""
 "Kostnaden bokförs när en leverantörsfaktura bekräftas, förutom i anglosaxisk "
-"redovisning med ständig lagervärdering, i vilket fall kostnaden (Konto för "
+"redovisning med löpande lagervärdering, i vilket fall kostnaden (Konto för "
 "sålda varor) bokförs när kundfakturan valideras."
 
 #. module: account
@@ -20935,6 +20944,13 @@ msgid ""
 "2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Det är inte möjligt att arkivera en journal som innehåller utkast till "
+"verifikationer.\n"
+"\n"
+"För att gå vidare:\n"
+"1/ gå till Bokföring > Bokföring > Verifikationer\n"
+"2/ filtrera efter journalen och 'Opublicerade' verifikationer\n"
+"3/ välj alla och antingen bekräfta eller radera dem genom åtgärdsmenyn"
 
 #. module: account
 #. odoo-python
@@ -21454,6 +21470,8 @@ msgid ""
 "You cannot modify the following readonly fields on the posted move %(move)s: "
 "%(fields)s"
 msgstr ""
+"Det är inte möjligt att ändra följande skrivskyddade fält i den bokförda "
+"verifikationen %(move)s: %(fields)s"
 
 #. module: account
 #. odoo-python

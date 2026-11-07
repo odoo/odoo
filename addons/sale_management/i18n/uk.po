@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-10-26 09:17+0000\n"
+"PO-Revision-Date: 2026-11-06 11:28+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "sale_management/uk/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">від</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -64,7 +64,7 @@ msgstr "Усі продажі"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Дозволені одиниці вимірювання"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -165,6 +165,8 @@ msgstr ""
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"Заборонений товар, кількість та одиниця вимірювання на непідзвітному рядку "
+"комерційної пропозиції"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -190,6 +192,8 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Якщо встановлено, SO з цим шаблоном виставлятиме рахунок у цьому журналі; в "
+"іншому випадку використовується журнал продажів із найнижчою послідовністю."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -203,7 +207,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Журнал виставлення рахунків"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -260,29 +264,29 @@ msgstr "Онлайн-підпис"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_optional
 msgid "Optional Line"
-msgstr ""
+msgstr "Додатковий рядок"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Optional Products Section"
-msgstr ""
+msgstr "Розділ Додаткових товарів"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Батьківський рядок розділу"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Відсоток передоплати"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Відсоток передоплати має бути коректним."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
@@ -335,7 +339,7 @@ msgstr "Шаблони комеційної пропозиції"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr ""
+msgstr "Термін дії комерційної пропозиції"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
@@ -408,7 +412,7 @@ msgstr "Послідовність"
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
 msgid "Set Optional"
-msgstr ""
+msgstr "Встановити необов'язковим"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
@@ -425,7 +429,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Підрозділ"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -451,6 +455,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Відсоток від суми, який необхідно сплатити для підтвердження комерційної "
+"пропозиції."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -476,14 +482,14 @@ msgstr "Порада: продавайте чи купуйте товари гр
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Одиниці"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
 msgid "Unset Optional"
-msgstr ""
+msgstr "Скасувати як необов'язкове"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -525,6 +531,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Ваш шаблон належить до компанії %(template_company)s, але містить товари з "
+"компанії (%(product_company)s), які недоступні для %(template_company)s.\n"
+"Будь ласка, змініть компанію вашого шаблону або видаліть товари з інших "
+"компаній."
 
 #. module: sale_management
 #. odoo-python
@@ -536,6 +546,11 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Ваш шаблон належить до компанії %(template_company)s, але містить товари з "
+"інших компаній (%(product_company)s), які недоступні для %(template_company)"
+"s.\n"
+"Будь ласка, змініть компанію вашого шаблону або видаліть товари з інших "
+"компаній."
 
 #. module: sale_management
 #. odoo-python
@@ -545,6 +560,9 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Ваш шаблон не може містити товари конкретних компаній, якщо він спільно "
+"використовується між компаніями. Будь ласка, обмежте доступ до шаблону або "
+"видаліть ці товари."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

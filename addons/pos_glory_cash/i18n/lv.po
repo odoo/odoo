@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-08-08 00:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Latvian <https://translate.odoo.com/projects/odoo-19/"
@@ -178,7 +178,7 @@ msgstr ""
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "Failed to cancel cash machine transaction."
+msgid "Failed to cancel cash machine transaction: %s."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -212,6 +212,12 @@ msgstr ""
 #. module: pos_glory_cash
 #: model_terms:ir.ui.view,arch_db:pos_glory_cash.pos_payment_method_view_form_inherit_pos_glory_cash
 msgid "Glory Settings"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Glory error animation."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -300,6 +306,12 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "The Glory machine is in an unknown error state."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr ""
@@ -364,7 +376,7 @@ msgstr ""
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is unable to return the inserted cash, please refund the "
-"client via another method."
+"client %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -391,8 +403,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
+"There is an error with the bill or coin device. The machine will now be "
+"reset and the contents verified. Once this is complete, the amount that must "
+"be returned to the customer will be displayed."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
 "There is insufficient cash in the machine to give change. You will need to "
-"refund the difference via another method."
+"refund %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash

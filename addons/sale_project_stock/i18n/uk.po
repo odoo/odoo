@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 04:59+0000\n"
+"PO-Revision-Date: 2026-11-06 11:28+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "sale_project_stock/uk/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__display_name
@@ -27,7 +27,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_project_project__id
@@ -35,12 +35,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_project_stock
 #: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
 msgid "No stock move found"
-msgstr ""
+msgstr "Не знайдено складського переміщення"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_project_project
@@ -50,12 +50,12 @@ msgstr "Проєкт"
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Рядок замовлення"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Складське переміщення "
 
 #. module: sale_project_stock
 #. odoo-python
@@ -64,6 +64,9 @@ msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
 "You cannot validate a stock picking on a cancelled Sales Order."
 msgstr ""
+"Замовлення на продаж %(order)s, пов'язане з проектом %(project)s, скасовано. "
+"Ви не можете підтвердити складське переміщення для скасованого замовлення на "
+"продаж."
 
 #. module: sale_project_stock
 #. odoo-python
@@ -73,6 +76,10 @@ msgid ""
 "locked. You cannot validate a stock picking on a locked Sales Order. Please "
 "create a new SO linked to this Project."
 msgstr ""
+"Замовлення на продаж %(order)s, пов'язане з проектом %(project)s, наразі "
+"заблоковане. Ви не можете підтвердити складське переміщення для "
+"заблокованого замовлення на продаж. Будь ласка, створіть нове замовлення на "
+"продаж, пов'язане з цим проектом."
 
 #. module: sale_project_stock
 #. odoo-python
@@ -81,6 +88,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s must be "
 "validated before validating the stock picking."
 msgstr ""
+"Замовлення на продаж %(order)s, пов’язане з проектом %(project)s, має бути "
+"підтверджене перед підтвердженням складського переміщення."
 
 #. module: sale_project_stock
 #: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
@@ -90,13 +99,18 @@ msgid ""
 "product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
+"Це меню надає повну відстежуваність складських\n"
+"                операцій за конкретним товаром. Ви можете відфільтрувати "
+"товар,\n"
+"                щоб побачити всі минулі або майбутні переміщення цього "
+"товару."
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Переміщення"
 
 #. module: sale_project_stock
 #: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
 msgid "Transfers"
-msgstr ""
+msgstr "Переміщення"

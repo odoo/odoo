@@ -1,57 +1,63 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_pl_bank_verification
+# * l10n_pl_bank_verification
 #
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-08 18:09+0000\n"
-"PO-Revision-Date: 2026-05-08 18:09+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-11-04 15:08+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
+"l10n_pl_bank_verification/pl/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"Language: pl\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields.selection,name:l10n_pl_bank_verification.selection__l10n_pl_bank_account_verification__verification_status__error
 msgid "An error occurred during check with Government API"
 msgstr ""
+"Wystąpił błąd podczas sprawdzania w interfejsie API administracji rządowej"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__partner_bank_id
 msgid "Bank Account"
-msgstr ""
+msgstr "Konto bankowe"
 
 #. module: l10n_pl_bank_verification
 #: model_terms:ir.ui.view,arch_db:l10n_pl_bank_verification.view_account_payment_form_inherit_l10n_pl
 msgid "Bank verification"
-msgstr ""
+msgstr "Weryfikacja banku"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment__l10n_pl_verification_request_id
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__verification_request_id
 msgid "Correlation ID"
-msgstr ""
+msgstr "ID korelacji"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Utworzone przez"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Data utworzenia"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nazwa wyświetlana"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,help:l10n_pl_bank_verification.field_account_payment__l10n_pl_verification_status
@@ -64,93 +70,103 @@ msgid ""
 "- Partner not found: Partner VAT not found in Government files.\n"
 "- Error: An error occurred during check with Government API.\n"
 msgstr ""
+"Oznacz status weryfikacji płatności jedną z poniższych opcji:\n"
+"- Prawidłowy: NIP partnera jest powiązany z rachunkiem bankowym używanym do "
+"tej płatności.\n"
+"- Nieprawidłowy: NIP partnera nie jest powiązany z rachunkiem bankowym "
+"używanym do tej płatności.\n"
+"- Niekompletny partner: Partner nie posiada NIP lub numeru rachunku "
+"bankowego.\n"
+"- Nie znaleziono partnera: NIP partnera nie został znaleziony w plikach "
+"rządowych.\n"
+"- Błąd: Wystąpił błąd podczas sprawdzania z API rządowym.\n"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields.selection,name:l10n_pl_bank_verification.selection__l10n_pl_bank_account_verification__verification_status__incomplete_partner
 msgid "Incomplete partner"
-msgstr ""
+msgstr "Niekompletny partner"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields.selection,name:l10n_pl_bank_verification.selection__l10n_pl_bank_account_verification__verification_status__invalid
 msgid "Invalid"
-msgstr ""
+msgstr "Nieprawidłowy"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment_register__l10n_pl_bank_verification_ids
 msgid "L10N Pl Bank Verification"
-msgstr ""
+msgstr "Weryfikacja bankowa L10N Pl"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment_register__l10n_pl_bank_verification_invalid_bank_account_ids
 msgid "L10N Pl Bank Verification Invalid Bank Account"
-msgstr ""
+msgstr "Weryfikacja bankowa L10N Pl: nieprawidłowy numer konta bankowego"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment_register__l10n_pl_incomplete_data_partner_ids
 msgid "L10N Pl Incomplete Data Partner"
-msgstr ""
+msgstr "L10N Pl Partner z niekompletnymi danymi"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment_register__l10n_pl_not_found_partner_ids
 msgid "L10N Pl Not Found Partner"
-msgstr ""
+msgstr "L10N Pl Partner nieznaleziony"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ostatnio zaktualizowane przez"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Data ostatniej aktualizacji"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model,name:l10n_pl_bank_verification.model_l10n_pl_bank_account_verification
 msgid "PL Bank Account Verification"
-msgstr ""
+msgstr "PL Weryfikacja rachunku bankowego"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment__l10n_pl_verification_id
 msgid "PL Bank Verification"
-msgstr ""
+msgstr "PL Weryfikacja banku"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__partner_bank_account_number
 msgid "Partner Bank Account Number"
-msgstr ""
+msgstr "Numer rachunku bankowego partnera"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__partner_vat
 msgid "Partner Vat"
-msgstr ""
+msgstr "NIP partnera"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields.selection,name:l10n_pl_bank_verification.selection__l10n_pl_bank_account_verification__verification_status__not_found_partner
 msgid "Partner not found"
-msgstr ""
+msgstr "Nie znaleziono partnera"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model,name:l10n_pl_bank_verification.model_account_payment_register
 msgid "Pay"
-msgstr ""
+msgstr "Zapłać"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model,name:l10n_pl_bank_verification.model_account_payment
 msgid "Payments"
-msgstr ""
+msgstr "Płatności"
 
 #. module: l10n_pl_bank_verification
 #: model_terms:ir.ui.view,arch_db:l10n_pl_bank_verification.l10n_pl_view_account_payment_register_form
@@ -158,6 +174,8 @@ msgid ""
 "The following partner(s) bank account(s) are not linked with their vat in "
 "the government files:"
 msgstr ""
+"Następujące rachunki bankowe partnera(-ów) nie są powiązane z ich numerem "
+"NIP w dokumentach urzędowych:"
 
 #. module: l10n_pl_bank_verification
 #: model_terms:ir.ui.view,arch_db:l10n_pl_bank_verification.l10n_pl_view_account_payment_register_form
@@ -165,6 +183,8 @@ msgid ""
 "The following partner(s) cannot be found in the government files, please "
 "check vat number:"
 msgstr ""
+"Następujących partnerów nie można znaleźć w dokumentach urzędowych, proszę "
+"sprawdzić numer NIP:"
 
 #. module: l10n_pl_bank_verification
 #: model_terms:ir.ui.view,arch_db:l10n_pl_bank_verification.l10n_pl_view_account_payment_register_form
@@ -172,25 +192,27 @@ msgid ""
 "The following partners do not have a VAT number and/or bank account, so we "
 "cannot check their bank account with government authorities:"
 msgstr ""
+"Następujący partnerzy nie posiadają numeru NIP i/lub rachunku bankowego, "
+"więc nie możemy sprawdzić ich rachunku bankowego w urzędach państwowych:"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields.selection,name:l10n_pl_bank_verification.selection__l10n_pl_bank_account_verification__verification_status__valid
 msgid "Valid"
-msgstr ""
+msgstr "Ważne"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__verification_date
 msgid "Verification Date"
-msgstr ""
+msgstr "Data waryfikacji"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment__l10n_pl_verification_status
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__verification_status
 msgid "Verification Status"
-msgstr ""
+msgstr "Status weryfikacji"
 
 #. module: l10n_pl_bank_verification
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_account_payment__l10n_pl_verification_timestamp
 #: model:ir.model.fields,field_description:l10n_pl_bank_verification.field_l10n_pl_bank_account_verification__verification_timestamp
 msgid "Verification Timestamp"
-msgstr ""
+msgstr "Sygnatura czasowa weryfikacji"

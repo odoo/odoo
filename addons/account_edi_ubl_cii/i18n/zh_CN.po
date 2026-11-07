@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 14:53+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -297,6 +297,14 @@ msgstr "配置"
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
 msgid "Contact"
 msgstr "联系人"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1246,6 +1254,15 @@ msgid ""
 msgstr ""
 "Peppol 终端点无效。它应包含正好为 10 位数字（公司注册号）。预期格式如："
 "1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python

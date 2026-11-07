@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:39+0000\n"
-"PO-Revision-Date: 2026-10-07 14:29+0000\n"
+"PO-Revision-Date: 2026-11-06 10:34+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "payment_xendit/uk/>\n"
@@ -70,6 +70,8 @@ msgid ""
 "The payment requires authentication from the customer, which isn't possible "
 "for this unattended transaction. Please ask the customer to pay manually."
 msgstr ""
+"Платіж потребує підтвердження від клієнта, що неможливо для цієї "
+"автоматичної транзакції. Будь ласка, попросіть клієнта оплатити вручну."
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
@@ -80,13 +82,13 @@ msgstr "Технічний код цього провайдера платежу
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Транзакція не зв'язана з токеном."
 
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Update the Xendit webhook configuration"
-msgstr ""
+msgstr "Оновити конфігурацію вебхуку Xendit"
 
 #. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
@@ -102,7 +104,7 @@ msgstr "Xendit"
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Xendit Dashboard"
-msgstr ""
+msgstr "Дашборд Xendit"
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -128,12 +130,16 @@ msgid ""
 "(dashboard_link)s before %(deadline)s to keep receiving payment and card "
 "token status updates."
 msgstr ""
+"Компанія Xendit замінила єдине поле вебхука, що використовувалося "
+"постачальником платіжних послуг %(provider)s, на окремі групи подій версії "
+"v3. Оновіть %(webhook_link)s на %(dashboard_link)s до %(deadline)s, щоб і "
+"надалі отримувати оновлення статусу платежів і токенів карток."
 
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "webhook configuration"
-msgstr ""
+msgstr "Налаштування вебхука"
 
 #~ msgid "Card Code"
 #~ msgstr "Код картки"

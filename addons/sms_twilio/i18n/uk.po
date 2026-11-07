@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-10-26 18:15+0000\n"
+"PO-Revision-Date: 2026-11-06 11:28+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "sms_twilio/uk/>\n"
@@ -24,14 +24,12 @@ msgstr ""
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
-#, fuzzy
 msgid "%(failure_type)s: %(failure_reason)s"
 msgstr "%(failure_type)s: %(failure_reason)s"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
-#, fuzzy
 msgid "'To' and 'From' numbers cannot be the same"
 msgstr "Номери «Кому» та «Від кого» не можуть бути однаковими"
 
@@ -39,41 +37,40 @@ msgstr "Номери «Кому» та «Від кого» не можуть б�
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "A 'From' number is required to send a message"
-msgstr ""
+msgstr "Для надсилання повідомлення потрібно вказати номер «Від кого»"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "A 'To' phone number is required"
-msgstr ""
+msgstr "Потрібен номер телефону для одержувача"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "ACabcde12345abcde12345abcde12345ab"
-msgstr ""
+msgstr "ACabcde12345abcde12345abcde12345ab"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_account_sid
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_twilio_account_sid
 msgid "Account SID"
-msgstr ""
+msgstr "Обліковий запис SID"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "An error occurred while fetching the numbers."
-msgstr ""
+msgstr "Під час отримання номерів сталася помилка."
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_auth_token
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_twilio_auth_token
 msgid "Auth Token"
-msgstr ""
+msgstr "Auth Token"
 
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_authentication
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_authentication
-#, fuzzy
 msgid "Authentication Error\""
 msgstr "Помилка аутентифікації\""
 
@@ -97,7 +94,7 @@ msgstr "Налаштування"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.res_config_settings_view_form
 msgid "Configure Twilio Account"
-msgstr ""
+msgstr "Налаштуйте обліковий запис Twilio"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__country_id
@@ -167,7 +164,6 @@ msgstr "Тип невдачі"
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_to
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_to
-#, fuzzy
 msgid "From / To identic"
 msgstr "Від / До ідентичного"
 
@@ -186,7 +182,6 @@ msgstr "ID"
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_callback
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_callback
-#, fuzzy
 msgid "Incorrect callback URL"
 msgstr "Неправильна URL-адреса зворотного виклику"
 
@@ -197,6 +192,8 @@ msgid ""
 "Invalid Twilio Account SID: must only contain alphanumeric characters after "
 "'AC'."
 msgstr ""
+"Недійсний SID облікового запису Twilio: після «AC» має містити лише буквено-"
+"цифрові символи."
 
 #. module: sms_twilio
 #. odoo-python
@@ -204,6 +201,8 @@ msgstr ""
 msgid ""
 "Invalid Twilio Account SID: must start with 'AC' and be 34 characters long."
 msgstr ""
+"Недійсний SID облікового запису Twilio: має починатися з «AC» та містити 34 "
+"символи."
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__write_uid
@@ -227,7 +226,7 @@ msgstr "Підключити SMS до поштової/sms моделі відс
 #: code:addons/sms_twilio/models/res_company.py:0
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Manage Twilio SMS"
-msgstr ""
+msgstr "Керувати Twilio SMS"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_mail_notification
@@ -237,7 +236,6 @@ msgstr "Сповіщення"
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_missing
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_missing
-#, fuzzy
 msgid "Missing From Number"
 msgstr "Відсутнє в номері"
 
@@ -248,6 +246,9 @@ msgid ""
 "                            <i class=\"fa fa-external-link\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"Потрібна допомога ?\n"
+"                            <i class=\"fa fa-external-link\" aria-"
+"hidden=\"true\"/>"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_number_ids
@@ -263,30 +264,30 @@ msgstr "Вихідні SMS"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Phone Numbers"
-msgstr ""
+msgstr "Телефонні номери"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Please set the number to which you want to send a test SMS."
-msgstr ""
+msgstr "Будь ласка, вкажіть номер, на який ви хочете надіслати тестове SMS."
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Reload Numbers from Twilio"
-msgstr ""
+msgstr "Перезавантажити номери Twilio"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_provider
 #: model:ir.model.fields,field_description:sms_twilio.field_res_config_settings__sms_provider
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__sms_provider
 msgid "SMS Provider"
-msgstr ""
+msgstr "Провайдер SMS"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_twilio_account_manage
 msgid "SMS Twilio Connection Wizard"
-msgstr ""
+msgstr "Помічник зʼєднання SMS Twilio"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_composer
@@ -296,17 +297,17 @@ msgstr "Помічник надсилання SMS"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Send test SMS"
-msgstr ""
+msgstr "Надіслати тестове SMS"
 
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__iap
 msgid "Send via Odoo"
-msgstr ""
+msgstr "Надіслати через Odoo"
 
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__twilio
 msgid "Send via Twilio"
-msgstr ""
+msgstr "Надіслати через Twilio"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__sequence
@@ -316,7 +317,7 @@ msgstr "Послідовність"
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__test_number
 msgid "Test Number"
-msgstr ""
+msgstr "Тестовий номер"
 
 #. module: sms_twilio
 #: model:ir.model.fields,help:sms_twilio.field_sms_twilio_number__country_code
@@ -331,85 +332,86 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "The SMS has been sent from %s"
-msgstr ""
+msgstr "SMS надіслано з %s"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "The number you're trying to reach is not correctly formatted"
-msgstr ""
+msgstr "Номер, який ви намагаєтеся отримати, має неправильний формат"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "This is a test SMS from Odoo"
-msgstr ""
+msgstr "Це тестове SMS з Odoo"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Trial Account Limitation"
-msgstr ""
+msgstr "Обмеження пробного облікового запису"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Twilio Authentication Error"
-msgstr ""
+msgstr "Помилка аутентифікації Twilio"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_twilio_number
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__number
 msgid "Twilio Number"
-msgstr ""
+msgstr "Номер Twilio"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Twilio SMS"
-msgstr ""
+msgstr "Twilio SMS"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Twilio SMS Manage Connection"
-msgstr ""
+msgstr "Управління зʼєднання Twilio SMS"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__sms_twilio_sid
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_tracker__sms_twilio_sid
 msgid "Twilio SMS SID"
-msgstr ""
+msgstr "Twilio SMS SID"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Twilio StatusCallback URL is incorrect"
-msgstr ""
+msgstr "URL-адреса зворотного виклику статусу Twilio неправильна"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unknown error, please contact Odoo support"
-msgstr ""
+msgstr "Невідома помилка, зверніться до служби підтримки Odoo"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unknown failure at sending, please contact Odoo support"
 msgstr ""
+"Невідома помилка під час надсилання, зверніться до служби підтримки Odoo"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unverified recipient on Trial Account"
-msgstr ""
+msgstr "Неперевірений одержувач у пробному обліковому записі"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Update Account"
-msgstr ""
+msgstr "Оновити обліковий запис"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "abcde12345abcde12345abcde12345ab"
-msgstr ""
+msgstr "abcde12345abcde12345abcde12345ab"

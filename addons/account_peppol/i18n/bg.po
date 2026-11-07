@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 11:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -120,6 +120,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "<span><strong>Disconnected from Peppol!</strong></span>"
 msgstr "<span><strong>Изключена от Peppol!</strong></span>"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "<strong>Contact us</strong>"
+msgstr ""
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -2310,6 +2315,14 @@ msgid "There is no message available for pulling from this MPC at this moment."
 msgstr "В момента няма налично съобщение за изтегляне от този MPC."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
 msgstr "Възникна грешка при изпращането на тази фактура чрез Peppol."
@@ -2749,13 +2762,8 @@ msgstr ""
 msgid ""
 "Your database is not linked to Peppol anymore. This might be due to a "
 "database duplication or restoration.\n"
-"                                        Make sure to reconnect the correct "
-"database."
+"                                        <br/>"
 msgstr ""
-"Вашата база данни вече не е свързана с Peppol. Това може да се дължи на "
-"дублиране или възстановяване на базата данни.\n"
-"                                        Уверете се, че сте свързали "
-"правилната база данни."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2868,6 +2876,11 @@ msgid "support"
 msgstr "support"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "to reconnect your database to Peppol."
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
 msgstr "за изпращане на фактури, но тази"
@@ -2876,6 +2889,17 @@ msgstr "за изпращане на фактури, но тази"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "използва"
+
+#~ msgid ""
+#~ "Your database is not linked to Peppol anymore. This might be due to a "
+#~ "database duplication or restoration.\n"
+#~ "                                        Make sure to reconnect the "
+#~ "correct database."
+#~ msgstr ""
+#~ "Вашата база данни вече не е свързана с Peppol. Това може да се дължи на "
+#~ "дублиране или възстановяване на базата данни.\n"
+#~ "                                        Уверете се, че сте свързали "
+#~ "правилната база данни."
 
 #~ msgid "I accept that Odoo may process my e-invoices,"
 #~ msgstr "Приемам, че Odoo може да обработва моите е-фактури,"

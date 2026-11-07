@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-09-15 10:41+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-11-04 12:35+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -1307,7 +1307,7 @@ msgstr "<span class=\"o_stat_text\">Journalbuchung</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Buchungszeilen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2915,7 +2915,7 @@ msgstr "Anzahl Buchungen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
 msgid "Account Move Line"
-msgstr ""
+msgstr "Buchungszeile"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2990,7 +2990,7 @@ msgstr "Kontenabstimmung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
-msgstr ""
+msgstr "Abstimmungsmodellzeile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -4637,7 +4637,7 @@ msgstr "Zurück zur Rechnung"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "Zurück zur Gutschrift"
 
 #. module: account
 #. odoo-javascript
@@ -4649,7 +4649,7 @@ msgstr "Zurück zur Rechnung"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Zurück zu Rückerstattung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8503,6 +8503,8 @@ msgid ""
 "Email addresses that should receive invoices copy/return reminders. Separate "
 "entries with ';'."
 msgstr ""
+"E-Mail-Adressen, die Kopien von Rechnungen oder Erinnerungen für "
+"Steuererklärungen erhalten sollen. Trennen Sie Einträge mit „;“."
 
 #. module: account
 #. odoo-javascript
@@ -9144,7 +9146,7 @@ msgstr "Steuerlicher Ländercode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
 msgid "Fiscal Country Code of the Company"
-msgstr ""
+msgstr "Steuerlicher Ländercode des Unternehmens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -11111,7 +11113,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Invoice generated but not sent."
-msgstr ""
+msgstr "Rechnung erstellt, aber nicht versendet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11827,7 +11829,7 @@ msgstr "Bezeichnung auf Kassenbons"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
 msgid "Label sanitize"
-msgstr ""
+msgstr "Bezeichnung bereinigen"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_land
@@ -13181,6 +13183,9 @@ msgid ""
 "No valid sending method could be applied, so this invoice was not sent "
 "automatically. Please configure a sending method and send it manually."
 msgstr ""
+"Es konnte keine gültige Versandmethode angewendet werden, daher wurde diese "
+"Rechnung nicht automatisch versendet. Bitte konfigurieren Sie eine "
+"Versandmethode und versenden Sie die Rechnung manuell."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -13600,7 +13605,7 @@ msgstr "Online-Zahlungen"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Only Accounting managers can create foreign taxes."
-msgstr ""
+msgstr "Nur Buchhaltungsmanager können ausländische Steuern anlegen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -18167,6 +18172,8 @@ msgid ""
 "The account code can only contain alphanumeric characters and dots. (account "
 "code: %s)"
 msgstr ""
+"Der Kontocode darf nur alphanumerische Zeichen und Punkte enthalten. "
+"(Kontocode: %s)"
 
 #. module: account
 #. odoo-python
@@ -18305,6 +18312,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_tax.py:0
 msgid "The cash basis transition account needs to allow reconciliation."
 msgstr "Das Zwischenkonto für Ist-Versteuerung muss Abstimmung zulassen."
@@ -18550,6 +18558,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is using taxes (%(tax_names)s) from a different company."
 msgstr ""
+"Die Buchung verwendet Steuern (%(tax_names)s) eines anderen Unternehmens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -20347,7 +20356,7 @@ msgstr "Aktualisiert"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Updated Data"
-msgstr "Hochgeladene Daten"
+msgstr "Aktualisierte Daten"
 
 #. module: account
 #. odoo-javascript
@@ -21083,6 +21092,13 @@ msgid ""
 "2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Sie können kein Journal archivieren, das Journalbuchungen im Entwurf "
+"enthält.\n"
+"\n"
+"Um fortzufahren:\n"
+"1/ gehen Sie zu Buchhaltung > Buchhaltung > Journalbuchungen\n"
+"2/ filtern Sie nach diesem Journal und nach „Nicht gebuchten“ Posten\n"
+"3/ wählen Sie alle aus und buchen oder löschen Sie diese über das Aktionsmenü"
 
 #. module: account
 #. odoo-python
@@ -21604,6 +21620,8 @@ msgid ""
 "You cannot modify the following readonly fields on the posted move %(move)s: "
 "%(fields)s"
 msgstr ""
+"Sie können die folgenden schreibgeschützten Felder des gebuchten Postens %"
+"(move)s nicht bearbeiten: %(fields)s"
 
 #. module: account
 #. odoo-python
