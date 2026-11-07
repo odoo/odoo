@@ -374,3 +374,83 @@ class TestReturnPicking(TestStockCommon):
         # 2 exchanged products received: both on-hand and forecasted quantities should be 10
         self.assertEqual(self.productA.qty_available, 10)
         self.assertEqual(self.productA.virtual_available, 10)
+
+
+class TestDeliveryConfirmationEmail(TestStockCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.stock_move_email_validation = True
+
+    def _create_picking(self, picking_type_id, location_id, location_dest_id, qty=5):
+        picking = self.PickingObj.create({
+            'picking_type_id': picking_type_id,
+            'location_id': location_id,
+            'location_dest_id': location_dest_id,
+            'partner_id': self.partner_1.id,
+            'move_ids': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': qty,
+                'product_uom': self.uom_unit.id,
+                'location_id': location_id,
+                'location_dest_id': location_dest_id,
+            })],
+        })
+        picking.action_confirm()
+        return picking
+
+    def _validate(self, picking):
+        for move in picking.move_ids:
+            move.quantity = move.product_uom_qty
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+    def _count_confirmation_messages(self, picking):
+        return self.env['mail.message'].search_count([
+            ('model', '=', 'stock.picking'),
+            ('res_id', '=', picking.id),
+            ('subtype_id', '=', self.env.ref('mail.mt_comment').id),
+        ])
+
+    def test_return_to_vendor_no_confirmation_email(self):
+        receipt = self._create_picking(self.picking_type_in, self.supplier_location, self.stock_location)
+        self._validate(receipt)
+        wizard = self.env['stock.return.picking'].with_context(
+            active_id=receipt.id, active_ids=receipt.ids, active_model='stock.picking',
+        ).create({})
+        wizard.product_return_moves.quantity = 5
+        wizard.action_create_returns()
+        return_picking = receipt.return_ids
+        self.assertEqual(return_picking.picking_type_id.code, 'outgoing')
+        self.assertEqual(return_picking.location_dest_id.usage, 'supplier')
+        self._validate(return_picking)
+        self.assertEqual(return_picking.state, 'done')
+        self.assertEqual(self._count_confirmation_messages(return_picking), 0)
+
+    def test_outgoing_to_transit_no_confirmation_email(self):
+        transit = self.env['stock.location'].create({'name': 'Transit', 'usage': 'transit'})
+        picking = self._create_picking(self.picking_type_out, self.stock_location, transit.id)
+        self._validate(picking)
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(self._count_confirmation_messages(picking), 0)
+
+    def test_delivery_to_customer_sends_confirmation_email(self):
+        picking = self._create_picking(self.picking_type_out, self.stock_location, self.customer_location)
+        self._validate(picking)
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(self._count_confirmation_messages(picking), 1)
+
+    def test_multi_step_delivery_sends_confirmation_email_on_last_step(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        pick = self._create_picking(warehouse.pick_type_id.id, warehouse.lot_stock_id.id, warehouse.wh_pack_stock_loc_id.id)
+        pack = self._create_picking(warehouse.pack_type_id.id, warehouse.wh_pack_stock_loc_id.id, warehouse.wh_output_stock_loc_id.id)
+        ship = self._create_picking(warehouse.out_type_id.id, warehouse.wh_output_stock_loc_id.id, self.customer_location)
+        for picking in (pick, pack, ship):
+            self._validate(picking)
+            self.assertEqual(picking.state, 'done')
+        self.assertEqual(self._count_confirmation_messages(pick), 0)
+        self.assertEqual(self._count_confirmation_messages(pack), 0)
+        self.assertEqual(self._count_confirmation_messages(ship), 1)
