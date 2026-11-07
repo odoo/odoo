@@ -14,11 +14,6 @@ class DeliveryCarrier(models.Model):
     _name = "delivery.carrier"
     _inherit = ["delivery.carrier", "website.published.multi.mixin"]
 
-    website_description = fields.Text(
-        string="Description for Online Quotations",
-        related="product_id.description_sale",
-        readonly=False,
-    )
     delivery_estimate_mode = fields.Selection(
         string="Estimated Delivery",
         help="Display an estimated date to your customer. With 'User Choice', the customer picks a"
@@ -71,7 +66,7 @@ class DeliveryCarrier(models.Model):
         :returns: The supported delivery types.
         :rtype: list[str]
         """
-        return ["fixed", "base_on_rule"]
+        return ["in_house"]
 
     def _get_delivery_estimate_dates(self, order=None):
         """Return the days of the estimated delivery range that the customer can be delivered on.
