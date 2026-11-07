@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 
 import json
 from datetime import datetime, timedelta
@@ -268,20 +268,33 @@ class TestDiscussSubChannels(HttpCase):
         self.assertIn(carol_user.partner_id, sub_channel.channel_member_ids.partner_id)
 
     def test_14_sub_channel_of_message_sent_to_non_member(self):
-        other_message = self.general.message_post(body="Hello again!")
-        sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
-        self.assertNotIn(self.user_employee.partner_id, sub_channel.channel_member_ids.partner_id)
+        group = self.env["discuss.channel"]._create_group(self.user_employee.partner_id.ids)
+        group_message = group.message_post(body="Hello group!")
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        data = self.make_jsonrpc_request(
-            "/discuss/channel/messages",
-            {"channel_id": self.general.id},
-        )
-        vals_by_message_id = {vals["id"]: vals for vals in data["data"]["mail.message"]}
-        self.assertEqual(
-            vals_by_message_id[self.general_message.id]["linkedSubChannel"],
-            {"id": sub_channel.id, "model": "discuss.channel"},
-        )
-        self.assertFalse(vals_by_message_id[other_message.id]["linkedSubChannel"])
+        for channel, message in ((self.general, self.general_message), (group, group_message)):
+            with self.subTest(channel_type=channel.channel_type):
+                other_message = channel.message_post(body="Hello again!")
+                sub_channel = channel._create_sub_channel(from_message_id=message.id)
+                sub_channel_message = sub_channel.message_post(body="Hello thread!")
+                self.assertNotIn(
+                    self.user_employee.partner_id,
+                    sub_channel.channel_member_ids.partner_id,
+                )
+                data = self.make_jsonrpc_request(
+                    "/discuss/channel/messages",
+                    {"channel_id": channel.id},
+                )["data"]
+                vals_by_message_id = {vals["id"]: vals for vals in data["mail.message"]}
+                self.assertEqual(
+                    vals_by_message_id[message.id]["linkedSubChannel"],
+                    {"id": sub_channel.id, "model": "discuss.channel"},
+                )
+                self.assertFalse(vals_by_message_id[other_message.id]["linkedSubChannel"])
+                thread_vals = next(
+                    vals for vals in data["mail.thread"] if vals["id"] == sub_channel.id
+                )
+                self.assertEqual(thread_vals["name"], sub_channel.name)
+                self.assertIn(sub_channel_message.id, vals_by_message_id)
 
     def test_15_sub_channel_sent_to_parent_channel_on_create(self):
         self.env["bus.bus"].sudo().search([]).unlink()
@@ -302,6 +315,20 @@ class TestDiscussSubChannels(HttpCase):
                                 "id": self.general_message.id,
                                 "linkedSubChannel": {
                                     "id": sub_channel.id,
+                                    "model": "discuss.channel",
+                                },
+                            },
+                        ],
+                        "mail.thread": [
+                            {
+                                "id": sub_channel.id,
+                                "last_interest_dt": fields.Datetime.to_string(
+                                    sub_channel.last_interest_dt,
+                                ),
+                                "model": "discuss.channel",
+                                "name": sub_channel.name,
+                                "parent_channel_id": {
+                                    "id": self.general.id,
                                     "model": "discuss.channel",
                                 },
                             },

@@ -85,6 +85,8 @@ export class MailMessage extends models.ServerModel {
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailMessageLinkPreview} */
         const MailMessageLinkPreview = this.env["mail.message.link.preview"];
         /** @type {import("mock_models").MailNotification} */
@@ -151,15 +153,25 @@ export class MailMessage extends models.ServerModel {
             if (
                 format_reply &&
                 message.model === "discuss.channel" &&
-                thread?.channel_type === "channel" &&
+                ["channel", "group"].includes(thread?.channel_type) &&
                 !thread.parent_channel_id
             ) {
+                const subChannelIds = DiscussChannel.search([["from_message_id", "=", message.id]]);
                 data.linkedSubChannel = mailDataHelpers.Store.one(
-                    DiscussChannel.browse(
-                        DiscussChannel.search([["from_message_id", "=", message.id]])
-                    ),
-                    makeKwArgs({ as_thread: true, only_id: true })
+                    DiscussChannel.browse(subChannelIds),
+                    ["name"],
+                    makeKwArgs({ as_thread: true })
                 );
+                const [lastMessageId] = MailMessage.search(
+                    [
+                        ["model", "=", "discuss.channel"],
+                        ["res_id", "in", subChannelIds],
+                    ],
+                    makeKwArgs({ limit: 1, order: "id DESC" })
+                );
+                if (lastMessageId) {
+                    store.add(MailMessage.browse(lastMessageId));
+                }
             }
             if (fields.includes("message_link_preview_ids")) {
                 data.message_link_preview_ids = mailDataHelpers.Store.many(

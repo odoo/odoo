@@ -12,6 +12,7 @@ declare module "models" {
     }
     export interface Message {
         linkedSubChannel: Thread;
+        openLinkedSubChannel: () => Promise<void>;
     }
     export interface Store {
         channels: ReturnType<Store['makeCachedFetchData']>;

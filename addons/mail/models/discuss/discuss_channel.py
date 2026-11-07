@@ -1581,7 +1581,17 @@ class DiscussChannel(models.Model):
         if message:
             Store(bus_channel=self).add(
                 message,
-                {"linkedSubChannel": Store.One(sub_channel, [], as_thread=True)},
+                {
+                    "linkedSubChannel": Store.One(
+                        sub_channel,
+                        [
+                            "last_interest_dt",
+                            "name",
+                            Store.One("parent_channel_id", [], as_thread=True),
+                        ],
+                        as_thread=True,
+                    ),
+                },
             ).bus_send()
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
