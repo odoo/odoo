@@ -858,6 +858,73 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint_1.deadline_date, False)
         self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())
 
+    @freeze_time('2025-09-02 14:00:00')
+    def test_orderpoint_deadline_date_multi_company_horizon(self):
+        """ Moves beyond a company's horizon must not set its deadline, even when
+        another company with a longer horizon shares the product. """
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.env.user.company_ids |= company_b
+        company_a.horizon_days = 5
+        company_b.horizon_days = 30
+        warehouse_a = self.env['stock.warehouse'].search([('company_id', '=', company_a.id)], limit=1)
+        warehouse_b = self.env['stock.warehouse'].search([('company_id', '=', company_b.id)], limit=1)
+        self.product.is_storable = True
+
+        route = self.env['stock.route'].create({
+            'name': 'Delayed Replenishment',
+            'company_id': company_a.id,
+            'rule_ids': [Command.create({
+                'name': 'Vendors -> Stock (3 days)',
+                'action': 'pull',
+                'delay': 3,
+                'procure_method': 'make_to_stock',
+                'location_src_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': warehouse_a.lot_stock_id.id,
+                'picking_type_id': warehouse_a.in_type_id.id,
+                'company_id': company_a.id,
+            })],
+        })
+        self.env['stock.quant'].create({
+            'product_id': self.product.id,
+            'location_id': warehouse_a.lot_stock_id.id,
+            'quantity': 20,
+        })
+        orderpoint_a = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'location_id': warehouse_a.lot_stock_id.id,
+            'company_id': company_a.id,
+            'route_id': route.id,
+            'trigger': 'manual',
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        orderpoint_b = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'location_id': warehouse_b.lot_stock_id.id,
+            'company_id': company_b.id,
+            'trigger': 'manual',
+            'product_min_qty': 0,
+            'product_max_qty': 50,
+        })
+        self.assertEqual(orderpoint_a.lead_days, 3)
+
+        # Dips below min on day 7: past A's 5-day horizon, within B's 30-day horizon.
+        self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 15,
+            'location_id': warehouse_a.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'date': datetime.today() + timedelta(days=7),
+        })._action_confirm()
+
+        orderpoints = (orderpoint_a | orderpoint_b).with_context(
+            allowed_company_ids=[company_a.id, company_b.id],
+        )
+        orderpoints._compute_deadline_date()
+        self.assertFalse(orderpoint_a.deadline_date)
+
     @freeze_time('2025-08-14 10:00:00')
     def test_orderpoint_wizard_graph(self):
         """ Test that the graph data is correctly computed. """
