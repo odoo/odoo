@@ -11,24 +11,6 @@ import { _t } from "@web/core/l10n/translation";
  */
 
 /**
- * @typedef { Object } HistoryShared
- * @property { HistoryPlugin['commit'] } commit
- * @property { HistoryPlugin['stash'] } stash
- * @property { HistoryPlugin['unstash'] } unstash
- * @property { HistoryPlugin['undo'] } undo
- * @property { HistoryPlugin['redo'] } redo
- * @property { HistoryPlugin['canUndo'] } canUndo
- * @property { HistoryPlugin['canRedo'] } canRedo
- * @property { HistoryPlugin['getCommits'] } getCommits
- * @property { HistoryPlugin['reset'] } reset
- * @property { HistoryPlugin['createSnapshotCommit'] } createSnapshotCommit
- * @property { HistoryPlugin['insertRemoteCommit'] } insertRemoteCommit
- * @property { HistoryPlugin['getIsPreviewing'] } getIsPreviewing
- * @property { HistoryPlugin['makePreviewableOperation'] } makePreviewableOperation
- * @property { HistoryPlugin['makePreviewableAsyncOperation'] } makePreviewableAsyncOperation
- * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
- */
-/**
  * @typedef { string[] } history_commit_data_properties
  * @typedef { ((commit: HistoryCommit, options: { ensureNewMutations: boolean, restoreSelection: boolean }) => void)[] } on_apply_history_commit_handlers
  * @typedef { ((commit: HistoryCommit) => void)[] } on_committed_to_history_handlers
@@ -68,7 +50,7 @@ export const HISTORY_COMMIT_TYPES = /** @type {const} */ ({
 export class HistoryPlugin extends Plugin {
     static id = "history";
     static dependencies = ["domReferenceMap"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "commit",
         "stash",
         "unstash",
@@ -86,7 +68,7 @@ export class HistoryPlugin extends Plugin {
         "makePreviewableOperation",
         "makePreviewableAsyncOperation",
         "makeSavePoint",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

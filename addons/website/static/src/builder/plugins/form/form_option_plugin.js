@@ -49,23 +49,6 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 import { isZWS } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 
-/**
- * @typedef { Object } FormOptionShared
- * @property { FormOptionPlugin['prepareFormModel'] } prepareFormModel
- * @property { FormOptionPlugin['getModelsCache'] } getModelsCache
- * @property { FormOptionPlugin['applyFormModel'] } applyFormModel
- * @property { FormOptionPlugin['addHiddenField'] } addHiddenField
- * @property { FormOptionPlugin['fetchAuthorizedFields'] } fetchAuthorizedFields
- * @property { FormOptionPlugin['fetchFieldRecords'] } fetchFieldRecords
- * @property { FormOptionPlugin['loadFieldOptionData'] } loadFieldOptionData
- * @property { FormOptionPlugin['prepareFields'] } prepareFields
- * @property { FormOptionPlugin['replaceField'] } replaceField
- * @property { FormOptionPlugin['prepareConditionInputs'] } prepareConditionInputs
- * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
- * @property { FormOptionPlugin['clearValidationDataset'] } clearValidationDataset
- * @property { FormOptionPlugin['fetchModels'] } fetchModels
- */
-
 export const INNER_SNIPPETS_EXCLUDED_FROM_FORMS = [
     ".s_accordion",
     ".s_add_to_cart",
@@ -86,7 +69,7 @@ export class FormOptionPlugin extends Plugin {
         "websiteBridge",
         "history",
     ];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "prepareFormModel",
         "getModelsCache",
         "getVisibilityConditionCache",
@@ -101,7 +84,7 @@ export class FormOptionPlugin extends Plugin {
         "setLabelsMark",
         "clearValidationDataset",
         "fetchModels",
-    ];
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: [

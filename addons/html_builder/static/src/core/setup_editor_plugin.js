@@ -5,11 +5,6 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
 /**
- * @typedef { Object } SetupEditorShared
- * @property { SetupEditorPlugin['getSavableAreas'] } getSavableAreas
- */
-
-/**
  * @typedef {(() => void | true)[]} after_setup_editor_overrides
  * @typedef {(() => void)[]} on_will_setup_editor_handlers
  *
@@ -18,7 +13,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
-    static shared = ["getSavableAreas"];
+    static shared = /** @type {const} */ (["getSavableAreas"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),

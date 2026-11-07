@@ -8,10 +8,6 @@ import { WebsiteConfigAction } from "../../customize_website_plugin";
 /** @typedef {import("@odoo/owl").Component} Component */
 
 /**
- * @typedef { Object } HeaderOptionShared
- * @property { HeaderOptionPlugin['getHeaderTemplates'] } getHeaderTemplates
- */
-/**
  * @typedef {(() => {
  *     key: string,
  *     Component: Component,
@@ -22,7 +18,7 @@ import { WebsiteConfigAction } from "../../customize_website_plugin";
 export class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite", "menuDataPlugin"];
-    static shared = ["getHeaderTemplates"];
+    static shared = /** @type {const} */ (["getHeaderTemplates"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

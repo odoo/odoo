@@ -174,33 +174,6 @@ function scrollToSelection(selection) {
 }
 
 /**
- * @typedef { Object } SelectionShared
- * @property { SelectionPlugin['extractContent'] } extractContent
- * @property { SelectionPlugin['focusEditable'] } focusEditable
- * @property { SelectionPlugin['getEditableSelection'] } getEditableSelection
- * @property { SelectionPlugin['getSelectionData'] } getSelectionData
- * @property { SelectionPlugin['getTargetedBlocks'] } getTargetedBlocks
- * @property { SelectionPlugin['getTargetedNodes'] } getTargetedNodes
- * @property { SelectionPlugin['modifySelection'] } modifySelection
- * @property { SelectionPlugin['preserveSelection'] } preserveSelection
- * @property { SelectionPlugin['rectifySelection'] } rectifySelection
- * @property { SelectionPlugin['areNodeContentsFullySelected'] } areNodeContentsFullySelected
- * @property { SelectionPlugin['resetSelection'] } resetSelection
- * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
- * @property { SelectionPlugin['setCursorStart'] } setCursorStart
- * @property { SelectionPlugin['setSelection'] } setSelection
- * @property { SelectionPlugin['isSelectionInEditable'] } isSelectionInEditable
- * @property { SelectionPlugin['isNodeEditable'] } isNodeEditable
- * @property { SelectionPlugin['selectElement'] } selectElement
- * @property { SelectionPlugin['editableDocumentHasFocus'] } editableDocumentHasFocus
- * @property { SelectionPlugin['getCachedSelection'] } getCachedSelection
- * @property { SelectionPlugin['setCachedSelection'] } setCachedSelection
- * @property { SelectionPlugin['stageSelection'] } stageSelection
- * @property { SelectionPlugin['stageFocus'] } stageFocus
- * @property { SelectionPlugin['serializeEditableSelection'] } serializeEditableSelection
- */
-
-/**
  * @typedef {((selectionData: SelectionData) => void)[]} on_selectionchange_handlers
  * @typedef {(() => void)[]} on_selection_leave_handlers
  *
@@ -218,7 +191,7 @@ function scrollToSelection(selection) {
 export class SelectionPlugin extends Plugin {
     static id = "selection";
     static dependencies = ["domReferenceMap", "properties"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "getSelectionData",
         "getEditableSelection",
         "setSelection",
@@ -244,7 +217,7 @@ export class SelectionPlugin extends Plugin {
         "stageSelection",
         "stageFocus",
         "serializeEditableSelection",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },

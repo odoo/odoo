@@ -1,26 +1,17 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } WebsiteBridgeShared
- * @property { WebsiteBridgePlugin['getRegistry'] } getRegistry
- * @property { WebsiteBridgePlugin['getWebsiteContextLang'] } getWebsiteContextLang
- * @property { WebsiteBridgePlugin['getSession'] } getSession
- * @property { WebsiteBridgePlugin['renderToElement'] } renderToElement
- * @property { WebsiteBridgePlugin['renderToFragment'] } renderToFragment
- * @property { WebsiteBridgePlugin['_t'] } _t
- */
 export class WebsiteBridgePlugin extends Plugin {
     static id = "websiteBridge";
     static dependencies = [];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "getRegistry",
         "getWebsiteContextLang",
         "_t",
         "getSession",
         "renderToElement",
         "renderToFragment",
-    ];
+    ]);
     ensureModuleLoader() {
         if (!this.moduleLoader) {
             this.moduleLoader = this.window.odoo.loader;

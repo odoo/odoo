@@ -10,17 +10,14 @@ function isResizable(el) {
     return isResizableY || isResizableX || isResizableGrid;
 }
 
-/**
- * @typedef { Object } BuilderOverlayShared
- * @property { BuilderOverlayPlugin['showOverlayPreview'] } showOverlayPreview
- * @property { BuilderOverlayPlugin['hideOverlayPreview'] } hideOverlayPreview
- * @property { BuilderOverlayPlugin['refreshOverlays'] } refreshOverlays
- */
-
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["builderOptions", "localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
+    static shared = /** @type {const} */ ([
+        "showOverlayPreview",
+        "hideOverlayPreview",
+        "refreshOverlays",
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_committed_to_history_handlers: this.refreshOverlays.bind(this),

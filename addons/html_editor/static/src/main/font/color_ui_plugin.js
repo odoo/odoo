@@ -12,15 +12,13 @@ const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
 
 /**
- * @typedef { Object } ColorUIShared
  * @typedef {(() => string)[]} selected_background_color_providers
- * @property { ColorUIPlugin['getPropsForColorSelector'] } getPropsForColorSelector
  */
 
 export class ColorUIPlugin extends Plugin {
     static id = "colorUi";
     static dependencies = ["color", "history", "selection"];
-    static shared = ["getPropsForColorSelector"];
+    static shared = /** @type {const} */ (["getPropsForColorSelector"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_items: [

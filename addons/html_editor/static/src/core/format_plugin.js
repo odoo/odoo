@@ -41,15 +41,6 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 const NOT_A_NUMBER = /[^\d]/g;
 
 /**
- * @typedef {Object} FormatShared
- * @property { FormatPlugin['canFormatContent'] } canFormatContent
- * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
- * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
- * @property { FormatPlugin['removeSelectionFormats'] } removeSelectionFormats
- * @property { FormatPlugin['requestFormat'] } requestFormat
- */
-
-/**
  * @typedef {Object} FormatSpec
  * @property {string} id
  * @property {string} [tagName]
@@ -89,7 +80,7 @@ export class FormatPlugin extends Plugin {
     static id = "format";
     static dependencies = ["selection", "history", "input", "split", "delete", "properties"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
-    static shared = [
+    static shared = /** @type {const} */ ([
         "areSimilarElements",
         "canFormatContent",
         "getOrCreateZws",
@@ -97,7 +88,7 @@ export class FormatPlugin extends Plugin {
         "removeSelectionFormats",
         "requestFormat",
         "getPendingIntents",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

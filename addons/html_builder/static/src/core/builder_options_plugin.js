@@ -49,24 +49,6 @@ import { omit } from "@web/core/utils/objects";
  */
 
 /**
- * @typedef { Object } BuilderOptionsShared
- * @property { BuilderOptionsPlugin['checkElement'] } checkElement
- * @property { BuilderOptionsPlugin['closestWithOption'] } closestWithOption
- * @property { BuilderOptionsPlugin['findOption'] } findOption
- * @property { BuilderOptionsPlugin['getContainers'] } getContainers
- * @property { BuilderOptionsPlugin['updateContainers'] } updateContainers
- * @property { BuilderOptionsPlugin['deactivateContainers'] } deactivateContainers
- * @property { BuilderOptionsPlugin['getTarget'] } getTarget
- * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
- * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
- * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
- * @property { BuilderOptionsPlugin['isClonable'] } isClonable
- * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
- * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
- * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
- */
-
-/**
  * @typedef {((containers: BuilderOptionContainer[]) => void)[]} on_current_options_containers_changed_handlers
  * @typedef {((newTargetEl: HTMLElement) => void)[]} on_will_restore_containers_handlers
  *
@@ -129,7 +111,7 @@ import { omit } from "@web/core/utils/objects";
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
     static dependencies = ["operation", "domObserver", "history"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "checkElement",
         "closestWithOption",
         "findOption",
@@ -144,7 +126,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getBuilderOptionContext",
         "getBuilderOptions",
         "isClonable",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         history_commit_data_properties: ["currentTarget", "nextTarget"],

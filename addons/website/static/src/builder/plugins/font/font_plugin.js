@@ -15,15 +15,9 @@ export const FONT_VARIABLES_TO_RESET = {
     "buttons-font": ["btn-font-weight", "btn-font-weight-bold"],
 };
 
-/**
- * @typedef { Object } WebsiteFontShared
- * @property { WebsiteFontPlugin['addFont'] } addFont
- * @property { WebsiteFontPlugin['deleteFont'] } deleteFont
- */
-
 export class WebsiteFontPlugin extends Plugin {
     static id = "websiteFont";
-    static shared = ["addFont", "deleteFont"];
+    static shared = /** @type {const} */ (["addFont", "deleteFont"]);
     static dependencies = ["savePlugin", "builderFont", "customizeWebsite"];
 
     async addFont(variable) {

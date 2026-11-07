@@ -9,15 +9,10 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { proxy } from "@odoo/owl";
 
-/**
- * @typedef { Object } EmojiShared
- * @property { EmojiPlugin['showEmojiPicker'] } showEmojiPicker
- */
-
 export class EmojiPlugin extends Plugin {
     static id = "emoji";
     static dependencies = ["history", "overlay", "dom", "selection", "delete"];
-    static shared = ["showEmojiPicker"];
+    static shared = /** @type {const} */ (["showEmojiPicker"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         delete_backward_overrides: this.handleDeleteBackward.bind(this),

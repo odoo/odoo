@@ -47,19 +47,6 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
  */
 
 /**
- * @typedef { Object } SplitShared
- * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
- * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
- * @property { SplitPlugin['splitElementUntil'] } splitElementUntil
- * @property { SplitPlugin['splitBlock'] } splitBlock
- * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
- * @property { SplitPlugin['splitElement'] } splitElement
- * @property { SplitPlugin['splitElementBlock'] } splitElementBlock
- * @property { SplitPlugin['splitSelection'] } splitSelection
- * @property { SplitPlugin['splitBlockSegments'] } splitBlockSegments
- */
-
-/**
  * @typedef {(({element: HTMLElement, secondPart: HTMLElement}) => void)[]} on_element_split_handlers
  * @typedef {(() => void)[]} on_will_split_block_handlers
  *
@@ -77,7 +64,7 @@ export class SplitPlugin extends Plugin {
         "properties",
     ];
     static id = "split";
-    static shared = [
+    static shared = /** @type {const} */ ([
         "splitBlock",
         "splitBlockNode",
         "splitElementBlock",
@@ -87,7 +74,7 @@ export class SplitPlugin extends Plugin {
         "splitSelection",
         "isUnsplittable",
         "splitBlockSegments",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),

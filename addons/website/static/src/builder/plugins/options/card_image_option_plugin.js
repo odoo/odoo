@@ -6,11 +6,6 @@ import { registry } from "@web/core/registry";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-/**
- * @typedef { Object } CardImageOptionShared
- * @property { CardImageOptionPlugin['adaptRatio'] } adaptRatio
- */
-
 const ratiosOnlySupportedForTopBottomImage = [
     "ratio ratio-4x3",
     "ratio ratio-16x9",
@@ -35,7 +30,7 @@ const cardImageSelector = ".o_card_img_wrapper > .o_card_img";
 export class CardImageOptionPlugin extends Plugin {
     static id = "cardImageOption";
     static dependencies = ["remove", "history", "builderOptions"];
-    static shared = ["adaptRatio", "getDelta"];
+    static shared = /** @type {const} */ (["adaptRatio", "getDelta"]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clone_disabled_reason_providers: (el) => {

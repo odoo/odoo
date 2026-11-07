@@ -5,15 +5,10 @@ import { Operation } from "./operation";
 
 /** @typedef {import("./operation").OperationParams} OperationParams */
 
-/**
- * @typedef { Object } OperationShared
- * @property { OperationPlugin['next'] } next
- */
-
 export class OperationPlugin extends Plugin {
     static id = "operation";
     static dependencies = ["domObserver", "history"];
-    static shared = ["addLoadingElement", "next", "hasTimedOut"];
+    static shared = /** @type {const} */ (["addLoadingElement", "next", "hasTimedOut"]);
 
     setup() {
         this._hasTimedOut = false;

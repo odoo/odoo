@@ -11,6 +11,7 @@ export const isValidTargetForDomListener = (target) =>
 export class Plugin {
     static id = "";
     static dependencies = [];
+    /** @type {readonly string[]} */
     static shared = [];
     static defaultConfig = {};
 

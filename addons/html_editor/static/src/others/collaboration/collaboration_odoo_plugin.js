@@ -43,11 +43,6 @@ const BROADCAST_BATCH_DELAY = 150;
 // this is a local cache for ice server descriptions
 let ICE_SERVERS = null;
 
-/**
- * @typedef { Object } CollaborationOdooShared
- * @property { CollaborationOdooPlugin['getPeerMetadata'] } getPeerMetadata
- */
-
 export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
     static dependencies = [
@@ -58,7 +53,7 @@ export class CollaborationOdooPlugin extends Plugin {
         "collaboration",
         "selection",
     ];
-    static shared = ["getPeerMetadata"];
+    static shared = /** @type {const} */ (["getPeerMetadata"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_selectionchange_handlers: debounce(() => {

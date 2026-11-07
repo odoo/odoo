@@ -27,16 +27,12 @@ import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
 
 /** @typedef {import("@odoo/owl").ComponentConstructor} ComponentConstructor */
-/**
- * @typedef { Object } BuilderComponentShared
- * @property { BuilderComponentPlugin['getComponents'] } getComponents
- */
 
 /** @typedef {ComponentConstructor[]} builder_components */
 
 export class BuilderComponentPlugin extends Plugin {
     static id = "builderComponents";
-    static shared = ["getComponents"];
+    static shared = /** @type {const} */ (["getComponents"]);
 
     /** @type {import("plugins").BuilderResources} */
     resources = {

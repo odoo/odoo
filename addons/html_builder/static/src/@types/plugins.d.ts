@@ -1,21 +1,21 @@
 declare module "plugins" {
-    import { anchor_allowed_selectors, anchor_excluded_selectors, AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
-    import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options_render_context, BuilderOptionsShared, on_current_options_containers_changed_handlers, clone_disabled_reason_providers, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_providers, auto_unfold_container_providers } from "@html_builder/core/builder_options_plugin";
-    import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
-    import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
-    import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
-    import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
-    import { dropzone_selectors, DropZoneShared, ignored_sibling_selectors, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
+    import { anchor_allowed_selectors, anchor_excluded_selectors, AnchorPlugin } from "@html_builder/core/anchor/anchor_plugin";
+    import { builder_components, BuilderComponentPlugin } from "@html_builder/core/builder_component_plugin";
+    import { builder_header_middle_buttons, builder_options_render_context, BuilderOptionsPlugin, on_current_options_containers_changed_handlers, clone_disabled_reason_providers, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_providers, auto_unfold_container_providers } from "@html_builder/core/builder_options_plugin";
+    import { BuilderOverlayPlugin } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
+    import { CachedModelPlugin } from "@html_builder/core/cached_model_plugin";
+    import { ClonePlugin, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
+    import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugin";
+    import { dropzone_selectors, DropZonePlugin, ignored_sibling_selectors, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { on_replicated_handlers } from "@html_builder/core/field_change_replication_plugin";
-    import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
-    import { OperationShared } from "@html_builder/core/operation_plugin";
-    import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
-    import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { on_saved_handlers, on_will_save_handlers, dirty_trackers, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { MediaWebsitePlugin } from "@html_builder/core/media_website_plugin";
+    import { OperationPlugin } from "@html_builder/core/operation_plugin";
+    import { get_overlay_buttons, OverlayButtonsPlugin } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
+    import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemovePlugin } from "@html_builder/core/remove_plugin";
+    import { on_saved_handlers, on_will_save_handlers, dirty_trackers, on_ready_to_save_document_handlers, SavePlugin } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
-    import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
-    import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
+    import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+    import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityPlugin } from "@html_builder/core/visibility_plugin";
     import { default_shape_providers, image_shape_groups_providers, on_shape_computed_handlers } from "@html_builder/plugins/image/image_shape_option_plugin";
     import { should_optimize_image_predicates } from "@html_builder/plugins/image/image_tool_option_plugin";
     import { background_filter_target_providers, target_element_providers, on_bg_image_hidden_handlers } from "@html_builder/plugins/background_option/background_image_option_plugin";
@@ -24,11 +24,11 @@ declare module "plugins" {
     import { on_target_revealed_handlers } from "@html_builder/sidebar/invisible_elements_panel";
     import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_inserted_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_processors } from "@html_builder/snippets/add_snippet_dialog";
-    import { background_shape_groups_providers, background_shape_target_providers, BackgroundShapeOptionShared, is_element_in_invisible_panel_predicates, should_ignore_background_color_for_shapes_predicates } from "@html_builder/plugins/background_option/background_shape_option_plugin";
+    import { background_shape_groups_providers, background_shape_target_providers, BackgroundShapeOptionPlugin, is_element_in_invisible_panel_predicates, should_ignore_background_color_for_shapes_predicates } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
     import { is_movable_selectors, on_element_arrow_moved_handlers } from "@html_builder/core/move_plugin";
     import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
-    import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
+    import { builder_actions, BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selectors, so_snippet_addition_selectors } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style_overrides } from "@html_builder/core/core_builder_action_plugin";
@@ -41,23 +41,23 @@ declare module "plugins" {
         // Main
 
         // Core
-        anchor: AnchorShared;
-        backgroundShapeOption: BackgroundShapeOptionShared,
-        builderActions: BuilderActionsShared;
-        builderComponents: BuilderComponentShared;
-        builderOptions: BuilderOptionsShared;
-        builderOverlay: BuilderOverlayShared;
-        cachedModel: CachedModelShared;
-        clone: CloneShared;
-        disableSnippets: DisableSnippetsShared;
-        dropzone: DropZoneShared;
-        media_website: MediaWebsiteShared;
-        operation: OperationShared;
-        overlayButtons: OverlayButtonsShared;
-        remove: RemoveShared;
-        savePlugin: SaveShared;
-        setup_editor_plugin: SetupEditorShared;
-        visibility: VisibilityShared;
+        anchor: SharedOf<typeof AnchorPlugin>;
+        backgroundShapeOption: SharedOf<typeof BackgroundShapeOptionPlugin>,
+        builderActions: SharedOf<typeof BuilderActionsPlugin>;
+        builderComponents: SharedOf<typeof BuilderComponentPlugin>;
+        builderOptions: SharedOf<typeof BuilderOptionsPlugin>;
+        builderOverlay: SharedOf<typeof BuilderOverlayPlugin>;
+        cachedModel: SharedOf<typeof CachedModelPlugin>;
+        clone: SharedOf<typeof ClonePlugin>;
+        disableSnippets: SharedOf<typeof DisableSnippetsPlugin>;
+        dropzone: SharedOf<typeof DropZonePlugin>;
+        media_website: SharedOf<typeof MediaWebsitePlugin>;
+        operation: SharedOf<typeof OperationPlugin>;
+        overlayButtons: SharedOf<typeof OverlayButtonsPlugin>;
+        remove: SharedOf<typeof RemovePlugin>;
+        savePlugin: SharedOf<typeof SavePlugin>;
+        setup_editor_plugin: SharedOf<typeof SetupEditorPlugin>;
+        visibility: SharedOf<typeof VisibilityPlugin>;
 
         // Other
     }

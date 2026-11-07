@@ -36,12 +36,6 @@ const IMAGE_ALIGNMENT = [
 ];
 
 /**
- * @typedef { Object } ImageShared
- * @property { ImagePlugin['getTargetedImage'] } getTargetedImage
- * @property { ImagePlugin['previewImage'] } previewImage
- */
-
-/**
  * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
  * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_providers
  */
@@ -49,7 +43,7 @@ const IMAGE_ALIGNMENT = [
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "dom", "selection"];
-    static shared = ["getTargetedImage", "previewImage"];
+    static shared = /** @type {const} */ (["getTargetedImage", "previewImage"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

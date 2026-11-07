@@ -48,25 +48,6 @@ export const BORDER_SENSITIVITY = 5;
 const LONG_PRESS_DELAY = 200;
 
 /**
- * @typedef { Object } TableShared
- * @property { TablePlugin['insertTable'] } insertTable
- * @property { TablePlugin['addColumn'] } addColumn
- * @property { TablePlugin['addRow'] } addRow
- * @property { TablePlugin['turnIntoHeader'] } turnIntoHeader
- * @property { TablePlugin['moveColumn'] } moveColumn
- * @property { TablePlugin['moveRow'] } moveRow
- * @property { TablePlugin['removeColumn'] } removeColumn
- * @property { TablePlugin['removeRow'] } removeRow
- * @property { TablePlugin['turnIntoRow'] } turnIntoRow
- * @property { TablePlugin['clearColumnContent'] } clearColumnContent
- * @property { TablePlugin['clearRowContent'] } clearRowContent
- * @property { TablePlugin['toggleAlternatingRows'] } toggleAlternatingRows
- * @property { TablePlugin['mergeSelectedCells'] } mergeSelectedCells
- * @property { TablePlugin['unmergeSelectedCell'] } unmergeSelectedCell
- * @property { TablePlugin['buildTableGrid'] } buildTableGrid
- */
-
-/**
  * @typedef {((el: HTMLElement) => HTMLElement)[]} deselect_custom_selected_nodes_processors
  */
 
@@ -89,7 +70,7 @@ export class TablePlugin extends Plugin {
         allowScrollableTables: true,
         saveScrollableTables: false,
     };
-    static shared = [
+    static shared = /** @type {const} */ ([
         "insertTable",
         "addColumn",
         "addRow",
@@ -105,7 +86,7 @@ export class TablePlugin extends Plugin {
         "mergeSelectedCells",
         "unmergeSelectedCell",
         "buildTableGrid",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
