@@ -209,6 +209,57 @@ class TestHrAttendanceOvertime(HttpCase):
         attendance.action_refuse_overtime()
         self.assertEqual(attendance.employee_id.total_overtime, 0, 0)
 
+    def test_regenerate_overtime_after_approval_setting_change(self):
+        self.company.attendance_overtime_validation = 'by_manager'
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 12, 31, 8),
+            'check_out': datetime(2025, 12, 31, 18),
+        })
+        self.assertEqual(attendance.overtime_status, 'to_approve')
+        self.assertEqual(self.employee.total_overtime, 0)
+
+        self.company.attendance_overtime_validation = 'no_validation'
+        self.assertEqual(attendance.overtime_status, 'to_approve')
+        self.ruleset.action_regenerate_overtimes()
+
+        self.assertRecordValues(attendance.linked_overtime_ids, [{
+            'status': 'approved',
+            'duration': 1,
+            'manual_duration': 1,
+        }])
+        self.assertRecordValues(attendance, [{
+            'overtime_status': 'approved',
+            'validated_overtime_hours': 1,
+        }])
+        self.assertEqual(self.employee.total_overtime, 1)
+
+    def test_regenerate_overtime_with_manual_adjustment(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 12, 31, 8),
+            'check_out': datetime(2025, 12, 31, 18),
+        })
+        for validation, status, validated_hours in [
+            ('no_validation', 'approved', 1),
+            ('by_manager', 'to_approve', 0),
+        ]:
+            with self.subTest(validation=validation):
+                self.company.attendance_overtime_validation = validation
+                attendance.linked_overtime_ids.manual_duration = 0.5
+                self.ruleset.action_regenerate_overtimes()
+
+                self.assertRecordValues(attendance.linked_overtime_ids, [{
+                    'status': status,
+                    'duration': 1,
+                    'manual_duration': 1,
+                }])
+                self.assertRecordValues(attendance, [{
+                    'overtime_status': status,
+                    'validated_overtime_hours': validated_hours,
+                }])
+                self.assertEqual(self.employee.total_overtime, validated_hours)
+
     def test_simple_overtime(self):
         checkin_am = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
