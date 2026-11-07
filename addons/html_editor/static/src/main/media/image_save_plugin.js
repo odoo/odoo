@@ -16,7 +16,7 @@ import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 /**
  * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
  *
- * @typedef {((args: {imageEl: HTMLElement}) => void)[]} on_image_saved_handlers
+ * @typedef {((args: {imageEl: HTMLElement}) => void | Promise<void>)[]} on_image_saved_handlers
  */
 
 export class ImageSavePlugin extends Plugin {
@@ -137,6 +137,7 @@ export class ImageSavePlugin extends Plugin {
             el.setAttribute("src", src);
         }
         el.classList.remove("o_b64_image_to_save");
+        await Promise.all(this.trigger("on_image_saved_handlers", { imageEl: el }));
     }
 
     /**
@@ -271,7 +272,7 @@ export class ImageSavePlugin extends Plugin {
                 targetEl.setAttribute("srcset", srcset.join(", "));
             }
         }
-        this.trigger("on_image_saved_handlers", { imageEl: targetEl });
+        await Promise.all(this.trigger("on_image_saved_handlers", { imageEl: targetEl }));
     }
 
     getImageBase64Payload(el) {
