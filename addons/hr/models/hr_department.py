@@ -175,7 +175,7 @@ class HrDepartment(models.Model):
             ])
         else:
             action['domain'] = domain
-        if self.plans_count == 0:
+        if self.plans_count == 0 and self.env['mail.activity.plan'].has_access('write'):
             action['views'] = [(False, 'form')]
         return action
 
