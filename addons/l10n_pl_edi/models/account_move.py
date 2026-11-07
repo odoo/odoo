@@ -177,7 +177,7 @@ class AccountMove(models.Model):
             return -self.direction_sign * sum(lines.mapped('price_subtotal'))
 
         def get_base_amount_reverse_charge():
-            return get_base_amounts_from_tag("K_12") + get_base_amounts_from_tag("K_31")
+            return get_base_amounts_from_tag("K_31")
 
         def compute_p_12(tag_names):
             """
