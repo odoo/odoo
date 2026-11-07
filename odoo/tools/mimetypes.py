@@ -34,6 +34,9 @@ class _Signature(typing.NamedTuple):
 
 
 def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
+    if not isinstance(bin_data, (bytes, bytearray)):
+        # e.g. a BinaryValue, like `_magic_guess_mimetype`
+        bin_data = bytes(bin_data)
     for supported_mimetype in SUPPORTED_MIMETYPES:
         if supported_mimetype.match(bin_data):
             return supported_mimetype.mimetype
