@@ -125,12 +125,12 @@
                         <group id="alloc_left_col">
                             <field name="is_name_custom" invisible="1"/> <!-- needed for triggering reasons -->
                             <field name="type_request_unit" invisible="1"/> <!-- drives invisible/readonly of number_of_days_display, number_of_hours and their units -->
-                            <div class="o_td_label" name="validity_label" invisible="not is_officer">
+                            <div class="o_td_label" name="validity_label" invisible="not is_manager">
                                 <label for="date_from" string="Validity Period"
                                     invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
                             </div>
-                            <div class="o_row" name="validity" invisible="not is_officer">
+                            <div class="o_row" name="validity" invisible="not is_manager">
                                 <field name="date_from" nolabel="1"
                                     readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
                                     invisible="not accrual_plan_id and state != 'confirm'"/>
