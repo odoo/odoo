@@ -150,9 +150,6 @@ class ResUsers(models.Model):
                     }
             raise
 
-    def _get_session_token_fields(self):
-        return super(ResUsers, self)._get_session_token_fields() | {'oauth_access_token'}
-
     @property
     def USER_PRIVATE_FIELDS(self):
         return super().USER_PRIVATE_FIELDS + ['oauth_access_token']
