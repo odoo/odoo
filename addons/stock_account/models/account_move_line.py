@@ -16,33 +16,34 @@ class AccountMoveLine(models.Model):
 
     def _set_cogs(self):
         """Re-evaluate the COGS of the originating invoice lines after the value of
-        one of their backing stock moves changed, updating the existing COGS journal
-        items in place. The lines live on a posted move, so we write them directly
-        (bypassing the move-level readonly guard on ``line_ids``) and defer the
-        balance check: both sides of the entry are updated symmetrically, so it is
-        balanced again once the loop is done."""
+        one of their backing stock moves changed, by reusing ``_get_cogs_lines_vals``.
+        The delta is written onto the matching existing cogs line in place when its
+        period is open; otherwise, its vals are returned so the caller can book them
+        (e.g. in a correction entry)."""
         self = self.sudo()  # noqa: PLW0642
-        for invoice_line in self.cogs_origin_id:
-            account_move = invoice_line.move_id
+        correction_line_vals = []
+        lines_by_cogs_origin = self.grouped('cogs_origin_id')
+        for cogs_origin, lines in lines_by_cogs_origin.items():
+            account_move = cogs_origin.move_id
             if account_move.state != 'posted':
                 continue
-            invoice_line = invoice_line.with_company(account_move.company_id)
-            accounts = invoice_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=account_move.fiscal_position_id)
-            stock_account = accounts['stock_valuation']
-
-            sign = -1 if account_move.move_type == 'out_refund' else 1
-            qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, invoice_line.product_id.uom_id)
-            price_unit = invoice_line.cogs_move_ids._get_price_unit(include_consigned=True, product=invoice_line.product_id)
-            amount = sign * qty * price_unit
-
-            cogs_lines = self.filtered(lambda l: l.display_type == 'cogs' and l.cogs_origin_id == invoice_line)
-            for line in cogs_lines:
-                on_stock_account = line.account_id == stock_account
-                line.with_context(check_move_validity=False).write({
-                    'price_unit': price_unit if on_stock_account else -price_unit,
-                    'amount_currency': -amount if on_stock_account else amount,
-                    'balance': -amount if on_stock_account else amount,
-                })
+            account_move = account_move.with_company(account_move.company_id)
+            locked = bool(account_move.company_id._get_lock_date_violations(account_move.date, purchase=False))
+            vals_list = account_move.with_context(cogs_origin_line_id=cogs_origin.id, cogs_invoice_line_ids=lines.ids)._get_cogs_lines_vals()
+            for vals in vals_list:
+                cogs_line = lines.filtered(
+                    lambda l, vals=vals: l.move_id == account_move
+                    and l.account_id.id == vals['account_id']
+                    and l.cogs_origin_id.id == vals['cogs_origin_id']
+                )
+                if not locked and cogs_line:
+                    vals['balance'] += cogs_line.balance
+                    cogs_line.with_context(check_move_validity=False).write(vals)
+                else:
+                    product = cogs_line.product_id or self.env['product.product'].browse(vals['product_id'])
+                    vals['name'] = f"{account_move.name} - {product.name}"
+                    correction_line_vals.append(vals)
+        return correction_line_vals
 
     def _get_cogs_value(self):
         """ Get the COGS price unit in the product's default unit of measure.
