@@ -44,8 +44,8 @@ class ResUsers(models.Model):
             raise AccessError(self.env._('You do not have permissions to remove the access token'))
         self.sudo().oauth_access_token = False
 
-    def _auth_oauth_rpc(self, endpoint, access_token):
-        if self.env['ir.config_parameter'].sudo().get_bool('auth_oauth.authorization_header'):
+    def _auth_oauth_rpc(self, provider, endpoint, access_token):
+        if provider.access_token_method == 'header':
             response = requests.get(endpoint, headers={'Authorization': 'Bearer %s' % access_token}, timeout=10)
         else:
             response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
@@ -63,11 +63,11 @@ class ResUsers(models.Model):
     def _auth_oauth_validate(self, provider, access_token):
         """ return the validation data corresponding to the access token """
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
-        validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
+        validation = self._auth_oauth_rpc(oauth_provider, oauth_provider.validation_endpoint, access_token)
         if validation.get("error"):
             raise Exception(validation['error'])
         if oauth_provider.data_endpoint:
-            data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
+            data = self._auth_oauth_rpc(oauth_provider, oauth_provider.data_endpoint, access_token)
             validation.update(data)
         # unify subject key, pop all possible and get most sensible. When this
         # is reworked, BC should be dropped and only the `sub` key should be
