@@ -436,12 +436,10 @@ test("Shows owner / admin in members panel + member actions for channel owner", 
     await waitFor(
         ".o-discuss-ChannelMember:text('Demo') [data-icon='crown'][title='Admin']:count(1)"
     );
-    await click(".o-discuss-ChannelMember:text('Owner') [title='Member Actions']");
-    await waitFor(".o-dropdown-item:count(2)");
-    await waitFor(".o-dropdown-item:eq(0):has(:text(Set Admin)):count(1)");
-    await waitFor(".o-dropdown-item:eq(1):has(:text(Set Member)):count(1)");
-    await click(".o-mail-Thread");
-    await waitForNone(".o-dropdown-item");
+    // owners cannot remove their own ownership
+    await waitFor(".o-discuss-ChannelMember [title='Member Actions']:count(3)");
+    expect(".o-discuss-ChannelMember:text('Demo') [title='Member Actions']").toHaveCount(1);
+    expect(".o-discuss-ChannelMember:text('Owner') [title='Member Actions']").toHaveCount(0);
     await click(".o-discuss-ChannelMember:text('Demo') [title='Member Actions']");
     await waitFor(".o-dropdown-item:count(3)");
     await waitFor(".o-dropdown-item:eq(0):has(:text(Set Owner)):count(1)");
@@ -460,11 +458,12 @@ test("Shows owner / admin in members panel + member actions for channel owner", 
     await click(".o-mail-Thread");
     await waitForNone(".o-dropdown-item");
     // can right-click to open member actions dropdown
-    await rightClick(".o-discuss-ChannelMember:text('Owner')");
-    await waitFor(".o-discuss-ChannelMember:text('Owner')[data-right-clicking]:count(1)");
-    await waitFor(".o-dropdown-item:count(2)");
-    await waitFor(".o-dropdown-item:eq(0):has(:text(Set Admin)):count(1)");
+    await rightClick(".o-discuss-ChannelMember:text('Demo')");
+    await waitFor(".o-discuss-ChannelMember:text('Demo')[data-right-clicking]:count(1)");
+    await waitFor(".o-dropdown-item:count(3)");
+    await waitFor(".o-dropdown-item:eq(0):has(:text(Set Owner)):count(1)");
     await waitFor(".o-dropdown-item:eq(1):has(:text(Set Member)):count(1)");
+    await waitFor(".o-dropdown-item:eq(2):has(:text(Remove Member)):count(1)");
 });
 
 test("Can send the invitation again to a member who has not joined yet", async () => {
