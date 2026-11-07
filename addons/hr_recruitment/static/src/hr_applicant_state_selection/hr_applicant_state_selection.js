@@ -5,9 +5,9 @@ import {
 } from "@web/views/fields/state_selection/state_selection_field";
 
 const STATUS_COLORS = {
-    blocked: "red",
-    done: "green",
-    waiting: "orange",
+    blocked: "danger",
+    done: "success",
+    waiting: "warning",
 };
 
 export class HrApplicantStateSelectionField extends StateSelectionField {

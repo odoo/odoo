@@ -12,6 +12,10 @@ export class BooleanFavoriteField extends Component {
         noLabel: t.boolean().optional(false),
     });
 
+    get btnClass() {
+        return this.props.record.data[this.props.name] ? "o_favorite_active" : "";
+    }
+
     get iconClass() {
         return this.props.record.data[this.props.name] ? "oi-filled" : "";
     }

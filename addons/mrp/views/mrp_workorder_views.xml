@@ -270,47 +270,51 @@
                 <field name="color"/>
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex o_kanban_record_top">
-                            <div class="o_kanban_workorder_title">
-                                <field name="production_id"/>
-                                <field name="priority" invisible="priority == '0'" widget="priority" class="px-2 my-auto"/>
-                                <div class="ms-auto text-nowrap d-flex">
-                                    <field name="qty_production" widget="float_without_trailing_zeros" class="ms-auto flex-shrink-0"/>
-                                    <field name="uom_id" class="ms-1 flex-shrink-0"/>
-                                </div>
+                        <t t-set="isDraft" t-value="this.record.production_state.raw_value == 'draft'"/>
+                        <div class="d-flex justify-content-between mb-1 smaller" t-att-class="{'opacity-50': isDraft}">
+                            <field name="production_id"/>
+                            <field name="priority" invisible="priority == '0'" widget="priority" class="px-2 my-auto"/>
+                            <div class="ms-auto text-nowrap d-flex">
+                                <field name="qty_production" widget="float_without_trailing_zeros" class="ms-auto flex-shrink-0"/>
+                                <field name="uom_id" class="ms-1 flex-shrink-0"/>
                             </div>
                         </div>
-                        <div class="o_kanban_workorder_product_name">
-                            <field name="product_id"/>
+                        <div class="d-flex align-items-baseline gap-2 w-100">
+                            <div class="fs-5 fw-bold">
+                                <field name="product_id"/>
+                            </div>
+                            <field name="state" widget="mo_view_list_dropdown"
+                                options="{'no_open': True}"
+                                invisible="production_state == 'draft'"
+                                class="ms-auto"/>
                         </div>
                         <div class="text-muted">
                             <field name="name"/>
                         </div>
-                        <footer>
+                        <footer class="gap-2">
                             <t invisible="state in ('done', 'cancel')">
-                                <i class="oi me-1" data-icon="hourglass_bottom" title="time remaining"/>
-                                <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time" t-att-class="record.remaining_time.raw_value &lt; 0 ? 'o_wo_red' : ''">
-                                    <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes'}"/>
+                                <div
+                                    class="badge d-flex gap-1 align-items-center flex-shrink-0 rounded-pill"
+                                    t-attf-class="{{ isDraft ? 'border' : record.remaining_time.raw_value &lt; 0 ? 'bg-danger-subtle text-danger' : 'bg-success-subtle text-success' }}"
+                                    data-tooltip="Remaining Time"
+                                >
+                                    <i class="oi" data-icon="hourglass_bottom" role="img" title="Remaining Time"/>
+                                    <field name="remaining_time" widget="float_time" options="{'unit': 'minutes'}"/>
                                 </div>
                                 <t t-set="start_datetime" t-value="luxon.DateTime.fromISO(record.date_start.raw_value)"/>
-                                <div class="o_kanban_workorder_date" invisible="not date_start"
-                                    t-att-class="{'o_wo_orange': start_datetime.hasSame(luxon.DateTime.now(), 'day'),
-                                        'o_wo_red': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
+                                <div class="d-flex gap-1 align-items-center flex-shrink-0 small" invisible="not date_start"
+                                    t-att-class="{'text-warning': start_datetime.hasSame(luxon.DateTime.now(), 'day'),
+                                        'text-danger': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
                                         '': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
                                     }">
-                                    <i class="oi me-1 my-auto" data-icon="schedule" title="planned date start"></i>
+                                    <i class="oi oi-filled" data-icon="calendar_today" title="planned date start"/>
                                     <div data-tooltip="Scheduled Date">
-                                        <field name="date_start" class="pe-2"/>
+                                        <field name="date_start"/>
                                     </div>
                                 </div>
                             </t>
-                            <div class="d-flex ms-auto">
+                            <div class="ms-auto">
                                 <field name="last_working_user_id" widget="many2one_avatar_user"/>
-                                <div data-tooltip="Status">
-                                    <field name="state" widget="mo_view_list_dropdown"
-                                        options="{'no_open': True, 'display': 'bubble'}"
-                                        invisible="production_state == 'draft'"/>
-                                </div>
                             </div>
                         </footer>
                     </t>

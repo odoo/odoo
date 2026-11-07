@@ -70,7 +70,7 @@
                     <t t-name="card">
                         <div class="o_hr_recruitment_kanban_card_large_screen">
                             <main>
-                                <div class="d-flex ms-3 py-1">
+                                <div class="d-flex p-1">
                                     <div class="o_kanban_card_header col-4 col-lg-3 d-flex flex-column pt-2 pt-lg-0">
                                         <div class="o_kanban_card_header_title d-flex align-items-baseline fw-bold">
                                             <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
@@ -83,10 +83,10 @@
                                                 </div>
                                                 <div groups="base.group_multi_company">
                                                     <t t-if="record.company_id.raw_value != 0">
-                                                        <div class="d-flex flex-row">
+                                                        <div class="d-flex flex-row gap-1 align-items-center">
                                                             <field name="recruiter_id" widget="many2one_avatar_employee"
                                                                 options="{'display_avatar_name': False}"/>
-                                                            <field class="ms-1 text-muted" name="company_id" />
+                                                            <field class="text-muted" name="company_id" />
                                                         </div>
                                                     </t>
                                                     <t t-else="">
@@ -136,11 +136,11 @@
                                         groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="d-flex justify-content-sm-start justify-content-xl-start mt-1">
                                             <div class="position-relative">
-                                                <button name="action_open_activities" type="object" class="px-2 pt-2 pb-1">
-                                                    <i class="oi oi-2x" data-icon="schedule" role="img" aria-label="Activities"></i>
-                                                    <span class="activity_badge position-absolute translate-middle badge rounded-pill bg-danger text-light" t-if="record.activity_count.raw_value > 0">
+                                                <button name="action_open_activities" type="object" class="btn btn-light btn-lg d-flex p-2">
+                                                    <i class="oi oi-lg" data-icon="schedule" role="img" aria-label="Activities"></i>
+                                                    <span class="activity_badge badge position-absolute top-0 start-100 translate-middle d-flex justify-content-center rounded-pill p-1 bg-danger text-light lh-1" t-if="record.activity_count.raw_value > 0">
                                                         <field name="activity_count"/>
-                                                    </span> 
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>
@@ -160,7 +160,7 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="o_hr_recruitment_kanban_card_mobile_screen py-1 px-2 py-md-0 px-md-0">
+                        <div class="o_hr_recruitment_kanban_card_mobile_screen py-1">
                             <main>
                                 <div class="o_kanban_card_header d-flex flex-column gap-1 mb-1">
                                     <div>
@@ -173,41 +173,29 @@
                                                 groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row">
-                                        <div class="col-1 me-1" style="max-width: 1.5rem;"
-                                            groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                            <div class="d-flex flex-row justify-content-center">
-                                                <field name="recruiter_id" widget="many2one_avatar_employee"
-                                                    options="{'display_avatar_name': False}"/>
-                                            </div>
+                                    <div class="d-flex gap-1 align-items-center">
+                                        <div groups="hr_recruitment.group_hr_recruitment_interviewer">
+                                            <field name="recruiter_id" widget="many2one_avatar_employee" options="{'display_avatar_name': False}"/>
                                         </div>
-                                        <div class="col align-content-end">
-                                            <div groups="base.group_multi_company">
-                                                <t t-if="record.company_id.raw_value != 0">
-                                                    <field name="company_id"/>
-                                                </t>
-                                                <t t-else="">
-                                                    <field name="recruiter_id"/>
-                                                </t>
-                                            </div>
-                                            <div groups="!base.group_multi_company">
+                                        <div groups="base.group_multi_company">
+                                            <t t-if="record.company_id.raw_value != 0">
+                                                <field name="company_id"/>
+                                            </t>
+                                            <t t-else="">
                                                 <field name="recruiter_id"/>
-                                            </div>
+                                            </t>
+                                        </div>
+                                        <div groups="!base.group_multi_company">
+                                            <field name="recruiter_id"/>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row">
-                                        <div class="col-1 align-content-end me-1" style="max-width: 1.5rem;"
-                                            groups="hr_recruitment.group_hr_recruitment_interviewer">
-                                            <div class="d-flex flex-row justify-content-center">
-                                                <i class="oi oi-filled" data-icon="person" title="new_applications_icon" aria-hidden="true"/>
-                                            </div>
-                                        </div>
-                                        <div class="col align-content-end">
-                                            <span>
-                                                <field name="application_count"/>
-                                                <span > new applications</span>
-                                            </span>
-                                        </div>
+                                    <div class="d-flex gap-1 align-items-center">
+                                        <i class="o_new_applications_icon oi oi-filled d-flex align-items-center justify-content-center fs-6" data-icon="person" title="new_applications_icon" aria-hidden="true"
+                                            groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                                        <span>
+                                            <field name="application_count"/>
+                                            <span> new applications</span>
+                                        </span>
                                     </div>
                                 </div>
                             </main>

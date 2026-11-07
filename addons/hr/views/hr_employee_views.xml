@@ -134,14 +134,14 @@
                         <div class="d-flex flex-row flex-wrap flex-md-nowrap align-items-center justify-content-center justify-content-md-start gap-3 column-gap-2 column-gap-md-3" name="employee_photo_and_info">
                             <field name="user_state" widget="employee_user_status" class="d-md-none order-first ms-0 mt-n2"/>
                             <div class="o_employee_avatar d-none d-md-block">
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status" class="position-absolute top-0 start-100 translate-middle d-flex rounded-circle p-1 bg-view z-1"/>
                                 <field name="image_1920" widget="image" options="{'size': [128,158], 'zoom': true, 'preview_image':'image_1024', 'img_class': 'border rounded vw-100 vh-100 object-fit-cover'}"/>
                                 <field name="show_hr_icon_display" invisible="1" /> <!-- drives invisible of hr_icon_display -->
                             </div>
                             <div class="d-flex gap-3 w-100 d-block d-md-none mt-n2">
                                 <div class="o_employee_avatar position-relative flex-shrink-0"
                                      style="width: 48px; height: 48px;">
-                                    <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                    <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status" class="position-absolute top-0 start-100 translate-middle d-flex rounded-circle p-1 bg-100 z-1"/>
                                     <field name="image_1920" widget="mobile_image" options="{'size': [48, 48], 'zoom': false, 'preview_image':'avatar_128', 'img_class': 'border rounded w-100 h-100 object-fit-cover'}"/>
                                 </div>
                                 <div class="flex-grow-1 mb-n2">
@@ -696,7 +696,7 @@
                     <field name="work_phone_formatted"/>
                     <templates>
                         <t t-name="card" class="flex-row">
-                            <aside class="o_card_aside_full">
+                            <aside class="o_card_aside_full position-relative">
                                 <t t-if="record.image_1024.raw_value">
                                     <field name="image_1024" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000, 'preview_image':'image_256'}" class="d-block position-relative"/>
                                 </t>
@@ -712,27 +712,25 @@
                                     </svg>
                                 </div>
                             </aside>
-                            <main class="ms-2">
-                                <div>
-                                    <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
-                                        <field name="hr_icon_display" widget="hr_presence_status" />
-                                    </div>
+                            <main>
+                                <div class="d-flex gap-1 justify-content-between">
                                     <field class="fw-bold fs-5" name="name" placeholder="Employee's Name"/>
+                                    <field name="hr_icon_display" widget="hr_presence_status" invisible="not show_hr_icon_display"/>
                                 </div>
                                 <div t-if="record.job_id.raw_value" class="text-truncate">
-                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="work" title="Job Position"/>
+                                    <i class="oi oi-fw oi-filled me-2" data-icon="work" title="Job Position"/>
                                     <field name="job_id"/>
                                 </div>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">
-                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="mail" title="Email"/>
+                                    <i class="oi oi-fw oi-filled me-2" data-icon="mail" title="Email"/>
                                     <field name="work_email" />
                                 </div>
                                 <div t-if="record.work_phone.raw_value" class="d-flex align-items-baseline">
-                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="phone" title="Phone"/>
+                                    <i class="oi oi-fw oi-filled me-2" data-icon="phone" title="Phone"/>
                                     <field name="work_phone" widget="phone"/>
                                 </div>
                                 <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_user" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
-                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="contract" title="Contract"/>
+                                    <i class="oi oi-fw oi-filled me-2" data-icon="contract" title="Contract"/>
                                     <field name="first_contract_date"/>
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
@@ -742,11 +740,11 @@
                                     <field name="birthday"/>
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
-                                <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
-                                <footer class="py-0">
-                                    <div class="d-flex ms-auto align-items-center">
-                                        <field name="user_id" widget="many2one_avatar_user" readonly="1" class="m-1 ms-2 d-flex align-items-center justify-content-center"/>
-                                        <field name="activity_ids" widget="kanban_activity" class="m-1 ms-2 d-flex align-items-center justify-content-center"/>
+                                <field class="hr_tags mt-1" name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
+                                <footer class="justify-content-between">
+                                    <div class="d-flex align-items-center gap-1">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                        <field name="user_id" widget="many2one_avatar_user" readonly="1"/>
                                     </div>
                                 </footer>
                             </main>

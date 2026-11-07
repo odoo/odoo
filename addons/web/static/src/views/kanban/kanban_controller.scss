@@ -98,23 +98,13 @@
 
     &.o_kanban_list {
         .o_kanban_renderer.o_kanban_ungrouped {
-            --Kanban-gap: 0;
+            --Kanban-gap-v: 0;
+            --Kanban-gap-h: 0;
             --KanbanRecord-width: 100%;
 
             .o_kanban_record {
-                --KanbanRecord-margin-v: 0;
-                --KanbanRecord-margin-h: 0;
-
                 &:not(:only-of-type, :first-of-type) {
-                    margin-top: -1px;
-                }
-
-                &:not(:first-of-type) {
-                    --Card-border-radius-top: 0;
-                }
-
-                &:not(:last-of-type) {
-                    --Card-border-radius-bottom: 0;
+                    margin-top: var(--KanbanListRecord-margin-top, -1px);
                 }
             }
         }
@@ -127,15 +117,18 @@
     /* Default KanbanView values */
 
     --Kanban-background: var(--o-kanban-background);
-    --Kanban-gap: unset;
+    --Kanban-gap-v: unset;
+    --Kanban-gap-h: unset;
     --Kanban-padding: 0;
 
     --KanbanGroup-background: var(--Kanban-background);
     --KanbanGroup-padding-h: var(--o-kanban-group-padding);
     --KanbanGroup-padding-bottom: var(--o-kanban-group-padding);
 
-    --KanbanRecord-margin-v: var(--o-kanban-record-margin);
-    --KanbanRecord-margin-h: var(--o-kanban-record-margin);
+    --KanbanRecord-margin-t: var(--o-kanban-record-margin);
+    --KanbanRecord-margin-b: var(--o-kanban-record-margin);
+    --KanbanRecord-margin-s: var(--o-kanban-record-margin);
+    --KanbanRecord-margin-e: var(--o-kanban-record-margin);
     --KanbanRecord-gap-v: var(--o-kanban-inner-hmargin);
     --KanbanRecord-width: var(--o-kanban-default-record-width); 
     --KanbanRecord--small-width: var(--o-kanban-small-record-width);
@@ -167,12 +160,15 @@
     border-top: var(--border-width) solid var(--Kanban-background);
     background: var(--Kanban-background);
     padding: var(--Kanban-padding);
-    gap: var(--Kanban-gap);
+    row-gap: var(--Kanban-gap-v);
+    column-gap: var(--Kanban-gap-h);
 
     @media print {
-        --Kanban-gap: var(--o-bs-spacer-2);
+        --Kanban-gap-v: var(--o-bs-spacer-2);
+        --Kanban-gap-h: var(--o-bs-spacer-2);
         --KanbanGroup-padding-h: 0;
-        --KanbanRecord-margin-h: 0;
+        --KanbanRecord-margin-s: 0px;
+        --KanbanRecord-margin-e: 0px;
     }
 
     @media print {
@@ -240,6 +236,11 @@
 
         .o_kanban_group {
             background: var(--KanbanGroup-background);
+
+            @media screen and (min-width: 768px), print and (min-width: 188mm) {
+                /* When the renderer scrolls, this lets the columns grow and keeps the bottom spacing at the end */
+                min-height: max-content;
+            }
         }
 
         .o_kanban_group,
@@ -384,12 +385,12 @@
         min-height: 100%;
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
-            --Kanban-padding: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
+            --Kanban-padding: var(--KanbanRecord-margin-t) var(--KanbanRecord-margin-e) var(--KanbanRecord-margin-b) var(--KanbanRecord-margin-s);
         }
 
         .o_kanban_record {
             width: var(--KanbanRecord-width);
-            margin: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
+            margin: var(--KanbanRecord-margin-t) var(--KanbanRecord-margin-e) var(--KanbanRecord-margin-b) var(--KanbanRecord-margin-s);
 
             @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 margin: 0 0 calc(var(--o-bs-border-width) * -1);
@@ -408,7 +409,7 @@
     }
 
     .o_search_panel_resize + &, .o_search_panel_sidebar + & {
-        --Kanban-padding: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h) var(--KanbanRecord-margin-v) 0;
+        --Kanban-padding: var(--KanbanRecord-margin-t) var(--KanbanRecord-margin-e) var(--KanbanRecord-margin-b) 0;
     }
 }
 

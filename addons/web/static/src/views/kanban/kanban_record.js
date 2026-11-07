@@ -86,6 +86,12 @@ export class KanbanRecord extends CardRenderer {
         this.longTouchTimer = null;
         this.touchStartMs = 0;
         this.showMenu = this.constructor.MENU_ATTRIBUTE in this.templates;
+        const menuCallSelector = `t[t-call="${this.constructor.MENU_ATTRIBUTE}"]`;
+        this.isMenuInCard =
+            this.showMenu &&
+            Object.values(this.props.archInfo.templateDocs).some((doc) =>
+                doc.querySelector(menuCallSelector)
+            );
     }
 
     get renderingContext() {

@@ -1,23 +1,19 @@
 .o_project_update_kanban_view {
     .o_kanban_record {
         &.o_kanban_color_8::after {
-            border-right-color: var(--o-success) !important;
-            border-left-color: var(--o-success) !important;
+            border-color: var(--o-success) !important;
         }
 
         &.o_kanban_color_9::after {
-            border-right-color: var(--o-info) !important;
-            border-left-color: var(--o-info) !important;
+            border-color: var(--o-info) !important;
         }
 
         &.o_kanban_color_10::after {
-            border-right-color: var(--o-warning) !important;
-            border-left-color: var(--o-warning) !important;
+            border-color: var(--o-warning) !important;
         }
 
         &.o_kanban_color_11::after {
-            border-right-color: var(--o-danger) !important;
-            border-left-color: var(--o-danger) !important;
+            border-color: var(--o-danger) !important;
         }
 
         &.o_kanban_color_0::after {
@@ -31,6 +27,11 @@
 
             border-right: 2px solid var(--primary) !important;
             border-left: 1px solid var(--primary) !important;
+        }
+
+        .o_progressbar {
+            --ProgressBarField-width: 100%;
+            --ProgressBarField-padding-x: 0;
         }
     }
 }

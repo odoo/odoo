@@ -1639,7 +1639,7 @@ test(`render popover with modifiers`, async () => {
 
     await clickEvent(4);
     expect(`.o_calendar_popover`).toHaveCount(1);
-    expect(`.o_calendar_popover .o_priority span.o_priority_star`).toHaveCount(1);
+    expect(`.o_calendar_popover .o_priority i.o_priority_star`).toHaveCount(1);
     expect(`.o_calendar_popover li.o_invisible_modifier`).toHaveCount(0);
     expect(`.o_calendar_popover .o_field_datetime`).toHaveCount(1);
 

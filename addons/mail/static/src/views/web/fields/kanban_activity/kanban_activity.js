@@ -2,6 +2,7 @@ import { ActivityButton } from "@mail/core/web/activity_button";
 
 import { Component, types, useProps } from "@odoo/owl";
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Record } from "@web/model/relational_model/record";
 
@@ -27,13 +28,26 @@ export class KanbanActivity extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = useProps({ record: types.instanceOf(Record) });
+        this.props = useProps({
+            record: types.instanceOf(Record),
+            buttonClasses: types.string().optional(),
+        });
     }
 }
 
 export const kanbanActivity = {
     component: KanbanActivity,
     fieldDependencies: KanbanActivity.fieldDependencies,
+    supportedOptions: [
+        {
+            label: _t("Button classes"),
+            name: "button_classes",
+            type: "string",
+        },
+    ],
+    extractProps: ({ options }) => ({
+        buttonClasses: options.button_classes,
+    }),
 };
 
 registry.category("fields").add("kanban_activity", kanbanActivity);

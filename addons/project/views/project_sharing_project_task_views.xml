@@ -186,11 +186,11 @@
                         </h1>
                         <div class="d-flex justify-content-between justify-content-lg-end align-items-center px-1 w-100 w-lg-auto" invisible="not active or is_template">
                             <field name="priority" class="h3 pe-2" widget="priority" readonly="not context.get('portal_can_advanced_edit', False)"/>
-                            <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
+                            <field name="state" widget="project_task_state_selection" options="{'hide_label': false}" class="o_task_state_widget" />
                         </div>
                         <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active and not is_template">
                             <field name="priority" class="h3 pe-2" widget="priority" readonly="not context.get('portal_can_advanced_edit', False)"/>
-                            <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
+                            <field name="state" widget="project_task_state_selection" options="{'hide_label': false}" class="o_task_state_widget" />
                         </div>
                     </div>
                     <group>
@@ -246,7 +246,7 @@
                                     <field name="display_in_project" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1" width="20px"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" width="25px"/>
                                     <field name="subtask_count" column_invisible="1"/>
                                     <field name="closed_subtask_count" column_invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>
@@ -282,7 +282,7 @@
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" readonly="1"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" width="25px" readonly="1"/>
                                     <field name="subtask_count" column_invisible="1"/>
                                     <field name="closed_subtask_count" column_invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>

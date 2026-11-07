@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.CardPropertiesField">
-        <div t-ref="this.propertiesRef" class="w-100 fw-normal text-muted">
-            <div class="o_card_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 mb-1"
+        <div t-ref="this.propertiesRef" class="w-100 fw-normal">
+            <div class="o_card_property_field d-flex align-items-baseline gap-1 w-100 text-truncate"
                 t-foreach="this.propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
                 t-if="propertyConfiguration.value and propertyConfiguration.view_in_cards">
                 <!-- We purposefully hide 'Falsy' values such as a False boolean or a 0 value integer field. -->
-                <div class="mw-100 text-truncate text-900 d-flex gap-2"
-                    t-att-class="{'border rounded-3 ps-2' : propertyConfiguration.type === 'boolean'}">
-                    <label t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)"
-                        t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>
-                    <PropertyValue
-                        id="this.generateUniqueDomID()"
-                        canChangeDefinition="this.state.canChangeDefinition"
-                        comodel="propertyConfiguration.comodel || ''"
-                        context="this.props.context"
-                        domain="propertyConfiguration.domain || '[]'"
-                        readonly="this.props.readonly"
-                        selection="propertyConfiguration.selection"
-                        string="propertyConfiguration.string"
-                        tags="propertyConfiguration.tags"
-                        type="propertyConfiguration.type"
-                        value="propertyConfiguration.value"
-                        onChange.bind="() => {}"
-                        onTagsChange.bind="() => {}"
-                        record="this.props.record"
-                    />
+                <i
+                    t-if="this.props.icon"
+                    class="oi"
+                    t-att-class="this.props.iconClass"
+                    t-att-data-icon="this.props.icon"/>
+                <div class="w-100 min-w-0 d-flex gap-2"
+                    t-att-class="{'d-flex align-items-center gap-1' : propertyConfiguration.type === 'boolean'}">
+                    <span t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)">
+                        <label t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>:
+                    </span>
+                    <div class="o_card_property_value text-truncate">
+                        <PropertyValue
+                            id="this.generateUniqueDomID()"
+                            canChangeDefinition="this.state.canChangeDefinition"
+                            comodel="propertyConfiguration.comodel || ''"
+                            context="this.props.context"
+                            domain="propertyConfiguration.domain || '[]'"
+                            readonly="this.props.readonly"
+                            selection="propertyConfiguration.selection"
+                            string="propertyConfiguration.string"
+                            tags="propertyConfiguration.tags"
+                            type="propertyConfiguration.type"
+                            value="propertyConfiguration.value"
+                            onChange.bind="() => {}"
+                            onTagsChange.bind="() => {}"
+                            record="this.props.record"
+                        />
+                    </div>
                     <span class="o_property_field_value_suffix" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
                 </div>
             </div>

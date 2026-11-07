@@ -115,7 +115,7 @@
                                     <div class="d-flex align-items-center">
                                         <field name="display_name" string="Name" class="fw-bolder"/>
                                         <t t-if="record.is_current.raw_value">
-                                            <span class="ms-2 text-success o_status o_status_green"></span>
+                                            <span class="ms-2 text-success o_status o_status_success"></span>
                                         </t>
                                         <span t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"
                                            class="ms-2 text-muted"/>

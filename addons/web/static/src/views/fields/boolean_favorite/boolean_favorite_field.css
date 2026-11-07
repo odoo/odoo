@@ -1,7 +1,12 @@
 .o_field_widget {
     .o_favorite {
-        i.oi {
-            font-size: var(--Favorite-font-size, 1rem);
+        --btn-color: var(--o-bs-text-muted);
+
+        &.o_favorite_active {
+            --btn-color: var(--o-main-favorite-color);
+        }
+        i {
+            font-size: var(--Favorite-font-size, 1em);
         }
     }
 }

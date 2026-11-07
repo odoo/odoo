@@ -475,12 +475,15 @@
     /* Contextual adaptation */
     .o_kanban_renderer {
         --Kanban-background: transparent;
-        --KanbanRecord-margin-v: 0;
-        --KanbanRecord-margin-h: 0;
+        --KanbanRecord-margin-t: 0px;
+        --KanbanRecord-margin-b: 0px;
+        --KanbanRecord-margin-s: 0px;
+        --KanbanRecord-margin-e: 0px;
 
         &.o_kanban_ungrouped, &.o_kanban_grouped {
             --Kanban-padding: 0;
-            --Kanban-gap: var(--o-bs-spacer-2);
+            --Kanban-gap-v: var(--o-bs-spacer-2);
+            --Kanban-gap-h: var(--o-bs-spacer-2);
         }
     }
 

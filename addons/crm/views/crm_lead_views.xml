@@ -533,17 +533,17 @@
                                     <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                                 </t>
                             </div>
-                            <div class="d-flex" invisible="not partner_id">
+                            <div class="d-flex align-items-center" invisible="not partner_id">
                                 <field name="partner_id" widget="many2one_avatar" class="text-truncate" readonly="1" options="{'no_create': 1, 'no_open': 1}"/>
                                 <field name="partner_id" class="ms-2 text-truncate"/>
                             </div>
                             <field name="contact_name" invisible="partner_id"/>
                             <field name="partner_name" invisible="partner_id or contact_name"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" class="mt-1"/>
                             <field name="lead_properties" widget="properties"/>
-                            <footer class="pt-1">
-                                <div class="d-flex align-items-center">
-                                    <field name="priority" widget="priority" groups="base.group_user" class="me-2"/>
+                            <footer>
+                                <div class="d-flex align-items-center gap-2">
+                                    <field name="priority" widget="priority" groups="base.group_user"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
                                 <div class="d-flex align-items-center gap-2 min-w-0 ms-auto">

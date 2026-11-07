@@ -27,6 +27,13 @@ import {
 } from "@odoo/owl";
 import { deepCopy } from "@web/core/utils/objects";
 
+export const propertiesFieldProps = {
+    ...standardFieldProps,
+    context: t.object().optional(),
+    columns: t.customValidator(t.number(), (columns) => [1, 2].includes(columns)).optional(),
+    editMode: t.boolean().optional(),
+};
+
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
     static components = {
@@ -35,12 +42,7 @@ export class PropertiesField extends Component {
         PropertyDefinition,
         PropertyValue,
     };
-    props = useProps({
-        ...standardFieldProps,
-        context: t.object().optional(),
-        columns: t.customValidator(t.number(), (columns) => [1, 2].includes(columns)).optional(),
-        editMode: t.boolean().optional(),
-    });
+    props = useProps(propertiesFieldProps);
 
     setup() {
         this.notification = useService("notification");

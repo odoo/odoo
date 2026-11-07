@@ -4636,6 +4636,35 @@ test("edit the kanban color with translated colors resulting in the same terms",
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
+test("record menu can be placed in the card with t-call='menu'", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "category",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="open" class="dropdown-item">Open</a>
+                    </t>
+                    <t t-name="card">
+                        <div class="o_menu_container">
+                            <t t-call="menu"/>
+                        </div>
+                        <field name="name"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    const record = getKanbanRecord({ index: 0 });
+    expect(queryAll(".o_dropdown_kanban", { root: record })).toHaveCount(1);
+    expect(queryAll(".o_menu_container > .o_dropdown_kanban", { root: record })).toHaveCount(1);
+    expect(queryAll(".o_dropdown_kanban", { root: record })).not.toHaveClass("position-absolute");
+
+    await toggleKanbanRecordDropdown(0);
+    expect(queryAll(".dropdown-item", { root: getDropdownMenu(record) })).toHaveText("Open");
+});
+
 test("load more records in column", async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step(`web_search_read ${kwargs.limit} - ${kwargs.offset}`);

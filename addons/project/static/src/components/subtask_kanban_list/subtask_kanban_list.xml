@@ -5,8 +5,8 @@
     <t t-name="project.SubtaskKanbanList">
         <t t-if="this.props.record.displaySubtasks">
             <div class="subtask_list d-flex flex-column gap-1 mt-2 border-top pt-2">
-                <div t-foreach="this.closedList" t-as="record" t-key="record.id"  class="subtask_list_row d-flex gap-1 align-items-stretch">
-                    <a t-attf-class="subtask_name_col d-flex align-items-center flex-grow-1 rounded ps-1 text-truncate small {{ ['1_done', '1_canceled'].includes(record.data.state) ? 'text-muted opacity-50' : '' }}"
+                <div t-foreach="this.closedList" t-as="record" t-key="record.id"  class="subtask_list_row d-flex gap-1 align-items-stretch" t-att-class="['1_done', '1_canceled'].includes(record.data.state) ? 'opacity-50' : ''">
+                    <a class="subtask_name_col d-flex align-items-center flex-grow-1 rounded ps-1 text-truncate small"
                         t-att-title="record.data.display_name"
                         t-on-click.prevent="() => this.goToSubtask(record.resId)">
                         <span t-out="record.data.display_name" class="d-block text-truncate"/>
