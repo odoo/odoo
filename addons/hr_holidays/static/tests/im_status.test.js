@@ -1,7 +1,7 @@
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 
 import {
-    contains,
     openDiscuss,
     sendPresenceUpdate,
     start,
@@ -22,19 +22,19 @@ test("change icon on change partner im_status for leave variants", async () => {
     patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']:count(1)"
     );
     sendPresenceUpdate("res.users", serverState.userId, "offline");
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave']:count(1)"
     );
     sendPresenceUpdate("res.users", serverState.userId, "away");
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and idle']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and idle']:count(1)"
     );
     sendPresenceUpdate("res.users", serverState.userId, "online");
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']:count(1)"
     );
 });

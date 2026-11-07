@@ -1,8 +1,8 @@
 import { describe, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import {
     click,
-    contains,
     openMessagingMenu,
     start,
     startServer,
@@ -33,7 +33,7 @@ test("shows 'Back on' in chat window header of dm chat", async () => {
     await start();
     await openMessagingMenu();
     await click(".o-mail-NotificationItem");
-    await contains(
-        ".o-mail-ChatWindow-header .o-mail-ChatWindow-outOfOffice:text('Back on Jan 1, 2023')"
+    await waitFor(
+        ".o-mail-ChatWindow-header .o-mail-ChatWindow-outOfOffice:text('Back on Jan 1, 2023'):count(1)"
     );
 });
