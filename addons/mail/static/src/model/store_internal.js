@@ -13,8 +13,6 @@ import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
 const Markup = markup().constructor;
 
-/** @typedef {string} FieldName */
-
 export class StoreInternal extends RecordInternal {
     /**
      * See {@link Store#MAKE_UPDATE}.

@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 export const modelRegistry = registry.category("discuss.model");
 
 export const COMPUTED_SYM = Symbol("computed");
-export const FIELD_DEFINITION_SYM = Symbol("field_definition");
+const FIELD_DEFINITION_SYM = Symbol("field_definition");
 /** @typedef {ATTR_SYM|MANY_SYM|ONE_SYM} FIELD_SYM */
 export const ATTR_SYM = Symbol("attr");
 export const MANY_SYM = Symbol("many");
@@ -112,8 +112,6 @@ export const fields = {
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
      * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
-     *   in the relation.
-     *   from the relation.
      * @returns {import("models").Models[M]}
      */
     One(targetModel, param1) {
@@ -132,8 +130,6 @@ export const fields = {
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
      * @param {string} [param1.inverse] if set, the name of field in targetModel that acts as the inverse.
-     *   in the relation.
-     *   from the relation.
      * @returns {import("models").Models[M][]}
      */
     Many(targetModel, param1) {

@@ -43,8 +43,6 @@ export class Record {
     _;
     static id = "id";
     /** @type {import("@web/env").OdooEnv} */
-    static env;
-    /** @type {import("@web/env").OdooEnv} */
     env;
     /** @type {Object<string, Record>} */
     static records;
@@ -67,10 +65,6 @@ export class Record {
         return this._.prepareRecord(this, ids);
     }
 
-    /** @param {() => any} fn */
-    static MAKE_UPDATE(fn) {
-        return this.store.MAKE_UPDATE(...arguments);
-    }
     static get(data) {
         const Model = this;
         return Model.records.get(Model.localId(data));
@@ -697,7 +691,6 @@ export class Record {
         return data;
     }
 }
-Record.register();
 
 untrackFunctions(Record, ["insert", "new"]);
 untrackFunctions(Record.prototype, ["delete", "update"]);
