@@ -6,6 +6,7 @@ import {
     onWillUnmount,
     Plugin,
     proxy,
+    signal,
     t,
     useConfig,
     useListener,
@@ -38,7 +39,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
-import { exprToBoolean } from "@web/core/utils/strings";
+import { exprToBoolean, isNumeric } from "@web/core/utils/strings";
 import { useSubEnv } from "@web/owl2/utils";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -47,6 +48,7 @@ import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { ReportAction } from "./reports/report_action";
 import { downloadReport, getReportUrl } from "./reports/utils";
+import { openHubItem } from '@web/search/hub_menu/hub_utils';
 
 class BlankComponent extends Component {
     props = useProps({
@@ -88,6 +90,16 @@ const actionRegistry = registry.category("actions");
  * @property {number} [index]
  * @property {boolean} [newWindow]
  * @property {boolean} [forceLeave]
+ * @property {string} [hubItemKey] item to open when executing an 'ir.actions.hub'
+ * @property {HubInfo} [hub] set by the hub on the options of its child action
+ */
+
+/**
+ * @typedef {Object} HubInfo
+ * @property {HubAction} action the hub action
+ * @property {number} resId id of the hub's record
+ * @property {string} itemKey key of the item currently opened
+ * @property {import("@odoo/owl").Signal<number[]>} pinnedItemIds ids of the items pinned by the user, in display order
  */
 
 export async function clearUncommittedChanges(bus, { forceLeave } = {}) {
@@ -993,6 +1005,33 @@ export class ActionPlugin extends Plugin {
         }
         const index = this.#computeStackIndex(options);
         const nextStack = [...this.#controllerStack.slice(0, index), controller];
+
+        if(controller.action.hub_action){
+            // insert hub controller 
+            const hubAction = controller.action.hub_action;
+
+            const hubControllerInStack = nextStack.find(c => c.action.type==='ir.actions.hub');
+            if(!hubControllerInStack){
+                const hubController = this.#makeController({
+                    virtual: true, // has no component 
+                    action: hubAction,
+                    displayName: hubAction.display_name,
+                    state: { 
+                        action: hubAction.id, 
+                        active_id: controller.action.context.active_id 
+                    },
+                });
+                nextStack.splice(-1, 0, hubController);
+            }
+
+            controller.hub = {
+                action: hubAction,
+                resId: controller.action.context.active_id,
+                pinnedItemIds: signal(hubAction.pinned_item_ids),
+                activeItemId: hubAction.active_item_id,
+            }
+        }
+
         if (action.target !== "new" && options.newWindow) {
             return this.#openActionInNewWindow(action, this.#makeState(nextStack));
         }
@@ -1028,6 +1067,10 @@ export class ActionPlugin extends Plugin {
             }
         };
         controller.config.isReloadingController = controller === this.#controllerStack.at(-1);
+        if (action.target !== "new" && controller.hub) {
+            // put .hub on config so it's available in env
+            controller.config.hub = controller.hub;
+        }
 
         const plugin = this;
         class ControllerComponent extends Component {
@@ -1384,6 +1427,7 @@ export class ActionPlugin extends Plugin {
             action,
             view,
             views,
+            hub: options.hub,
             ...this.#getViewInfo(view, action, views, options.props),
         });
         action.controllers[view.type] = controller;
@@ -1449,6 +1493,7 @@ export class ActionPlugin extends Plugin {
             const controller = this.#makeController({
                 Component: clientAction,
                 action,
+                hub: options.hub,
                 ...this.#getActionInfo(action, { ...props, ...options.props }),
             });
             controller.displayName ||= clientAction.displayName?.toString() || "";
@@ -1583,6 +1628,26 @@ export class ActionPlugin extends Plugin {
         return this.#doAction(nextAction, options);
     }
 
+    // ---------------------------------------------------------------------------
+    // ir.actions.hub
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Executes an action of type 'ir.actions.hub'.
+     *
+     * @private
+     * @param {HubAction} action
+     * @param {ActionOptions} options
+     * @returns {Promise<void>}
+     */
+    async #executeHubAction(action, options) {
+        const firstItem = action.item_ids.find((i) => i.id === action.pinned_item_ids?.[0]) || action.item_ids[0];
+        return openHubItem(this, firstItem, {
+            resModel: action.res_model, 
+            resId: action.context.active_id,
+        }, options);
+    }
+
     #executeCloseAction(params = {}) {
         if (this.#dialog) {
             return this.#removeDialog(params.onCloseInfo);
@@ -1631,6 +1696,8 @@ export class ActionPlugin extends Plugin {
                 return this.#executeServerAction(action, options);
             case "ir.actions.report":
                 return this.#executeReportAction(action, options);
+            case "ir.actions.hub":
+                return this.#executeHubAction(action, options);
             default: {
                 const handler = actionHandlersRegistry.get(action.type, null);
                 if (handler !== null) {
@@ -1831,6 +1898,7 @@ export class ActionPlugin extends Plugin {
                 Component: View,
                 action: controller.action,
                 views: controller.views,
+                hub: controller.hub,
                 view,
             });
 
@@ -1961,7 +2029,7 @@ export class ActionPlugin extends Plugin {
     }
 
     #makeState(cStack) {
-        const actions = cStack.map((controller) => {
+        const actions = cStack.filter((controller) => controller.action.type !== "ir.actions.hub").map((controller) => {
             const { action, props, displayName } = controller;
             const actionState = { displayName };
             if (action.path || action.id) {

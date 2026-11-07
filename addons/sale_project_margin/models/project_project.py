@@ -19,7 +19,7 @@ class ProjectProject(models.Model):
         embedded_action_context = self.env.context.get('from_embedded_action', False)
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project_margin.action_project_forecast_margin')
         all_sale_orders_lines = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]})
-        action['display_name'] = self.env._("%(name)s's Forecast Margins", name=self.name)
+        # action['display_name'] = self.env._("%(name)s's Forecast Margins", name=self.name)
         action["domain"] = [("id", "in", all_sale_orders_lines.ids)]
         action['context'] = {
             'from_embedded_action': embedded_action_context,

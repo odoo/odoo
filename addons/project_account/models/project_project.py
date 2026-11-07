@@ -12,7 +12,7 @@ class ProjectProject(models.Model):
         context = literal_eval(action['context'])
         action['context'] = {
             **context,
-            'create': self.env.context.get('from_embedded_action', False),
+            # 'create': self.env.context.get('from_embedded_action', False),
             'default_account_id': self.account_id.id,
         }
         return action
