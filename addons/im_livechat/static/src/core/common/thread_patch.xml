@@ -4,5 +4,8 @@
         <xpath expr="//div[hasclass('o-mail-Thread')]" position="before">
             <div t-if="this.showVisitorDisconnected" class="o-livechat-VisitorDisconnected alert alert-light py-1 fw-bold smaller shadow-sm border d-print-none" t-att-class="{ 'rounded-4': !this.ancestors.inChatWindow, 'rounded-0': this.ancestors.inChatWindow, 'mx-3': this.ancestors.inDiscussContent }" t-out="this.disconnectedText"/>
         </xpath>
+        <xpath expr="(//div[hasclass('o-mail-Thread')])" position="inside">
+            <Message t-if="this.channel?.chatbot?.typingMessage" message="this.channel.chatbot.typingMessage" hasActions="false" isTypingMessage="true" thread="this.props.thread"/>
+        </xpath>
     </t>
 </templates>

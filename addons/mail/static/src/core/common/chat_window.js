@@ -149,6 +149,14 @@ export class ChatWindow extends Component {
         return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto;`;
     }
 
+    get composerHiddenContainerClass() {
+        return {};
+    }
+
+    get showNeedactionCounter() {
+        return this.channel.importantCounter > 0;
+    }
+
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         if (
