@@ -3,6 +3,8 @@
 from unittest.mock import patch
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from lxml import html
+
 import odoo.tests
 from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -114,23 +116,27 @@ class TestWebsiteProfile(HttpCaseGamification):
 
         test_cases = [
             # All Time Total Karma: A (40k), B (30k), C (20k), D (15k)
-            ('/profile/users', [user_a, user_b]),
-            ('/profile/users/page/2', [user_c, user_d]),
+            ('/profile/users', [(1, user_a), (2, user_b)]),
+            ('/profile/users/page/2', [(3, user_c), (4, user_d)]),
 
             # This Month Karma Gain: B (20k), C (10k), D (5k), A (0)
-            ('/profile/users?group_by=month', [user_b, user_c]),
-            ('/profile/users/page/2?group_by=month', [user_d]),
+            ('/profile/users?group_by=month', [(1, user_b), (2, user_c)]),
+            ('/profile/users/page/2?group_by=month', [(3, user_d), (4, user_a)]),
 
-            # This Week Karma Gain: C (10k), D (5k), A (0), B (0)
-            ('/profile/users?group_by=week', [user_c, user_d]),
-            ('/profile/users/page/2?group_by=week', []),
+            # This Week Karma Gain: C (10k), D (5k), then B and A (0) by descending id
+            ('/profile/users?group_by=week', [(1, user_c), (2, user_d)]),
+            ('/profile/users/page/2?group_by=week', [(3, user_b), (4, user_a)]),
+
+            # Search: users keep their position in the whole ranking
+            ('/profile/users?search=Test User D', [(4, user_d)]),
+            ('/profile/users?search=Test User D&group_by=week', [(2, user_d)]),
         ]
 
-        for url, expected_users in test_cases:
+        for url, expected_rows in test_cases:
             with self.subTest(url=url):
-                html = self.url_open(url).text
-                for user in users:
-                    if user in expected_users:
-                        self.assertIn(user.name, html)
-                    else:
-                        self.assertNotIn(user.name, html)
+                tree = html.fromstring(self.url_open(url).content)
+                rows = [
+                    (int(row.xpath('string(./td[1])')), row.xpath('string(./td[3]/span[1])'))
+                    for row in tree.xpath('//table//tr[count(td) > 1]')
+                ]
+                self.assertEqual(rows, [(position, user.name) for position, user in expected_rows])
