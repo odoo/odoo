@@ -399,9 +399,10 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[False, "list"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"], [False, "calendar"]],
+            "search_view_id": self.env.ref('hr_attendance.hr_attendance_view_filter').ids,
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
-            "context": {"group_by": ["check_in:week"]},
+            "context": {"search_default_groupby_week": 1},
         }
 
     @api.depends("user_id.im_status", "attendance_state")
