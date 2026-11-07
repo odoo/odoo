@@ -10,5 +10,6 @@ patch(MoOverviewComponentsBlock.prototype, {
         super.setup();
         this.formatMonetary = (val) => formatMonetary(val, {currencyId: this.props.summary.currency_id});
         this.formatFloat = formatFloat;
+        this.extraCostTitle = "Extra Cost";
     },
 });

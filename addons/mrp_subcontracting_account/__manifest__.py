@@ -14,4 +14,9 @@ This bridge module allows to manage subcontracting with valuation.
     'data': [
         'security/ir.access.csv',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'mrp_subcontracting_account/static/src/**/*',
+        ],
+    },
 }
