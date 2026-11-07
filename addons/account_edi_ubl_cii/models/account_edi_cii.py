@@ -1243,6 +1243,15 @@ class AccountEdiCii(models.AbstractModel):
         price_allowance_amount = price_allowance_values.get('amount')
         if price_allowance_amount and (price_allowance_charge_indicator_sign := price_allowance_values.get('charge_indicator_sign')):
             price_allowance_amount *= price_allowance_charge_indicator_sign
+        if (
+            total_allowances
+            and price_amount
+            and billed_quantity
+            and line_total_amount
+            and currency.compare_amounts(line_total_amount, price_amount * billed_quantity / (base_quantity or 1.0) + total_charges) == 0
+        ):
+            # The line total is not reduced by the allowances: they are already included in the net price.
+            total_allowances = 0.0
         subtotal = (line_total_amount or 0.0) + total_allowances - total_charges
 
         # Price level.
