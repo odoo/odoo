@@ -536,6 +536,10 @@ export class StaticList extends DataPoint {
                 }
                 case DELETE:
                 case UNLINK: {
+                    // A removed record must not send its pending changes (see LINK if re-added).
+                    commandsByIds[command[1]] = getOwnCommands(command[1]).filter(
+                        (x) => x.command[0] !== UPDATE
+                    );
                     // If we receive an UNLINK command and we already have a SET command
                     // containing the record to unlink, we just remove it from the SET command.
                     // If there's a SET command, we know it's the first one (see @_replaceWith).
@@ -589,6 +593,9 @@ export class StaticList extends DataPoint {
                     }
                     this._currentIds.push(record.resId);
                     addOwnCommand([command[0], command[1]]);
+                    if (Object.keys(record._changes).length) {
+                        addOwnCommand([UPDATE, command[1]]);
+                    }
                     this.count++;
                     break;
                 }
