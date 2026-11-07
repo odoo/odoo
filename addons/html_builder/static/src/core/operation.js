@@ -10,7 +10,8 @@ import { Mutex } from "@web/core/utils/concurrency";
  * @property {Boolean} cancellable tells if the operation is cancellable (if it
  *   is a preview for example)
  * @property {Function} cancelPrevious the function to run when cancelling
- * @property {Number} [cancelTime=50] TODO
+ * @property {Number} [cancelTime=50] minimum delay (in ms), counted from when
+ *   the operation is queued, before a cancelled operation releases the mutex
  * @property {Boolean} [withLoadingEffect=true] specifies if a spinner should
  *   appear on the editable during the operation
  * @property {Number} [loadingEffectDelay=500] the delay after which the

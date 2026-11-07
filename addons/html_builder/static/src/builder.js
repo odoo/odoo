@@ -205,7 +205,7 @@ export class Builder extends Component {
             allowTargetBlank: true,
             allowTextColumnResize: false,
             dropImageAsAttachment: true,
-            getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
+            getBuilderEnvConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
             baseContainers: ["P"],
             cleanEmptyStructuralContainers: false,
             isEditableRTL: false,

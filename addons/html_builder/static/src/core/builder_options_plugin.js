@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
@@ -425,7 +424,8 @@ export class BuilderOptionsPlugin extends Plugin {
                         : {},
                     hideOverlay: Options.length && Options.every((Option) => Option.hideOverlay),
                     hasOverlayOptions: this.hasOverlayOptions(element),
-                    isRemovable: isRemovable(element),
+                    isRemovable:
+                        this.checkPredicates("is_element_removable_predicates", element) ?? true,
                     removeDisabledReason: this.getRemoveDisabledReason(element),
                     isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
@@ -605,7 +605,10 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     isClonable(el) {
         // TODO and isDraggable
-        return el.matches(this.clonableSelector) || isRemovable(el);
+        return (
+            el.matches(this.clonableSelector) ||
+            (this.checkPredicates("is_element_removable_predicates", el) ?? true)
+        );
     }
 
     /**
@@ -815,11 +818,7 @@ export class BuilderOptionsPlugin extends Plugin {
 }
 
 function getClosestElements(element, selector) {
-    if (!element) {
-        // TODO we should remove it
-        return [];
-    }
-    const parent = element.closest(selector);
+    const parent = element?.closest(selector);
     return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
 }
 

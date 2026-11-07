@@ -72,13 +72,6 @@ export class BuilderOverlay {
         return this.isResizableY() || this.isResizableX() || this.isResizableGrid();
     }
 
-    // displayOverlayOptions(el) {
-    //     // TODO when options will be more clear:
-    //     // - moving
-    //     // - timeline
-    //     // (maybe other where `displayOverlayOptions: true`)
-    // }
-
     isActive() {
         // TODO active still necessary ? (check when we have preview mode)
         return this.overlayElement.matches(".oe_active, .o_we_overlay_preview, .o_hover_overlay");
