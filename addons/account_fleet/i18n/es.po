@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-10-13 11:30+0000\n"
+"PO-Revision-Date: 2026-11-06 10:10+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
 "account_fleet/es/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.report_invoice_document
 msgid "1-ABC-123"
-msgstr ""
+msgstr "1-ABC-123"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -47,11 +47,14 @@ msgid ""
 "                                <span class=\"o_stat_text\">Service's Bill</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_value\">Nuevo</span>\n"
+"                                <span class=\"o_stat_text\">Factura del "
+"servicio</span>"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_account
 msgid "Account"
-msgstr ""
+msgstr "Cuenta"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
@@ -85,6 +88,8 @@ msgid ""
 "Check this box if a vehicle has to be linked to the account, when creating a "
 "bill for an expense or when creating an asset."
 msgstr ""
+"Marca esta casilla si un vehículo debe vincularse a la cuenta al crear una "
+"factura de proveedor sobre un gasto o al crear un activo."
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
@@ -110,7 +115,7 @@ msgstr "Fecha de creación"
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__display_name
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_account__id
@@ -141,13 +146,13 @@ msgstr "Necesita vehículo"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_account__is_vehicle_account
 msgid "Requires vehicle"
-msgstr ""
+msgstr "Requiere vehículo"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "Service Vendor Bill: %s"
-msgstr "Factura de servicio del proveedor: %s"
+msgstr "Factura de servicio de proveedor: %s"
 
 #. module: account_fleet
 #. odoo-python
@@ -156,7 +161,7 @@ msgstr "Factura de servicio del proveedor: %s"
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__service_count
 #: model_terms:ir.ui.view,arch_db:account_fleet.view_move_form
 msgid "Services"
-msgstr ""
+msgstr "Servicios"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
@@ -171,7 +176,7 @@ msgstr "Estado"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Impuesto"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle
@@ -192,8 +197,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill "
 "created."
 msgstr ""
-"No puede borrar registros de servicios registrados ya que uno o más de ellos "
-"ya tienen una factura creada."
+"No puedes borrar registros de servicios registrados porque uno o varios de "
+"ellos ya tienen una factura creada."
 
 #. module: account_fleet
 #. odoo-python
@@ -202,14 +207,16 @@ msgid ""
 "You cannot modify the amount of services linked to a journal item. Do it on "
 "the related accounting entry instead."
 msgstr ""
+"No puedes modificar el importe de los servicios vinculados a un apunte "
+"contable. Hazlo en el asiento correspondiente."
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "account_move_line_id"
-msgstr ""
+msgstr "account_move_line_id"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr "mostrar las facturas del proveedor para este vehículo"
+msgstr "mostrar las facturas del proveedor de este vehículo"

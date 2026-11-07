@@ -4,13 +4,14 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-06-29 23:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-04 19:33+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-3/pos_viva_com/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_api_key
@@ -73,6 +74,8 @@ msgid ""
 "Could not sync the order before starting the Viva.com payment. Please try "
 "again."
 msgstr ""
+"Não foi possível sincronizar o pedido antes de iniciar o pagamento Viva.com. "
+"Tente novamente."
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment__display_name
@@ -143,12 +146,14 @@ msgstr "Não"
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
 msgid "No internet connection. Waiting for recovery to confirm the payment..."
 msgstr ""
+"Sem conexão com a internet. Aguardando a recuperação para confirmar o "
+"pagamento..."
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/hooks/use_viva_app.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Ops!"
 
 #. module: pos_viva_com
 #. odoo-python
@@ -186,7 +191,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Pay with the Viva Wallet application"
-msgstr ""
+msgstr "Pague com o aplicativo Viva Wallet"
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -248,7 +253,7 @@ msgstr "Modo de teste"
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva.com, try again later."
-msgstr ""
+msgstr "Há alguns problemas entre nós e a Viva.com, tente novamente mais tarde."
 
 #. module: pos_viva_com
 #. odoo-python
@@ -280,7 +285,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Use Viva app"
-msgstr ""
+msgstr "Usar aplicativo Viva"
 
 #. module: pos_viva_com
 #: model_terms:ir.ui.view,arch_db:pos_viva_com.pos_payment_method_view_form_inherit_pos_viva_com
@@ -330,7 +335,7 @@ msgstr "Viva.com - Erro"
 #: code:addons/pos_viva_com/static/src/app/hooks/use_viva_app.js:0
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
 msgid "Viva.com Payment Error"
-msgstr ""
+msgstr "Erro de pagamento Viva.com"
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -340,6 +345,9 @@ msgid ""
 "customer may have been charged; refund the transaction on the Viva terminal "
 "before retrying."
 msgstr ""
+"A Viva.com cobrou %s, o que não corresponde ao total deste pedido (%s). O "
+"cliente pode ter sido cobrado; reembolse a transação no terminal Viva antes "
+"de tentar novamente."
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -349,6 +357,9 @@ msgid ""
 "(%s). The customer may have been charged; refund the transaction on the Viva "
 "terminal before retrying."
 msgstr ""
+"A Viva.com cobrou em %s, o que não corresponde à moeda definida para este "
+"pedido (%s). O cliente pode ter sido cobrado; reembolse a transação no "
+"terminal Viva antes de tentar novamente."
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -357,6 +368,8 @@ msgid ""
 "Viva.com payment could not be validated. The customer may have been charged; "
 "refund the transaction on the Viva terminal before retrying."
 msgstr ""
+"O pagamento Viva.com não pôde ser validado. O cliente pode ter sido cobrado; "
+"reembolse a transação no terminal Viva antes de tentar novamente."
 
 #. module: pos_viva_com
 #. odoo-javascript

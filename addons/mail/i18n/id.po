@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-10-06 09:34+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-04 06:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
 "mail/id/>\n"
@@ -160,7 +160,7 @@ msgstr "%(candidateType)s (%(protocol)s)"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_preview.js:0
 msgid "%(count)s Messages"
-msgstr "%(count)s Pesan-Pesan"
+msgstr "%(count)s Pesan"
 
 #. module: mail
 #. odoo-javascript
@@ -575,6 +575,12 @@ msgstr "1 jam"
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "1 item marked as read"
 msgstr "1 item ditandai sudah dibaca"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_message_result.js:0
+msgid "1 message found"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1009,7 +1015,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "A place to connect and exchange news with colleagues across the company."
 msgstr ""
@@ -1545,7 +1551,7 @@ msgstr "Admin"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Administrators"
 msgstr "Administrator"
 
@@ -5327,7 +5333,7 @@ msgstr "File"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Filter Messages"
-msgstr "Filter Pesan-Pesan"
+msgstr "Filter Pesan"
 
 #. module: mail
 #. odoo-javascript
@@ -5649,13 +5655,13 @@ msgstr "Gateway"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "General"
 msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "General channel for administrators."
 msgstr "Saluran umum untuk administrator."
 
@@ -11004,7 +11010,7 @@ msgstr "Pesan yang DIjadwalkan"
 #: model:ir.ui.menu,name:mail.mail_message_schedule_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_search
 msgid "Scheduled Messages"
-msgstr "Pesan-Pesan yang Dijadwalkan"
+msgstr "Pesan yang Dijadwalkan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
@@ -11073,7 +11079,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Search Messages"
-msgstr "Cari Pesan-Pesan"
+msgstr "Cari Pesan"
 
 #. module: mail
 #. odoo-javascript
@@ -11726,6 +11732,14 @@ msgstr "Tunjukkan konten yang di-trim"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Show video participants only"
 msgstr "Tunjukkan hanya peserta video"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_message_result.js:0
+msgid ""
+"Showing the first %(count)s messages found. Narrow your search or scroll to "
+"see more."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12754,7 +12768,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "This is a space for the whole team to connect and share updates."
 msgstr "Di sini, seluruh tim dapat terhubung dan berbagi informasi terbaru."
 
@@ -12768,7 +12782,7 @@ msgstr "Ini adalah awal kelompok %(conversationName)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of the #%(channelName)s channel"
-msgstr "Ini adalah awal mulai dari channel #%(channelName)s"
+msgstr "Ini adalah awal mulai dari saluran #%(channelName)s"
 
 #. module: mail
 #. odoo-javascript
@@ -14257,7 +14271,7 @@ msgstr "Selamat datang ke #%(channelName)s!"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Welcome to the #General channel 🎉"
 msgstr "Selamat datang di saluran #Umum 🎉"
 

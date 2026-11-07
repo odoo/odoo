@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 14:09+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-05 10:21+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/nl/>\n"
@@ -2739,7 +2739,7 @@ msgstr "Doorgaan"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_open_ui_button/pos_open_ui_button.js:0
 msgid "Continue Selling"
-msgstr "Blijven verkopen"
+msgstr "Doorgaan met verkopen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9871,6 +9871,15 @@ msgid ""
 msgstr ""
 "Deze order is al eerder gesynchroniseerd. Je dient de factuur vanuit de "
 "backend aan te maken voor deze order: "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The order was validated with a total of %(paid)s, but its lines now amount "
+"to %(total)s because they were changed on another device. The order stays "
+"open until the difference is settled."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

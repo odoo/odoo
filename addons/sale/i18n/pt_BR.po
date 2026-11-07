@@ -13,12 +13,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:44+0000\n"
-"PO-Revision-Date: 2026-07-29 18:45+0000\n"
+"PO-Revision-Date: 2026-11-05 18:33+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-3/sale/pt_BR/>\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -1138,6 +1139,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Olá,\n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.state in ('draft', 'sent')\">\n"
+"            Sua fatura pro forma da cotação <span style=\"font-weight: "
+"bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Sua fatura pro forma do pedido <span style=\"font-weight: "
+"bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"        </t>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (com a referência: <t t-out=\"object.origin or ''\"/> )\n"
+"        </t>\n"
+"        no valor de <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está "
+"disponível.\n"
+"        <br/><br/>\n"
+"        Não hesite em entrar em contato conosco se tiver alguma dúvida.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -1199,6 +1227,63 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Olá,\n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.state in ('draft', 'sent')\">\n"
+"            Sua cotação <span style=\"font-weight: bold;\" t-"
+"out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (com a referência: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
+"            </t>\n"
+"            no valor de <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> está pronta para revisão.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Seu pedido <span style=\"font-weight: bold;\" t-"
+"out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (com a referência: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
+"            </t>\n"
+"            no valor de <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> está pronto para revisão.\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
+"        <t t-if=\"documents\">\n"
+"            <br/>\n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Aqui estão alguns documentos adicionais que podem lhe "
+"interessar:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Aqui está um documento adicional que pode lhe interessar:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Não hesite em entrar em contato conosco se tiver alguma dúvida.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1390,7 +1475,7 @@ msgid ""
 "<strong>\n"
 "                        Invoicing Address\n"
 "                    </strong>"
-msgstr ""
+msgstr "<strong>Endereço de faturamento</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1398,7 +1483,7 @@ msgid ""
 "<strong>\n"
 "                        Shipping Address\n"
 "                    </strong>"
-msgstr ""
+msgstr "<strong>Endereço de entrega</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1406,7 +1491,7 @@ msgid ""
 "<strong>\n"
 "                    Invoicing and Shipping Address\n"
 "                </strong>"
-msgstr ""
+msgstr "<strong>Endereço de faturamento e entrega</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1669,7 +1754,6 @@ msgstr "Adicionar diversas variantes a um pedido a partir de uma grade"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-#, fuzzy
 msgid "Add to order"
 msgstr "Adicionar ao pedido"
 
@@ -1852,11 +1936,15 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.\n"
 "If you want to change it, please archive the product and create a new one."
 msgstr ""
+"Como outras unidades de medida (ex: %(problem_uom)s) além de %(uom)s já "
+"foram utilizadas para este produto, a alteração da unidade de medida não "
+"pode ser realizada.\n"
+"Se você deseja alterá-la, arquive o produto e crie um novo."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
 msgid "At Sales price"
-msgstr ""
+msgstr "Ao preço de Vendas"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
@@ -2122,7 +2210,6 @@ msgstr "Clique para configurar"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-#, fuzzy
 msgid "Click to define an invoicing target"
 msgstr "Clique para definir uma meta de faturamento"
 
@@ -2218,13 +2305,11 @@ msgstr "Configurar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid "Configure Delivery Methods"
 msgstr "Configurar formas de entrega"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
@@ -2624,7 +2709,6 @@ msgstr "Status da entrega"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
-#, fuzzy
 msgid "Delivery Time"
 msgstr "Prazo de entrega"
 
@@ -2645,7 +2729,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
-#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
@@ -2795,7 +2878,7 @@ msgstr "Nome exibido"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Display Product Images"
-msgstr ""
+msgstr "Exibir imagens do produto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
@@ -2883,7 +2966,7 @@ msgstr "Entrada <br/>"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
 msgid "Down payment Account Active"
-msgstr ""
+msgstr "Conta de entrada de pagamento ativa"
 
 #. module: sale
 #. odoo-python
@@ -2957,7 +3040,7 @@ msgstr "E-mail enviado ao cliente quando a fatura estiver disponível."
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
 msgid "Enable Services and Materials in Sales"
-msgstr ""
+msgstr "Habilitar serviços e materiais em Vendas"
 
 #. module: sale
 #. odoo-javascript
@@ -2968,7 +3051,7 @@ msgstr "Inserir um valor personalizado"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Excl. Tax)"
-msgstr ""
+msgstr "Excl. Imposto)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2978,7 +3061,7 @@ msgstr "Data prevista"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Expenses, Services & Materials"
-msgstr ""
+msgstr "Despesas, serviços e materiais"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -3023,7 +3106,6 @@ msgstr "Posição fiscal"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
-#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
@@ -3064,6 +3146,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                            sale orders."
 msgstr ""
+"Para preços fixos ou com fórmula, o preço original não é exibido nos\n"
+"                            pedidos de venda."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -3336,6 +3420,9 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                            discount column."
 msgstr ""
+"Na linha do pedido de venda, o preço original é o preço unitário e o "
+"desconto está na\n"
+"                            coluna de desconto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -3345,7 +3432,6 @@ msgstr "No pedido"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-#, fuzzy
 msgid "Included"
 msgstr "Incluído"
 
@@ -3994,7 +4080,6 @@ msgstr "Número de ações"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__customer_lead
-#, fuzzy
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
@@ -4055,6 +4140,9 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "Set the quantity to 0instead."
 msgstr ""
+"Após a confirmação de um pedido de venda, não é possível remover uma de suas "
+"linhas (precisamos rastrear se algo foi faturado ou entregue).\n"
+"Defina a quantidade como 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -4697,7 +4785,6 @@ msgstr "Cotação nº"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
-#, fuzzy
 msgid "Quotation / Order"
 msgstr "Cotação/Pedido"
 
@@ -5342,7 +5429,7 @@ msgstr "Serviços e Material"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
 msgid "Services & Materials"
-msgstr ""
+msgstr "Serviços e materiais"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5399,7 +5486,7 @@ msgstr "Mostrar margens em pedidos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show product images on your PDF and online quotes."
-msgstr ""
+msgstr "Exibir imagens de produtos em seus PDFs e cotações online."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5676,7 +5763,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Template for Quotations"
-msgstr ""
+msgstr "Modelo para cotações"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -5810,6 +5897,8 @@ msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"Os seguintes pedidos de venda %(invalid_orders)s não podem ser entregues. "
+"Todas as entregas foram canceladas."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5897,6 +5986,8 @@ msgid ""
 "The percentage of the amount that must be paid by the customer to confirm "
 "the order."
 msgstr ""
+"A porcentagem do valor que deve ser paga pelo cliente para confirmar o "
+"pedido."
 
 #. module: sale
 #. odoo-python
@@ -6302,6 +6393,8 @@ msgstr "Oportunidade de upsell"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Use fixed-price and cost-based services and materials for re-invoicing"
 msgstr ""
+"Usar serviços e materiais de preço fixo e baseados em custo para "
+"refaturamento"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6351,6 +6444,8 @@ msgid ""
 "Validity of the quotation. After this date, you will no longer be able to "
 "sign and pay it."
 msgstr ""
+"Validade da cotação. Após esta data, você não poderá mais assiná-la nem pagá-"
+"la."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6555,6 +6650,9 @@ msgid ""
 "in sales orders. Changing it may affect how the related order lines are "
 "delivered."
 msgstr ""
+"Você não deve alterar o tipo de produto porque este produto já está sendo "
+"usado em pedidos de Vendas. Alterá-lo pode afetar como as linhas de pedido "
+"relacionadas são entregues."
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_your_orders
@@ -6570,7 +6668,6 @@ msgstr "Sua referência:"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-#, fuzzy
 msgid "Your browser does not support iframe."
 msgstr "Seu navegador não oferece suporte a iframe."
 
@@ -6609,6 +6706,10 @@ msgid ""
 "Please change the company of your quotation or remove the products from "
 "other companies(%(bad_products)s)."
 msgstr ""
+"Sua cotação contém produtos da empresa %(product_company)s, enquanto sua "
+"cotação pertence à empresa %(quote_company)s. \n"
+"Por favor, altere a empresa de sua cotação ou remova os produtos de outras "
+"empresas (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript
