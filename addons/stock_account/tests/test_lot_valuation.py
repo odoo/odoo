@@ -840,19 +840,29 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(product.total_value, 100)
 
     def test_standard_lot_replay(self):
-        """Standard cost: a retroactive standard-price change re-prices the out
-        moves of a lot-valuated product."""
+        """Standard cost: backdating a delivery of a lot-valuated product before
+        a standard price change replays the period as expected and correctly
+        re-prices its out move at the standard price as of the new date."""
         product = self.product
         product.categ_id = self.category_standard
-        product.standard_price = 10
         lot1 = self.lot1
 
-        self._make_in_move(product, 10, 10, lot_ids=[lot1])
+        now = fields.Datetime.now()
+        with freeze_time(now - timedelta(seconds=3)):
+            product.standard_price = 10
+            self._make_in_move(product, 10, 10, lot_ids=[lot1])
+        with freeze_time(now - timedelta(seconds=1)):
+            product.standard_price = 15
         out = self._make_out_move(product, 4, lot_ids=[lot1])
-        self.assertEqual(out.value, -40)
 
-        product.standard_price = 15
+        # The current price is 15.
         self.assertEqual(out.value, -60)
+        self.assertEqual(lot1.product_qty, 6)
+        self.assertEqual(lot1.total_value, 90)
+
+        # In the past it was 10.
+        out.date = now - timedelta(seconds=2)
+        self.assertEqual(out.value, -40)
         self.assertEqual(lot1.product_qty, 6)
         self.assertEqual(lot1.total_value, 90)
 
