@@ -813,10 +813,6 @@ class WebsocketConnectionHandler:
         'connection', 'host', 'sec-websocket-key',
         'sec-websocket-version', 'upgrade', 'origin',
     }
-    # Latest version of the websocket worker. This version should be incremented
-    # every time `websocket_worker.js` is modified to force the browser to fetch
-    # the new worker bundle.
-    _VERSION = "saas-19.5-1"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -844,6 +840,7 @@ class WebsocketConnectionHandler:
             e = "Websocket is shutting down"
             raise ServiceUnavailable(e)
         public_session = cls._handle_public_configuration(request)
+        expected_version = request.env['ir.http']._get_bus_worker_version()
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
             socket = request.httprequest._HTTPRequest__environ['socket']
@@ -855,6 +852,7 @@ class WebsocketConnectionHandler:
                     db,
                     httprequest,
                     version,
+                    expected_version,
                 ),
             )
             # Save the session, as the WebSocket authentication reads it back
@@ -950,11 +948,11 @@ class WebsocketConnectionHandler:
             raise BadRequest(e)
 
     @classmethod
-    def _serve_forever(cls, websocket, db, httprequest, version):
+    def _serve_forever(cls, websocket, db, httprequest, version, expected_version):
         """
         Process incoming messages and dispatch them to the application.
         """
-        if httprequest.user_agent and version != cls._VERSION:
+        if httprequest.user_agent and version != expected_version:
             # Close the connection from an outdated worker. We can't use a
             # custom close code because the connection is considered successful,
             # preventing exponential reconnect backoff. This would cause old

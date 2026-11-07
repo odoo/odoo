@@ -287,7 +287,7 @@ class WebsocketCase(HttpCase, BusCase):
             cls._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
         cls._BASE_WEBSOCKET_URL = f"ws://{HOST}:{cls.http_port()}/websocket"
-        cls._WEBSOCKET_URL = f"{cls._BASE_WEBSOCKET_URL}?version={WebsocketConnectionHandler._VERSION}"
+        cls._WEBSOCKET_URL = f"{cls._BASE_WEBSOCKET_URL}?version={cls.env['ir.http']._get_bus_worker_version()}"
         websocket_allowed_patch = patch.object(WebsocketConnectionHandler, "websocket_allowed", return_value=True)
         cls.startClassPatcher(websocket_allowed_patch)
 
