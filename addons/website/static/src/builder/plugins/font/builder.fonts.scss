@@ -1,6 +1,7 @@
 
 @each $font-name, $font-config in $o-theme-font-configs {
     $url: map-get($font-config, 'url');
+    $local-url: map-get($font-config, 'local-url');
     @if $url {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap&subset=latin,latin-ext,vietnamese");
     } @else {
@@ -8,6 +9,11 @@
         $attachment: map-get($font-config, 'attachment');
         @if $attachment {
             @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+        } @else if $local-url {
+            // The leading slash must be written out: the asset bundle prefixes
+            // the urls not visibly starting with one with the directory of this
+            // file, and it reads the source before the interpolation.
+            @import url("/#{str-slice($local-url, 2)}");
         }
     }
 }
