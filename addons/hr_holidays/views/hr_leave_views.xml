@@ -247,17 +247,17 @@
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
                                     class="o_image_40_cover float-start rounded" alt="Employee's image"/>
                             </aside>
-                            <main class="d-flex flex-column lh-sm">
+                            <main class="d-flex flex-column flex-grow-1 lh-sm">
                                 <span class="hr_leave_kanban_employee_id"><field name="employee_id" class="fw-bold"/></span>
-                                <div class="d-flex flex-row">
-                                    <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
+                                <div>
+                                    <div id="date_part"> <!-- To be override in my_kanban-->
                                             <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
                                             <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
-                                            <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                            <span class="text-nowrap" t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                             <t t-if="leave_unit == 'day'">
                                                 <t t-if="!same_day">
                                                     <span class="mx-1">–</span>
-                                                    <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    <span class="text-nowrap" t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                 </t>
                                             </t>
                                             <t t-elif="leave_unit == 'half_day'">
@@ -272,7 +272,7 @@
                                                 </t>
                                                 <t t-else="">
                                                     <span class="mx-1">–</span>
-                                                    <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    <span class="text-nowrap" t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                     <span class="mx-1"><t t-out="record.request_date_to_period.value"/></span>
                                                 </t>
                                             </t>
@@ -281,7 +281,7 @@
                                                 <field name="request_hour_from" widget="float_time_selection"/>
                                                 <span class="mx-1">–</span>
                                                 <t t-if="!same_day">
-                                                    <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    <span class="text-nowrap" t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                     <span class="mx-1">-</span>
                                                 </t>
                                                 <field name="request_hour_to" widget="float_time_selection"/>
@@ -391,7 +391,7 @@
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                             <group name="col_left" class="m-0" col="1">
-                                <div class="d-flex gap-2">
+                                <div class="o_wrap_label o_hr_leave_label d-flex gap-2">
                                     <i class="oi oi-lg align-self-center" data-icon="label" title="Time Off Type" name="work_entry_type_id"/>
                                     <label for="work_entry_type_id" string="Time Type"/>
                                 </div>
@@ -416,11 +416,11 @@
                                         placeholder="eg. Sickness, Paid time off, Unpaid, ..."
                                     />
                                 </div>
-                                <div class="d-flex gap-2">
+                                <div class="o_wrap_label o_hr_leave_label d-flex gap-2">
                                     <i class="oi oi-lg align-self-center" data-icon="schedule" title="Dates" name="date"/>
                                     <label for="request_date_from" string="Dates"/>
                                 </div>
-                                <div>
+                                <div class="o_hr_leave_dates">
                                     <div id="full_date" invisible="work_entry_type_request_unit == 'hour'">
                                         <field name="request_date_from"
                                                widget="daterange"
@@ -442,9 +442,9 @@
                                         <field name="request_hour_from" invisible="1"/>
                                         <field name="request_hour_to" invisible="1"/>
                                     </div>
-                                    <div class="d-flex gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
+                                    <div class="o_hr_leave_periods" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
                                         <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
-                                        <i class="oi" data-icon="east" aria-label="to" title="To"/>
+                                        <i class="oi" data-icon="arrow_forward" aria-label="to" title="To"/>
                                         <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
                                     <field name="is_time_rule_trimmed" invisible="1"/>
@@ -476,7 +476,7 @@
                                           <field class="text-danger fw-bold" name="allocation_display_warning" nolabel="1"/>
                                     </div>
                                 </div>
-                                <div class="d-flex gap-2">
+                                <div class="o_wrap_label o_hr_leave_label d-flex gap-2">
                                     <i class="oi oi-lg oi-filled align-self-center" data-icon="edit" title="Description" name="name"/>
                                     <label for="name" string="Description"/>
                                 </div>
@@ -521,13 +521,13 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <label for="request_date_from" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="class">d-md-none</attribute>
             </label>
             <label for="work_entry_type_id" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="class">d-md-none</attribute>
             </label>
             <label for="name" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="class">d-md-none</attribute>
             </label>
             <xpath expr="//div[hasclass('o_attachment_preview')]" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -588,10 +588,11 @@
         <field name="priority">17</field>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='col_left']/*[1]" position="before">
-                <div class="d-flex gap-2">
+                <div class="o_wrap_label o_hr_leave_label d-flex gap-2" groups="hr_holidays.group_hr_holidays_responsible">
                     <i class="oi oi-lg oi-filled align-self-center" data-icon="person" title="Employee" name="employee_id"/>
+                    <label for="employee_id" string="Employee" class="d-md-none"/>
                 </div>
-                <div>
+                <div groups="hr_holidays.group_hr_holidays_responsible">
                     <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible"
                         readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
                 </div>
@@ -716,7 +717,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form/field[@name='employee_id']" position="replace"/> <!--to focus on selected employee-->
             <xpath expr="//group[@name='col_left']/*[1]" position="before">
-                <div class="d-flex gap-2">
+                <div class="o_wrap_label o_hr_leave_label d-flex gap-2">
                     <i class="oi oi-lg oi-filled align-self-center" data-icon="person" title="Employee" name="employee_id"/>
                     <label for="employee_id" string="Employee"/>
                 </div>
