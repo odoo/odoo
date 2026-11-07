@@ -1,0 +1,226 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Imports, naming and model layout, translations.
+# Rules: odoo-guidelines guidelines/python.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "py1_import_order"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 6:
+The imports of models/booking.py are out of order: the odoo imports come
+before the stdlib ones (datetime, logging), and the third-party markupsafe
+comes last; the order is stdlib, third-party, odoo, odoo.addons, each
+sorted.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py2_plural_model_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 228:
+The model name equipment.booking.lines is plural; model names are singular
+(equipment.booking.line), and so is the class name.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py3_model_variable_case"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 35:
+In res.partner._get_upcoming_bookings, booking_obj holds a model; a variable
+holding a model is PascalCase (Booking).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py4_record_named_id"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 37:
+In portal_my_bookings, partner_id holds a res.partner record, not an id; the
+_id suffix is for ids (name it partner).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py5_compute_method_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 66:
+The compute method of duration is named _get_duration instead of
+_compute_duration.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py6_constraint_method_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 93:
+The @api.constrains method is named _validate_no_overlap instead of
+_check_<name> (_check_no_overlap).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py7_action_ensure_one"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 151:
+action_open_equipment reads self.equipment.id without self.ensure_one(); an
+action_* method acts on one record and starts with ensure_one().
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "py8_model_body_order"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/equipment_booking_location.py`, line 14:
+In equipment.booking.location, the create override sits above the field
+declarations; the model body order is private attributes, fields,
+constraints, computes, ..., CRUD overrides, actions.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "tr1_format_before_lookup"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 108:
+In _validate_no_overlap, the message is %-formatted inside
+self.env._("Booking %s overlaps ..." % booking.name), so the formatted
+string matches no exported term and is never translated; pass the value as
+an argument of _().
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "tr2_format_after_lookup"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 145:
+In action_cancel, the message is formatted after the lookup: self.env._("...
+%s ...") % booking.name; pass the value as an argument of _() so
+placeholders are validated per translation.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "tr3_manual_join"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 189:
+In _check_missing_accessories, the names are joined by hand (", ".join)
+before being passed to _(); pass the list itself, which _() formats per
+language.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "tr4_module_level_translation"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 12:
+DEFAULT_BOOKING_NAME = _("New Booking") calls _() at module level, at import
+time with no language: it is never translated (use LazyTranslate, or
+translate inside the method).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "tr5_bare_underscore"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 224:
+_get_late_labels uses the bare _ inside a list comprehension, where it
+cannot find the environment and returns the untranslated string; use
+self.env._.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

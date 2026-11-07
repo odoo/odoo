@@ -1,0 +1,5 @@
+# The spec's behaviours are split over three judges, so each call stays small
+# enough for structured output; every behaviour weighs the same.
+[[reward]]
+aggregation = "weighted-mean"
+weights = { printers = 8.0, printing = 9.0, shipping = 7.0 }

@@ -1,0 +1,210 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: SCSS formatting, class and variable naming.
+# Rules: odoo-web-guidelines guidelines/scss.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "css1_scss_variable_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 3:
+The SCSS variable $bookingCardColor does not follow
+$o-[root]-[element]-[property]-[modifier] (e.g. $o-equipment-booking-card-
+color): camelCase, no o- prefix.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css2_mixin_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 5:
+The mixin cardShadow is not named o-[imperative verb] (e.g. o-add-card-
+shadow), and its argument $size is not in scoped form ($-size). Flagging
+either half passes.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css3_root_css_variable"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 9:
+The CSS variable --booking-accent is defined on :root. CSS variables are for
+contextual DOM adaptation, not global design: use an SCSS variable, or
+define it on the board's own element.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css4_id_selector"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 13:
+#booking_board_header is an id selector; avoid id selectors, use a class
+(o_equipment_booking_board_header).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css5_css_variable_bem"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 18:
+The CSS variable --columnGap does not follow the BEM convention
+--[root]__[element]-[property]--[modifier] (e.g. --BookingBoard__column-
+gap).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css6_property_order"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 28:
+The properties of .o_equipment_booking_board_column are not ordered from the
+outside in: color and font-size come first, width and position last. Start
+with position, then layout and box (width, padding), and end with decorative
+ones (color, font).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css7_nested_class_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 38:
+o_equipment_booking_board_column_card_header_title is a hyper-specific class
+name that spells out the DOM nesting; use the flat grandchild approach
+(o_equipment_booking_board_title).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css8_hyphenated_class"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 42:
+The class o-booking-card uses hyphens (and drops the module name): classes
+use underscores and the o_<module> prefix (o_equipment_booking_board_card);
+hyphens are for SCSS variables, mixins and functions.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css9_unprefixed_class"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 51:
+The class booking_late has no o_<module> prefix
+(o_equipment_booking_board_late).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css10_scoped_variable_placement"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 58:
+The scoped variable $-badge-radius is declared mid-rule, after declarations;
+scoped SCSS and CSS variables go at the top of the rule, separated by a
+blank line.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css11_one_line_rule"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 62:
+The rule .o_equipment_booking_board_note is written on one line with three
+declarations: one declaration per line, closing brace on its own line.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "css12_tab_indentation"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/scss/booking_board.scss`, line 64:
+The rule .o_equipment_booking_board_empty is indented with tabs; SCSS is
+indented with 4 spaces.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

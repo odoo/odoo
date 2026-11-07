@@ -1,0 +1,68 @@
+# Findings judge, Routes in controllers/portal.py that act on request input.
+# One file per group: a single judge call with every criterion exceeds the
+# structured-output size the API accepts. The answer key is solution/security_review.md.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "eval_of_request_rule"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the rule parameter of /my/leases reaches eval in _filtered_by_rule: code execution.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "domain_injection_filter"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the filter parameter of /my/leases is put in front of the tenant domain and searched with sudo, so a crafted domain (a leading '|') returns other tenants' leases. Reporting the injection, or the sudo search that makes it exploitable, passes as long as the filter parameter is identified as able to widen the search. A review that examines it and concludes it is not exploitable fails.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "get_route_changes_state"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /my/leases/<id>/cancel changes the lease state on a GET route: CSRF by link or image.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "csrf_disabled_update"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /my/leases/<id>/update is an http POST route with csrf=False that is not a webhook.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "sudo_write_raw_post"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /my/leases/<id>/update does lease.sudo().write(post) with the raw request parameters, so the tenant can set any field (rent, state, property, tenant) as superuser.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "getattr_request_field"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /my/leases/<id>/value calls getattr on the record with a request-chosen name.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""

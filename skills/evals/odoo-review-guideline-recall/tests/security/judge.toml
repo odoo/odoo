@@ -1,0 +1,394 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Security.
+# Rules: odoo-security skill.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "sc1_public_route_exposes_data"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 100:
+/booking/calendar/<id> is auth='public' and searches bookings with sudo:
+anonymous visitors see holder names and booking notes of any equipment.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc2_sql_injection"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 95:
+/booking/availability interpolates the request parameter day into the SQL
+with an f-string: SQL injection. Pass it as a query parameter.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc3_raw_sql_bypasses_orm"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 39:
+_get_equipment_in_use reads equipment_booking with raw SQL where an ORM
+search does it, bypassing access rules and the ORM (flush, active).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc4_domain_injection"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 40:
+portal_my_bookings prepends the request's filter_domain to the ownership
+domain and searches with sudo: a filter starting with '|' turns it into
+'anything or mine', exposing every booking. Combine with Domain (AND) and
+validate the user domain.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc5_public_method_sudo_write"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 170:
+set_booking_state is public, so callable over RPC on any ids, and writes the
+given state with sudo: any user can set any booking to any state.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc6_get_route_changes_state"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 73:
+/my/bookings/<id>/cancel cancels a booking on a GET request: a link or an
+image tag on another site cancels the victim's booking (CSRF). Use POST with
+the CSRF token.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc7_csrf_disabled"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 67:
+/my/bookings/<id>/update is an http POST route with csrf=False: any site can
+submit it as the logged-in user.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc8_form_without_csrf_token"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/portal.xml`, line 40:
+The portal booking page's update form posts without the csrf_token hidden
+input (the reason the route disables CSRF).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc9_markup_fstring"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 149:
+action_cancel builds Markup(f"<p>Cancelled: {reason}</p>"): the f-string
+defeats escaping, so the reason is posted to the chatter as raw HTML (XSS).
+Use Markup("<p>Cancelled: %s</p>") % reason, or .format.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc10_t_esc_server_qweb"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.xml`, line 22:
+The report uses t-esc, which server QWeb ignores (it renders nothing), so
+the holder's phone never shows; use t-out.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc11_token_without_groups"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 15:
+res.partner.booking_feed_token is a secret (it authenticates the calendar
+feed) with no groups: any internal user can read every partner's token with
+search_read. Restrict it (base.group_system or fields.NO_ACCESS).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc12_related_sudo_secret"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 47:
+feed_token is a related field (computed with sudo by default) reaching the
+partner's feed token through the user-writable partner_id: point a booking
+at any partner and read their token. Set related_sudo=False or drop the
+field.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc13_related_attachment"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 49:
+manual_file is a sudo-computed related field onto ir.attachment through the
+user-writable manual_attachment_id: set it to any attachment id and read any
+file. Use a plain Binary or the attachment's own access checks.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc14_sudo_write_request_params"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 70:
+portal_booking_update writes the raw request parameters with sudo
+(booking_sudo.write(post)): the holder can set any field (state, partner_id,
+price, company_id, line commands). Whitelist the keys (note).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc15_with_user_from_request"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 59:
+portal_booking_create switches to with_user(int(post['user_id'])): the
+request picks the user the booking is created as, any user included.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc16_open_builtin"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.py`, line 38:
+_get_equipment_picture opens a path built from the equipment's serial number
+with the builtin open(): a serial number like ../../.. reads arbitrary
+files. Use file_open, or store the picture as an attachment.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc17_safe_eval_user_expression"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/equipment_booking_location.py`, line 44:
+_accepts_booking runs safe_eval on booking_condition, which any internal
+user can write (cru on locations): evaluating an expression is only for
+trusted, privileged users.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc18_pickle"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 32:
+_get_booking_preferences unpickles a stored field: pickle runs arbitrary
+code on load; store JSON.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc19_getattr_request_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 42:
+portal_my_bookings sorts with getattr(booking, sortby), sortby coming from
+the request, on sudo records: the user picks any attribute (private methods,
+any field). Whitelist sort keys and use record[name].
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc20_token_comparison"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 114:
+booking_feed compares the feed token with != instead of a constant-time
+comparison (consteq).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc21_mutable_default"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 181:
+_prepare_reminder_values has a mutable default (extra_values={}) that it
+updates: the dict is shared across calls and carries the previous booking's
+reply_to.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc22_public_method_returns_object"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/maintenance_equipment.py`, line 37:
+get_label_signer is a public method returning an hmac object keyed with
+database.secret: reachable from safe_eval'd code (server actions) and RPC,
+it lets anyone sign check-in codes or walk the object. Make it private, or a
+module-level function.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "sc23_markup_note_js"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/static/src/components/booking_board.js`, line 42:
+The booking board renders booking.note through markup(), which marks it as
+safe HTML. Portal users write the note (/my/bookings/<id>/update), so their
+HTML and scripts run in the backend of every user who opens the board
+(stored XSS). Render the note as plain text.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

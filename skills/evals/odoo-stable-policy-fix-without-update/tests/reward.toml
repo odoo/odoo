@@ -1,0 +1,11 @@
+# deploy:    the email after a pull and a restart, without a module update (the stable case)
+# behavior:  the email after `-u mail`, and the tracking tests of test_mail
+# stable:    deterministic stable-policy checks on the change
+# fix:       LLM judge on the code against the merged stable fix
+# structure: deterministic checks on the commit and the message shape
+# message:   LLM judge on the content of the message
+# process:   LLM judge on the trajectory (stable branch recognized, not-updated databases considered, tests run)
+[[reward]]
+name = "reward"
+aggregation = "weighted-mean"
+weights = { deploy = 3.0, behavior = 1.5, stable = 1.0, fix = 2.0, structure = 1.0, message = 1.0, process = 1.0 }

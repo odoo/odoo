@@ -1,0 +1,73 @@
+# LLM judge on the commit message. The reference is the message of the merged
+# stable fix (odoo/odoo 87e57ed44969), which the agent never saw. The agent was
+# given no task or ticket number, so a missing reference is not a fault.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/commit_message.txt", "/logs/verifier/commit.diff"]
+reference = "/tests/message/reference_message.txt"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "why_first"
+type = "binary"
+description = """
+The body explains what was wrong and for whom before it describes the change.
+A body that only narrates the diff does not pass. The commit message is in
+/logs/verifier/commit_message.txt; the diff it describes is
+/logs/verifier/commit.diff. An empty message fails.
+"""
+
+[[criterion]]
+name = "reproduction_steps"
+type = "rubric"
+description = """
+A bug fix message gives the steps that reproduce the bug: what to do, what
+happens, what should happen instead. The report was: change a tracked field
+on a record; followers notified by email get the old value, the new value and
+the field name glued together, while the chatter shows them with an arrow and
+parentheses.
+"""
+levels = [
+  "No reproduction steps; the symptom is at most implied.",
+  "Steps or a scenario are present but one of what-to-do, what-happens, what-should-happen is missing.",
+  "What to do, what happens, and what should happen are all stated.",
+]
+
+[[criterion]]
+name = "cause_explained"
+type = "binary"
+description = """
+The message states the cause: the tracking HTML holds only the values, and
+the arrow and parentheses are added by the web client's CSS, which emails do
+not get. Any accurate wording of that mechanism passes.
+"""
+
+[[criterion]]
+name = "constraints_explained"
+type = "binary"
+description = """
+The message explains the technical choice and the constraints behind it, as
+the reference does: why the fix is done where it is, and how messages stored
+before the fix and databases that are not updated keep working.
+"""
+
+[[criterion]]
+name = "no_unsupported_claims"
+type = "binary"
+description = """
+Every factual statement in the message is supported by the diff in
+/logs/verifier/commit.diff or by the report above. Invented details
+(affected versions, customers, measurements, a task or ticket number) fail.
+"""
+
+[[criterion]]
+name = "reviewer_acceptance"
+type = "likert"
+points = 5
+description = """
+Compare the message with the reference message of the merged fix. Would an
+Odoo reviewer merge the agent's message as it is? 1 = would send it back for
+a rewrite, 3 = would ask for a change or two, 5 = as good as or better than
+the reference.
+"""

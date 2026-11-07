@@ -1,0 +1,1 @@
+I'm about to open a PR with the last commit on my branch in the Odoo checkout at /app: a new equipment_booking module, plus a change to maintenance it needs. Could you review it first? I'd like a complete review, everything you would flag, not only the main issues. Put the review in /app/review.md, and don't change the code: I'll fix things myself.
