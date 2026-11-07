@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_tag_form_view" model="ir.ui.view">
+        <field name="name">purchase.order.tag.form</field>
+        <field name="model">purchase.order.tag</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Order Tag">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. IT Equipment"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="color" required="True" widget="color_picker"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_order_tag_tree_view" model="ir.ui.view">
+        <field name="name">purchase.order.tag.list</field>
+        <field name="model">purchase.order.tag</field>
+        <field name="arch" type="xml">
+        <list string="Purchase Order Tags" editable="bottom" sample="1">
+                <field name="name" string="Tag Name" />
+                <field name="color" widget='color_picker'/>
+            </list>
+        </field>
+    </record>
+</odoo>
