@@ -9,7 +9,7 @@ declare module "plugins" {
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, removable_descendants_providers, system_node_selectors } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
-    import { on_content_inserted_handlers, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, on_will_insert_handlers, can_insert_block_in_parent_predicates } from "@html_editor/core/dom_plugin";
+    import { on_content_inserted_handlers, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, on_will_insert_handlers, can_insert_block_in_parent_predicates, set_tag_target_predicates } from "@html_editor/core/dom_plugin";
     import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared, serializable_descendants_processors } from "@html_editor/core/dom_reference_map_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
@@ -229,6 +229,7 @@ declare module "plugins" {
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
         is_feff_legit_predicates: would_feff_be_legit_predicates;
         are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
+        set_tag_target_predicates: set_tag_target_predicates;
 
         // Processors
         apply_background_color_processors: apply_background_color_processors;
