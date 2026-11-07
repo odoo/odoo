@@ -1337,6 +1337,13 @@ class HrLeave(models.Model):
 
                 self.env.remove_to_compute(self._fields['work_entry_type_id'], leave)   # to stop onchange methods from resetting the wet chosen earlier
 
+        # number_of_days shares its compute with number_of_hours, so it is protected here
+        durations = candidates._get_durations()
+        for leave in candidates:
+            days, _hours = durations.get(leave.id, (0, 0))
+            if float_compare(leave.number_of_days, days, precision_digits=2) != 0:
+                leave.number_of_days = days
+
     @api.depends_context('uid')
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_approve(self):
