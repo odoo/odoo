@@ -356,3 +356,37 @@ class TestDeleteEvents(TestCommon):
         self.assertFalse(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
         self.recurrent_events[1].with_user(self.organizer_user).unlink()
         self.assertFalse(self.recurrent_events[1].exists(), "Recurrent event must be deleted after unlink with sync off.")
+
+    @patch.object(MicrosoftCalendarService, 'delete')
+    def test_reset_account_delete_from_odoo_sends_no_request(self, mock_delete):
+        events = self.simple_event | self.recurrent_events
+        self.assertTrue(self.env['calendar.event']._check_microsoft_sync_status())
+
+        wizard = self.env['microsoft.calendar.account.reset'].create({
+            'user_id': self.organizer_user.id,
+            'delete_policy': 'delete_odoo',
+            'sync_policy': 'new',
+        })
+        with patch.object(self.env.cr, 'commit', lambda: None):
+            wizard.reset_account()
+        self.call_post_commit_hooks()
+
+        self.assertFalse(events.exists())
+        mock_delete.assert_not_called()
+
+    @patch_api
+    def test_reset_account_sync_all_reinserts_events(self):
+        wizard = self.env['microsoft.calendar.account.reset'].create({
+            'user_id': self.organizer_user.id,
+            'delete_policy': 'dont_delete',
+            'sync_policy': 'all',
+        })
+        with patch.object(self.env.cr, 'commit', lambda: None):
+            wizard.reset_account()
+
+        self.simple_event.with_user(self.organizer_user)._sync_odoo2microsoft()
+
+        self.assertFalse(self.simple_event.ms_universal_event_id)
+        self.assertTrue(self.simple_event.need_sync_m)
+        self.simple_event._microsoft_insert.assert_called_once()
+        self.simple_event._microsoft_patch.assert_not_called()
