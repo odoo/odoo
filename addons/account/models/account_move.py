@@ -797,8 +797,6 @@ class AccountMove(models.Model):
     is_exact_move_duplicate = fields.Boolean(compute='_compute_duplicate_move_status')
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
-    show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
-
     # used to display the various dates and amount dues on the invoice's PDF
     payment_term_details = fields.Json(compute="_compute_payment_term_details", exportable=False)
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
@@ -2823,7 +2821,13 @@ class AccountMove(models.Model):
 
     @api.onchange('fiscal_position_id')
     def _onchange_fpos_id_show_update_fpos(self):
-        self.show_update_fpos = self.line_ids and self._origin.fiscal_position_id != self.fiscal_position_id
+        has_product_lines = any(
+            line.display_type not in ('line_section', 'line_note')
+            for line in self.invoice_line_ids
+        )
+
+        if has_product_lines and (self.state not in ['cancel', 'posted']):
+            self.with_context(skip_fpos_sync=True).action_update_fpos_values()
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -6724,6 +6728,20 @@ class AccountMove(models.Model):
                     product_taxes_after_fp=new_taxes,
                     document_tax_mode=line.document_tax_mode,
                 )
+        if self.env.context.get('skip_fpos_sync'):
+            # onchange path: no sync wrapper
+            product_lines = self.invoice_line_ids.filtered(
+                lambda l: l.display_type == 'product'
+            )
+            for line in product_lines:
+                if line.product_id:
+                    line.tax_ids = line._get_computed_taxes()
+                else:
+                    computed = line.with_context(from_invoice_tab=True)._get_computed_taxes()
+                    if computed:
+                        line.tax_ids = computed
+            product_lines._compute_account_id()
+            return
         container = {'records': self}
         with self._check_balanced(container), self._sync_dynamic_lines(container):
             self.env.add_to_compute(lines_to_recompute._fields['price_unit'], lines_to_recompute)
