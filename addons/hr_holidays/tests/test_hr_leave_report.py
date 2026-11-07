@@ -19,6 +19,14 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
             'leave_validation_type': 'no_validation',
             'request_unit': 'day',
         })
+        cls.negative_leave_type = cls.env['hr.leave.type'].create({
+            'name': 'Test negative leave type',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'allows_negative': True,
+            'max_allowed_negative': 10,
+        })
 
         cls.alloc_a, cls.alloc_b = cls.env['hr.leave.allocation'].create([
             {
@@ -205,3 +213,71 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         # 20 total allocated - 13 taken = 7 remaining
         self.assertEqual(sum(left_records.mapped('number_of_days')), 7)
         self.assertEqual(sum(taken_records.mapped('number_of_days')), 13)
+
+    def test_negative_balance_leave_report(self):
+        """
+        Ensure the leave report shows a negative balance for leave types
+        that allow negative balances.
+        """
+        self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.negative_leave_type.id,
+            'date_from': '2026-11-01',
+            'number_of_days': 2,
+        }).action_validate()
+
+        self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.negative_leave_type.id,
+            'request_date_from': '2026-11-02',
+            'request_date_to': '2026-11-04',
+        })
+
+        domain = [
+            ('employee_id', '=', self.employee_emp.id),
+            ('leave_type', '=', self.negative_leave_type.id),
+        ]
+        leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
+        left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
+        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+
+        self.assertEqual(sum(left_records.mapped('number_of_days')), -1)
+        self.assertEqual(sum(taken_records.mapped('number_of_days')), 3)
+
+    def test_negative_balance_leave_report_multiple_overlap_allocations(self):
+        """
+        With overlapping allocations, earlier ones drain to 0 (FIFO) and
+        only the last one carries the negative balance.
+        """
+        self.env['hr.leave.allocation'].create([
+            {
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.negative_leave_type.id,
+                'date_from': '2026-11-01',
+                'number_of_days': 2,
+            },
+            {
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.negative_leave_type.id,
+                'date_from': '2026-11-02',
+                'number_of_days': 2,
+            },
+        ]).action_validate()
+
+        self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.negative_leave_type.id,
+            'request_date_from': '2026-11-02',
+            'request_date_to': '2026-11-06',
+        })
+
+        domain = [
+            ('employee_id', '=', self.employee_emp.id),
+            ('leave_type', '=', self.negative_leave_type.id),
+        ]
+        leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
+        left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
+        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+
+        self.assertEqual(sorted(left_records.mapped('number_of_days')), [-1, 0])
+        self.assertEqual(sum(taken_records.mapped('number_of_days')), 5)
