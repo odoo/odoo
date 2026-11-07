@@ -220,6 +220,9 @@ class ProductPricelist(models.Model):
     ):
         """Pick the first applicable rule per product and optionally compute its price.
 
+        Each product is only checked against the candidates that may apply to it, see
+        ``product.pricelist.item._get_applicability_key``.
+
         :param product.pricelist.item rule_candidates: Candidate rules, already pre-filtered and
             ordered by precedence.
         :param product.product|product.template products: Products/templates to price.
@@ -236,13 +239,38 @@ class ProductPricelist(models.Model):
         """
         results = {}
         products_by_rule = defaultdict(list)
+
+        # A rule restricted to a variant, a product or a category may only apply to some products:
+        # index the candidates by the key of these products, so that each product is only checked
+        # against the rules that may apply to it, in their order of precedence.
+        PricelistItem = self.env['product.pricelist.item']
+        candidates = list(rule_candidates)
+        unrestricted_positions = []
+        restricted_positions_by_key = defaultdict(list)
+        for position, rule in enumerate(candidates):
+            if key := rule._get_applicability_key():
+                restricted_positions_by_key[key].append(position)
+            else:
+                unrestricted_positions.append(position)
+        key_models = {model for model, _record_id in restricted_positions_by_key}
+
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
             # If no uom is specified, fallback on the product uom
             quantity_uom = uom or product._get_main_uom()
 
-            for rule in rule_candidates:
+            positions = unrestricted_positions
+            if key_models:
+                restricted_positions = [
+                    position
+                    for key in PricelistItem._get_applicability_keys(product, key_models)
+                    for position in restricted_positions_by_key.get(key, ())
+                ]
+                if restricted_positions:
+                    positions = sorted(restricted_positions + unrestricted_positions)
+            for position in positions:
+                rule = candidates[position]
                 if rule._is_applicable_for(product, quantity, uom=quantity_uom, **kwargs):
                     suitable_rule = rule
                     break
