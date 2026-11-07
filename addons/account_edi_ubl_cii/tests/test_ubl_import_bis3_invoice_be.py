@@ -186,6 +186,7 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
         self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
         self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+        self.assertEqual(bill.ubl_cii_xml_id.raw, xml_attachment.raw)
 
         # Import the document via mail alias
         init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
