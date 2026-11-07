@@ -26,8 +26,6 @@
                     decoration-success="state == 'done'"
                     decoration-info="state in ('requested', 'downloading', 'downloaded')"
                 />
-                <field name="error" column_invisible="1"/>
-                <field name="is_expired" column_invisible="1"/>
             </list>
         </field>
     </record>
@@ -54,7 +52,6 @@
                             <field name="date_from"/>
                             <field name="date_to"/>
                             <field name="date_expiry"/>
-                            <field name="is_expired" invisible="1"/>
                         </group>
                     </group>
                     <notebook>

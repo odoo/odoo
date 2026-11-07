@@ -17,7 +17,6 @@ _logger = logging.getLogger(__name__)
 
 KSEF_WINDOW = 7
 KSEF_FIRST_DAY = fields.Date.from_string('2026-01-31')
-
 KSEF_IN_PROGRESS = 100
 KSEF_READY = 200
 ODOO_ERROR = 999
@@ -200,7 +199,7 @@ class BatchDownload(models.Model):
             'encrypted_symmetric_key': encryption_data['encrypted_symmetric_key'],
             'raw_iv': encryption_data['raw_iv'],
         }).with_env(self.env)
-        batch._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_check_status')
+        self.env.ref('l10n_pl_edi_batch.ir_cron_check_status')._trigger()
         return batch
 
     def _run_for_all_companies(self, method, cron_xmlid, company_domain=None):
@@ -307,7 +306,7 @@ class BatchDownload(models.Model):
                             self._create_batch_download(batch.company_id, last_date, old_date_to)
                 elif state == 'requested':
                     batch.retry_count += 1
-                    batch._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_check_status')
+                    batch._delayed_trigger('l10n_pl_edi_batch.ir_cron_check_status')
 
                 batch.update(data)
 
@@ -322,7 +321,7 @@ class BatchDownload(models.Model):
                     missing_parts[:1].download()
                 except UserError as e:
                     if batch._raise_retry_count(str(e)):
-                        self._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_download')  # retry
+                        self._delayed_trigger('l10n_pl_edi_batch.ir_cron_download')  # retry
                     return
                 if batch.state == 'downloading':
                     self.env['ir.cron']._notify_progress(done=1, remaining=len(missing_parts) - 1)
@@ -358,7 +357,7 @@ class BatchDownload(models.Model):
                     batch.part_ids.decrypted_file = False
                     batch.part_ids.invalidate_recordset(['decrypted_file'])
                     batch._raise_retry_count(self.env._("The KSeF batch ZIP is corrupt: %s", e))
-                    batch._trigger_cron_when_due('l10n_pl_edi_batch.download')  # retry
+                    batch._delayed_trigger('l10n_pl_edi_batch.download')  # retry
                     return
 
                 with zip_file:
@@ -414,7 +413,7 @@ class BatchDownload(models.Model):
 
         self._run_for_all_companies(do_import, 'l10n_pl_edi_batch.ir_cron_import')
 
-    def _trigger_cron_when_due(self, cron_ref):
+    def _delayed_trigger(self, cron_ref):
         """ Run the cron once the batch, just written, is due again. """
         self.env.ref(cron_ref)._trigger(at=fields.Datetime.now() + timedelta(seconds=10 * 2 ** self.retry_count))
 
