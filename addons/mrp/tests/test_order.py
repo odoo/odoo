@@ -5209,6 +5209,38 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids[0].duration_expected, 1440.0)
 
+    def test_change_duration_expected_with_next_workorder_planned(self):
+        """
+        Checks that the expected duration set on a planned work order from the MO form
+        is kept when another work order of the same work center is planned right after it.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Continuous 8-16',
+            'tz': 'UTC',
+            'attendance_ids': [Command.create({
+                'name': str(day), 'dayofweek': str(day), 'hour_from': 8, 'hour_to': 16,
+            }) for day in range(5)],
+        })
+        self.workcenter_2.write({'resource_calendar_id': calendar.id, 'tz': 'UTC'})
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'workorder_ids': [Command.create({
+                'name': name,
+                'product_uom_id': self.product_1.uom_id.id,
+                'workcenter_id': self.workcenter_2.id,
+                'duration_expected': 60,
+            }) for name in ('WO 1', 'WO 2')],
+        })
+        mo.action_confirm()
+        wo_1, wo_2 = mo.workorder_ids
+        wo_1.write({'date_start': datetime(2024, 6, 3, 10), 'date_finished': datetime(2024, 6, 3, 11)})
+        wo_2.write({'date_start': datetime(2024, 6, 3, 11), 'date_finished': datetime(2024, 6, 3, 12)})
+
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.edit(0) as wo_line:
+                wo_line.duration_expected = 100
+        self.assertEqual(wo_1.duration_expected, 100)
+
     def test_workcenter_with_resource_calendar_from_another_company(self):
         """Test that only the resource calendars from the same
         company as the work center can be set."""
