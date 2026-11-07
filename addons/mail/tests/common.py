@@ -1670,7 +1670,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
               * ``email_to`` -- email if sent without partner
               * ``email_to_recipients`` -- propagated to ``assertMailMail``
               * ``failure_type`` -- ``failure_type`` on ``mail.notification``
-              * ``is_read`` -- ``is_read`` on ``mail.notification``
+              * ``is_read`` -- whether ``read_date`` is set on ``mail.notification``
               * ``partner`` -- ``res.partner`` record (may be empty)
               * ``status`` -- ``notification_status`` on ``mail.notification``
               * ``type`` -- ``notification_type`` on ``mail.notification``
@@ -1789,7 +1789,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                 self.assertEqual(len(notif), 1,
                                  f'Mail: not found notification for {partner or email_to_lst} (type: {ntype}, message: {message.id})\n{debug_info}')
                 self.assertEqual(notif.author_id, notif.mail_message_id.author_id)
-                self.assertEqual(notif.is_read, nis_read)
+                self.assertEqual(bool(notif.read_date), nis_read)
                 if 'failure_reason' in recipient:
                     self.assertEqual(notif.failure_reason, recipient['failure_reason'])
                 if 'failure_type' in recipient:
@@ -1904,7 +1904,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             * ``partner`` -- ``res.partner`` record (may be empty or unset)
             * ``email`` -- single normalized email address as a string (may be empty or unset)
             * ``type`` -- ``notification_type`` to check
-            * ``is_read`` -- ``is_read`` to check
+            * ``is_read`` -- whether ``read_date`` is set
         """
         notifications = self._new_notifs.filtered(lambda notif: notif in message.notification_ids)
         if is_complete:
@@ -1923,7 +1923,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
             # in case multiple would match the same recipient
             notifications -= recipient_notif
             self.assertTrue(recipient_notif)
-            self.assertEqual(recipient_notif.is_read, rinfo['is_read'])
+            self.assertEqual(bool(recipient_notif.read_date), rinfo['is_read'])
             self.assertEqual(recipient_notif.notification_type, rinfo['type'])
 
 
