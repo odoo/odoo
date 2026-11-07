@@ -459,3 +459,36 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         })
 
         self.assertEqual(orderpoint.lead_days, 365)
+
+    @freeze_time('2026-05-13')
+    def test_supplier_lead_time_with_orderpoint_selected_vendor(self):
+        """Test replenishment uses the selected vendor delay to compute
+        correct RFQ order, planned dates and order deadline."""
+        self.company.horizon_days = 0
+        self.env['stock.warehouse.orderpoint'].search([]).unlink()
+        self._use_route_buy(self.product, create_seller=False)
+        self.product.seller_ids = [
+            Command.create({
+                'partner_id': self.vendor.id,
+                'min_qty': 10,
+                'delay': 10,
+            }),
+            Command.create({
+                'partner_id': self.partner.id,
+                'min_qty': 0,
+                'delay': 11,
+            }),
+        ]
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 5,
+        })
+        orderpoint.action_replenish()
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
+        today = datetime(2026, 5, 13, 12)
+        self.assertRecordValues(purchase_order, [{
+            'partner_id': self.partner.id,
+            'date_order': today,
+            'date_planned': today + timedelta(days=11),
+        }])
