@@ -81,3 +81,21 @@ class TestSystray(HttpCase):
                 'name': 'My Website 2',
             })
         self.start_tour(self.env['website'].get_client_action_url('/test_model/1'), 'test_systray_multi_website', login="admin")
+
+
+@tagged('post_install', '-at_install')
+class TestWebsitePreviewBreadcrumb(HttpCase):
+
+    def test_breadcrumb_restores_last_page(self):
+        second = self.env['test.model'].create({'name': 'Second Record'})
+        self.env['ir.ui.view'].create({
+            'name': "Link to the second record",
+            'type': 'qweb',
+            'inherit_id': self.env.ref('test_website.test_model_page_layout').id,
+            'arch': f"""
+                <xpath expr="//span" position="after">
+                    <a id="test_link_to_second" href="/test_model/{second.id}">Second</a>
+                </xpath>
+            """,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/test_model/1'), 'website_preview_breadcrumb', login='admin')
