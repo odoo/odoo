@@ -1728,6 +1728,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(leave.number_of_hours, 13.0)
 
+    def test_flexible_schedule_hourly_leave_days(self):
+        """Check that an hourly time off of a flexible employee counts its days on the average hours per day."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.holidays_type_1.request_unit = 'hour'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Hourly Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': '2025-08-29',
+            'request_date_to': '2025-08-29',
+            'request_unit_hours': True,
+            'request_hour_from': 8,
+            'request_hour_to': 12,
+        })
+
+        self.assertEqual(leave.number_of_hours, 4.0)
+        self.assertEqual(leave.number_of_days, 0.5)
+
     def test_leave_request_both_notified_users(self):
         """ Test the Fallback to Responsible Users are notified when a leave request is made
         with ("both","By Employee's Approver and Time Off Officer") set for leave_validation_type,
