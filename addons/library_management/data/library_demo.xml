@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="library_member_alice" model="library.member">
+        <field name="name">Alice Johnson</field>
+        <field name="email">alice.johnson@example.com</field>
+        <field name="phone">+1 555-0101</field>
+    </record>
+    <record id="library_member_bob" model="library.member">
+        <field name="name">Bob Smith</field>
+        <field name="email">bob.smith@example.com</field>
+        <field name="phone">+1 555-0102</field>
+    </record>
+
+    <record id="library_book_1" model="library.book">
+        <field name="name">The Great Adventure</field>
+        <field name="author">Jane Wright</field>
+        <field name="isbn">978-0000000001</field>
+        <field name="category">fiction</field>
+    </record>
+    <record id="library_book_2" model="library.book">
+        <field name="name">Learning Odoo Development</field>
+        <field name="author">Mark Lee</field>
+        <field name="isbn">978-0000000002</field>
+        <field name="category">technology</field>
+    </record>
+    <record id="library_book_3" model="library.book">
+        <field name="name">Python for Everyone</field>
+        <field name="author">Sara Kim</field>
+        <field name="isbn">978-0000000003</field>
+        <field name="category">technology</field>
+        <field name="state">borrowed</field>
+        <field name="member_id" ref="library_member_alice"/>
+        <field name="borrow_date" eval="(DateTime.today()).strftime('%Y-%m-%d')"/>
+    </record>
+</odoo>
