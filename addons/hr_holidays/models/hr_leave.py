@@ -1677,7 +1677,7 @@ class HrLeave(models.Model):
             invalid_holidays = real_holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
             holidays -= invalid_holidays
             invalid_holidays.unlink()
-        self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+        self.env['hr.leave.allocation']._invalidate_compute_leaves_fields()
 
         for holiday in holidays:
             if not self.env.context.get('leave_fast_create'):
@@ -1791,7 +1791,7 @@ class HrLeave(models.Model):
                 # Preserve context check for date validation skip
                 if not self.env.context.get('leave_skip_date_check'):
                     self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
-            self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])
+            self.env['hr.leave.allocation']._invalidate_compute_leaves_fields()
 
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
@@ -1830,7 +1830,7 @@ class HrLeave(models.Model):
         """
         self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', self.ids)
         self.sudo()._post_leave_cancel()
-        self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+        self.env['hr.leave.allocation']._invalidate_compute_leaves_fields()
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         """Apply the result of the time rules on the requests.
