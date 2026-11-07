@@ -680,6 +680,45 @@ test("custom embedded action loaded first", async () => {
     });
 });
 
+test("button returning an action for another record uses that record's embedded settings", async () => {
+    user.updateUserSettings("embedded_actions_config_ids", {
+        "1+2": {
+            embedded_actions_visibility: [102],
+            embedded_visibility: false,
+            embedded_actions_order: [102, false],
+        },
+        "1+1": {
+            embedded_actions_visibility: [103],
+            embedded_visibility: false,
+            embedded_actions_order: [103, false],
+        },
+    });
+    onRpc("partner", "object", () => ({
+        ...actions[0],
+        type: "ir.actions.act_window",
+        embedded_action_ids: actions.filter((action) => action.parent_action_id === 1),
+        context: { active_id: 1 },
+    }));
+    onRpc("partner", "do_python_method", ({ args, kwargs }) => {
+        expect.step(`do_python_method ${args[0]} ${kwargs.context.active_id}`);
+        return {
+            id: 4,
+            name: "Favorite Ponies from python action",
+            res_model: "pony",
+            type: "ir.actions.act_window",
+            views: [[false, "kanban"]],
+        };
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doActionButton({
+        name: "object",
+        type: "object",
+        resModel: "partner",
+        resId: 2,
+    });
+    expect.verifySteps(["do_python_method 1 1"]);
+});
+
 test("test get_embedded_actions_settings rpc args", async () => {
     onRpc("res.users.settings", "get_embedded_actions_settings", ({ args, kwargs }) => {
         expect(args.length).toBe(1, {
