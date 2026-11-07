@@ -49,16 +49,10 @@ class StockMove(models.Model):
         order = line.order_id
         received_qty = self._get_qty_received_without_self()
         if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
-            move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             convert_date = self._get_currency_convert_date()
-            receipt_value = 0
-            for layer in move_layer:
-                if not layer._should_impact_price_unit_receipt_value():
-                    continue
-                receipt_value += layer.currency_id._convert(
-                    layer.value, order.currency_id, order.company_id, convert_date, round=False)
+            receipt_value = line.move_ids._get_price_unit_receipt_value(order, convert_date)
             if invoiced_layer:
                 receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
@@ -105,6 +99,18 @@ class StockMove(models.Model):
         if self.product_id.lot_valuated:
             return dict.fromkeys(self.lot_ids, price_unit)
         return {self.env['stock.lot']: price_unit}
+
+    def _get_price_unit_receipt_value(self, order, convert_date):
+        """ Return the value already received through the moves of `self`, in the
+        currency of `order`. Used to compute the price unit of a receipt when the
+        purchase order line has been invoiced before being received."""
+        receipt_value = 0
+        for layer in self.sudo().stock_valuation_layer_ids:
+            if not layer._should_impact_price_unit_receipt_value():
+                continue
+            receipt_value += layer.currency_id._convert(
+                layer.value, order.currency_id, order.company_id, convert_date, round=False)
+        return receipt_value
 
     def _get_qty_received_without_self(self):
         line = self.purchase_line_id
