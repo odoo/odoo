@@ -69,6 +69,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.dialog = useService("dialog");
         this.websiteService = useService("website");
         this.ui = useService("ui");
+        this.offline = useService("offline");
         this.title = useService("title");
         this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
@@ -171,12 +172,79 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
         });
 
+<<<<<<< c368cd4ba868144f43cc9a4fed368c6b49f8f4b6
         useEffect(() => {
             this.websiteContext.edition = this.state.isEditing;
             if (!this.state.isEditing) {
                 this.addSystrayItems();
             }
         });
+||||||| 973053ad62758e4b7373f9f511a2c50fe167859f
+        effect(
+            (state) => {
+                this.websiteContext.edition = state.isEditing;
+                if (!state.isEditing) {
+                    // The systray item removal below is delayed by 200ms (see
+                    // the other effect). If we leave edit mode before that
+                    // delay elapsed, that pending removal must be cancelled
+                    // here and now: otherwise it can still fire later and
+                    // remove the item this call is about to re-add, since
+                    // Owl's useEffect cleanup that normally cancels it only
+                    // runs after the next render/patch cycle (too late).
+                    clearTimeout(this.navBarTimeout);
+                    this.addSystrayItems();
+                }
+            },
+            [this.state]
+        );
+=======
+        let isFrozenOffline = false;
+        let isDestroyed = false;
+        effect(
+            (offline, state) => {
+                if (isDestroyed) {
+                    return;
+                }
+                const freeze = offline.offline && state.isEditing;
+                if (freeze === isFrozenOffline) {
+                    return;
+                }
+                isFrozenOffline = freeze;
+                if (freeze) {
+                    this.blockIframe();
+                    this.ui.block();
+                } else {
+                    this.unblockIframe();
+                    this.ui.unblock();
+                }
+            },
+            [this.offline, this.state]
+        );
+        onWillDestroy(() => {
+            isDestroyed = true;
+            if (isFrozenOffline) {
+                this.ui.unblock();
+            }
+        });
+
+        effect(
+            (state) => {
+                this.websiteContext.edition = state.isEditing;
+                if (!state.isEditing) {
+                    // The systray item removal below is delayed by 200ms (see
+                    // the other effect). If we leave edit mode before that
+                    // delay elapsed, that pending removal must be cancelled
+                    // here and now: otherwise it can still fire later and
+                    // remove the item this call is about to re-add, since
+                    // Owl's useEffect cleanup that normally cancels it only
+                    // runs after the next render/patch cycle (too late).
+                    clearTimeout(this.navBarTimeout);
+                    this.addSystrayItems();
+                }
+            },
+            [this.state]
+        );
+>>>>>>> d7f0b2c68b5d14c96c4b58b18de13da0a82e126a
         useLayoutEffect(
             (isEditing) => {
                 document.querySelector("body").classList.toggle("o_builder_open", isEditing);
@@ -583,8 +651,8 @@ export class WebsiteBuilderClientAction extends Component {
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
             const newUrl = new URL(encodedPath, baseUrl);
-            if(newUrl.origin !== baseUrl.origin) {
-                console.error("Tried to change the iframe's origin. Reloading instead")
+            if (newUrl.origin !== baseUrl.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead");
                 this.websiteContent.el.contentWindow.location.reload();
             } else {
                 if (history.state?.skipRouteChange) {
