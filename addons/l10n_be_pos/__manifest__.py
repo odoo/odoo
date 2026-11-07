@@ -7,6 +7,7 @@
     'sequence': 6,
     'summary': 'Link module between point_of_sale and l10n_be',
     'depends': ['point_of_sale', 'l10n_be', 'account'],
+    'data': ['views/res_partner_views.xml'],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
