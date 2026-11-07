@@ -81,7 +81,10 @@ registerComposerAction("add-emoji", {
         name: _t("Emoji"),
         props: ({ action, owner }) => ({
             onSelect: (emoji) => owner.addEmoji(emoji),
-            onClose: () => action.closePanel(),
+            onClose: () => {
+                owner.focus();
+                action.closePanel();
+            },
             storeScroll: action.emojiStoreScroll,
         }),
     },

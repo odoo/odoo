@@ -57,7 +57,7 @@ export class SubChannelList extends Component {
      * @type {ReturnType<typeof import("@mail/discuss/core/public_web/sub_channel_preview").subChannelPreviewOnClickType>["type"]}
      */
     async onClickSubChannel(ev, { channelAtRender }) {
-        channelAtRender.open({ focus: true });
+        channelAtRender.open({ focus: true, asSideChannel: true });
         this.props.close?.();
     }
 

@@ -146,6 +146,8 @@ export class Composer extends Component {
      * @type {import("@odoo/owl").Signal<import("@html_editor/editor").Editor>}
      */
     readyEditor = signal(undefined);
+    /** Focus requests of this composer only, unlike `composer.autofocus`, @see focus */
+    ownFocusRequest = signal(0);
 
     setup() {
         super.setup();
@@ -622,7 +624,12 @@ export class Composer extends Component {
 
     /** Incremented to (re)focus the composer. */
     get focusRequest() {
-        return this.props.autofocus + this.props.composer.autofocus;
+        return this.props.autofocus + this.props.composer.autofocus + this.ownFocusRequest();
+    }
+
+    /** Focuses this composer, not the others displaying its composer record. */
+    focus() {
+        this.ownFocusRequest.set(this.ownFocusRequest() + 1);
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */

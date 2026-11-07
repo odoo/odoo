@@ -669,8 +669,8 @@ export function mockPipWindow() {
     const outsideArea = document.createElement("div");
     getFixture().appendChild(outsideArea);
     const popoutWindow = {
-        addEventListener: () => {},
-        removeEventListener: () => {},
+        addEventListener: (...args) => popoutIframe.contentWindow?.addEventListener(...args),
+        removeEventListener: (...args) => popoutIframe.contentWindow?.removeEventListener(...args),
         closed: false,
         get document() {
             const doc = popoutIframe.contentDocument;

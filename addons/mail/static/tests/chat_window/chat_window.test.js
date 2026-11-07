@@ -401,14 +401,17 @@ test("Close composer suggestions in chat window with ESCAPE does not also close 
     await waitFor(".o-mail-ChatWindow:count(1)");
 });
 
-test("Close emoji picker in chat window with ESCAPE does not also close the chat window", async () => {
+test.tags("focus required");
+test("Close emoji picker in chat window with ESCAPE focuses its composer, without closing the chat window", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     setupChatHub({ opened: [channelId] });
     await start();
     await contains("button[title='Add Emojis']:count(1)").click();
+    await waitFor(".o-EmojiPicker input:focus");
     triggerHotkey("Escape");
     await waitForNone(".o-EmojiPicker");
+    await waitFor(".o-mail-ChatWindow .o-mail-Composer-html:focus");
     await waitFor(".o-mail-ChatWindow:count(1)");
 });
 

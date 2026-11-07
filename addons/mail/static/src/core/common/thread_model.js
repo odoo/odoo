@@ -772,7 +772,7 @@ export class Thread extends Record {
     }
 
     /**
-     * @param {Object} [options]
+     * @param {import("models").ThreadOpenOptions} [options]
      * @return {boolean} true if the thread was opened, false otherwise
      */
     open(options) {

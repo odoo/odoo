@@ -9,6 +9,7 @@ import {
     onMounted,
     onWillUnmount,
     providePlugins,
+    signal,
     types,
     usePlugin,
     useProps,
@@ -23,6 +24,7 @@ import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { useEscapeFocus } from "@mail/utils/common/hooks";
 import { assignGetter } from "@mail/utils/common/misc";
 
 const { DateTime } = luxon;
@@ -61,10 +63,13 @@ export class Meeting extends Component {
             ),
         });
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
+        this.rootRef = signal.ref(HTMLDivElement);
         providePlugins([MessageHighlightPlugin], { thread: () => this.channel.thread });
         onMounted(() => (this.store.meetingViewOpened = true));
         onWillUnmount(() => (this.store.meetingViewOpened = false));
         useHotkey("escape", () => this.onEscape());
+        // Escape from the call refocuses no composer, unlike from its chat panel
+        useEscapeFocus(this.rootRef);
     }
 
     get channel() {
