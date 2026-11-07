@@ -64,3 +64,18 @@ class WebsiteSaleCartPayment(PaymentHttpCommon):
         }
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    def test_cart_updated_after_payment_initiation_is_not_confirmed(self):
+        """Test that a cart updated after the payment is initiated is not confirmed with the
+        initial payment amount, even if it covers the prepayment percentage."""
+        product = self.env["product.product"].create({"name": "Test Product", "list_price": 100.0})
+        self.order.company_id.prepayment_percent = 0.2
+        self.order.write({
+            "order_line": [Command.create({"product_id": product.id})],
+            "require_payment": True,
+        })
+        self.tx.amount = self.order.amount_total
+        self.order.order_line.product_uom_qty = 2  # Update the cart from another tab.
+        self.tx.state = "done"
+        self.tx._check_amount_and_confirm_order()
+        self.assertEqual(self.order.state, "draft")
