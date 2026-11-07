@@ -78,8 +78,26 @@ def _configure_stock_account_company_data(env):
         account_account_data = ChartTemplate._get_stock_account_account(template_code)
         account_templates = ChartTemplate._get_chart_template_model_data(template_code, 'account.account')
         for xmlid, vals in account_account_data.items():
-            if not ChartTemplate.ref(xmlid, raise_if_not_found=False):
-                vals.update(account_templates.get(xmlid, {}))
+            if ChartTemplate.ref(xmlid, raise_if_not_found=False):
+                continue
+            template_vals = account_templates.get(xmlid, {})
+            # The account may exist under another xmlid (e.g. renamed in the template since the CoA was
+            # installed): bind the xmlid to it rather than creating an account with a duplicate code.
+            existing_account = False
+            if 'code' in template_vals:
+                code_digits = int(ChartTemplate._get_chart_template_data(template_code)['template_data'].get('code_digits', 6))
+                existing_account = env['account.account'].with_company(company).with_context(active_test=False).search([
+                    *env['account.account']._check_company_domain(company),
+                    ('code', '=', f"{template_vals['code']:<0{code_digits}}"),
+                ], limit=1)
+            if existing_account:
+                env['ir.model.data']._update_xmlids([{
+                    'xml_id': ChartTemplate.company_xmlid(xmlid, company),
+                    'record': existing_account,
+                    'noupdate': True,
+                }])
+            else:
+                vals.update(template_vals)
         ChartTemplate._load_data({
             'res.company': res_company_data,
             'account.account': account_account_data,
