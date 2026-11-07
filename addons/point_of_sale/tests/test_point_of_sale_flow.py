@@ -1035,21 +1035,117 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
 
         # paid filter: excludes other config and cancelled orders
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [], 80, 0, state_filter='paid')['ordersInfo']]
+        paid_domain = [('state', 'in', ['paid', 'done'])]
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, paid_domain, 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
         self.assertNotIn(cancelled_order.id, order_ids)
 
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0, state_filter='paid')['ordersInfo']]
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, paid_domain + [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
         self.assertNotIn(cancelled_order.id, order_ids)
 
         # cancelled filter: excludes other config and paid orders
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [], 80, 0, state_filter='cancelled')['ordersInfo']]
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [('state', '=', 'cancel')], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertNotIn(paid_order_2.id, order_ids)
         self.assertIn(cancelled_order.id, order_ids)
+
+    def _create_paid_order(self, session, date_order, **values):
+        return self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'date_order': date_order,
+            'lines': [Command.create({
+                'product_id': self.product_a.id,
+                'qty': 1,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+            })],
+            'amount_tax': 0.0,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_return': 0.0,
+            'state': 'paid',
+            **values,
+        })
+
+    def test_search_order_ids_pages(self):
+        """ One page of paid orders, most recent first, after the orders not synced yet """
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        now = fields.Datetime.now()
+        # Saved yesterday and paid today: on top, even if created before the others.
+        paid_today = self._create_paid_order(session, now)
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE pos_order SET create_date = %s WHERE id = %s",
+            [now - timedelta(days=1), paid_today.id],
+        )
+        same_date_1 = self._create_paid_order(session, now - timedelta(hours=1))
+        same_date_2 = self._create_paid_order(session, now - timedelta(hours=1))
+        older_1 = self._create_paid_order(session, now - timedelta(hours=2))
+        older_2 = self._create_paid_order(session, now - timedelta(hours=3))
+        all_orders = paid_today | same_date_1 | same_date_2 | older_1 | older_2
+        domain = [('state', 'in', ['paid', 'done']), ('id', 'in', all_orders.ids)]
+
+        def search(limit, offset, **kwargs):
+            result = self.env['pos.order'].search_order_ids(
+                self.pos_config_usd.id, domain, limit, offset, **kwargs
+            )
+            return [order_id for order_id, _write_date in result['ordersInfo']], result
+
+        ids, result = search(5, 0)
+        self.assertEqual(ids, [paid_today.id, same_date_2.id, same_date_1.id, older_1.id, older_2.id])
+        self.assertEqual(result['totalCount'], 5)
+
+        # 3 orders not synced yet come first: page 1 is full of them, page 2 has one server order.
+        ids, result = search(2, 0, local_count=3)
+        self.assertEqual(ids, [])
+        self.assertEqual(result['totalCount'], 5, "the orders not synced yet are counted by the browser")
+        ids, _result = search(2, 2, local_count=3)
+        self.assertEqual(ids, [paid_today.id])
+        ids, _result = search(2, 4, local_count=3)
+        self.assertEqual(ids, [same_date_2.id, same_date_1.id])
+
+        # The page of the focused order is returned, whatever the offset asked.
+        ids, result = search(2, 0, focus_order_id=older_1.id)
+        self.assertEqual((ids, result['offset']), ([same_date_1.id, older_1.id], 2))
+        ids, result = search(2, 0, focus_order_id=older_1.id, local_count=3)
+        self.assertEqual((ids, result['offset']), ([older_1.id, older_2.id], 6))
+
+        # An order outside the filters can't be focused: the offset asked is kept.
+        other_order = self._create_paid_order(session, now)
+        ids, result = search(2, 0, focus_order_id=other_order.id)
+        self.assertEqual((ids, result['offset']), ([paid_today.id, same_date_2.id], 0))
+
+    def test_search_order_ids_refund_write_date(self):
+        """ A refund doesn't write on the refunded order, but changes its last write date """
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        order = self._create_paid_order(session, fields.Datetime.now())
+        refund = self._create_paid_order(session, fields.Datetime.now(), is_refund=True, lines=[
+            Command.create({
+                'product_id': self.product_a.id,
+                'qty': -1,
+                'price_subtotal': -10.0,
+                'price_subtotal_incl': -10.0,
+                'refunded_orderline_id': order.lines.id,
+            }),
+        ])
+        refund_date = order.write_date + timedelta(hours=1)
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE pos_order_line SET write_date = %s WHERE id = %s",
+            [refund_date, refund.lines.id],
+        )
+        self.env.invalidate_all()
+
+        result = self.env['pos.order'].search_order_ids(
+            self.pos_config_usd.id, [('id', '=', order.id)], 1, 0
+        )
+        self.assertEqual(result['ordersInfo'], [(order.id, refund_date)])
 
     def test_open_ui_missing_country(self):
         """ Test that a POS can not be opened if it has no country """

@@ -1,4 +1,4 @@
-import { models, Command } from "@web/../tests/web_test_helpers";
+import { models, Command, getKwArgs } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -184,10 +184,12 @@ export class PosOrder extends models.ServerModel {
         };
     }
 
-    search_order_ids(config_id, domain, limit, offset) {
+    search_order_ids() {
+        const { offset } = getKwArgs(arguments, "config_id", "domain", "limit", "offset");
         return {
             ordersInfo: [],
             totalCount: 0,
+            offset,
         };
     }
 }

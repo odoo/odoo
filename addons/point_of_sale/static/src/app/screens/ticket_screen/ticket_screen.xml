@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TicketScreen">
-        <t t-set="_filteredOrderList" t-value="this.getFilteredOrderList()" />
-        <div class="ticket-screen screen h-100 bg-100" t-att-class="{'loading-orders': this.pos.loadingOrderState}">
+        <t t-set="_filteredOrderList" t-value="this.list.orders()" />
+        <div class="ticket-screen screen h-100 bg-100" t-att-class="{'loading-orders': this.state.loadingOrders}">
             <div class="screen-full-width d-flex w-100 h-100">
                 <t t-set="usePreset" t-value="this.pos.config.use_presets and this.pos.models['pos.preset'].length > 1" />
                 <div t-if="!this.ui.isSmall || this.pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">
@@ -13,7 +13,7 @@
                             config="this.getSearchBarConfig()"
                             placeholder.translate="Search Orders..."
                             onSearch.bind="this.onSearch"
-                            onFilterSelected.bind="this.onFilterSelected" />
+                            onFilterSelected.bind="this.setFilter" />
                         <div class="filter-buttons buttons d-flex gap-1 overflow-auto" t-if="usePreset" t-att-class="{'mt-2 mt-sm-0': this.ui.isSmall}">
                             <t t-set="presets" t-value="this.presetFilterButtons"/>
                             <t t-set="dropdownPresets" t-value="presets.slice(3)"/>
@@ -38,18 +38,23 @@
                             </Dropdown>
                         </div>
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
-                            <span class="page me-2" role="button" t-on-click="this.onClickPageNbr"><t t-out="this.getPageNumber()" /></span>
+                            <span t-if="this.list.isLocalPage" class="badge text-bg-warning me-2">Offline</span>
+                            <span class="page me-2" role="button" t-on-click="this.onClickPageNbr"><t t-out="this.list.pageLabel" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
-                                <button class="previous btn btn-secondary" t-on-click="() => this.onPrevPage()">
+                                <button class="previous btn btn-secondary" t-att-disabled="this.state.page &lt;= 1" t-on-click="() => this.onPrevPage()">
                                     <i class="oi oi-fw" data-icon="arrow_left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
                                 </button>
-                                <button class="next btn btn-secondary" t-on-click="() => this.onNextPage()">
+                                <button class="next btn btn-secondary" t-att-disabled="this.state.page &gt;= this.list.nbrPages" t-on-click="() => this.onNextPage()">
                                     <i class="oi oi-fw" data-icon="arrow_right" role="img" aria-label="Next Order List" title="Next Order List"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div class="orders overflow-y-auto flex-grow-1 rounded-bottom-3 bg-view">
+                    <div t-if="this.list.showReloadBanner" class="reload-banner alert alert-info d-flex align-items-center justify-content-between rounded-0 m-0 py-2">
+                        <span>Back online: some orders may be missing.</span>
+                        <button class="btn btn-primary btn-sm" t-on-click="() => this.list.reload()">Reload</button>
+                    </div>
+                    <div class="orders overflow-y-auto flex-grow-1 rounded-bottom-3 bg-view" t-att-class="{'opacity-50 pe-none': this.state.loadingPage}">
                         <t t-if="_filteredOrderList.length !== 0">
                             <table t-if="!this.ui.isSmall"  class="table table-striped table-hover">
                                 <tbody>
@@ -164,7 +169,7 @@
                     </div>
                     <div class="switchpane d-flex gap-2 m-2" t-if="this.ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="this.getSelectedOrder()" />
-                        <t t-set="_showLoadButton" t-value="!_selectedSyncedOrder or (!this.isOrderSynced and !this.isOrderCancelled(_selectedSyncedOrder))" />
+                        <t t-set="_showLoadButton" t-value="!_selectedSyncedOrder or (!this.isOrderSynced and !_selectedSyncedOrder.isCancelled)" />
                         <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
                             t-att-disabled="!_selectedSyncedOrder"
                             t-if="_showLoadButton"
@@ -197,7 +202,7 @@
                                 </li>
                             </Orderline>
                         </OrderDisplay>
-                        <div class="pads" t-if="!this.isOrderCancelled(_selectedSyncedOrder)">
+                        <div class="pads" t-if="!_selectedSyncedOrder.isCancelled">
                             <t t-if="this.isOrderSynced">
                                 <div t-if="this.pos.accessRight.canAccessButton" class="control-buttons d-flex gap-2 pb-2">
                                     <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.showOrderDetails(_selectedSyncedOrder)">
