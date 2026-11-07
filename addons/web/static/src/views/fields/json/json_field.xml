@@ -2,7 +2,22 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.JsonField">
-        <span t-out="this.formattedValue" />
+        <CodeEditor
+            value="this.state.editorValue"
+            mode="'json'"
+            readonly="this.props.readonly"
+            onBlur.bind="this.commitChanges"
+            onChange.bind="this.handleChange"
+            theme="this.theme"
+            maxLines="this.maxLines"
+            annotations="this.state.annotations"
+        />
+        <div t-if="this.errorMessage" class="o_field_json_error text-danger small mt-1" t-out="this.errorMessage"/>
     </t>
 
+    <t t-name="web.ListJsonField">
+        <!-- don't instantiate an editor in each readonly cell -->
+        <span t-if="this.props.readonly" t-out="this.formattedValue"/>
+        <t t-else="" t-call="web.JsonField"/>
+    </t>
 </templates>

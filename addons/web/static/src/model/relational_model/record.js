@@ -564,9 +564,11 @@ export class Record extends DataPoint {
                     break;
                 }
                 case "json": {
+                    const value = this.data[fieldName];
                     if (
                         this._isRequired(fieldName) &&
-                        (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
+                        // scalar values (e.g. 42) are valid json values
+                        (!value || (typeof value === "object" && !Object.keys(value).length))
                     ) {
                         unsetRequiredFields.add(fieldName);
                     }
