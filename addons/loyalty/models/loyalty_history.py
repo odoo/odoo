@@ -55,7 +55,8 @@ class LoyaltyHistory(models.Model):
     expiration_date = fields.Date(readonly=True, index=True)
 
     order_model = fields.Char(readonly=True)
-    order_id = fields.Many2oneReference(model_field="order_model", readonly=True)
+    order_id = fields.Many2oneReference(model_field="order_model", readonly=True, ondelete=lambda self, model: self._order_id_ondelete(model))
+    # TODO replace order_id with sale_order_id and pos_order_id
 
     _issued_or_used = models.Constraint(
         "CHECK (issued = 0 OR used = 0)",
@@ -65,6 +66,10 @@ class LoyaltyHistory(models.Model):
         "CHECK (issued >= 0 AND used >= 0)",
         "A history line cannot award or consume a negative amount of points.",
     )
+
+    def _order_id_ondelete(self, model):
+        # to be overwritten in sub-modules
+        return 'ignore'
 
     # === CRUD METHODS === #
 
