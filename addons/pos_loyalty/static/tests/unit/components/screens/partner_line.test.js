@@ -1,13 +1,16 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, animationFrame } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { mockAccessRight } from "../../utils";
 
 definePosModels();
 
 test("getLoyaltyPoints lists loyalty balances for the partner", async () => {
     const store = await setupPosEnv();
+    const canApplyRewards = mockAccessRight(store, "canApplyRewards", true);
+
     const models = store.models;
     // Fresh order with no partner: getLoyaltyPoints reads each program's card balance.
     store.addNewOrder();
@@ -37,4 +40,9 @@ test("getLoyaltyPoints lists loyalty balances for the partner", async () => {
     expect(byProgram[2]).toMatch(/E-Wallet Program: .*25\.00/);
     const ids = entries.map((e) => e.id);
     expect(ids).not.toInclude(3);
+
+    canApplyRewards.set(false);
+    await animationFrame();
+    const updatedEntries = component.getLoyaltyPoints();
+    expect(updatedEntries).toBeEmpty();
 });
