@@ -9,5 +9,5 @@ class StockValuationAdjustmentLines(models.Model):
     def _prepare_account_move_line_values(self):
         res = super()._prepare_account_move_line_values()
         if self.cost_id.target_model == 'picking':
-            res['analytic_distribution'] = self.move_id.picking_id.project_id._get_analytic_distribution()
+            res['analytic_distribution'] = self.move_id.picking_id.project_id.sudo()._get_analytic_distribution()
         return res
