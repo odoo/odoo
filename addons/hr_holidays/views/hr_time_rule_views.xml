@@ -33,10 +33,10 @@
         <field name="arch" type="xml">
             <!-- extend existing "Set Excess/Deficit to" tooltips with leave-specific constraints -->
             <xpath expr="//span[hasclass('o_form_label')][@invisible=&quot;threshold_operator == 'less_than'&quot;]/sup" position="attributes">
-                <attribute name="data-tooltip">The time off type created for the excess. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
+                <attribute name="data-tooltip">The time type created for the excess. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
             </xpath>
             <xpath expr="//span[hasclass('o_form_label')][@invisible=&quot;threshold_operator != 'less_than'&quot;]/sup" position="attributes">
-                <attribute name="data-tooltip">The time off type created for the deficit. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
+                <attribute name="data-tooltip">The time type created for the deficit. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
             </xpath>
 
             <!-- allocation row appended after the output WET div -->
@@ -49,7 +49,7 @@
                     <span class="text-muted" invisible="not leave_compensation_rate or threshold_operator != 'less_than'">from</span>
                     <field name="allocation_type_id" nolabel="1"
                         invisible="not leave_compensation_rate"
-                        placeholder="Choose a Time Off Type"
+                        placeholder="Choose a Time Type"
                         help="Must require allocation and be selectable in time off requests."/>
                 </div>
             </xpath>

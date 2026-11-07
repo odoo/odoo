@@ -57,7 +57,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # 1. Company is one of the selected companies.
         # 2. Company is false but whose country is one the countries of the selected companies.
         # 3. Company is false and country is false
-        # Thus, a time off type is defined to be available for `Test company`
+        # Thus, a time type is defined to be available for `Test company`
         # For example, the tour 'time_off_request_calendar_view' would succeed (false positive) without this leave type.
         # However, the tour won't create a time-off request (as expected)because no time-off type is available to be selected on the leave
         # This would cause the test case that uses the tour to fail.

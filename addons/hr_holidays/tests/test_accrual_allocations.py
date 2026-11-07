@@ -3232,7 +3232,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ))
 
     def test_time_off_balance_computation(self):
-        """ Assert `get_allocation_data` computes properly the balance of a time off type
+        """ Assert `get_allocation_data` computes properly the balance of a time type
             which is linked to an accrual allocation with expiring days + limited amount
             of carriedover duration
         """
