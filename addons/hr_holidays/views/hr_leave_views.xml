@@ -553,9 +553,9 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//group[@name='attachments_relapse']" position="inside">
-                <div class="d-flex align-items-baseline gap-2" colspan="2" invisible="not attachment_is_visible or state != 'confirm'">
-                    <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" class="w-auto"/>
-                    <span class="text-danger" invisible="not work_entry_type_support_document or supported_attachment_ids">Required</span>
+                <div class="d-flex align-items-baseline gap-2" colspan="2" invisible="not attachment_is_visible or (state != 'confirm' and not supported_attachment_ids)">
+                    <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" class="w-auto" readonly="state != 'confirm'"/>
+                    <span class="text-danger" invisible="not work_entry_type_support_document or supported_attachment_ids or state != 'confirm'">Required</span>
                 </div>
             </xpath>
         </field>
