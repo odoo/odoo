@@ -24,6 +24,8 @@ const { specificRangeTransformRegistry } = registries;
  * @property {Array<string>} orderBy
  * @property {string} actionXmlId
  * @property {boolean} [translateHeaders] Whether the custom headers should be translated or not
+ * @property {string} [type] Type of the list, to use a dedicated data source
+ *   implementation (see `listDataSourceRegistry`)
  */
 
 /**
