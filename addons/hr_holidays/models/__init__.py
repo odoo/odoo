@@ -5,6 +5,7 @@ from . import resource_calendar
 from . import resource_calendar_leaves
 from . import hr_time_rule
 from . import hr_time_rule_allocation_log
+from . import hr_version
 from . import hr_employee
 from . import hr_employee_departure
 from . import hr_employee_public
@@ -16,7 +17,6 @@ from . import hr_work_entry_type
 from . import hr_leave_accrual_plan_level
 from . import hr_leave_accrual_plan
 from . import hr_leave_mandatory_day
-from . import hr_version
 from . import mail_activity_type
 from . import mail_message_subtype
 from . import res_company

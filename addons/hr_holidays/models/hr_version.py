@@ -24,6 +24,25 @@ class HrVersion(models.Model):
     hr_responsible_id = fields.Many2one(domain=lambda self: self._get_hr_responsible_domain())
     allocation_from_working_schedule_id = fields.Many2one('hr.leave.allocation', string="Allocation from working schedule", copy=False, groups="hr.group_hr_user")
 
+    def _get_leave_manager_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_holidays.group_hr_holidays_employee').id
+    leave_manager_id = fields.Many2one(
+        'res.users', string='Time Off Approver',
+        compute='_compute_leave_manager', store=True, readonly=False,
+        domain=_get_leave_manager_domain,
+        help='Select the user responsible for approving "Time Off" of this employee.\n'
+             'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
+
+    @api.depends('parent_id')
+    def _compute_leave_manager(self):
+        for version in self:
+            previous_manager = version._origin.parent_id.user_id
+            manager = version.parent_id.user_id
+            if manager and version.leave_manager_id and version.leave_manager_id == previous_manager:
+                version.leave_manager_id = manager
+            elif not version.leave_manager_id:
+                version.leave_manager_id = False
+
     @api.constrains('contract_date_start', 'contract_date_end')
     def _check_contracts(self):
         """Check that the time off of the versions does not span different working schedules."""

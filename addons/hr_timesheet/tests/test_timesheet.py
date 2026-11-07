@@ -1285,3 +1285,27 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertFalse(future_timesheet.exists(), "Future timesheets must be deleted when an employee with a departure date is archived.")
         self.assertFalse(employee_no_wizard.active, "The second employee should be archived.")
         self.assertTrue(future_timesheet_no_wizard.exists(), "Future timesheets must NOT be deleted when an employee is archived without the departure wizard.")
+
+    def test_timesheet_manager_follows_employee_manager(self):
+        manager_1, manager_2 = self.env['hr.employee'].create([{'name': 'Manager 1'}, {'name': 'Manager 2'}])
+        self.empl_employee.version_ids.sudo().write({'date_version': fields.Date.today() - timedelta(days=10)})
+        self.empl_employee.parent_id = manager_1
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'unit_amount': 1,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(timesheet.manager_id, manager_1)
+
+        self.empl_employee.parent_id = manager_2
+        self.assertEqual(timesheet.manager_id, manager_2, "Changing the manager of the employee updates the timesheets")
+
+        new_version = self.empl_employee.version_id.copy({
+            'employee_id': self.empl_employee.id,
+            'date_version': fields.Date.today() - timedelta(days=1),
+            'parent_id': manager_1.id,
+        })
+        self.assertEqual(self.empl_employee.current_version_id, new_version)
+        self.assertEqual(timesheet.manager_id, manager_1, "A new current version updates the timesheets")
