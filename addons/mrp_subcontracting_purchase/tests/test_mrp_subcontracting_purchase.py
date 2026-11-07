@@ -566,6 +566,45 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
         self.assertEqual(price_diff_line.credit, 10)
 
+    def test_subcontracting_stock_input_reconciliation(self):
+        """ Receive a subcontracted product before billing it, and bill another one
+            before receiving it: in both cases the stock input lines of the bill and
+            of the subcontracting valuation entry are reconciled together.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'fifo'
+        product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
+        stock_input_account = product_category_all.property_stock_account_input_categ_id
+        self.finished2.purchase_method = 'purchase'
+
+        receipt_first_po, bill_first_po = self.env['purchase.order'].create([{
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({'product_id': self.finished2.id, 'price_unit': 100})],
+        } for _ in range(2)])
+        (receipt_first_po | bill_first_po).button_confirm()
+
+        bill_first_po.action_create_invoice()
+        bill_first_po.invoice_ids.invoice_date = Date.today()
+        bill_first_po.invoice_ids.action_post()
+
+        pickings = (receipt_first_po | bill_first_po).picking_ids
+        pickings.move_ids.picked = True
+        pickings.button_validate()
+
+        receipt_first_po.action_create_invoice()
+        receipt_first_po.invoice_ids.invoice_date = Date.today()
+        receipt_first_po.invoice_ids.action_post()
+
+        for po in (receipt_first_po, bill_first_po):
+            valuation_lines = po.picking_ids.move_ids.move_orig_ids.account_move_ids.line_ids
+            stock_input_lines = (po.invoice_ids.line_ids | valuation_lines).filtered(lambda line: line.account_id == stock_input_account)
+            self.assertRecordValues(stock_input_lines, [
+                {'balance': 100.0, 'reconciled': True},
+                {'balance': -100.0, 'reconciled': True},
+            ])
+
     def test_subcontract_product_price_change(self):
         """ Create a PO for subcontracted product, receive the product (finish MO),
             create vendor bill and edit the product price, confirm the bill.
