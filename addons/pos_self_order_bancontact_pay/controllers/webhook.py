@@ -2,8 +2,8 @@ from odoo.addons.pos_bancontact_pay.controllers.webhook import BancontactPayCont
 
 
 class SelfOrderBancontactPayController(BancontactPayController):
-    def _notify_pos(self, pos_config, bancontact_id, bancontact_status):
-        super()._notify_pos(pos_config, bancontact_id, bancontact_status)
+    def _notify_pos(self, pos_config, bancontact_id, bancontact_status, debtor_values=None):
+        super()._notify_pos(pos_config, bancontact_id, bancontact_status, debtor_values)
 
         if pos_config.self_ordering_mode == "kiosk":
             error = self._get_bancontact_error_message(bancontact_status)
