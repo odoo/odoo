@@ -3305,6 +3305,48 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(self.product_avco.total_value, 2000)
         self.assertEqual(self.product_avco.standard_price, 20)
 
+    def test_avco_mixed_inventory_apply_skips_history_recompute(self):
+        """Applying a count with both positive and negative lines must not recompute the whole
+        history of an AVCO product that only gets an incoming move in that batch. A product with
+        an incoming and an outgoing move in the same batch still needs the full recomputation.
+        """
+        product_in = self.product_avco
+        product_out = self.product_avco.copy({'name': 'Avco Product Out'})
+        product_both = self.product_avco.copy({'name': 'Avco Product Both'})
+        shelf = self.env['stock.location'].create({'name': 'Shelf', 'location_id': self.stock_location.id})
+        for product in (product_in, product_out, product_both):
+            self._make_in_move(product, 10, 10)
+            self._make_in_move(product, 10, 20)
+        self._make_in_move(product_both, 10, 15, location_dest_id=shelf.id)
+
+        Quant = self.env['stock.quant'].with_context(inventory_mode=True)
+        counts = [
+            (product_in, self.stock_location, 25),
+            (product_out, self.stock_location, 17),
+            (product_both, self.stock_location, 22),
+            (product_both, shelf, 8),
+        ]
+        quants = Quant
+        for product, location, counted_quantity in counts:
+            quant = Quant._gather(product, location)
+            quant.inventory_quantity = counted_quantity
+            quants |= quant
+
+        ProductProduct = self.env.registry['product.product']
+        with patch.object(ProductProduct, '_run_average_batch', autospec=True,
+                          side_effect=ProductProduct._run_average_batch) as run_average_batch:
+            quants.action_apply_inventory()
+        recomputed_products = self.env['product.product'].concat(*(
+            call.args[0] for call in run_average_batch.call_args_list if call.kwargs.get('force_recompute')
+        ))
+
+        self.assertNotIn(product_in, recomputed_products)
+        self.assertIn(product_both, recomputed_products)
+        self.assertEqual(product_in.qty_available, 25)
+        self.assertEqual(product_in.standard_price, 15)
+        self.assertEqual(product_out.standard_price, 15)
+        self.assertEqual(product_both.standard_price, 15)
+
     def test_avco_report_multiple_page(self):
         # New prod to have clean avco report
         prod_avco = self.env['product.product'].create({
