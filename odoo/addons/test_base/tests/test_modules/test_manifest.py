@@ -51,7 +51,7 @@ class TestModuleManifest(BaseCase):
             'demo': [],
             'depends': ['base'],
             'description': '',
-            'external_dependencies': {},
+            'external_dependencies': [],
             'iap_paid_service': False,
             'icon': '/base/static/description/icon.png',
             'installable': True,

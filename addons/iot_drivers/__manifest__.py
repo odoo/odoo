@@ -22,6 +22,17 @@ are found in other modules that must be installed separately.
         ],
     },
     'installable': False,
+    'external_dependencies': [
+        {'pypi': 'dbus-python', 'modules': ['dbus'], 'apt': 'python3-dbus'},
+        {'pypi': 'netifaces', 'apt': 'python3-netifaces'},
+        {'pypi': 'PyKCS11', 'apt': 'python3-pykcs11'},
+        {'pypi': 'schedule', 'apt': 'python3-schedule'},
+        {'pypi': 'websocket-client', 'modules': ['websocket'], 'apt': 'python3-websocket'},
+        {'pypi': 'sentry-sdk', 'modules': ['sentry_sdk']},
+        {'pypi': 'qrcode', 'apt': 'python3-qrcode'},
+        {'pypi': 'pyserial', 'modules': ['serial'], 'apt': 'python3-serial'},
+        {'pypi': 'pyusb', 'modules': ['usb'], 'apt': 'python3-usb'},
+    ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

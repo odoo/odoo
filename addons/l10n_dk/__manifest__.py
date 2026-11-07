@@ -21,6 +21,9 @@ Also provides Nemhandel registration and invoice sending throught the Odoo Acces
         'account_edi_proxy_client',
         'account_edi_ubl_cii',
     ],
+    'external_dependencies': [
+        {'pypi': 'phonenumbers', 'apt': 'python3-phonenumbers', 'optional': True, 'custom_install': 'A custom package is available on the odoo repositories'},
+    ],
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
