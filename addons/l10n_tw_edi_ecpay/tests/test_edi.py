@@ -96,7 +96,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             }]
         )
 
-        self.assertTrue(self.basic_invoice.l10n_tw_edi_file_id)
+        self.assertTrue(self.basic_invoice.l10n_tw_edi_file)
 
     def test_03_failed_submission(self):
         """
@@ -414,7 +414,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             }]
         )
 
-        self.assertTrue(self.basic_invoice_b2b.l10n_tw_edi_file_id)
+        self.assertTrue(self.basic_invoice_b2b.l10n_tw_edi_file)
 
     @freeze_time("2025-01-06 15:00:00")
     def test_11_basic_submission_b2b_partner_exists(self):
@@ -436,7 +436,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             }]
         )
 
-        self.assertTrue(self.basic_invoice_b2b.l10n_tw_edi_file_id)
+        self.assertTrue(self.basic_invoice_b2b.l10n_tw_edi_file)
 
     @freeze_time("2025-01-06 15:00:00")
     def test_12_basic_submission_b2b_partner_creation_failed(self):

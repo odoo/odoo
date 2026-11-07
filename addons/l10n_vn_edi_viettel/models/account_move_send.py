@@ -22,17 +22,6 @@ class AccountMoveSend(models.AbstractModel):
     # ATTACHMENTS
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _get_invoice_extra_attachments(self, move):
-        # EXTENDS 'account'
-        # we require these to be downloadable for a better UX. It was also said that the xml and pdf files are
-        # important files that needs to be shared with the customer.
-        return (
-            super()._get_invoice_extra_attachments(move)
-            + move.l10n_vn_edi_sinvoice_xml_file_id
-            + move.l10n_vn_edi_sinvoice_pdf_file_id
-        )
-
     def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None, pdf_report=None):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report)
@@ -126,10 +115,6 @@ class AccountMoveSend(models.AbstractModel):
 
             if not invoice.l10n_vn_edi_sinvoice_file and json_file_data:
                 self.env['ir.attachment'].with_user(SUPERUSER_ID).create(json_file_data)
-                invoice.invalidate_recordset(fnames=[
-                    'l10n_vn_edi_sinvoice_file_id',
-                    'l10n_vn_edi_sinvoice_file',
-                ])
 
             if invoice.l10n_vn_edi_invoice_state != 'sent':
                 continue

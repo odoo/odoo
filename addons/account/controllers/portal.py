@@ -162,7 +162,7 @@ class PortalAccount(CustomerPortal):
                 return request.make_response(zip_content, headers)
 
         elif report_type in ('html', 'pdf', 'text'):
-            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
+            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_file)
             request.update_context(proforma_invoice=not has_generated_invoice)
             # If the partner's language is RTL, set the context language to match, ensuring the report shows the correct text direction.
             partner_lang = invoice_sudo.partner_id.lang

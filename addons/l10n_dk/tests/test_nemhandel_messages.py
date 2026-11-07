@@ -161,7 +161,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             self.assertRecordValues(move, [{'nemhandel_move_state': 'error', 'nemhandel_message_uuid': OUTGOING_MESSAGE_UUID}])
 
         # we can't send the ubl document again unless we regenerate the pdf
-        move.invoice_pdf_report_id.unlink()
+        move.invoice_pdf_report_file = False
         with _mock_send(['0184:12345666']):
             wizard = self.create_send_and_print(move, default=True)
             self.assertEqual(wizard.invoice_edi_format, 'oioubl_21')
@@ -194,7 +194,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
                 'nemhandel_message_uuid': OUTGOING_MESSAGE_UUID,
             }],
         )
-        self.assertTrue(bool(move.ubl_cii_xml_id))
+        self.assertTrue(bool(move.ubl_cii_xml_file))
 
     def test_nemhandel_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via nemhandel

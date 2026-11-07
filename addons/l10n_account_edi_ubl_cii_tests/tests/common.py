@@ -81,14 +81,17 @@ class TestUBLCommon(AccountTestInvoicingCommon):
     # IMPORT HELPERS
     # -------------------------------------------------------------------------
 
+    def _create_attachment_from_binary(self, binary_value):
+        return self.env['ir.attachment'].create({'name': binary_value.filename, 'raw': binary_value})
+
     @freeze_time('2017-01-01')
-    def _assert_imported_invoice_from_etree(self, invoice, attachment):
+    def _assert_imported_invoice_from_etree(self, invoice, xml_file):
         """
         Create an account.move directly from an xml file, asserts the invoice obtained is the same as the expected
         invoice.
         """
         # /!\ use the same journal as the invoice's one to import the attachment !
-        invoice.journal_id.create_document_from_attachment(attachment.ids)
+        invoice.journal_id.create_document_from_attachment(self._create_attachment_from_binary(xml_file).ids)
         new_invoice = self.env['account.move'].search([], order='id desc', limit=1)
 
         self.assertTrue(new_invoice)
@@ -179,13 +182,13 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         """ Hook for subclasses to adjust the expected etree based on which optional
         modules are installed, before comparison. """
 
-    def _assert_invoice_attachment(self, attachment, xpaths, expected_file_path):
+    def _assert_invoice_attachment(self, xml_file, xpaths, expected_file_path):
         """
-        Get attachment from a posted account.move, and asserts it's the same as the expected xml file.
+        Get the xml file from a posted account.move, and asserts it's the same as the expected xml file.
         """
-        self.assertTrue(attachment)
+        self.assertTrue(xml_file)
 
-        xml_content = attachment.raw.content
+        xml_content = xml_file.content
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
@@ -202,14 +205,15 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             modified_etree,
         )
 
-        return attachment
+        return xml_file
 
-    def _test_import_partner(self, attachment, seller, buyer):
+    def _test_import_partner(self, xml_file, seller, buyer):
         """
         Given a buyer and seller in an EDI attachment.
         * Uploading the attachment as an invoice should create an invoice with the partner = buyer.
         * Uploading the attachment as a vendor bill should create a bill with the partner = seller.
         """
+        attachment = self._create_attachment_from_binary(xml_file)
         # Import attachment as an invoice
         new_invoice = self.company_data['default_journal_sale']._create_document_from_attachment(attachment.ids)
         self.assertEqual(buyer, new_invoice.partner_id)
@@ -218,11 +222,12 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         new_invoice = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment.ids)
         self.assertEqual(seller, new_invoice.partner_id)
 
-    def _test_import_in_journal(self, attachment):
+    def _test_import_in_journal(self, xml_file):
         """
         If the context contains the info about the current default journal, we should use it
         instead of infering the journal from the move type.
         """
+        attachment = self._create_attachment_from_binary(xml_file)
         journal2 = self.company_data['default_journal_sale'].copy()
         journal2.default_account_id = self.company_data['default_account_revenue'].id
         journal3 = journal2.copy()
@@ -240,9 +245,9 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         new_invoice3 = self.env['account.journal'].with_context(default_move_type='out_invoice')._create_document_from_attachment(attachment.id)
         self.assertEqual(new_invoice3.journal_id, self.company_data['default_journal_sale'])
 
-    def _test_encoding_in_attachment(self, attachment, filename):
+    def _test_encoding_in_attachment(self, xml_file, filename):
         """
         Generate an invoice, assert that the tag '<?xml version='1.0' encoding='UTF-8'?>' is present in the attachment
         """
-        self.assertTrue(filename in attachment.name)
-        self.assertIn(b"<?xml version='1.0' encoding='UTF-8'?>", attachment.raw.content)
+        self.assertTrue(filename in xml_file.filename)
+        self.assertIn(b"<?xml version='1.0' encoding='UTF-8'?>", xml_file.content)

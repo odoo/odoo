@@ -212,7 +212,7 @@ class TestSAZATCAPosInvoice(TestPoSCommon):
         When sync_from_ui is called with generate_pdf=False (set by the SA JS patch),
         _generate_pos_order_invoice must:
         - Process ZATCA EDI synchronously  →  l10n_sa_edi_document_id.state in ('accepted', 'warning')
-        - Skip PDF generation              →  invoice_pdf_report_id is False
+        - Skip PDF generation              →  invoice_pdf_report_file is False
         """
         ZATCA_PATCH = (
             'odoo.addons.l10n_sa_edi.models.l10n_sa_edi_document'
@@ -234,5 +234,5 @@ class TestSAZATCAPosInvoice(TestPoSCommon):
         self.assertTrue(zatca_doc, "ZATCA EDI document should exist after invoicing")
         self.assertIn(zatca_doc.state, ('accepted', 'warning'),
             "ZATCA EDI document must be processed synchronously during POS checkout")
-        self.assertFalse(invoice.invoice_pdf_report_id,
+        self.assertFalse(invoice.invoice_pdf_report_file,
             "PDF must not be generated during checkout — it is deferred to on-demand generation")

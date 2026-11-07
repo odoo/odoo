@@ -79,12 +79,6 @@ SPANISH_CREDIT_REASON_TYPE = {
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_es_edi_facturae_xml_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="Facturae Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'),
-        depends=['l10n_es_edi_facturae_xml_file']
-    )
     l10n_es_edi_facturae_xml_file = fields.Binary(
         attachment=True,
         string="Facturae File",
@@ -169,6 +163,12 @@ class AccountMove(models.Model):
         fields_list = super()._get_fields_to_detach()
         fields_list.append("l10n_es_edi_facturae_xml_file")
         return fields_list
+
+    def _get_invoice_files(self):
+        invoice_files = super()._get_invoice_files()
+        if xml_file := self.l10n_es_edi_facturae_xml_file:
+            invoice_files.append({'file': xml_file, 'send': True, 'chatter': True})
+        return invoice_files
 
     def _l10n_es_edi_facturae_export_data_check(self):
         """ This function checks the Settings, Company, Partners involved in the
@@ -832,7 +832,7 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def action_invoice_download_facturae(self):
-        if invoices_with_facturae := self.filtered('l10n_es_edi_facturae_xml_id'):
+        if invoices_with_facturae := self.filtered('l10n_es_edi_facturae_xml_file'):
             return {
                 'type': 'ir.actions.act_url',
                 'url': f'/account/download_invoice_documents/{",".join(map(str, invoices_with_facturae.ids))}/facturae',
@@ -898,18 +898,18 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         self.ensure_one()
         if filetype == 'facturae':
-            if facturae_attachment := self.l10n_es_edi_facturae_xml_id:
+            if facturae_xml := self.l10n_es_edi_facturae_xml_file:
                 return [{
-                    'filename': facturae_attachment.name,
+                    'filename': facturae_xml.filename,
                     'filetype': 'xml',
-                    'content': facturae_attachment.raw,
+                    'content': facturae_xml,
                 }]
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
     def get_extra_print_items(self):
         # EXTENDS 'account' - add possibility to download Factura-e XML files
         print_items = super().get_extra_print_items()
-        if self.filtered('l10n_es_edi_facturae_xml_id'):
+        if self.filtered('l10n_es_edi_facturae_xml_file'):
             print_items.append({
                 'key': 'download_xml_facturae',
                 'description': _('Factura-e XML'),

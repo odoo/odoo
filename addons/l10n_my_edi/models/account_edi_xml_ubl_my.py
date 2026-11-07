@@ -351,8 +351,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _add_myinvois_document_header_nodes(self, document_node, vals):
         def _get_original_document_id(original_document):
             if vals['document_type_code'] in {'02', '03', '04', '12', '13', '14'} and original_document:
-                if original_document.myinvois_file_id:
-                    decoded_vals = self._l10n_my_edi_decode_myinvois_attachment(original_document.myinvois_file_id)
+                if original_document.myinvois_file:
+                    decoded_vals = self._l10n_my_edi_decode_myinvois_attachment(original_document.myinvois_file)
                     return decoded_vals.get('original_document_id')
                 original_invoice = original_document.invoice_ids[:1]
                 if vals['document_type_code'] in {'12', '13', '14'} and original_invoice.ref:
@@ -724,7 +724,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         constraints[f'myinvois_{record_identifier}_{code}'] = message_mapping[code]
 
     @api.model
-    def _l10n_my_edi_decode_myinvois_attachment(self, attachment):
+    def _l10n_my_edi_decode_myinvois_attachment(self, myinvois_file):
         """ Extract data from MyInvois xml. """
         def get_node(node, xpath):
             nodes = node.xpath(xpath)
@@ -737,7 +737,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         vals = {}
         try:
-            root = etree.fromstring(attachment.raw.content)
+            root = etree.fromstring(myinvois_file.content)
             invoice_id_node = get_node(root, "//*[local-name()='Invoice']/*[local-name()='ID']")
         except etree.XMLSyntaxError:
             # Not an xml

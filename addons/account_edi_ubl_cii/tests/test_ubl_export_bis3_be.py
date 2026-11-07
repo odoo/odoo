@@ -61,11 +61,11 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
         self._generate_invoice_ubl_file(invoice)
         self.assertTrue(
-            invoice.ubl_cii_xml_id,
+            invoice.ubl_cii_xml_file,
             "Invoice export should not be blocked by a line with quantity 0.0 [IBR-022]"
         )
 
-        xml_tree = etree.fromstring(invoice.ubl_cii_xml_id.raw.content)
+        xml_tree = etree.fromstring(invoice.ubl_cii_xml_file.content)
         invoiced_quantity = xml_tree.find('.//{*}InvoicedQuantity')
         self.assertIsNotNone(invoiced_quantity)
         self.assertEqual(invoiced_quantity.text, '0.0')

@@ -217,7 +217,6 @@ class AccountMove(models.Model):
                 invoice.message_post(body=self.env._("Success: Invoice signed for ETA"))
 
         self.env['ir.attachment'].create(attachments_to_create)
-        self.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
 
         if invoices_to_sign:
             return drive_id.action_sign_invoices(invoices_to_sign)
@@ -675,7 +674,6 @@ class AccountMove(models.Model):
         invoice_json = json.loads(self.l10n_eg_eta_json_doc_file.content)
         invoice_json['response'] = response
         self.l10n_eg_eta_json_doc_file = BinaryBytes(json.dumps(invoice_json).encode())
-        self.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
         if success:
             # If the submission is successful, store the JSON in attachments
             self.env['ir.attachment'].create({

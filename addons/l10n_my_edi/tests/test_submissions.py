@@ -84,7 +84,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         )
 
         # We will test the actual file in another test class, but we ensure it was generated as expected.
-        self.assertTrue(myinvois_document.myinvois_file_id)
+        self.assertTrue(myinvois_document.myinvois_file)
 
     @freeze_time('2024-07-15 10:00:00')
     def test_02_new_failed_submission(self):

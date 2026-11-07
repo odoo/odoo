@@ -53,8 +53,8 @@ class TestDownloadDocs(TestUblBis3Common, TestUblCiiBECommon, AccountTestInvoici
         cls.invoices.action_post()
         cls._generate_invoice_ubl_file(cls.invoices)
         cls.invoices += invoice_3
-        assert invoice_1.invoice_pdf_report_id and invoice_2.invoice_pdf_report_id and not invoice_3.invoice_pdf_report_id
-        assert invoice_1.ubl_cii_xml_id and invoice_2.ubl_cii_xml_id and not invoice_3.ubl_cii_xml_id
+        assert invoice_1.invoice_pdf_report_file and invoice_2.invoice_pdf_report_file and not invoice_3.invoice_pdf_report_file
+        assert invoice_1.ubl_cii_xml_file and invoice_2.ubl_cii_xml_file and not invoice_3.ubl_cii_xml_file
 
     def test_download_invoice_documents_filetype_all(self):
         self.authenticate(self.env.user.login, self.env.user.login)
@@ -98,4 +98,4 @@ class TestDownloadDocs(TestUblBis3Common, TestUblCiiBECommon, AccountTestInvoici
         xml_tree = etree.fromstring(res.content)
         self.assertIsNotNone(xml_tree.find('{*}AccountingCustomerParty/{*}Party'))
         self.assertIsNone(xml_tree.find('{*}AccountingCustomerParty/{*}Party/{*}EndpointID'))
-        self.assertFalse(invoice.ubl_cii_xml_id)
+        self.assertFalse(invoice.ubl_cii_xml_file)
