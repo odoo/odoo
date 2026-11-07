@@ -113,6 +113,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         )
 
     def test_03_product_configurator_edition(self):
+        self.salesman.groups_id += self.env.ref('uom.group_uom')
         self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):
