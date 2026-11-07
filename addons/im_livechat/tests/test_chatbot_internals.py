@@ -230,6 +230,20 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {"store_data": transfer_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "mail.message": [
+                            {
+                                "email_from": messages[1].email_from,
+                                "id": messages[1].id,
+                                "notification_ids": [],
+                                "reply_to": messages[1].reply_to,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
                     discuss_channel,
                     "mail.record/insert",
                     {
@@ -279,6 +293,20 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {"store_data": joined_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "mail.message": [
+                            {
+                                "email_from": messages[0].email_from,
+                                "id": messages[0].id,
+                                "notification_ids": [],
+                                "reply_to": messages[0].reply_to,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
                     discuss_channel,
                     "mail.record/insert",
                     {
@@ -323,9 +351,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "res.partner": self._filter_partners_fields(
                             {
                                 "agent_ids": [],
-                                "email": "e.e@example.com",
                                 "id": self.partner_employee.id,
-                                "tz": False,
                                 "user_ids": self.user_employee.ids,
                             },
                         ),
