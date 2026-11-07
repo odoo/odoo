@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_request_historic" model="ir.cron">
+        <field name="name">Polish eInvoice: Request the past vendor bills from KSeF</field>
+        <field name="model_id" ref="model_l10n_pl_edi_batch_download"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_request_historic()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+    <record id="ir_cron_check_status" model="ir.cron">
+        <field name="name">Polish eInvoice: Check the status of the KSeF batches</field>
+        <field name="model_id" ref="model_l10n_pl_edi_batch_download"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_status()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+    <record id="ir_cron_download" model="ir.cron">
+        <field name="name">Polish eInvoice: Download the parts of the KSeF batches</field>
+        <field name="model_id" ref="model_l10n_pl_edi_batch_download"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_download()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+    <record id="ir_cron_import" model="ir.cron">
+        <field name="name">Polish eInvoice: Import the bills of the KSeF batches</field>
+        <field name="model_id" ref="model_l10n_pl_edi_batch_download"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_import()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

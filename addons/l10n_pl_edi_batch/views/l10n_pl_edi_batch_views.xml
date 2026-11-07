@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- KSeF Batch Download Views -->
+    <record id="l10n_pl_edi_batch_download_view_list" model="ir.ui.view">
+        <field name="name">l10n_pl_edi_batch.download.view.list</field>
+        <field name="model">l10n_pl_edi_batch.download</field>
+        <field name="arch" type="xml">
+            <list string="KSeF Batch Downloads"
+                decoration-danger="state == 'failed'"
+                decoration-success="state == 'done'"
+                decoration-info="state in ('requested', 'downloading', 'downloaded')"
+            >
+                <header>
+                    <button name="action_trigger_check_status" string="Check Status" type="object" display="always"/>
+                    <button name="action_trigger_download" string="Download" type="object" display="always"/>
+                    <button name="action_trigger_import" string="Import" type="object" display="always"/>
+                </header>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="date_expiry"/>
+                <field name="state" widget="badge"
+                    decoration-danger="state == 'failed'"
+                    decoration-success="state == 'done'"
+                    decoration-info="state in ('requested', 'downloading', 'downloaded')"
+                />
+                <field name="error" column_invisible="1"/>
+                <field name="is_expired" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_pl_edi_batch_download_view_form" model="ir.ui.view">
+        <field name="name">l10n_pl_edi_batch.download.view.form</field>
+        <field name="model">l10n_pl_edi_batch.download</field>
+        <field name="arch" type="xml">
+            <form string="KSeF Batch Download">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="requested,downloading,downloaded,done" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="KSeF Batch Reference"/>
+                        <h1>
+                            <field name="name" placeholder="Reference Number..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="error" invisible="not error" groups="base.group_system"/>
+                        <group string="Date Range">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="date_expiry"/>
+                            <field name="is_expired" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Batch Parts" name="parts">
+                            <field name="part_ids" readonly="1">
+                                <list string="Parts">
+                                    <field name="part_number" string="#" width="60px"/>
+                                    <field name="part_name" string="Part" width="400px"/>
+                                    <field string="Method" name="download_method" width="90px"/>
+                                    <field name="download_url" widget="url" width="550px"/>
+                                    <field name="decrypted_file" filename="part_name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="JSON" name="json_info">
+                            <field name="content" widget="ace"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_pl_edi_batch_download_view_search" model="ir.ui.view">
+        <field name="name">l10n_pl_edi_batch.download.view.search</field>
+        <field name="model">l10n_pl_edi_batch.download</field>
+        <field name="arch" type="xml">
+            <search string="Search KSeF Batches">
+                <field name="name" string="Batch Reference"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="In Progress" name="filter_in_progress" domain="[('state', 'not in', ['done', 'failed'])]"/>
+                <separator/>
+                <filter string="Requested" name="filter_requested" domain="[('state', '=', 'requested')]"/>
+                <filter string="Downloading" name="filter_downloading" domain="[('state', '=', 'downloading')]"/>
+                <filter string="Downloaded" name="filter_downloaded" domain="[('state', '=', 'downloaded')]"/>
+                <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Failed" name="filter_failed" domain="[('state', '=', 'failed')]"/>
+                <separator/>
+                <filter string="Expired" name="filter_expired" domain="[('is_expired', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Company" name="group_company" domain="[]" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- KSeF Batch Part Views -->
+    <record id="l10n_pl_edi_batch_part_view_list" model="ir.ui.view">
+        <field name="name">l10n_pl_edi_batch.part.view.list</field>
+        <field name="model">l10n_pl_edi_batch.part</field>
+        <field name="arch" type="xml">
+            <list string="KSeF Batch Parts">
+                <field name="batch_name"/>
+                <field name="part_number" width="80px"/>
+                <field name="part_name" string="Part" width="180px"/>
+                <field name="download_method" width="100px"/>
+                <field name="download_url" widget="url"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="decrypted_file" filename="part_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_pl_edi_batch_part_view_form" model="ir.ui.view">
+        <field name="name">l10n_pl_edi_batch.part.view.form</field>
+        <field name="model">l10n_pl_edi_batch.part</field>
+        <field name="arch" type="xml">
+            <form string="KSeF Batch Part">
+                <sheet>
+                    <group>
+                        <group string="Part Details">
+                            <field name="batch_id"/>
+                            <field name="batch_name"/>
+                            <field name="part_number"/>
+                            <field name="part_name" string="Part"/>
+                        </group>
+                        <group string="HTTP Download Settings">
+                            <field name="download_method"/>
+                            <field name="download_url" widget="url"/>
+                            <field name="decrypted_file" filename="part_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action and menu -->
+    <record id="l10n_pl_edi_batch_download_action" model="ir.actions.act_window">
+        <field name="name">KSeF Batch Downloads</field>
+        <field name="res_model">l10n_pl_edi_batch.download</field>
+        <field name="context">{'search_default_filter_in_progress': 1}</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="l10n_pl_edi_batch_download_view_search"/>
+    </record>
+
+    <menuitem
+        id="menu_l10n_pl_edi_batch_download"
+        name="KSeF Batch Downloads"
+        parent="account.menu_finance_receivables"
+        action="l10n_pl_edi_batch_download_action"
+        sequence="50"/>
+
+</odoo>
