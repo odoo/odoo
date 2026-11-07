@@ -87,6 +87,7 @@
             'point_of_sale/static/src/app/models/related_models.js',
             # for the data_service.test.js
             'point_of_sale/static/src/app/models/utils/indexed_db.js',
+            'point_of_sale/static/src/app/models/utils/tax_details.js',
             'point_of_sale/static/src/app/models/data_service_options.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/models/data_service.js',
