@@ -32,8 +32,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             ('raw_material_production_id', '!=', False),
             ('location_id', 'in', wh_location_ids),
         ]
-        in_product_qty = {k.id: v for k, v in self.env['mrp.production'].sudo()._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
-        out_product_qty = {k.id: v for k, v in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+        in_product_qty = {(f'{k.id}_{v.id}'): s for k, v, s in self.env['mrp.production'].sudo()._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id', 'warehouse_id'])}
+        out_product_qty = {(f'{k.id}_{v.id}'): s for k, v, s in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id', 'warehouse_id'])}
 
         self._add_product_quantities(res, product_template_ids, product_ids, 'draft_production_qty', in_product_qty, out_product_qty)
 
