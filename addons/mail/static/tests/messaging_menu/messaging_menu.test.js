@@ -15,6 +15,7 @@ import {
     start,
     startServer,
     triggerEvents,
+    triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { Store } from "@mail/../tests/mock_server/store";
@@ -54,6 +55,14 @@ test("should have messaging menu button in systray", async () => {
     await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
     await waitForNone(".o-mail-MessagingMenu");
     await waitFor(".o_menu_systray i[aria-label='Messages'][data-icon='forum'].oi:count(1)");
+});
+
+test("ALT+SHIFT+D toggles the messaging menu", async () => {
+    await start();
+    await triggerHotkey("alt+shift+d");
+    await waitFor(".o-mail-MessagingMenuInDropdown:count(1)");
+    await triggerHotkey("alt+shift+d");
+    await waitForNone(".o-mail-MessagingMenuInDropdown");
 });
 
 test("light user can start a chat from the messaging menu", async () => {
