@@ -1,8 +1,9 @@
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
+    useFocusTooltip,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -28,6 +29,12 @@ export class TableAlignSelector extends Component {
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.tableAlignSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+        useFocusTooltip(this.menuRef);
+    }
+
+    get ariaLabel() {
+        const currentItem = this.items.find((item) => item.mode === this.state.displayName);
+        return getToolbarAriaLabel(this.props.title, currentItem?.title);
     }
 
     onSelected(item) {

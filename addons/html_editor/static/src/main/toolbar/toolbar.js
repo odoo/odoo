@@ -2,6 +2,8 @@ import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { useFocusTooltip } from "@html_editor/toolbar_dropdown_hook";
 
 const componentButtonSchema = {
     Component: t.component(),
@@ -16,7 +18,7 @@ const genericButtonSchema = {
     icon: t.string().optional(),
     iconClass: t.string().optional(),
     id: t.string(),
-    isActive: t.boolean(),
+    isActive: t.boolean().optional(),
     isDisabled: t.boolean(),
     opensUi: t.boolean().optional(),
     run: t.function(),
@@ -47,6 +49,7 @@ export class Toolbar extends Component {
     setup() {
         this.state = proxy(this.props.state);
         this.shouldFocusFirstButton = false;
+        useFocusTooltip(this.toolbarEl);
 
         useHotkey("alt+f", () => this.focusFirstToolbarButton(), {
             bypassEditableProtection: true,
@@ -108,6 +111,22 @@ export const toolbarButtonProps = {
     getSelection: t.function(),
     isDisabled: t.boolean(),
 };
+
+/**
+ * Builds the `aria-label` of a toolbar button, including its current value
+ * when relevant (e.g. "Select text style: Paragraph"), so that screen readers
+ * announce it while the visible text remains part of the accessible name.
+ *
+ * @param {string} title
+ * @param {string|number} [value]
+ * @returns {string}
+ */
+export function getToolbarAriaLabel(title, value) {
+    if (value === undefined || value === null || value === "") {
+        return title;
+    }
+    return _t("%(label)s: %(value)s", { label: title, value });
+}
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */
 /** @typedef {import("./toolbar_plugin").ToolbarCommandItem} ToolbarCommandItem */

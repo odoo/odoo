@@ -13,15 +13,19 @@ import { isTableCell } from "@html_editor/utils/dom_info";
 const borderStyleItems = [
     {
         value: "solid",
+        title: _t("Solid"),
     },
     {
         value: "dashed",
+        title: _t("Dashed"),
     },
     {
         value: "dotted",
+        title: _t("Dotted"),
     },
     {
         value: "double",
+        title: _t("Double"),
     },
 ];
 

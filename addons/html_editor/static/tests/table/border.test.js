@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitFor } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "../_helpers/editor";
 import { expandToolbar } from "../_helpers/toolbar";
@@ -37,6 +37,18 @@ test("should apply border style", async () => {
         ".o-dropdown-item:has(.o-border-preview[style*='border-style: dotted'])"
     ).click();
     expect("td").toHaveStyle({ "border-style": "dotted" }, { inline: true });
+});
+
+test("border width and style items should have an accessible name", async () => {
+    await setupEditor(`
+        <table class="o_selected_table"><tbody><tr>
+            <td class="o_selected_td">11[]</td>
+        </tr></tbody></table>`);
+    await expandToolbar();
+    await contains(".btn[name='table_border_width']").click();
+    await waitFor(".o-dropdown-item[title='3px'][aria-label='3px']");
+    await contains(".btn[name='table_border_style']").click();
+    await waitFor(".o-dropdown-item[title='Dotted'][aria-label='Dotted']");
 });
 
 test("should remove only border color on color delete", async () => {
