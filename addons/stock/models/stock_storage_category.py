@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class StockStorageCategory(models.Model):
@@ -39,6 +39,23 @@ class StockStorageCategory(models.Model):
     def _set_storage_capacity_ids(self):
         for storage_category in self:
             storage_category.capacity_ids = storage_category.product_capacity_ids | storage_category.package_capacity_ids
+
+    def _get_availability_msg(self, location, product):
+        self.ensure_one()
+        location_usage = location._get_weight()[location]
+        remaining_weight = self.max_weight - location_usage['forecast_weight']
+        if product_capacity := self.product_capacity_ids.filtered_domain([('product_id', '=', product.id)]):
+            remaining_capacity = product_capacity.quantity - location_usage[product]
+        if self.max_weight and product_capacity:
+            return _("%(location)s can store %(quantity)s products for %(weight)s %(uom)s",
+                location=location.name, quantity=remaining_capacity, weight=remaining_weight, uom=self.weight_uom_name)
+        if product_capacity:
+            return _("%(location)s can store %(quantity)s products",
+                location=location.name, quantity=remaining_capacity)
+        if self.max_weight:
+            return _("%(location)s can store products for %(weight)s %(uom)s",
+                location=location.name, weight=remaining_weight, uom=self.weight_uom_name)
+        return _("No restriction on %(location)", location=location.name)
 
 
 class StockStorageCategoryCapacity(models.Model):
