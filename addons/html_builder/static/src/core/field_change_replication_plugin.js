@@ -17,45 +17,47 @@ export class FieldChangeReplicationPlugin extends Plugin {
     };
 
     setup() {
-        this.fieldsToReplicate = new Set();
+        this.mutationsBySource = new Map();
     }
 
     /**
      * @param { import("@html_editor/core/dom_observer_plugin").SerializedMutation[] } mutations
      */
     handleMutations(mutations) {
-        mutations
-            .filter((m) => !m.isAutomatic)
-            .filter(
-                (m) =>
-                    !(
-                        m.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
-                        m.attributeName.startsWith("data-oe-t")
-                    )
-            )
-            .map((m) => {
-                let nodeId = m.nodeId;
-                // TODO: Wouldn't doing this only for "remove" be enough?
-                if (
-                    [EDITOR_MUTATION_TYPES.ADD, EDITOR_MUTATION_TYPES.REMOVE].includes(m.type) &&
-                    m.parentNodeId
-                ) {
-                    nodeId = m.parentNodeId;
-                }
-                return closestElement(
-                    this.dependencies.domReferenceMap.getNodeById(nodeId),
-                    "[data-oe-model], [data-oe-translation-source-sha]"
-                );
-            })
-            .filter(Boolean)
-            .forEach((fieldEl) => this.fieldsToReplicate.add(fieldEl));
+        for (const mutation of mutations) {
+            if (
+                mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
+                mutation.attributeName.startsWith("data-oe-t")
+            ) {
+                continue;
+            }
+            let nodeId = mutation.nodeId;
+            // TODO: Wouldn't doing this only for "remove" be enough?
+            if (
+                [EDITOR_MUTATION_TYPES.ADD, EDITOR_MUTATION_TYPES.REMOVE].includes(mutation.type) &&
+                mutation.parentNodeId
+            ) {
+                nodeId = mutation.parentNodeId;
+            }
+            const fieldEl = closestElement(
+                this.dependencies.domReferenceMap.getNodeById(nodeId),
+                "[data-oe-model], [data-oe-translation-source-sha]"
+            );
+            if (!fieldEl) {
+                continue;
+            }
+            if (!this.mutationsBySource.has(fieldEl)) {
+                this.mutationsBySource.set(fieldEl, []);
+            }
+            this.mutationsBySource.get(fieldEl).push(mutation);
+        }
     }
 
     onNormalizedPendingMutations() {
-        const fields = this.fieldsToReplicate;
-        this.fieldsToReplicate = new Set();
+        const mutationsBySource = this.mutationsBySource;
+        this.mutationsBySource = new Map();
         const touchedEls = new Set();
-        for (const sourceEl of fields) {
+        for (const sourceEl of mutationsBySource.keys()) {
             const same = (attribute, quote = '"') =>
                 `[${attribute}=${quote}${sourceEl.getAttribute(attribute)}${quote}]`;
             let selector = "";
@@ -108,6 +110,33 @@ export class FieldChangeReplicationPlugin extends Plugin {
                     if (targetEl.innerHTML !== cloneEl.innerHTML) {
                         targetEl.replaceChildren(...cloneEl.cloneNode(true).childNodes);
                         touchedEls.add(targetEl);
+                    }
+                    if (
+                        targetEl.getAttribute("data-oe-model") === "ir.ui.view" &&
+                        targetEl.getAttribute("data-oe-field") === "arch"
+                    ) {
+                        for (const mutation of mutationsBySource.get(sourceEl)) {
+                            if (
+                                this.dependencies.domReferenceMap.getNodeById(mutation.nodeId) !==
+                                sourceEl
+                            ) {
+                                continue;
+                            }
+                            if (mutation.type === EDITOR_MUTATION_TYPES.CLASS_LIST) {
+                                targetEl.classList.toggle(mutation.className, mutation.value);
+                            } else if (
+                                mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
+                                (this.config.allowedRootAttrs || []).includes(
+                                    mutation.attributeName
+                                )
+                            ) {
+                                if (mutation.value === null) {
+                                    targetEl.removeAttribute(mutation.attributeName);
+                                } else {
+                                    targetEl.setAttribute(mutation.attributeName, mutation.value);
+                                }
+                            }
+                        }
                     }
                     this.trigger("on_replicated_handlers", { sourceEl, targetEl });
                 }
