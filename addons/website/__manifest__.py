@@ -458,7 +458,8 @@
         ],
         'website.font_urls_export': [
             # A minimal bundle that includes all the variable/function files
-            # needed to compile font_urls_export.scss.
+            # needed to compile the scss exports (font_urls_export.scss, and
+            # the ones of other modules).
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
