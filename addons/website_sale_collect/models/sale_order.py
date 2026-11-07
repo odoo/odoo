@@ -176,7 +176,7 @@ class SaleOrder(models.Model):
             in_store_dm = self.website_id.sudo().in_store_dm_id
             if not in_store_dm:
                 return
-            self.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
+            self.set_delivery_line(in_store_dm, in_store_dm.fixed_price)
             self.set_pickup_location(selection["pickup_location_data"])
         elif selection.get("type") == "delivery":
             delivery_method = (

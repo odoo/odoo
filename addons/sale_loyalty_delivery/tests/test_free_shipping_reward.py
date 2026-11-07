@@ -23,20 +23,11 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             "amount_type": "percent",
             "amount": 15,
         })
-        cls.product_delivery_poste = cls.env["product.product"].create({
-            "name": "The Poste",
-            "type": "service",
-            "categ_id": cls.env.ref("delivery.product_category_deliveries").id,
-            "sale_ok": False,
-            "purchase_ok": False,
-            "list_price": 20.0,
-            "taxes_id": [Command.set(tax_15pc_excl.ids)],
-        })
         cls.carrier = cls.env["delivery.carrier"].create({
             "name": "The Poste",
             "fixed_price": 20.0,
             "delivery_type": "base_on_rule",
-            "product_id": cls.product_delivery_poste.id,
+            "tax_ids": [Command.set(tax_15pc_excl.ids)],
         })
         cls.env["delivery.price.rule"].create([
             {"carrier_id": cls.carrier.id, "max_value": 5, "list_base_price": 20},
@@ -412,14 +403,10 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Create an order including: product and delivery
         order = self._create_so(
             order_line=[
-                Command.create({"product_id": self.iPadMini.id, "name": self.iPadMini.name}),
-                Command.create({
-                    "product_id": self.product_delivery_poste.id,
-                    "name": "Free delivery charges\nFree Shipping",
-                    "is_delivery": True,
-                }),
+                Command.create({"product_id": self.iPadMini.id, "name": self.iPadMini.name})
             ]
         )
+        order.set_delivery_line(self.carrier, 20.0)
 
         # Calculate promotions
         self._auto_rewards(order, discount_program)
