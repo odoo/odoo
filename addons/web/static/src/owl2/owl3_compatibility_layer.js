@@ -73,7 +73,7 @@ owl.status = function status(component) {
     }
 };
 
-class Plugin extends owl.Plugin {
+class RawPlugin extends owl.Plugin {
     constructor() {
         super();
         // Private members can't be accessed through a Proxy: prevent owl from
@@ -83,7 +83,7 @@ class Plugin extends owl.Plugin {
     }
 }
 
-owl.Plugin = Plugin;
+owl.Plugin = RawPlugin;
 
 /**
  * @param {() => void} cb

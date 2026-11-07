@@ -80,6 +80,7 @@ const parsers = {
     datetime: parseDateTime,
 };
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const datetimePickerService = {
     dependencies: ["bottom_sheet", "popover", "ui"],
     start(_env, { bottom_sheet: bottomSheetService, popover: popoverService, ui }) {
