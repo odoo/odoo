@@ -703,6 +703,7 @@ class HrTimeRule(models.Model):
         """
         create_vals = []
         all_source_ids = set()
+        sources_to_archive = set()
         dummy = self.env['resource.calendar']
         excess_alloc = []   # [employee, rule, hours, source, log_source]
         deficit_alloc = []  # [employee, rule, hours, source, log_source]
@@ -714,10 +715,11 @@ class HrTimeRule(models.Model):
             tz = ZoneInfo(employee._get_tz())
             for source, intervals in by_source.items():
                 all_source_ids.add(source.id)
-                # group by period, pick the lowest-sequence rule per period
+                source_wet_id = source.work_entry_type_id.id
+                has_deficit_output = False
                 by_period = defaultdict(list)
                 for iv_start, iv_end, rule in intervals:
-                    if not rule.work_entry_type_id or iv_end <= iv_start:
+                    if iv_end <= iv_start:
                         continue
                     if rule.quantity_period == 'week':
                         ws = int(rule.week_start or '0')
@@ -746,46 +748,34 @@ class HrTimeRule(models.Model):
                             if slot_hours > remaining:
                                 slot_e = slot_s + timedelta(hours=remaining)
                                 slot_hours = remaining
-                            # log against the output record (resolved after create())
-                            # so deleting the output precisely reverses its own allocation effect
                             pending_deficit_log_sources.append((len(deficit_alloc), len(create_vals)))
-                            create_vals.append(source._get_time_rule_output_vals(rule, slot_s, slot_e, pp))
+                            vals = source._get_time_rule_output_vals(rule, slot_s, slot_e, pp)
+                            if not vals.get('work_entry_type_id'):
+                                vals['work_entry_type_id'] = source_wet_id
+                            create_vals.append(vals)
                             deficit_alloc.append([employee, rule, slot_hours, source, None])
                             remaining -= slot_hours
+                            has_deficit_output = True
+                if has_deficit_output:
+                    sources_to_archive.add(source)
+                    start_field = source._time_rule_span_start_field
+                    end_field = source._time_rule_span_end_field
+                    create_vals.append(
+                        source._get_time_rule_remainder_vals(source[start_field], source[end_field])
+                        | {'work_entry_type_id': source_wet_id}
+                    )
 
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
             for source, intervals in by_source.items():
                 all_source_ids.add(source.id)
 
-                # credit displaced rules (acc) that had their classification overwritten.
-                # they produced no output record but still earn allocation for the hours they claimed.
-                for iv in intervals:
-                    if iv.end > iv.start:
-                        hours = (iv.end - iv.start).total_seconds() / 3600
-                        for prev_rule in iv.acc:
-                            excess_alloc.append([employee, prev_rule, hours, source, source])
-
                 output_intervals = self._resolve_output_intervals(intervals)
                 if not output_intervals:
                     continue
 
-                # pp-only rules (no rule WET): all intervals retain the source WET.
-                # just accumulate pp across all intervals and write to source, no splitting.
-                # still record excess hours so callers with allocation_type_id can allocate them.
-                if all(not iv.rule.work_entry_type_id for iv in output_intervals):
-                    all_pp = frozenset().union(*(iv.pp for iv in output_intervals))
-                    # collect extra_vals from every distinct classifying rule so that
-                    # future overrides of _get_source_annotation_vals that inspect
-                    # self are all called, not just the first interval's rule.
-                    extra_vals = {}
-                    for rule in dict.fromkeys(iv.rule for iv in output_intervals):
-                        extra_vals |= rule._get_source_annotation_vals(accumulated_pp=all_pp)
-                    if extra_vals:
-                        source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
-                    for iv in output_intervals:
-                        excess_alloc.append([employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600, source, source])
-                    continue
+                # archive the source to enable undo-ing
+                sources_to_archive.add(source)
 
                 start_field = source._time_rule_span_start_field
                 src_start_local = _from_utc(source[start_field], tz)
@@ -808,111 +798,51 @@ class HrTimeRule(models.Model):
                     if (_to_utc(seg[1], tz) - _to_utc(seg[0], tz)).total_seconds() >= 1
                 ]
 
-                min_out_start_utc = min(_to_utc(iv.start, tz) for iv in output_intervals)
-                src_start_utc = source[start_field]
-                # we apply break proration across intervals matching the source time type and pp
+                # break proration: distribute the source's break across slices that
+                # keep the source work entry type and premium pays
                 src_wet = source.work_entry_type_id
                 src_pp = frozenset()
-                if min_out_start_utc <= src_start_utc:
-                    first = output_intervals[0]
-                    first_end_utc = _to_utc(first.end, tz)
-                    extra_vals = first.rule._get_source_annotation_vals(accumulated_pp=first.pp)
-                    # source record is repurposed as the first output; all remainder segments need new records
-                    # remainder: time between/after outputs that reverts to the original work type
-                    remainder_secs = sum(
-                        _utc_seconds(seg_s, seg_e, tz)
-                        for seg_s, seg_e, _ in remainder_segments
-                    )
-                    # eligible pool: remainder + output slices that keep the original type/pp
-                    break_pool_secs = remainder_secs + sum(
-                        _utc_seconds(iv.start, iv.end, tz)
-                        for iv in ([first._replace(start=src_start_local)] + list(output_intervals[1:]))
-                        if iv.wet == src_wet and iv.pp == src_pp
-                    )
-                    # zero out if the pool is too small to hold the break
-                    if break_pool_secs < src_break_h * 3600:
-                        break_pool_secs = 0
-                    break_span_secs = break_pool_secs or src_span_secs
-                    first_break_vals = {}
-                    if src_break_h:
-                        # the source becomes the first output: it must always get its own
-                        # share (possibly 0), never keep the original full break, else
-                        # the break is counted twice (source + remainder records)
-                        first_gets_break = not break_pool_secs or (first.wet == src_wet and first.pp == src_pp)
-                        first_break_vals['break_duration'] = (
-                            (first_end_utc - src_start_utc).total_seconds() / break_span_secs * src_break_h
-                            if first_gets_break and break_span_secs else 0.0
-                        )
-                    if not (
-                        source.work_entry_type_id == first.wet
-                        and source.time_rule_id == first.rule
-                        and source[source._time_rule_span_end_field] == first_end_utc
-                    ):
-                        source.sudo().with_context(**source._time_rule_write_ctx).write({
-                            'work_entry_type_id': first.wet.id,
-                            'time_rule_id': first.rule.id,
-                            **source._get_time_rule_end_write_vals(first_end_utc, first.end),
-                            **extra_vals,
-                            **first_break_vals,
-                        })
-                    elif extra_vals or first_break_vals:
-                        # main fields already match but pp or break may still need updating
-                        source.sudo().with_context(**source._time_rule_write_ctx).write({
-                            **extra_vals,
-                            **first_break_vals,
-                        })
-                    # in-place: source record IS the output (its WET/time_rule_id were changed);
-                    excess_alloc.append([employee, first.rule, (first.end - first.start).total_seconds() / 3600, source, source])
-                    subsequent = output_intervals[1:]
-                else:
-                    min_out_start_local = min(iv.start for iv in output_intervals)
-                    # source record is cut at the first output: it keeps all the remainder
-                    # segments before it (several when absences are clipped to the schedule)
-                    # eligible pool: all remainder segments + output slices
-                    # that keep the original type/pp
-                    break_pool_secs = sum(
-                        _utc_seconds(seg_s, seg_e, tz)
-                        for seg_s, seg_e, _ in remainder_segments
-                    ) + sum(
-                        _utc_seconds(iv.start, iv.end, tz)
-                        for iv in output_intervals
-                        if iv.wet == src_wet and iv.pp == src_pp
-                    )
-                    # zero out if the pool is too small to hold the break
-                    if break_pool_secs < src_break_h * 3600:
-                        break_pool_secs = 0
-                    break_span_secs = break_pool_secs or src_span_secs
-                    write_vals = source._get_time_rule_end_write_vals(min_out_start_utc, min_out_start_local)
-                    if src_break_h and break_span_secs:
-                        write_vals['break_duration'] = (min_out_start_utc - src_start_utc).total_seconds() / break_span_secs * src_break_h
-                    source.sudo().with_context(**source._time_rule_write_ctx).write(write_vals)
-                    subsequent = output_intervals
+                break_pool_secs = sum(
+                    _utc_seconds(seg_s, seg_e, tz)
+                    for seg_s, seg_e, _ in remainder_segments
+                ) + sum(
+                    _utc_seconds(iv.start, iv.end, tz)
+                    for iv in output_intervals
+                    if iv.wet == src_wet and iv.pp == src_pp
+                )
+                if break_pool_secs < src_break_h * 3600:
+                    break_pool_secs = 0
+                break_span_secs = break_pool_secs or src_span_secs
 
+                # remainder slices: all portions of the source span not covered by outputs
                 for seg_s, seg_e, _ in remainder_segments:
-                    if _to_utc(seg_e, tz) <= min_out_start_utc:
-                        continue
-                    # snap a start that lands on the end-of-day boundary to midnight
-                    if seg_s.time() == time.max:
-                        seg_s = datetime.combine(seg_s.date() + timedelta(1), time.min)
                     seg_start_utc = _to_utc(seg_s, tz)
                     seg_end_utc = _to_utc(seg_e, tz)
-                    vals = source._get_time_rule_remainder_vals(seg_start_utc, seg_end_utc)
-                    vals['work_entry_type_id'] = source_wet_id
+                    vals = source._get_time_rule_remainder_vals(seg_start_utc, seg_end_utc) | {'work_entry_type_id': source_wet_id}
                     if src_break_h and break_span_secs:
                         vals['break_duration'] = (seg_end_utc - seg_start_utc).total_seconds() / break_span_secs * src_break_h
                     create_vals.append(vals)
 
-                for iv in subsequent:
+                # output slices: every classified interval becomes its own new record.
+                # pp-only rules have no work_entry_type_id; fall back to the source WET so
+                # the output record is valid and distinguishable from remainders via time_rule_id.
+                for iv in output_intervals:
+                    cv_idx = len(create_vals)
                     iv_start_utc = _to_utc(iv.start, tz)
                     iv_end_utc = _to_utc(iv.end, tz)
-                    # new output record being created; log_source resolved to it after create()
-                    pending_log_sources.append((len(excess_alloc), len(create_vals)))
-                    iv_gets_break = not break_pool_secs or (iv.wet == src_wet and iv.pp == src_pp)
                     vals = source._get_time_rule_output_vals(iv.rule, iv_start_utc, iv_end_utc, iv.pp)
+                    if not vals.get('work_entry_type_id'):
+                        vals['work_entry_type_id'] = source_wet_id
+                    iv_gets_break = not break_pool_secs or (iv.wet == src_wet and iv.pp == src_pp)
                     if iv_gets_break and src_break_h and break_span_secs:
                         vals['break_duration'] = (iv_end_utc - iv_start_utc).total_seconds() / break_span_secs * src_break_h
                     create_vals.append(vals)
-                    excess_alloc.append([employee, iv.rule, (iv.end - iv.start).total_seconds() / 3600, source, None])
+                    hours = (iv.end - iv.start).total_seconds() / 3600
+                    pending_log_sources.append((len(excess_alloc), cv_idx))
+                    excess_alloc.append([employee, iv.rule, hours, source, None])
+                    for prev_rule in iv.acc:
+                        pending_log_sources.append((len(excess_alloc), cv_idx))
+                        excess_alloc.append([employee, prev_rule, hours, source, None])
 
         any_source = next(
             (src for by_source in excess.values() for src in by_source),
@@ -920,6 +850,9 @@ class HrTimeRule(models.Model):
         )
         if any_source is None:
             return None, frozenset(), [], []
+        if sources_to_archive:
+            archive_recs = any_source.browse([r.id for r in sources_to_archive])
+            archive_recs.sudo().with_context(skip_time_rules=True).write({'active': False})
         new_records = self.env[any_source._name].sudo().with_context(**any_source._time_rule_write_ctx).create(create_vals)
         # resolve pending log_sources: output records now have IDs; backfill into excess/deficit alloc
         for alloc_idx, create_idx in pending_log_sources:
@@ -1168,9 +1101,19 @@ class HrTimeRule(models.Model):
                     ]
                     continue
 
+                # for excess rules, keep source leave in the schedule so it doesn't
+                # collapse the expected baseline; deficit rules want it subtracted normally
+                if rule.threshold_operator != 'less_than':
+                    source_leave_intervals = Intervals(
+                        (iv.start, iv.end, self.env['resource.calendar'])
+                        for iv in inside
+                        if iv.source._name == 'hr.leave'
+                    )
+                else:
+                    source_leave_intervals = Intervals()
                 schedule = (
                     work_intervals['schedule'][employee]
-                    - work_intervals['leave'][employee]
+                    - (work_intervals['leave'][employee] - source_leave_intervals)
                     - work_intervals['public_leave'][employee]
                 )
                 fully_flex = work_intervals['fully_flexible'][employee]
@@ -1241,3 +1184,20 @@ class HrTimeRule(models.Model):
                     excess[employee][iv.source].append(iv)
 
         return excess, deficit, active_iv
+
+    def action_reprocess_time_rules(self):
+        src_filter = self.env.context.get('time_rule_app', 'all')
+        rules = self or self.search([])
+        wizard = self.env['hr.time.rule.regenerate.wizard'].create({
+            'rule_ids': [(6, 0, rules.ids)],
+            'source_model_filter': src_filter,
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env['hr.time.rule.regenerate.wizard']._description,
+            'res_model': 'hr.time.rule.regenerate.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'target': 'new',
+        }

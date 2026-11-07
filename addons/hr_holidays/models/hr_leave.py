@@ -56,6 +56,7 @@ class HrLeave(models.Model):
     _time_rule_span_end_field = 'date_to'
     _time_rule_write_ctx = {
         'skip_time_rules': True,
+        'skip_payroll_issues': True,
         'leave_fast_create': True,
         'leave_skip_date_check': True,
         'leave_skip_state_check': True,
@@ -64,7 +65,6 @@ class HrLeave(models.Model):
         'mail_activity_automation_skip': True,
         'skip_leave_version_check': True,
         'skip_create_resource_leave': True,
-        'leave_time_rule_trim': True,
     }
 
     @api.model
@@ -258,21 +258,16 @@ class HrLeave(models.Model):
 
     time_rule_id = fields.Many2one('hr.time.rule', string="Time Rule", copy=False, index=True)
     source_leave_id = fields.Many2one('hr.leave', string="Source Leave", copy=False, index=True)
-    output_leave_ids = fields.One2many('hr.leave', 'source_leave_id')
-    is_time_rule_trimmed = fields.Boolean(
-        string='Trimmed by Time Rule', default=False, copy=False,
-        help="Set when a time rule trims this leave's end to sub-day precision. "
-             "Prevents _compute_date_from_to from snapping the end back to the schedule boundary.",
-    )
+    output_leave_ids = fields.One2many('hr.leave', 'source_leave_id', domain=[('time_rule_id', '!=', False)])
     time_rule_time_range = fields.Char(
         compute='_compute_time_rule_time_range',
         help="HH:MM → HH:MM label shown on rule-split and trimmed leaves.",
     )
 
-    @api.depends('request_hour_from', 'request_hour_to', 'is_time_rule_trimmed', 'source_leave_id')
+    @api.depends('request_hour_from', 'request_hour_to', 'source_leave_id')
     def _compute_time_rule_time_range(self):
         for leave in self:
-            if leave.is_time_rule_trimmed or leave.source_leave_id:
+            if leave.source_leave_id:
                 def fmt(h):
                     return float_to_time(h).strftime('%H:%M')
                 leave.time_rule_time_range = '%s → %s' % (
@@ -746,20 +741,7 @@ class HrLeave(models.Model):
             leave.date_from = leave._origin.date_from
             leave.date_to = leave._origin.date_to
 
-        # rule-trimmed source leaves: engine wrote a sub-day end; preserve it
-        trimmed_sources = self.filtered(
-            lambda l: not l.source_leave_id and (
-                l.is_time_rule_trimmed or self.env.context.get('leave_time_rule_trim')
-            )
-        )
-        for leave in trimmed_sources:
-            if not self.env.context.get('leave_time_rule_trim'):
-                # outside an engine write: restore the committed engine dates from DB
-                leave.date_from = leave._origin.date_from or leave.date_from
-                leave.date_to = leave._origin.date_to or leave.date_to
-            # inside an engine write: dates are already in cache from the write; leave them
-
-        for holiday in self.filtered(lambda l: not l.source_leave_id and l not in trimmed_sources):
+        for holiday in self.filtered(lambda l: not l.source_leave_id):
             is_calendar_leave = holiday.work_entry_type_id.count_days_as == 'calendar'
             if not holiday.request_date_from or not holiday.request_date_to:
                 holiday.date_from = False
@@ -1071,7 +1053,7 @@ class HrLeave(models.Model):
             # The calendar days branch already returns a final duration, it must not be rounded again.
             if not is_calendar_days:
                 if leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
-                    if (leave.is_time_rule_trimmed or leave.source_leave_id) and hours > 0:
+                    if leave.source_leave_id and hours > 0:
                         # rule-split leaves report actual fraction
                         hours_per_day = (calendar.hours_per_day if calendar else None) \
                             or (leave.employee_id.sudo().resource_calendar_id.hours_per_day if leave.employee_id else HOURS_PER_DAY) \
@@ -1131,7 +1113,7 @@ class HrLeave(models.Model):
             display = "%g %s" % (duration, unit)
             if leave.work_entry_type_request_unit == "hour" \
                     or (leave.work_entry_type_request_unit in ('day', 'half_day')
-                        and (leave.is_time_rule_trimmed or leave.source_leave_id)
+                        and leave.source_leave_id
                         and leave.number_of_hours > 0
                         and leave.number_of_days < 1):
                 # hour-type leaves, and sub-day rule-split segments of day/half-day type,
@@ -1486,6 +1468,9 @@ class HrLeave(models.Model):
         if self.env.context.get('leave_skip_state_check'):
             return
         for holiday in self:
+            if holiday.source_leave_id or not holiday.active:
+                # engine output child or archived source; not gated by the normal approval flow
+                continue
             if holiday.state in ['validate1', 'validate']:
                 message = _(
                     "To modify an approved time off, make sure you unapprove it first (%(employee)s: %(date_from)s to %(date_to)s).",
@@ -1694,7 +1679,8 @@ class HrLeave(models.Model):
                 'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', invalid_employee_names),
             })
         if self.env.context.get('leave_fast_create') and not self.env.context.get('skip_create_resource_leave'):
-            holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
+            # exclude leaves archived by time rules during this create (their children already got RCLs)
+            holidays.filtered(lambda l: l.state == 'validate' and l.active)._create_resource_leave()
         if zero_duration_employees:
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
@@ -1751,8 +1737,13 @@ class HrLeave(models.Model):
         state_invalidated = 'state' in values and values['state'] != 'validate'
         if validated_leaves and state_invalidated:
             validated_leaves._remove_resource_leave()
-            # Preserve allocation reversal logic from existing codebase
-            self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', validated_leaves.ids)
+            # include output children: in the archive+create arch the alloc log points to
+            # the output child (res_id = child.id), not the archived source.
+            all_ids = set(validated_leaves.ids)
+            all_ids.update(
+                validated_leaves.with_context(active_test=False).mapped('output_leave_ids').ids
+            )
+            self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', all_ids)
 
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
@@ -1819,8 +1810,15 @@ class HrLeave(models.Model):
 
     def unlink(self):
         """Delete requests, after reversing their time rule credits and removing their leaves."""
+        if not self.env.context.get('skip_time_rules'):
+            orphaned = self._get_orphaned_sources_on_unlink()
+        else:
+            orphaned = self.browse()
         self._prepare_leave_unlink()
-        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        result = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        if orphaned:
+            orphaned.with_context(active_test=False, skip_time_rules=True).sudo().unlink()
+        return result
 
     def _prepare_leave_unlink(self):
         """Undo the effects of the requests before their deletion.
@@ -1866,34 +1864,19 @@ class HrLeave(models.Model):
         """
         return [('state', '=', 'validate')]
 
+    @api.model
+    def _time_rule_wizard_extra_domain(self):
+        return [('state', '=', 'validate')]
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)
+
     def _get_write_source_extra_source_fields(self):
         """Run the time rules again when the type or the state of a request changes.
 
         :rtype: set[str]
         """
         return {'work_entry_type_id', 'state'}
-
-    def _get_time_rule_end_write_vals(self, end_utc, stop_local):
-        """Return the values shortening a request to ``end_utc``.
-
-        Writes ``date_to`` and the request fields; requests by day or half day are flagged
-        ``is_time_rule_trimmed`` so that their end is not recomputed from the schedule.
-
-        :param datetime end_utc: new end, naive UTC
-        :param datetime stop_local: the same instant in the employee's timezone
-        :rtype: dict
-        """
-        tz = ZoneInfo(self.employee_id._get_tz())
-        start_local = self.date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        vals = {
-            'date_to': end_utc,
-            'request_date_to': stop_local.date(),
-            'request_hour_from': start_local.hour + start_local.minute / 60,
-            'request_hour_to': stop_local.hour + stop_local.minute / 60,
-        }
-        if self.work_entry_type_request_unit in ('day', 'half_day'):
-            vals['is_time_rule_trimmed'] = True
-        return vals
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
         """Return the validated time off of the employee within a period.
