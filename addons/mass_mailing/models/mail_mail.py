@@ -46,14 +46,31 @@ class MailMail(models.Model):
                     new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")
                     body = body.replace(Wrapper(href), Wrapper(new_href))
 
-            # generate tracking URL
-            tracking_url = self._get_tracking_url()
-            body = tools.mail.append_content_to_html(
-                body,
-                f'<img src="{tracking_url}"/>',
-                plaintext=False,
-            )
+            # generate tracking URL, unless tracking is disabled for this recipient
+            disable_all, _country_codes = self.env['mailing.mailing']._get_tracking_disabled_config()
+            if not disable_all and self.id not in self.env.context.get('mailing_untracked_mail_ids', ()):
+                tracking_url = self._get_tracking_url()
+                body = tools.mail.append_content_to_html(
+                    body,
+                    f'<img src="{tracking_url}"/>',
+                    plaintext=False,
+                )
         return body
+
+    def _send(self, *args, **kwargs):
+        """ Flag, in batch, mailing emails whose recipient country forbids
+        tracking, so that '_prepare_outgoing_body' skips the opening pixel. """
+        Mailing = self.env['mailing.mailing']
+        additional_context = {}
+        # disable_all is checked directly in '_prepare_outgoing_body'
+        _disable_all, country_codes = Mailing._get_tracking_disabled_config()
+        if country_codes:
+            untracked_mail_ids = set()
+            for model, model_mails in self.filtered(lambda m: m.mailing_id and m.model and m.res_id).grouped('model').items():
+                untracked_res_ids = Mailing._get_untracked_res_ids(model, model_mails.mapped('res_id'))
+                untracked_mail_ids.update(model_mails.filtered(lambda m: m.res_id in untracked_res_ids).ids)
+            additional_context['mailing_untracked_mail_ids'] = frozenset(untracked_mail_ids)
+        return super(MailMail, self.with_context(**additional_context))._send(*args, **kwargs)
 
     def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
         """ Update mailing specific links to replace generic unsubscribe and

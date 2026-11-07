@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
 from odoo.tests.common import users, warmup
@@ -55,6 +57,40 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
 
         mails = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])
         self.assertFalse(mails, 'Should have auto-deleted the <mail.mail>')
+
+    @users('__system__', 'marketing')
+    @warmup
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
+    def test_send_mailing_tracking_disabled(self):
+        """ Half of the recipients are located in a country for which tracking
+        is disabled (see 'mass_mailing.disable_tracking'). """
+        country_fr, country_be = self.env.ref('base.fr'), self.env.ref('base.be')
+        mailing_list = self.env['mailing.list'].sudo().create({
+            'name': 'Tracking List',
+            'contact_ids': [(0, 0, {
+                'name': 'Recipient %s' % x,
+                'email': 'rec.%s@example.com' % x,
+                'country_id': (country_fr if x % 2 else country_be).id,
+            }) for x in range(0, 50)],
+        })
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Test',
+            'subject': 'Test',
+            'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
+            'reply_to_mode': 'new',
+            'mailing_model_id': self.ref('mass_mailing.model_mailing_list'),
+            'contact_list_ids': [(4, mailing_list.id)],
+        })
+
+        # patch rather than set the parameter: 'set_param' clears the ormcaches
+        # during the measured run
+        with patch.object(self.registry['mailing.mailing'], '_get_tracking_disabled_config',
+                          lambda self: (False, {'FR'})), \
+             self.assertQueryCount(__system__=1105, marketing=1106):
+            mailing.action_send_mail()
+
+        self.assertEqual(mailing.sent, 50)
+        self.assertEqual(mailing.delivered, 50)
 
 
 @tagged('mail_performance', 'post_install', '-at_install')

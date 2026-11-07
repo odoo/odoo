@@ -1007,6 +1007,37 @@ class MassMailing(models.Model):
             'post_convert_links': self._get_link_tracker_values(),
         }
 
+    @api.model
+    def _get_tracking_disabled_config(self):
+        """ Parse 'mass_mailing.disable_tracking': 'True'/'1' disables tracking
+        (opening pixel, link shortening) for everyone; comma-separated country
+        codes (e.g. 'FR,IT') disable it for recipients in those countries.
+
+        :return: tuple (disable_all, set of upper country codes)
+        """
+        value = (self.env['ir.config_parameter'].sudo().get_param('mass_mailing.disable_tracking') or '').strip().upper()
+        if value in ('TRUE', '1'):
+            return True, set()
+        return False, {code.strip() for code in value.split(',')} if value else set()
+
+    @api.model
+    def _get_untracked_res_ids(self, model, res_ids):
+        """ Return, in batch, the res_ids of model whose recipient must not be
+        tracked: record 'country_id' if any, else the country of its partners. """
+        disable_all, country_codes = self._get_tracking_disabled_config()
+        if disable_all:
+            return set(res_ids)
+        if not country_codes:
+            return set()
+        records = self.env[model].sudo().browse(res_ids)
+        if 'country_id' in records._fields:
+            return set(records.filtered(lambda r: r.country_id.code in country_codes).ids)
+        # read all partners at once: each record's partners have their own prefetch set
+        partners_by_record = records._mail_get_partners()
+        untracked_partners = self.env['res.partner'].union(*partners_by_record.values()).filtered(
+            lambda p: p.country_id.code in country_codes)
+        return {res_id for res_id, partners in partners_by_record.items() if partners & untracked_partners}
+
     def _get_recipients(self):
         mailing_domain = self._get_recipients_domain()
         res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
