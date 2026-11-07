@@ -101,8 +101,13 @@ class StockPickingBatch(models.Model):
             for move_line in batch.picking_ids.move_ids.move_line_ids:
                 if move_line.result_package_id.id in done_package_ids:
                     continue
-                estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
-                estimated_shipping_volume += move_line.product_id.volume * move_line.quantity_product_uom
+                if move_line.result_package_id:
+                    estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
+                    estimated_shipping_volume += move_line.product_id.volume * move_line.quantity_product_uom
+                else:
+                    weight, volume = move_line.product_id._get_shipping_weight_and_volume(move_line.quantity, move_line.uom_id, move_line.move_id.packaging_uom_id)
+                    estimated_shipping_weight += weight
+                    estimated_shipping_volume += volume
             batch.estimated_shipping_weight = estimated_shipping_weight
             batch.estimated_shipping_volume = estimated_shipping_volume
 

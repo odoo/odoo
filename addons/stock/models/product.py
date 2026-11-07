@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 from odoo.tools.barcode import check_barcode_encoding
 
 PY_OPERATORS = {
@@ -698,6 +698,31 @@ class ProductProduct(models.Model):
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         return defaultdict(float), defaultdict(float)
+
+    def _get_shipping_weight_and_volume(self, quantity, uom, packaging_uom=False):
+        """ Weight and volume of `quantity` `uom` of the product, as shipped.
+
+        When the packaging (`packaging_uom`, by default `uom`) has a package type, every started
+        package adds the weight of the package type, and the packages take the volume of the package
+        type when its dimensions are set, instead of the volume of the products. Otherwise, the
+        weight and volume of the product are used.
+
+        :return: (weight, volume) in the units of the product weights and volumes
+        """
+        self.ensure_one()
+        packaging_uom = packaging_uom or uom
+        product_qty = uom._compute_quantity(quantity, self.uom_id)
+        weight = self.weight * product_qty
+        volume = self.volume * product_qty
+        if package_type := packaging_uom.sudo().package_type_id:
+            package_count = float_round(
+                uom._compute_quantity(quantity, packaging_uom, round=False),
+                precision_rounding=1.0, rounding_method='UP',
+            )
+            weight += package_count * package_type.base_weight
+            if package_volume := package_type._get_volume():
+                volume = package_count * package_volume
+        return weight, volume
 
     def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:
