@@ -1769,19 +1769,35 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             rendering_values["signup_url"] = signup_url._replace(
                 query=urlencode(
-                    dict(parse_qs(signup_url.query), redirect="/shop/unarchive_user_addresses"),
+                    dict(parse_qs(signup_url.query), redirect="/shop/confirmation/link_order"),
                     doseq=True,
                 )
             ).geturl()
 
         return rendering_values
 
-    @route("/shop/unarchive_user_addresses", type="http", auth="user", sitemap=False)
-    def shop_unarchive_user_addresses(self):
-        self.env["res.partner"].sudo().search([
-            ("active", "=", False),
-            ("parent_id", "=", self.env.user.partner_id.id),
-        ]).active = True
+    @route("/shop/confirmation/link_order", type="http", auth="user", sitemap=False)
+    def shop_confirmation_link_order(self):
+        if sale_order_id := request.session.get("sale_last_order_id"):
+            order_sudo = self.env["sale.order"].sudo().browse(sale_order_id).exists()
+            partner = self.env.user.partner_id
+            if order_sudo and order_sudo.partner_id != partner:
+                # Sign in: attach the checkout addresses to the account to show the order.
+                customer = order_sudo.partner_id
+                shipping_partner = order_sudo.partner_shipping_id
+                if customer.commercial_partner_id != partner.commercial_partner_id:
+                    customer.write({
+                        "parent_id": partner.id,
+                        "type": "other" if customer == shipping_partner else "invoice",
+                    })
+                if (
+                    shipping_partner != customer
+                    and shipping_partner.commercial_partner_id != partner.commercial_partner_id
+                ):
+                    shipping_partner.write({"parent_id": partner.id, "type": "delivery"})
+
+            if order_sudo:
+                return request.redirect(order_sudo.get_portal_url(share_token=False))
 
         return request.redirect("/my")
 

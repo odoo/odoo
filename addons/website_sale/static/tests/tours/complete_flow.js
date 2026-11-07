@@ -138,10 +138,8 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             expectUnloadPage: true,
         },
         {
-            content: "See Quotations",
-            trigger: '.o_portal_docs a:contains("Quotations to review")',
-            run: "click",
-            expectUnloadPage: true,
+            content: "Check that we are redirected to the order portal page",
+            trigger: ".o_portal_sale_sidebar",
         },
         // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
         {
