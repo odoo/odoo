@@ -88,8 +88,8 @@ export class Group extends DataPoint {
         this.model._updateConfig(this.config, { extraDomain: filter }, { reload: false });
     }
 
-    deleteRecords(records) {
-        return this.model.mutex.exec(() => this._deleteRecords(records));
+    deleteRecords(records, { context } = {}) {
+        return this.model.mutex.exec(() => this._deleteRecords(records, { context }));
     }
 
     async toggle() {
@@ -120,8 +120,8 @@ export class Group extends DataPoint {
         this.count++;
     }
 
-    async _deleteRecords(records) {
-        await this.list._deleteRecords(records);
+    async _deleteRecords(records, { context } = {}) {
+        await this.list._deleteRecords(records, { context });
         this.count -= records.length;
     }
 
