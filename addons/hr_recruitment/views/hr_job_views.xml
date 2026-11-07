@@ -439,12 +439,6 @@
             <field name="name" position="after">
                 <field name="department_id" optional="hide"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="applicant_matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}"
-                    column_invisible="not context.get('active_applicant_id') and not context.get('active_applicant_skill_ids')"/>
-                <field name="matching_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
-                    column_invisible="not context.get('active_applicant_skill_ids')"/>
-                <field name="missing_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
-                    column_invisible="not context.get('active_applicant_skill_ids')"/>
                 <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer" optional="hide"/>
                 <field name="no_of_recruitment"/>
             </field>
@@ -463,6 +457,26 @@
             <list position="attributes">
                 <attribute name="js_class">recruitment_list_view</attribute>
             </list>
+        </field>
+    </record>
+
+    <record id="hr_job_view_list_matching" model="ir.ui.view">
+        <field name="name">hr.job.view.list.matching</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">applicant_matching_score desc, id</attribute>
+            </xpath>
+            <field name="open_application_count" position="before">
+                <field name="applicant_matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}"
+                    column_invisible="not context.get('active_applicant_id')"/>
+                <field name="matching_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_id')"/>
+                <field name="missing_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_id')"/>
+            </field>
         </field>
     </record>
 
