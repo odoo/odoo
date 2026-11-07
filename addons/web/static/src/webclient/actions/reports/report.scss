@@ -1,8 +1,9 @@
 $o-default-report-font: 'Lato' !default;
 $o-default-report-primary-color: $o-gray-900 !default;
 $o-default-report-secondary-color: $o-default-report-primary-color !default;
-$o-default-report-margins:  11mm !default; /* 7mm + container padding */
-$o-snailmail-address-padding-top: 42px;
+$o-default-report-margins:  7mm !default;
+$o-report-printed-mm: 4.43px;
+$o-snailmail-address-padding-top: 42px + (52 - 40) * $o-report-printed-mm;
 
 
 html, body {
@@ -32,15 +33,36 @@ body {
         padding-bottom: $o-default-report-margins;
 
         .o_footer_pager, p {
-            /* Condensed footer spacing */
-            margin-bottom: map-get($spacers, 1);
+            margin-bottom: 0;
         }
     }
 }
 
+.o_footer_content {
+    font-size: $small-font-size;
+    line-height: $line-height-sm;
+}
+
 .o_body_html {
     .header {
-        min-height: 52mm + $o-default-report-margins;
+        min-height: 40 * $o-report-printed-mm;
+        max-height: 40 * $o-report-printed-mm;
+
+        @each $margin-top in 44, 48 {
+            &[data-report-margin-top="#{$margin-top}"] {
+                min-height: $margin-top * $o-report-printed-mm;
+                max-height: $margin-top * $o-report-printed-mm;
+            }
+        }
+
+        ~ .footer {
+            height: 22 * $o-report-printed-mm;
+            overflow: hidden;
+        }
+
+        &[data-report-margin-bottom="23"] ~ .footer {
+            height: 23 * $o-report-printed-mm;
+        }
     }
 
     .o_footer_content {
@@ -145,7 +167,7 @@ li.oe-nested {
     margin-bottom: 0;
 }
 
-div[name=comment] p, div[name=address] p {
+div[name=comment] p, div[name=address] p, ul[name=company_address_list] p {
     /* wkhtmltopdf trims margin top/bottom which would extend a flex */
     /* container's height. This rule cut the address block's p margins to replicate in html. */
     margin-bottom: 0;

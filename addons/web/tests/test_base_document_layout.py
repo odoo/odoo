@@ -240,6 +240,48 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         doc_layout_2 = self.env['base.document.layout'].create({'company_id': self.company.id})
         self.assertTrue('street_2_detail' in doc_layout_2.company_details)
 
+    def test_company_address_list_compact_when_long(self):
+        """Test that a company block of more than 5 lines switches to a smaller font,
+        so it still fits in the header of the layouts."""
+        self.company.write({
+            'company_details': '<p>YourCompany<br>Rue de la Loi 16<br>1000 Brussels<br>Belgium</p>',
+            'vat': 'BE0477472701',
+        })
+        address_list = str(self.env['ir.qweb']._render('web.company_address_list', {'company': self.company}))
+        self.assertNotIn('class="small lh-sm"', address_list)
+
+        self.company.company_details = '<p>YourCompany<br>Rue de la Loi 16<br>1000 Brussels<br>Belgium</p><p>RPM Brussels</p>'
+        address_list = str(self.env['ir.qweb']._render('web.company_address_list', {'company': self.company}))
+        self.assertIn('class="small lh-sm"', address_list)
+
+        self.company.company_details = '<p>YourCompany<br>Rue de la Loi 16<br>1000 Brussels<br>Belgium</p>'
+        address_list = str(self.env['ir.qweb']._render('web.company_address_list', {'company': self.company, 'company_address_max_lines': 4}))
+        self.assertIn('class="small lh-sm"', address_list)
+
+    def test_company_address_list_line_count(self):
+        """Test that the company block counts the lines it prints, whatever html
+        the company details are written in."""
+        self.company.write({
+            'name': 'YourCompany',
+            'street': 'Rue de la Loi 16',
+            'street2': 'Box 4',
+            'zip': '1000',
+            'city': 'Brussels',
+            'state_id': False,
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+        for company_details, line_count in (
+            ('<div>YourCompany<br>Rue de la Loi 16<br>Box 4<br>1000 Brussels<br>Belgium</div>', 6),
+            ('<p>YourCompany</p><div>Rue de la Loi 16</div><ul><li>1000 Brussels</li><li>Belgium</li></ul>', 5),
+            ('<h3>YourCompany</h3><p>Rue de la Loi 16<br><a href="https://www.example.com">www.example.com</a></p>', 4),
+            (False, 6),
+        ):
+            with self.subTest(company_details=company_details):
+                self.company.company_details = company_details
+                address_list = self.env['ir.qweb']._render('web.company_address_list', {'company': self.company})
+                self.assertEqual(self.env['res.company']._get_report_line_count(address_list), line_count)
+
     def test_extract_primary_secondary_on_svg(self):
         svg = BinaryBytes(b'<svg xmlns="http://www.w3.org/2000/svg"/>')
         primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(svg)

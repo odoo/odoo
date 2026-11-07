@@ -17,8 +17,13 @@
             <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <t t-set="header_shape_height" position="after">
-            <t t-set="header_shape_height" t-if="o and o._name == 'account.move' and o.country_code == 'SA'">250</t>
+            <t t-set="l10n_sa_invoice" t-value="o and o._name == 'account.move' and o.country_code == 'SA'"/>
+            <t t-set="header_shape_height" t-if="l10n_sa_invoice">250</t>
         </t>
+        <xpath expr="//div[@data-report-margin-top]" position="attributes">
+            <attribute name="t-att-data-report-margin-top">l10n_sa_invoice and 69 or 48</attribute>
+            <attribute name="t-att-data-report-header-spacing">l10n_sa_invoice and 69 or 48</attribute>
+        </xpath>
     </template>
     <template id="l10n_sa_external_layout_wave" inherit_id="web.external_layout_wave">
         <!-- support for custom header -->
