@@ -85,8 +85,8 @@
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>
             <font_awesome_option selector="span.oi, i.oi, .social_media_img" exclude="[data-oe-xpath]"/>
             <video_size_option selector=".media_iframe_video"/>
-            <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
-            <image_pop_up_option selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img"/>
+            <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id]), .s_references_carousel_item img"/>
+            <image_pop_up_option selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img, .s_references_carousel_item img"/>
             <image_and_fa_option
                 template="html_builder.ImageAndFaOption"
                 selector="span.oi, i.oi, img"
@@ -117,7 +117,7 @@
 
         <animate_option
             selector=".o_animable, section .row > div, img, .oi, .btn, .s_card"
-            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.oi, .s_share i.oi, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card"/>
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.oi, .s_share i.oi, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card, .s_references_carousel_item img"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
         <visibility_option selector="section, .s_hr"/>
         <device_visibility_option
