@@ -115,6 +115,12 @@ export class PosTicketPrinterService {
     }
 
     async print({ printer, iframe, image = null }) {
+        if (!printer._instance) {
+            return {
+                successful: false,
+                message: { body: _t("An unexpected error occurred while printing.") },
+            };
+        }
         const finalImage =
             image ||
             (this.setIframeSizeFromPrinter(iframe, printer) && (await this.generateImage(iframe)));
