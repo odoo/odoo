@@ -6,6 +6,8 @@ import chardet
 import requests
 from urllib3.exceptions import LocationParseError
 
+from odoo.tools.urls import UnsafeUrlError, safe_requests
+
 
 def get_link_preview_from_url(url, request_session=None):
     """
@@ -27,10 +29,9 @@ def get_link_preview_from_url(url, request_session=None):
         'Odoo-Link-Preview': 'True',  # Used to identify coming from the link previewer
     }
     try:
-        if request_session:
-            response = request_session.get(url, timeout=3, headers=headers, allow_redirects=True, stream=True)
-        else:
-            response = requests.get(url, timeout=3, headers=headers, allow_redirects=True, stream=True)
+        response = safe_requests.get(url, session=request_session, timeout=3, headers=headers, stream=True)
+    except UnsafeUrlError:
+        return False
     except requests.exceptions.RequestException:
         return False
     except LocationParseError:
