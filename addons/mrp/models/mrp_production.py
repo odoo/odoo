@@ -1026,7 +1026,7 @@ class MrpProduction(models.Model):
                 if not field_values.get('warehouse_id'):
                     field_values['warehouse_id'] = warehouse_id
 
-        moves_to_reassign = self.env['stock.move']
+        production_ids_to_reassign = OrderedSet()
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for production in self:
@@ -1036,7 +1036,7 @@ class MrpProduction(models.Model):
                     prev_production_name = production.name
                     production.name = picking_type.sequence_id.next_by_id()
                     production.move_raw_ids.reference_ids.filtered(lambda r: r.name == prev_production_name).name = production.name
-                    moves_to_reassign |= production.move_raw_ids
+                    production_ids_to_reassign.add(production.id)
 
         res = super(MrpProduction, self).write(vals)
 
@@ -1062,6 +1062,7 @@ class MrpProduction(models.Model):
                 new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
+        moves_to_reassign = self.browse(production_ids_to_reassign).move_raw_ids
         if moves_to_reassign:
             moves_to_reassign._do_unreserve()
             moves_to_reassign = moves_to_reassign.filtered(
@@ -1924,15 +1925,22 @@ class MrpProduction(models.Model):
         ])
         for order in self:
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
+            # Total finished demand: in sync it equals the quantity to produce, so distributing
+            # the produced qty by each finished move's share of it reproduces the former behaviour
+            # while staying correct when a quantity change left a finished move's demand out of
+            # sync with product_qty.
+            total_finished_qty = sum(finish_moves.mapped('product_uom_qty'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
                 if move.has_tracking != 'none' and not move.lot_ids:
                     move.lot_ids = order.lot_producing_ids.ids
-                    if move.has_tracking == 'lot' and order.lot_producing_ids:
-                        lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id)
-                        lines_without_lot.lot_id = order.lot_producing_ids[:1]
+                if move.has_tracking == 'lot' and order.lot_producing_ids:
+                    lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
+                    lines_without_lot.lot_id = order.lot_producing_ids[:1]
                 # Distribute the produced qty across the finished moves (there can be several, exemple: after a split/merge)
-                move.quantity = order.product_uom_id.round((order.qty_producing - order.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
+                move.quantity = order.product_uom_id.round(
+                    (order.qty_producing - order.qty_produced) * move.product_uom_qty / (total_finished_qty or 1),
+                    rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)
@@ -2360,7 +2368,7 @@ class MrpProduction(models.Model):
             lambda m: not m.manual_consumption and not m.picked and m.product_uom.compare(m.quantity, m.product_uom_qty) == 0
         ).picked = True
 
-        self.move_raw_ids.filtered(lambda m: m.manual_consumption and not m.picked).picked = True
+        self.move_raw_ids.filtered(lambda m: m._should_be_auto_picked()).picked = True
 
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
@@ -2725,6 +2733,7 @@ class MrpProduction(models.Model):
                 bom_line.product_id,
                 bom_qty / ratio,
                 bom_line.product_uom_id,
+                operation_id=bom_line.operation_id.id,
                 bom_line=bom_line
             )
             raw_moves_values.append(raw_move_vals)

@@ -92,6 +92,15 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
 },
 ...clickOnEditAndWaitEditMode(),
 {
+    content: 'Edit the form',
+    trigger: ':iframe input[type="file"]',
+    run: "click",
+}, {
+    content: 'Add a new field',
+    trigger: 'div[data-container-title="Field"] button.btn-success',
+    run: "click",
+},
+{
     content: 'Add a fake default value for the job_id hidden field',
     trigger: ":iframe form input[name=job_id]:not(:visible)",
     run() {
@@ -108,15 +117,6 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         departmentEl.type = 'text';
         departmentEl.closest('.s_website_form_field').classList.remove('s_website_form_dnone');
     },
-},
-{
-    content: 'Edit the form',
-    trigger: ':iframe input[type="file"]',
-    run: "click",
-}, {
-    content: 'Add a new field',
-    trigger: 'div[data-container-title="Field"] button.btn-success',
-    run: "click",
 },
 ...clickOnSave(),
 {

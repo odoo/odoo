@@ -3,6 +3,7 @@
 
 import base64
 import random
+from unittest.mock import patch
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
@@ -167,6 +168,69 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_kiosk_combo_sides")
+
+    def test_self_order_kiosk_combo_fixed_choice(self):
+        """A combo choice with a single item and no attributes (a "fixed"
+        choice) is not shown as a selection step in the kiosk UI, but it
+        must still be added to the order along with the combo choices the
+        customer actually picks."""
+        fixed_product = self.env["product.product"].create({
+            "name": "Fixed Side",
+            "available_in_pos": True,
+            "list_price": 3,
+            "taxes_id": False,
+        })
+        variable_product_1 = self.env["product.product"].create({
+            "name": "Variable Side 1",
+            "available_in_pos": True,
+            "list_price": 4,
+            "taxes_id": False,
+        })
+        variable_product_2 = self.env["product.product"].create({
+            "name": "Variable Side 2",
+            "available_in_pos": True,
+            "list_price": 5,
+            "taxes_id": False,
+        })
+        fixed_combo = self.env["product.combo"].create({
+            "name": "Fixed Choice",
+            "combo_item_ids": [
+                Command.create({"product_id": fixed_product.id, "extra_price": 2}),
+            ],
+        })
+        variable_combo = self.env["product.combo"].create({
+            "name": "Variable Choice",
+            "combo_item_ids": [
+                Command.create({"product_id": variable_product_1.id, "extra_price": 0}),
+                Command.create({"product_id": variable_product_2.id, "extra_price": 0}),
+            ],
+        })
+        self.env["product.product"].create({
+            "available_in_pos": True,
+            "list_price": 10,
+            "taxes_id": False,
+            "name": "Test Fixed Combo",
+            "type": "combo",
+            "combo_ids": [Command.set([fixed_combo.id, variable_combo.id])],
+        })
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_kiosk_combo_fixed_choice")
+
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(
+            len(order.lines), 3,
+            "There should be 3 order lines - 1 combo parent, 1 variable choice, 1 fixed choice"
+        )
+        fixed_line = order.lines.filtered(lambda l: l.product_id == fixed_product)
+        self.assertEqual(len(fixed_line), 1, "The fixed choice should still be included in the order")
+        self.assertEqual(order.amount_total, 12, "The fixed choice extra price should be charged")
 
     def test_self_order_kiosk_combo_qty_max_free(self):
         setup_product_combo_items(self)
@@ -345,3 +409,27 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_parent_category")
+
+    def test_kiosk_reloads_on_config_change(self):
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        with patch.object(self.env.registry["pos.config"], "_notify") as notify:
+            self.pos_config.write({'has_paper': False})
+            notify.assert_not_called()
+            self.pos_config.write({'limit_categories': True})
+            notify.assert_called_once_with('CONFIG_UPDATED', {'write_date': self.pos_config.write_date})
+
+    def test_kiosk_paid_order_visible_in_other_pos(self):
+        classic_config = self.pos_config.copy({
+            'payment_method_ids': [Command.set(self.bank_payment_method.ids)],
+        })
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        order, _ = self.create_backend_pos_order({
+            'order_data': {'source': 'kiosk'},
+            'line_data': [{'product_id': self.cola.id, 'qty': 1}],
+            'payment_data': [{'payment_method_id': self.bank_payment_method.id}],
+        })
+
+        result = self.env['pos.order'].search_paid_order_ids(classic_config.id, [], 80, 0)
+        self.assertIn(order.id, [order_id for order_id, _ in result['ordersInfo']])

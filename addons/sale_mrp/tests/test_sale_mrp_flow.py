@@ -2699,6 +2699,37 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.move_ids.product_qty, 20)
 
+    def test_reassign_component_picking_sale_order_keeps_mo_reference(self):
+        """Check that linking the components transfer of an MTO manufacturing order to another sales order
+        keeps the further component needs of that manufacturing order in the same transfer, and that linking
+        it back leaves that transfer with the references of its own supply chain only."""
+        warehouse = self.company_data['default_warehouse']
+        warehouse.manufacture_steps = 'pbm'
+        self.product.route_ids = [Command.set([
+            warehouse.mto_pull_id.route_id.id,
+            warehouse.manufacture_pull_id.route_id.id,
+        ])]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 1})],
+        })
+        so_1, so_2 = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 1})],
+        } for _ in range(2)])
+        so_1.action_confirm()
+        mo = so_1.mrp_production_ids
+        component_pick = mo.move_raw_ids.move_orig_ids.picking_id
+        # Link the component pick to the other so and check it is still linked to its supply chain
+        component_pick.sale_id = so_2
+        mo.move_raw_ids.product_uom_qty = 3
+        self.assertEqual(mo.move_raw_ids.move_orig_ids.picking_id, component_pick)
+        self.assertRecordValues(component_pick.move_ids, [{'product_id': self.component_a.id, 'product_uom_qty': 3}])
+        # Link the component pick back to its original so and check it removes its link to so_2's reference
+        component_pick.sale_id = so_1
+        self.assertEqual(component_pick.reference_ids, so_1.stock_reference_ids)
+        self.assertFalse(so_2.stock_reference_ids.move_ids)
+
     def test_separate_child_mo_for_shared_component(self):
         """Ensure that when confirming a Sale Order with multiple MTO products
         sharing the same component (which has its own BOM), each parent

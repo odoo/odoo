@@ -255,7 +255,7 @@ class L10nInEwaybill(models.Model):
         dependent_fields = self._get_ewaybill_dependencies()
         for ewaybill in self:
             if any(ewaybill[d_field] for d_field in dependent_fields):
-                ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+                ewaybill_json = ewaybill._get_ewaybill_request_json()
             else:
                 ewaybill_json = {}
             ewaybill.content = base64.b64encode(json.dumps(ewaybill_json).encode())
@@ -407,6 +407,7 @@ class L10nInEwaybill(models.Model):
         for line in invoice_lines:
             if (
                 line.display_type == 'product'
+                and line.l10n_in_hsn_code
                 and not AccountMove._l10n_in_is_service_hsn(line.l10n_in_hsn_code)
                 and (hsn_error_message := line._l10n_in_check_invalid_hsn_code())
             ):
@@ -473,6 +474,9 @@ class L10nInEwaybill(models.Model):
             blocking_level = 'warning'
         self._write_error(error_message, blocking_level)
 
+    def _get_ewaybill_request_json(self):
+        return self._ewaybill_generate_direct_json()
+
     def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
         def _create_attachment_vals(name, raw_data, res_field=False):
             vals = {
@@ -487,7 +491,7 @@ class L10nInEwaybill(models.Model):
             return vals
 
         attachment_vals_list = []
-        request_json = self._get_cancellation_request_vals() if is_cancel else self._ewaybill_generate_direct_json()
+        request_json = self._get_cancellation_request_vals() if is_cancel else self._get_ewaybill_request_json()
         request_type = 'cancel_request' if is_cancel else 'request'
         request_name = f'ewaybill_{ewb_name}_{request_type}.json'
         attachment_vals_list.append(_create_attachment_vals(request_name, request_json))
@@ -700,7 +704,13 @@ class L10nInEwaybill(models.Model):
         tax_details = self.account_move_id._l10n_in_prepare_tax_details()
         tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        filtered_invoice_line_tax_details = {
+            line: line_tax_details
+            for line, line_tax_details in invoice_line_tax_details.items()
+            if line.l10n_in_hsn_code and line.tax_ids
+        }
         sign = self.account_move_id.is_inbound() and -1 or 1
+        other_base_values = sum(line.balance for line in invoice_line_tax_details if not (line.l10n_in_hsn_code and line.tax_ids)) * sign
         rounding_amount = sum(line.balance for line in self.account_move_id.line_ids if line.display_type == 'rounding') * sign
         total_invoice_value = tax_details.get("base_amount", 0.00) + tax_details.get("tax_amount", 0.00) + rounding_amount
         if self.account_move_id.l10n_in_gst_treatment == 'overseas' and self.partner_ship_to_id.country_id.code != 'IN':
@@ -712,15 +722,15 @@ class L10nInEwaybill(models.Model):
             )
             total_invoice_value -= adjusting_rc_amount
         return {
-            "itemList": list(starmap(self._get_l10n_in_ewaybill_line_details, invoice_line_tax_details.items())),
+            "itemList": list(starmap(self._get_l10n_in_ewaybill_line_details, filtered_invoice_line_tax_details.items())),
             "totalValue": round_value(tax_details.get("base_amount", 0.00)),
             **{
                 f'{tax_type}Value': round_value(tax_details_by_code.get(f'{tax_type}_amount', 0.00))
                 for tax_type in ['cgst', 'sgst', 'igst', 'cess']
             },
             "cessNonAdvolValue": round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
-            "totInvValue": round_value(total_invoice_value),
+            "otherValue": round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount + other_base_values),
+            "totInvValue": round_value(total_invoice_value + other_base_values),
         }
 
     def _ewaybill_generate_direct_json(self):

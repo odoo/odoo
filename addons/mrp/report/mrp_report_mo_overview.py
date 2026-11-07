@@ -209,7 +209,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.is_storable else False,
             'quantity_reserved': 0.0,
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
-            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
+            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)[:1]),
             'mo_cost': currency.round(mo_cost),
             'mo_cost_decorator': mo_cost_decorator,
             'real_cost_decorator': real_cost_decorator if not mo_cost_decorator else False,
@@ -383,7 +383,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         for index, workorder in enumerate(production.workorder_ids):
             estimate_cost = workorder._should_estimate_cost()
             hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
-            duration = (workorder.duration_expected if estimate_cost else workorder.get_duration()) / 60
+            duration = workorder.duration_expected / 60 if estimate_cost else workorder._get_actual_duration()
             operation_cost = duration * hourly_cost
             mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True) if workorder.duration_expected\
                         else workorder._get_current_theorical_operation_cost(without_employee_cost=True)
@@ -639,7 +639,11 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             replenishment = {}
             forecast_uom_id = forecast_line['uom_id']
             line_quantity = min(quantity, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom))  # Avoid over-rounding
-            bom_quantity = production.product_uom_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
+            qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+            if production.bom_id:
+                bom_quantity = qty_in_bom_uom / production.bom_id.product_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
+            else:
+                bom_quantity = 0
             replenishment['summary'] = {
                 'level': level + 1,
                 'index': replenishment_index,
@@ -654,7 +658,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'uom_precision': self._get_uom_precision(forecast_line['uom_id']['rounding']),
                 'unit_cost': self._get_unit_cost(move_raw),
                 'mo_cost': forecast_line.get('cost', self._get_replenishment_mo_cost(product, line_quantity, move_raw.product_uom, currency, forecast_line.get('move_in'))),
-                'bom_cost': currency.round(self._get_component_real_cost(move_raw, bom_quantity)) if bom_quantity else False,
+                'bom_cost': currency.round(self._get_component_real_cost(move_raw, bom_quantity)),
                 'real_cost': currency.round(self._get_component_real_cost(move_raw, line_quantity)),
                 'currency_id': currency.id,
                 'currency': currency,
@@ -693,8 +697,11 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
         available_qty = reserved_quantity + free_qty + total_ordered
         missing_quantity = quantity - available_qty
-        qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
-        bom_missing_quantity = qty_in_bom_uom * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+        if move_raw.bom_line_id:
+            qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+            bom_missing_quantity = qty_in_bom_uom / production.bom_id.product_qty * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+        else:
+            bom_missing_quantity = 0
 
         if product.is_storable and production.state not in ('done', 'cancel')\
            and move_raw.product_uom.compare(missing_quantity, 0) > 0:

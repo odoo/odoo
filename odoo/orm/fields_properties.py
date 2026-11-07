@@ -987,6 +987,10 @@ class PropertiesDefinition(Field):
     def convert_to_write(self, value, record):
         return value
 
+    def convert_to_export(self, value, record):
+        # record format -> export format (the JSON the import reads back)
+        return json.dumps(value) if value else ''
+
     def _validate_properties_definition(self, properties_definition, env):
         """Raise an error if the property definition is not valid."""
         allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
@@ -1009,8 +1013,6 @@ class PropertiesDefinition(Field):
                     ', '.join(invalid_keys),
                 )
 
-            check_property_field_value_name(property_definition['name'])
-
             required_keys = set(self.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
                 raise ValueError(
@@ -1022,6 +1024,7 @@ class PropertiesDefinition(Field):
             property_name = property_definition.get('name')
             if not property_name or property_name in properties_names:
                 raise ValueError(f'The property name {property_name!r} is not set or duplicated.')
+            check_property_field_value_name(property_name)
             properties_names.add(property_name)
 
             if property_type == 'html' and not property_name.endswith('_html'):

@@ -119,3 +119,58 @@ registerWebsitePreviewTour(
     },
     () => [...websiteCreateEventTourSteps(), ...websiteEditEventTourSteps()]
 );
+
+registerWebsitePreviewTour(
+    "website_event_submenus",
+    {
+        url: "/event",
+    },
+    () => [
+        {
+            trigger: ':iframe span:contains("Some event")',
+            run: "click",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        {
+            trigger: "#customize-tab",
+            run: "click",
+        },
+        {
+            content: "Enable the sub-menu option",
+            trigger: "div[data-action-id='displaySubMenu'] input",
+            run: "click",
+        },
+        {
+            content: "Make sure we end up on a sub-menu",
+            trigger: ":iframe h1:contains('Introduction')",
+        },
+        {
+            content: "Wait for the sidebar to have reloaded",
+            trigger: ".o_customize_tab:not(:contains('Sidebar Blocks'))",
+        },
+        {
+            trigger: "#blocks-tab",
+            run: "click",
+        },
+        ...insertSnippet({
+            id: "s_image_text",
+            name: "Image - Text",
+            groupName: "Content",
+        }),
+        ...clickOnSave(),
+        ...clickOnEditAndWaitEditMode(),
+        {
+            trigger: "#customize-tab",
+            run: "click",
+        },
+        {
+            content: "Disable the sub-menu option",
+            trigger: "div[data-action-id='displaySubMenu'] input",
+            run: "click",
+        },
+        {
+            content: "Make sure we get back on the main menu",
+            trigger: ":iframe h1:contains('Some Event')",
+        },
+    ]
+);

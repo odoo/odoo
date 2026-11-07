@@ -386,6 +386,22 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(self._get_xml_value(xml, "//ns:Platnosc/ns:RachunekBankowy/ns:NrRB"), expected_acc)
         self.assertEqual(self._get_xml_value(xml, "//ns:Platnosc/ns:RachunekBankowy/ns:NazwaBanku"), 'Test Bank PL')
 
+    def test_credit_note_omits_short_bank_account(self):
+        """
+        Test that KSeF omits RachunekBankowy when NrRB does not meet the KSeF specification requirements.
+        """
+        foreign_partner = self.partner_a
+        foreign_partner.write({
+            'bank_ids': [
+                Command.create({
+                    'acc_number': '19881841',
+                    'allow_out_payment': True,
+        })]})
+        invoice_line = self._prepare_invoice_line(product_id=self.product_a.id, quantity=1, price_unit=1000.0)
+        credit_note = self._create_invoice(move_type='out_refund', invoice_line_ids=[invoice_line], partner_id=foreign_partner.id, post=True)
+        xml = credit_note._l10n_pl_edi_render_xml()
+        self.assertFalse(self._get_xml_nodes(xml, "//ns:Platnosc/ns:RachunekBankowy"))
+
     @freeze_time('2026-01-23')
     def test_payment_terms_structure(self):
         """
@@ -502,6 +518,24 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 self._get_xml_value(xml, "//ns:Podmiot1/ns:PrefiksPodatnika"),
                 'PL',
             )
+
+    @freeze_time('2026-01-23')
+    def test_ksef_fa3_buyer_vat_identification(self):
+        self.partner_a.write({
+            'country_id': self.env.ref('base.de').id,
+            'vat': 'DE286808614',
+        })
+        ident = "//ns:Podmiot2/ns:DaneIdentyfikacyjne"
+        for tax_ref, product_type in [('vs_unia', 'consu'), ('vs_dostu', 'service')]:
+            with self.subTest(tax_ref=tax_ref):
+                tax = self.env['account.chart.template'].ref(tax_ref)
+                product = self._create_product(name='EU Product', type=product_type, taxes_id=tax.ids)
+                invoice_line = self._prepare_invoice_line(product_id=product.id, quantity=1, price_unit=1000.0)
+                invoice = self._create_invoice(invoice_line_ids=[invoice_line], partner_id=self.partner_a.id, post=True)
+                xml = invoice._l10n_pl_edi_render_xml()
+                self.assertEqual(self._get_xml_value(xml, f"{ident}/ns:KodUE"), 'DE')
+                self.assertEqual(self._get_xml_value(xml, f"{ident}/ns:NrVatUE"), '286808614')
+                self.assertFalse(self._get_xml_nodes(xml, f"{ident}/ns:NrID"))
 
     @freeze_time('2026-01-23')
     def test_ksef_fa3_eu_service_b2b_includes_p13_9(self):

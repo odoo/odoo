@@ -113,6 +113,16 @@ def parse_iso_date(value: str) -> date | datetime:
     return now
 
 
+def _localize_wall_time(dt: datetime, tz: pytz.BaseTzInfo) -> datetime:
+    naive = datetime.combine(dt, dt.time())
+    try:
+        return tz.localize(naive, is_dst=None)
+    except pytz.AmbiguousTimeError:
+        return tz.localize(naive, is_dst=bool(dt.dst()))
+    except pytz.NonExistentTimeError:
+        return tz.localize(naive, is_dst=False)
+
+
 def parse_date(value: str, env: Environment) -> date | datetime:
     r""" Parse a technical date string into a date or datetime.
 
@@ -185,11 +195,15 @@ def parse_date(value: str, env: Environment) -> date | datetime:
             elif isinstance(dt, datetime):
                 dt += TRUNCATE_TODAY
             dt += timedelta(weekday_offset)
+            if isinstance(dt, datetime) and dt.tzinfo:
+                dt = _localize_wall_time(dt, env.tz)
             continue
 
         # Operations on dates
         try:
             unit = _SHORT_DATE_UNIT[term[-1]]
+            if unit in ("hours", "minutes", "seconds") and not isinstance(dt, datetime):
+                dt = env.tz.localize(datetime.combine(dt, time.min))
             if operator in ('+', '-'):
                 number = int(term[:-1])  # positive or negative
             else:
@@ -199,6 +213,10 @@ def parse_date(value: str, env: Environment) -> date | datetime:
                     dt += TRUNCATE_UNIT[unit]
                 # note: '=Nw' is not supported
             dt += relativedelta(**{unit: number})
+            if isinstance(dt, datetime) and dt.tzinfo and unit in ("hours", "minutes", "seconds"):
+                dt = env.tz.normalize(dt)
+            elif isinstance(dt, datetime) and dt.tzinfo:
+                dt = _localize_wall_time(dt, env.tz)
         except (ValueError, TypeError, KeyError):
             raise ValueError(f"Invalid term {term!r} in expression date: {value!r}")
 
@@ -408,8 +426,11 @@ def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) 
             start = start.replace(tzinfo=None)
             end = end.replace(tzinfo=None)
 
-    elif isinstance(start, date) and isinstance(end, date):
-        if not isinstance(start + step, date):
+    elif (
+        isinstance(start, date) and not isinstance(start, datetime)
+        and isinstance(end, date) and not isinstance(end, datetime)
+    ):
+        if isinstance(start + step, datetime):
             raise ValueError("the step interval must add only entire days")  # noqa: TRY004
     else:
         raise ValueError("start/end should be both date or both datetime type")  # noqa: TRY004

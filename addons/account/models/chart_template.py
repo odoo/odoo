@@ -35,6 +35,24 @@ TAX_TAG_DELIMITER = '||'
 SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE',
                   'CD', 'SN', 'TD', 'TG']
 
+# Territories that don't have their own fiscal localization and whose
+# chart of accounts should default to their parent country's template.
+# French DROM-COM territories all use the French PCG.
+CHART_TEMPLATE_COUNTRY_FALLBACK = {
+    'gp': 'fr',
+    'mq': 'fr',
+    're': 'fr',
+    'gf': 'fr',
+    'yt': 'fr',
+    'bl': 'fr',
+    'mf': 'fr',
+    'pm': 'fr',
+    'pf': 'fr',
+    'wf': 'fr',
+    'tf': 'fr',
+    'nc': 'fr',
+}
+
 
 def get_python_translation(module, lang, value):
     value_translated = code_translations.get_python_translations(module, lang).get(value)
@@ -120,6 +138,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _select_chart_template(self, country=None):
         """Get the available templates in a format suited for Selection fields."""
         country = country if country is not None else self.env.company.country_id
+        if country and country.code:
+            fallback_code = CHART_TEMPLATE_COUNTRY_FALLBACK.get(country.code.lower())
+            if fallback_code:
+                country = self.env.ref(f'base.{fallback_code}', raise_if_not_found=False) or country
         chart_template_mapping = self._get_chart_template_mapping()
         return [
             (template_code, template['name'])
@@ -1232,7 +1254,7 @@ class AccountChartTemplate(models.AbstractModel):
     def ref(self, xmlid, raise_if_not_found=True):
         return (
             self.env.ref(self.company_xmlid(xmlid), raise_if_not_found=False)
-            or self.env.ref(self.company_xmlid(xmlid, self.env.company.parent_ids[0]), raise_if_not_found)
+            or self.env.ref(self.company_xmlid(xmlid, self.env.company.root_id), raise_if_not_found)
         )
 
     def _get_parent_template(self, code):

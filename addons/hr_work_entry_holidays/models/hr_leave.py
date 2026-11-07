@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
+import pytz
+
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
@@ -19,6 +22,18 @@ class HrLeave(models.Model):
         vals = super(HrLeave, self)._prepare_resource_leave_vals()
         vals['work_entry_type_id'] = self.holiday_status_id.work_entry_type_id.id
         return vals
+
+    def _split_leaves(self, split_date_from, split_date_to=False):
+        split_source_dates = {
+            leave.id: (leave.request_date_from, leave.request_date_to)
+            for leave in self
+        }
+        new_leaves = super()._split_leaves(split_date_from, split_date_to)
+        modified_leaves = self.filtered(
+            lambda leave: split_source_dates[leave.id] != (leave.request_date_from, leave.request_date_to)
+        )
+        (modified_leaves | new_leaves).filtered(lambda leave: leave.state == 'validate')._cancel_work_entry_conflict()
+        return new_leaves
 
     def _cancel_work_entry_conflict(self):
         """
@@ -43,9 +58,15 @@ class HrLeave(models.Model):
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
-                    work_entries_vals_list += contracts._get_work_entries_values(
-                        datetime.combine(leave.date_from, time.min),
-                        datetime.combine(leave.date_to, time.max),
+                    contract_tz = (contract.resource_calendar_id or contract.employee_id.resource_calendar_id or contract.employee_id).tz
+                    tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+                    contract_start = fields.Datetime.to_datetime(contract.date_start)
+                    contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()), time.max)
+                    work_entry_start = max(pytz.utc.localize(leave.date_from).astimezone(tz).replace(tzinfo=None), contract_start)
+                    work_entry_end = min(pytz.utc.localize(leave.date_to).astimezone(tz).replace(tzinfo=None), contract_stop)
+                    work_entries_vals_list += contract._get_work_entries_values(
+                        tz.localize(datetime.combine(work_entry_start, time.min)),
+                        tz.localize(datetime.combine(work_entry_end, time.max)),
                     )
 
         work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)

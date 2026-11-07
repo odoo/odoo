@@ -145,11 +145,19 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             lst_price=100.0,
             default_code='P123',
             barcode='1234567890123',
-            description='A simple product description',
+            description='Internal note that must not be exported',
+            description_sale='Sales description',
             taxes_id=self.tax_20,
         )
-        invoice = self._create_invoice_one_line(
-            product_id=product,
+        invoice = self._create_invoice(
+            invoice_line_ids=[
+                # Default label computed from the product: split into Name / Description.
+                self._prepare_invoice_line(product_id=product),
+                # Label equal to the product's display_name only: Name only.
+                self._prepare_invoice_line(product_id=product, name=product.display_name),
+                # Label only.
+                self._prepare_invoice_line(name="Custom label\nwith details", price_unit=50.0, tax_ids=self.tax_20),
+            ],
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
             post=True,
@@ -454,6 +462,84 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_deferred_dates')
+
+    def test_invoice_deferred_dates_with_delivery_date(self):
+        """ Every line has a start and an end date: the header BillingSpecifiedPeriod replaces the
+        ActualDeliverySupplyChainEvent, so the delivery date is not exported and the XML is the same as in
+        test_invoice_deferred_dates.
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_fr,
+            partner_bank_id=self.recipient_bank,
+            delivery_date="2026-01-15",
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    price_unit=1000.0,
+                    product_id=self.product,
+                    tax_ids=self.tax_20,
+                    deferred_start_date="2026-02-01",
+                    deferred_end_date="2026-05-01",
+                ),
+                self._prepare_invoice_line(
+                    price_unit=2000.0,
+                    product_id=self.product,
+                    tax_ids=self.tax_20,
+                    deferred_start_date="2026-03-01",
+                    deferred_end_date="2026-06-01",
+                ),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_deferred_dates')
+
+    def test_invoice_deferred_dates_on_some_lines(self):
+        """ Only the first line has a start and an end date: the header has no BillingSpecifiedPeriod, and
+        ActualDeliverySupplyChainEvent holds the invoice date (20260101). The first line keeps its own period.
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_fr,
+            partner_bank_id=self.recipient_bank,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    price_unit=1000.0,
+                    product_id=self.product,
+                    tax_ids=self.tax_20,
+                    deferred_start_date="2026-02-01",
+                    deferred_end_date="2026-05-01",
+                ),
+                self._prepare_invoice_line(price_unit=2000.0, product_id=self.product, tax_ids=self.tax_20),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_deferred_dates_on_some_lines')
+
+    def test_invoice_deferred_dates_on_some_lines_with_delivery_date(self):
+        """ Only the first line has a start and an end date: the header has no BillingSpecifiedPeriod, and
+        ActualDeliverySupplyChainEvent holds the delivery date (20260115). The first line keeps its own period.
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_fr,
+            partner_bank_id=self.recipient_bank,
+            delivery_date="2026-01-15",
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    price_unit=1000.0,
+                    product_id=self.product,
+                    tax_ids=self.tax_20,
+                    deferred_start_date="2026-02-01",
+                    deferred_end_date="2026-05-01",
+                ),
+                self._prepare_invoice_line(price_unit=2000.0, product_id=self.product, tax_ids=self.tax_20),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_deferred_dates_on_some_lines_with_delivery_date')
 
     def test_invoice_delivery_date_and_address(self):
         partner_shipping = self.env['res.partner'].create({

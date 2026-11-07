@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-09 10:53+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-11-03 15:39+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/es/>\n"
@@ -194,6 +194,12 @@ msgstr "%(person)s en %(leave_type)s: %(duration)s (%(start)s)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s: %(duration)s (%(start)s)"
 msgstr "%(person)s: %(duration)s (%(start)s)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid "%(success_count)s time off request(s) created successfully."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -505,6 +511,11 @@ msgstr ""
 "\n"
 "Versiones:\n"
 "%(versions)s"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -973,7 +984,8 @@ msgstr "Importe"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "An employee already booked time off which overlaps with this period:"
-msgstr "Un empleado ya ha reservado una ausencia que coincide con este periodo:"
+msgstr ""
+"Un empleado ya ha reservado una ausencia que coincide con este periodo:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2510,6 +2522,14 @@ msgstr ""
 "ausencias sin eliminarlo."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -3310,7 +3330,8 @@ msgstr "Solo un gerente o encargado de ausencias puede rechazar un permiso."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
-msgstr "Solo un gerente o encargado de ausencias puede rechazar una asignación."
+msgstr ""
+"Solo un gerente o encargado de ausencias puede rechazar una asignación."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3769,7 +3790,8 @@ msgstr "Define la frecuencia de acumulación para el empleado:"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Show all records whose next activity date is past"
-msgstr "Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
+msgstr ""
+"Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_sick_leave_100
@@ -4174,8 +4196,8 @@ msgstr "La ausencia se ha autorizado automáticamente"
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
 msgstr ""
-"La solicitud de ausencia ha sido cancelado por el siguiente motivo: %(reason)"
-"s"
+"La solicitud de ausencia ha sido cancelado por el siguiente motivo: %"
+"(reason)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4360,6 +4382,12 @@ msgstr "Tablero de ausencias"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
 msgid "Time Off Description"
 msgstr "Descripción de la ausencia"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid "Time Off Generated"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
@@ -5148,7 +5176,8 @@ msgstr "No puede restablecer un permiso. Cancele o elimine este y cree otro"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
-msgstr "No puede restablecer una asignación. Cancele o elimine esta y cree otra"
+msgstr ""
+"No puede restablecer una asignación. Cancele o elimine esta y cree otra"
 
 #. module: hr_holidays
 #. odoo-python

@@ -182,6 +182,11 @@ class configmanager:
             "import_image_timeout": "import_file_timeout",
         }
 
+        # file options of future Odoo versions, to mute the unknown warning
+        self.futures = frozenset((
+            'with_test_data',
+        ))
+
         self.parser = self._build_cli()
         self._load_default_options()
         self._parse_config()
@@ -908,7 +913,7 @@ class configmanager:
                     value = str(self._check_without_demo(None, 'without_demo', value))
                 option = self.options_index.get(name)
                 if not option:
-                    if name not in self.aliases:
+                    if name not in self.aliases and name not in self.futures:
                         self._log(logging.WARNING,
                             "unknown option %r in the config file at "
                             "%s, option stored as-is, without parsing",

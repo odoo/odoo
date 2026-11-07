@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-15 05:07+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/sale/lo/>\n"
@@ -90,8 +90,7 @@ msgstr ""
 msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
-msgstr ""
-", ມັນຟຣີ 100%! ທ່ານຈະປະຢັດເວລາໃນການສ້າງໃບສະເໜີລາຄາທີ່ສວຍງາມ ແລະ ຕິດຕາມການຂາຍ."
+msgstr ", ມັນຟຣີ 100%! ທ່ານຈະປະຢັດເວລາໃນການສ້າງໃບສະເໜີລາຄາທີ່ສວຍງາມ ແລະ ຕິດຕາມການຂາຍ."
 
 #. module: sale
 #. odoo-javascript
@@ -171,13 +170,14 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        ເປັນຈຳນວນເງິນ\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        ສຳລັບໃບສັ່ງຊື້ຂອງທ່ານ\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
-"S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
-"\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            ແມ່ນກຳລັງລໍຖ້າການດຳເນີນການ.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -561,13 +561,13 @@ msgstr ""
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            ແມ່ນກຳລັງລໍຖ້າການດຳເນີນການ. ມັນຈະຖືກຢືນຢັນເມື່ອໄດ້ຮັບການຊຳລະເງິນແລ້ວ.\n"
 "            <t t-if=\"object.reference\">\n"
-"                ເລກອ້າງອີງການຊຳລະເງິນຂອງທ່ານແມ່ນ <span style=\"font-"
-"weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+"                ເລກອ້າງອີງການຊຳລະເງິນຂອງທ່ານແມ່ນ <span style=\"font-weight:bold;"
+"\" t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
-"\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+">\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -600,8 +600,8 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
 "border-collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><span style=\"font-"
-"weight:bold;\">ສິນຄ້າ</span></td>\n"
+"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;"
+"\">ສິນຄ້າ</span></td>\n"
 "                <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-"
 "weight:bold;\">ຈຳນວນ</span></td>\n"
@@ -623,8 +623,8 @@ msgstr ""
 "            <t t-set=\"line_subtotal\" t-value=\"                     "
 "line.price_subtotal                     if hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'                     else line.price_total                 \"/>"
-"\n"
+"'tax_excluded'                     else line.price_total                 \"/"
+">\n"
 "            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
 "line_subtotal\"/>\n"
 "            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
@@ -647,8 +647,8 @@ msgstr ""
 "out=\"line.name or ''\">Taking care of Trees Course</span>\n"
 "                                <t t-set=\"current_section\" t-"
 "value=\"line\"/>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>"
-"\n"
+"                                <t t-set=\"current_subtotal\" t-value=\"0\"/"
+">\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
 "                                <i t-out=\"line.name or ''\">Taking care of "
@@ -669,9 +669,9 @@ msgstr ""
 "                        <t t-set=\"loop_cycle_number\" t-"
 "value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/{{ "
-"line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: {"
-"{hasattr(object, 'website_id') and object.website_id and "
+"                            <img t-attf-src=\"/web/image/product.product/"
+"{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: "
+"{{hasattr(object, 'website_id') and object.website_id and "
 "object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
 "cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
@@ -683,24 +683,28 @@ msgstr ""
 "weight:bold; white-space: nowrap;\">\n"
 "                        <t t-if=\"hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            <t t-out=\"format_amount"
-"(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+"                            <t t-"
+"out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ "
+"10.00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-out=\"format_amount"
-"(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
+"                            <t t-"
+"out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ "
+"10.00</t>\n"
 "                        </t>\n"
 "                        </span></td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-if=\"current_section and (                     line_last"
-"                     or object.order_line[line_index+1].display_type in "
-"('line_section', 'line_subsection')                     or "
+"            <t t-if=\"current_section and "
+"(                     line_last                     or "
+"object.order_line[line_index+1].display_type in ('line_section', "
+"'line_subsection')                     or "
 "object.order_line[line_index+1].product_type == 'combo'                     "
 "or (                         line.combo_item_id                         and "
-"not object.order_line[line_index+1].combo_item_id                     )"
-"                 ) and not line.is_downpayment\">\n"
+"not "
+"object.order_line[line_index+1].combo_item_id                     )                 ) "
+"and not line.is_downpayment\">\n"
 "                <t t-set=\"current_section\" t-value=\"None\"/>\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: "
 "12px; border-collapse: collapse;\">\n"
@@ -711,8 +715,8 @@ msgstr ""
 "                        <t t-set=\"loop_cycle_number\" t-"
 "value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 100%\" align=\"right\">\n"
-"                            <span style=\"font-weight: bold;\">ລວມຍ່ອຍ:</span>"
-"\n"
+"                            <span style=\"font-weight: bold;\">ລວມຍ່ອຍ:</"
+"span>\n"
 "                            <span t-out=\"format_amount(current_subtotal, "
 "object.currency_id) or ''\">$ 10.00</span>\n"
 "                        </td>\n"
@@ -802,8 +806,8 @@ msgstr ""
 "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>"
-"\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/"
+">\n"
 "                    </t>\n"
 "                    (<t t-out=\"format_amount(tx_sudo.amount, "
 "object.currency_id) or ''\">$ 10.00</t>)\n"
@@ -819,8 +823,8 @@ msgstr ""
 "                <td>\n"
 "                    <br/>\n"
 "                    <span style=\"font-weight:bold;\">ຈັດສົ່ງເຖິງ:</span>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or ''\">"
-"1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.street or "
+"''\">1201 S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
 "Angeles</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.state_id.name or "
@@ -859,22 +863,68 @@ msgstr ""
 "</div>"
 
 #. module: sale
+#: model:mail.template,body_html:sale.email_template_proforma
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.state in ('draft', 'sent')\">\n"
+"            Your Pro forma invoice for quotation <span style=\"font-weight: "
+"bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Your Pro forma invoice for order <span style=\"font-weight: bold;"
+"\" t-out=\"object.name or ''\">S00052</span>\n"
+"        </t>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> is available.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
 "        Hello,\n"
 "        <br/><br/>\n"
-"        Your <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-"
-"weight: bold;\" t-out=\"object.name or ''\"/>\n"
-"        <t t-if=\"object.origin\">\n"
-"            (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"        </t>\n"
-"        amounting in <span style=\"font-weight: bold;\" t-"
+"        <t t-if=\"object.state in ('draft', 'sent')\">\n"
+"            Your quotation <span style=\"font-weight: bold;\" t-"
+"out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
+"            </t>\n"
+"            amounting in <span style=\"font-weight: bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
 "10.00</span> is ready for review.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Your order <span style=\"font-weight: bold;\" t-"
+"out=\"object.name or ''\"/>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</"
+"t> )\n"
+"            </t>\n"
+"            amounting in <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> is ready for review.\n"
+"        </t>\n"
 "        <br/>\n"
 "        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
 ">\n"
@@ -908,108 +958,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'ໃບສະເໜີລາຄາ' if object.state in "
-"('draft', 'sent') else 'ໃບສັ່ງຊື້'\"/>\n"
-"        ສະບາຍດີ,\n"
-"        <br/><br/>\n"
-"        <t t-out=\"doc_name or ''\">ໃບສະເໜີລາຄາ</t> ຂອງທ່ານ <span style=\"font-"
-"weight: bold;\" t-out=\"object.name or ''\"/>\n"
-"        <t t-if=\"object.origin\">\n"
-"            (ດ້ວຍເລກອ້າງອີງ: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"        </t>\n"
-"        ເປັນມູນຄ່າ <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> ແມ່ນພ້ອມສຳລັບກາ"
-"ນກວດສອບແລ້ວ.\n"
-"        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
-"\n"
-"        <t t-if=\"documents\">\n"
-"            <br/>\n"
-"            <t t-if=\"len(documents)&gt;1\">\n"
-"                ນີ້ແມ່ນເອກະສານເພີ່ມເຕີມບາງຢ່າງທີ່ທ່ານອາດຈະສົນໃຈ:\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                ນີ້ແມ່ນເອກະສານເພີ່ມເຕີມທີ່ທ່ານອາດຈະສົນໃຈ:\n"
-"            </t>\n"
-"            <ul style=\"margin-bottom: 0;\">\n"
-"                <t t-foreach=\"documents\" t-as=\"document\">\n"
-"                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
-"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
-"target=\"target\"/>\n"
-"                    </li>\n"
-"                </t>\n"
-"            </ul>\n"
-"        </t>\n"
-"        <br/>\n"
-"        ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາຫາກທ່ານມີຄຳຖາມໃດໆ.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
-
-#. module: sale
-#: model:mail.template,body_html:sale.email_template_proforma
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
-"        Hello,\n"
-"        <br/><br/>\n"
-"        Your Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
-"span>\n"
-"        <t t-if=\"object.origin\">\n"
-"            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
-"        </t>\n"
-"        amounting in <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span> is available.\n"
-"        <br/><br/>\n"
-"        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
-msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'ໃບສະເໜີລາຄາ' if object.state in "
-"('draft', 'sent') else 'ໃບສັ່ງຊື້'\"/>\n"
-"        ສະບາຍດີ,\n"
-"        <br/><br/>\n"
-"        ໃບແຈ້ງໜີ້ Pro forma ສຳລັບ <t t-out=\"doc_name or ''\">ໃບສະເໜີລາຄາ</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span> "
-"ຂອງທ່ານ\n"
-"        <t t-if=\"object.origin\">\n"
-"            (ດ້ວຍເລກອ້າງອີງ: <t t-out=\"object.origin or ''\"/> )\n"
-"        </t>\n"
-"        ເປັນມູນຄ່າ <span style=\"font-weight: bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> ແມ່ນພ້ອມແລ້ວ.\n"
-"        <br/><br/>\n"
-"        ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາຫາກທ່ານມີຄຳຖາມໃດໆ.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1103,8 +1051,8 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"ສິນຄ້ານີ້ຖືກຈັ"
-"ດເກັບແລ້ວ\" invisible=\"state not in ['draft', 'sent'] or not "
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" "
+"title=\"ສິນຄ້ານີ້ຖືກຈັດເກັບແລ້ວ\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 
 #. module: sale
@@ -1150,8 +1098,8 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
-"<span><b>ຂໍສະແດງຄວາມຍິນດີ</b>, ໃບສະເໜີລາຄາທຳອິດຂອງທ່ານຖືກສົ່ງແລ້ວ!<br>ກະລຸນາກວດສອບອີເມວຂອ"
-"ງທ່ານເພື່ອຢືນຢັນໃບສະເໜີລາຄາ.\n"
+"<span><b>ຂໍສະແດງຄວາມຍິນດີ</b>, ໃບສະເໜີລາຄາທຳອິດຂອງທ່ານຖືກສົ່ງແລ້ວ!"
+"<br>ກະລຸນາກວດສອບອີເມວຂອງທ່ານເພື່ອຢືນຢັນໃບສະເໜີລາຄາ.\n"
 "        </span>"
 
 #. module: sale
@@ -1189,8 +1137,27 @@ msgstr "<span>ຄຳເຕືອນ: ໃບສັ່ງຊື້ສິນຄ້�
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr "<strong class=\"d-block mt-3\">ທີ່ຢູ່ຈັດສົ່ງ</strong>"
+msgid ""
+"<strong>\n"
+"                            Invoicing Address\n"
+"                        </strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid ""
+"<strong>\n"
+"                            Shipping Address\n"
+"                        </strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid ""
+"<strong>\n"
+"                        Invoicing and Shipping Address\n"
+"                    </strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1253,8 +1220,7 @@ msgstr "ໝາຍເຫດ, ເຊິ່ງເນື້ອໃນໂດຍທົ�
 msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
-msgstr ""
-"ລາຍການຄອມໂບຂອງໃບສັ່ງຂາຍຈະຕ້ອງຢູ່ໃນບັນດາລາຍການຄອມໂບທີ່ມີຢູ່ຂອງແຖວທີ່ເຊື່ອມໂຍງກັນ."
+msgstr "ລາຍການຄອມໂບຂອງໃບສັ່ງຂາຍຈະຕ້ອງຢູ່ໃນບັນດາລາຍການຄອມໂບທີ່ມີຢູ່ຂອງແຖວທີ່ເຊື່ອມໂຍງກັນ."
 
 #. module: sale
 #. odoo-python
@@ -1506,8 +1472,8 @@ msgstr ""
 "ເຊັ່ນ: ຕົວເລືອກນີ້ມີປະໂຫຍດໃນການແບ່ງປັນໄຟລ໌ລາຍລະອຽດສິນຄ້າ.\n"
 "ໃນການຢືນຢັນໃບສັ່ງຊື້: ເອກະສານຈະຖືກສົ່ງໄປຫາ ແລະ ເຂົ້າເຖິງໄດ້ໂດຍລູກຄ້າ.\n"
 "ເຊັ່ນ: ຕົວເລືອກນີ້ມີປະໂຫຍດໃນການແບ່ງປັນຄູ່ມືການໃຊ້ ຫຼື ເນື້ອຫາທາງດິຈິຕອນທີ່ຊື້ໃນ ecommerce. \n"
-"ພາຍໃນໃບສະເໜີລາຄາ: ເອກະສານຈະຖືກລວມເຂົ້າໃນ PDF ຂອງໃບສະເໜີລາຄາ ແລະ ໃບສັ່ງຂາຍ ລະຫວ່າງໜ້າຫົວ"
-"ຂໍ້ ແລະ ຕາຕະລາງໃບສະເໜີລາຄາ. "
+"ພາຍໃນໃບສະເໜີລາຄາ: ເອກະສານຈະຖືກລວມເຂົ້າໃນ PDF ຂອງໃບສະເໜີລາຄາ ແລະ ໃບສັ່ງຂາຍ "
+"ລະຫວ່າງໜ້າຫົວຂໍ້ ແລະ ຕາຕະລາງໃບສະເໜີລາຄາ. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1599,8 +1565,8 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
-"ນຳໃຊ້ສ່ວນຫຼຸດດ້ວຍຕົນເອງໃນລາຍການໃບສັ່ງຊື້ ຫຼື ສະແດງສ່ວນຫຼຸດທີ່ຄິດໄລ່ຈາກລາຍການລາຄາ (ຕົວເລືອກເພື່ອເປີດໃຊ້"
-"ໃນການຕັ້ງຄ່າລາຍການລາຄາ)."
+"ນຳໃຊ້ສ່ວນຫຼຸດດ້ວຍຕົນເອງໃນລາຍການໃບສັ່ງຊື້ ຫຼື ສະແດງສ່ວນຫຼຸດທີ່ຄິດໄລ່ຈາກລາຍການລາຄາ "
+"(ຕົວເລືອກເພື່ອເປີດໃຊ້ໃນການຕັ້ງຄ່າລາຍການລາຄາ)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1620,8 +1586,7 @@ msgstr ""
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
-"ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການຍົກເລີກທຸລະກຳທີ່ໄດ້ຮັບອະນຸຍາດ? ການດຳເນີນການນີ້ບໍ່ສາມາດກັບຄືນໄດ້."
+msgstr "ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການຍົກເລີກທຸລະກຳທີ່ໄດ້ຮັບອະນຸຍາດ? ການດຳເນີນການນີ້ບໍ່ສາມາດກັບຄືນໄດ້."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1640,8 +1605,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"ເນື່ອງຈາກຫົວໜ່ວຍວັດແທກອື່ນ (ເຊັ່ນ: %(problem_uom)s) ນອກຈາກ %(uom)s ໄດ້ຖືກນຳໃຊ້ສຳລັບສິນຄ້ານີ້ແລ້"
-"ວ, ຈຶ່ງບໍ່ສາມາດປ່ຽນຫົວໜ່ວຍວັດແທກໄດ້. ຫາກທ່ານຕ້ອງການປ່ຽນມັນ, ກະລຸນາຈັດເກັບສິນຄ້ານີ້ແລ້ວສ້າງໃໝ່."
+"ເນື່ອງຈາກຫົວໜ່ວຍວັດແທກອື່ນ (ເຊັ່ນ: %(problem_uom)s) ນອກຈາກ %(uom)s "
+"ໄດ້ຖືກນຳໃຊ້ສຳລັບສິນຄ້ານີ້ແລ້ວ, ຈຶ່ງບໍ່ສາມາດປ່ຽນຫົວໜ່ວຍວັດແທກໄດ້. ຫາກທ່ານຕ້ອງການປ່ຽນມັນ, "
+"ກະລຸນາຈັດເກັບສິນຄ້ານີ້ແລ້ວສ້າງໃໝ່."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1707,8 +1673,8 @@ msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
 msgstr ""
-"ເພີ່ມຍອດຂາຍດ້ວຍການຊຳລະເງິນ ຫຼື ລາຍເຊັນອອນລາຍ, ການຂາຍເພີ່ມ (upsells), ແລະ ພອດທໍລູກຄ້າທີ່ດີຢ້ຽ"
-"ມ."
+"ເພີ່ມຍອດຂາຍດ້ວຍການຊຳລະເງິນ ຫຼື ລາຍເຊັນອອນລາຍ, ການຂາຍເພີ່ມ (upsells), ແລະ "
+"ພອດທໍລູກຄ້າທີ່ດີຢ້ຽມ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1719,8 +1685,8 @@ msgid ""
 "products."
 msgstr ""
 "ເພີ່ມຍອດຂາຍຂອງທ່ານດ້ວຍລາຍການຫຼາກຫຼາຍຮູບແບບ: ຄູປອງ, ໂປຣໂມຊັນ, ບັດຂອງຂວັນ, ລະບົບສະສົມຄະແນນ. "
-"ສາມາດກຳນົດເງື່ອນໄຂສະເພາະໄດ້ (ສິນຄ້າ, ລູກຄ້າ, ຈຳນວນເງິນຊື້ຂັ້ນຕ່ຳ, ໄລຍະເວລາ). ຂອງລາງວັນສາມາດເ"
-"ປັນສ່ວນຫຼຸດ (% ຫຼື ຈຳນວນເງິນ) ຫຼື ສິນຄ້າແຖມ."
+"ສາມາດກຳນົດເງື່ອນໄຂສະເພາະໄດ້ (ສິນຄ້າ, ລູກຄ້າ, ຈຳນວນເງິນຊື້ຂັ້ນຕ່ຳ, ໄລຍະເວລາ). "
+"ຂອງລາງວັນສາມາດເປັນສ່ວນຫຼຸດ (% ຫຼື ຈຳນວນເງິນ) ຫຼື ສິນຄ້າແຖມ."
 
 #. module: sale
 #. odoo-javascript
@@ -1808,10 +1774,10 @@ msgstr ""
 "   • ນະໂຍບາຍການອອກໃບແຈ້ງໜີ້ຂອງສິນຄ້າຖືກຕັ້ງຄ່າຢ່າງຖືກຕ້ອງ.\n"
 "\n"
 "ຫາກທ່ານຕ້ອງການອອກໃບແຈ້ງໜີ້ໂດຍອີງໃສ່ຈຳນວນທີ່ສັ່ງຊື້ແທນ:\n"
-"   • ສຳລັບສິນຄ້າທີ່ບໍລິໂພກໄດ້ ຫຼື ສິນຄ້າທີ່ເກັບໄວ້ໄດ້, ໃຫ້ເປີດສິນຄ້າ, ໄປທີ່ແທັບ 'ຂໍ້ມູນທົ່ວໄປ' ແລະ ປ່ຽນ 'ນະ"
-"ໂຍບາຍການອອກໃບແຈ້ງໜີ້' ຈາກ 'ຈຳນວນທີ່ຈັດສົ່ງ' ເປັນ 'ຈຳນວນທີ່ສັ່ງຊື້'.\n"
-"   • ສຳລັບການບໍລິການ (ແລະ ສິນຄ້າອື່ນໆ), ໃຫ້ປ່ຽນ 'ນະໂຍບາຍການອອກໃບແຈ້ງໜີ້' ເປັນ 'ຈ່າຍລ່ວງໜ້າ/ລາ"
-"ຄາຄົງທີ່'.\n"
+"   • ສຳລັບສິນຄ້າທີ່ບໍລິໂພກໄດ້ ຫຼື ສິນຄ້າທີ່ເກັບໄວ້ໄດ້, ໃຫ້ເປີດສິນຄ້າ, ໄປທີ່ແທັບ 'ຂໍ້ມູນທົ່ວໄປ' ແລະ ປ່ຽນ "
+"'ນະໂຍບາຍການອອກໃບແຈ້ງໜີ້' ຈາກ 'ຈຳນວນທີ່ຈັດສົ່ງ' ເປັນ 'ຈຳນວນທີ່ສັ່ງຊື້'.\n"
+"   • ສຳລັບການບໍລິການ (ແລະ ສິນຄ້າອື່ນໆ), ໃຫ້ປ່ຽນ 'ນະໂຍບາຍການອອກໃບແຈ້ງໜີ້' ເປັນ 'ຈ່າຍລ່ວງໜ້າ/"
+"ລາຄາຄົງທີ່'.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1841,8 +1807,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
-"ການປ່ຽນບໍລິສັດຂອງໃບສະເໜີລາຄາທີ່ມີຢູ່ແລ້ວ ອາດຈະຕ້ອງມີການປັບປຸງລາຍລະອຽດຂອງລາຍການດ້ວຍຕົນເອງ. ທ່ານຄ"
-"ວນພິຈາລະນາອັບເດດລາຄາຄືນໃໝ່."
+"ການປ່ຽນບໍລິສັດຂອງໃບສະເໜີລາຄາທີ່ມີຢູ່ແລ້ວ ອາດຈະຕ້ອງມີການປັບປຸງລາຍລະອຽດຂອງລາຍການດ້ວຍຕົນເອງ. "
+"ທ່ານຄວນພິຈາລະນາອັບເດດລາຄາຄືນໃໝ່."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1945,8 +1911,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "ຄຳນວນຄ່າຈັດສົ່ງ ແລະ ສົ່ງດ້ວຍ DHL<br/>\n"
-"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ ເພື່ອຕິດຕັ້ງ)"
-"</strong>"
+"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ "
+"ເພື່ອຕິດຕັ້ງ)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1966,8 +1932,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "ຄຳນວນຄ່າຈັດສົ່ງ ແລະ ສົ່ງດ້ວຍ FedEx<br/>\n"
-"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ ເພື່ອຕິດຕັ້ງ)"
-"</strong>"
+"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ "
+"ເພື່ອຕິດຕັ້ງ)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1992,8 +1958,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "ຄຳນວນຄ່າຈັດສົ່ງ ແລະ ສົ່ງດ້ວຍ UPS<br/>\n"
-"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ ເພື່ອຕິດຕັ້ງ)"
-"</strong>"
+"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ "
+"ເພື່ອຕິດຕັ້ງ)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2003,8 +1969,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "ຄຳນວນຄ່າຈັດສົ່ງ ແລະ ສົ່ງດ້ວຍ USPS<br/>\n"
-"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ ເພື່ອຕິດຕັ້ງ)"
-"</strong>"
+"                                    <strong>(ກະລຸນາໄປທີ່ ໜ້າທຳອິດ&gt;ແອັບ "
+"ເພື່ອຕິດຕັ້ງ)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2143,8 +2109,7 @@ msgstr "ສ້າງໃບແຈ້ງໜີ້"
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr ""
-"ສ້າງໃບແຈ້ງໜີ້, ລົງທະບຽນການຊຳລະເງິນ ແລະ ຕິດຕາມການສົນທະນາກັບລູກຄ້າຂອງທ່ານ."
+msgstr "ສ້າງໃບແຈ້ງໜີ້, ລົງທະບຽນການຊຳລະເງິນ ແລະ ຕິດຕາມການສົນທະນາກັບລູກຄ້າຂອງທ່ານ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -2157,8 +2122,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
-"ສ້າງໃບແຈ້ງໜີ້ດຽວສຳລັບທຸກໃບສັ່ງຊື້ທີ່ກ່ຽວຂ້ອງກັບລູກຄ້າຄົນດຽວກັນ, ທີ່ຢູ່ອອກໃບແຈ້ງໜີ້ດຽວກັນ ແລະ ທີ່ຢູ່ຈັດສົ່ງດຽວກັ"
-"ນ."
+"ສ້າງໃບແຈ້ງໜີ້ດຽວສຳລັບທຸກໃບສັ່ງຊື້ທີ່ກ່ຽວຂ້ອງກັບລູກຄ້າຄົນດຽວກັນ, ທີ່ຢູ່ອອກໃບແຈ້ງໜີ້ດຽວກັນ ແລະ "
+"ທີ່ຢູ່ຈັດສົ່ງດຽວກັນ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -2296,8 +2261,7 @@ msgstr "ວັນທີ:"
 msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
-msgstr ""
-"ຈຳນວນມື້ລະຫວ່າງການສະເໜີລາຄາຈົນເຖິງມື້ໝົດອາຍຸ. 0 ມື້ໝາຍເຖິງປິດການໝົດອາຍຸອັດຕະໂນມັດ"
+msgstr "ຈຳນວນມື້ລະຫວ່າງການສະເໜີລາຄາຈົນເຖິງມື້ໝົດອາຍຸ. 0 ມື້ໝາຍເຖິງປິດການໝົດອາຍຸອັດຕະໂນມັດ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -2322,8 +2286,7 @@ msgstr "ລາຄາຂາຍເລີ່ມຕົ້ນລວມ"
 msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
-msgstr ""
-"ຄ່າເລີ່ມຕົ້ນວ່າລາຄາຂາຍທີ່ໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ກັບບໍລິສັດນີ້ແມ່ນລວມພາສີແລ້ວຫຼືບໍ່."
+msgstr "ຄ່າເລີ່ມຕົ້ນວ່າລາຄາຂາຍທີ່ໃຊ້ໃນສິນຄ້າ ແລະ ໃບແຈ້ງໜີ້ກັບບໍລິສັດນີ້ແມ່ນລວມພາສີແລ້ວຫຼືບໍ່."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2331,8 +2294,8 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
-"ໄລຍະເວລາເລີ່ມຕົ້ນທີ່ໃບສະເໜີລາຄາມີຜົນສັກສິດ ແລະ ລູກຄ້າສາມາດຍອມຮັບໄດ້. ຄ່າເລີ່ມຕົ້ນນີ້ສາມາດປ່ຽນແປງໄດ້ຕາ"
-"ມແຕ່ລະໃບສັ່ງຊື້ ຫຼື ແບບຟອມ."
+"ໄລຍະເວລາເລີ່ມຕົ້ນທີ່ໃບສະເໜີລາຄາມີຜົນສັກສິດ ແລະ ລູກຄ້າສາມາດຍອມຮັບໄດ້. "
+"ຄ່າເລີ່ມຕົ້ນນີ້ສາມາດປ່ຽນແປງໄດ້ຕາມແຕ່ລະໃບສັ່ງຊື້ ຫຼື ແບບຟອມ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -2401,9 +2364,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"ວັນທີຈັດສົ່ງທີ່ທ່ານສາມາດສັນຍາກັບລູກຄ້າ, ຄິດໄລ່ຈາກໄລຍະເວລາລໍຖ້າຕ່ຳສຸດຂອງລາຍການສັ່ງຊື້ໃນກໍລະນີຂອງສິນຄ້າບໍລິ"
-"ການ. ໃນກໍລະນີຂອງການຈັດສົ່ງ, ນະໂຍບາຍການຈັດສົ່ງຂອງໃບສັ່ງຊື້ຈະຖືກນຳມາພິຈາລະນາເພື່ອໃຊ້ໄລຍະເວລາລໍຖ້າຕ່"
-"ຳສຸດ ຫຼື ສູງສຸດຂອງລາຍການສັ່ງຊື້."
+"ວັນທີຈັດສົ່ງທີ່ທ່ານສາມາດສັນຍາກັບລູກຄ້າ, "
+"ຄິດໄລ່ຈາກໄລຍະເວລາລໍຖ້າຕ່ຳສຸດຂອງລາຍການສັ່ງຊື້ໃນກໍລະນີຂອງສິນຄ້າບໍລິການ. ໃນກໍລະນີຂອງການຈັດສົ່ງ, "
+"ນະໂຍບາຍການຈັດສົ່ງຂອງໃບສັ່ງຊື້ຈະຖືກນຳມາພິຈາລະນາເພື່ອໃຊ້ໄລຍະເວລາລໍຖ້າຕ່ຳສຸດ ຫຼື ສູງສຸດຂອງລາຍການສັ່ງຊື້."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2660,8 +2623,8 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
-"ລາກ ແລະ ວາງໄຟລ໌ PDF ໃບຮ້ອງຂໍສະເໜີລາຄາ ລົງໃນລາຍການໃບສະເໜີລາຄາຂອງທ່ານໃນ Odoo. ເພີດເພີນກັບ"
-"ລະບົບອັດຕະໂນມັດ!"
+"ລາກ ແລະ ວາງໄຟລ໌ PDF ໃບຮ້ອງຂໍສະເໜີລາຄາ ລົງໃນລາຍການໃບສະເໜີລາຄາຂອງທ່ານໃນ Odoo. "
+"ເພີດເພີນກັບລະບົບອັດຕະໂນມັດ!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2763,8 +2726,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the customer."
 msgstr ""
-"ສະຖານະທາງພາສີຖືກໃຊ້ເພື່ອປັບປ່ຽນອາກອນ ແລະ ບັນຊີສຳລັບລູກຄ້າສະເພາະ ຫຼື ໃບສັ່ງຊື້/ໃບແຈ້ງໜີ້. ຄ່າເລີ່ມຕົ້ນແມ່"
-"ນມາຈາກຂໍ້ມູນລູກຄ້າ."
+"ສະຖານະທາງພາສີຖືກໃຊ້ເພື່ອປັບປ່ຽນອາກອນ ແລະ ບັນຊີສຳລັບລູກຄ້າສະເພາະ ຫຼື ໃບສັ່ງຊື້/ໃບແຈ້ງໜີ້. "
+"ຄ່າເລີ່ມຕົ້ນແມ່ນມາຈາກຂໍ້ມູນລູກຄ້າ."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2812,8 +2775,8 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"ຈາກລາຍງານນີ້, ທ່ານສາມາດເຫັນພາບລວມຂອງມູນຄ່າທີ່ອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າຂອງທ່ານ. ເຄື່ອງມືຄົ້ນຫາຍັງສາມາດໃ"
-"ຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານໃຫ້ສອດຄ່ອງກັບຄວາມຕ້ອງການ."
+"ຈາກລາຍງານນີ້, ທ່ານສາມາດເຫັນພາບລວມຂອງມູນຄ່າທີ່ອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າຂອງທ່ານ. "
+"ເຄື່ອງມືຄົ້ນຫາຍັງສາມາດໃຊ້ເພື່ອປັບແຕ່ງລາຍງານໃບແຈ້ງໜີ້ຂອງທ່ານໃຫ້ສອດຄ່ອງກັບຄວາມຕ້ອງການ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
@@ -2998,8 +2961,7 @@ msgstr "ຖ້າໝາຍໄວ້, ບາງຂໍ້ຄວາມມີຂໍ�
 msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
-msgstr ""
-"ຖ້າຕັ້ງໄວ້, SO ຈະອອກໃບແຈ້ງໜີ້ໃນສະໝຸດບັນຊີນີ້; ຖ້າບໍ່ດັ່ງນັ້ນ ຈະໃຊ້ສະໝຸດບັນຊີການຂາຍທີ່ມີລຳດັບຕ່ຳສຸດ."
+msgstr "ຖ້າຕັ້ງໄວ້, SO ຈະອອກໃບແຈ້ງໜີ້ໃນສະໝຸດບັນຊີນີ້; ຖ້າບໍ່ດັ່ງນັ້ນ ຈະໃຊ້ສະໝຸດບັນຊີການຂາຍທີ່ມີລຳດັບຕ່ຳສຸດ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3007,8 +2969,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"ຖ້າການຂາຍຖືກລັອກ, ທ່ານບໍ່ສາມາດແກ້ໄຂໄດ້ອີກຕໍ່ໄປ. ແນວໃດກໍ່ຕາມ, ທ່ານຍັງສາມາດອອກໃບແຈ້ງໜີ້ ຫຼື ສົ່ງມອບສິນ"
-"ຄ້າໄດ້."
+"ຖ້າການຂາຍຖືກລັອກ, ທ່ານບໍ່ສາມາດແກ້ໄຂໄດ້ອີກຕໍ່ໄປ. ແນວໃດກໍ່ຕາມ, ທ່ານຍັງສາມາດອອກໃບແຈ້ງໜີ້ ຫຼື "
+"ສົ່ງມອບສິນຄ້າໄດ້."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -3146,8 +3108,7 @@ msgstr "ສະຖານະໃບແຈ້ງໜີ້"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr ""
-"ອອກໃບແຈ້ງໜີ້ຫຼັງການຈັດສົ່ງ, ອີງຕາມຈຳນວນທີ່ສົ່ງມອບ, ບໍ່ແມ່ນຈຳນວນທີ່ສັ່ງຊື້."
+msgstr "ອອກໃບແຈ້ງໜີ້ຫຼັງການຈັດສົ່ງ, ອີງຕາມຈຳນວນທີ່ສົ່ງມອບ, ບໍ່ແມ່ນຈຳນວນທີ່ສັ່ງຊື້."
 
 #. module: sale
 #. odoo-python
@@ -3162,8 +3123,8 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"ລາຍໄດ້ຈາກໃບແຈ້ງໜີ້ສຳລັບເດືອນປັດຈຸບັນ. ນີ້ແມ່ນມູນຄ່າທີ່ຊ່ອງທາງການຂາຍໄດ້ອອກໃບແຈ້ງໜີ້ໃນເດືອນນີ້. ມັນຖືກໃຊ້ເ"
-"ພື່ອຄິດໄລ່ອັດຕາສ່ວນຄວາມຄືບໜ້າຂອງລາຍໄດ້ປັດຈຸບັນທຽບກັບເປົ້າໝາຍໃນມຸມມອງຄຳບັງ (Kanban)."
+"ລາຍໄດ້ຈາກໃບແຈ້ງໜີ້ສຳລັບເດືອນປັດຈຸບັນ. ນີ້ແມ່ນມູນຄ່າທີ່ຊ່ອງທາງການຂາຍໄດ້ອອກໃບແຈ້ງໜີ້ໃນເດືອນນີ້. "
+"ມັນຖືກໃຊ້ເພື່ອຄິດໄລ່ອັດຕາສ່ວນຄວາມຄືບໜ້າຂອງລາຍໄດ້ປັດຈຸບັນທຽບກັບເປົ້າໝາຍໃນມຸມມອງຄຳບັງ (Kanban)."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -3232,7 +3193,6 @@ msgid "Invoicing"
 msgstr "ການອອກໃບແຈ້ງໜີ້"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address"
 msgstr "ທີ່ຢູື່ອອກໃບແຈ້ງໜີ້"
@@ -3255,7 +3215,6 @@ msgid "Invoicing Target"
 msgstr "ເປົ້າໝາຍການອອກໃບແຈ້ງໜີ້"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
 msgstr "ທີ່ຢູື່ອອກໃບແຈ້ງໜີ້ ແລະ ການຈັດສົ່ງ"
@@ -3411,14 +3370,13 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
-"ເຮັດໃຫ້ໃບສະເໜີລາຄາຂອງທ່ານໜ້າສົນໃຈໂດຍການເພີ່ມໜ້າຫົວຂໍ້, ລາຍລະອຽດສິນຄ້າ ແລະ ໜ້າທ້າຍໃສ່ໃບສະເໜີລາຄາ"
-"ຂອງທ່ານ."
+"ເຮັດໃຫ້ໃບສະເໜີລາຄາຂອງທ່ານໜ້າສົນໃຈໂດຍການເພີ່ມໜ້າຫົວຂໍ້, ລາຍລະອຽດສິນຄ້າ ແລະ "
+"ໜ້າທ້າຍໃສ່ໃບສະເໜີລາຄາຂອງທ່ານ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
-msgstr ""
-"ຈັດການໂປຣໂມຊັນ, ຄູປອງ, ບັດສະມາຊິກ, ບັດຂອງຂວັນ ແລະ ກະເປົາເງິນອີເລັກໂທຣນິກ"
+msgstr "ຈັດການໂປຣໂມຊັນ, ຄູປອງ, ບັດສະມາຊິກ, ບັດຂອງຂວັນ ແລະ ກະເປົາເງິນອີເລັກໂທຣນິກ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3451,8 +3409,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
-"ກຳນົດຈຳນວນໃນໃບສັ່ງຊື້ດ້ວຍຕົນເອງ: ອອກໃບເກັບເງິນຕາມຈຳນວນທີ່ປ້ອນເຂົ້າດ້ວຍຕົນເອງ ໂດຍບໍ່ຕ້ອງສ້າງບັນຊີວິເຄ"
-"າະ.\n"
+"ກຳນົດຈຳນວນໃນໃບສັ່ງຊື້ດ້ວຍຕົນເອງ: ອອກໃບເກັບເງິນຕາມຈຳນວນທີ່ປ້ອນເຂົ້າດ້ວຍຕົນເອງ "
+"ໂດຍບໍ່ຕ້ອງສ້າງບັນຊີວິເຄາະ.\n"
 "ໃບລາຍງານເວລາໃນສັນຍາ: ອອກໃບເກັບເງິນຕາມຊົ່ວໂມງທີ່ຕິດຕາມໃນໃບລາຍງານເວລາທີ່ກ່ຽວຂ້ອງ.\n"
 "ສ້າງວຽກ ແລະ ຕິດຕາມຊົ່ວໂມງ: ສ້າງວຽກໃນຂັ້ນຕອນການຢືນຢັນໃບສັ່ງຂາຍ ແລະ ຕິດຕາມຊົ່ວໂມງເຮັດວຽກ."
 
@@ -3698,8 +3656,8 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
-"ເມື່ອຄຳສັ່ງຂາຍຖືກຢືນຢັນແລ້ວ, ທ່ານບໍ່ສາມາດລຶບລາຍການໃດໜຶ່ງອອກໄດ້ (ພວກເຮົາຈຳເປັນຕ້ອງຕິດຕາມວ່າສິ່ງໃດຖືກອ"
-"ອກໃບແຈ້ງໜີ້ ຫຼື ຈັດສົ່ງແລ້ວ).\n"
+"ເມື່ອຄຳສັ່ງຂາຍຖືກຢືນຢັນແລ້ວ, ທ່ານບໍ່ສາມາດລຶບລາຍການໃດໜຶ່ງອອກໄດ້ "
+"(ພວກເຮົາຈຳເປັນຕ້ອງຕິດຕາມວ່າສິ່ງໃດຖືກອອກໃບແຈ້ງໜີ້ ຫຼື ຈັດສົ່ງແລ້ວ).\n"
 "                ໃຫ້ຕັ້ງຈຳນວນເປັນ 0 ແທນ."
 
 #. module: sale
@@ -3719,8 +3677,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"ເມື່ອໃບສະເໜີລາຄາຖືກຢືນຢັນ, ມັນຈະກາຍເປັນໃບສັ່ງຂາຍ.<br> ທ່ານຈະສາມາດສ້າງໃບເກັບເງິນ ແລະ ເກັບເງິນໄ"
-"ດ້."
+"ເມື່ອໃບສະເໜີລາຄາຖືກຢືນຢັນ, ມັນຈະກາຍເປັນໃບສັ່ງຂາຍ.<br> ທ່ານຈະສາມາດສ້າງໃບເກັບເງິນ ແລະ "
+"ເກັບເງິນໄດ້."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3785,8 +3743,8 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-"ສິນຄ້າທາງເລືອກຈະຖືກແນະນຳທຸກຄັ້ງທີ່ລູກຄ້າກົດ *ເພີ່ມລົງກະຕ່າ* (ກົນລະຍຸດການຂາຍຄວບຄູ່, ເຊັ່ນ: ສຳລັບຄອມພິວ"
-"ເຕີ: ການຮັບປະກັນ, ຊອບແວ, ແລະ ອື່ນໆ)."
+"ສິນຄ້າທາງເລືອກຈະຖືກແນະນຳທຸກຄັ້ງທີ່ລູກຄ້າກົດ *ເພີ່ມລົງກະຕ່າ* (ກົນລະຍຸດການຂາຍຄວບຄູ່, ເຊັ່ນ: "
+"ສຳລັບຄອມພິວເຕີ: ການຮັບປະກັນ, ຊອບແວ, ແລະ ອື່ນໆ)."
 
 #. module: sale
 #. odoo-python
@@ -4328,8 +4286,7 @@ msgstr "ສົ່ງໃບສະເໜີລາຄາແລ້ວ"
 #. odoo-python
 #: code:addons/sale/wizard/res_config_settings.py:0
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
-"ຈຳເປັນຕ້ອງມີອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາ ແລະ ຕ້ອງຫຼາຍກວ່າ ຫຼື ເທົ່າກັບ 0."
+msgstr "ຈຳເປັນຕ້ອງມີອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາ ແລະ ຕ້ອງຫຼາຍກວ່າ ຫຼື ເທົ່າກັບ 0."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
@@ -4480,8 +4437,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
-"ຮ້ອງຂໍການຊຳລະເງິນເພື່ອຢືນຢັນຄຳສັ່ງຊື້, ແບບເຕັມ (100%) ຫຼື ບາງສ່ວນ. ຄ່າເລີ່ມຕົ້ນສາມາດປ່ຽນແປງໄດ້ຕາມແຕ່"
-"ລະຄຳສັ່ງຊື້ ຫຼື ແບບຟອມ."
+"ຮ້ອງຂໍການຊຳລະເງິນເພື່ອຢືນຢັນຄຳສັ່ງຊື້, ແບບເຕັມ (100%) ຫຼື ບາງສ່ວນ. "
+"ຄ່າເລີ່ມຕົ້ນສາມາດປ່ຽນແປງໄດ້ຕາມແຕ່ລະຄຳສັ່ງຊື້ ຫຼື ແບບຟອມ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4489,8 +4446,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
-"ຮ້ອງຂໍໃຫ້ລູກຄ້າເຊັນໃບສະເໜີລາຄາເພື່ອຢືນຢັນຄຳສັ່ງຊື້. ຄ່າເລີ່ມຕົ້ນສາມາດປ່ຽນແປງໄດ້ຕາມແຕ່ລະຄຳສັ່ງຊື້ ຫຼື ແບບຟອ"
-"ມ."
+"ຮ້ອງຂໍໃຫ້ລູກຄ້າເຊັນໃບສະເໜີລາຄາເພື່ອຢືນຢັນຄຳສັ່ງຊື້. ຄ່າເລີ່ມຕົ້ນສາມາດປ່ຽນແປງໄດ້ຕາມແຕ່ລະຄຳສັ່ງຊື້ ຫຼື "
+"ແບບຟອມ."
 
 #. module: sale
 #. odoo-python
@@ -4506,8 +4463,7 @@ msgstr "ຜູ້ຮັບຜິດຊອບ"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr ""
-"ເປົ້າໝາຍລາຍຮັບສຳລັບເດືອນປັດຈຸບັນ (ຍອດລວມກ່ອນພາສີຂອງໃບແຈ້ງໜີ້ທີ່ຊຳລະແລ້ວ)."
+msgstr "ເປົ້າໝາຍລາຍຮັບສຳລັບເດືອນປັດຈຸບັນ (ຍອດລວມກ່ອນພາສີຂອງໃບແຈ້ງໜີ້ທີ່ຊຳລະແລ້ວ)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4774,8 +4730,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"ລາຍການໃບສັ່ງຂາຍທີ່ຈະເພີ່ມເວລາທີ່ໃຊ້ເພື່ອອອກໃບເກັບເງິນໃຫ້ລູກຄ້າ. ລຶບລາຍການໃບສັ່ງຂາຍອອກເພື່ອໃຫ້ການບັນທຶ"
-"ກເວລານັ້ນບໍ່ສາມາດເກັບເງິນໄດ້."
+"ລາຍການໃບສັ່ງຂາຍທີ່ຈະເພີ່ມເວລາທີ່ໃຊ້ເພື່ອອອກໃບເກັບເງິນໃຫ້ລູກຄ້າ. "
+"ລຶບລາຍການໃບສັ່ງຂາຍອອກເພື່ອໃຫ້ການບັນທຶກເວລານັ້ນບໍ່ສາມາດເກັບເງິນໄດ້."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4910,8 +4866,8 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
-"ການສົ່ງອີເມລມີປະໂຫຍດຖ້າທ່ານຕ້ອງການແບ່ງປັນຂໍ້ມູນສະເພາະ ຫຼື ເນື້ອຫາ ກ່ຽວກັບສິນຄ້າ (ຄຳແນະນຳ, ກົດລະບຽ"
-"ບ, ລິ້ງ, ສື່, ແລະ ອື່ນໆ)."
+"ການສົ່ງອີເມລມີປະໂຫຍດຖ້າທ່ານຕ້ອງການແບ່ງປັນຂໍ້ມູນສະເພາະ ຫຼື ເນື້ອຫາ ກ່ຽວກັບສິນຄ້າ (ຄຳແນະນຳ, "
+"ກົດລະບຽບ, ລິ້ງ, ສື່, ແລະ ອື່ນໆ)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4923,8 +4879,7 @@ msgstr "ສົ່ງໃຫ້ລູກຄ້າເມື່ອຢືນຢັນ
 msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm "
 "their order"
-msgstr ""
-"ສົ່ງໃຫ້ລູກຄ້າເມື່ອໄດ້ຮັບການຊຳລະເງິນແລ້ວ ແຕ່ຍັງບໍ່ທັນຢືນຢັນຄຳສັ່ງຊື້ຂອງພວກເຂົາທັນທີ"
+msgstr "ສົ່ງໃຫ້ລູກຄ້າເມື່ອໄດ້ຮັບການຊຳລະເງິນແລ້ວ ແຕ່ຍັງບໍ່ທັນຢືນຢັນຄຳສັ່ງຊື້ຂອງພວກເຂົາທັນທີ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -5053,8 +5008,7 @@ msgstr ""
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
-msgstr ""
-"ບາງລາຍການຄຳສັ່ງຊື້ຍັງບໍ່ທັນມີສິນຄ້າ, ທ່ານຈຳເປັນຕ້ອງແກ້ໄຂໃຫ້ຖືກຕ້ອງກ່ອນຈະດຳເນີນການຕໍ່ໄປ."
+msgstr "ບາງລາຍການຄຳສັ່ງຊື້ຍັງບໍ່ທັນມີສິນຄ້າ, ທ່ານຈຳເປັນຕ້ອງແກ້ໄຂໃຫ້ຖືກຕ້ອງກ່ອນຈະດຳເນີນການຕໍ່ໄປ."
 
 #. module: sale
 #. odoo-python
@@ -5120,8 +5074,7 @@ msgstr "Stripe"
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
-msgstr ""
-"Stripe Connect ບໍ່ມີໃຫ້ບໍລິການໃນປະເທດຂອງທ່ານ, ກະລຸນາໃຊ້ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນອື່ນ."
+msgstr "Stripe Connect ບໍ່ມີໃຫ້ບໍລິການໃນປະເທດຂອງທ່ານ, ກະລຸນາໃຊ້ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນອື່ນ."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
@@ -5159,8 +5112,8 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
-"ຜົນລວມຂອງທຸລະກຳທີ່ເຮັດຜ່ານແບບຟອມການຊຳລະເງິນອອນໄລນ໌ທີ່ຢູ່ໃນສະຖານະ 'ສຳເລັດ' ຫຼື 'ໄດ້ຮັບອະນຸຍາດ' ແ"
-"ລະ ເຊື່ອມໂຍງກັບຄຳສັ່ງຊື້ນີ້."
+"ຜົນລວມຂອງທຸລະກຳທີ່ເຮັດຜ່ານແບບຟອມການຊຳລະເງິນອອນໄລນ໌ທີ່ຢູ່ໃນສະຖານະ 'ສຳເລັດ' ຫຼື 'ໄດ້ຮັບອະນຸຍາດ' "
+"ແລະ ເຊື່ອມໂຍງກັບຄຳສັ່ງຊື້ນີ້."
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
@@ -5233,8 +5186,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
-"ທີມ %(team_name)s ມີ %(sale_order_count)s ຄຳສັ່ງຂາຍທີ່ກຳລັງເຄື່ອນໄຫວ. ໃຫ້ພິຈາລະນາຍົກເລີກພວ"
-"ກມັນ ຫຼື ຈັດເກັບທີມແທນ."
+"ທີມ %(team_name)s ມີ %(sale_order_count)s ຄຳສັ່ງຂາຍທີ່ກຳລັງເຄື່ອນໄຫວ. "
+"ໃຫ້ພິຈາລະນາຍົກເລີກພວກມັນ ຫຼື ຈັດເກັບທີມແທນ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -5289,8 +5242,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
 msgstr ""
-"ຄຳສັ່ງຂາຍ %(order)s ທີ່ຈະອອກໃບແຈ້ງໜີ້ຄືນຖືກຍົກເລີກແລ້ວ. ທ່ານບໍ່ສາມາດລົງທະບຽນຄ່າໃຊ້ຈ່າຍໃນຄຳສັ່ງຂາຍທີ່"
-"ຖືກຍົກເລີກໄດ້."
+"ຄຳສັ່ງຂາຍ %(order)s ທີ່ຈະອອກໃບແຈ້ງໜີ້ຄືນຖືກຍົກເລີກແລ້ວ. "
+"ທ່ານບໍ່ສາມາດລົງທະບຽນຄ່າໃຊ້ຈ່າຍໃນຄຳສັ່ງຂາຍທີ່ຖືກຍົກເລີກໄດ້."
 
 #. module: sale
 #. odoo-python
@@ -5299,8 +5252,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
-"ຄຳສັ່ງຂາຍ %(order)s ທີ່ຈະອອກໃບແຈ້ງໜີ້ຄືນຖືກລັອກຢູ່. ທ່ານບໍ່ສາມາດລົງທະບຽນຄ່າໃຊ້ຈ່າຍໃນຄຳສັ່ງຂາຍທີ່ຖືກລັອ"
-"ກໄດ້."
+"ຄຳສັ່ງຂາຍ %(order)s ທີ່ຈະອອກໃບແຈ້ງໜີ້ຄືນຖືກລັອກຢູ່. "
+"ທ່ານບໍ່ສາມາດລົງທະບຽນຄ່າໃຊ້ຈ່າຍໃນຄຳສັ່ງຂາຍທີ່ຖືກລັອກໄດ້."
 
 #. module: sale
 #. odoo-python
@@ -5308,8 +5261,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
-msgstr ""
-"ຄຳສັ່ງຂາຍ %(order)s ທີ່ຈະອອກໃບແຈ້ງໜີ້ຄືນຕ້ອງໄດ້ຮັບການກວດສອບກ່ອນທີ່ຈະລົງທະບຽນຄ່າໃຊ້ຈ່າຍ."
+msgstr "ຄຳສັ່ງຂາຍ %(order)s ທີ່ຈະອອກໃບແຈ້ງໜີ້ຄືນຕ້ອງໄດ້ຮັບການກວດສອບກ່ອນທີ່ຈະລົງທະບຽນຄ່າໃຊ້ຈ່າຍ."
 
 #. module: sale
 #. odoo-python
@@ -5335,8 +5287,7 @@ msgstr "ຈຳນວນເງິນຕ້ອງຫຼາຍກວ່າຈຳນ
 msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
-msgstr ""
-"ຈຳເປັນຕ້ອງມີບໍລິສັດ, ກະລຸນາເລືອກໜຶ່ງບໍລິສັດກ່ອນທີ່ຈະເຮັດການປ່ຽນແປງອື່ນໆຕໍ່ຄຳສັ່ງຂາຍ."
+msgstr "ຈຳເປັນຕ້ອງມີບໍລິສັດ, ກະລຸນາເລືອກໜຶ່ງບໍລິສັດກ່ອນທີ່ຈະເຮັດການປ່ຽນແປງອື່ນໆຕໍ່ຄຳສັ່ງຂາຍ."
 
 #. module: sale
 #. odoo-python
@@ -5344,8 +5295,7 @@ msgstr ""
 msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
-msgstr ""
-"ວັນທີສົ່ງສິນຄ້າແມ່ນໄວກວ່າວັນທີທີ່ຄາດໄວ້. ທ່ານອາດຈະບໍ່ສາມາດສົ່ງສິນຄ້າໄດ້ຕາມກຳນົດ."
+msgstr "ວັນທີສົ່ງສິນຄ້າແມ່ນໄວກວ່າວັນທີທີ່ຄາດໄວ້. ທ່ານອາດຈະບໍ່ສາມາດສົ່ງສິນຄ້າໄດ້ຕາມກຳນົດ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -5363,11 +5313,11 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
-"ຜະລິດຕະພັນຕໍ່ໄປນີ້ບໍ່ສາມາດຈຳກັດໃຫ້ສະເພາະບໍລິສັດ %(company)s ໄດ້ ເພາະວ່າພວກມັນຖືກໃຊ້ໃນໃບສະເໜີລາຄ"
-"າ ຫຼື ຄຳສັ່ງຂາຍໃນບໍລິສັດອື່ນແລ້ວ:\n"
+"ຜະລິດຕະພັນຕໍ່ໄປນີ້ບໍ່ສາມາດຈຳກັດໃຫ້ສະເພາະບໍລິສັດ %(company)s ໄດ້ "
+"ເພາະວ່າພວກມັນຖືກໃຊ້ໃນໃບສະເໜີລາຄາ ຫຼື ຄຳສັ່ງຂາຍໃນບໍລິສັດອື່ນແລ້ວ:\n"
 "%(used_products)s\n"
-"ທ່ານສາມາດຈັດເກັບຜະລິດຕະພັນເຫຼົ່ານີ້ ແລະ ສ້າງພວກມັນຄືນໃໝ່ດ້ວຍການຈຳກັດບໍລິສັດຂອງທ່ານແທນ, ຫຼື ປະໃຫ້ພວກມັ"
-"ນເປັນຜະລິດຕະພັນທີ່ໃຊ້ຮ່ວມກັນ."
+"ທ່ານສາມາດຈັດເກັບຜະລິດຕະພັນເຫຼົ່ານີ້ ແລະ ສ້າງພວກມັນຄືນໃໝ່ດ້ວຍການຈຳກັດບໍລິສັດຂອງທ່ານແທນ, ຫຼື "
+"ປະໃຫ້ພວກມັນເປັນຜະລິດຕະພັນທີ່ໃຊ້ຮ່ວມກັນ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5379,16 +5329,15 @@ msgid ""
 "This mode is advised if you issue the final invoice at the order and not "
 "after the delivery."
 msgstr ""
-"ໃບເກັບເງິນຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດ ແລະ ສາມາດເບິ່ງໄດ້ໃນພອດທໍລູກຄ້າເມື່ອທຸລະກຳຖືກຢືນຢັນໂດຍຜູ້ໃຫ້ບໍລິກາ"
-"ນຊຳລະເງິນ."
+"ໃບເກັບເງິນຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດ ແລະ "
+"ສາມາດເບິ່ງໄດ້ໃນພອດທໍລູກຄ້າເມື່ອທຸລະກຳຖືກຢືນຢັນໂດຍຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set "
 "in their detail form."
-msgstr ""
-"ອັດຕາກຳໄລຖືກຄິດໄລ່ຈາກຜົນລວມຂອງລາຄາຂາຍສິນຄ້າ ລົບດ້ວຍຕົ້ນທຶນທີ່ຕັ້ງໄວ້ໃນຟອມລາຍລະອຽດ."
+msgstr "ອັດຕາກຳໄລຖືກຄິດໄລ່ຈາກຜົນລວມຂອງລາຄາຂາຍສິນຄ້າ ລົບດ້ວຍຕົ້ນທຶນທີ່ຕັ້ງໄວ້ໃນຟອມລາຍລະອຽດ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5523,8 +5472,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"ນີ້ແມ່ນວັນທີສົ່ງສິນຄ້າທີ່ສັນຍາກັບລູກຄ້າ. ຖ້າຕັ້ງໄວ້, ໃບສົ່ງສິນຄ້າຈະຖືກກຳນົດເວລາຕາມວັນທີນີ້ແທນທີ່ຈະເປັນໄລຍະເວລ"
-"ານຳສົ່ງສິນຄ້າ."
+"ນີ້ແມ່ນວັນທີສົ່ງສິນຄ້າທີ່ສັນຍາກັບລູກຄ້າ. ຖ້າຕັ້ງໄວ້, "
+"ໃບສົ່ງສິນຄ້າຈະຖືກກຳນົດເວລາຕາມວັນທີນີ້ແທນທີ່ຈະເປັນໄລຍະເວລານຳສົ່ງສິນຄ້າ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5540,8 +5489,7 @@ msgstr "ນີ້ແມ່ນວິທີການສົ່ງ, ເຊັ່ນ:
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
-"ນີ້ແມ່ນແຫຼ່ງທີ່ມາຂອງລິ້ງ, ເຊັ່ນ: ເຄື່ອງມືຄົ້ນຫາ, ໂດເມນອື່ນ, ຫຼື ຊື່ຂອງລາຍຊື່ອີເມລ"
+msgstr "ນີ້ແມ່ນແຫຼ່ງທີ່ມາຂອງລິ້ງ, ເຊັ່ນ: ເຄື່ອງມືຄົ້ນຫາ, ໂດເມນອື່ນ, ຫຼື ຊື່ຂອງລາຍຊື່ອີເມລ"
 
 #. module: sale
 #. odoo-javascript
@@ -5624,8 +5572,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"ເພື່ອສົ່ງຄຳເຊີນໃນໂໝດ B2B, ໃຫ້ເປີດລາຍຊື່ຜູ້ຕິດຕໍ່ ຫຼື ເລືອກຫຼາຍລາຍການໃນມຸມມອງລາຍການ ແລ້ວຄລິກທີ່ຕົວເລືອ"
-"ກ 'ການຈັດການການເຂົ້າເຖິງພອດທໍ' ໃນເມນູ *ການດຳເນີນການ*."
+"ເພື່ອສົ່ງຄຳເຊີນໃນໂໝດ B2B, ໃຫ້ເປີດລາຍຊື່ຜູ້ຕິດຕໍ່ ຫຼື ເລືອກຫຼາຍລາຍການໃນມຸມມອງລາຍການ "
+"ແລ້ວຄລິກທີ່ຕົວເລືອກ 'ການຈັດການການເຂົ້າເຖິງພອດທໍ' ໃນເມນູ *ການດຳເນີນການ*."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5819,8 +5767,7 @@ msgstr "ໂອກາດການຂາຍເພີ່ມ"
 msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
-msgstr ""
-"ໃຊ້ REST URL ຂ້າງເທິງເພື່ອຮັບຂໍ້ມູນທີ່ມີໂຄງສ້າງຂອງຄຳສັ່ງຊື້ໃນຮູບແບບ UBL."
+msgstr "ໃຊ້ REST URL ຂ້າງເທິງເພື່ອຮັບຂໍ້ມູນທີ່ມີໂຄງສ້າງຂອງຄຳສັ່ງຊື້ໃນຮູບແບບ UBL."
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
@@ -5830,8 +5777,7 @@ msgstr "ໃຊ້ໂດຍພະນັກງານຂາຍເມື່ອພວ
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
-"ໃຊ້ໂດຍພະນັກງານຂາຍເມື່ອພວກເຂົາສົ່ງໃບສະເໜີລາຄາ ຫຼື ໃບເກັບເງິນຊົ່ວຄາວໃຫ້ກັບລູກຄ້າທີ່ຄາດຫວັງ"
+msgstr "ໃຊ້ໂດຍພະນັກງານຂາຍເມື່ອພວກເຂົາສົ່ງໃບສະເໜີລາຄາ ຫຼື ໃບເກັບເງິນຊົ່ວຄາວໃຫ້ກັບລູກຄ້າທີ່ຄາດຫວັງ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5850,8 +5796,8 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"ຄ່າໃຊ້ຈ່າຍທີ່ກວດສອບແລ້ວ, ໃບເກັບເງິນຜູ້ສະໜອງ, ຫຼື ການຮັບເຄື່ອງເຂົ້າສາງ (ທີ່ຕັ້ງຄ່າເພື່ອຕິດຕາມຕົ້ນທຶນ) ສາມາ"
-"ດອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າໄດ້ທັງໃນລາຄາຕົ້ນທຶນ ຫຼື ລາຄາຂາຍ."
+"ຄ່າໃຊ້ຈ່າຍທີ່ກວດສອບແລ້ວ, ໃບເກັບເງິນຜູ້ສະໜອງ, ຫຼື ການຮັບເຄື່ອງເຂົ້າສາງ (ທີ່ຕັ້ງຄ່າເພື່ອຕິດຕາມຕົ້ນທຶນ) "
+"ສາມາດອອກໃບແຈ້ງໜີ້ໃຫ້ລູກຄ້າໄດ້ທັງໃນລາຄາຕົ້ນທຶນ ຫຼື ລາຄາຂາຍ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -5861,10 +5807,9 @@ msgstr "ໄລຍະເວລາການໃຊ້ງານ"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
-"Validity of the order, after that you will not able to sign & pay the "
-"quotation."
+"Validity of the quotation. After this date, you will no longer be able to "
+"sign and pay it."
 msgstr ""
-"ຄວາມຖືກຕ້ອງຂອງຄຳສັ່ງຊື້, ຫຼັງຈາກນັ້ນທ່ານຈະບໍ່ສາມາດເຊັນ & ຊຳລະເງິນໃບສະເໜີລາຄາໄດ້."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5957,8 +5902,7 @@ msgstr "ປະຫວັດການຕິດຕໍ່ສື່ສານທາງ
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
-msgstr ""
-"ທ່ານບໍ່ສາມາດລຶບໃບສະເໜີລາຄາທີ່ສົ່ງແລ້ວ ຫຼື ໃບສັ່ງຂາຍທີ່ຢືນຢັນແລ້ວ. ທ່ານຕ້ອງຍົກເລີກມັນກ່ອນ."
+msgstr "ທ່ານບໍ່ສາມາດລຶບໃບສະເໜີລາຄາທີ່ສົ່ງແລ້ວ ຫຼື ໃບສັ່ງຂາຍທີ່ຢືນຢັນແລ້ວ. ທ່ານຕ້ອງຍົກເລີກມັນກ່ອນ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5966,8 +5910,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"ທ່ານສາມາດເລືອກໃບສັ່ງຊື້ທັງໝົດ ແລະ ອອກໃບເກັບເງິນເປັນຊຸດ, <br> ຫຼື ກວດສອບແຕ່ລະໃບສັ່ງຊື້ ແລະ ອອກໃບເ"
-"ກັບເງິນເທື່ອລະລາຍການ."
+"ທ່ານສາມາດເລືອກໃບສັ່ງຊື້ທັງໝົດ ແລະ ອອກໃບເກັບເງິນເປັນຊຸດ, <br> ຫຼື ກວດສອບແຕ່ລະໃບສັ່ງຊື້ ແລະ "
+"ອອກໃບເກັບເງິນເທື່ອລະລາຍການ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -5991,22 +5935,13 @@ msgstr "ທ່ານບໍ່ສາມາດປ່ຽນລາຍການລາ
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr "ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຂອງສິນຄ້າໄດ້ ເພາະມັນຖືກນຳໃຊ້ໃນໃບສັ່ງຂາຍແລ້ວ."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຂອງລາຍການໃບສັ່ງຂາຍໄດ້. ທ່ານຄວນລຶບລາຍການປັດຈຸບັນ ແລະ ສ້າງລາຍການໃໝ່ທີ່ມີປະເ"
-"ພດທີ່ຖືກຕ້ອງແທນ."
+"ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຂອງລາຍການໃບສັ່ງຂາຍໄດ້. ທ່ານຄວນລຶບລາຍການປັດຈຸບັນ ແລະ "
+"ສ້າງລາຍການໃໝ່ທີ່ມີປະເພດທີ່ຖືກຕ້ອງແທນ."
 
 #. module: sale
 #. odoo-python
@@ -6020,8 +5955,8 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
-"ທ່ານບໍ່ສາມາດຕັ້ງຄ່າເປັນຕົວເລກລົບສຳລັບອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາເລີ່ມຕົ້ນ. ປະໃຫ້ວ່າງ (ຫຼື 0) ເພື່ອປິດ"
-"ການໝົດອາຍຸອັດຕະໂນມັດ."
+"ທ່ານບໍ່ສາມາດຕັ້ງຄ່າເປັນຕົວເລກລົບສຳລັບອາຍຸການໃຊ້ງານຂອງໃບສະເໜີລາຄາເລີ່ມຕົ້ນ. ປະໃຫ້ວ່າງ (ຫຼື 0) "
+"ເພື່ອປິດການໝົດອາຍຸອັດຕະໂນມັດ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6036,6 +5971,16 @@ msgid ""
 msgstr ""
 "ທ່ານຕ້ອງກຳນົດສິນຄ້າສຳລັບທຸກສິ່ງທີ່ທ່ານຂາຍ ຫຼື ຊື້,\n"
 "ບໍ່ວ່າມັນຈະເປັນສິນຄ້າທີ່ເກັບໄວ້ໄດ້, ສິນຄ້າບໍລິໂພກ ຫຼື ການບໍລິການ."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -6088,8 +6033,8 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"ໃບສະເໜີລາຄາຂອງທ່ານມີສິນຄ້າຈາກບໍລິສັດ %(product_company)s ໃນຂະນະທີ່ໃບສະເໜີລາຄາຂອງທ່ານເປັນຂອ"
-"ງບໍລິສັດ %(quote_company)s. \n"
+"ໃບສະເໜີລາຄາຂອງທ່ານມີສິນຄ້າຈາກບໍລິສັດ %(product_company)s "
+"ໃນຂະນະທີ່ໃບສະເໜີລາຄາຂອງທ່ານເປັນຂອງບໍລິສັດ %(quote_company)s. \n"
 " ກະລຸນາປ່ຽນບໍລິສັດຂອງໃບສະເໜີລາຄາ ຫຼື ລຶບສິນຄ້າຈາກບໍລິສັດອື່ນອອກ (%(bad_products)s)."
 
 #. module: sale
@@ -6212,6 +6157,171 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+#~ "('draft', 'sent') else 'order'\"/>\n"
+#~ "        Hello,\n"
+#~ "        <br/><br/>\n"
+#~ "        Your <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-"
+#~ "weight: bold;\" t-out=\"object.name or ''\"/>\n"
+#~ "        <t t-if=\"object.origin\">\n"
+#~ "            (with reference: <t t-out=\"object.origin or ''\">S00052</"
+#~ "t> )\n"
+#~ "        </t>\n"
+#~ "        amounting in <span style=\"font-weight: bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "10.00</span> is ready for review.\n"
+#~ "        <br/>\n"
+#~ "        <t t-set=\"documents\" t-value=\"object._get_product_documents()"
+#~ "\"/>\n"
+#~ "        <t t-if=\"documents\">\n"
+#~ "            <br/>\n"
+#~ "            <t t-if=\"len(documents)&gt;1\">\n"
+#~ "                Here are some additional documents that may interest "
+#~ "you:\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                Here is an additional document that may interest you:\n"
+#~ "            </t>\n"
+#~ "            <ul style=\"margin-bottom: 0;\">\n"
+#~ "                <t t-foreach=\"documents\" t-as=\"document\">\n"
+#~ "                    <li style=\"font-size: 13px;\">\n"
+#~ "                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+#~ "href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+#~ "target=\"target\"/>\n"
+#~ "                    </li>\n"
+#~ "                </t>\n"
+#~ "            </ul>\n"
+#~ "        </t>\n"
+#~ "        <br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">Mitchell Admin</t></div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        <t t-set=\"doc_name\" t-value=\"'ໃບສະເໜີລາຄາ' if object.state in "
+#~ "('draft', 'sent') else 'ໃບສັ່ງຊື້'\"/>\n"
+#~ "        ສະບາຍດີ,\n"
+#~ "        <br/><br/>\n"
+#~ "        <t t-out=\"doc_name or ''\">ໃບສະເໜີລາຄາ</t> ຂອງທ່ານ <span "
+#~ "style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+#~ "        <t t-if=\"object.origin\">\n"
+#~ "            (ດ້ວຍເລກອ້າງອີງ: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+#~ "        </t>\n"
+#~ "        ເປັນມູນຄ່າ <span style=\"font-weight: bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "10.00</span> ແມ່ນພ້ອມສຳລັບການກວດສອບແລ້ວ.\n"
+#~ "        <br/>\n"
+#~ "        <t t-set=\"documents\" t-value=\"object._get_product_documents()"
+#~ "\"/>\n"
+#~ "        <t t-if=\"documents\">\n"
+#~ "            <br/>\n"
+#~ "            <t t-if=\"len(documents)&gt;1\">\n"
+#~ "                ນີ້ແມ່ນເອກະສານເພີ່ມເຕີມບາງຢ່າງທີ່ທ່ານອາດຈະສົນໃຈ:\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                ນີ້ແມ່ນເອກະສານເພີ່ມເຕີມທີ່ທ່ານອາດຈະສົນໃຈ:\n"
+#~ "            </t>\n"
+#~ "            <ul style=\"margin-bottom: 0;\">\n"
+#~ "                <t t-foreach=\"documents\" t-as=\"document\">\n"
+#~ "                    <li style=\"font-size: 13px;\">\n"
+#~ "                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+#~ "href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+#~ "target=\"target\"/>\n"
+#~ "                    </li>\n"
+#~ "                </t>\n"
+#~ "            </ul>\n"
+#~ "        </t>\n"
+#~ "        <br/>\n"
+#~ "        ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາຫາກທ່ານມີຄຳຖາມໃດໆ.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">Mitchell Admin</t></div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+#~ "('draft', 'sent') else 'order'\"/>\n"
+#~ "        Hello,\n"
+#~ "        <br/><br/>\n"
+#~ "        Your Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</"
+#~ "t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
+#~ "span>\n"
+#~ "        <t t-if=\"object.origin\">\n"
+#~ "            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
+#~ "        </t>\n"
+#~ "        amounting in <span style=\"font-weight: bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "10.00</span> is available.\n"
+#~ "        <br/><br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">Mitchell Admin</t></div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        <t t-set=\"doc_name\" t-value=\"'ໃບສະເໜີລາຄາ' if object.state in "
+#~ "('draft', 'sent') else 'ໃບສັ່ງຊື້'\"/>\n"
+#~ "        ສະບາຍດີ,\n"
+#~ "        <br/><br/>\n"
+#~ "        ໃບແຈ້ງໜີ້ Pro forma ສຳລັບ <t t-out=\"doc_name or ''\">ໃບສະເໜີລາຄາ</t> "
+#~ "<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
+#~ "span> ຂອງທ່ານ\n"
+#~ "        <t t-if=\"object.origin\">\n"
+#~ "            (ດ້ວຍເລກອ້າງອີງ: <t t-out=\"object.origin or ''\"/> )\n"
+#~ "        </t>\n"
+#~ "        ເປັນມູນຄ່າ <span style=\"font-weight: bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "10.00</span> ແມ່ນພ້ອມແລ້ວ.\n"
+#~ "        <br/><br/>\n"
+#~ "        ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາຫາກທ່ານມີຄຳຖາມໃດໆ.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">Mitchell Admin</t></div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+#~ msgstr "<strong class=\"d-block mt-3\">ທີ່ຢູ່ຈັດສົ່ງ</strong>"
+
+#~ msgid ""
+#~ "Validity of the order, after that you will not able to sign & pay the "
+#~ "quotation."
+#~ msgstr "ຄວາມຖືກຕ້ອງຂອງຄຳສັ່ງຊື້, ຫຼັງຈາກນັ້ນທ່ານຈະບໍ່ສາມາດເຊັນ & ຊຳລະເງິນໃບສະເໜີລາຄາໄດ້."
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr "ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຂອງສິນຄ້າໄດ້ ເພາະມັນຖືກນຳໃຊ້ໃນໃບສັ່ງຂາຍແລ້ວ."
 
 #~ msgid " Data Fetched"
 #~ msgstr " ດຶງຂໍ້ມູນແລ້ວ"

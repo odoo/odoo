@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-08-03 22:38+0000\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "survey/lt/>\n"
@@ -39,7 +39,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -228,6 +228,42 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"       <tbody>\n"
+"            <tr> <td>\n"
+"                <!-- We use the logo of the company that created the survey "
+"(to handle multi company cases) --> \n"
+"               <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/> </a>\n"
+"            </td> <td style=\"text-align:right;vertical-align:middle;\"> \n"
+"                    Sertifikatas: <t t-out=\"object.survey_id.display_name "
+"or ''\">Atsiliepimų forma</t>\n"
+"            </td></tr>\n"
+"        </tbody> \n"
+"   </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
+"solid #e1e1e1;\"> \n"
+"       <tbody>\n"
+"            <tr> <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p> Gerbiamas „ <span t-out=\"object.partner_id.name or "
+"'participant'\">“ dalyvi</span></p>\n"
+"               <p> \n"
+"                    Pridedame jūsų\n"
+"                       <strong t-out=\"object.survey_id.display_name or "
+"''\"> „Furniture Creation“</strong>\n"
+"                    sertifikatą\n"
+"               </p>\n"
+"                <p> Sveikiname, kad išlaikėte testą, surinkdami <strong t-"
+"out=\"object.scoring_percentage\"/>% balų!</p>\n"
+"            </td></tr>\n"
+"        </tbody> \n"
+"   </table>\n"
+"</div> \n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -271,6 +307,43 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Gerbiamas „ <t t-out=\"object.partner_id.name or 'participant'\">“ "
+"dalyvi</t><br/><br/>\n"
+"        <t t-if=\"object.survey_id.certification\"> \n"
+"            Jūs esate pakviestas dalyvauti naujoje sertifikacijoje.\n"
+"       </t>\n"
+"        <t t-else=\"\"> \n"
+"            Atliekame apklausą ir būsime dėkingi už jūsų atsakymus.\n"
+"       </t>\n"
+"        </p> <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\"> \n"
+"               <t t-if=\"object.survey_id.certification\"> \n"
+"                    Pradėti sertifikavimą\n"
+"               </t>\n"
+"                <t t-else=\"\"> \n"
+"                    Pradėti apklausą\n"
+"               </t>\n"
+"            </a> \n"
+"       </div>\n"
+"        <t t-if=\"object.deadline\"> \n"
+"            Prašome atsakyti į apklausą dėl „ <t t-out=\"format_date"
+"(object.deadline) or ''\">“ 2021 m. gegužės 5 d.</t>.<br/><br/>\n"
+"       </t>\n"
+"        <t t-if=\"object.survey_id.certification\"> \n"
+"            Linkime sėkmės!\n"
+"       </t>\n"
+"        <t t-else=\"\"> \n"
+"            Iš anksto dėkojame už dalyvavimą.\n"
+"       </t>\n"
+"    \n"
+"</div> \n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -353,7 +426,7 @@ msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>atsakymas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Survey"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Eiti į apklausą"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -1021,7 +1094,7 @@ msgstr "Fono paveikslėlis"
 #: model:ir.model.fields,field_description:survey.field_survey_question__background_image_url
 #: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_url
 msgid "Background Url"
-msgstr ""
+msgstr "Nuoroda į informaciją"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -1132,7 +1205,7 @@ msgstr "Sertifikato šablonas"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: {{ object.survey_id.display_name }}"
-msgstr ""
+msgstr "Sertifikavimas: {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -1194,16 +1267,17 @@ msgstr "Pasirinkimaii"
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
 msgstr ""
+"Pasirinkite mėgstamą temą ir parodykite, kaip gerai ją išmanote. Pasiruošę?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q3
 msgid "Choose your green meal"
-msgstr ""
+msgstr "Pasirinkite ekologišką patiekalą"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q4
 msgid "Choose your meal"
-msgstr ""
+msgstr "Pasirinkite patiekalą"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -1265,7 +1339,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "Come back once you have added questions to your Surveys."
-msgstr ""
+msgstr "Grįžkite, kai į savo apklausas pridėsite klausimus."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_comments
@@ -1327,7 +1401,7 @@ msgstr ""
 #: model_terms:web_tour.tour,rainbow_man_message:survey.survey_tour
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
 msgstr ""
-"Sveikiname! Dabar esate pasirengę rinkti atsiliepimus kaip profesionalas :-)"
+"Sveikiname! Dabar esate pasiruošę rinkti atsiliepimus kaip profesionalai :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1542,7 +1616,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "DEMO_CERTIFIED_NAME"
-msgstr ""
+msgstr "DEMO_CERTIFIED_NAME"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
@@ -1814,7 +1888,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "For this question, you can only select one answer."
-msgstr ""
+msgstr "Atsakydami į šį klausimą, galite pasirinkti tik vieną atsakymą."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -1845,7 +1919,7 @@ msgstr "Sužaidybinimo iššūkis"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Gather feedbacks from your employees and customers"
-msgstr ""
+msgstr "Rinkite atsiliepimus iš savo darbuotojų ir klientų"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__survey_session_speed_rating_time_limit
@@ -2084,6 +2158,8 @@ msgid ""
 "If a customer purchases a product on 6 January 2020, what is the latest day "
 "we expect to ship it?"
 msgstr ""
+"Jei klientas įsigyja prekę 2020 m. sausio 6 d., kada vėliausiai tikimasi ją "
+"išsiųsti?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
@@ -2817,7 +2893,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__nickname
 msgid "Nickname"
-msgstr ""
+msgstr "Vartotojo vardas"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q1_sug2
@@ -2852,7 +2928,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "No question yet, come back later."
-msgstr ""
+msgstr "Kol kas nėra klausimų, grįžkite vėliau."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__no_scoring
@@ -2889,7 +2965,7 @@ msgstr "Baigę, pateikite apklausos atsakymus."
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Now, use this shortcut to go back to the survey."
-msgstr ""
+msgstr "Dabar naudokite šį sparčiąją nuorodą, kad grįžtumėte į apklausą."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__number
@@ -3048,6 +3124,7 @@ msgstr "Liko tik vienas klausimas!"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
 msgid "Only show survey results having selected this answer"
 msgstr ""
+"Rodyti tik tuos apklausos rezultatus, kuriuose buvo pasirinktas šis atsakymas"
 
 #. module: survey
 #. odoo-python
@@ -3171,7 +3248,7 @@ msgstr "Dalyviai"
 #. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 msgid "Participate to %(survey_name)s"
-msgstr ""
+msgstr "Dalyvaukite %(survey_name)s"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
@@ -3439,7 +3516,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/radio_selection_with_filter/radio_selection_field_with_filter.js:0
 msgid "Radio for Selection With Filter"
-msgstr ""
+msgstr "Radijas su filtravimo galimybe"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
@@ -3600,7 +3677,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as user nickname"
-msgstr ""
+msgstr "Išsaugoti kaip vartotojo slapyvardį"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__scale
@@ -3751,12 +3828,13 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_header
 msgid "Select a language"
-msgstr ""
+msgstr "Pasirinkite kalbą"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
 msgid "Select all the available customizations for our Customizable Desk"
 msgstr ""
+"Pasirinkite visas mūsų „Customizable Desk“ siūlomas pritaikymo galimybes"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_2
@@ -3766,7 +3844,7 @@ msgstr "Pasirinkite visus egzistuojančius produktus."
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_2
 msgid "Select all the products that sell for $100 or more"
-msgstr ""
+msgstr "Pasirinkite visus produktus, kurių kaina yra 100 USD ar daugiau"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -4252,7 +4330,7 @@ msgstr "Dėkojame už dalyvavimą, tikimės, kad smagiai praleidote laiką!"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
+msgstr "Labai dėkojame už jūsų atsiliepimus. Mums labai svarbi jūsų nuomonė!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4524,6 +4602,9 @@ msgid ""
 "products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
+"Ši apklausa leidžia jums pateikti atsiliepimą apie savo patirtį naudojantis "
+"mūsų produktais.\n"
+"    Ją užpildydami padedate mums pagerinti jūsų patirtį."
 
 #. module: survey
 #. odoo-python
@@ -4733,6 +4814,7 @@ msgstr "Naudoti šabloną"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
 msgstr ""
+"Naudokite navigacijos grandinę, kad greitai grįžtumėte į Valdymo skydelį."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description

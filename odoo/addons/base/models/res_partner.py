@@ -919,6 +919,14 @@ class ResPartner(models.Model):
             if internal_users := partner.user_ids.filtered(lambda u: u._is_internal() and u != self.env.user):
                 internal_users.check_access('write')
             updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values.get(fname)}
+            if (
+                'parent_id' in updated and pre_values['parent_id']
+                and partner.commercial_partner_id not in (partner, pre_values['parent_id'].commercial_partner_id)
+            ):
+                # synced values still come from the previous commercial entity
+                commercial = partner.commercial_partner_id
+                if stale := [fname for fname in partner._synced_commercial_fields() if partner[fname] and not commercial[fname]]:
+                    super(ResPartner, partner).write(dict.fromkeys(stale, False))
             if updated:
                 partner._fields_sync(updated)
         return result
@@ -932,7 +940,13 @@ class ResPartner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
-        partners = super().create(vals_list)
+        create_self = self
+        if 'default_user_ids' in self.env.context:
+            # default_user_ids targets other models (e.g. task assignees); as
+            # user_ids is the inverse of res.users.partner_id, applying it here
+            # would re-link those users to the new partner
+            create_self = self.with_context({k: v for k, v in self.env.context.items() if k != 'default_user_ids'})
+        partners = super(ResPartner, create_self).create(vals_list)
         # due to ir.default, compute is not called as there is a default value
         # hence calling the compute manually
         for partner, values in zip(partners, vals_list):

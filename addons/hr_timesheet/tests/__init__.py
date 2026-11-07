@@ -9,3 +9,4 @@ from . import test_project_template
 from . import test_employee_delete_wizard
 from . import test_timesheet_import_template
 from . import test_project_sharing
+from . import test_task_analysis

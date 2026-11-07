@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 19:17+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -51,8 +51,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Pay Now</span>"
 msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> ชำ"
-"ระเงินตอนนี้</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"ชำระเงินตอนนี้</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -121,8 +121,8 @@ msgid ""
 "configuration."
 msgstr ""
 "<strong>คำเตือน!</strong> มีการคืนเงินที่รอดำเนินการสำหรับการชำระเงินนี้\n"
-"                        รอสักครู่เพื่อให้ดำเนินการ หากการคืนเงินยังรอดำเนินการในอีกไม่กี่นา"
-"ที\n"
+"                        รอสักครู่เพื่อให้ดำเนินการ "
+"หากการคืนเงินยังรอดำเนินการในอีกไม่กี่นาที\n"
 "                        โปรดตรวจสอบการกำหนดค่าผู้ให้บริการชำระเงินของคุณ"
 
 #. module: account_payment
@@ -177,19 +177,13 @@ msgstr "จำนวนที่จ่าย"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
-"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? การดำเนินการนี้ไม่สามารถยกเลิกได้"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
 msgid "Authorized Transactions"
 msgstr "ธุรกรรมที่ได้รับอนุญาต"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -229,7 +223,6 @@ msgid "Discount Date"
 msgstr "วันที่ให้ส่วนลด"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
@@ -255,8 +248,8 @@ msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
 msgstr ""
-"เสร็จสิ้น การชำระเงินออนไลน์ของคุณได้รับการดำเนินการเรียบร้อยแล้ว ขอขอบคุณสำหรับการสั่งซื้อของคุ"
-"ณ."
+"เสร็จสิ้น การชำระเงินออนไลน์ของคุณได้รับการดำเนินการเรียบร้อยแล้ว "
+"ขอขอบคุณสำหรับการสั่งซื้อของคุณ."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
@@ -294,7 +287,6 @@ msgid "Has a pending refund"
 msgstr "มีการคืนเงินที่ค้างอยู่"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__id
 #: model:ir.model.fields,field_description:account_payment.field_account_move__id
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__id
@@ -315,8 +307,7 @@ msgstr "ไอดี"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr ""
-"เป็นไปไม่ได้ที่จะชำระใบแจ้งหนี้ที่ค้างชำระทั้งหมดหากใบแจ้งหนี้เหล่านั้นไม่ได้ใช้สกุลเงินเดียวกัน"
+msgstr "เป็นไปไม่ได้ที่จะชำระใบแจ้งหนี้ที่ค้างชำระทั้งหมดหากใบแจ้งหนี้เหล่านั้นไม่ได้ใช้สกุลเงินเดียวกัน"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -394,8 +385,7 @@ msgstr "งวดถัดไป"
 msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
-msgstr ""
-"โปรดทราบว่ามีเพียงโทเค็นจากผู้ให้บริการที่อนุญาตให้บันทึกจำนวนเงินที่มีอยู่เท่านั้น"
+msgstr "โปรดทราบว่ามีเพียงโทเค็นจากผู้ให้บริการที่อนุญาตให้บันทึกจำนวนเงินที่มีอยู่เท่านั้น"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -403,8 +393,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
-"โปรดทราบว่าโทเค็นจากผู้ให้บริการที่ตั้งค่าให้อนุญาตเฉพาะธุรกรรม (แทนที่จะบันทึกจำนวนเงิน) จะไม่สา"
-"มารถใช้ได้"
+"โปรดทราบว่าโทเค็นจากผู้ให้บริการที่ตั้งค่าให้อนุญาตเฉพาะธุรกรรม (แทนที่จะบันทึกจำนวนเงิน) "
+"จะไม่สามารถใช้ได้"
 
 #. module: account_payment
 #. odoo-python
@@ -664,8 +654,7 @@ msgstr "เกิดข้อผิดพลาดในการดำเนิ
 msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
-msgstr ""
-"เกิดข้อผิดพลาดในการดำเนินการชำระเงินของคุณ: ปัญหาเกี่ยวกับการตรวจสอบรหัสบัตรเครดิต"
+msgstr "เกิดข้อผิดพลาดในการดำเนินการชำระเงินของคุณ: ปัญหาเกี่ยวกับการตรวจสอบรหัสบัตรเครดิต"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -746,8 +735,7 @@ msgstr ""
 msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
-msgstr ""
-"คุณไม่สามารถถอนการติดตั้งโมดูลนี้ได้ เนื่องจากการชำระเงินโดยใช้วิธีการชำระเงินนี้มีอยู่แล้ว"
+msgstr "คุณไม่สามารถถอนการติดตั้งโมดูลนี้ได้ เนื่องจากการชำระเงินโดยใช้วิธีการชำระเงินนี้มีอยู่แล้ว"
 
 #. module: account_payment
 #. odoo-python

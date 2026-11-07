@@ -4,7 +4,7 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022, 2026.
 # Dmytro Kyrychuk <dmytro.kyrychuck@gmail.com>, 2026.
 # Denys Nykula <nykula@ukr.net>, 2026.
 msgid ""
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-06 22:01+0000\n"
-"Last-Translator: Denys Nykula <nykula@ukr.net>\n"
+"PO-Revision-Date: 2026-09-19 17:33+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "hr_fleet/uk/>\n"
 "Language: uk\n"
@@ -24,7 +24,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -43,17 +43,17 @@ msgstr ""
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Шаблон плану дій"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
-msgstr ""
+msgstr "Призначення"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Прикріплення"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -77,7 +77,7 @@ msgstr "Автівки"
 #: code:addons/hr_fleet/models/employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Cars History"
-msgstr ""
+msgstr "Історія авто"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
@@ -92,7 +92,7 @@ msgstr "Поточний водій"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_attachment_kanban_inherit_hr
 msgid "Delete"
-msgstr ""
+msgstr "Видалити"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
@@ -111,7 +111,7 @@ msgstr "Помічник звільнення"
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Відобразити назву"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -143,7 +143,7 @@ msgstr "Співробітник"
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "Співробітник %s не привʼязаний до авто."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -153,13 +153,13 @@ msgstr "Ім'я співробітника"
 #. module: hr_fleet
 #: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Менеджер автотранспорту"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Fleet Manager is limited to Employee plans."
-msgstr ""
+msgstr "Функція Менеджер автотранспорту доступна лише в планах співробітників."
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
@@ -183,7 +183,7 @@ msgstr "Майбутній водій (Співробітник)"
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
@@ -236,6 +236,8 @@ msgid ""
 "The vehicle of employee %(employee)s is not linked to a fleet manager, "
 "assigning to you."
 msgstr ""
+"Автотранспорт співробітника %(employee)s не пов’язаний з менеджером "
+"автопарку; призначається вам."
 
 #. module: hr_fleet
 #. odoo-javascript

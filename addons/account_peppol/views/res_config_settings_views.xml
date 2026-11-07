@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='account_peppol_install']" position="replace">
-                <div id="account_peppol" class="col-12 o_setting_box col-lg-6 o_searchable_setting">
-                    <div class="o_setting_right_pane border-0" invisible="account_is_token_out_of_sync">
+                <setting id="account_peppol" help="Allow sending and receiving invoices through the Peppol network">
+                    <div invisible="account_is_token_out_of_sync">
                         <!-- Info in case of sender. -->
                         <div invisible="peppol_use_parent_company or account_peppol_proxy_state != 'sender'">
                             Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
@@ -108,11 +108,14 @@
                                     <span><strong>Disconnected from Peppol!</strong></span>
                                     <p>
                                         Your database is not linked to Peppol anymore. This might be due to a database duplication or restoration.
-                                        Make sure to reconnect the correct database.
+                                        <br/><a class="text-info" href="https://www.odoo.com/help-form" target="_blank"><strong>Contact us</strong></a>
+                                        to reconnect your database to Peppol.
                                     </p>
                                 </div>
                             </div>
-                            <div class="mt-3 d-flex gap-1">
+
+                            <!-- hidden for now until a proper fix is in place, buttons were not removed as we will need them later-->
+                            <div class="mt-3 d-flex gap-1" invisible="True">
                                 <button name="button_reconnect_this_database"
                                     type="object"
                                     string="Reconnect this database"
@@ -126,7 +129,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </setting>
                 <setting
                     invisible="account_is_token_out_of_sync or peppol_use_parent_company or peppol_participation_role != 'sending_and_receiving'">
                     <div class="row" name="peppol_journal_config">

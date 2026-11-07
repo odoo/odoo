@@ -102,12 +102,22 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.channel_type === "livechat") {
-            return this.livechat_operator_id.avatarUrl;
+        if (this.channel_type !== "livechat") {
+            return super.avatarUrl;
         }
-        return super.avatarUrl;
+        if (this.livechatVisitorMember && this.self_member_id?.notEq(this.livechatVisitorMember)) {
+            return this.livechatVisitorMember.avatarUrl;
+        }
+        return this.livechat_operator_id.avatarUrl;
     },
     get displayName() {
+        if (
+            this.channel_type === "livechat" &&
+            this.livechatVisitorMember &&
+            this.self_member_id?.notEq(this.livechatVisitorMember)
+        ) {
+            return this.self_member_id.custom_channel_name || this.livechatVisitorMember.name;
+        }
         if (this.channel_type === "livechat" && this.livechat_operator_id) {
             return this.getPersonaName(this.livechat_operator_id);
         }
@@ -146,7 +156,9 @@ patch(Thread.prototype, {
                 thread: this,
             });
             this.messages.push(temporaryMsg);
-            this?.chatbot?._simulateTyping(2 ** 31 - 1);
+            if (this.chatbot?.currentStep?.step_type !== "free_input_multi") {
+                this?.chatbot?._simulateTyping(2 ** 31 - 1);
+            }
             const thread = await this.store.env.services["im_livechat.livechat"].persist(this);
             if (this.store.self_partner) {
                 temporaryMsg.author_id = this.store.self_partner; // Might have been created after persist.
@@ -160,7 +172,13 @@ patch(Thread.prototype, {
             return thread.post(...arguments).then(() => thread.readyToSwapDeferred.resolve());
         }
         const message = await super.post(...arguments);
-        await this.chatbot?.processAnswer(message);
+        if (this.chatbot?.currentStep?.step_type === "free_input_multi") {
+            // Multi-line answers are processed after a debounce delay: do not wait to swap
+            // temporary thread with persisted one.
+            this.chatbot.processAnswer(message);
+        } else {
+            await this.chatbot?.processAnswer(message);
+        }
         return message;
     },
 

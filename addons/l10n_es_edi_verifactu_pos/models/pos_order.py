@@ -123,6 +123,7 @@ class PosOrder(models.Model):
         return selected_clave_regimen and selected_clave_regimen.split('_', 1)[0]
 
     def l10n_es_edi_verifactu_button_send(self):
+        self.check_access('write')
         self._l10n_es_edi_verifactu_mark_for_next_batch()
 
     def _l10n_es_edi_verifactu_check(self, cancellation=False):

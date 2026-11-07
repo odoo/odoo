@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 14:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -40,10 +40,10 @@ msgstr ""
 "        กำหนดแหล่งที่มาสำหรับการสร้างรายการงาน\n"
 "\n"
 "        ตารางการทำงาน: รายการงานจะถูกสร้างขึ้นจากชั่วโมงทำงานด้านล่าง\n"
-"        การเข้างาน: รายการงานจะถูกสร้างขึ้นจากการเข้างานของพนักงาน (ต้องใช้แอปการเข้างา"
-"น)\n"
-"        การวางแผน: รายการงานจะถูกสร้างขึ้นจากการวางแผนของพนักงาน (ต้องใช้แอปการวางแผ"
-"น)\n"
+"        การเข้างาน: รายการงานจะถูกสร้างขึ้นจากการเข้างานของพนักงาน "
+"(ต้องใช้แอปการเข้างาน)\n"
+"        การวางแผน: รายการงานจะถูกสร้างขึ้นจากการวางแผนของพนักงาน "
+"(ต้องใช้แอปการวางแผน)\n"
 "    "
 
 #. module: hr_work_entry
@@ -81,8 +81,8 @@ msgid ""
 "<span class=\"text-muted\">Warning: The work entry regeneration will delete "
 "all manual changes on the selected period.</span>"
 msgstr ""
-"<span class=\"text-muted\">คำเตือน: การสร้างรายการงานใหม่จะลบการเปลี่ยนแปลงด้วยตนเอ"
-"งทั้งหมดในช่วงเวลาที่เลือก</span>"
+"<span class=\"text-muted\">คำเตือน: "
+"การสร้างรายการงานใหม่จะลบการเปลี่ยนแปลงด้วยตนเองทั้งหมดในช่วงเวลาที่เลือก</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -183,8 +183,8 @@ msgid ""
 "Careful, the Code is used in many references, changing it could lead to "
 "unwanted changes."
 msgstr ""
-"โปรดระวัง มีการใช้รหัสในการอ้างอิงจำนวนมาก การเปลี่ยนแปลงอาจนำไปสู่การเปลี่ยนแปลงที่ไม่พึงประ"
-"สงค์ได้"
+"โปรดระวัง มีการใช้รหัสในการอ้างอิงจำนวนมาก "
+"การเปลี่ยนแปลงอาจนำไปสู่การเปลี่ยนแปลงที่ไม่พึงประสงค์ได้"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
@@ -569,8 +569,8 @@ msgid ""
 "Invalid option: For fully flexible calendars, the work entry source cannot "
 "be 'Working Hours'."
 msgstr ""
-"ตัวเลือกไม่ถูกต้อง: สำหรับปฏิทินที่ยืดหยุ่นอย่างสมบูรณ์ แหล่งที่มาของรายการงานไม่สามารถเป็น 'ชั่วโมง"
-"การทำงาน' ได้"
+"ตัวเลือกไม่ถูกต้อง: สำหรับปฏิทินที่ยืดหยุ่นอย่างสมบูรณ์ แหล่งที่มาของรายการงานไม่สามารถเป็น "
+"'ชั่วโมงการทำงาน' ได้"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
@@ -765,6 +765,21 @@ msgstr "ชั่วโมงล่วงเวลา"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
 msgid "Overtime Hours (Paid at 150%)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_off_days
+msgid "Overtime Off-days"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_daytime
+msgid "Overtime Weekdays Daytime"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_nighttime
+msgid "Overtime Weekdays Nighttime"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1023,7 +1038,7 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
-msgid "Sick Leave 0"
+msgid "Sick Leave 1"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1373,8 +1388,8 @@ msgid ""
 "You can't change the Country of this work entry type cause it's currently "
 "used by the system. You need to delete related working entries first."
 msgstr ""
-"คุณไม่สามารถเปลี่ยนประเทศของประเภทรายการงานนี้ได้เนื่องจากระบบกำลังใช้งานอยู่ คุณต้องลบรายกา"
-"รงานที่เกี่ยวข้องออกก่อน"
+"คุณไม่สามารถเปลี่ยนประเทศของประเภทรายการงานนี้ได้เนื่องจากระบบกำลังใช้งานอยู่ "
+"คุณต้องลบรายการงานที่เกี่ยวข้องออกก่อน"
 
 #. module: hr_work_entry
 #. odoo-python

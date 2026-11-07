@@ -1,7 +1,7 @@
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { test, expect, beforeEach, getFixture } from "@odoo/hoot";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { click, press } from "@odoo/hoot-dom";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -53,6 +53,23 @@ test("close on click away", async () => {
     expect(".o_popover #comp").toHaveCount(0);
 });
 
+test("close on pointer down with a nonzero event detail", async () => {
+    class Comp extends Component {
+        static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
+    }
+
+    getService("popover").add(target, Comp);
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(1);
+
+    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, detail: 1 }));
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(0);
+});
+
 test("close on click away when loading", async () => {
     const def = new Deferred();
     class Comp extends Component {
@@ -78,6 +95,30 @@ test("close on click away when loading", async () => {
     expect(".o_popover #comp").toHaveCount(0);
 
     def.resolve();
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover #comp").toHaveCount(0);
+});
+
+test("close on click away triggered by a hotkey", async () => {
+    class Comp extends Component {
+        static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(`
+        <button id="target">Target</button>
+        <button data-hotkey="h">Outside</button>
+    `);
+    getService("popover").add(target.querySelector("#target"), Comp);
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover #comp").toHaveCount(1);
+
+    await press("alt+h");
+    await tick();
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);

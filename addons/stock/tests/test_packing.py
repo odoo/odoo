@@ -4,6 +4,7 @@ from odoo import Command
 import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.tools.safe_eval import expr_eval
 from odoo.exceptions import UserError
 
 
@@ -1954,15 +1955,17 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(pack.package_dest_id, container)
 
     def test_remove_part_of_entire_pack(self):
-        """ Checks that removing quantity from an entire pack removes its `is_entire_pack` flag for all of its move lines,
-            while keeping the other ones untouched.
+        """ Checks that editing or deleting a move line of an entire pack removes its `is_entire_pack` flag
+            for all of its move lines, while keeping the other ones untouched.
         """
-        pack1, pack2 = self.env['stock.package'].create([{
+        pack1, pack2, pack3 = self.env['stock.package'].create([{
             'name': name,
-        } for name in ['pack1', 'pack2']])
+        } for name in ['pack1', 'pack2', 'pack3']])
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pack1)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 3, package_id=pack1)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1, package_id=pack2)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2, package_id=pack3)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 2, package_id=pack3)
 
         delivery = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.out_type_id.id,
@@ -1970,14 +1973,23 @@ class TestPackagePropagation(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
         })
 
-        delivery.action_add_entire_packs((pack1 | pack2).ids)
-        self.assertEqual(delivery.move_line_ids.mapped('is_entire_pack'), [True, True, True])
+        delivery.action_add_entire_packs((pack1 | pack2 | pack3).ids)
+        self.assertEqual(delivery.move_line_ids.mapped('is_entire_pack'), [True, True, True, True, True])
 
         # Remove some quantity from one move line. The package should not be considered as 'entire' for both move lines.
         pack1_ml = delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack1)
         pack1_ml[0].quantity = 1
         self.assertEqual(pack1_ml.mapped('is_entire_pack'), [False, False])
-        self.assertTrue(delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack2).is_entire_pack)
+        self.assertEqual(
+            delivery.move_line_ids.filtered(lambda ml: ml.package_id in pack2 | pack3).mapped('is_entire_pack'),
+            [True, True, True],
+        )
+
+        # Delete the move line of one product of pack3. The package should not be considered as 'entire' for the other one.
+        delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack3 and ml.product_id == self.productA).unlink()
+        self.assertRecordValues(delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack3), [
+            {'product_id': self.productB.id, 'is_entire_pack': False},
+        ])
 
     def test_pack_in_pack_already_packed(self):
         """ Checks that if a package is already in another pack and we call put in pack again on it, it replaces its destination
@@ -2227,3 +2239,37 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertFalse(pack2.quant_ids)
         self.assertEqual(pack2.location_id, self.stock_location)
         self.assertEqual(pack2.company_id, self.stock_location.company_id)
+
+    def test_put_in_pack_destination_package(self):
+        """Test that a package created through 'Put in Pack' can be selected again as a destination package."""
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+        delivery.action_confirm()
+        package = delivery.move_line_ids[0].with_context(delivery.action_detailed_operations()['context']).action_put_in_pack()
+        self.assertFalse(package.location_id, 'location_id should not be set')
+        domain = expr_eval(
+            self.env['stock.move.line']._fields['result_package_id'].domain
+            .replace('location_dest_id)', f'{delivery.move_line_ids.location_dest_id.id})')
+            .replace('package_id)', f'{delivery.move_line_ids.package_id.id})'),
+        )
+        self.assertIn(package, self.env['stock.package'].search(domain))
+        delivery.move_line_ids[1].result_package_id = package
+        self.assertRecordValues(delivery.move_line_ids, [
+            {'result_package_id': package.id},
+            {'result_package_id': package.id},
+        ])

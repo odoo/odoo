@@ -1,4 +1,4 @@
-import { describe, test, expect, click } from "@odoo/hoot";
+import { describe, test, expect, click, animationFrame } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
@@ -103,6 +103,18 @@ test("getProductPrice matches cart line after take-out preset", async () => {
 });
 
 describe("getProductPrice with variants", () => {
+    test("With a single-value attribute line", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplate = store.models["product.template"].get(152);
+        const variant = store.models["product.product"].get(153);
+        productTemplate.self_order_available = true;
+        variant.update({ product_tmpl_id: productTemplate });
+        const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+
+        await click(".self_order_attribute_selection button");
+        expect(comp.getProductPrice()).toBe(20);
+    });
+
     test("With attribute create_variant='always'", async () => {
         const store = await setupSelfPosEnv();
         const models = store.models;
@@ -177,6 +189,26 @@ test("isAddToCartEnabled", async () => {
     // Product unavailability
     product.self_order_available = false;
     expect(comp.isAddToCartEnabled()).toBe(false);
+});
+
+test("deleted variant cannot be added to the cart", async () => {
+    const store = await setupSelfPosEnv();
+    const productTemplate = store.models["product.template"].get(19);
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+
+    await click(".self_order_attribute_selection div:nth-child(1) button");
+    expect(comp.isAddToCartEnabled()).toBe(true);
+    expect(".o_self_footer .alert-warning").toHaveCount(0);
+
+    store.models["product.product"].get(20).delete();
+    await click(".self_order_attribute_selection div:nth-child(2) button");
+    await animationFrame();
+    expect(comp.isDeletedCombination()).toBe(true);
+    expect(comp.isAddToCartEnabled()).toBe(false);
+    expect(".o_self_footer .alert-warning").toHaveText("This combination does not exist.");
+
+    await store.addToCart(productTemplate, 1, "", comp.getSelectedAttributesValues());
+    expect(store.currentOrder.lines).toHaveLength(0);
 });
 
 test("hide attribute with single 'is_custom' value", async () => {

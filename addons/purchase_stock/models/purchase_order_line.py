@@ -3,7 +3,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, api, Command, fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 
 
@@ -109,7 +109,7 @@ class PurchaseOrderLine(models.Model):
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super().write(values)
-        if 'price_unit' in values:
+        if 'price_unit' in values or 'discount' in values:
             for line in lines:
                 # Avoid updating kit components' stock.move
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
@@ -117,7 +117,7 @@ class PurchaseOrderLine(models.Model):
         if 'product_qty' in values:
             lines = lines.filtered(lambda l: l.product_uom_id.compare(previous_product_qty[l.id], l.product_qty) != 0)
             lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
-        valuation_trigger = ['price_unit', 'product_qty', 'product_uom']
+        valuation_trigger = ['price_unit', 'discount', 'tax_ids', 'product_qty', 'product_uom_id']
         if any(field in valuation_trigger for field in values):
             self.move_ids.filtered(lambda m: m.is_valued)._set_value()
         return result
@@ -240,7 +240,6 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         order = self.order_id
         price_unit = self.price_unit_discounted
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.tax_ids:
             qty = self.product_qty or 1
             price_unit = self.tax_ids.compute_all(
@@ -259,7 +258,7 @@ class PurchaseOrderLine(models.Model):
             conversion_date = self.env.context.get('conversion_date', self.date_order) or fields.Date.today()
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, conversion_date, round=False)
-        return float_round(price_unit, precision_digits=price_unit_prec)
+        return price_unit
 
     def _get_qty_procurement(self):
         self.ensure_one()
@@ -310,6 +309,7 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
+            'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
             'sequence': self.sequence,
         }
 

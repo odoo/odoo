@@ -13,7 +13,9 @@ from odoo.tools import consteq, format_datetime
 class EventController(Controller):
 
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public", website=True, sitemap=False)
-    def event_ics_file(self, event, **kwargs):
+    def event_ics_file(self, event, lang=None, **kwargs):
+        if lang in dict(request.env['res.lang'].get_installed()):
+            event = event.with_context(lang=lang)
         slot_id = int(kwargs['slot_id']) if kwargs.get('slot_id') else False
         slot = request.env['event.slot'].sudo().search(
             Domain('event_id', '=', event.id) & Domain('id', '=', slot_id)) if slot_id else False

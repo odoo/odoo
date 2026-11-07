@@ -503,6 +503,28 @@ class TestDropship(common.TransactionCase):
             {'product_id': subscription_dropship_product.id, 'date_planned': datetime(2026, 1, 1)},
         ])
 
+    def test_modifying_partner_on_dropship_picking(self):
+        """
+        Test that changing the contact on a dropship picking does not
+        replace the original customer.
+        """
+        self.dropship_product.route_ids = [Command.set(self.dropshipping_route.ids)]
+        self.supplier.write({'child_ids': [Command.create({'name': 'Supplier employee'})]})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.dropship_product.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order._get_purchase_orders().button_confirm()
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id.id, self.customer.id)
+        sale_order.picking_ids.partner_id = self.supplier.child_ids
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id.id, self.customer.id)
+
 
 @tagged('post_install', '-at_install')
 class TestDropshipPostInstall(common.TransactionCase):

@@ -1,7 +1,9 @@
+from odoo import fields
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -26,13 +28,13 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 {
                     'quantity': 150.0,
                     'price_unit': 0.53073,
-                    'discount': 11.996055747115614,
+                    'discount': 11.996055747115609,
                     'tax_ids': tax_21.ids,
                 },
                 {
                     'quantity': 200.0,
                     'price_unit': 0.6369,
-                    'discount': 12.00345423143351,
+                    'discount': 12.003454231433505,
                     'tax_ids': tax_21.ids,
                 },
             ],
@@ -47,6 +49,26 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 },
             ],
         )
+
+    @freeze_time('2020-01-01')
+    def test_import_unrounded_discount_then_edit(self):
+        """ Test that editing a bill imported with a discount more precise than the
+            decimal accuracy doesn't change its amounts
+        """
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
+        self.percent_tax(6.0, type_tax_use='purchase')
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan'})
+        analytic_account = self.env['account.analytic.account'].create({'name': 'Account', 'plan_id': analytic_plan.id})
+
+        invoice = self._import_invoice_as_attachment_on(test_name='test_import_unrounded_discount_edit')
+        expected_amounts = [{'amount_untaxed': 2000.01, 'amount_tax': 120.0, 'amount_total': 2120.01}]
+        self.assertRecordValues(invoice, expected_amounts)
+
+        self.env.invalidate_all()
+        with Form(invoice) as invoice_form:
+            with invoice_form.invoice_line_ids.edit(0) as line_form:
+                line_form.analytic_distribution = {str(analytic_account.id): 100}
+        self.assertRecordValues(invoice, expected_amounts)
 
     @freeze_time('2020-01-01')
     def test_import_lot_of_decimals_in_quantities(self):
@@ -173,3 +195,38 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
         self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
         self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+    def test_import_empty_embedded_document(self):
+        """
+        Importing an xml with an empty embedded document (self-closing EmbeddedDocumentBinaryObject) should skip it instead of failing the import
+        """
+        _filename, file_content = self._import_file_content('test_import_embedded_pdf', 'xml')
+        xml_tree = etree.fromstring(file_content)
+
+        # Keep a single additional document, without any content
+        additional_doc, *other_docs = xml_tree.findall('./{*}AdditionalDocumentReference')
+        for doc in other_docs:
+            xml_tree.remove(doc)
+        additional_doc.find('./{*}Attachment/{*}EmbeddedDocumentBinaryObject').text = None
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': etree.tostring(xml_tree),
+        })
+
+        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment)
+        self.assertRecordValues(bill.invoice_line_ids, [{'quantity': 1.0, 'price_unit': 657.0}])
+        self.assertFalse(bill.attachment_ids.filtered(lambda att: att.mimetype == 'application/pdf'))
+
+    def test_import_credit_note_payment_due_date(self):
+        """ Test that the due date are imported correctly from the credit note """
+        credit_note = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_credit_note_payment_due_date',
+            journal=self.company_data['default_journal_purchase'],
+        )
+        self.assertRecordValues(credit_note, [{
+            'move_type': 'in_refund',
+            'partner_id': self.partner_be.id,
+            'invoice_date': fields.Date.from_string('2027-01-01'),
+            'invoice_date_due': fields.Date.from_string('2027-01-31'),
+        }])

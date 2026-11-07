@@ -9,7 +9,7 @@ ProductTemplate._records = [
         list_price: 0,
         standard_price: 0,
         type: "consu",
-        service_tracking: "none",
+        service_tracking: "no",
         pos_categ_ids: [1],
         categ_id: false,
         uom_id: 1,

@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, fields
 from lxml import etree
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
 try:
@@ -12,6 +12,14 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.ubl_namespaces = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
 
     @classmethod
     def subfolders(cls):
@@ -46,6 +54,30 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             any("Line 1: Item name is missing" in str(err) for err in errors),
             f"Expected constraint error for missing item name was not found. Actual errors: {errors}"
         )
+
+    def test_invoice_line_zero_quantity_not_missing(self):
+        """
+        [IBR-022] Generic PINT constraint (defined on account.edi.ubl_pint, inherited by BIS3
+        for EU invoices as well as by non-EU PINT CIUS such as MY/SG/JP/ANZ): a quantity of 0.0 is
+        a valid value and must not block the invoice export nor be dropped from the XML.
+        """
+        product = self._create_product(lst_price=100.0, taxes_id=self.tax_sale_a)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            quantity=0.0,
+            partner_id=self.partner_be,
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self.assertTrue(
+            invoice.ubl_cii_xml_id,
+            "Invoice export should not be blocked by a line with quantity 0.0 [IBR-022]"
+        )
+
+        xml_tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+        invoiced_quantity = xml_tree.find('.//{*}InvoicedQuantity')
+        self.assertIsNotNone(invoiced_quantity)
+        self.assertEqual(invoiced_quantity.text, '0.0')
 
     def test_invoice_buyer_reference_uses_partner_ref(self):
         tax_21 = self.percent_tax(21.0)
@@ -941,6 +973,69 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             test_file='test_invoice_customer_party_identifiers_partner_nl_vat_eas_oin_company_registry',
         )
 
+    def test_ubl_use_correct_vat(self):
+        """Test that UBL use the foreign VAT when available, else the company VAT."""
+        germany = self.env.ref("base.de")
+        tax_group = self.env['account.tax.group'].create({
+            'name': 'German Taxes',
+            'company_id': self.company.id,
+            'country_id': germany.id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'DE VAT 19%',
+            'amount': 19,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'country_id': germany.id,
+            'tax_group_id': tax_group.id,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'German FP',
+            'vat_required': True,
+            'foreign_vat': 'DE123456788',
+            'country_id': germany.id,
+        })
+
+        invoice_with_fp = self.env['account.move'].create({
+            'partner_id': self.partner_be.id,
+            'move_type': 'out_invoice',
+            'fiscal_position_id': fiscal_position.id,
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        local_invoice = self.env['account.move'].create({
+            'partner_id': self.partner_be.id,
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+            })],
+        })
+        invoice_with_fp.action_post()
+        local_invoice.action_post()
+
+        # Check XML for foreign VAT
+        self._generate_invoice_ubl_file(invoice_with_fp)
+        xml_tree = etree.fromstring(invoice_with_fp.ubl_cii_xml_id.raw)
+        node = xml_tree.xpath(
+            "//cac:AccountingSupplierParty//cac:PartyTaxScheme/cbc:CompanyID",
+            namespaces=self.ubl_namespaces,
+        )
+        self.assertEqual(node[0].text, fiscal_position.foreign_vat, "Foreign Fiscal Position VAT")
+
+        # Check XML for company VAT fallback
+        self._generate_invoice_ubl_file(local_invoice)
+        xml_tree = etree.fromstring(local_invoice.ubl_cii_xml_id.raw)
+        node = xml_tree.xpath(
+            "//cac:AccountingSupplierParty//cac:PartyTaxScheme/cbc:CompanyID",
+            namespaces=self.ubl_namespaces,
+        )
+        self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
+
     def test_invoice_BR_E_08_line_extension_amount(self):
         """ [BR-E-08] In a VAT breakdown (BG-23) where the VAT category code (BT-118) is "Exempt from VAT"
             the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131)
@@ -995,6 +1090,25 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
 
+    def test_export_collapsed_sections_amounts(self):
+        """ Test that the amounts of collapsed sections are correctly exported. """
+        tax_21 = self.percent_tax(21.0)
+        for rounding_method, sections in (
+            ('round_globally', [[(10.03, tax_21)], [(10.03, tax_21)]]),
+            ('round_per_line', [[(10.03, tax_21), (10.03, tax_21)]]),
+        ):
+            self.env.company.tax_calculation_rounding_method = rounding_method
+            invoice_line_ids = []
+            for index, lines in enumerate(sections):
+                invoice_line_ids.append(self._prepare_invoice_line(name=f"Section {index}", display_type='line_section', collapse_composition=True, price_unit=0.0))
+                invoice_line_ids += [self._prepare_invoice_line(product_id=self.product_a, price_unit=price_unit, tax_ids=tax) for price_unit, tax in lines]
+            invoice = self._create_invoice(partner_id=self.partner_be, invoice_line_ids=invoice_line_ids, post=True)
+
+            xml_tree = etree.fromstring(self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0])
+            self.assertEqual(float(xml_tree.findtext('./{*}TaxTotal/{*}TaxAmount')), invoice.amount_tax)
+            self.assertEqual(float(xml_tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')), invoice.amount_untaxed)
+            self.assertEqual(float(xml_tree.findtext('./{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')), invoice.amount_total)
+
     def test_invoice_tax_subtotal_exempt_amount(self):
         """ Test that the taxable amount for exempt taxes is correctly computed,
         regardless of the tax calculation rounding method.
@@ -1032,6 +1146,32 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_out_of_scope')
 
+    def test_invoice_export_sections_with_price_included_taxes(self):
+        """
+        When a section is collapsed ('Hide composition' / collapse_composition=True)
+        and its lines use price-included taxes, the generated collapsed line should
+        not double-strip the tax amount.
+        """
+        tax_21_included = self.percent_tax(21.0, price_include_override='tax_included')
+        tax_21_excluded = self.percent_tax(21.0)
+
+        product_1 = self._create_product(lst_price=100.0, name="product_included_1")
+        product_2 = self._create_product(lst_price=50.0, name="product_included_2")
+        product_3 = self._create_product(lst_price=80.0, name="product_excluded_1")
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(name="Collapsed Mixed Section", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_1, price_unit=100.0, tax_ids=[tax_21_included.id]),
+                self._prepare_invoice_line(product_id=product_2, price_unit=50.0, tax_ids=[tax_21_included.id]),
+                self._prepare_invoice_line(product_id=product_3, price_unit=80.0, tax_ids=[tax_21_excluded.id]),
+            ],
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_with_price_included_taxes')
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestBeExport(TestUblExportBis3BE):
@@ -1039,10 +1179,6 @@ class TestBeExport(TestUblExportBis3BE):
     @TestUblExportBis3BE.setup_chart_template('be_comp')
     def setUpClass(cls):
         super().setUpClass()
-        cls.ubl_namespaces = {
-            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
-        }
 
     def test_invoice_cocontractant_tax_exemption_reason(self):
 

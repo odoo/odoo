@@ -68,8 +68,10 @@ class WebsitePage(models.Model):
 
     @api.depends('menu_ids')
     def _compute_website_menu(self):
+        website_menus = self.env['website'].search([]).menu_id
+        main_menus = self.env['website.menu'].search([('id', 'child_of', website_menus.ids)])
         for page in self:
-            page.is_in_menu = bool(page.menu_ids)
+            page.is_in_menu = bool(page.menu_ids & main_menus)
 
     # This update was added to make sure the mixin calculations are correct
     # (page.website_url > page.url).
@@ -347,6 +349,9 @@ class WebsitePage(models.Model):
         html = response.response[0]
         html = re.sub(r'csrf_token: "[^"]+"', f'csrf_token: {csrf_token!r}', html)
         html = re.sub(r'name="csrf_token" value="[^"]+"', f'name="csrf_token" value={csrf_token!r}', html)
+        # the page may have been cached while the translations hash wasn't
+        translation_hash = self.env['ir.http']._get_cached_frontend_translations_hash(request.lang.code)
+        html = re.sub(r'"translation_hash": "[^"]*"', f'"translation_hash": "{translation_hash}"', html)
         response.response = [html]
 
         # used for _register_website_track
@@ -363,6 +368,7 @@ class WebsitePage(models.Model):
         return (
             request.website.id,
             request.lang.code,
+            request.httprequest.host,
             request.httprequest.path,
             request.session.debug,
             request.website._allConsentsGranted(),

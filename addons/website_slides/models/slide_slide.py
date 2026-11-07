@@ -381,7 +381,7 @@ class SlideSlide(models.Model):
                 slide.slide_type = False
 
     @api.depends('slide_partner_ids.partner_id', 'slide_partner_ids.vote', 'slide_partner_ids.completed')
-    @api.depends('uid')
+    @api.depends_context('uid')
     def _compute_user_membership_id(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids),
@@ -809,6 +809,14 @@ class SlideSlide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
+
+    def get_image_1024_src(self):
+        attachment = self.env["ir.attachment"].search([
+            ("res_model", "=", self._name),
+            ("res_id", "=", self.id),
+            ("res_field", "=", "image_1024"),
+        ], limit=1)
+        return attachment and ("%s?access_token=%s" % (attachment.image_src, attachment.generate_access_token()[0]))
 
     def action_set_viewed(self, quiz_attempts_inc=False):
         if any(not slide.channel_id.is_member for slide in self):

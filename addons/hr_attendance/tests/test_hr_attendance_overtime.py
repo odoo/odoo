@@ -849,6 +849,30 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the fully flexible resource.')
 
+        # A 'non working days' rule is use to match every single day for fully flexible resource,
+        # because their working days were read from an empty schedule, so the whole attendance
+        # was turned into overtime.
+        self.env['hr.attendance.overtime.rule'].create({
+            'name': "Rule non working days",
+            'base_off': 'timing',
+            'timing_type': 'non_work_days',
+            'ruleset_id': self.ruleset.id,
+        })
+
+        # 3) on weekday
+        attendance.write({
+            'check_in': datetime(2026, 9, 1, 9, 0),
+            'check_out': datetime(2026, 9, 1, 18, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 0)
+
+        # 4) on weekend
+        attendance.write({
+            'check_in': datetime(2026, 9, 6, 9, 0),
+            'check_out': datetime(2026, 9, 6, 18, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 0)
+
     def test_overtime_flexible_non_consecutive_days(self):
         """ A flexible hours employee working exactly their weekly budget
         spread across non consecutive days must not generate overtime. """
@@ -1248,12 +1272,14 @@ class TestHrAttendanceOvertime(HttpCase):
         """Validate that multiple overtime lines for today are summed correctly
         and that the entire attendance_employee_data response is consistent.
         """
-        for _ in range(2):
-            self.env['hr.attendance.overtime.line'].create({
-                'employee_id': self.employee.id,
-                'date': date.today(),
-                'duration': 5,
-            })
+        overtime_line_vals = {
+            'employee_id': self.employee.id,
+            'date': date.today(),
+            'duration': 5,
+        }
+        if 'compensable_as_leave' in self.env['hr.attendance.overtime.line']._fields:
+            overtime_line_vals['compensable_as_leave'] = True
+        self.env['hr.attendance.overtime.line'].create([overtime_line_vals.copy() for _ in range(2)])
         token = self.employee.company_id.attendance_kiosk_key
         response = self.make_jsonrpc_request(
             '/hr_attendance/attendance_employee_data',
@@ -1985,3 +2011,87 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         # Since the absence has been covered, there should no longer be any overtime
         self.assertEqual(absence_attendance.linked_overtime_ids.duration, 0)
+
+    def test_absence_detection_weekly_rule_unscheduled_days(self):
+        """ With a weekly quantity rule, the week-to-date deficit must not turn
+        days without scheduled work (weekend) into unjustified absences. """
+        self.company.absence_management = True
+        weekly_ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset weekly schedule quantity',
+            'company_id': self.company.id,
+            'rule_ids': [Command.create({
+                'name': 'Rule weekly schedule quantity',
+                'base_off': 'quantity',
+                'expected_hours_from_contract': True,
+                'quantity_period': 'week',
+            })],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Weekly Worker',
+            'company_id': self.company.id,
+            'tz': 'Europe/Brussels',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'ruleset_id': weekly_ruleset.id,
+        })
+        # Monday 3 to Friday 7 August 2026: 4 hours worked instead of 8 each day
+        self.env['hr.attendance'].create([{
+            'employee_id': employee.id,
+            'check_in': datetime(2026, 8, day, 6, 0),
+            'check_out': datetime(2026, 8, day, 10, 0),
+        } for day in range(3, 8)])
+        technical_domain = [('employee_id', '=', employee.id), ('in_mode', '=', 'technical')]
+
+        # Saturday and Sunday are not scheduled: no absence despite the weekly deficit
+        for today in ('2026-08-09 06:00:00', '2026-08-10 06:00:00'):
+            with freeze_time(today):
+                self.env['hr.attendance']._cron_absence_detection()
+            self.assertFalse(self.env['hr.attendance'].search(technical_domain))
+
+        # Monday 10 is scheduled but not worked: an absence is created
+        with freeze_time('2026-08-11 06:00:00'):
+            self.env['hr.attendance']._cron_absence_detection()
+        absence = self.env['hr.attendance'].search(technical_domain)
+        self.assertEqual(len(absence), 1)
+        self.assertEqual(absence.check_in, datetime(2026, 8, 9, 22, 0))
+        self.assertLess(absence.overtime_hours, 0)
+
+    def test_absence_detection_weekly_rule_keeps_approved_extra_hours(self):
+        """ With a weekly quantity rule, running the absence detection after a
+        day worked as scheduled keeps the approved extra hours of the week. """
+        self.company.write({
+            'absence_management': True,
+            'attendance_overtime_validation': 'by_manager',
+        })
+        weekly_ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset weekly schedule quantity',
+            'company_id': self.company.id,
+            'rule_ids': [Command.create({
+                'name': 'Rule weekly schedule quantity',
+                'base_off': 'quantity',
+                'expected_hours_from_contract': True,
+                'quantity_period': 'week',
+            })],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Weekly Worker',
+            'company_id': self.company.id,
+            'tz': 'Europe/Brussels',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'ruleset_id': weekly_ruleset.id,
+        })
+        # Monday 3 to Friday 7 August 2026: 2 extra hours on Tuesday and Wednesday
+        self.env['hr.attendance'].create([{
+            'employee_id': employee.id,
+            'check_in': datetime(2026, 8, day, 6, 0),
+            'check_out': datetime(2026, 8, day, 17 if day in (4, 5) else 15, 0),
+        } for day in range(3, 8)])
+        self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id)]).action_approve()
+
+        with freeze_time('2026-08-04 06:00:00'):
+            self.env['hr.attendance']._cron_absence_detection()
+        overtimes = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(overtimes.mapped('status'), ['approved'])

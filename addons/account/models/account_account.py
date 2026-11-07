@@ -20,7 +20,7 @@ class AccountAccount(models.Model):
     _name = 'account.account'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Account"
-    _order = "code, placeholder_code"
+    _order = "code, placeholder_code, id"
     _check_company_auto = True
     _check_company_domain = models.check_companies_domain_parent_of
 
@@ -192,6 +192,15 @@ class AccountAccount(models.Model):
                     raise UserError(_('An Off-Balance account can not be reconcilable'))
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
+
+    @api.constrains('reconcile')
+    def _constrains_cash_basis_transition_account_reconcile(self):
+        non_reconcilable_accounts = self.filtered(lambda account: not account.reconcile)
+        if self.env['account.tax'].with_context(active_test=False).search_count([
+            ('tax_exigibility', '=', 'on_payment'),
+            ('cash_basis_transition_account_id', 'in', non_reconcilable_accounts.ids),
+        ], limit=1):
+            raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
 
     @api.constrains('currency_id')
     def _check_journal_consistency(self):
@@ -886,7 +895,9 @@ class AccountAccount(models.Model):
 
     @api.onchange('code')
     def _onchange_code(self):
-        self.env.add_to_compute(self._fields['account_type'], self)
+        to_update = self.filtered(lambda a: not a.id or not a.account_type)
+        self.env.add_to_compute(self._fields['account_type'], to_update)
+        to_update.modified(['account_type'])
 
     @api.depends_context('company', 'formatted_display_name')
     @api.depends('code')

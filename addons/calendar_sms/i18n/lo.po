@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 18:05+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/calendar_sms/"
@@ -30,6 +30,13 @@ msgid "Calendar Event: Reminder"
 msgstr "ກິດຈະກຳປະຕິທິນ: ການແຈ້ງເຕືອນ"
 
 #. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
 msgstr "ການແຈ້ງເຕືອນກິດຈະກຳ"
@@ -42,22 +49,25 @@ msgstr "ຜູ້ຈັດການການແຈ້ງເຕືອນກິດ
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
+#: code:addons/calendar_sms/tests/test_calendar_sms.py:0
 msgid "Event reminder: %(name)s, %(time)s."
 msgstr "ແຈ້ງເຕືອນກິດຈະກຳ: %(name)s, %(time)s."
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: {{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgid ""
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
-"ແຈ້ງເຕືອນກິດຈະກຳ: {{ object.name }}, {{ object.get_display_time_tz"
-"(object.partner_id.tz) }}"
+"ແຈ້ງເຕືອນກິດຈະກຳ: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_alarm.py:0
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
-msgid "Notify Responsible"
-msgstr "ແຈ້ງເຕືອນຜູ້ຮັບຜິດຊອບ"
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr ""
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -75,15 +85,11 @@ msgid "SMS Text Message"
 msgstr "ຂໍ້ຄວາມ SMS"
 
 #. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
 msgid "Send SMS"
 msgstr "ສົ່ງ SMS"
-
-#. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_event.py:0
-msgid "Send SMS Text Message"
-msgstr "ສົ່ງຂໍ້ຄວາມ SMS"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -105,3 +111,9 @@ msgstr "ບໍ່ມີຜູ້ເຂົ້າຮ່ວມໃນກິດຈະ
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "ປະເພດ"
+
+#~ msgid "Notify Responsible"
+#~ msgstr "ແຈ້ງເຕືອນຜູ້ຮັບຜິດຊອບ"
+
+#~ msgid "Send SMS Text Message"
+#~ msgstr "ສົ່ງຂໍ້ຄວາມ SMS"

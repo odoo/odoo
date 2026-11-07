@@ -189,6 +189,17 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
 
 
+def has_bytewise_collation(cr: BaseCursor) -> bool:
+    """ Test if the default collation of the database compares strings
+    character by character, like the "C" collation does.
+
+    Collations like glibc's en_US.UTF-8 ignore punctuation at first and sort
+    '12/14/' after '120', so a range on ``parent_path`` misses descendants.
+    """
+    cr.execute("SELECT '12/14/'::varchar < '120'::varchar")
+    return cr.fetchone()[0]
+
+
 def has_trigram(cr: BaseCursor) -> bool:
     """ Test if the database has the a word_similarity function.
 

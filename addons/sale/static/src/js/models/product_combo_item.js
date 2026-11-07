@@ -32,6 +32,15 @@ export class ProductComboItem {
     }
 
     /**
+     * Return the combo item's display name.
+     *
+     * @return {String} The combo item's display name.
+     */
+    get name() {
+        return this.product.display_name;
+    }
+
+    /**
      * Return a deep copy of this combo item.
      *
      * @return {ProductComboItem} A deep copy of this combo item.

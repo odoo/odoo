@@ -1,9 +1,8 @@
 import json
-from datetime import timedelta
 from freezegun import freeze_time
 from markupsafe import Markup
 
-from odoo import Command, fields
+from odoo import Command
 from odoo.tests import new_test_user, tagged, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
@@ -257,18 +256,19 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             "message": "Hello joey, how you doing?",
             "step_type": "text",
         })
-        data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "anonymous_name": "Thomas",
-                "chatbot_script_id": chatbot_script.id,
-                "channel_id": self.livechat_channel.id,
-            },
-        )
+        with freeze_time("2026-01-15 10:00:00"):
+            data = self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "Thomas",
+                    "chatbot_script_id": chatbot_script.id,
+                    "channel_id": self.livechat_channel.id,
+                },
+            )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
-        with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(hours=23))):
+        with freeze_time("2026-01-16 09:00:00"):
             self.assertFalse(channel.livechat_end_dt)
-        with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
+        with freeze_time("2026-01-16 10:00:00"):
             channel._gc_bot_only_ongoing_sessions()
         self.assertTrue(channel.livechat_end_dt)
 

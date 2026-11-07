@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class BankAccountAllocationLineWizard(models.TransientModel):
@@ -27,3 +28,15 @@ class BankAccountAllocationLineWizard(models.TransientModel):
 
     def _get_amount_type_selection_vals(self):
         return [('percentage', 'Percentage'), ('fixed', 'Fixed')]
+
+    def write(self, vals):
+        if (
+            'trusted' in vals and
+            any(
+                line.trusted != vals['trusted'] and
+                not line.bank_account_id._user_can_trust()
+                for line in self
+            )
+        ):
+            raise UserError(self.env._("You do not have the rights to trust or un-trust accounts."))
+        return super().write(vals)

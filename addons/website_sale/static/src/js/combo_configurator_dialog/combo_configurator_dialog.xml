@@ -20,7 +20,7 @@
             <button
                 name="website_sale_combo_configurator_continue_button"
                 class="btn btn-primary w-100 w-lg-auto"
-                t-if="this.props.isFrontend and !this.props.options.isBuyNow"
+                t-if="this.props.isFrontend and !this.props.options?.isBuyNow"
                 t-on-click="() => this.confirm({goToCart: false})"
                 t-att-disabled="!areAllCombosSelected"
             >

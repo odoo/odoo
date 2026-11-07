@@ -2423,6 +2423,21 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sibling_mo.state, 'done')
         self.assertEqual(sum(finished_moves.mapped('quantity')), 15.0)
 
+    def test_qty_change_then_overproduction_no_inflated_production(self):
+        """ Test that producing more than a reduced quantity to produce records exactly the
+        produced quantity when the finished move demand is out of sync with product_qty"""
+        mo = self.env['mrp.production'].create({'bom_id': self.bom_1.id, 'product_qty': 10.0})
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 10.0
+        mo.product_qty = 2.0
+        finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product_4)
+        self.assertEqual(finished_move.product_uom_qty, 10.0)
+
+        mo.with_context(skip_consumption=True, skip_backorder=True).button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(finished_move.quantity, 10.0)
+
     def test_backorder_with_underconsumption(self):
         """ Check that the components of the backorder have the correct quantities
         when there is underconsumption in the initial MO
@@ -3826,6 +3841,24 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.bom_id = bom_wh02
         self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the default value')
 
+    def test_change_bom_with_other_operation_type(self):
+        """Check that switching a saved draft MO to a BoM of another operation type
+        replaces its components."""
+        picking_type_manu_2 = self.picking_type_manu.copy()
+        bom_2 = self.bom_1.copy()
+        bom_2.picking_type_id = picking_type_manu_2
+        mo = self.env['mrp.production'].with_user(self.user_mrp_user).create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+        })
+        self.assertEqual(mo.picking_type_id, self.picking_type_manu)
+
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_2
+
+        self.assertEqual(mo.picking_type_id, picking_type_manu_2)
+        self.assertRecordValues(mo.move_raw_ids, [{'picking_type_id': picking_type_manu_2.id}, {'picking_type_id': picking_type_manu_2.id}])
+
     def test_workcenter_specific_capacities(self):
         """ Test that the duraction expected is correctly computed when specific capacities are defined on the workcenter.
         """
@@ -4304,6 +4337,7 @@ class TestMrpOrder(TestMrpCommon):
         be shown in planning gantt view
         """
         self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
+        (self.workcenter_1 + self.workcenter_2).resource_id.tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'product_uom_id': self.bom_1.product_uom_id.id,

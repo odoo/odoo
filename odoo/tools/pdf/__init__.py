@@ -357,6 +357,11 @@ def reshape_text(text):
     if first_letter_is_rtl and no_letter_is_ltr:
         text = reshape(text)
         text = text[::-1]
+        # Numbers are written left-to-right even inside right-to-left text,
+        # so restore the original order of their digits after the flip.
+        text = re.sub(r'\d+(?:[.,:/\u00A0\u060C\u066B\u066C\u202F]\d+)*', lambda match: match[0][::-1], text)
+        # Brackets are mirrored in right-to-left text.
+        text = text.translate(str.maketrans('()[]{}<>«»', ')(][}{><»«'))
 
     return text
 
@@ -657,8 +662,9 @@ class OdooPdfFileWriter(PdfFileWriter):
 
                 annot[NameObject('/F')] = NumberObject(flags)
 
-        outlines = self._root_object['/Outlines'].getObject()
-        outlines[NameObject('/Count')] = NumberObject(1)
+        if '/Outlines' in self._root_object:
+            outlines = self._root_object['/Outlines'].getObject()
+            outlines[NameObject('/Count')] = NumberObject(1)
 
         # [6.7.2.2-1] include a MarkInfo dictionary containing "Marked" with true value
         mark_info = DictionaryObject({NameObject("/Marked"): BooleanObject(True)})

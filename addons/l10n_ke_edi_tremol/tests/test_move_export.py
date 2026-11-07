@@ -39,7 +39,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
         """ Helper method for creating the expected lines """
         msg = b'1' + b';'.join([                       # 0x31, command to add a line
             line_dict.get('name', b''.ljust(36)),      # 36 characters for the name
-            line_dict.get('vat_class', b'A'),          # 1 symbol for vat class (a because the tax is 16.0%)
+            line_dict.get('vat_class', b'A'),          # 1 symbol for vat class ('A', the historical default sent when no item code is set)
             line_dict.get('price', b'1'),              # up to 15 symbols for the unit price, tax included (up to 5 decimal places)
             line_dict.get('uom', b'Uni'),              # 3 symbols for uom
             line_dict.get('item_code', b''.ljust(10)), # 10 symbols for item code (only reported when the tax is not 16.0%)
@@ -81,7 +81,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'quantity': b'10.0',
             'discount': b'-25.0%',
             'vat_rate': b'0.0',
-            'vat_class': b'E',
+            'vat_class': b'A',  # item_code_2023_00391153 is stored as tax_rate='E' (Exempted), remapped to the KRA byte 'A'
         })
         expected_messages = [
             # open invoice
@@ -227,3 +227,68 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
             'discount': b'-25.0%',
         })
         self.assertEqual(generated_messages, [expected_sale_line])
+
+    def test_export_wire_tax_rate_remap(self):
+        """The stored tax_rate is remapped to the VAT class byte expected by KRA."""
+        # (stored tax_rate, tax amount, expected wire vat_class, expected vat_rate)
+        cases = [
+            ('E', 0,  b'A', b'0.0'),    # Exempted         -> wire 'A'
+            ('B', 8,  b'E', b'8.0'),    # Taxable at 8%    -> wire 'E'
+            ('C', 0,  b'C', b'0.0'),    # Zero Rated       -> wire 'C'
+            ('A', 16, b'B', b'16.0'),   # Taxable at 16%   -> wire 'B'
+            ('D', 0,  b'D', b'0.0'),    # Special Category -> wire 'D'
+            (None, 16, b'A', b'16.0'),  # no item code     -> historical default 'A'
+        ]
+        # Dummy item codes, so the test doesn't depend on the shipped data (which
+        # changes as KRA's list is refreshed). One per stored tax_rate value used.
+        stored_rates = [case[0] for case in cases if case[0]]
+        item_codes = self.env['l10n_ke.item.code'].sudo().create([
+            {'code': f'9990.00.{i:02d}', 'description': f'Dummy {rate}', 'tax_rate': rate}
+            for i, rate in enumerate(stored_rates)
+        ])
+        item_code_by_rate = dict(zip(stored_rates, item_codes))
+
+        taxes = self.env['account.tax'].create([
+            {
+                'name': f'Test tax {rate or "no code"}',
+                'amount': amount,
+                'amount_type': 'percent',
+                'company_id': self.company_data['company'].id,
+                'l10n_ke_item_code_id': item_code_by_rate[rate].id if rate else False,
+            }
+            for rate, amount, *_values in cases
+        ])
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [(0, 0, {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [(6, 0, [tax.id])],
+                })],
+            }
+            for tax in taxes
+        ])
+        invoices.action_post()
+
+        expected_prices = {0: b'100', 8: b'108', 16: b'116'}
+        expected_lines = [
+            [self.line_dict_to_bytes({
+                'name': b'Infinite Improbability Drive        ',
+                'price': expected_prices[amount],
+                'quantity': b'1.0',
+                'item_code': (tax.l10n_ke_item_code_id.code or '').ljust(10).encode('cp1251'),
+                'item_desc': invoice._l10n_ke_fmt(tax.l10n_ke_item_code_id.description, 20),
+                'vat_rate': expected_vat_rate,
+                'vat_class': expected_vat_class,
+            })]
+            for (rate, amount, expected_vat_class, expected_vat_rate), tax, invoice
+            in zip(cases, taxes, invoices)
+        ]
+        generated_lines = [invoice._l10n_ke_cu_lines_messages() for invoice in invoices]
+
+        for case, generated, expected in zip(cases, generated_lines, expected_lines):
+            with self.subTest(stored_tax_rate=case[0]):
+                self.assertEqual(generated, expected)

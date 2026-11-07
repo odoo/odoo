@@ -2,12 +2,13 @@
 
 import { animationFrame } from "@odoo/hoot-dom";
 import { App } from "@odoo/owl";
-import { getActiveElement, getCurrentDimensions } from "@web/../lib/hoot-dom/helpers/dom";
-import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { _getCurrentDimensions, getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
+import { _setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { isInstanceOf } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
+import { trackObject } from "./gc";
 
 /**
  * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
@@ -86,7 +87,7 @@ export function makeFixtureManager(runner) {
                 currentFixture.show();
             }
 
-            const { width, height } = getCurrentDimensions();
+            const { width, height } = _getCurrentDimensions();
             if (width !== getViewPortWidth()) {
                 currentFixture.style.width = `${width}px`;
             }
@@ -95,6 +96,9 @@ export function makeFixtureManager(runner) {
             }
 
             document.body.appendChild(currentFixture);
+
+            // Retained fixtures also retain all elements rendered in them
+            trackObject("fixture", currentFixture);
         }
         return currentFixture;
     }
@@ -172,7 +176,7 @@ export class HootFixtureElement extends HTMLElement {
     _iframes = new Map();
 
     connectedCallback() {
-        setupEventActions(this);
+        _setupEventActions(this);
         subscribeToTransitionChange((allowTransitions) =>
             this.classList.toggle(this.constructor.CLASSES.transitions, allowTransitions)
         );
@@ -208,7 +212,7 @@ export class HootFixtureElement extends HTMLElement {
                 continue;
             }
             this._iframes.set(iframe, waitForIframe(iframe));
-            setupEventActions(iframe.contentWindow);
+            _setupEventActions(iframe.contentWindow);
         }
         for (const iframe of toRemove) {
             this._iframes.delete(iframe);

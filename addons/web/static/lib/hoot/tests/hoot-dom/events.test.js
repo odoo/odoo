@@ -1595,6 +1595,40 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("hover and leave: shadow root", async () => {
+        await mountForTest(/* xml */ `<div class="container" />`);
+        const shadow = queryOne(".container").attachShadow({ mode: "open" });
+        const button = document.createElement("button");
+        shadow.appendChild(button);
+        for (const type of ["mouseenter", "mouseleave"]) {
+            button.addEventListener(type, () => expect.step(type));
+        }
+        await hover(".container:shadow button");
+        expect.verifySteps(["mouseenter"]);
+        await leave();
+        expect.verifySteps(["mouseleave"]);
+    });
+
+    test("hover: previous target in a removed iframe", async () => {
+        await mountForTest(/* xml */ `
+            <button>Click me</button>
+            <iframe srcdoc="&lt;button&gt;iframe button&lt;/button&gt;" />
+        `);
+
+        await hover(":iframe button");
+
+        queryOne("button").addEventListener("pointerover", (ev) =>
+            expect.step(`pointerover:${ev.relatedTarget}`)
+        );
+        queryOne("iframe").remove();
+
+        // The removed iframe button must not be used as related target
+        // (Chrome >= 156 would crash the renderer).
+        await hover("button");
+
+        expect.verifySteps(["pointerover:null"]);
+    });
+
     test("keyDown", async () => {
         await mountForTest(/* xml */ `<input type="text" />`);
 

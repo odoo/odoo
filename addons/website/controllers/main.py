@@ -15,7 +15,6 @@ from hashlib import md5, sha256
 from io import BytesIO
 from itertools import islice
 from lxml import etree, html
-from markupsafe import escape as markup_escape
 from textwrap import shorten
 from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
@@ -780,13 +779,16 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(
+            lang=request.website.default_lang_id.code,
+            delay_translations=self._get_delay_translations(),
+        ).arch = arch
+
+    def _get_delay_translations(self):
         disable_delay_translations = self.env['ir.config_parameter'].sudo().get_param(
             'website.disable_delay_translations'
         ) not in ('False', '0', '', False)
-        request.env['ir.ui.view'].browse(view_id).with_context(
-            lang=request.website.default_lang_id.code,
-            delay_translations=not disable_delay_translations,
-        ).arch = arch
+        return not disable_delay_translations
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
@@ -889,19 +891,19 @@ class Website(Home):
             img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
             tree = html.fromstring(str(record[img['field']]))
             modified = False
-            for index, element in enumerate(tree.xpath('//img')):
+            for index, element in enumerate(tree.xpath('//img[@src]')):
                 imgId = self._get_image_id(img['res_model'], img['res_id'], img['field'], str(index))
                 if imgId == img['id']:
                     if (img['decorative']):
                         element.set('alt', '')
                         element.set('role', 'presentation')
                     else:
-                        element.set('alt', markup_escape(img['alt']))
+                        element.set('alt', img['alt'])
                         element.attrib.pop('role', None)
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.with_context(delay_translations=self._get_delay_translations()).write({img['field']: new_html_content})
 
     @staticmethod
     def _get_image_id(model, model_id, field, index):
@@ -924,11 +926,11 @@ class Website(Home):
                     if link['remove']:
                         element.drop_tag()
                     else:
-                        element.set('href', markup_escape(link['newLink']))
+                        element.set('href', link['newLink'])
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({link['field']: new_html_content})
+                record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):

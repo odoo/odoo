@@ -3,6 +3,8 @@
 from freezegun import freeze_time
 
 from odoo import Command, fields
+from odoo.exceptions import ValidationError
+
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools.misc import mute_logger
@@ -572,3 +574,10 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             "chatbot_script_id": chatbot_script.id,
         })
         self.assertTrue(discuss_channel.livechat_end_dt, "The livechat session must be inactive since there is no operator available.")
+
+    def test_invalid_regex_url_raises_validation_error(self):
+        with self.assertRaisesRegex(ValidationError, "The URL Regex '\\[' is not valid."):
+            self.env["im_livechat.channel.rule"].create({
+                "channel_id": self.livechat_channel.id,
+                "regex_url": "[",
+            })

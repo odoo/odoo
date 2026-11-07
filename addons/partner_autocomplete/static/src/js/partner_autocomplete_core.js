@@ -6,6 +6,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
 import { onWillStart } from "@odoo/owl";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Get list of companies via Autocomplete API
@@ -153,7 +154,14 @@ export function usePartnerAutocomplete() {
             [value, queryCountryId],
         );
 
-        const suggestions = await keepLastOdoo.add(prom);
+        let suggestions = [];
+        try {
+          suggestions = await keepLastOdoo.add(prom);
+        } catch (e) {
+          if (!(e instanceof ConnectionLostError)) {
+            throw e;
+          }
+        }
 
         if (!isVAT && suggestions.length === 0) {
             lastNoResultsQuery = value;

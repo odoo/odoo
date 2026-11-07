@@ -202,3 +202,56 @@ test("Only create one channel when posting multiple messages", async () => {
         "/mail/message/post - 3",
     ]);
 });
+
+test("Only create one channel when posting multiple lines on chat bot multi-line step", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const scriptId = pyEnv["chatbot.script"].create({
+        operator_partner_id: serverState.odoobotId,
+        title: "Bot",
+    });
+    pyEnv["chatbot.script.step"].create([
+        {
+            chatbot_script_id: scriptId,
+            message: "Tell us what you need.",
+            sequence: 1,
+            step_type: "free_input_multi",
+        },
+        {
+            chatbot_script_id: scriptId,
+            message: "Thanks for the details!",
+            sequence: 2,
+            step_type: "text",
+        },
+    ]);
+    pyEnv["im_livechat.channel.rule"].create({
+        channel_id: livechatChannelId,
+        chatbot_script_id: scriptId,
+    });
+    onRpc("/im_livechat/get_session", async (req) => {
+        const { params } = await req.json();
+        if (params.persisted) {
+            expect.step("persist");
+        }
+    });
+    onRpc("/mail/message/post", async (req) => {
+        const { params } = await req.json();
+        expect.step(`/mail/message/post - ${params.post_data.body}`);
+    });
+    await start({ authenticateAs: false });
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-Message", { text: "Tell us what you need." });
+    // Lines are posted before the multi-line step is completed.
+    for (const line of ["Line 1", "Line 2", "Line 3"]) {
+        await insertText(".o-mail-Composer-input", line);
+        await click(".o-sendMessageActive");
+        await contains(".o-mail-Message", { text: line });
+        await contains(".o-mail-Composer-input", { value: "" });
+    }
+    await expect.waitForSteps([
+        "persist",
+        "/mail/message/post - Line 1",
+        "/mail/message/post - Line 2",
+        "/mail/message/post - Line 3",
+    ]);
+});

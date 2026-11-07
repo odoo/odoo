@@ -1,7 +1,8 @@
 from odoo import models
 from odoo.tools import html2plaintext
 
-PAID_STATES = frozenset({'in_payment', 'paid'})
+
+PAID_STATES = frozenset({'paid', 'in_payment', 'reversed'})
 
 
 class AccountEdiCommon(models.AbstractModel):
@@ -49,7 +50,7 @@ class AccountEdiCommon(models.AbstractModel):
             profile_scope = "S"
 
         profile_number = "1"
-        if invoice.payment_state in PAID_STATES:
+        if vals['currency_id'].is_zero(invoice.amount_residual) and invoice.payment_state in PAID_STATES:
             # Already paid
             profile_number = "2"
         elif not invoice._is_downpayment() and invoice.invoice_line_ids._get_downpayment_lines():

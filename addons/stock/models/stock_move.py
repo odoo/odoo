@@ -234,8 +234,15 @@ class StockMove(models.Model):
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
-            if location_dest:
-                is_move_to_interco_transit = location_dest._child_of(customer_loc) and move.location_final_id == inter_comp_location
+            if location_dest and move.location_final_id and inter_comp_location:
+                location_final = move.location_final_id
+                # The inter-company transit or a sublocation set up like it (transit, no company)
+                is_move_to_interco_transit = (
+                    location_dest._child_of(customer_loc)
+                    and location_final._child_of(inter_comp_location)
+                    and location_final.usage == 'transit'
+                    and not location_final.company_id
+                )
             if location_dest and move.location_final_id and (move.location_final_id._child_of(location_dest) or is_move_to_interco_transit):
                 # Force the location_final as dest in the following cases:
                 # - The location_final is a sublocation of destination -> Means we reached the end
@@ -287,8 +294,10 @@ class StockMove(models.Model):
                 move.picked = False
 
     def _inverse_picked(self):
-        for move in self:
-            move.move_line_ids.picked = move.picked
+        picked_moves = self.filtered('picked')
+        not_picked_moves = self - picked_moves
+        picked_moves.move_line_ids.picked = True
+        not_picked_moves.move_line_ids.picked = False
 
     @api.depends('picking_id.priority')
     def _compute_priority(self):
@@ -761,7 +770,8 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _compute_show_info(self):
         for move in self:
             move.show_quant = move.picking_code != 'incoming'\
-                           and move.product_id.is_storable
+                           and move.product_id.is_storable\
+                           and not (move.has_tracking != 'none' and move.picking_type_id.use_create_lots and not move.picking_type_id.use_existing_lots)
             move.show_lots_text = move.has_tracking != 'none'\
                 and move.picking_type_id.use_create_lots\
                 and not move.picking_type_id.use_existing_lots\
@@ -919,6 +929,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         orderpoints = self._get_orderpoints_to_update()
         orderpoints.invalidate_recordset(['qty_to_order', 'qty_forecast'])
         self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['deadline_date'], orderpoints)
 
     def _get_orderpoints_to_update(self):
         domains = []
@@ -1140,13 +1151,13 @@ Please change the quantity done or the rounding precision in your settings.""",
         assert mode in ('generate', 'import')
         default_vals = {}
 
-        def generate_lot_qty(quantity, qty_per_lot):
+        def generate_lot_qty(quantity, qty_per_lot, rounding):
             if qty_per_lot <= 0:
                 raise UserError(_("The quantity per lot should always be a positive value."))
             line_count = int(quantity // qty_per_lot)
             leftover = quantity % qty_per_lot
             qty_array = [qty_per_lot] * line_count
-            if leftover:
+            if not float_is_zero(leftover, precision_rounding=rounding):
                 qty_array.append(leftover)
             return qty_array
 
@@ -1160,7 +1171,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                 default_vals[remove_prefix(key, 'default_')] = context_data[key]
 
         if default_vals['tracking'] == 'lot' and mode == 'generate':
-            lot_qties = generate_lot_qty(default_vals['quantity'], count)
+            product = self.env['product.product'].browse(default_vals['product_id'])
+            lot_qties = generate_lot_qty(default_vals['quantity'], count, product.uom_id.rounding)
         else:
             lot_qties = [1] * count
 
@@ -1539,6 +1551,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
+        if self.partner_id:
+            domain += [('partner_id', '=', self.partner_id.id)]
         return domain
 
     def _search_picking_for_assignation(self):
@@ -2155,7 +2169,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                     all_move_line_vals = []
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
+                        effective_need = move._get_quantity_to_assign() - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
+                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, effective_need), location_id, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
@@ -2232,10 +2247,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         return
 
     def _skip_push(self):
+        move_dest_ids = self.sudo().move_dest_ids
         return self.is_inventory or (
-            self.move_dest_ids and any(
+            move_dest_ids and any(
                 m.location_id._child_of(self.location_dest_id) or self.location_dest_id._child_of(m.location_id)
-                for m in self.move_dest_ids
+                for m in move_dest_ids
             )
         )
 
@@ -2348,6 +2364,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         orderpoints = self._get_orderpoints_to_update()
         res = super().unlink()
         self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['deadline_date'], orderpoints)
         return res
 
     def _prepare_move_split_vals(self, qty):
@@ -2443,6 +2460,10 @@ Please change the quantity done or the rounding precision in your settings.""",
         from_wh = self.location_id.warehouse_id
         to_wh = self.location_dest_id.warehouse_id
         return self.picking_type_id.code in ('internal', 'outgoing') or (from_wh and to_wh and from_wh != to_wh)
+
+    def _get_quantity_to_assign(self):
+        self.ensure_one()
+        return self.product_qty
 
     def _get_lang(self):
         """Determine language to use for translated description"""
@@ -2819,6 +2840,16 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _visible_quantity(self):
         self.ensure_one()
         return self.quantity
+
+    def _is_return(self):
+        """ A return of a return is a new shipment, so only odd positions in a return chain are returns """
+        self.ensure_one()
+        seen = set()
+        move = self
+        while move.origin_returned_move_id and move.id not in seen:
+            seen.add(move.id)
+            move = move.origin_returned_move_id
+        return len(seen) % 2 == 1
 
     def _is_incoming(self):
         self.ensure_one()

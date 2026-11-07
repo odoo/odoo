@@ -60,6 +60,17 @@ class ResPartner(models.Model):
         )
         l10n_ar_cuit_partners._l10n_ar_identification_validation()
 
+    def write(self, vals):
+        if 'l10n_ar_afip_responsibility_type_id' in vals:
+            # sudo: user may not have access to every company
+            companies_sudo = self.filtered(
+                lambda p: p.l10n_ar_afip_responsibility_type_id.id != vals['l10n_ar_afip_responsibility_type_id']
+            ).sudo().ref_company_ids
+            if any(company_sudo._existing_accounting() for company_sudo in companies_sudo):
+                raise UserError(_('Could not change the ARCA Responsibility of this company because there are already accounting entries.'))
+
+        return super().write(vals)
+
     def _run_check_identification(self, validation='error'):
         """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
         extend this method in order to process it. """

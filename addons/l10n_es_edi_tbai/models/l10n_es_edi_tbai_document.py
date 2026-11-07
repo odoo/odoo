@@ -155,6 +155,9 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     return _('Refund reason must be R5 for simplified invoices (TicketBAI)')
                 if not is_simplified and refund_reason == 'R5':
                     return _('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)')
+        elif not values['is_sale'] and not self.is_cancel and values['is_refund'] and not values['refund_reason']:
+            # the reason of a vendor credit note is required as well (LROE)
+            return _('Refund reason must be specified (TicketBAI)')
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
@@ -529,7 +532,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     .get('DetalleIVA')
                 if detalle_iva:
                     detalle_iva[-1]['CuotaRecargoEquivalencia'] = sign * float_round(values['tax_amount'], 2)
-                    detalle_iva[-1]['TipoRecargoEquivalencia'] = sign * grouping_key['applied_tax_amount']
+                    detalle_iva[-1]['TipoRecargoEquivalencia'] = grouping_key['applied_tax_amount']
             elif l10n_es_type == 'no_sujeto':
                 no_sujeta = sujeta_no_sujeta.setdefault('NoSujeta', {})
                 no_sujeta.setdefault('ImportePorArticulos7_14_Otros', 0.0)

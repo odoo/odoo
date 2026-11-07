@@ -13,6 +13,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.tests import new_test_user
 from odoo.tools import mute_logger
 from odoo.tools.image import image_to_base64
 
@@ -89,6 +90,16 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
 
         a2_fn = os.path.join(self.filestore, a2_store_fname2)
         self.assertTrue(os.path.isfile(a2_fn))
+
+    def test_06_create_with_reused_values(self):
+        vals_list = [
+            {'name': 'raw', 'raw': self.blob1},
+            {'name': 'datas', 'datas': self.blob2_b64},
+        ]
+
+        for _ in range(2):
+            attachments = self.Attachment.create(vals_list)
+            self.assertEqual(attachments.mapped('raw'), [self.blob1, self.blob2])
 
     def test_07_write_mimetype(self):
         """
@@ -282,6 +293,29 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             )
             self.assertEqual(patch_file_read.call_count, 0)
 
+    def test_16_create_unique_only_reuses_writable_attachments(self):
+        """ create_unique() must not return an attachment the current user cannot write, as
+        callers link new attachments to it (e.g. the resized variants of an uploaded image).
+        """
+        user_other = new_test_user(self.env, login='other_user', groups='base.group_user')
+        vals = {'name': 'image.webp', 'datas': self.blob1_b64, 'mimetype': 'image/webp'}
+        # attachment of another user, not linked to any record (like an image variant)
+        attachment_other = self.Attachment.with_user(user_other).create({**vals, 'public': True})
+
+        Attachment = self.Attachment.with_user(self.user_demo)
+        attachment_ids = Attachment.create_unique([vals])
+        self.assertNotIn(attachment_other.id, attachment_ids)
+        # a variant can be linked to the returned attachment, as the image field does
+        Attachment.create({
+            'name': 'image.jpg',
+            'datas': self.blob2_b64,
+            'mimetype': 'image/jpeg',
+            'res_model': 'ir.attachment',
+            'res_id': attachment_ids[0],
+        })
+        # the attachments of the current user are still reused
+        self.assertEqual(Attachment.create_unique([vals]), attachment_ids)
+
 
 class TestPermissions(TransactionCaseWithUserDemo):
     def setUp(self):
@@ -343,6 +377,33 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # Safety assert that base.user_admin is not the superuser, otherwise the test is useless
         self.assertNotEqual(SUPERUSER_ID, admin_user.id)
         attachment_admin.with_user(admin_user).datas
+
+    def test_search_without_limit(self):
+        """A search without limit returns the readable attachments, in order:
+        public ones, the ones linked to no record for their creator or an
+        administrator, and the ones linked to a readable record.
+        """
+        admin = self.env.ref('base.user_admin')
+        record_vals = {'res_model': self.vals['res_model'], 'res_id': self.vals['res_id']}
+        own = self.Attachments.create({'name': 'own'})
+        own_field = self.Attachments.sudo().create({'name': 'own field', 'res_field': 'image_128', 'create_uid': self.user_demo.id})
+        other = self.Attachments.with_user(admin).create({'name': 'other'})
+        public = self.Attachments.sudo().create({'name': 'public', 'public': True, **record_vals})
+        attachments = self.attachment | own | own_field | other | public
+        domain = [('id', 'in', attachments.ids)]
+
+        def search(user, **kwargs):
+            return self.Attachments.with_user(user).search(domain, **kwargs).ids
+
+        expected_demo = (public | own | self.attachment).sorted('id', reverse=True).ids
+        self.assertEqual(search(self.user_demo), expected_demo)
+        self.assertEqual(search(self.user_demo, offset=1), expected_demo[1:])
+        self.assertEqual(search(admin), attachments.sorted('id', reverse=True).ids)
+
+        # hide the linked record: its attachment is gone, the public one stays
+        self.rule.perm_read = True
+        self.assertEqual(search(self.user_demo), (public | own).sorted('id', reverse=True).ids)
+        self.assertEqual(search(admin), (public | other | own_field | own).sorted('id', reverse=True).ids)
 
     @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
     def test_field_read_permission(self):

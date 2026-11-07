@@ -1,5 +1,7 @@
 from odoo import api, models, fields
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class ImLivechatChannelMemberHistory(models.Model):
@@ -46,8 +48,23 @@ class ImLivechatChannelMemberHistory(models.Model):
         "im_livechat.channel", "Live chat channel", related="channel_id.livechat_channel_id"
     )
     session_outcome = fields.Selection(related="channel_id.livechat_outcome")
-    session_start_hour = fields.Float(related="channel_id.livechat_start_hour")
-    session_week_day = fields.Selection(related="channel_id.livechat_week_day")
+    session_start_hour = fields.Float(
+        "Session Start Hour",
+        compute="_compute_session_start",
+        compute_sudo=True,
+        search="_search_session_start_hour",
+    )
+    session_week_day = fields.Selection(
+        lambda self: (
+            self.env["discuss.channel"]
+            ._fields["livechat_week_day"]
+            ._description_selection(self.env)
+        ),
+        string="Day of the Week",
+        compute="_compute_session_start",
+        compute_sudo=True,
+        search="_search_session_week_day",
+    )
     session_duration_hour = fields.Float(
         "Session Duration",
         help="Time spent by the persona in the session in hours",
@@ -180,6 +197,62 @@ class ImLivechatChannelMemberHistory(models.Model):
                 history.channel_id.id, fields.Datetime.now()
             )
             history.session_duration_hour = (end - history.create_date).total_seconds() / 3600
+
+    @api.depends("channel_id.create_date")
+    @api.depends_context("tz", "uid")
+    def _compute_session_start(self):
+        self.session_start_hour = False
+        self.session_week_day = False
+        for history in self.filtered(lambda h: h.channel_id.create_date):
+            start_date = fields.Datetime.context_timestamp(history, history.channel_id.create_date)
+            history.session_start_hour = start_date.hour
+            history.session_week_day = str(start_date.weekday())
+
+    def _search_session_start_hour(self, operator, value):
+        return self._search_session_start("session_start_hour", operator, value)
+
+    def _search_session_week_day(self, operator, value):
+        return self._search_session_start("session_week_day", operator, value)
+
+    def _search_session_start(self, fname, operator, value):
+        sql_operator = {
+            "in": SQL("IN"),
+            "<": SQL("<"),
+            "<=": SQL("<="),
+            ">": SQL(">"),
+            ">=": SQL(">="),
+        }.get(operator)
+        if not sql_operator:
+            return NotImplemented
+        if operator == "in":
+            value = tuple(val for val in value if val is not False)
+            if not value:
+                return Domain.FALSE
+        return Domain.custom(
+            to_sql=lambda model, alias, query: SQL(
+                "%s %s %s",
+                model._session_start_to_sql(fname, alias, query),
+                sql_operator,
+                value,
+            ),
+        )
+
+    def _read_group_groupby(self, alias, groupby_spec, query):
+        if groupby_spec not in ("session_start_hour", "session_week_day"):
+            return super()._read_group_groupby(alias, groupby_spec, query)
+        return self._session_start_to_sql(groupby_spec, alias, query)
+
+    def _session_start_to_sql(self, fname, alias, query):
+        self._check_field_access(self._fields[fname], "read")
+        __, channel_alias = self._fields["channel_id"].join(self, alias, query)
+        start_date_tz = SQL(
+            "timezone(%s, timezone('UTC', %s))",
+            self.env.tz.zone,
+            SQL.identifier(channel_alias, "create_date"),
+        )
+        if fname == "session_start_hour":
+            return SQL("date_part('hour', %s)", start_date_tz)
+        return SQL("(date_part('isodow', %s)::int - 1)::text", start_date_tz)
 
     @api.model
     def action_open_discuss_channel_view(self, domain=()):

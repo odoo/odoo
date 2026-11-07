@@ -5,7 +5,7 @@
     }
   }
 
-  span:where(:has(.file_upload_kanban_action_a)) {
-    @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+  a.file_upload_kanban_action_a {
+    @include o-kanban-dashboard-dropdown-link-style($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
   }
 }

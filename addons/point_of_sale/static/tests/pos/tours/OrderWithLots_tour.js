@@ -34,6 +34,11 @@ registry.category("web_tour.tours").add("test_03_pos_with_lots", {
             Numpad.click("⌫"),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.totalAmountIs("6.38"),
+            ProductScreen.clickReview(),
+            ProductScreen.clickLotIcon(),
+            Dialog.confirm(),
+            { ...ProductScreen.orderLineHas("Monitor Stand", "2")[0], isActive: ["desktop"] },
+            { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.isShown(),
         ].flat(),
 });

@@ -1,6 +1,14 @@
-import { expect, test } from "@odoo/hoot";
-import { click, hover, leave, press, queryAll, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    click,
+    expect,
+    hover,
+    leave,
+    press,
+    queryAll,
+    queryAllTexts,
+    test,
+} from "@odoo/hoot";
 import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -179,6 +187,9 @@ test("PriorityField can write after adding a record -- kanban", async () => {
             ["1", 1],
         ],
     });
+    for (const record of Partner._records) {
+        delete record.selection;
+    }
     Partner._records[0].selection = "0";
     Partner._views[["form", "myquickview"]] = /* xml */ `<form/>`;
     onRpc("web_save", ({ args }) => expect.step(`web_save ${JSON.stringify(args)}`));

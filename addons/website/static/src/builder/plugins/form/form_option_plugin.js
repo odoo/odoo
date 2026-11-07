@@ -280,14 +280,7 @@ export class FormOptionPlugin extends Plugin {
         const formKey = activeForm?.website_form_key;
         const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (formInfo) {
-            const formatInfo = getDefaultFormat(el);
-            await Promise.all(
-                formInfo.formFields.map((field) => {
-                    field.formatInfo = formatInfo;
-                    return this.fetchFieldRecords(field);
-                })
-            );
-            await this.fetchFormInfoFields(formInfo);
+            await Promise.all(formInfo.formFields.map((field) => this.fetchFieldRecords(field)));
         }
         return formInfo;
     }
@@ -335,7 +328,7 @@ export class FormOptionPlugin extends Plugin {
     applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
         if (modelId) {
-            const oldFormKey = activeForm.website_form_key;
+            const oldFormKey = activeForm?.website_form_key;
             if (oldFormKey) {
                 oldFormInfo = registry
                     .category("website.form_editor_actions")
@@ -387,15 +380,6 @@ export class FormOptionPlugin extends Plugin {
                     this.addHiddenField(el, field.defaultValue, field.name);
                 }
             });
-        }
-    }
-    /**
-     * Ensures formInfo fields are fetched.
-     */
-    async fetchFormInfoFields(formInfo) {
-        if (formInfo.fields) {
-            const proms = formInfo.fields.map((field) => this.fetchFieldRecords(field));
-            await Promise.all(proms);
         }
     }
     async fetchAuthorizedFields(formEl) {
@@ -927,7 +911,7 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        return parseInt(modelId) === activeForm.id;
+        return parseInt(modelId) === activeForm?.id;
     }
 }
 // Select the value of a field (hidden) that will be used on the model as a preset.
@@ -935,6 +919,7 @@ export class SelectAction extends BuilderAction {
 export class AddActionFieldAction extends BuilderAction {
     static id = "addActionField";
     static dependencies = ["websiteFormOption"];
+    loadOnClean = true;
     async load({ editingElement: el }) {
         return this.dependencies.websiteFormOption.fetchAuthorizedFields(el);
     }
@@ -948,8 +933,8 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect === "true") {
-            value = parseInt(value);
+        if (value && params.isSelect) {
+            value = JSON.parse(value).id;
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
     }
@@ -972,11 +957,10 @@ export class AddActionFieldAction extends BuilderAction {
             const dataForValues = getParsedDataFor(formId, el.ownerDocument);
             return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
         }
-        if (value) {
-            return value;
-        } else {
-            return params.isSelect ? "0" : "";
+        if (!value) {
+            return "";
         }
+        return params.isSelect ? JSON.stringify({ id: parseInt(value) }) : value;
     }
     isApplied({ editingElement, params, value }) {
         const currentValue = this.getValue({
@@ -984,6 +968,9 @@ export class AddActionFieldAction extends BuilderAction {
             params,
         });
         return currentValue === value;
+    }
+    clean(context) {
+        this.apply(context);
     }
 }
 export class PromptSaveRedirectAction extends BuilderAction {
@@ -1263,12 +1250,18 @@ export class ToggleDescriptionAction extends BuilderAction {
         const description = fieldEl.querySelector(".s_website_form_field_description");
         const hasDescription = !!description;
         const field = getActiveField(fieldEl, { fields });
-        field.description = !hasDescription; // Will be changed to default description in qweb
+
+        if (hasDescription) {
+            description.classList.toggle("d-none");
+        } else {
+            field.description = true; // Will be changed to default description in qweb
+        }
+
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
     isApplied({ editingElement: fieldEl }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
-        return !!description;
+        return !!description && !description.classList.contains("d-none");
     }
 }
 export class SelectTextareaValueAction extends BuilderAction {

@@ -26,6 +26,19 @@ class IrAttachment(models.Model):
               self.env['res.config.settings']._get_cloud_storage_configuration()):
             self.ensure_one()
             info = self._generate_cloud_storage_download_info()
+
+            if self.env.context.get('cloud_storage_force_download'):
+                response = requests.get(info['url'], timeout=10)
+                response.raise_for_status()
+
+                return Stream(
+                    type='data',
+                    data=response.content,
+                    mimetype=self.mimetype,
+                    download_name=self.name,
+                    size=len(response.content),
+                )
+
             stream = Stream(type='url', url=info['url'])
             if 'time_to_expiry' in info:
                 # cache the redirection until 10 seconds before the expiry

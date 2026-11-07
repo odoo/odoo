@@ -46,6 +46,7 @@ class CrmTeam(models.Model):
         # for team belonging to a user in C1/C2 -> only results for C1 will be returned
         team = self.env['crm.team']
         teams = self.env['crm.team'].search([
+            ('active', '=', True),
             ('company_id', 'in', valid_cids),
              '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id])
         ])
@@ -68,7 +69,7 @@ class CrmTeam(models.Model):
             team = default_team
 
         if not team:
-            teams = self.env['crm.team'].search([('company_id', 'in', valid_cids)])
+            teams = self.env['crm.team'].search([('active', '=', True), ('company_id', 'in', valid_cids)])
             # 4- default: based on company rule, first one matching domain
             if teams and domain:
                 team = teams.filtered_domain(domain)[:1]

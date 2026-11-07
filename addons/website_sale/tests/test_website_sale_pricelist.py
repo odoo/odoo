@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
+from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import SQL
@@ -331,6 +332,57 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
             price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
             self.assertEqual(price, 18, msg)
+
+    def test_pricelist_report_cost_based_restricted_to_internal_users(self):
+        """ Portal users can read pricelists but not the product cost, so they must not be able
+        to print a cost-based pricelist.
+        """
+        pricelist = self._create_pricelist(item_ids=[Command.create({
+            'base': 'standard_price',
+            'compute_price': 'formula',
+            'price_markup': 10,
+        })])
+        self.product.standard_price = 100.0
+        data = {
+            'pricelist_id': pricelist.id,
+            'active_model': 'product.product',
+            'active_ids': self.product.ids,
+        }
+        report = self.env['report.product.report_pricelist']
+        with self.assertRaisesRegex(AccessError, "not allowed to access this document"):
+            report.with_user(self._create_new_portal_user()).get_html(data)
+
+        report_data = report.with_user(self._create_new_internal_user())._get_report_data(data)
+        self.assertEqual(report_data['products'][0]['price'][1], 110.0)
+
+    def test_prevent_zero_price_sale_hides_price_before_discount(self):
+        """ When a pricelist discounts a product to zero and zero prices are hidden,
+        the catalog price must not be sent either: the product page would still
+        print it as a hidden strikethrough, and it is also used as analytics price. """
+        self.website.prevent_zero_price_sale = True
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Test Product',
+            'list_price': 100.0,
+            'taxes_id': False,
+            'is_published': True,
+        })
+        self.pricelist.write({
+            'item_ids': [Command.create({
+                'compute_price': 'percentage',
+                'percent_price': 100,
+                'product_tmpl_id': product_tmpl.id,
+            })],
+        })
+        with MockRequest(self.env, website=self.website, website_sale_current_pl=self.pricelist.id):
+            combination_info = product_tmpl._get_combination_info()
+            analytics_data = product_tmpl._get_google_analytics_data(
+                product_tmpl.product_variant_id, combination_info,
+            )
+
+        self.assertTrue(combination_info['prevent_zero_price_sale'])
+        self.assertFalse(combination_info['has_discounted_price'])
+        self.assertEqual(combination_info['list_price'], 0)
+        self.assertEqual(analytics_data['price'], 0)
 
     def test_base_price_with_discount_on_pricelist_tax_included(self):
         """

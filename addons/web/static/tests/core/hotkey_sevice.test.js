@@ -11,6 +11,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { Deferred } from "@web/core/utils/concurrency";
 
@@ -644,6 +646,63 @@ test("registrations and elements belong to the correct UI owner", async () => {
     await press(["alt", "b"]);
     await tick();
     expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
+});
+
+test("hotkey of a component opened from a popover", async () => {
+    class ItemsPopover extends Component {
+        static template = xml`
+            <div class="o_items_popover">
+                <button class="o_item" t-on-click="() => this.props.onSelect()">Item</button>
+            </div>
+        `;
+        static props = ["*"];
+    }
+
+    class Panel extends Component {
+        static template = xml`<div class="o_panel">Panel</div>`;
+        static props = ["*"];
+        setup() {
+            useHotkey("a", () => expect.step("panel hotkey"));
+        }
+    }
+
+    class Parent extends Component {
+        static components = { MainComponentsContainer, Panel };
+        static template = xml`
+            <div>
+                <button class="o_open_popover" t-on-click="openPopover">Open</button>
+                <Panel t-if="state.isPanelOpen"/>
+            </div>
+            <MainComponentsContainer/>
+        `;
+        static props = ["*"];
+        setup() {
+            this.state = useState({ isPanelOpen: false });
+            this.popover = usePopover(ItemsPopover);
+        }
+        openPopover(ev) {
+            this.popover.open(ev.target, { onSelect: () => this.onSelect() });
+        }
+        onSelect() {
+            this.state.isPanelOpen = true;
+            this.popover.close();
+        }
+    }
+
+    // Mount the main components container in the same app, as in the webclient, so that the
+    // panel is mounted and the popover removed in the same animation frame.
+    await mountWithCleanup(Parent, { noMainContainer: true });
+    await contains(".o_open_popover").click();
+    expect(".o_items_popover").toHaveCount(1);
+    expect(getService("ui").activeElement).toBe(queryOne(".o_popover"));
+
+    await contains(".o_item").click();
+    expect(".o_panel").toHaveCount(1);
+    expect(".o_items_popover").toHaveCount(0);
+    expect(getService("ui").activeElement).toBe(document);
+
+    await press("a");
+    expect.verifySteps(["panel hotkey"]);
 });
 
 test("replace the overlayModifier for non-MacOs", async () => {

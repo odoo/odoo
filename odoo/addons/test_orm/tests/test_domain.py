@@ -356,6 +356,18 @@ class TestDomain(TransactionExpressionCase):
             self.assertEqual(u_domain.operator, 'any!')
             self.assertIs(u_domain.value, sub_domain.value, "The query should be used as-is")
 
+    def test_condition_optimize_any_active_test(self):
+        """An 'any' domain on a many2one field must let the comodel's own
+        custom search methods see archived records.
+        """
+        model = self.env['test_orm.related']
+        message = self.env['test_orm.message'].create({'body': 'hello archived world'})
+        message.active = False
+        related = model.create({'name': 'rel', 'message': message.id})
+
+        res_search = self._search(model, [('message', 'any', [('body_search', 'like', 'hello archived')])])
+        self.assertEqual(res_search, related, "the archived message should still be found")
+
 
 class TestDomainComplement(TransactionExpressionCase):
 
@@ -661,6 +673,18 @@ class TestDomainOptimize(TransactionCase):
             self.assertEqual(domain.optimize_full(model), Domain('date', '>', date(2024, 1, 5)))
             self.assertEqual(Domain('date', '>', '+12H').optimize_full(model), Domain('date', '>', date(2024, 1, 6)))
             self.assertEqual(list(Domain('date', '=', 'today').optimize_full(model).value), [date(2024, 1, 5)])
+
+    @freeze_time("2026-07-15 12:00:00")
+    def test_condition_optimize_date_timezone(self):
+        model = self.env["test_orm.mixed"].with_context(tz="Europe/Brussels")
+        self.assertEqual(
+            Domain("date", ">=", "=1d").optimize_full(model),
+            Domain("date", ">=", date(2026, 7, 1)),
+        )
+        self.assertEqual(
+            Domain("date", ">=", "today +1H").optimize_full(model),
+            Domain("date", ">=", date(2026, 7, 15)),
+        )
 
     def test_condition_optimize_datetime(self):
         model = self.env['test_orm.mixed'].with_context(tz='UTC')

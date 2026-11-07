@@ -5,7 +5,7 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.tools import float_compare, float_is_zero, float_round, format_date, groupby
 from odoo.tools.translate import _
 
 
@@ -184,7 +184,7 @@ class SaleOrderLine(models.Model):
     discount = fields.Float(
         string="Discount (%)",
         compute='_compute_discount',
-        digits='Discount',
+        min_display_digits='Discount',
         store=True, readonly=False, precompute=True)
 
     price_subtotal = fields.Monetary(
@@ -794,6 +794,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_discount(self):
         discount_enabled = self.env['product.pricelist.item']._is_discount_feature_enabled()
+        discount_precision = self.env['decimal.precision'].precision_get('Discount')
         for line in self:
             if not line.product_id or line.display_type:
                 line.discount = 0.0
@@ -822,7 +823,7 @@ class SaleOrderLine(models.Model):
                 if (discount > 0 and base_price > 0) or (discount < 0 and base_price < 0):
                     # only show negative discounts if price is negative
                     # otherwise it's a surcharge which shouldn't be shown to the customer
-                    line.discount = discount
+                    line.discount = float_round(discount, precision_digits=discount_precision)
 
     def _prepare_base_line_for_taxes_computation(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
@@ -1010,7 +1011,7 @@ class SaleOrderLine(models.Model):
             invoice_lines = line._get_invoice_lines()
             for invoice_line in invoice_lines:
                 if line.is_downpayment:
-                    if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
+                    if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
                         invoiced_qties[line] = 1
                         line.qty_invoiced = 1
                     else:
@@ -1322,9 +1323,16 @@ class SaleOrderLine(models.Model):
 
     # === ONCHANGE METHODS ===#
 
+    def onchange(self, values, field_names, fields_spec):
+        self_with_context = self
+        if not field_names:
+            # Some onchange methods should not apply to first onchange
+            self_with_context = self.with_context(sale_onchange_first_call=True)
+        return super(SaleOrderLine, self_with_context).onchange(values, field_names, fields_spec)
+
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        if not self.product_id:
+        if not self.product_id or self.env.context.get("sale_onchange_first_call"):
             return
         self._reset_price_unit()
 
@@ -1541,10 +1549,18 @@ class SaleOrderLine(models.Model):
                 'collapse_composition': self.collapse_composition,
                 **optional_values,
             }
+        product = self.product_id.with_context(
+            lang=self.order_id._get_lang(),
+            partner_id=self.order_id.partner_id.id,
+            company_id=self.company_id.id,
+        )
+        display_name = product.with_context(partner_id=False, seller_id=False).display_name
+        if not display_name or display_name not in self.name:
+            display_name = product.display_name
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
-            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
+            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom_id.id,
             'quantity': self.qty_to_invoice,

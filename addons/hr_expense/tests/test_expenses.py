@@ -218,6 +218,24 @@ class TestExpenses(TestExpenseCommon):
         # Only possible if no expense linked to the account
         self.analytic_account_1.unlink()
 
+    def test_expense_no_cost_product_zero_quantity(self):
+        """ A zero quantity on a product without cost must not zero the receipt line """
+        expense = self.create_expenses({
+            'product_id': self.product_c.id,
+            'quantity': 0,
+            'total_amount_currency': 100.0,
+            'tax_ids': [Command.clear()],
+        })
+        self.assertEqual(expense.price_unit, 100.0)
+
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+        self.assertRecordValues(expense.account_move_id.invoice_line_ids, [
+            {'quantity': 1.0, 'price_unit': 100.0, 'price_total': 100.0},
+        ])
+        self.assertEqual(expense.account_move_id.amount_total, 100.0)
+
     def test_expense_split_flow(self):
         """ Check Split Expense flow. """
         # Grant Analytic Accounting rights, to be able to modify analytic_distribution from the wizard

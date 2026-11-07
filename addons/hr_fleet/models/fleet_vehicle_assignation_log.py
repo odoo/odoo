@@ -19,8 +19,15 @@ class FleetVehicleAssignationLog(models.Model):
         employees_by_partner_id_and_company_id = {
             (partner, company): employee for partner, company, employee in employees_by_partner_id_and_company_id
         }
+        # the driver can be an employee of another company than the vehicle's one
+        employees_by_partner_id = {
+            partner: employee for (partner, _company), employee in employees_by_partner_id_and_company_id.items()
+        }
         for log in self:
-            employees = employees_by_partner_id_and_company_id.get((log.driver_id, log.vehicle_id.company_id))
+            employees = (
+                employees_by_partner_id_and_company_id.get((log.driver_id, log.vehicle_id.company_id))
+                or employees_by_partner_id.get(log.driver_id)
+            )
             log.driver_employee_id = employees[0] if employees else False
 
     def _compute_attachment_number(self):

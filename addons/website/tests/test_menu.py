@@ -30,6 +30,44 @@ class TestMenu(common.TransactionCase):
 
         self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
 
+    def test_menu_visible_password_view_skips_handle_visibility(self):
+        """ When a password protected page is accessed, the request contains a
+        password. This test ensures that if a menu contains a link to another
+        password protected page, the password in the current request is never
+        tested against the linked page. """
+        View = self.env['ir.ui.view']
+        Page = self.env['website.page']
+        Menu = self.env['website.menu']
+        website_1 = self.env['website'].browse(1)
+
+        view = View.create({
+            'name': 'Protected',
+            'type': 'qweb',
+            'arch': '<div>protected</div>',
+            'key': 'test.menu_protected_view',
+            'visibility': 'password',
+        })
+        page = Page.create({
+            'view_id': view.id,
+            'url': '/menu-protected',
+            'is_published': True,
+            'website_id': website_1.id,
+        })
+        menu = Menu.create({
+            'name': 'Protected menu',
+            'page_id': page.id,
+            'website_id': website_1.id,
+        })
+
+        public_user = self.env.ref('base.public_user')
+        with MockRequest(self.env(user=public_user), website=website_1) as mock_request:
+            mock_request.params = {'visibility_password': 'secret'}
+            menu_pub = mock_request.env['website.menu'].browse(menu.id)
+            with patch.object(self.registry['ir.ui.view'], '_handle_visibility') as mocked_handle_visibility:
+                is_visible = menu_pub.is_visible
+                mocked_handle_visibility.assert_not_called()
+            self.assertTrue(is_visible)
+
     def test_02_menu_count(self):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
@@ -124,6 +162,37 @@ class TestMenu(common.TransactionCase):
         default_menu = self.env.ref('website.main_menu')
         default_menu.child_id[0].unlink()
         self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
+
+    def test_default_menu_unlink_other_menu_trees(self):
+        Menu = self.env['website.menu']
+        website = self.env['website'].browse(1)
+        default_menu = self.env.ref('website.main_menu')
+        generic_menu = Menu.create({
+            'name': 'Generic',
+            'url': '/generic-menu',
+            'parent_id': default_menu.id,
+        })
+        copies = Menu.search([('url', '=', '/generic-menu'), ('website_id', '!=', False)])
+        self.assertEqual(len(copies), self.nb_website)
+        # A copy moved into a submenu of the main menu is still a copy
+        submenu = Menu.create({
+            'name': 'Submenu',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+        })
+        copies.filtered(lambda m: m.website_id == website).parent_id = submenu
+        # Another menu tree of the website links the same URL
+        other_root = Menu.create({'name': 'Other Root', 'website_id': website.id})
+        other_menu = Menu.create({
+            'name': 'Same URL',
+            'url': '/generic-menu',
+            'website_id': website.id,
+            'parent_id': other_root.id,
+        })
+
+        generic_menu.unlink()
+        self.assertFalse(copies.exists(), "Deleting a default menu should delete its copies from the websites' main menus")
+        self.assertTrue(other_menu.exists(), "Deleting a default menu should keep the menus of other menu trees with the same URL")
 
     def test_06_menu_active(self):
         Menu = self.env['website.menu']

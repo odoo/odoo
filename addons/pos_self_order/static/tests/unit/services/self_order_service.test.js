@@ -141,6 +141,39 @@ test("verifyCart", async () => {
     }
 });
 
+test("verifyCart removes lines whose category hour window has closed", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    await getFilledSelfOrder(store);
+
+    models["pos.category"].get(1).update({
+        hour_after: 10,
+        hour_until: 12,
+    });
+    mockDate("2025-11-29 18:00:00");
+
+    const result = store.verifyCart();
+    expect(result).toBe(false);
+    expect(store.currentOrder.lines).toHaveLength(1);
+    expect(store.currentOrder.lines[0].product_id.product_tmpl_id.id).toBe(6);
+});
+
+test("verifyCart keeps combo choices from unavailable categories", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboLine = await addComboProduct(store);
+    const categ1 = models["pos.category"].get(1);
+    const categ2 = models["pos.category"].get(2);
+
+    comboLine.combo_line_ids[0].product_id.product_tmpl_id.update({ pos_categ_ids: [categ1] });
+    store.config.limit_categories = true;
+    store.config.iface_available_categ_ids = [categ2];
+    store.initProducts();
+
+    expect(store.verifyCart()).toBe(true);
+    expect(store.currentOrder.lines).toHaveLength(3);
+});
+
 test("getProductPriceInfo", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
@@ -564,4 +597,30 @@ test("product with single 'multi' display_type attr with single choice is config
     // Mobile mode
     store.self_ordering_mode = "mobile";
     expect(!!store.isProductConfigurable(product)).toBe(true);
+});
+
+test("payment status notification keeps the partner of the order", async () => {
+    const store = await setupSelfPosEnv();
+    const { uuid } = await getFilledSelfOrder(store);
+    await store.sendDraftOrderToServer();
+    const order = store.models["pos.order"].getBy("uuid", uuid);
+    const signedPartnerId = "7-0123456789abcdef";
+    const connectedData = store.models.connectNewData({
+        "res.partner": [{ id: signedPartnerId, name: "Demo User" }],
+    });
+    order.partner_id = connectedData["res.partner"][0];
+
+    const { method: onPaymentStatus } = store.data.channels.find(
+        ({ channel }) => channel === "PAYMENT_STATUS"
+    );
+    onPaymentStatus({
+        payment_result: "Success",
+        data: {
+            "pos.order": [{ id: order.id, uuid, access_token: order.access_token, state: "paid" }],
+        },
+    });
+
+    expect(order.state).toBe("paid");
+    expect(order.partner_id?.id).toBe(signedPartnerId);
+    expect(order.partner_id?.name).toBe("Demo User");
 });

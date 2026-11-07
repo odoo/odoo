@@ -38,13 +38,15 @@ def after_commit(func):
         @self.env.cr.postcommit.add
         def called_after():
             db_registry = Registry(dbname)
-            with db_registry.cursor() as cr:
-                env = api.Environment(cr, uid, context)
-                try:
-                    func(self.with_env(env), *args, **kwargs)
-                except Exception as e:
-                    _logger.warning("Could not sync record now: %s" % self)
-                    _logger.exception(e)
+            try:
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, uid, context)
+                    try:
+                        func(self.with_env(env), *args, **kwargs)
+                    except Exception:
+                        _logger.exception("Could not sync record now: %s", self)
+            except Exception:
+                _logger.exception("Could not commit sync of record: %s", self)
 
     return wrapped
 
@@ -204,9 +206,11 @@ class MicrosoftCalendarSync(models.AbstractModel):
         # the seriesMaster then keeps the iCalUId of the former single event. Those
         # single events are now represented by the recurrences, so remove them to
         # avoid leaving duplicates next to the recurrences' first occurrences.
-        if new_recurrence:
+        # UIDs may be missing for birthday events; empty UIDs would match unrelated, unsynchronized events.
+        recurrence_uids = [uid for uid in new_recurrence.mapped('ms_universal_event_id') if uid]
+        if recurrence_uids:
             duplicate_singles = self.env['calendar.event'].search([
-                ('ms_universal_event_id', 'in', new_recurrence.mapped('ms_universal_event_id')),
+                ('ms_universal_event_id', 'in', recurrence_uids),
                 ('recurrence_id', '=', False),
             ])
             duplicate_singles.microsoft_id = False
@@ -306,9 +310,10 @@ class MicrosoftCalendarSync(models.AbstractModel):
         synced_events |= updated_events
 
         # remove cancelled events and recurrences
+        # Deleted events may be returned without an iCalUId.
         cancelled_recurrences = self.env['calendar.recurrence'].search([
             '|',
-            ('ms_universal_event_id', 'in', cancelled.uids),
+            ('ms_universal_event_id', 'in', [uid for uid in cancelled.uids if uid]),
             ('microsoft_id', 'in', cancelled.ids),
         ])
         cancelled_events = self.browse([

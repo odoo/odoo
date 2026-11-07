@@ -21,10 +21,12 @@
         <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu p-1 mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.DiscussSidebarCategory.main"/>
             <t t-set-slot="content">
-                <div class="overflow-hidden d-flex flex-column" t-ref="floating">
-                    <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-ref="floatingCategoryName" t-esc="category.name"/>
-                    <t t-call="mail.DiscussSidebarCategory.actions"/>
-                </div>
+                <UseHoverOverlay hover="hover">
+                    <div class="overflow-hidden d-flex flex-column">
+                        <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-ref="floatingCategoryName" t-esc="category.name"/>
+                        <t t-call="mail.DiscussSidebarCategory.actions"/>
+                    </div>
+                </UseHoverOverlay>
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSidebarCategory.main"/>

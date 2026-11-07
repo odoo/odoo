@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-30 10:09+0000\n"
+"PO-Revision-Date: 2026-09-18 09:33+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "event_booth_sale/uk/>\n"
@@ -242,7 +242,7 @@ msgstr "Останнє оновлення"
 #. odoo-python
 #: code:addons/event_booth_sale/models/product_template.py:0
 msgid "Mark the selected Booth as Unavailable."
-msgstr ""
+msgstr "Позначте вибраний стенд як недоступний."
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
@@ -356,6 +356,10 @@ msgid ""
 "Category, %(event_booth_category_name)s. The service_tracking must remain "
 "\"Event Booth\"."
 msgstr ""
+"Параметр «service_tracking» для шаблону товару %(product_template_name)s "
+"неможливо змінити, оскільки один із його варіантів призначено категорії "
+"стендів для заходів %(event_booth_category_name)s. Для параметра «"
+"service_tracking» має залишатися значення «Event Booth»."
 
 #. module: event_booth_sale
 #. odoo-python
@@ -374,6 +378,8 @@ msgid ""
 "The product, %(product_name)s , is used for Event Booth, it must have "
 "service_tracking set to \"Event Booth\"."
 msgstr ""
+"Товар, %(product_name)s , використовується для Стенду події, поивнен мати "
+"service_tracking встановлений як \"Стенд події\"."
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -410,6 +416,9 @@ msgid ""
 "because it is already assigned to %(booth_category_name)s. The "
 "service_tracking must remain 'event_booth'."
 msgstr ""
+"Ви не можете змінити параметр service_tracking для товару %(product_name)s, "
+"оскільки він уже призначений для %(booth_category_name)s. Параметр "
+"service_tracking повинен залишатися «event_booth»."
 
 #. module: event_booth_sale
 #. odoo-python

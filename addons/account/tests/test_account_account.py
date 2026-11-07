@@ -338,6 +338,19 @@ class TestAccountAccount(TestAccountMergeCommon):
         with self.assertRaises(UserError):
             account.reconcile = False
 
+    def test_toggle_reconcile_cash_basis_transition_account(self):
+        account = self.company_data['default_account_assets']
+        account.reconcile = True
+        self.env['account.tax'].create({
+            'name': 'cash basis tax',
+            'amount': 10.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': account.id,
+        })
+
+        with self.assertRaises(ValidationError):
+            account.reconcile = False
+
     def test_remove_account_from_account_group(self):
         """Test if an account is well removed from account group"""
         group = self.env['account.group'].create({
@@ -390,6 +403,19 @@ class TestAccountAccount(TestAccountMergeCommon):
         alternate_code = self.env['account.account']._search_new_account_code(alternate_account.code)
         new_account.code = alternate_code
         self.assertEqual(new_account.account_type, existing_account.account_type)
+
+    def test_compute_account_type_on_code_change(self):
+        """ Changing the code should recompute account_type and reconcile too, since reconcile depends on it. """
+        receivable_account = self.company_data['default_account_receivable']
+
+        new_code = self.env['account.account']._search_new_account_code(receivable_account.code)
+        with Form(self.env['account.account']) as account_form:
+            account_form.name = "A new account"
+            account_form.code = new_code
+
+        account = account_form.record
+        self.assertEqual(account.account_type, 'asset_receivable')
+        self.assertTrue(account.reconcile)
 
     def test_get_closest_parent_account(self):
         self.env['account.account'].create({

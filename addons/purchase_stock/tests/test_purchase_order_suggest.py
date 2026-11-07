@@ -662,6 +662,22 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         )
         self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin')
 
+    def test_monthly_demand_vendor_return(self):
+        "Test Returning receipt must not increase the warehouse's demand."
+        product = self.product_1
+        po = self._create_purchase(product, quantity=10)
+        self._receive(po, quantity=15)
+        return_wizard = self.env['stock.return.picking'].create({'picking_id': po.picking_ids.id})
+        return_wizard.product_return_moves.quantity = 5
+        return_picking = return_wizard._create_return()
+        return_picking.button_validate()
+        self.assertEqual(product.monthly_demand, 0)
+        self.assertEqual(product.with_context(warehouse_id=self.warehouse.id).monthly_demand, 0)
+        self._create_and_process_delivery_at_date([(product, 4)])
+        product.invalidate_recordset(['monthly_demand'])
+        self.assertEqual(product.monthly_demand, 4)
+        self.assertEqual(product.with_context(warehouse_id=self.warehouse.id).monthly_demand, 4)
+
     def test_monthly_demand_interwarehouse_two_step_delivery(self):
         """Ensure that monthly demand is correctly counted for waiting outgoing
         moves in inter-warehouse transfers using two-step delivery routes.

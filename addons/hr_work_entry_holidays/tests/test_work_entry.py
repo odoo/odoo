@@ -6,7 +6,7 @@ import pytz
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
-from odoo.fields import Date
+from odoo.fields import Command, Date
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -201,6 +201,108 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.assertEqual(sum_remote_hours, 35, "It should equal the number of hours richard worked in remote")  # 5 days * 8 hours - 5 hours for leave
         self.assertEqual(sum_leave_hours, 5.0, "It should equal the number of hours richard was on leave")
 
+    def test_generate_multi_overlap_preserves_leave_work_entries(self):
+        """
+        The multi time off wizard splits the overlapping validated time off only when
+        neither the existing time off type nor the generated one allows requests on top.
+        In every case, each remaining validated time off keeps its calendar leave and
+        its work entries.
+        """
+        work_entry_type_training = self.env['hr.work.entry.type'].create({
+            'name': 'Training',
+            'is_leave': True,
+            'code': 'TRAININGTEST100',
+        })
+        training_type, training_on_top_type = self.env['hr.leave.type'].create([{
+            'name': 'No request on top type',
+            'time_type': 'other',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'allow_request_on_top': False,
+            'work_entry_type_id': work_entry_type_training.id,
+        }, {
+            'name': 'Request on top type',
+            'time_type': 'other',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'allow_request_on_top': True,
+            'work_entry_type_id': work_entry_type_training.id,
+        }])
+        self.leave_remote_type.leave_validation_type = 'no_validation'
+        leave_wet, remote_wet, training_wet = self.work_entry_type_leave, self.work_entry_type_remote, work_entry_type_training
+
+        def week(monday, *types):
+            return {monday + relativedelta(days=i): wet for i, wet in enumerate(types)}
+
+        # One week of November 2015 per scenario: the existing time off covers Monday to
+        # Friday, the generated one covers Wednesday and Thursday.
+        scenarios = [
+            {
+                'name': 'neither type allows requests on top: split',
+                'existing_type': self.leave_type,
+                'wizard_type': training_type,
+                'monday': date(2015, 11, 2),
+                'work_entries': week(date(2015, 11, 2), leave_wet, leave_wet, training_wet, training_wet, leave_wet),
+            },
+            {
+                'name': 'generated type allows requests on top: no split',
+                'existing_type': self.leave_type,
+                'wizard_type': self.leave_remote_type,
+                'monday': date(2015, 11, 9),
+                'work_entries': week(date(2015, 11, 9), leave_wet, leave_wet, leave_wet, leave_wet, leave_wet),
+            },
+            {
+                'name': 'existing type allows requests on top: no split',
+                'existing_type': self.leave_remote_type,
+                'wizard_type': training_type,
+                'monday': date(2015, 11, 16),
+                'work_entries': week(date(2015, 11, 16), remote_wet, remote_wet, training_wet, training_wet, remote_wet),
+            },
+            {
+                'name': 'both types allow requests on top: no split',
+                'existing_type': self.leave_remote_type,
+                'wizard_type': training_on_top_type,
+                'monday': date(2015, 11, 23),
+                'work_entries': week(date(2015, 11, 23), remote_wet, remote_wet, training_wet, training_wet, remote_wet),
+            },
+        ]
+
+        for scenario in scenarios:
+            monday, friday = scenario['monday'], scenario['monday'] + relativedelta(days=4)
+            existing_leave = self.env['hr.leave'].create({
+                'name': 'Existing Time Off',
+                'employee_id': self.richard_emp.id,
+                'holiday_status_id': scenario['existing_type'].id,
+                'request_date_from': monday,
+                'request_date_to': friday,
+            })
+            if existing_leave.state != 'validate':
+                existing_leave.action_approve()
+
+            self.env['hr.leave.generate.multi.wizard'].create({
+                'name': 'Generated Time Off',
+                'allocation_mode': 'employee',
+                'company_id': self.env.company.id,
+                'employee_ids': [(6, 0, self.richard_emp.ids)],
+                'holiday_status_id': scenario['wizard_type'].id,
+                'date_from': monday + relativedelta(days=2),
+                'date_to': monday + relativedelta(days=3),
+            }).action_generate_time_off()
+
+            with self.subTest(scenario=scenario['name']):
+                self.richard_emp.generate_work_entries(monday, friday)
+                work_entries = self.env['hr.work.entry'].search([
+                    ('employee_id', '=', self.richard_emp.id),
+                    ('date', '>=', monday),
+                    ('date', '<=', friday),
+                ])
+                self.assertEqual(
+                    {(we.date, we.work_entry_type_id) for we in work_entries},
+                    set(scenario['work_entries'].items()))
+                self.assertEqual(
+                    {we.date: we.duration for we in work_entries},
+                    {day: 8.0 for day in scenario['work_entries']})
+
     def test_reset_leave_work_entries(self):
         """
         This test ensures that when the employee's calendar_id.company_id is False,
@@ -307,3 +409,37 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.assertEqual(1, len(leave_work_entry))
         self.assertTrue(leave_work_entry.work_entry_type_id == self.work_entry_type_leave)
         self.assertEqual(2.0, leave_work_entry.duration)
+
+    def test_time_off_keeps_non_working_schedule_period(self):
+        """ Check that a time off over a day whose afternoon is unpaid in the working schedule
+        only replaces the working morning in the work entries. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'tz': 'UTC',
+            'attendance_ids': [
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type_unpaid.id}),
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+            'date_version': date(2024, 9, 1),
+            'contract_date_start': date(2024, 9, 1),
+            'contract_date_end': date(2024, 9, 30),
+            'wage': 5000.0,
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': self.hours_leave_type.id,
+            'request_date_from': date(2024, 9, 2),
+            'request_date_to': date(2024, 9, 2),
+        })
+        leave.action_approve()
+
+        work_entries = employee.generate_work_entries(date(2024, 9, 2), date(2024, 9, 2))
+        self.assertDictEqual(
+            {work_entry.work_entry_type_id: work_entry.duration for work_entry in work_entries},
+            {self.work_entry_type_leave: 4.0, self.work_entry_type_unpaid: 4.0},
+        )

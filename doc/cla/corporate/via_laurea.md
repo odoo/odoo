@@ -1,4 +1,4 @@
-Lithuania, 2020-08-24
+Lithuania, 2026-10-08
 
 Via laurea agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.
@@ -8,10 +8,14 @@ declaration.
 
 Signed,
 
-Gailius Kazlauskas gailius.kaz@vialaurea.lt https://github.com/gaikaz
+Gailius Kazlauskas gailius.kaz@vialaurea.com https://github.com/gaikaz
 
 List of contributors:
 
+Gailius Kazlauskas gailius.kaz@vialaurea.com https://github.com/gaikaz
+Donatas Valiulis donatas@vialaurea.com https://github.com/DonatasV
+Domantas Girdžiūnas domantas@vialaurea.com https://github.com/Du-ma
+Edvardas Stuobrys edvardas@vialaurea.com https://github.com/Despuots
 Gailius Kazlauskas gailius.kaz@vialaurea.lt https://github.com/gaikaz
 Donatas Valiulis donatas@vialaurea.lt https://github.com/DonatasV
 Domantas Girdžiūnas domantas@vialaurea.lt https://github.com/Du-ma

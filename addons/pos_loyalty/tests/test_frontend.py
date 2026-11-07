@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
@@ -1379,6 +1380,27 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount': 10,
                 'discount_applicability': 'specific',
                 'discount_product_domain': '["&", "&", ("categ_id", "ilike", "Saleable"), ("name", "=", "Product B"), ("product_tag_ids", "not ilike", "test")]',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        # Matches no product of the tour, only the discount products of the other rewards
+        # (priced 0): discounting their reward lines would turn them into surcharges
+        self.env['loyalty.program'].create({
+            'name': 'Discount on Cheap Products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_domain': '[("list_price", "<", 10)]',
             })],
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
@@ -3800,6 +3822,76 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.trusted_config_ids += trusted_pos_config
         self.start_pos_tour("test_loyalty_is_not_processed_for_draft_order", login="pos_user")
 
+    def test_promotion_reward_of_order_loaded_on_another_device(self):
+        """A promotion reward line saved in a draft order has no coupon on the server
+        (its coupon is temporary): the order must still load and pay correctly on
+        another device."""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 0,
+        })
+        promotion = self.env['loyalty.program'].create({
+            'name': 'Auto Discount 10%',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': self.whiteboard_pen.product_variant_id,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.whiteboard_pen.product_variant_id.ids,
+            })],
+        })
+        self.start_pos_tour("test_promotion_reward_of_order_loaded_on_another_device_make_order", login="pos_user")
+        order = self.env['pos.order'].search([('config_id', '=', self.main_pos_config.id)])
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'draft')
+        self.assertFalse(reward_line.coupon_id)
+
+        self.start_pos_tour("test_promotion_reward_of_order_loaded_on_another_device", login="pos_user")
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.amount_total, 90)
+        self.assertEqual(len(reward_line), 1)
+        self.assertEqual(reward_line.coupon_id.program_id, promotion)
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_promo_code_reward_of_order_loaded_on_another_device(self):
+        """The promo code entered on the first device is not saved with the order: the
+        reward line of the code must still be kept on another device."""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.code_promo_program.active = True
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 0,
+        })
+        self.start_pos_tour("test_promo_code_reward_of_order_loaded_on_another_device_make_order", login="pos_user")
+        order = self.env['pos.order'].search([('config_id', '=', self.main_pos_config.id)])
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'draft')
+        self.assertFalse(reward_line.coupon_id)
+
+        self.start_pos_tour("test_promo_code_reward_of_order_loaded_on_another_device", login="pos_user")
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.amount_total, 50)
+        self.assertEqual(len(reward_line), 1)
+        self.assertEqual(reward_line.coupon_id.program_id, self.code_promo_program)
+
     def test_race_conditions_update_program(self):
         """This test ensures that the loyalty program update are correctly applied, even if a lot of programs applies on one order."""
         product_test = self.env['product.product'].create({
@@ -3974,6 +4066,56 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("test_reward_line_tax_grouping_key", pos_config=self.main_pos_config)
         self.main_pos_config.current_session_id.action_pos_session_closing_control()
 
+    def test_specific_discount_with_negative_line(self):
+        """The reward lines of a fixed discount must add up to the discount when
+        a negative line is taxed differently from the discounted products.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        tax_10_incl = self.env['account.tax'].create({
+            'name': 'Tax 10% incl',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+        })
+        self.env['product.product'].create([{
+            'name': 'Product A',
+            'list_price': 1000,
+            'available_in_pos': True,
+            'taxes_id': [Command.set(tax_10_incl.ids)],
+        }, {
+            'name': 'Voucher',
+            'list_price': -100,
+            'available_in_pos': True,
+            'taxes_id': [Command.clear()],
+        }])
+        self.env['loyalty.program'].create({
+            'name': 'Fixed discount on specific products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 50,
+                'discount_mode': 'per_order',
+                'discount_applicability': 'specific',
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosLoyaltySpecificDiscountNegativeLine')
+
+        order = self.main_pos_config.current_session_id.order_ids
+        self.assertAlmostEqual(sum(order.lines.filtered('is_reward_line').mapped('price_subtotal_incl')), -50.00, places=2)
+        self.assertAlmostEqual(order.amount_total, 850.00, places=2)
+
     def test_partner_list_after_removing_code_activated_coupon(self):
         """A coupon assigned to a partner is loaded at POS boot and cached in
         `partnerId2CouponIds`. Activating its code and then removing the reward line
@@ -4005,3 +4147,31 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosLoyaltyPartnerListAfterCouponRemoval')
+
+
+@tagged('post_install', '-at_install')
+class TestPosSessionError(TestPointOfSaleHttpCommon):
+
+    def test_missing_gift_card_print_report(self):
+        """Opening the POS displays the missing report error without creating a session."""
+        self.env['loyalty.program'].search([]).active = False
+        program = self.env['loyalty.program'].browse(
+            self.env['loyalty.program'].create_from_template('gift_card')['res_id']
+        )
+        program.write({
+            'pos_report_print_id': False,
+            'pos_config_ids': [Command.clear()],
+            'currency_id': self.main_pos_config.currency_id.id,
+        })
+        program.rule_ids.product_ids.available_in_pos = True
+        self.assertTrue(program.mail_template_id)
+
+        self.authenticate('pos_user', 'pos_user')
+        # The expected validation error is logged by the HTTP dispatcher.
+        with mute_logger('odoo.http'):
+            response = self.url_open(self._get_url())
+        self.assertIn('Oops! Something went wrong.', response.text)
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn('There is no print report on the gift card program', response.text)
+        self.assertFalse(self.main_pos_config.current_session_id)

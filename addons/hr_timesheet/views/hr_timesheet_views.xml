@@ -214,13 +214,13 @@
                 </xpath>
                 <filter name="month" position="inside">
                     <filter name="date_this_week" string="This Week" domain="[
-                        ('date', '&gt;=', '=week_start'),
-                        ('date', '&lt;', '=week_start +1w'),
+                        ('date', '&gt;=', 'today =week_start'),
+                        ('date', '&lt;', 'today =week_start +1w'),
                     ]"/>
                     <filter name="date_today" string="Today" domain="[('date', '&gt;=', 'today'), ('date', '&lt;', 'today +1d')]"/>
                     <filter name="date_last_week" string="Last Week" domain="[
-                        ('date', '&gt;=', '=week_start -1w'),
-                        ('date', '&lt;', '=week_start'),
+                        ('date', '&gt;=', 'today =week_start -1w'),
+                        ('date', '&lt;', 'today =week_start'),
                     ]"/>
                 </filter>
                 <xpath expr="//group[@name='groupby']" position="before">
@@ -344,7 +344,11 @@
                     <field name="project_id"/>
                     <field name="task_id" invisible="not task_id"/>
                     <field name="name"/>
-                    <field name="employee_id" avatar_field="avatar_128" filters="1" write_model="account.analytic.line.calendar.employee" write_field="employee_id" filter_field="checked"/>
+                    <field name="employee_id" avatar_field="avatar_128" filters="1"
+                           widget="many2one_avatar_employee"
+                           options="{'relation': 'hr.employee.public'}"
+                           write_model="account.analytic.line.calendar.employee"
+                           write_field="employee_id" filter_field="checked"/>
                 </calendar>
             </field>
         </record>

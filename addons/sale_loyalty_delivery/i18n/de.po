@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-02 14:25+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
@@ -39,8 +39,17 @@ msgstr ""
 "Automatische Werbeaktion: kostenloser Versand bei Bestellungen über 50 €"
 
 #. module: sale_loyalty_delivery
+#. odoo-python
+#: code:addons/sale_loyalty_delivery/controllers/payment.py:0
+msgid ""
+"Cannot process payment: Gift cards and eWallets are not compatible with on "
+"site payment"
+msgstr ""
+
+#. module: sale_loyalty_delivery
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_loyalty_program__display_name
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_loyalty_reward__display_name
+#: model:ir.model.fields,field_description:sale_loyalty_delivery.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
@@ -67,6 +76,7 @@ msgstr "Kostenloser Versand"
 #. module: sale_loyalty_delivery
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_loyalty_program__id
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_loyalty_reward__id
+#: model:ir.model.fields,field_description:sale_loyalty_delivery.field_payment_provider__id
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_sale_order__id
 msgid "ID"
 msgstr "ID"
@@ -82,6 +92,11 @@ msgid "Loyalty Reward"
 msgstr "Treuebonus"
 
 #. module: sale_loyalty_delivery
+#: model:ir.model,name:sale_loyalty_delivery.model_payment_provider
+msgid "Payment Provider"
+msgstr ""
+
+#. module: sale_loyalty_delivery
 #: model:ir.model.fields,field_description:sale_loyalty_delivery.field_loyalty_reward__reward_type
 msgid "Reward Type"
 msgstr "Belohnungstyp"
@@ -90,3 +105,9 @@ msgstr "Belohnungstyp"
 #: model:ir.model,name:sale_loyalty_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
+
+#. module: sale_loyalty_delivery
+#. odoo-python
+#: code:addons/sale_loyalty_delivery/models/payment_provider.py:0
+msgid "incompatible with gift cards and eWallets"
+msgstr ""

@@ -118,6 +118,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                             {
                                 "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
                                 "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                                "formats": ["urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"],
                             },
                         ],
                     },
@@ -135,6 +136,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                             {
                                 "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
                                 "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                                "formats": ["urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"],
                             }
                         ],
                     },
@@ -289,15 +291,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # peppol is not possible to select
         self.assertFalse(wizard.alerts)  # there is no alerts
 
-    @patch('odoo.addons.account_peppol.models.res_partner.ResPartner._check_document_type_support', return_value=False)
-    def test_send_peppol_alerts_not_valid_format_partner(self, mocked_check):
+    def test_send_peppol_alerts_not_valid_format_partner(self):
+        ''' Tries to send using the NLCIUS format but the partner only accepts BIS3 '''
+        self.valid_partner.invoice_edi_format = 'nlcius'
         move = self.create_move(self.valid_partner)
         move.action_post()
-        wizard = self.create_send_and_print(move, sending_methods=['peppol'])
-
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive bis3
+        wizard = self.create_send_and_print(move, sending_methods=['peppol'])  # Peppol not checked by default, force it
+        self.assertEqual(wizard.invoice_edi_format, 'nlcius')
         self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
+        self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive NLCIUS
 
     def test_send_peppol_alerts_invalid_partner(self):
         """If there's already account_edi_ubl_cii_configure_partner, the warning should not appear."""
@@ -407,6 +409,39 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             ['oops_another_bill@example.com'],
             subject=f"{self.env.company.name} - New invoice in {peppol_purchase_journal.display_name} journal",
         )
+
+    def test_receive_peppol_document_parsing_failure_creates_empty_move(self):
+        # return False to simulate an error during the parsing
+        with patch(
+            'odoo.addons.account.models.account_move.AccountMove._extend_with_attachments',
+            return_value=False,
+        ):
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertTrue(move, "the move should still have been created")
+
+        # Move should be fully empty
+        self.assertFalse(move.invoice_line_ids)
+        self.assertFalse(move.partner_id)
+        self.assertEqual(move.amount_total, 0)
+        self.assertEqual(move.peppol_move_state, 'error')
+
+        messages = self.env['mail.message'].search([
+            ('model', '=', 'account.move'),
+            ('res_id', '=', move.id),
+        ])
+        self.assertTrue(
+            messages.filtered(lambda m: 'error' in (m.body or '').lower()),
+            "an error should be surfaced to the user on the failed import",
+        )
+
+        # document must be attached even if there's nothing
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', move.id),
+        ])
+        self.assertTrue(attachment, "the original document should still be attached to the move")
 
     def test_peppol_document_retrieval_with_company_context(self):
         # Ensure that the bill creation is done using the move company/proxy user context
@@ -606,6 +641,27 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         self.assertEqual(len(moves.ubl_cii_xml_id), 2)
         self.assertEqual(moves.mapped('peppol_move_state'), ['processing', 'processing'])
+
+    def test_peppol_only_sending_method_batch_no_false_error(self):
+        """ A move sent via Peppol as its only sending method must be considered as sent, not flagged
+        as 'generated but not sent'.
+        """
+        self.valid_partner.invoice_edi_format = False
+        self.valid_partner.email = False
+
+        move_1 = self.create_move(self.valid_partner)
+        move_2 = self.create_move(self.valid_partner)
+        moves = (move_1 + move_2)
+        moves.action_post()
+        wizard = self.create_send_and_print(moves, default=True)
+        self.assertEqual(wizard.summary_data, {'peppol': {'count': 2, 'label': 'by Peppol'}})
+        wizard.action_send_and_print()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+
+        self.assertEqual(moves.mapped('peppol_move_state'), ['processing', 'processing'])
+        self.assertTrue(all(move.peppol_is_sent for move in moves))
+        self.assertFalse(moves.message_ids.filtered(lambda m: 'Invoice generated but not sent.' in (m.body or '')))
 
     def test_silent_error_while_creating_xml(self):
         """When in multi/async mode, the generation of XML can fail silently (without raising).

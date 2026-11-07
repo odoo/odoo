@@ -30,7 +30,9 @@ class ResUsers(models.Model):
         super()._compute_im_status()
         dayfield = self.env['hr.employee']._get_current_day_location_field()
         for user in self:
-            location_type = user[dayfield].location_type
+            # sudo: hr.employee.location - can read today's location of a user to show its IM status
+            employee = user.sudo().employee_id
+            location_type = (employee.exceptional_location_id or employee[dayfield]).location_type
             if not location_type:
                 continue
             im_status = user.im_status

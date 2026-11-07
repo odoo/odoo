@@ -35,26 +35,33 @@ class TestFleet(common.TransactionCase):
         car.with_user(self.manager).plan_to_change_car = True
 
     def test_change_future_driver(self):
+        registered_state = self.env.ref(
+            "fleet.fleet_vehicle_state_registered"
+        )
         car1, car2, bike1, bike2 = self.env["fleet.vehicle"].create([
             {
                 "model_id": self.car_model.id,
                 "driver_id": self.user.partner_id.id,
                 "plan_to_change_car": False,
+                "state_id": registered_state.id,
             },
             {
                 "model_id": self.car_model.id,
                 "driver_id": self.manager.partner_id.id,
                 "plan_to_change_car": False,
+                "state_id": registered_state.id,
             },
             {
                 "model_id": self.bike_model.id,
                 "driver_id": self.user.partner_id.id,
                 "plan_to_change_car": False,
+                "state_id": registered_state.id,
             },
             {
                 "model_id": self.bike_model.id,
                 "driver_id": self.manager.partner_id.id,
                 "plan_to_change_car": False,
+                "state_id": registered_state.id,
             },
         ])
         self.assertFalse(car1.future_driver_id)

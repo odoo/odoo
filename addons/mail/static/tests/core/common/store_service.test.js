@@ -1,6 +1,6 @@
 import { Message } from "@mail/core/common/message_model";
 
-import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
 
 import { expect, test } from "@odoo/hoot";
 
@@ -8,6 +8,7 @@ import {
     asyncStep,
     getService,
     patchWithCleanup,
+    serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
@@ -78,4 +79,42 @@ test("store.insert different PY model having same JS model", async () => {
     expect(Boolean(store.Thread.get({ id: 1, model: "discuss.channel" }))).toBe(true);
     expect(Boolean(store.Thread.get({ id: 2, model: "discuss.channel" }))).toBe(true);
     expect(Boolean(store.Thread.get({ id: 3, model: "discuss.channel" }))).toBe(true);
+});
+
+test("no push notification while user is busy", async () => {
+    await startServer();
+    patchWithCleanup(parent.document, { hasFocus: () => false });
+    patchWithCleanup(navigator.serviceWorker, {
+        controller: {
+            postMessage(data) {
+                asyncStep(data);
+            },
+        },
+    });
+    await start();
+    const store = getService("mail.store");
+    await store.isReady;
+    const requestDisplay = () =>
+        navigator.serviceWorker.dispatchEvent(
+            new MessageEvent("message", {
+                data: {
+                    type: "notification-display-request",
+                    payload: {
+                        correlationId: "push",
+                        model: "res.partner",
+                        res_id: serverState.partnerId,
+                    },
+                },
+            })
+        );
+    // online
+    store.self_partner.im_status = "online";
+    requestDisplay();
+    await waitForSteps([]);
+    // busy
+    store.self_partner.im_status = "busy";
+    requestDisplay();
+    await waitForSteps([
+        { type: "notification-display-response", payload: { correlationId: "push" } },
+    ]);
 });

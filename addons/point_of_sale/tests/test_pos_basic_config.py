@@ -1352,6 +1352,25 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
         self.assertEqual(self.env['account.move'].search_count([('pos_order_ids', 'in', order.ids)]), 1, 'Order should have one invoice')
 
+    def test_invoice_paid_with_cash_change_same_receivable_account(self):
+        """ Test that when the default_pos_receivable_account and the partner
+        account_receivable are the same, an invoiced order paid in cash
+        with change is correctly marked as paid.
+        """
+        self.company.account_default_pos_receivable_account_id = self.customer.property_account_receivable_id
+        self.open_new_session()
+
+        order_data = self.create_ui_order_data(
+            [(self.product1, 1)],
+            pos_order_ui_args={'amount_return': -5},
+            payments=[(self.cash_pm1, 15)],
+            customer=self.customer,
+            is_invoiced=True,
+        )
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env['pos.order'].browse(res['pos.order'][0]['id'])
+        self.assertEqual(order.account_move.payment_state, 'paid')
+
     def test_pos_archived_combination(self):
         product = self.env['product.template'].create({
             'name': 'Product Test',
@@ -1422,6 +1441,56 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(len(product_data['_archived_combinations']), 1, "There should be one archived combination for the product")
         self.assertEqual(len(product_data['_archived_combinations'][0]), 2, "Archived combination should have two values")
         self.assertTrue(all(value in product_data['_archived_combinations'][0] for value in first_variant.product_template_attribute_value_ids.ids), "Archived combination should match the first variant's attribute values")
+
+    def test_load_product_from_pos_archived_attribute_line(self):
+        """ Loading the archived variant of a past order must not link the archived
+        attribute line and variants to the template used for new sales. """
+        size_attribute, color_attribute = self.env['product.attribute'].create([{
+            'name': 'Size',
+            'create_variant': 'dynamic',
+            'value_ids': [(0, 0, {'name': 'S'}), (0, 0, {'name': 'M'})],
+        }, {
+            'name': 'Color',
+            'create_variant': 'always',
+            'value_ids': [(0, 0, {'name': 'Red'}), (0, 0, {'name': 'Blue'})],
+        }])
+        product = self.env['product.template'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)],
+            }), (0, 0, {
+                'attribute_id': color_attribute.id,
+                'value_ids': [(6, 0, color_attribute.value_ids.ids)],
+            })],
+        })
+        size_line = product.attribute_line_ids.filtered(lambda l: l.attribute_id == size_attribute)
+        color_line = product.attribute_line_ids - size_line
+        sold_variant = product._create_product_variant(
+            product.attribute_line_ids.product_template_value_ids.filtered(lambda v: v.name in ('S', 'Red'))
+        )
+
+        self.open_new_session()
+        self._create_orders([{'pos_order_lines_ui_args': [(sold_variant, 1)]}])
+
+        # The sold variant can't be deleted, so removing the line archives both
+        product.write({'attribute_line_ids': [(2, size_line.id)]})
+        self.assertFalse(size_line.active)
+        self.assertFalse(sold_variant.active)
+
+        # Same call as when the POS loads a past order containing the archived variant
+        result = self.env['product.template'].with_context(load_archived=True).load_product_from_pos(
+            self.config.id, [('product_variant_ids.id', 'in', sold_variant.ids)]
+        )
+        product_data = next(item for item in result['product.template'] if item['id'] == product.id)
+        self.assertEqual(product_data['attribute_line_ids'], color_line.ids, "The archived attribute line should not be linked to the template")
+        self.assertNotIn(sold_variant.id, product_data['product_variant_ids'], "The archived variant should not be linked to the template")
+        # The archived records are still loaded so that the past order can be displayed
+        self.assertIn(sold_variant.id, [p['id'] for p in result['product.product']])
+        self.assertIn(size_line.id, [l['id'] for l in result['product.template.attribute.line']])
 
     def test_refunded_order_id(self):
         """

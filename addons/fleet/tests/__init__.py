@@ -2,4 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_access_rights
+from . import test_fleet_ui
 from . import test_overdue
+from . import test_send_mail

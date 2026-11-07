@@ -6,13 +6,14 @@
 # Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-07 23:30+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-09-21 05:33+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/iap/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -73,6 +74,11 @@ msgid "Company"
 msgstr "الشركة"
 
 #. module: iap
+#: model:ir.model,name:iap.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
 #: model:ir.model.fields,field_description:iap.field_iap_service__create_uid
 msgid "Created by"
@@ -99,6 +105,7 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
 
@@ -119,9 +126,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data "
 "of your opportunities."
 msgstr ""
-"احصل على عملاء مهتمين وفرص عالية الجودة: قم بتحويل زائري موقعك الإلكتروني إلى "
-"عملاء مهتمين، وإنشاء عملاء مهتمين بناءً على مجموعة من المعايير وإثراء بيانات "
-"الشركة الخاصة بفرصك."
+"احصل على عملاء مهتمين وفرص عالية الجودة: قم بتحويل زائري موقعك الإلكتروني "
+"إلى عملاء مهتمين، وإنشاء عملاء مهتمين بناءً على مجموعة من المعايير وإثراء "
+"بيانات الشركة الخاصة بفرصك."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -137,7 +144,6 @@ msgstr "حساب IAP"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
 msgstr "حسابات IAP"
 
@@ -155,8 +161,14 @@ msgstr "خدمة الشراء داخل التطبيق"
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "المُعرف"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "In-App Purchase Accounts"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -174,6 +186,11 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Manage"
+msgstr ""
 
 #. module: iap
 #. odoo-javascript
@@ -226,6 +243,11 @@ msgid "Registered"
 msgstr "مُسجل"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Rotate"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
 msgid "Service"
 msgstr "الخدمة"
@@ -249,8 +271,16 @@ msgstr "الاسم التقني"
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
-msgid "The IAP token provided is invalid or empty."
+msgid ""
+"The IAP server is unreachable and the information may not be up to date. "
+"Please try again later."
 msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "The IAP token provided is invalid or empty."
+msgstr "رمز الشراء داخل التطبيق (IAP token) المقدم غير صالح أو فارغ."
 
 #. module: iap
 #. odoo-python
@@ -261,6 +291,25 @@ msgid ""
 msgstr ""
 "انتهت مهلة طلب الخدمة. يرجى الاتصال بمنشئ التطبيق. كان عنوان URL الذي حاول "
 "الاتصال به هو %s"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid ""
+"This is useful if you think it may have leaked. It will also deactivate auto-"
+"refill if set. Are you sure to rotate your IAP token?"
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unable to rotate token, another process is busy. Please try later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unexpected while contacting IAP. Please contact the support."
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
@@ -289,9 +338,6 @@ msgstr "اعرض خدمات IAP الخاصة بك وقم بإعادة شحن ر�
 
 #~ msgid "Cancel"
 #~ msgstr "إلغاء "
-
-#~ msgid "Config Settings"
-#~ msgstr "تهيئة الإعدادات "
 
 #~ msgid "Insufficient credit to perform this service."
 #~ msgstr "الرصيد غير كافٍ لإجراء هذه الخدمة."

@@ -90,6 +90,17 @@ import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
 export * from "./mail_test_helpers_contains";
 
+const { AudioContext } = window;
+
+/**
+ * Audio context that processes audio without rendering it to any output device.
+ */
+class SilentAudioContext extends AudioContext {
+    constructor(options) {
+        super({ ...options, sinkId: { type: "none" } });
+    }
+}
+
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
@@ -344,6 +355,7 @@ export async function start(options) {
             after(() => this.clear());
         },
     });
+    preventActualMediaUsage();
     if (!MockServer.current) {
         await startServer();
     }
@@ -468,7 +480,7 @@ export async function patchUiSize({ height, size, width }) {
 }
 
 function createAudioStream() {
-    const ctx = new window.AudioContext();
+    const ctx = new SilentAudioContext();
     const dest = ctx.createMediaStreamDestination();
     after(() => {
         closeStream(dest.stream);
@@ -522,6 +534,32 @@ export function mockGetMedia() {
         },
     });
     return streams;
+}
+
+/**
+ * Prevents tests from using the actual microphone, camera, screen and speakers:
+ * media requests that are not mocked by the test get synthetic streams, and
+ * audio is processed without being rendered to an output device.
+ *
+ * The prototype is patched so that the test's own mocks on `navigator.mediaDevices`
+ * (e.g. `mockGetMedia`, denied permissions) take precedence regardless of order.
+ */
+function preventActualMediaUsage() {
+    patchWithCleanup(MediaDevices.prototype, {
+        async getUserMedia(constraints) {
+            return constraints?.audio ? createAudioStream() : createVideoStream();
+        },
+        async getDisplayMedia() {
+            return createVideoStream();
+        },
+    });
+    if (window.AudioContext === AudioContext) {
+        patchWithCleanup(window, { AudioContext: SilentAudioContext });
+    }
+    if (browser.AudioContext === AudioContext) {
+        // not already mocked by the test, e.g. with `patchVoiceMessageAudio`
+        patchWithCleanup(browser, { AudioContext: SilentAudioContext });
+    }
 }
 
 /**
@@ -935,7 +973,7 @@ export function patchVoiceMessageAudio() {
             }
             /** @returns {AudioBuffer} */
             decodeAudioData(...args) {
-                return new AudioContext().decodeAudioData(...args);
+                return new SilentAudioContext().decodeAudioData(...args);
             }
         },
         AudioWorkletNode: class {

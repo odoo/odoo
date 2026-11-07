@@ -143,3 +143,10 @@ class StockMoveLine(models.Model):
             self.move_id.unbuild_id
             and not self.move_id.origin_returned_move_id.move_line_ids.lot_id
         ) or super()._exclude_requiring_lot()
+
+    def _get_outdated_candidate_sort_key(self, candidate):
+        """ Prioritise the current component production first"""
+        production = self.move_id.raw_material_production_id
+        if not production:
+            return super()._get_outdated_candidate_sort_key(candidate)
+        return (candidate.move_id.raw_material_production_id != production,) + super()._get_outdated_candidate_sort_key(candidate)

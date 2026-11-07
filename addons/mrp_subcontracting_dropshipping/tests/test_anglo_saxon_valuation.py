@@ -238,3 +238,77 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         self.assertEqual(avco_product.standard_price, 0)
         self.assertEqual(avco_product_2.standard_price, 0)
+
+    def test_mto_kit_component_keeps_cost_on_vendor_bill(self):
+        """
+        Sell a kit whose AVCO component is replenished on order from a vendor. The
+        component enters stock at its purchase price on receipt, and a partial vendor
+        bill revalues only the billed units at the bill price.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.mto_pull_id.route_id.active = True
+        warehouse.mto_pull_id.procure_method = 'mts_else_mto'
+        component, kit = self.env['product.product'].create([{
+            'name': 'avco component',
+            'is_storable': True,
+            'categ_id': self.categ_avco_auto.id,
+            'route_ids': [Command.set([warehouse.mto_pull_id.route_id.id, warehouse.buy_pull_id.route_id.id])],
+            'seller_ids': [Command.create({'partner_id': self.partner_a.id, 'price': 60})],
+        }, {
+            'name': 'kit',
+        }])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 4})],
+        })
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_b.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_uom_qty': 1.0})],
+        })
+        sale_order.action_confirm()
+
+        purchase_order = sale_order._get_purchase_orders()
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.button_validate()
+        self.assertEqual(component.standard_price, 60)
+
+        # Bill 2 of the 4 received units at 90: only those 2 units are revalued, so the
+        # component's cost blends to (2*90 + 2*60) / 4 = 75.
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        with Form(bill) as bill_form:
+            bill_form.invoice_date = fields.Date.today()
+            with bill_form.invoice_line_ids.edit(0) as line:
+                line.quantity = 2
+                line.price_unit = 90
+        bill.action_post()
+        self.assertEqual(component.standard_price, 75)
+
+    def test_resupply_dropship_bill_accounts(self):
+        """
+        A component dropshipped by its vendor to the subcontractor lands in the valued
+        subcontracting location: its bill must hit the stock valuation account, unless
+        the component is not storable.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto.id,
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id})],
+        })
+        accounts = self.product_b.product_tmpl_id.get_product_accounts()
+        for is_storable, account in [(True, accounts['stock_valuation']), (False, accounts['expense'])]:
+            self.product_b.is_storable = is_storable
+            self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({'product_id': self.product_a.id})],
+            }).button_confirm()
+            resupply_po = self.env['purchase.order'].search([
+                ('product_id', '=', self.product_b.id),
+                ('state', '=', 'draft'),
+            ])
+            resupply_po.button_confirm()
+            resupply_po.picking_ids.button_validate()
+            resupply_po.action_create_invoice()
+            self.assertEqual(resupply_po.invoice_ids.invoice_line_ids.account_id, account)

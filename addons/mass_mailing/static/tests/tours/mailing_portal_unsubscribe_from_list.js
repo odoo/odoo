@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list", 
         {
             content: "Confirmation unsubscribe is done",
             trigger:
-                "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
+                "div#o_mailing_subscription_info span:contains('You are no longer part of the List2, List1 mailing list')",
             run: "click",
         },
         {
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list_wi
         {
             content: "Confirmation unsubscribe is done",
             trigger:
-                "div#o_mailing_subscription_info span:contains('You are no longer part of the List1, List2 mailing list')",
+                "div#o_mailing_subscription_info span:contains('You are no longer part of the List2, List1 mailing list')",
             run: "click",
         },
         {

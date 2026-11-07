@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-09 10:40+0000\n"
 "Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/product/"
@@ -541,8 +541,7 @@ msgstr "افزودن به محصولات"
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
-msgstr ""
-"سایر بسته‌بندی‌ها برای این محصول که می‌توان از آنها برای فروش استفاده کرد"
+msgstr "سایر بسته‌بندی‌ها برای این محصول که می‌توان از آنها برای فروش استفاده کرد"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_adidas
@@ -3585,6 +3584,12 @@ msgid "Sony"
 msgstr ""
 
 #. module: product
+#. odoo-python
+#: code:addons/product/report/product_pricelist_report.py:0
+msgid "Sorry, you are not allowed to access this document."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
@@ -3838,9 +3843,9 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
-"تعداد گونه‌های قابل ایجاد بیشتر از حد مجاز است. برای هر ترکیب گونه ایجاد نکنید"
-"، یا آنها را بر اساس تقاضا بر اساس سفارش فروش تولید کنید. برای این کار، نمای "
-"فرم مشخصه‌ها را باز کرده و حالت «ایجاد گونه‌ها» را تغییر دهید."
+"تعداد گونه‌های قابل ایجاد بیشتر از حد مجاز است. برای هر ترکیب گونه ایجاد "
+"نکنید، یا آنها را بر اساس تقاضا بر اساس سفارش فروش تولید کنید. برای این کار، "
+"نمای فرم مشخصه‌ها را باز کرده و حالت «ایجاد گونه‌ها» را تغییر دهید."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -4017,8 +4022,8 @@ msgid ""
 "Unable to import products with attribute value without attribute name "
 "(defined as: attribute:value): %s"
 msgstr ""
-"امکان ایمپورت محصولات با مقدار مشخصه بدون نام مشخصه (به صورت attribute:value) "
-"وجود ندارد: %s"
+"امکان ایمپورت محصولات با مقدار مشخصه بدون نام مشخصه (به صورت "
+"attribute:value) وجود ندارد: %s"
 
 #. module: product
 #. odoo-python
@@ -4565,8 +4570,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on "
 "the following products: %(products)s"
 msgstr ""
-"امکان تغییر مشخصه مقدار %(value)s وجود ندارد، زیرا در این محصولات استفاده شده "
-"است: %(products)s"
+"امکان تغییر مشخصه مقدار %(value)s وجود ندارد، زیرا در این محصولات استفاده "
+"شده است: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -4615,7 +4620,8 @@ msgid ""
 "following products:\n"
 "%(products)s"
 msgstr ""
-"حذف مشخصه %(attribute)s امکان‌پذیر نیست، زیرا در محصولات زیر استفاده شده است:\n"
+"حذف مشخصه %(attribute)s امکان‌پذیر نیست، زیرا در محصولات زیر استفاده شده "
+"است:\n"
 "%(products)s"
 
 #. module: product

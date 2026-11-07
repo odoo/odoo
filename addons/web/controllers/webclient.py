@@ -56,10 +56,9 @@ class WebClient(http.Controller):
         if mods:
             mods = mods.split(',')
         else:
-            mods = request.env.registry._init_modules.union(odoo.tools.config['server_wide_modules'])
+            mods = request.env['ir.http']._get_web_translations_modules()
 
-        if lang and lang not in {code for code, _ in request.env['res.lang'].sudo().get_installed()}:
-            lang = None
+        lang = request.env['ir.http']._get_web_translations_lang(lang)
 
         current_hash = request.env["ir.http"].with_context(cache_translation_data=True)._get_web_translations_hash(mods, lang)
 

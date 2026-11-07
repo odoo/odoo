@@ -2334,6 +2334,8 @@ class TestStockValuation(TestStockValuationCommon):
         """
         Ensure that qty_available, free_qty, avg_cost, and total_value are computed
         correctly for products at a historical to_date, taking the user's timezone into account.
+        A receipt in the evening of the company timezone, already the next day in UTC,
+        counts on that day.
         """
         self.env.user.tz = 'Europe/Paris'
         to_date = date(2024, 1, 10)
@@ -2380,6 +2382,50 @@ class TestStockValuation(TestStockValuationCommon):
             products.with_context(to_date="2024-01-10"),
             expected_values,
         )
+
+        self.env.company.tz = 'America/Bogota'  # UTC-5
+        with freeze_time('2024-01-11 01:00:00'):  # 2024-01-10 20:00 in Bogota
+            self._make_in_move(self.product_standard, 1)
+        with freeze_time('2024-01-12 10:00:00'):
+            self.assertRecordValues(
+                self.product_standard.with_context(to_date=to_date),
+                [{'qty_available': 11.0, 'total_value': 110.0}],
+            )
+
+    def test_valuation_report_and_closing_use_company_timezone(self):
+        """ With the company in UTC+9 and the user in Brussels, 2026-07-01 20:00 UTC
+        is July 1 for the user and July 2 for the company. The valuation report and
+        a closing at July 1 count what happened until the end of the company's
+        July 1, and a closing generated at that moment is dated July 2 and posted. """
+        self.env.company.tz = 'Asia/Tokyo'  # UTC+9
+        self.env.user.tz = 'Europe/Brussels'
+        self._use_inventory_location_accounting()
+        product = self.product_standard_auto
+        with freeze_time('2026-07-01 01:00:00'):  # 2026-07-01 10:00 for the company
+            self._make_in_move(product, 1)
+        with freeze_time('2026-07-01 20:00:00'):  # 2026-07-01 22:00 for the user, 2026-07-02 05:00 for the company
+            self._make_in_move(product, 1)
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+            closing_move = self._close(at_date=date(2026, 7, 1))
+            valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+            variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
+            self.assertRecordValues(
+                valuation_aml + variation_aml,
+                [
+                    {'account_id': self.account_stock_valuation.id, 'debit': 10, 'credit': 0},
+                    {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 10},
+                ]
+            )
+            closing = self._close()
+            self.assertEqual(closing.date, date(2026, 7, 2))
+            self.assertEqual(closing.state, 'posted')
+        with freeze_time('2026-07-02 10:00:00'):  # 2026-07-02 12:00 for the user
+            report = self.env['stock_account.stock.valuation.report'].get_report_values(date='2026-07-01')['data']
+            self.assertEqual(report['ending_stock']['value'], 10.0)
 
     def test_stock_report_avco_warehouse_dependency(self):
         """ Create two warehouses and check that the total value and the on hand quantity
@@ -3290,6 +3336,32 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(report_lines[-1].quantity, 3)
         self.assertEqual(report_lines[-1].added_value, 30)
 
+    def test_avco_report_for_lot_valuated_product(self):
+        """Ensure that the AVCO justification report for lot valuated
+        product is accurate at all steps.
+        """
+        self.product_avco.write({
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
+        lot1, lot2 = self.env['stock.lot'].create([{
+            'name': f'Lot{i}',
+            'product_id': self.product_avco.id,
+        } for i in range(0, 2)])
+        self._make_in_move(self.product_avco, quantity=1, unit_cost=10, lot_ids=lot1)
+        self._make_in_move(self.product_avco, quantity=1, unit_cost=20, lot_ids=lot2)
+        self._make_out_move(self.product_avco, quantity=1, lot_ids=lot2)
+        report_lines = self.env['stock.avco.report'].search([('product_id', '=', self.product_avco.id)]).sorted('date, id')[1:]
+        self.assertEqual(report_lines[-1].avco_value, self.product_avco.standard_price)
+        self.assertRecordValues(
+            report_lines,
+            [
+                {'added_value': 10, 'total_quantity': 1, 'total_value': 10, 'avco_value': 10},
+                {'added_value': 20, 'total_quantity': 2, 'total_value': 30, 'avco_value': 15},
+                {'added_value': -20, 'total_quantity': 1, 'total_value': 10, 'avco_value': 10},
+            ],
+        )
+
     def test_avco_report_after_cost_method_change(self):
         """Ensure that the AVCO justification report for a product is accurate at all steps, even if
         the cost method changed after some moves.
@@ -3477,10 +3549,11 @@ class TestStockValuation(TestStockValuationCommon):
     def test_cron_post_stock_valuation_domain(self):
         """ Cron must process daily/periodic every day and add monthly/periodic
         on the last day of the month, regardless of the valuation method.
-        Manual companies must be skipped.
+        Manual companies must be skipped. The last day of the month is the one
+        of the company timezone.
         """
         Company = self.env['res.company']
-        daily_periodic, monthly_periodic, daily_realtime, manual_periodic = Company.create([
+        daily_periodic, monthly_periodic, daily_realtime, manual_periodic, monthly_tokyo = Company.create([
             {
                 'name': 'Daily Periodic',
                 'inventory_period': 'daily',
@@ -3500,6 +3573,11 @@ class TestStockValuation(TestStockValuationCommon):
                 'name': 'Manual Periodic',
                 'inventory_period': 'manual',
                 'inventory_valuation': 'periodic',
+            },
+            {
+                'name': 'Monthly Tokyo',
+                'inventory_period': 'monthly',
+                'tz': 'Asia/Tokyo',  # UTC+9
             },
         ])
 
@@ -3533,6 +3611,51 @@ class TestStockValuation(TestStockValuationCommon):
                 self.assertIn(monthly_periodic.id, called_ids)
                 self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
+
+            with freeze_time('2026-03-30 16:00:00'):  # 2026-03-31 01:00 in Tokyo
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(monthly_tokyo.id, called_ids)
+
+            with freeze_time('2026-03-31 16:00:00'):  # 2026-04-01 01:00 in Tokyo
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertNotIn(monthly_tokyo.id, called_ids)
+
+    def test_continental_closing_uses_company_fiscal_year(self):
+        """ In continental perpetual valuation, the variation of an inventory
+        adjustment made in June 2026 belongs to the 2026 fiscal year: with the
+        company in UTC+9, a closing generated at 2026-12-31 20:00 UTC is already
+        on the company's 2027-01-01 and has nothing to post for 2027. """
+        self.env.company.tz = 'Asia/Tokyo'  # UTC+9
+        self.account_stock_valuation.account_stock_expense_id = self.account_expense
+        self._use_inventory_location_accounting()
+        with freeze_time('2026-06-15 10:00:00'):
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard_auto.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+        with freeze_time('2026-12-31 20:00:00'):  # 2027-01-01 05:00 in Tokyo
+            with self.assertRaises(UserError):
+                self._close()
+
+    def test_closing_after_past_date_closing_uses_company_day(self):
+        """ With the company in UTC-5, an inventory adjustment at 2026-06-30 20:00
+        local time is posted by a closing at June 30, so the next closing has
+        nothing left to post. """
+        self.env.company.tz = 'America/Bogota'  # UTC-5
+        self._use_inventory_location_accounting()
+        with freeze_time('2026-07-01 01:00:00'):  # 2026-06-30 20:00 in Bogota
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+        with freeze_time('2026-07-03 12:00:00'):
+            self._close(at_date=date(2026, 6, 30))
+            with self.assertRaises(UserError):
+                self._close()
 
     def test_generate_entry_branch_correct_account(self):
         """ When generating entry on a branch and the main company is also selected, the account move is
@@ -3789,3 +3912,97 @@ class TestStockValuation(TestStockValuationCommon):
 
         # Company B should not have the cost from Company A, so the standard_price should remain 0.0
         self.assertEqual(product.standard_price, 0.0)
+
+    def test_multi_company_fifo_stack_isolation(self):
+        """ Check that when multiple companies are selected, the fifo logic only uses moves
+        from the main company to compute the value of the outgoing move
+        """
+        self.product_fifo.categ_id.with_company(self.other_company).property_cost_method = 'fifo'
+
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=200.0, company=self.company)
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=100.0, company=self.other_company)
+
+        other_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.other_company.id)], limit=1)
+        out_move = self.env['stock.move'].create({
+            'product_id': self.product_fifo.id,
+            'location_id': other_warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'product_uom_qty': 1,
+            'company_id': self.other_company.id,
+        })
+        out_move_with_comp = out_move.with_company(self.other_company).with_context(allowed_company_ids=[self.other_company.id, self.company.id])
+        out_move_with_comp._action_confirm()
+        out_move_with_comp._action_assign()
+        out_move_with_comp.move_line_ids.quantity = 1.0
+        out_move_with_comp.picked = True
+        out_move_with_comp._action_done()
+
+        self.assertEqual(out_move_with_comp.value, 100)
+
+    def test_standard_price_in_qty_history_report_after_recount(self):
+        """Ensure the quantity history report reflects the product's standard price
+        when inventory is recounted at a date preceding the product's creation."""
+        product_standard = self.env['product.template'].create({
+            **self.product_common_vals,
+            'name': 'Standard Product',
+            'categ_id': self.category_standard.id,
+        }).product_variant_id  # Creating via product template for creation of product.value None -> 0.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product_standard.id,
+            'inventory_quantity': 10,
+            'location_id': self.stock_location.id,
+        })._apply_inventory(Datetime.to_datetime('2026-07-01'))
+        action = self.env['stock.quantity.history'].create({'inventory_datetime': Datetime.to_datetime('2026-07-02')}).open_at_date()
+        products = self.env[action['res_model']].with_context(action['context']).search(action['domain'])
+        self.assertRecordValues(
+            products & product_standard,
+            [{
+                'standard_price': 10,
+                'qty_available': 10,
+                'total_value': 100,
+                'avg_cost': 10
+            }],
+        )
+
+    def test_avco_valuation_multicompany(self):
+        """
+        Test that changing values manually for an AVCO product in different companies results
+        in the correct total value when the product is viewed in a single or multi-company context.
+        """
+        product_avco = self.product_avco
+        now = Datetime.now()
+
+        c1 = self.env.company
+        c2 = self.env['res.company'].create({'name': 'Test Company'})
+        c1_stock_loc = self.warehouse.lot_stock_id
+        c2_stock_loc = self.env['stock.warehouse'].search([('company_id', '=', c2.id)], limit=1).lot_stock_id
+        product_company1 = product_avco.with_context(allowed_company_ids=[c1.id])
+        product_company2 = product_avco.with_context(allowed_company_ids=[c2.id])
+
+        # Change cost manually and create stock move for each company
+        with freeze_time(now + timedelta(minutes=1)):
+            product_company1.standard_price = 10
+        with freeze_time(now + timedelta(minutes=2)):
+            self._make_in_move(product_company1, 2.0, company=c1, location_id=self.supplier_location.id, location_dest_id=c1_stock_loc.id)
+        with freeze_time(now + timedelta(minutes=3)):
+            product_company2.standard_price = 50
+        with freeze_time(now + timedelta(minutes=4)):
+            self._make_in_move(product_company2, 1.0, company=c2, location_id=self.supplier_location.id, location_dest_id=c2_stock_loc.id)
+
+        self.assertRecordValues(product_company1, [{
+            'total_value': 20,
+            'qty_available': 2,
+            'avg_cost': 10,
+        }])
+        self.assertRecordValues(product_company2, [{
+            'total_value': 50,
+            'qty_available': 1,
+            'avg_cost': 50,
+        }])
+        product_companies = product_avco.with_context(allowed_company_ids=[c1.id, c2.id])
+        product_companies.invalidate_recordset(fnames=['total_value'])
+        self.assertRecordValues(product_companies, [{
+            'total_value': 70,  # sum of both total_values
+            'qty_available': 3,
+            'avg_cost': 23.33,
+        }])

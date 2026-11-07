@@ -30,6 +30,14 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     TEST_PAYMENT_DATE = fields.Date.from_string('2025-02-15')
 
     @classmethod
+    def get_default_groups(cls):
+        # needed to create sale orders in test_export_downpayments_partner_fr
+        groups = super().get_default_groups()
+        if cls.env['ir.module.module']._get('sales_team').state != 'installed':
+            return groups
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
+    @classmethod
     @TestUblCiiCommon.setup_country('fr')
     def setUpClass(cls):
         super().setUpClass()
@@ -44,7 +52,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'street': 'Rue Abbé Huet',
             'city': 'Rennes',
             'zip': '35043',
-            'vat': 'FR91746948785',
+            'vat': 'FR74968515759',
             'phone': '+33612345678',
             'pdp_identifier': '968515759_96851575905899'  # Should set company_id, peppol_eas and peppol_endpoint
         })
@@ -77,12 +85,13 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905823',
+            'company_registry': '33417522105821',
             'invoice_edi_format': 'ubl_21_fr',
             'peppol_eas': '0225',
-            'peppol_endpoint': '968515759_96851575905823',
+            'peppol_endpoint': '334175221_33417522105821',
         })
-        cls.partner_b.write({
+        cls.belgian_partner = cls.partner_b
+        cls.belgian_partner.write({
             'name': 'SUPER BELGIAN PARTNER',
             'street': 'Rue du Paradis, 10',
             'zip': '6870',
@@ -149,6 +158,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
                             {
                                 "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
                                 "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                                "formats": ["urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0"],
                             },
                         ] if ubl3_services else [],
                 }

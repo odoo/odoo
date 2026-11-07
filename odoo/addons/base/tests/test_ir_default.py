@@ -11,7 +11,8 @@ class TestIrDefault(TransactionCase):
         companyA = self.env.company
         companyB = companyA.create({'name': 'CompanyB'})
         user1 = self.env.user
-        user2 = user1.create({'name': 'u2', 'login': 'u2'})
+        user2 = user1.create({'name': 'u2', 'login': 'u2',
+            'group_ids': [(4, self.ref('base.group_user')), (4, self.ref('base.group_partner_manager'))]})
         user3 = user1.create({'name': 'u3', 'login': 'u3',
                               'company_id': companyB.id,
                               'company_ids': companyB.ids})
@@ -118,6 +119,7 @@ class TestIrDefault(TransactionCase):
             'name': 'u2', 'login': 'u2',
             'company_id': company_a.id,
             'company_ids': company_a_b.ids,
+            'group_ids': [(4, self.ref('base.group_user')), (4, self.ref('base.group_partner_manager'))],
         })
         IrDefault = self.env["ir.default"].with_user(multi_company_user)
         IrDefault.with_context(allowed_company_ids=company_a.ids).set(
@@ -146,13 +148,23 @@ class TestIrDefault(TransactionCase):
         )
 
     def test_ir_default_field(self):
-        user = self.env.user.create({'name': 'u2', 'login': 'u2'})
+        user = self.env.user.create({'name': 'u2', 'login': 'u2',
+            'group_ids': [(4, self.ref('base.group_user')), (4, self.ref('base.group_partner_manager'))]})
         IrDefault = self.env['ir.default']
         field_id = self.env['ir.model.fields']._get('res.partner', 'ref').id
         field = self.env['res.partner']._fields['ref']
         with self.assertRaises(AccessError):
             # cannot create global defaults as non-system user
             IrDefault.with_user(user).create({'field_id': field_id, 'json_value': '"test"'})
+        # can create a default
+        IrDefault.with_user(user).create({'field_id': field_id, 'json_value': '"test"', 'user_id': user.id}).unlink()
+
+        # the user cannot add a default if they cannot create records
+        access = self.env['ir.model.access'].search([('perm_create', '=', True), ('model_id.model', '=', 'res.partner')])
+        access.active = False
+        with self.assertRaises(AccessError):
+            IrDefault.with_user(user).create({'field_id': field_id, 'json_value': '"test"', 'user_id': user.id})
+        access.active = True
 
         self.patch(field, 'groups', 'base.group_system')
         # the user cannot create a default

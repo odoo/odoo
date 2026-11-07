@@ -561,7 +561,7 @@ registerWebsitePreviewTour(
         },
         {
             trigger: ".o-we-linkpopover select[name=link_style_shape]",
-            run: "select rounded-circle",
+            run: "select rounded-pill",
         },
         {
             trigger: ".o-we-linkpopover select[name='link_style_size']",
@@ -573,7 +573,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check the resulting button",
-            trigger: ":iframe .s_website_form_send.btn.btn-sm.btn-custom.rounded-circle",
+            trigger: ":iframe .s_website_form_send.btn.btn-sm.btn-custom.rounded-pill",
         },
         // Add a default value to a auto-fillable field.
         ...selectFieldByLabel("Your Name"),

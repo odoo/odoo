@@ -567,6 +567,42 @@ class TestItEdiImport(TestItEdi):
         alpha_partner.invalidate_recordset(['is_company'])
         self.assertFalse(alpha_partner.is_company)
 
+    def test_receive_bill_bank_account_riba(self):
+        """ When importing a RiBa (MP12) vendor bill, our company's IBAN must not be added to the vendor's bank accounts. """
+        vendor = self.env['res.partner'].create({
+            'name': "SOCIETA' ALPHA SRL",
+            'vat': 'IT00313371213',
+            'l10n_it_codice_fiscale': '00313371213',
+            'country_id': self.env.ref('base.it').id,
+            'is_company': True,
+        })
+        vendor_bank = self.env['res.partner.bank'].create({
+            'partner_id': vendor.id,
+            'acc_number': 'IT94W0333201600000001112418',
+        })
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/ModalitaPagamento" position="replace">
+                <ModalitaPagamento>MP12</ModalitaPagamento>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{self.test_bank.acc_number}</IBAN>
+            </xpath>
+        """)
+        self.assertEqual(invoice.partner_id, vendor)
+        self.assertEqual(vendor.bank_ids, vendor_bank)
+        self.assertEqual(invoice.partner_bank_id, vendor_bank)
+
+    def test_receive_bill_bank_account_own_iban(self):
+        """ If the IBAN in the XML is one of our own company accounts, it must not be duplicated on the vendor. """
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], f"""
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{self.test_bank.acc_number}</IBAN>
+            </xpath>
+        """)
+        self.assertFalse(invoice.partner_bank_id)
+        self.assertFalse(invoice.partner_id.bank_ids)
+        self.assertEqual(self.env['res.partner.bank'].search([('acc_number', '=', self.test_bank.acc_number)]), self.test_bank)
+
     def test_import_due_date_on_issued_invoice(self):
         """ DataScadenzaPagamento and CodicePagamento populate
         invoice_date_due and payment_reference on out_invoice and
@@ -689,7 +725,7 @@ class TestItEdiImport(TestItEdi):
                     'quantity': 5.0,
                     'name': 'DESCRIZIONE DELLA FORNITURA',
                     'price_unit': 1.0,
-                    'discount': -10.0,
+                    'discount': -10.000000000000014,
                 },
             ],
         }], applied_xml)
@@ -1074,4 +1110,33 @@ class TestItEdiImport(TestItEdi):
                 self.vat_0_N2_1_purchase | pension_tax,
                 self.vat_0_N1_purchase,
             ]
+        )
+
+    def test_import_vendor_bill_no_vat_seller(self):
+        """Do not match an existing partner with vat='/' when the seller has no IdFiscaleIVA"""
+
+        self.env['res.partner'].create({
+            'name': 'Decoy Partner',
+            'vat': '/',
+            'company_id': self.company.id,
+        })
+        existing_partners = self.env['res.partner'].search([])
+
+        # Strip IdFiscaleIVA from the seller so _l10n_it_edi_get_partner_info returns vat='/'
+        applied_xml = """
+            <xpath expr="//CedentePrestatore/DatiAnagrafici/IdFiscaleIVA" position="replace"/>
+            <xpath expr="//CedentePrestatore/DatiAnagrafici/CodiceFiscale" position="replace">
+                <CodiceFiscale>MRTMTT91D08F205J</CodiceFiscale>
+            </xpath>
+        """
+        invoice = self._assert_import_invoice(
+            'IT01234567888_FPR01.xml',
+            [{'move_type': 'in_invoice'}],
+            applied_xml,
+        )
+
+        self.assertNotIn(
+            invoice.partner_id, existing_partners,
+            "A FatturaPA seller with no VAT number must not match any existing partner "
+            "(including partners with '/' as a placeholder VAT). A new partner should be created.",
         )

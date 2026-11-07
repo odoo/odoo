@@ -122,6 +122,28 @@ class TestStockLandedCostsLots(TestLotValuation):
             {'product_qty': 3, 'total_value': 33.9},
         ])
 
+    def test_two_landed_costs_on_standard_price_lot_receipt(self):
+        """Receive 10 units of a single lot valued at the lot cost, then add two landed costs one
+        after another. Each cost raises the receipt value and the lot cost once."""
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_line_ids': [Command.create({
+                'product_id': self.product.id,
+                'lot_id': self.lot1.id,
+                'quantity': 10,
+            })],
+        })
+        receipt.button_validate()
+        self.assertEqual(receipt.move_ids.value, 100)
+
+        self._apply_landed_cost(receipt, 10, self.productlc1)
+        self.assertEqual(receipt.move_ids.value, 110)
+        self._apply_landed_cost(receipt, 5, self.productlc1)
+        self.assertEqual(receipt.move_ids.value, 115)
+        self.assertEqual(self.lot1.standard_price, 11.5)
+
     def test_landed_cost_when_partially_sold(self):
         """
         Check that the landed costs split correctly between lot/ serial numbers

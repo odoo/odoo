@@ -178,6 +178,39 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'confirm')
         self.assertEqual(leave.number_of_days, 4)
 
+    def test_new_version_does_not_update_previous_leaves(self):
+        # The leave belongs to the initial 35h schedule. The employee later switches
+        # to 40h, then gets another version while keeping that 40h schedule.
+        leave = self.create_leave(date(2022, 2, 1), date(2022, 2, 4), employee_id=self.jules_emp.id)
+        leave.action_approve()
+        self.assertEqual(leave.state, 'validate')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_35h)
+
+        intermediate_version = self.jules_emp.create_version({
+            'date_version': date(2022, 5, 1),
+            'contract_date_start': self.contract_cdi.contract_date_start,
+            'contract_date_end': False,
+            'name': 'New Schedule for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5000.0,
+        })
+        self.assertEqual(intermediate_version.resource_calendar_id, self.calendar_40h)
+        self.assertEqual(leave.state, 'validate')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_35h)
+
+        new_version = self.jules_emp.create_version({
+            'date_version': date(2022, 9, 1),
+            'contract_date_start': self.contract_cdi.contract_date_start,
+            'contract_date_end': False,
+            'name': 'New Version for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5500.0,
+        })
+
+        self.assertEqual(new_version.resource_calendar_id, self.calendar_40h)
+        self.assertEqual(leave.state, 'validate')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_35h)
+
     def test_contract_traceability_calculate_nbr_leave(self):
         """
             The goal is to test the traceability of contracts in the past,
@@ -427,3 +460,80 @@ class TestHolidaysMultiContract(TestHolidayContract):
         # Assert based on partial-time calendar
         self.assertEqual(leave.number_of_days, 1)
         self.assertEqual(leave.number_of_hours, 6)
+
+    @freeze_time('2026-09-24')
+    def test_recompute_leave_on_version_change_date_rollover(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'mythra juice box',
+            'tz': 'America/New_York',
+            'contract_date_start': datetime.strptime('2026-09-01', '%Y-%m-%d').date(),
+        })
+        first_schedule, second_schedule = self.env['resource.calendar'].create([
+            {
+                'name': "40 Hour Schedule",
+                'tz': "America/New_York"
+            },
+            {
+                'name': '50 Hour Schedule',
+                'tz': 'America/New_York',
+                'attendance_ids': [
+                    (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 22, 'day_period': 'morning'})
+                ]
+            }
+
+        ])
+        employee.version_id.write({
+            'name': "mythra's contract",
+            'resource_calendar_id': first_schedule.id,
+            'wage': 6700.0
+        })
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'display_name': 'pto for mythra',
+            'date_from': datetime.strptime('2026-09-01', '%Y-%m-%d').date(),
+            'number_of_days': 3,
+            'holiday_status_id': self.env.ref('hr_holidays.leave_type_paid_time_off').id,
+            'employee_id': employee.id
+        })
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'request_date_from': datetime(2026, 9, 15, 12, 0, 0),
+            'request_date_to': datetime(2026, 9, 17, 21, 0, 0),
+            'display_name': "mythra goes to elysium",
+            'employee_id': employee.id,
+            'holiday_status_id': self.env.ref('hr_holidays.leave_type_paid_time_off').id,
+        })
+        leave.action_approve()
+
+        self.assertRaises(employee.version_id.write({'resource_calendar_id': second_schedule.id}))
+
+    def test_cancelled_leave_next_version_calendar_change(self):
+        # A cancelled time off shouldn't be impacted when the working schedule of the next version changes
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee with two versions',
+            'tz': 'Europe/Brussels',
+        })
+        employee.version_id.write({
+            'date_version': date(2026, 9, 1),
+            'contract_date_start': date(2026, 9, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        october_version = employee.create_version({
+            'date_version': date(2026, 10, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        leave = self.create_leave(date(2026, 9, 30), date(2026, 10, 2), employee_id=employee.id)
+        leave.action_approve()
+        leave._force_cancel("Not needed anymore")
+        self.assertEqual(leave.state, 'cancel')
+
+        october_version.resource_calendar_id = self.calendar_35h
+
+        self.assertEqual(leave.state, 'cancel')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_40h)
+        self.assertEqual(self.env['hr.leave'].search([('employee_id', '=', employee.id)]), leave)

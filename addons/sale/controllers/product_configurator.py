@@ -319,6 +319,7 @@ class SaleProductConfiguratorController(Controller):
 
         values = dict(
             product_tmpl_id=product_template.id,
+            product_type=product_template.type,
             **self._get_basic_product_information(
                 product_or_template,
                 pricelist,

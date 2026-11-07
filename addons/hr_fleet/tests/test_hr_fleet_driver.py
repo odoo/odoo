@@ -85,3 +85,17 @@ class TestHrFleetDriver(common.TransactionCase):
         ])
         self.assertEqual(len(assignation_log), 1)
         self.assertEqual(assignation_log.driver_employee_id, test_employee2)
+
+    def test_driver_employee_other_company(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        car = self.env['fleet.vehicle'].create({
+            'model_id': self.model.id,
+            'company_id': other_company.id,
+            'driver_id': self.test_employee.work_contact_id.id,
+            'future_driver_id': self.test_employee.work_contact_id.id,
+        })
+        self.assertEqual(car.driver_employee_id, self.test_employee)
+        self.assertEqual(car.future_driver_employee_id, self.test_employee)
+
+        assignation_log = self.env['fleet.vehicle.assignation.log'].search([('vehicle_id', '=', car.id)])
+        self.assertEqual(assignation_log.driver_employee_id, self.test_employee)

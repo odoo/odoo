@@ -13,6 +13,12 @@ __all__ = [
     "generic",
 ]
 
+
+PageObject.add_transformation = lambda self, ctm: self.addTransformation(ctm)
+generic.PdfObject.get_object = lambda self: self.getObject()
+generic.RectangleObject.lower_left = property(lambda self: self.lowerLeft)
+
+
 # by default PdfFileReader will overwrite warnings.showwarning which is what
 # logging.captureWarnings does, meaning it essentially reverts captureWarnings
 # every time it's called which is undesirable

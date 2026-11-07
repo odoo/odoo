@@ -356,6 +356,52 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(pol.product_qty, 2.0)
         self.assertEqual(rr.qty_to_order, 0.0)
 
+    def test_reordering_rule_replenishment_uom_float_residue(self):
+        """
+        A product P in m with RR 0-0 and mm as replenishment multiple.
+        Confirm a delivery with 10000 mm x P -> RFQ created for 10 m, kept in draft.
+        Confirm a second delivery with 300 mm x P: the RFQ must be increased by
+        0.3 m, the float residue of the forecast must not be rounded up to an extra mm.
+        """
+        uom_m = self.env.ref('uom.product_uom_meter')
+        uom_mm = self.env.ref('uom.product_uom_millimeter')
+        product = self.env['product.product'].create({
+            'name': 'Rail',
+            'is_storable': True,
+            'uom_id': uom_m.id,
+            'seller_ids': [
+                Command.create({'partner_id': self.partner.id}),
+                Command.create({'partner_id': self.partner.id, 'product_uom_id': uom_mm.id, 'sequence': 2}),
+            ],
+            'route_ids': [Command.set(self.buy_route.ids)],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.warehouse.orderpoint'].create({
+            'location_id': stock_location.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'replenishment_uom_id': uom_mm.id,
+        })
+
+        for qty_mm, ordered_qty in ((10000, 10.0), (300, 10.3)):
+            self.env['stock.picking'].create({
+                'picking_type_id': warehouse.out_type_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+                'move_ids': [Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': qty_mm,
+                    'product_uom': uom_mm.id,
+                    'location_id': stock_location.id,
+                    'location_dest_id': customer_location.id,
+                })],
+            }).action_confirm()
+            pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+            self.assertRecordValues(pol, [{'product_qty': ordered_qty, 'product_uom_id': uom_m.id, 'state': 'draft'}])
+
     def test_replenish_report_1(self):
         """Tests the auto generation of manual orderpoints.
 

@@ -23,7 +23,6 @@ export class ResUsersSettingsVolumes extends models.ServerModel {
             if (relatedGuest) {
                 guest_id = {
                     id: relatedGuest.id,
-                    name: relatedGuest.name,
                 };
             }
             return {

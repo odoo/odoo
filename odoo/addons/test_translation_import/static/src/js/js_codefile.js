@@ -48,5 +48,13 @@ export class TestTranslationExportModel {
         _t(dummyFunction("NO - JS Export 07"));
 
         dummyFunction(`NO - JS Export 08${_t("JS Export 27")}NO - JS Export 09`);
+
+        dummyFunction`NO - JS Export 10${_t("JS Export 28")}NO - JS Export 11`;
+        dummyFunction(dummyFunction`NO - JS Export 12${_t("JS Export 29")}`);
+
+        function dummyReturn() {
+            return `NO - JS Export 13${_t("JS Export 30")}`;
+        }
+        dummyReturn();
     }
 }

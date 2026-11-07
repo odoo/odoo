@@ -16,15 +16,18 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         this.actionService = useService("action");
 
         onWillStart(async () => {
-            const res = await this.orm.searchCount('hr.skill.type', []);
-            this.anySkills = res > 0;
-            [this.user] = await this.orm.read("res.users", [user.userId], ["employee_ids"]);
-            this.IsHrUser = await user.hasGroup("hr.group_hr_user");
-            this.userSubordinates = (await this.orm.searchRead(
-                "hr.employee",
-                [["id", "child_of", this.user.employee_ids]],
-                ["id"]
-            )).map((record) => record["id"]);
+            const [skillTypeCount, isHrUser, subordinateIds] = await Promise.all([
+                this.orm.searchCount("hr.skill.type", []),
+                user.hasGroup("hr.group_hr_user"),
+                this.orm
+                    .read("res.users", [user.userId], ["employee_ids"])
+                    .then(([{ employee_ids }]) =>
+                        this.orm.search("hr.employee", [["id", "child_of", employee_ids]])
+                    ),
+            ]);
+            this.anySkills = skillTypeCount > 0;
+            this.IsHrUser = isHrUser;
+            this.userSubordinates = subordinateIds;
         });
     }
 

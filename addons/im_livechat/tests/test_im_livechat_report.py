@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import new_test_user, tagged
 
 
@@ -157,6 +158,46 @@ class TestImLivechatReport(TestImLivechatCommon):
             actual_order,
             expected_order,
             f"Days should be ordered starting from Saturday. Got {actual_order}, expected {expected_order}"
+        )
+
+    def test_hour_and_day_of_week_in_user_timezone(self):
+        alice_user = mail_new_test_user(
+            self.env,
+            login="alice",
+            groups="im_livechat.im_livechat_group_manager",
+            tz="Europe/Brussels",
+        )
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Test Support", "user_ids": [alice_user.id]},
+        )
+        # Simulate Friday 23:30 UTC: Saturday 00:30 (winter) and 01:30 (summer) in Brussels.
+        for date in ("2023-03-17 23:30:00", "2023-06-16 23:30:00"):
+            with freeze_time(date):
+                self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"channel_id": livechat_channel.id},
+                )
+        report_model = self.env["im_livechat.report.channel"].with_user(alice_user)
+        domain = [("livechat_channel_id", "=", livechat_channel.id)]
+        result = report_model.formatted_read_group(domain, groupby=["start_hour"])
+        self.assertEqual([group["start_hour"] for group in result], ["00", "01"])
+        result = report_model.formatted_read_group(domain, groupby=["day_number"])
+        self.assertEqual([group["day_number"] for group in result], ["6"])
+        history_model = self.env["im_livechat.channel.member.history"].with_user(alice_user)
+        domain = [("session_livechat_channel_id", "=", livechat_channel.id)]
+        histories = history_model.search(domain)
+        self.assertEqual(sorted(histories.mapped("session_start_hour")), [0.0, 0.0, 1.0, 1.0])
+        self.assertEqual(set(histories.mapped("session_week_day")), {"5"})
+        result = history_model.formatted_read_group(domain, groupby=["session_start_hour"])
+        self.assertEqual([group["session_start_hour"] for group in result], [0.0, 1.0])
+        for group in result:
+            self.assertEqual(history_model.search_count(domain + group["__extra_domain"]), 2)
+        result = history_model.formatted_read_group(domain, groupby=["session_week_day"])
+        self.assertEqual([group["session_week_day"] for group in result], ["5"])
+        self.assertEqual(history_model.search_count(domain + result[0]["__extra_domain"]), 4)
+        self.assertEqual(history_model.search_count(domain + [("session_start_hour", ">", 0)]), 2)
+        self.assertEqual(
+            history_model.search_count(domain + [("session_week_day", "!=", False)]), 4,
         )
 
     def test_time_to_answer_does_not_count_messages_after_close(self):

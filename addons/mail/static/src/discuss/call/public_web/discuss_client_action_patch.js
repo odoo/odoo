@@ -36,7 +36,13 @@ patch(DiscussClientAction.prototype, {
     async joinCallWithDefaultSettings() {
         const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
         const camera = browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
-        await this.rtc.toggleCall(this.store.discuss.thread, { audio: !mute, camera });
+        const channel = this.store.discuss.thread;
+        if (channel.self_member_id?.rtcSession && !this.rtc.isHost) {
+            await this.rtc.crossTabInitDeferred;
+        }
+        if (channel.notEq(this.rtc.channel)) {
+            await this.rtc.toggleCall(channel, { audio: !mute, camera });
+        }
         await this.rtc.enterFullscreen();
     },
 });

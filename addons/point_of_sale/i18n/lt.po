@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-08-06 05:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
+"PO-Revision-Date: 2026-10-13 12:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/lt/>\n"
@@ -44,9 +44,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
-": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -81,7 +81,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s POS komplektavimas"
 
 #. module: point_of_sale
 #. odoo-python
@@ -107,18 +107,19 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
 msgstr ""
+"%(payment_method)s „ %(partner)s “ mokėjimas per POS terminalą %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: Ištrinta eilutė (skaičius: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Ordered quantity: %(old_qty)s"
-msgstr ""
+msgstr "%(product_name)s: Užsakyta kiekis: %(old_qty)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -130,7 +131,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(title)s %(product_name)s with %(taxes)s"
-msgstr ""
+msgstr "%(title)s %(product_name)s su %(taxes)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -321,7 +322,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kasininkas</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -383,7 +384,7 @@ msgstr "<span>Peržiūra</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Amount of discounts</strong>:"
-msgstr ""
+msgstr "<strong>Nuolaidų dydis „</strong> “:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -393,7 +394,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Config names</strong>"
-msgstr ""
+msgstr "<strong>Konfigūracijos pavadinimai</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -403,7 +404,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Number of discounts</strong>:"
-msgstr ""
+msgstr "<strong>Nuolaidų skaičius „</strong> “:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -432,6 +433,13 @@ msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? \"Patvirtinti\" paspaudimas patvirtins mokėjimą."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid ""
+"A QR code payment already covers the amount due. Send it or remove it first."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
@@ -448,7 +456,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "Mokėjimas su šiuo UUID jau egzistuoja"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -498,37 +506,38 @@ msgstr "Priimti klientų arbatpinigius arba keisti jų grąžą į arbatpinigius
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr ""
+msgstr "Priimkite mokėjimus per „Mercado Pago“ terminale"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva.com on a terminal or tap on phone"
 msgstr ""
+"Priimkite mokėjimus per „Viva.com“ terminale arba prisiliesdami telefonu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Pine Labs payment terminal"
-msgstr ""
+msgstr "Priimkite mokėjimus naudodami „Pine Labs“ mokėjimo terminalą"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a QFPay payment terminal"
-msgstr ""
+msgstr "Priimkite mokėjimus naudodami „QFPay“ mokėjimo terminalą"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr ""
+msgstr "Priimkite mokėjimus naudodami „Razorpay“ mokėjimo terminalą"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Stripe payment terminal"
-msgstr ""
+msgstr "Priimkite mokėjimus naudodami „Stripe“ mokėjimo terminalą"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
-msgstr ""
+msgstr "Priimkite mokėjimus naudodami „Adyen“ mokėjimo terminalą"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -546,14 +555,14 @@ msgstr "Prieigos raktas"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"Access printer configuration panel by puttin this URL in your search bar:"
+"Access printer configuration panel by putting this URL in your search bar:"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"Access the below URL but replace [printer_ip] with your current Pritner IP "
+"Access the below URL but replace [printer_ip] with your current Printer IP "
 "address"
 msgstr ""
 
@@ -582,6 +591,7 @@ msgstr "DK įrašai"
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Account payments representing aggregated and bank split payments."
 msgstr ""
+"Sąskaitų mokėjimai, atspindintys suvestinius ir banko padalintus mokėjimus."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -589,6 +599,8 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records "
 "for bank payments."
 msgstr ""
+"Sąskaita, naudojama kaip neapmokėta sąskaita kuriant apskaitos mokėjimo "
+"įrašus bankiniams mokėjimams."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -610,6 +622,8 @@ msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
 msgstr ""
+"Apskaitos žurnalas, naudojamas POS sesijos žurnalo įrašams ir POS sąskaitų "
+"faktūrų mokėjimams įrašyti."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction
@@ -766,7 +780,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Added %(payment_method)s with %(amount)s"
-msgstr ""
+msgstr "Pridėta „ %(payment_method)s “ su %(amount)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -793,7 +807,7 @@ msgstr "Adresas"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Adds a button to set a global discount"
-msgstr ""
+msgstr "Prideda mygtuką, leidžiantį nustatyti bendrą nuolaidą"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -814,7 +828,7 @@ msgstr "Adyen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_adyen
 msgid "Adyen Payment Terminal"
-msgstr ""
+msgstr "„Adyen“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -896,7 +910,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to log and switch between selected Employees"
-msgstr ""
+msgstr "Leisti prisijungti ir perjungti tarp pasirinktų darbuotojų"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -971,6 +985,8 @@ msgid ""
 "An error has occurred when trying to close the session.\n"
 "You will be redirected to the back-end to manually close the session."
 msgstr ""
+"Bandant uždaryti sesiją įvyko klaida.\n"
+"Jūs būsite nukreipti į vidinę sistemą, kad sesiją uždarytumėte rankiniu būdu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1090,6 +1106,8 @@ msgid ""
 "At least one bank account must be defined on the journal to allow "
 "registering QR code payments with Bank apps."
 msgstr ""
+"Kad būtų galima registruoti QR kodų mokėjimus naudojant banko programėles, "
+"žurnale turi būti nurodyta bent viena banko sąskaita."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
@@ -1134,7 +1152,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_terminal_payment
 msgid "Auto Validate Terminal Payment"
-msgstr ""
+msgstr "Automatinis terminalo mokėjimo patvirtinimas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
@@ -1176,7 +1194,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validates orders paid with a payment terminal."
-msgstr ""
+msgstr "Automatiškai patvirtina užsakymus, apmokėtus mokėjimo terminalu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
@@ -1202,7 +1220,7 @@ msgstr "Pasiekiamas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__available_payment_method_ids
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "Galimi mokėjimo būdai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -1255,7 +1273,7 @@ msgstr "Pereiti į Sistemą"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Backend Invoice"
-msgstr ""
+msgstr "Sistemos sąskaita faktūra"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
@@ -1267,7 +1285,7 @@ msgstr "Fono paveikslėlis"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_customer_display_bg_img_name
 msgid "Background Image Name"
-msgstr ""
+msgstr "Fono paveikslėlio pavadinimas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
@@ -1519,7 +1537,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
 msgid "Cancel Payment"
-msgstr ""
+msgstr "Atšaukti mokėjimą"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1583,7 +1601,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 msgid "Card Owner name"
-msgstr ""
+msgstr "Kortelės savininko numeris"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_form
@@ -1595,7 +1613,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Cardholder Name"
-msgstr ""
+msgstr "Kortelės savininko vardas ir pavardė"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1977,36 +1995,38 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Užsakymo metu pasirinkite konkretią fiskalinę poziciją, priklausomai nuo "
+"kliento tipo (neapmokestinamas, valgymas vietoje ar išsinešimas ir pan.)."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/list_container/list_container.js:0
 msgid "Choose an order"
-msgstr ""
+msgstr "Pasirinkite užsakymą"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose customer"
-msgstr ""
+msgstr "Pasirinkite klientą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr ""
+msgstr "Pasirinkite, kaip portalo URL bus spausdinamas ant kvito."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "Pasirinkite mokestį, kurį norite taikyti"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Choose your store"
-msgstr ""
+msgstr "Pasirinkite savo parduotuvę"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cinnamon_roll_product_template
@@ -2041,6 +2061,7 @@ msgstr "Klientas"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
@@ -2055,7 +2076,7 @@ msgstr "Uždaryti"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
-msgstr ""
+msgstr "Uždaryti registrą"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -2087,7 +2108,7 @@ msgstr "Uždaryta ir paskelbta"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "Uždarasis registras"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
@@ -2122,7 +2143,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Closing Register"
-msgstr ""
+msgstr "Baigiamasis registras"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2140,7 +2161,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
-msgstr ""
+msgstr "Skirtumų apibendrinimas „ %(payment_method)s “ (%(session)s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2218,7 +2239,7 @@ msgstr "Spalvos indeksas"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr ""
+msgstr "Sujunkite „ %(payment_method)s “ POS mokėjimus iš %(session)s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -2304,6 +2325,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
@@ -2320,7 +2342,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
 msgid "Confirm Payment"
-msgstr ""
+msgstr "Patvirtinkite mokėjimą"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirmation_wizard
@@ -2364,6 +2386,7 @@ msgstr "Jungiamasi prie proxy"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Connection Lost"
 msgstr ""
@@ -2752,6 +2775,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr ""
+"Norint naudotis mokėjimo būdu „ %s “, būtina turėti „Customer“ paskyrą."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2876,7 +2900,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__default_pos_receivable_account_name
 msgid "Default Receivable Account Name"
-msgstr ""
+msgstr "Numatytasis gautinų sumų sąskaitos pavadinimas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
@@ -2930,6 +2954,8 @@ msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
 msgstr ""
+"Nustato mokėjimo būdo pavadinimą, kuris bus rodomas Prekybos sistemoje, kai "
+"bus pasirenkami mokėjimai."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__delay_validation
@@ -3252,7 +3278,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Do you want to open the customer list to select customer?"
-msgstr ""
+msgstr "Ar norite atidaryti klientų sąrašą, kad galėtumėte pasirinkti klientą?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3331,7 +3357,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Edit Payment"
-msgstr ""
+msgstr "Redaguoti mokėjimą"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_edit_pos
@@ -3372,7 +3398,7 @@ msgstr "Darbuotojas"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
 msgid "Employee who uses the cash register."
-msgstr ""
+msgstr "Darbuotojas, dirbantis prie kasos."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3407,6 +3433,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Enable fast payment methods to validate orders on the product screen."
 msgstr ""
+"Įjunkite greito mokėjimo būdus, kad užsakymai būtų patvirtinami prekių "
+"ekrane."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3558,26 +3586,26 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Failure to generate Payment QR Code"
-msgstr ""
+msgstr "Nepavyko sugeneruoti mokėjimo QR kodo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fallback_nomenclature_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fallback_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fallback Nomenclature"
-msgstr ""
+msgstr "Atsarginė nomenklatūra"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "Fast Payment Methods"
-msgstr ""
+msgstr "Greiti mokėjimo būdai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_fast_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Fast Payment Validation"
-msgstr ""
+msgstr "Greitas mokėjimo patvirtinimas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3734,6 +3762,9 @@ msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
 msgstr ""
+"Naudojant šį mokėjimo būdą, privaloma nurodyti klientą, o žurnalo įrašai "
+"suskirstomi pagal kiekvieną klientą. Tai gali sulėtinti ataskaitų uždarymo "
+"procesą."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3756,7 +3787,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "From invoice payments"
-msgstr ""
+msgstr "Iš sąskaitų apmokėjimų"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3767,7 +3798,7 @@ msgstr "Pilnas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
 msgid "Full Product Name"
-msgstr ""
+msgstr "Pilnas produkto pavadinimas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3801,7 +3832,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_unique_code
 msgid "Generate a code on ticket"
-msgstr ""
+msgstr "Sukurti kodą biliete"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3830,7 +3861,7 @@ msgstr "Globalios nuolaidos"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/back_button/back_button.xml:0
 msgid "Go Back"
-msgstr ""
+msgstr "Grįžti atgal"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3935,7 +3966,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "Paslėpti mokėjimo terminalą"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4000,6 +4031,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "I have access to my router configuration (To fix device IP addresses)"
 msgstr ""
+"Turiu prieigą prie savo maršrutizatoriaus nustatymų (kad galėčiau nustatyti "
+"įrenginių IP adresus)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4154,7 +4187,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
-"If this endpoint does not returan a 404 error and displays a blank page, "
+"If this endpoint does not return a 404 error and displays a blank page, "
 "everything is ready."
 msgstr ""
 
@@ -4243,7 +4276,8 @@ msgstr "Vykdoma"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr "Norint ištrinti pardavimą, jis turi būti naujai sukurtas arba atšauktas"
+msgstr ""
+"Norint ištrinti pardavimą, jis turi būti naujai sukurtas arba atšauktas"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
@@ -4285,6 +4319,10 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"Įdiegus sąskaitų planą iš „\n"
+"                Sąskaitų išrašymo/apskaitos“ programos bendrųjų nustatymų, "
+"banko ir grynųjų pinigų mokėjimo\n"
+"                būdai bus sukurti automatiškai."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -4393,6 +4431,8 @@ msgstr "Sąskaitos faktūros būsena"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
+"Sąskaitos apmokėjimas už „ %(order)s “ (%(account_move)s) naudojant %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -4481,7 +4521,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
 msgid "Is this payment change?"
-msgstr ""
+msgstr "Ar tai mokėjimo pakeitimas?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4497,7 +4537,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_printer_service.js:0
 msgid "It is possible to print your tickets by making use of an IoT Box."
-msgstr ""
+msgstr "Bilietus galima atsispausdinti naudojantis „IoT Box“."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4744,6 +4784,14 @@ msgid ""
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
+"Palikite tuščią, jei norite naudoti kliento gautinų sumų sąskaitą.\n"
+"Nustato žurnalą, į kurį po sesijos uždarymo turi būti įrašyti sukaupti "
+"mokėjimai (arba atskiras mokėjimas, jei nustatytas parametras „Identifikuoti "
+"klientą“).\n"
+"Grynųjų pinigų žurnale tiesiogiai įrašome į numatytąją sąskaitą žurnale per "
+"ataskaitos eilutes.\n"
+"Banko žurnale įrašome į šio mokėjimo būdo nurodytą neapmokėtą sąskaitą.\n"
+"Leidžiami tik grynųjų pinigų ir banko žurnalai."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -4893,6 +4941,9 @@ msgid ""
 "Local Network Access is enabled for this POS, but your browser version does "
 "not support it. Please update your browser to the latest version."
 msgstr ""
+"Šiam POS įrenginiui įjungta prieiga prie vietinio tinklo, tačiau jūsų "
+"naršyklės versija jos nepalaiko. Atnaujinkite naršyklę iki naujausios "
+"versijos."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5029,6 +5080,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
 msgstr ""
+"Valdykite akcijas, kurių metu klientams bus suteikiamos nuolaidos ar dovanos"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__manual
@@ -5075,6 +5127,8 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_max
 msgid "Maximum number of items to select in the combo."
 msgstr ""
+"Maksimalus elementų skaičius, kurį galima pasirinkti iš išskleidžiamojo "
+"meniu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_max
@@ -5101,7 +5155,7 @@ msgstr "Mercado Pago"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercado_pago
 msgid "Mercado Pago Payment Terminal"
-msgstr ""
+msgstr "„Mercado Pago“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__message
@@ -5113,6 +5167,14 @@ msgstr "Žinutė"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Žinutės pristatymo klaida"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid ""
+"Message: %(messages)s\n"
+"Please update the %(invalid_fields)s"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_ids
@@ -5128,7 +5190,7 @@ msgstr "Būdas"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 msgid "Method Name"
-msgstr ""
+msgstr "Metodo pavadinimas"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
@@ -5372,7 +5434,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "No Point of Sale selected"
-msgstr ""
+msgstr "Nepasirinkta prekybos sistema"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5508,6 +5570,8 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "No valid orders were selected. No new invoices could be generated"
 msgstr ""
+"Nebuvo pasirinkta jokių galiojančių užsakymų. Nebuvo galima sugeneruoti "
+"jokių naujų sąskaitų faktūrų"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -5671,6 +5735,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.js:0
+msgid "Offline"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Offline Orders"
 msgstr "Neinternetiniai užsakymai"
@@ -5678,7 +5748,7 @@ msgstr "Neinternetiniai užsakymai"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
-msgstr ""
+msgstr "Mokėjimas vienu paspaudimu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5698,10 +5768,19 @@ msgid ""
 "Online payment, delivery payment, terminal payment, and methods that require "
 "customer identification are not supported for fast payment validation."
 msgstr ""
+"Greitam mokėjimo patvirtinimui nepalaikomi mokėjimai internetu, mokėjimai "
+"pristatymo metu, mokėjimai per terminalą ir metodai, kuriems reikalingas "
+"kliento tapatybės patvirtinimas."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Online reservation for Point of Sale"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Only Point of Sale managers can modify a Point of Sale configuration."
 msgstr ""
 
 #. module: point_of_sale
@@ -5730,6 +5809,8 @@ msgstr ""
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
+"Su mokėjimo būdais galima naudoti tik „Grynieji pinigai“ arba „Bankas“ tipo "
+"žurnalus."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5774,7 +5855,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "Atidarykite POS sesijas, kuriose naudojamas šis mokėjimo būdas."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5782,7 +5863,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Open Register"
-msgstr ""
+msgstr "Atviras registras"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5800,7 +5881,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Open your POS and try to print a ticket"
-msgstr ""
+msgstr "Atidarykite savo POS ir pabandykite išspausdinti kvitą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -5938,7 +6019,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_backend_seq_id
 msgid "Order Backend Sequence"
-msgstr ""
+msgstr "Užsakymų apdorojimo seka"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__count
@@ -6151,7 +6232,7 @@ msgstr "PT užsakymo įrašai"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
 msgid "POS Payment Method"
-msgstr ""
+msgstr "POS mokėjimo būdas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
@@ -6197,7 +6278,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order backend from config #%s"
-msgstr ""
+msgstr "POS tvarkos nustatymas konfigūracijoje #%s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6262,7 +6343,7 @@ msgstr "Mokėjimas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_authcode
 msgid "Payment APPR Code"
-msgstr ""
+msgstr "Mokėjimo APPR kodas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_date
@@ -6272,7 +6353,7 @@ msgstr "Sąskaitos faktūros data"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_issuer_bank
 msgid "Payment Issuer Bank"
-msgstr ""
+msgstr "Mokėjimo išdavėjas – bankas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_method_id
@@ -6299,17 +6380,17 @@ msgstr "Mokėjimo būdai"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_payment_mode
 msgid "Payment Mode"
-msgstr ""
+msgstr "Mokėjimo būdas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Payment Name Demo"
-msgstr ""
+msgstr "Mokėjimo pavadinimas (pavyzdys)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "Informacija apie mokėjimo kvitą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -6336,13 +6417,13 @@ msgstr "Mokėjimo terminalai"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "Mokėjimo transakcija"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Payment changes:"
-msgstr ""
+msgstr "Mokėjimo pakeitimai:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6357,24 +6438,24 @@ msgstr "Galimi mokėjimo būdai"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_ref_no
 msgid "Payment reference number"
-msgstr ""
+msgstr "Mokėjimo nuorodos numeris"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__payment_ref_no
 msgid "Payment reference number from payment provider terminal"
-msgstr ""
+msgstr "Mokėjimo nuorodos numeris iš mokėjimo paslaugų teikėjo terminalo"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Payment request pending"
-msgstr ""
+msgstr "Mokėjimo prašymas laukia patvirtinimo"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Payment reversed"
-msgstr ""
+msgstr "Mokėjimas atšauktas"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6459,7 +6540,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_pine_labs
 msgid "Pine Labs Payment Terminal"
-msgstr ""
+msgstr "„Pine Labs“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6495,6 +6576,9 @@ msgid ""
 "this payment method.\n"
 "Open sessions: %s"
 msgstr ""
+"Prieš keisdami šį mokėjimo būdą, uždarykite ir patvirtinkite šias atidarytas "
+"POS sesijas.\n"
+"Atidarytos sesijos: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6507,6 +6591,8 @@ msgstr ""
 msgid ""
 "Please create/select a Point of Sale above to show the configuration options."
 msgstr ""
+"Prašome aukščiau sukurti arba pasirinkti Prekybos sistemą, kad būtų rodomos "
+"konfigūracijos parinktys."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6561,7 +6647,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "Prašome atsispausdinti sąskaitą iš administracinės sistemos"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6574,13 +6660,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
-msgstr ""
+msgstr "Pasirinkite mokėjimo būdą"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please select a time slot before proceeding."
-msgstr ""
+msgstr "Prieš tęsdami, pasirinkite laiko intervalą."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6746,7 +6832,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Prekybos sistemos mokėjimo vedlys"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -6865,6 +6951,7 @@ msgid "Pos Order Count"
 msgstr "PT užsakymų skaičius"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_tax__pos_order_line_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr "PT užsakymo įrašas"
@@ -6873,7 +6960,7 @@ msgstr "PT užsakymo įrašas"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_payment_ids
 msgid "Pos Payment"
-msgstr ""
+msgstr "POS mokėjimas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -6889,7 +6976,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
 msgid "Pos Selectable Categ"
-msgstr ""
+msgstr "POS pasirenkamos kategorijos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__pos_session_id
@@ -7140,7 +7227,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_basic_receipt
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print basic ticket without prices. Can be used for gifts."
-msgstr ""
+msgstr "Spausdinkite paprastą bilietą be kainų. Galima naudoti dovanoms."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -7215,7 +7302,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
-msgid "Printer's local IP address is printerd"
+msgid "Printer's local IP address is printed"
 msgstr ""
 
 #. module: point_of_sale
@@ -7447,7 +7534,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_qfpay
 msgid "QFPay Payment Terminal"
-msgstr ""
+msgstr "„QFPay“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7465,7 +7552,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
 msgid "QR Code Payment"
-msgstr ""
+msgstr "Mokėjimas naudojant QR kodą"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code
@@ -7526,7 +7613,7 @@ msgstr "Razorpay"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_razorpay
 msgid "Razorpay Payment Terminal"
-msgstr ""
+msgstr "„Razorpay“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7599,7 +7686,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "Įrašykite mokėjimus, atliktus terminalu, į šį žurnalą."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
@@ -7733,6 +7820,9 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Reload Data"
 msgstr ""
 
@@ -7774,7 +7864,7 @@ msgstr "Pašalinti vieną"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Removed %(payment_method)s with %(amount)s"
-msgstr ""
+msgstr "Pašalinta „ %(payment_method)s “ su %(amount)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7909,7 +7999,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Reverse Payment"
-msgstr ""
+msgstr "Atvirkštinis mokėjimas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -7949,7 +8039,7 @@ msgstr "Apvalinimo būdas"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Apskaičiavimo paklaida mokėjimo eilutėse"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8034,7 +8124,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sample Config Name"
-msgstr ""
+msgstr "Pavyzdinis konfigūracijos pavadinimas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -8050,7 +8140,8 @@ msgstr "Išsaugoti"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr "Išsaugokite šį puslapį ir grįžkite čia nustatyti funkcionalumui."
+msgstr ""
+"Išsaugokite šį puslapį ir grįžkite čia, kad nustatytumėte šią funkciją."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8147,6 +8238,12 @@ msgid "Secure printing"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Secure printing enabled"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__access_token
@@ -8162,59 +8259,61 @@ msgstr "Pasirinkti"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
-msgstr ""
+msgstr "Pasirinkite POS, kad pradėtumėte dalytis užsakymais"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Select a payment method to validate the order."
-msgstr ""
+msgstr "Pasirinkite mokėjimo būdą, kad patvirtintumėte užsakymą."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 msgid "Select a preset"
-msgstr ""
+msgstr "Pasirinkite išankstinį nustatymą"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order or scan QR code"
-msgstr ""
+msgstr "Pasirinkite užsakymą arba nuskaitykite QR kodą"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Select preset"
-msgstr ""
+msgstr "Pasirinkite nustatymą"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Select the pricelist"
-msgstr ""
+msgstr "Pasirinkite kainoraštį"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select the product(s) to refund and set the quantity"
 msgstr ""
+"Pasirinkite produktą (-us), už kurį (-iuos) norite gauti grąžinamą sumą, ir "
+"nustatykite kiekį"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Select the shipping date"
-msgstr ""
+msgstr "Pasirinkite pristatymo datą"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
 msgid "Selected Attributes"
-msgstr ""
+msgstr "Pasirinkti atributai"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Selection of outstanding account is required"
-msgstr ""
+msgstr "Reikia pasirinkti išskirtinę paskyrą"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8249,7 +8348,7 @@ msgstr "Siųsti el. laišką"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Send Payment Request"
-msgstr ""
+msgstr "Siųsti mokėjimo prašymą"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8402,7 +8501,7 @@ msgstr "Nustatykite kelias produkto kainas, automatines nuolaidas ir kt."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set the background image of your customer display"
-msgstr ""
+msgstr "Nustatykite kliento ekrano fono paveikslėlį"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8482,7 +8581,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Shortcut to skip payment screen"
-msgstr ""
+msgstr "Spartusis klavišas, leidžiantis praleisti mokėjimo ekraną"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
@@ -8601,6 +8700,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/main.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
@@ -8710,6 +8810,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
 msgstr ""
+"Prekių atsargos, produktų konfigūratorius, atsargų papildymas, nuolaidos"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8729,7 +8830,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_order_edit_tracking
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Store edited orders in the backend"
-msgstr ""
+msgstr "Išsaugokite redaguotus užsakymus užkulisiuose"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8739,7 +8840,7 @@ msgstr "Stripe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
-msgstr ""
+msgstr "„Stripe“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.leather_jacket_product_template
@@ -8961,6 +9062,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid "The %s must be filled in your details."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
 msgstr ""
@@ -9031,7 +9138,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "The Ticket Number should be at least 12 characters long."
-msgstr ""
+msgstr "Bilieto numeris turi būti ne trumpesnis kaip 12 simbolių."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9040,6 +9147,8 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
+"Jei nesate nustatę mokėjimo grynaisiais būdo, suma negali būti didesnė už "
+"mokėtiną sumą."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9050,6 +9159,10 @@ msgid ""
 "The rounding precision is %(rounding)s so you should set %(expectedAmount)s "
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
+"Kad sandoris būtų patvirtintas, mokėjimo eilučių sumos turi būti "
+"suapvalintos.\n"
+"Apvalinimo tikslumas yra „ %(rounding)s “, todėl kaip mokėjimo sumą "
+"turėtumėte nurodyti „ %(expectedAmount)s “, o ne „ %(paidAmount)s “."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -9104,6 +9217,8 @@ msgid ""
 "The default tip product is missing. Please manually specify the tip product. "
 "(See Tips field.)"
 msgstr ""
+"Trūksta numatytojo arbatpinigių produkto. Prašome rankiniu būdu nurodyti "
+"arbatpinigių produktą. (Žr. lauką „Arbatpinigiai“.)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9263,6 +9378,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"Užsakymas buvo sinchronizuotas anksčiau. Prašome išrašyti sąskaitą užsakymui "
+"per administravimo sistemą: "
 
 #. module: point_of_sale
 #. odoo-python
@@ -9280,7 +9397,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The password is located on the back of the printer (remove covers)."
-msgstr ""
+msgstr "Slaptažodis yra spausdintuvo gale (nuimkite dangtelius)."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9288,13 +9405,14 @@ msgstr ""
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
+"Pasirinktas mokėjimo būdas nėra leidžiamas POS sesijos konfigūracijoje."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
-msgstr ""
+msgstr "Mokėjimo būdai Prekybos sistemoje %s turi priklausyti tai įmonei."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -9309,7 +9427,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
 "The points of sale for the payment method %s must belong to its company."
-msgstr ""
+msgstr "Mokėjimo būdo „ %s “ prekybos sistemos turi priklausyti šiai įmonei."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -9383,6 +9501,12 @@ msgstr "Kvitas bus automatiškai atspausdinamas kiekvieno užsakymo pabaigoje."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
+msgid "The register cannot be opened while offline. Please try again."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
@@ -9401,7 +9525,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "Pasirinktajam klientui reikia adreso."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9455,6 +9579,8 @@ msgid ""
 "The tip has been added to the order. However,the selected payment line does "
 "not allow tips to be added."
 msgstr ""
+"Arbatpinigiai buvo pridėti prie užsakymo. Tačiau pasirinktoje mokėjimo "
+"eilutėje neleidžiama pridėti arbatpinigių."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -9463,6 +9589,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"Sandorius apdoroja „Adyen“. Nustatykite savo „Adyen“ prisijungimo duomenis "
+"atitinkamame mokėjimo būde."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9475,6 +9603,8 @@ msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
 msgstr ""
+"Mokėjimus apdoroja „Mercado Pago“. Nustatykite savo „Mercado Pago“ "
+"prisijungimo duomenis atitinkamame mokėjimo būde."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9487,6 +9617,8 @@ msgid ""
 "The transactions are processed by Pine Labs. Set your Pine Labs credentials "
 "on the related payment method."
 msgstr ""
+"Sandorius apdoroja „Pine Labs“. Nustatykite savo „Pine Labs“ prisijungimo "
+"duomenis atitinkamame mokėjimo būde."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9499,6 +9631,8 @@ msgid ""
 "The transactions are processed by QFPay. Set your QFPay credentials on the "
 "related payment method."
 msgstr ""
+"Mokėjimus apdoroja „QFPay“. Nustatykite savo „QFPay“ prisijungimo duomenis "
+"atitinkamame mokėjimo būde."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
@@ -9507,6 +9641,8 @@ msgid ""
 "The transactions are processed by Razorpay. Set your Razorpay credentials on "
 "the related payment method."
 msgstr ""
+"Mokėjimus apdoroja „Razorpay“. Nustatykite savo „Razorpay“ prisijungimo "
+"duomenis atitinkamame mokėjimo būde."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -9515,6 +9651,8 @@ msgid ""
 "The transactions are processed by Stripe. Set your Stripe credentials on the "
 "related payment method."
 msgstr ""
+"Mokėjimus apdoroja „Stripe“. Nustatykite savo „Stripe“ prisijungimo duomenis "
+"atitinkamame mokėjimo būde."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_viva_com
@@ -9525,7 +9663,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
 msgid "The type of the payment card (e.g. CREDIT CARD OR DEBIT CARD)"
-msgstr ""
+msgstr "Mokėjimo kortelės tipas (pvz., KREDITO KORTELĖ ARBA DEBETO KORTELĖ)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -9579,7 +9717,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
-msgstr ""
+msgstr "Jau vyksta elektroninis mokėjimas."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9609,13 +9747,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash payment method for this PoS Session"
-msgstr ""
+msgstr "Šioje POS sesijoje nėra galimybės atsiskaityti grynaisiais pinigais"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "There is no cash register in this session."
-msgstr ""
+msgstr "Šioje sesijoje nėra kasos aparato."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9637,6 +9775,13 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "These payment methods will be available for fast payment"
+msgstr "Šie mokėjimo būdai bus prieinami greitam mokėjimui"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
+msgid ""
+"This action will delete all unsaved orders and other locally stored data"
 msgstr ""
 
 #. module: point_of_sale
@@ -9646,6 +9791,8 @@ msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a "
 "fallback barcode parser from the PoS settings."
 msgstr ""
+"Šis brūkšninis kodas neatitinka GS1 standarto. Apsvarstykite galimybę POS "
+"nustatymuose sukonfigūruoti atsarginį brūkšninių kodų skaitytuvą."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9654,6 +9801,8 @@ msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
 msgstr ""
+"Šis grynųjų pinigų mokėjimo būdas jau naudojamas kitoje Prekybos sistemoje.\n"
+"Šiai Prekybos sistemai reikėtų sukurti naują grynųjų pinigų mokėjimo būdą."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9709,7 +9858,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
-msgstr ""
+msgstr "Šis žurnalas yra susietas su mokėjimo būdu. Jo tipo keisti negalima"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9720,6 +9869,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "This option or combination of options is not available"
 msgstr ""
 
@@ -9737,6 +9887,8 @@ msgstr ""
 msgid ""
 "This order has already been paid. You cannot set it back to draft or edit it."
 msgstr ""
+"Šis užsakymas jau apmokėtas. Jo negalima grąžinti į juodraščio būseną ar "
+"redaguoti."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9764,7 +9916,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
-msgstr ""
+msgstr "Šis mokėjimo būdas nėra sukonfigūruotas QR kodams generuoti."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -9798,12 +9950,12 @@ msgstr "Bilietas"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
 msgid "Ticket Code"
-msgstr ""
+msgstr "Bilieto kodas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Ticket Nr"
-msgstr ""
+msgstr "Bilieto Nr."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_tiger_white_loaf_product_template
@@ -9953,7 +10105,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Bendra mokėjimų suma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -9981,7 +10133,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr ""
+msgstr "Bendra mokėjimo suma."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__total_cost
@@ -10057,7 +10209,7 @@ msgstr "Tipas"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__qr_code_method
 msgid "Type of QR-code to be generated for this payment method."
-msgstr ""
+msgstr "Šiam mokėjimo būdui generuotino QR kodo tipas."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
@@ -10073,7 +10225,7 @@ msgstr "Įrašytos išimties veiklos tipas."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "UNSELECT"
-msgstr ""
+msgstr "ATŠAUKTI PASIRINKIMĄ"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__url
@@ -10314,11 +10466,20 @@ msgid ""
 "Validation Error: You cannot assign the same Cash payment method to multiple "
 "POS Shops. Please create a separate Cash payment method for each shop."
 msgstr ""
+"Patikrinimo klaida: Negalima priskirti to paties mokėjimo būdo „Grynaisiais“ "
+"kelioms POS parduotuvėms. Prašome sukurti atskirą mokėjimo būdą "
+"„Grynaisiais“ kiekvienai parduotuvei."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "Suma"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Variant does not exist"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_green_hood_product_template
@@ -10345,7 +10506,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_viva_com
 msgid "Viva.com Payment Terminal"
-msgstr ""
+msgstr "„Viva.com“ mokėjimo terminalas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10532,6 +10693,8 @@ msgid ""
 "You can not archive this journal because it is set on the following payment "
 "method : %s."
 msgstr ""
+"Šio žurnalo negalima archyvuoti, nes jam nustatytas šis mokėjimo būdas: „ %s "
+"“."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10565,7 +10728,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "You can update it by selecting one of the following options:"
-msgstr ""
+msgstr "Galite atnaujinti pasirinkdami vieną iš šių parinkčių:"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10583,6 +10746,9 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"Negalima: sukurti POS užsakymo per administravimo sąsają, panaikinti "
+"kainoraščio, sukurti POS užsakymo Python testuose naudojant „Form“ įrankį "
+"arba redaguoti formos peržiūrą „Studio“, jei POS užsakymo nėra"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10604,7 +10770,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot change the payment of a printed order."
-msgstr ""
+msgstr "Spausdinto užsakymo apmokėjimo sąlygų pakeisti negalima."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10672,6 +10838,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
+msgstr "Jūs negalite redaguoti mokėjimo už jau užregistruotą užsakymą."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "You cannot refund more than the outstanding quantity for this product."
 msgstr ""
 
 #. module: point_of_sale
@@ -10687,6 +10859,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr ""
+"Negalima naudoti to paties žurnalo keliems grynųjų pinigų mokėjimo būdams."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10729,6 +10902,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
+"Jūs įjungėte parinktį „Identifikuoti klientą“ mokėjimo būdui „ %"
+"(payment_method)s “, tačiau užsakyme %(order)s nėra nurodyto kliento."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -10751,6 +10926,8 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
+"Norėdami pradėti sesiją, turite turėti bent vieną sukonfigūruotą mokėjimo "
+"būdą."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10759,6 +10936,8 @@ msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
 msgstr ""
+"Turite pasirinkti QR kodų generavimo būdą, kad galėtumėte sugeneruoti QR "
+"kodus šiam mokėjimo būdui."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10814,7 +10993,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "Jūsų „ {{ object.config_id.name }} “ kvitas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -10866,7 +11045,7 @@ msgstr "nuolaida"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "discount off on"
-msgstr ""
+msgstr "nuolaida nuo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
@@ -11067,6 +11246,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "open orders planned for later."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
 msgstr ""
 
 #. module: point_of_sale

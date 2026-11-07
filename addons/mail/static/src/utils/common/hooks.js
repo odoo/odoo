@@ -19,6 +19,8 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { clamp } from "@web/core/utils/numbers";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -245,7 +247,8 @@ export class UseHoverOverlay extends Component {
     setup() {
         super.setup();
         this.root = useRef("root");
-        const overlayContains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        const contains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        const overlayContains = (target) => !target?.closest(".o_dialog") && contains(target);
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);
@@ -318,6 +321,22 @@ export function useVisible(refName, cb, { ready = true } = {}) {
     return state;
 }
 
+function needsScrollToCenter(el) {
+    const scrollable = closestScrollableY(el.parentElement);
+    if (!scrollable) {
+        return false;
+    }
+    const { height, top } = el.getBoundingClientRect();
+    const center =
+        scrollable.getBoundingClientRect().top + scrollable.clientTop + scrollable.clientHeight / 2;
+    const target = clamp(
+        scrollable.scrollTop + top + height / 2 - center,
+        0,
+        scrollable.scrollHeight - scrollable.clientHeight
+    );
+    return Math.abs(target - scrollable.scrollTop) >= Math.max(2, 2 / window.devicePixelRatio);
+}
+
 /**
  * @typedef {Object} MessageScrolling
  * @property {function} clear
@@ -381,13 +400,22 @@ export function useMessageScrolling(duration = 2000) {
             const scrollPromise = new Deferred();
             state.scrollPromise = scrollPromise;
             if ("onscrollend" in window) {
-                document.addEventListener("scrollend", scrollPromise.resolve, {
-                    capture: true,
-                    once: true,
-                });
+                const { top } = el.getBoundingClientRect();
+                const onScrollEnd = () => {
+                    if (el.getBoundingClientRect().top !== top) {
+                        scrollPromise.resolve();
+                    }
+                };
+                document.addEventListener("scrollend", onScrollEnd, { capture: true });
+                scrollPromise.then(() =>
+                    document.removeEventListener("scrollend", onScrollEnd, { capture: true })
+                );
             } else {
                 // To remove when safari will support the "scrollend" event.
                 setTimeout(scrollPromise.resolve, 250);
+            }
+            if (!needsScrollToCenter(el)) {
+                scrollPromise.resolve();
             }
             el.scrollIntoView({ behavior: "smooth", block: "center" });
             return scrollPromise;

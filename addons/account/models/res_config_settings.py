@@ -234,7 +234,7 @@ class ResConfigSettings(models.TransientModel):
 
     def _inverse_account_default_credit_limit(self):
         for setting in self:
-            self.env['ir.default'].set(
+            self.env['ir.default'].sudo().set(
                 'res.partner',
                 'credit_limit',
                 setting.account_default_credit_limit,

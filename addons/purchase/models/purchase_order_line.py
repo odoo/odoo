@@ -29,7 +29,7 @@ class PurchaseOrderLine(models.Model):
     discount = fields.Float(
         string="Discount (%)",
         compute='_compute_price_unit_and_date_planned_and_name',
-        digits='Discount',
+        min_display_digits='Discount',
         store=True, readonly=False)
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
@@ -201,9 +201,9 @@ class PurchaseOrderLine(models.Model):
             for inv_line in line._get_invoice_lines():
                 if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
-                        invoiced_qties[line] += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
+                        invoiced_qties[line] += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id, round=False)
                     elif inv_line.move_id.move_type == 'in_refund':
-                        invoiced_qties[line] -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
+                        invoiced_qties[line] -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id, round=False)
         return invoiced_qties
 
     def _get_invoice_lines(self):
@@ -284,7 +284,7 @@ class PurchaseOrderLine(models.Model):
             else:
                 line.selected_seller_id = False
 
-    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_received_at_date', 'product_qty')
+    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_received_at_date')
     @api.depends_context('accrual_entry_date')
     def _compute_amount_to_invoice_at_date(self):
         for line in self:
@@ -293,10 +293,8 @@ class PurchaseOrderLine(models.Model):
             line.amount_to_invoice_at_date = qty_to_invoice * line._get_gross_price_unit()
 
     def _get_qty_to_invoice_at_date(self):
-        """Return the quantity to invoice at the accrual date, respecting the product's purchase method."""
+        """Return the quantity to invoice at the accrual date."""
         self.ensure_one()
-        if self.product_id.purchase_method == 'purchase':
-            return self.product_qty - self.qty_invoiced_at_date
         return self.qty_received_at_date - self.qty_invoiced_at_date
 
     @api.model_create_multi
@@ -306,7 +304,10 @@ class PurchaseOrderLine(models.Model):
                 values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False, date_planned=False)
             else:
                 values.update(self._prepare_add_missing_fields(values))
-            if values.get('price_unit') and not values.get('technical_price_unit'):
+            # keeping technical_price_unit apart flags an imported price as
+            # manually set, so a later recompute does not replace it
+            if values.get('price_unit') and not values.get('technical_price_unit') \
+                    and not self.env.context.get('import_file'):
                 values['technical_price_unit'] = values['price_unit']
 
         lines = super().create(vals_list)
@@ -381,7 +382,7 @@ class PurchaseOrderLine(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         # TODO: Remove when onchanges are replaced with computes
-        if not self.product_id:
+        if not self.product_id or self.env.context.get("first_onchange_call"):
             return
         if self.env.context.get('origin_po_id') and self.product_qty:
             self._compute_tax_id()
@@ -450,6 +451,7 @@ class PurchaseOrderLine(models.Model):
                             line.name = display_names[vendors.ids.index(line.selected_seller_id.id)] + line.name[len(display_name):]
                         break
 
+            supplier_taxes = line.product_id.supplier_taxes_id._filter_taxes_by_company(line.company_id)
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not line.selected_seller_id:
                 unavailable_seller = line.product_id.seller_ids.filtered(
@@ -462,7 +464,7 @@ class PurchaseOrderLine(models.Model):
                 po_line_uom = line.product_uom_id or line.product_id.uom_id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
-                    line.product_id.supplier_taxes_id,
+                    supplier_taxes,
                     line.tax_ids,
                     line.company_id,
                 )
@@ -477,7 +479,7 @@ class PurchaseOrderLine(models.Model):
                 )
 
             elif line.selected_seller_id:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, supplier_taxes, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
                 price_unit = line.selected_seller_id.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 line._reset_price_unit(line.selected_seller_id.product_uom_id._compute_price(price_unit, line.product_uom_id))
                 line.discount = line.selected_seller_id.discount or 0.0
@@ -630,9 +632,32 @@ class PurchaseOrderLine(models.Model):
         aml_currency = move and move.currency_id or self.currency_id
         date = move and move.date or fields.Date.today()
 
+        seller = self.env['product.supplierinfo']
+        if self.product_id:
+            seller = self.product_id.with_company(self.company_id)._select_seller(
+                partner_id=self.partner_id,
+                quantity=self.product_qty,
+                date=self.order_id.date_order and self.order_id.date_order.date() or fields.Date.context_today(self),
+                uom_id=self.product_uom_id,
+                params=self._get_select_sellers_params(),
+            )
+        product = self.product_id.with_context(
+            lang=get_lang(self.env, self.partner_id.lang).code,
+            partner_id=self.partner_id.id if seller else False,
+            seller_id=seller.id,
+            company_id=self.company_id.id,
+        )
+        standard_display_name = product.with_context(
+            partner_id=False, seller_id=False,
+        ).display_name
+        display_name = (
+            standard_display_name
+            if standard_display_name and standard_display_name in (self.name or '')
+            else product.display_name
+        )
         res = {
             'display_type': self.display_type or 'product',
-            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
+            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom_id.id,
             'quantity': -self.qty_to_invoice if move and move.move_type == 'in_refund' else self.qty_to_invoice,

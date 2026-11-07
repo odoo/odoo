@@ -17,6 +17,8 @@ class TestSaleMrpKitBom(BaseCommon):
             'email': 'mitchell.admin@example.com',
         })
         cls.env.user.group_ids += cls.quick_ref('product.group_product_variant')
+        cls.company_2 = cls.env['res.company'].create({'name': 'Company 2'})
+        cls.customer_1 = cls.env['res.partner'].create({'name': 'Customer 1'})
 
     def _create_product(self, name, storable, price):
         return self.env['product.product'].create({
@@ -330,6 +332,43 @@ class TestSaleMrpKitBom(BaseCommon):
         # Checks the delivery amount (must be 1).
         self.assertEqual(so.order_line.qty_delivered, 1)
 
+    def test_display_qty_widget_kit_of_kit(self):
+        """ Check that the QtyAtDateWidget is not displayed
+        for a kit containing another kit.
+        """
+        bulk_kit = self._create_product('Bulk Kit Product', True, 1.00)
+        useful_kit = self._create_product('Useful Kit Product', False, 1.00)
+        component_a = self._create_product('Component A', False, 1.00)
+        self.env['mrp.bom'].create([
+            {
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component.id,
+                    'product_qty': 10.0,
+                }),
+            ],
+            } for component, kit in [(component_a, useful_kit), (useful_kit, bulk_kit)]
+        ])
+        so = self.env['sale.order'].with_company(self.company_2).create({
+            'partner_id': self.customer_1.id,
+            'order_line': [
+                Command.create({
+                    'name': bulk_kit.name,
+                    'product_id': bulk_kit.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1,
+                    'tax_ids': False,
+                })],
+            'company_id': self.env.company.id,
+        })
+        self.assertFalse(so.order_line.display_qty_widget)
+
+        so.action_confirm()
+        self.assertFalse(so.order_line.display_qty_widget)
+
     def test_sale_kit_show_kit_in_delivery(self):
         """Create a kit with 2 product and activate 2 steps
             delivery and check that every stock move contains
@@ -596,7 +635,7 @@ class TestSaleMrpKitBom(BaseCommon):
         self.assertFalse(keys, "All keys should be in the report with the defined order")
 
     def test_sale_multistep_kit_qty_change(self):
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.write({'delivery_steps': 'pick_ship'})
         self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
@@ -803,6 +842,51 @@ class TestSaleMrpKitBom(BaseCommon):
             {'product_id': mto_comp.id, 'product_uom_qty': 6.0},
             {'product_id': mto_comp.id, 'product_uom_qty': 9.0},
             {'product_id': comp.id, 'product_uom_qty': 25.0},
+        ])
+
+    def test_sale_kit_duplicated_component_qty_change(self):
+        """
+        Check that repeatedly increasing the ordered quantity of a kit that lists the same
+        component on two of its BoM lines updates each component demand proportionally.
+        """
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        kit_product = self._create_product('Kit', True, 1)
+        comp = self._create_product('Component', True, 1)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': comp.id, 'product_qty': 1}),
+                Command.create({'product_id': comp.id, 'product_qty': 2}),
+            ],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so.picking_ids.move_ids.sorted(lambda m: m.bom_line_id.id), [
+            {'product_id': comp.id, 'bom_line_id': bom.bom_line_ids[0].id, 'product_uom_qty': 1.0},
+            {'product_id': comp.id, 'bom_line_id': bom.bom_line_ids[1].id, 'product_uom_qty': 2.0},
+        ])
+
+        so.order_line.product_uom_qty = 2
+        self.assertRecordValues(so.picking_ids.move_ids.sorted(lambda m: m.bom_line_id.id), [
+            {'product_id': comp.id, 'bom_line_id': bom.bom_line_ids[0].id, 'product_uom_qty': 2.0},
+            {'product_id': comp.id, 'bom_line_id': bom.bom_line_ids[1].id, 'product_uom_qty': 4.0},
+        ])
+
+        so.order_line.product_uom_qty = 3
+        self.assertRecordValues(so.picking_ids.move_ids.sorted(lambda m: m.bom_line_id.id), [
+            {'product_id': comp.id, 'bom_line_id': bom.bom_line_ids[0].id, 'product_uom_qty': 3.0},
+            {'product_id': comp.id, 'bom_line_id': bom.bom_line_ids[1].id, 'product_uom_qty': 6.0},
         ])
 
     def test_inter_company_qty_delivered_with_kit(self):

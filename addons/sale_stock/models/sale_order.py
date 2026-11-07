@@ -6,7 +6,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -90,12 +90,18 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
         for order in self:
-            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+            if not order.picking_ids or \
+                (
+                    all(p.state in ['done', 'cancel'] for p in order.picking_ids) and
+                    all(line.qty_delivered_method != 'stock_move' or float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
+                    for line in order.order_line)
+                ):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
             elif any(p.state == 'done' for p in order.picking_ids) and any(
-                    l.qty_delivered for l in order.order_line):
+                    line.qty_delivered_method == 'stock_move' and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
+                    for line in order.order_line):
                 order.delivery_status = 'partial'
             elif any(p.state == 'done' for p in order.picking_ids):
                 order.delivery_status = 'started'
@@ -254,7 +260,7 @@ class SaleOrder(models.Model):
         for sale_order in self:
             if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
-                documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
+                documents = self.env['stock.picking'].sudo().with_context(include_draft_documents=True)._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
         self.picking_ids.filtered(lambda p: p.state != 'done').with_context(skip_cancel_activity=True).action_cancel()
         if documents:
             filtered_documents = {}

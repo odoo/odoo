@@ -62,7 +62,7 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <div class="button send_force_done" role="button" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                        <div t-if="line.isForceDoneAllowed()" class="button send_force_done" role="button" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
                                             Force done
                                         </div>
                                         <div t-if="!this.props.isRefundOrder" class="button send_payment_cancel" role="button" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
@@ -76,10 +76,10 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-circle-o-notch fa-spin" role="img" />
-                                        <div t-if="line.payment_status == 'waiting'" class="button send_force_done" role="button" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                        <div t-if="line.payment_status == 'waiting' and line.isForceDoneAllowed()" class="button send_force_done" role="button" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
                                             Force done
                                         </div>
-                                        <div t-if="line.payment_status == 'waitingCancel'" class="button send_force_done" role="button" title="Force Cancel" t-on-click="() => line.setPaymentStatus('retry')">
+                                        <div t-if="line.payment_status == 'waitingCancel' and line.isForceDoneAllowed()" class="button send_force_done" role="button" title="Force Cancel" t-on-click="() => line.setPaymentStatus('retry')">
                                             Force cancel
                                         </div>
                                     </div>

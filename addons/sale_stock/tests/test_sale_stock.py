@@ -2451,7 +2451,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
-        user has only one allowed company. """
+        user has only one allowed company, and that a delivery address whose
+        customer location is a transit sublocation of it is delivered there. """
         company_a = self.env['res.company'].create({'name': 'Company A'})
         company_b = self.env['res.company'].create({'name': 'Company B'})
         user_a = self.env['res.users'].create({
@@ -2474,6 +2475,27 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         intercom_location = self.env.ref('stock.stock_location_inter_company')
         self.assertEqual(so.picking_ids.location_dest_id, intercom_location)
         self.assertEqual(so.picking_ids.move_ids.location_dest_id, intercom_location)
+
+        transit_location = self.env['stock.location'].create({
+            'name': 'Company B Transit',
+            'location_id': intercom_location.id,
+            'usage': 'transit',
+            'company_id': False,
+        })
+        # The customer location is company dependent: set it for Company A, the seller
+        delivery_address = self.env['res.partner'].with_company(company_a).create({
+            'name': 'Company B Delivery',
+            'parent_id': company_b.partner_id.id,
+            'property_stock_customer': transit_location.id,
+        })
+        so_to_delivery_address = self.env['sale.order'].with_user(user_a).create({
+            'partner_id': company_b.partner_id.id,
+            'partner_shipping_id': delivery_address.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        })
+        so_to_delivery_address.action_confirm()
+        self.assertEqual(so_to_delivery_address.picking_ids.location_dest_id, transit_location)
+        self.assertEqual(so_to_delivery_address.picking_ids.move_ids.location_dest_id, transit_location)
 
     def test_sale_order_line_quantity_forecast_widget_display(self):
         """
@@ -2864,3 +2886,135 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_multistep_cancel_delivery_status(self):
+        """Check that in two-step delivery, validating and then cancelling the ship results
+        in a 'Not Available' delivery status on the sale order."""
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        sale_order = self._get_new_sale_order()
+        # Add a service product line to the sale order to check that delivery status is not impacted
+        service_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.service_product.id,
+            'product_uom_qty': 1,
+        })
+        sale_order.action_confirm()
+        service_line.qty_delivered = 5
+        self.assertEqual(sale_order.delivery_status, 'pending')
+        pick = sale_order.picking_ids
+        pick.button_validate()
+        self.assertEqual(pick.state, 'done')
+        self.assertEqual(sale_order.delivery_status, 'started')
+        ship = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+        ship.action_cancel()
+        self.assertEqual(ship.state, 'cancel')
+        # Ensure that the sale order status is set to 'Not Available'.
+        self.assertEqual(sale_order.delivery_status, False)
+
+    def test_resupply_so_qty_update(self):
+        """In a 2-warehouse resupply scenario (WH/Stock -> WH/Output -> WH2/Stock
+        -> Customer), updating the SO line qty should update all 3 moves qty in the
+        chain accordingly.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+            'resupply_wh_ids': [Command.set([warehouse.id])],
+        })
+
+        resupply_route = warehouse2.resupply_route_ids
+        self.assertEqual(len(resupply_route), 1)
+
+        # WH2 delivery: always trigger resupply.
+        warehouse2.delivery_route_id.rule_ids.procure_method = 'make_to_order'
+
+        # Replace auto-created rules with 2 explicit rules, without warehouse as
+        # when created from the route form (the field is only shown in debug mode):
+        # Rule A: WH/Output -> WH2/Stock
+        # Rule B: WH/Stock  -> WH/Output
+        resupply_route.rule_ids.unlink()
+        self.env['stock.rule'].create([
+            {
+                'name': 'WH/Output -> WH2/Stock',
+                'route_id': resupply_route.id,
+                'action': 'pull',
+                'location_src_id': warehouse.wh_output_stock_loc_id.id,
+                'location_dest_id': warehouse2.lot_stock_id.id,
+                'picking_type_id': warehouse2.in_type_id.id,
+                'procure_method': 'make_to_order',
+                'location_dest_from_rule': True,
+            },
+            {
+                'name': 'WH/Stock -> WH/Output',
+                'route_id': resupply_route.id,
+                'action': 'pull',
+                'location_src_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.wh_output_stock_loc_id.id,
+                'picking_type_id': warehouse.pick_type_id.id,
+                'procure_method': 'make_to_stock',
+                'location_dest_from_rule': True,
+            },
+        ])
+
+        self.product_a.is_storable = True
+        self.product_a.route_ids = [Command.set([resupply_route.id])]
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': warehouse2.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 3)
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('id'), [
+            {'location_id': warehouse2.lot_stock_id.id, 'location_dest_id': self.partner_a.property_stock_customer.id, 'product_uom_qty': 1},
+            {'location_id': warehouse.wh_output_stock_loc_id.id, 'location_dest_id': warehouse2.lot_stock_id.id, 'product_uom_qty': 1},
+            {'location_id': warehouse.lot_stock_id.id, 'location_dest_id': warehouse.wh_output_stock_loc_id.id, 'product_uom_qty': 1},
+        ])
+        so.order_line.product_uom_qty = 2
+        self.assertRecordValues(so.picking_ids.move_ids.sorted('id'), [
+            {'location_id': warehouse2.lot_stock_id.id, 'location_dest_id': self.partner_a.property_stock_customer.id, 'product_uom_qty': 2},
+            {'location_id': warehouse.wh_output_stock_loc_id.id, 'location_dest_id': warehouse2.lot_stock_id.id, 'product_uom_qty': 2},
+            {'location_id': warehouse.lot_stock_id.id, 'location_dest_id': warehouse.wh_output_stock_loc_id.id, 'product_uom_qty': 2},
+        ])
+
+    def test_change_linked_sale_order_on_delivery(self):
+        """Check that relinking a delivery to another sales order gives each order its own delivery."""
+        warehouse = self.company_data['default_warehouse']
+        customer_location = self.env.ref('stock.stock_location_customers')
+        sale_orders = self._get_new_sale_order(product=self.new_product) | self._get_new_sale_order(product=self.new_product)
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner_a.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.sale_id = sale_orders[0]
+        delivery.action_confirm()
+        delivery.sale_id = sale_orders[1]
+        sale_orders.action_confirm()
+        self.assertEqual(sale_orders[1].picking_ids, delivery)
+        self.assertEqual(delivery.move_ids.sale_line_id.order_id, sale_orders[1])
+        self.assertRecordValues(sale_orders[0].picking_ids, [
+            {'picking_type_code': 'outgoing', 'sale_id': sale_orders[0].id},
+        ])
+
+    def test_delivery_empty_list_help_sales_orders_button(self):
+        """ The "Sales Orders" button of the empty deliveries list must only be
+        shown to users having access to the Sales app. """
+        stock_user = new_test_user(self.env, login='stock_user_no_sale', groups='stock.group_stock_user')
+        salesman = self.company_data['default_user_salesman']
+        Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='outgoing')
+        self.assertNotIn('sale.action_orders', Picking.with_user(stock_user).get_empty_list_help(''))
+        self.assertIn('sale.action_orders', Picking.with_user(salesman).get_empty_list_help(''))

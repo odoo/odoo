@@ -35,6 +35,35 @@ class TestCrmMailActivity(TestCrmCommon):
             })
 
     @users('user_sales_leads')
+    def test_create_calendar_event_includes_customer(self):
+        """When creating a calendar event from an activity on a CRM opportunity, both the
+        meeting creator and the opportunity's customer should be included as attendees."""
+        opportunity = self.env['crm.lead'].create({
+            'name': 'Test Opportunity',
+            'type': 'opportunity',
+            'partner_id': self.contact_1.id,
+            'user_id': self.user_sales_leads.id,
+            'team_id': self.sales_team_1.id,
+        })
+        activity = self.env['mail.activity'].create({
+            'activity_type_id': self.activity_type_1.id,
+            'res_id': opportunity.id,
+            'res_model_id': self.env['ir.model']._get_id('crm.lead'),
+            'user_id': self.user_sales_manager.id,
+        })
+
+        action = activity.action_create_calendar_event()
+        event_attendees = self.env['calendar.event'].with_context(action['context']).create({
+            'name': 'Test Meeting',
+        }).attendee_ids.partner_id
+        self.assertEqual(
+            event_attendees,
+            self.contact_1 | self.user_sales_leads.partner_id | self.user_sales_manager.partner_id,
+            "The opportunity's customer, the meeting creator and the activity's assigned user"
+            " should all be automatically added as meeting attendees.",
+        )
+
+    @users('user_sales_leads')
     def test_crm_activity_ordering(self):
         """ Test ordering on "my activities", linked to a hack introduced for a b2b.
         Purpose is to be able to order on "my activities", which is a filtered o2m.

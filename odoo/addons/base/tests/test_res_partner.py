@@ -238,6 +238,18 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(first_child.lang, 'de_DE')
         self.assertEqual(second_child.lang, 'fr_FR')
 
+    def test_create_ignores_default_user_ids(self):
+        """ default_user_ids is meant for other models (e.g. the 'All Tasks'
+        action), creating a partner with it must not re-link the user. """
+        user = self.user_demo
+        user_partner = user.partner_id
+        partner_id, _name = self.env['res.partner'].with_context(
+            default_user_ids=[Command.link(user.id)],
+        ).name_create('Imported Customer')
+        partner = self.env['res.partner'].browse(partner_id)
+        self.assertFalse(partner.user_ids)
+        self.assertEqual(user.partner_id, user_partner)
+
     def test_name_create(self):
         res_partner = self.env['res.partner']
         for text, expected_name, expected_mail in SAMPLES:
@@ -1169,6 +1181,30 @@ class TestPartnerAddressCompany(TransactionCase):
         })
         record = self.env['res.partner'].with_user(user).search([('id', '=', partner.id)])
         self.assertEqual(record.id, partner.id)
+
+    def test_commercial_field_sync_move_contact(self):
+        company_a, company_b, company_c = self.env['res.partner'].create([
+            {'name': 'Company A', 'is_company': True, 'vat': 'BECOMPANYA'},
+            {'name': 'Company B', 'is_company': True},
+            {'name': 'Company C', 'is_company': True, 'vat': 'BECOMPANYC'},
+        ])
+        contact_b = self.env['res.partner'].create({'name': 'B Employee', 'parent_id': company_b.id})
+        contact_a, contact_c = self.env['res.partner'].create([
+            {'name': 'Contact A', 'parent_id': company_a.id},
+            {'name': 'Contact C', 'parent_id': company_c.id},
+        ])
+        self.assertEqual(contact_a.vat, 'BECOMPANYA')
+
+        contact_a.parent_id = company_b
+        self.assertEqual(company_a.vat, 'BECOMPANYA')
+        self.assertFalse(company_b.vat, 'Moving a contact should not push the VAT of its previous company')
+        self.assertFalse(contact_b.vat)
+        self.assertFalse(contact_a.vat)
+
+        contact_c.parent_id = company_a
+        self.assertEqual(company_a.vat, 'BECOMPANYA')
+        self.assertEqual(company_c.vat, 'BECOMPANYC')
+        self.assertEqual(contact_c.vat, 'BECOMPANYA')
 
 
 @tagged('res_partner', 'post_install', '-at_install')

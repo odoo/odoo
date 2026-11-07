@@ -1,5 +1,6 @@
 import { reactive } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -91,6 +92,14 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            ({ data: { action, data } }) => {
+                if (action === "OPEN_RECORD") {
+                    this.store.Thread.insert({ id: data.id, model: data.model }).open();
+                }
+            }
+        );
     }
 }
 

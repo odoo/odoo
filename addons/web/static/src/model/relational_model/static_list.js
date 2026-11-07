@@ -38,13 +38,14 @@ function compareRecords(r1, r2, orderBy, fields) {
     return 0;
 }
 
-function copyRecordData(record, copyFields = []) {
+function copyRecordData(record, copyFields = [], noCopyFields = []) {
     const data = {};
     for (const [name, value] of Object.entries(record.data)) {
         if (
-            ![...copyFields, "display_name"].includes(name) &&
-            (record._isReadonly(name) || record._isInvisible(name)) &&
-            !record._isRequired(name)
+            noCopyFields.includes(name) ||
+            (![...copyFields, "display_name"].includes(name) &&
+                (record._isReadonly(name) || record._isInvisible(name)) &&
+                !record._isRequired(name))
         ) {
             continue;
         }
@@ -60,16 +61,12 @@ function copyRecordData(record, copyFields = []) {
                 });
                 break;
             }
-            case "many2one":
-            case "many2one_reference":
-            case "reference":
-                data[name] = value && Object.assign({}, value);
-                break;
             case "one2many":
                 // Not supported => that field is left empty
                 break;
             default:
-                data[name] = value;
+                // record.data is in client side format, it must be serialized for the server
+                data[name] = record._formatServerValue(record.fields[name].type, value);
         }
     }
     return data;
@@ -221,7 +218,11 @@ export class StaticList extends DataPoint {
 
     delete(record) {
         return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
+            const recordId = record.resId || record._virtualId;
+            if (!this._currentIds.includes(recordId)) {
+                return;
+            }
+            await this._applyCommands([[x2ManyCommands.DELETE, recordId]]);
             // All records of last page are deleted => reload the new last page
             if (this.count === this.offset) {
                 await this._load({ offset: Math.max(this.offset - this.limit, 0) });
@@ -925,7 +926,11 @@ export class StaticList extends DataPoint {
     async _duplicateRecords(records, options) {
         const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
         const copyFields = options.copyFields || [];
-        let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
+        const noCopyFields = options.noCopyFields || [];
+        let sequence;
+        if (this.handleField) {
+            sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
+        }
 
         let parentChanges;
         if (this.config.relationField) {
@@ -936,11 +941,10 @@ export class StaticList extends DataPoint {
         }
 
         const changesList = records.map((record) => {
-            const changes = {
-                ...copyRecordData(record, copyFields),
-                [this.handleField]: sequence++,
-            };
-
+            const changes = { ...copyRecordData(record, copyFields, noCopyFields) };
+            if (this.handleField) {
+                changes[this.handleField] = sequence++;
+            }
             if (parentChanges) {
                 changes[this.config.relationField] = { ...parentChanges };
             }
@@ -948,19 +952,16 @@ export class StaticList extends DataPoint {
             return changes;
         });
 
-        const fieldsSpec = getFieldsSpec(
-            this.activeFields,
-            this.fields,
-            this.evalContext,
-            { withInvisible: true }
-        );
+        const fieldsSpec = getFieldsSpec(this.activeFields, this.fields, this.evalContext, {
+            withInvisible: true,
+        });
 
         const responses = await this.model.orm.call(
             this.resModel,
             "onchange_batch",
             [changesList, [], fieldsSpec],
             {
-                context: this.context,
+                context: { ...this.context, ...options.context },
             }
         );
 
@@ -986,20 +987,24 @@ export class StaticList extends DataPoint {
         }
 
         const commands = [];
-        // `this.records.slice(targetIndex)` is wrong
-        // we need to iterate on ALL the next records even the ones on the next pages..
-        for (const record of this.records.slice(targetIndex)) {
-            commands.push(
-                x2ManyCommands.update(record.resId || record._virtualId, {
-                    [this.handleField]: sequence++,
-                })
-            );
+        if (this.handleField) {
+            // `this.records.slice(targetIndex)` is wrong
+            // we need to iterate on ALL the next records even the ones on the next pages..
+            for (const record of this.records.slice(targetIndex)) {
+                commands.push(
+                    x2ManyCommands.update(record.resId || record._virtualId, {
+                        [this.handleField]: sequence++,
+                    })
+                );
+            }
+            await this._applyCommands(commands);
         }
-        await this._applyCommands(commands);
 
         await Promise.all(newRecords.map((record) => this._addRecord(record, { sort: false })));
 
-        await this._sort();
+        if (this.orderBy.length) {
+            await this._sort();
+        }
     }
 
     _getCommands({ withReadonly } = {}) {

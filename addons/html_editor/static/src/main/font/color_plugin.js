@@ -18,11 +18,18 @@ import {
     isZWS,
     PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    ancestors,
+    childNodes,
+    closestElement,
+    descendants,
+    findFurthest,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { isColorGradient, normalizeCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
@@ -192,7 +199,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) &&
+                        (!isTextNode(node) || this.dependencies.selection.isNodeEditable(node)) &&
                         node.nodeName !== "T" &&
                         this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
@@ -202,10 +209,74 @@ export class ColorPlugin extends Plugin {
         }
 
         const findTopMostDecoration = (current) => {
-            const decoration = closestElement(current.parentNode, "s, u");
-            return decoration?.textContent === current.textContent
-                ? findTopMostDecoration(decoration)
-                : current;
+            let topMostDecoration = findFurthest(
+                current,
+                closestBlock(current),
+                (node) => isElement(node) && node.matches("u, s")
+            );
+            if (!topMostDecoration) {
+                return current;
+            }
+            const isUnsplittable = (el) => this.dependencies.split.isUnsplittable(el);
+            const hasUnsplittable = (el) => descendants(el, [el]).some((e) => isUnsplittable(e));
+            if (
+                hasUnsplittable(topMostDecoration) &&
+                !this.dependencies.selection.areNodeContentsFullySelected(topMostDecoration)
+            ) {
+                // Walk down from `topMostDecoration` to `current`, splitting around each
+                // splittable ancestor and, once an unsplittable is hit, moving the
+                // decoration tags inside it instead of splitting it. Returns the node to
+                // use as the new limit for `splitAroundUntil(current, ...)`.
+                const extractUnsplittable = (node, limit) => {
+                    for (const child of childNodes(node)) {
+                        if (this.dependencies.selection.areNodeContentsFullySelected(child)) {
+                            // Fully selected: nothing to split inside it, `limit` stands.
+                            return limit;
+                        }
+                        if (child.contains(current)) {
+                            if (isElement(child) && hasUnsplittable(child)) {
+                                if (isUnsplittable(child)) {
+                                    // `child` itself is unsplittable: split everything above
+                                    // it up to `limit`, then pull the decoration tags that
+                                    // used to wrap it inside it instead.
+                                    const unsplittableStyleParent =
+                                        this.dependencies.split.splitAroundUntil(child, limit);
+                                    const decorations = ancestors(
+                                        child,
+                                        unsplittableStyleParent.parentElement
+                                    ).filter((node) => node.matches("u, s"));
+                                    for (const decoration of decorations) {
+                                        cursors.update(callbacksForCursorUpdate.unwrap(decoration));
+                                        decoration.replaceWith(...childNodes(decoration));
+                                        for (const node of childNodes(child)) {
+                                            cursors.update(
+                                                callbacksForCursorUpdate.append(decoration, node)
+                                            );
+                                            decoration.append(node);
+                                        }
+                                        cursors.update(
+                                            callbacksForCursorUpdate.append(child, decoration)
+                                        );
+                                        child.append(decoration);
+                                    }
+                                    cursors.restore();
+                                    // Recurse into `child`, now limited to the outermost
+                                    // decoration we just moved inside it.
+                                    return extractUnsplittable(child, decorations.at(-1));
+                                } else {
+                                    // Not unsplittable itself, but contains one: descend.
+                                    return extractUnsplittable(child, limit);
+                                }
+                            } else {
+                                // No unsplittable below: safe to split up to `limit` here.
+                                return this.dependencies.split.splitAroundUntil(child, limit);
+                            }
+                        }
+                    }
+                };
+                topMostDecoration = extractUnsplittable(topMostDecoration, topMostDecoration);
+            }
+            return this.dependencies.split.splitAroundUntil(current, topMostDecoration);
         };
 
         const hexColor = rgbaToHex(color).toLowerCase();
@@ -241,6 +312,8 @@ export class ColorPlugin extends Plugin {
                 .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
                 .filter(Boolean)
         );
+
+        const nodesToColor = [...selectedNodes, ...targetedFieldNodes];
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
@@ -390,21 +463,23 @@ export class ColorPlugin extends Plugin {
                         fillEmpty(font);
                     }
                 } else {
-                    font = []; // Ignore non-text or invisible text nodes.
+                    // Ignore non-text or invisible text nodes.
+                    font =
+                        node.nodeType === Node.ELEMENT_NODE &&
+                        node.matches(PROTECTED_QWEB_SELECTOR) &&
+                        this.dependencies.selection.isNodeEditable(node)
+                            ? node
+                            : [];
                 }
                 return font;
             });
 
-        for (const fieldNode of targetedFieldNodes) {
-            this.colorElement(fieldNode, color, mode);
-        }
-
-        let fonts = getFonts(selectedNodes);
+        let fonts = getFonts(nodesToColor);
         // Dirty fix as the previous call could have unconnected elements
         // because of the `splitAroundUntil`. Another call should provide he
         // correct list of fonts.
         if (!fonts.every((font) => font.isConnected)) {
-            fonts = getFonts(selectedNodes);
+            fonts = getFonts(nodesToColor);
         }
 
         // Color the selected <font>s and remove uncolored fonts.

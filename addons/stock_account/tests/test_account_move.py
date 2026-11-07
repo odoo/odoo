@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
@@ -259,6 +260,39 @@ class TestAccountMove(TestStockValuationCommon):
             {'analytic_distribution': {str(analytic_account.id): 100}, 'credit': 0, 'debit': 10},
         ])
 
+    def test_validate_receipts_from_different_partners_together(self):
+        """
+        Validating together receipts from different partners must create one
+        valuation entry per partner instead of failing.
+        """
+        product = self.product_standard_auto
+        self.stock_location.valuation_account_id = self.env['account.account'].create({
+            'name': 'STCK Test Account',
+            'code': '100119',
+            'account_type': 'asset_current',
+        })
+        partners = self.partner + self.vendor
+        receipts = self.env['stock.picking'].create([{
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'partner_id': partner.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_qty': 1.0,
+            })],
+        } for partner in partners])
+        receipts.button_validate()
+
+        self.assertEqual(receipts.mapped('state'), ['done', 'done'])
+        for receipt in receipts:
+            account_move = receipt.move_ids.account_move_id
+            self.assertEqual(len(account_move), 1)
+            self.assertEqual(account_move.partner_id, receipt.partner_id)
+            self.assertEqual(account_move.ref, receipt.name)
+
     def test_cogs_account_branch_company(self):
         """Check branch company accounts are selected"""
         product = self.product_standard_auto
@@ -397,3 +431,72 @@ class TestAccountMove(TestStockValuationCommon):
         self.assertFalse(move.invoice_line_ids.name)
         # ensure the invoice is posted successfully
         self.assertEqual(move.state, 'posted')
+
+    def test_cogs_foreign_currency_invoice_no_date(self):
+        """
+        Test that no currency rate is applied on COGS lines from an invoice without invoice
+        date in a foreign currency as COGS lines are using the currency of the company.
+        """
+        self._use_multi_currencies([
+            ('2026-01-16', 2.0),
+            ('2026-01-17', 3.0),
+        ])
+        product_category = self.env['product.category'].create({
+            'name': 'Category A',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'standard',
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product XYZ',
+            'is_storable': True,
+            'standard_price': 100.00,
+            'categ_id': product_category.id,
+        })
+        # create an invoice without invoice_date in a foreign currency
+        with freeze_time('2026-01-16'):
+            move = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner.id,
+                'currency_id': self.other_currency.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': product.id,
+                    }),
+                ],
+            })
+            # force create_date to the frozen time
+            self.env.cr.execute(
+                "UPDATE account_move SET create_date = %s WHERE id = %s",
+                (datetime.now(), move.id),
+            )
+            move.invalidate_recordset(['create_date'])
+        # confirm the invoice the following day when the currency rate is different
+        with freeze_time('2026-01-17'):
+            move.action_post()
+
+        expense_account = product._get_product_accounts()['expense']
+        valuation_account = product._get_product_accounts()['stock_valuation']
+        expense_line = move.line_ids.filtered(lambda l: l.account_id == expense_account)
+        stock_valuation_line = move.line_ids.filtered(lambda l: l.account_id == valuation_account)
+
+        self.assertRecordValues(
+            stock_valuation_line + expense_line,
+            [
+                {
+                    'account_id': valuation_account.id,
+                    'currency_id': move.company_currency_id.id,
+                    'currency_rate': 1.0,
+                    'amount_currency': -100.0,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                },
+                {
+                    'account_id': expense_account.id,
+                    'currency_id': move.company_currency_id.id,
+                    'currency_rate': 1.0,
+                    'amount_currency': 100.0,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                },
+            ]
+        )

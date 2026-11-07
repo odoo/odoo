@@ -2,6 +2,7 @@ import requests
 from unittest import mock
 from urllib.parse import parse_qs
 
+from odoo import api
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -22,61 +23,25 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'country_id': self.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
+            'company_registry': '33417522117412',
             'invoice_edi_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
+            'peppol_endpoint': '334175221',
             'peppol_eas': '0225',
         }])
 
         partner = self.env["res.partner"].create({
             'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
             'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
             'invoice_edi_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
+            'peppol_endpoint': '334175221',
             'peppol_eas': '0225',
         }])
-
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
-
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
+        self.assertEqual(partner._l10n_fr_pdp_get_base_identifier(), ('siren', '334175221'))
 
     def test_pdp_edi_formats(self):
         partner = self.partner_a
@@ -88,8 +53,75 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner.invoice_sending_method = 'email'
         partner.invoice_edi_format = 'ubl_bis3'
 
+    def test_einvoicing_terminology_by_company(self):
+        self.assertEqual(self.env.company._get_einvoicing_network_name(), "the Approved Platform")
+        self.assertEqual(
+            self.env.company._get_einvoicing_identifier_name(),
+            "French e-invoicing identifier",
+        )
+        partner_fields = self.env['res.partner'].fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by the Approved Platform")
+
+        move = self._create_invoice(partner_id=self.belgian_partner.id)
+        wizard = self.env['account.move.send.wizard'].new({'move_id': move})
+        self.assertEqual(wizard._get_peppol_checkbox_label("by Peppol"), "by the Approved Platform")
+        self.assertEqual(
+            wizard._get_peppol_checkbox_addendum_disable_reason(),
+            " (Customer not available for French E-Invoicing)",
+        )
+        move.peppol_move_state = 'done'
+        self.assertEqual(
+            wizard._get_peppol_checkbox_addendum_disable_reason(),
+            " (Previously sent)",
+        )
+        self.assertEqual(
+            self.env['account.move.send']._get_peppol_partner_want_peppol_message(self.belgian_partner, move),
+            f"{self.belgian_partner.display_name} has requested electronic invoices reception via French E-Invoicing.",
+        )
+        french_move = self._create_invoice(partner_id=self.partner_a.id)
+        self.assertEqual(
+            self.env['account.move.send']._get_peppol_partner_want_peppol_message(self.partner_a, french_move),
+            f"{self.partner_a.display_name} has requested electronic invoices reception via French E-Invoicing.",
+        )
+
+        company_lu = self.env['res.company'].create({
+            'name': 'Luxembourg company',
+            'country_id': self.env.ref('base.lu').id,
+        })
+        company_lu.partner_id.write({
+            'peppol_eas': '0009',
+            'peppol_endpoint': '96851575905899',
+        })
+        self.assertTrue(company_lu._peppol_is_french_company())
+        self.assertEqual(company_lu._get_einvoicing_network_name(), "Peppol")
+        self.assertEqual(
+            company_lu._get_einvoicing_identifier_name(),
+            "Peppol EAS and/or Endpoint identifier",
+        )
+        partner_fields = self.env['res.partner'].with_company(company_lu).fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by Peppol")
+
+        company_fr_peppol = self.env['res.company'].create({
+            'name': 'French company registered on Peppol',
+            'country_id': self.env.ref('base.fr').id,
+            'account_peppol_proxy_state': 'receiver',
+        })
+        self.assertEqual(company_fr_peppol._get_peppol_proxy_type(), 'peppol')
+        self.assertEqual(company_fr_peppol._get_einvoicing_network_name(), "the Approved Platform")
+        partner_fields = self.env['res.partner'].with_company(company_fr_peppol).fields_get(['invoice_sending_method'])
+        sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
+        self.assertEqual(sending_methods['peppol'], "by the Approved Platform")
+
+    def test_einvoicing_terminology_without_user(self):
+        # auth='none' routes (e.g. /auth_oauth/signin) run without user, so with an empty env.company
+        env_no_user = api.Environment(self.env.cr, None, {})
+        partner_fields = env_no_user['res.partner'].fields_get(['invoice_sending_method'], attributes=())
+        self.assertIn('invoice_sending_method', partner_fields)
+
     def test_validate_partner_be_invalid_format(self):
-        partner = self.partner_b
+        partner = self.belgian_partner
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
             'peppol_verification_state': 'not_valid',
@@ -121,7 +153,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         }])
 
     def test_validate_partner_be(self):
-        partner = self.partner_b
+        partner = self.belgian_partner
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
             ('peppol', "0208:0239843188")
@@ -175,7 +207,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner = self.partner_a
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905823")
+            ('pdp', "0225:334175221_33417522105821")
         )
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
@@ -189,10 +221,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
             if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
-            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A334175221_33417522105821"):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
 
         partner.invoice_sending_method = False
         with (
@@ -211,7 +243,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner = self.partner_a
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905823")
+            ('pdp', "0225:334175221_33417522105821")
         )
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
@@ -225,10 +257,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
             if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823", b2g=True)
-            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821", b2g=True)
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A334175221_33417522105821"):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
 
         partner.invoice_sending_method = False
         with (
@@ -322,14 +354,14 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             if r.url.startswith(f"{origin}/api/pdp/1/pdp_annuaire_lookup"):
                 response = requests.Response()
                 response.status_code = 200
-                response._content = b'{"annuaire_lines": [{"identifier": "968515759_96851575900034"}, {"identifier": "968515759"}, {"identifier": "968515759_96851575905823"}]}'
+                response._content = b'{"annuaire_lines": [{"identifier": "968515759_96851575900034"}, {"identifier": "968515759"}, {"identifier": "334175221_33417522105821"}]}'
                 return response
             elif r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821")
             elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
             return requests.Response()
 
         with (
@@ -343,7 +375,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
             self.assertRecordValues(self.partner_a, [{
                 'peppol_eas': '0225',
-                'peppol_endpoint': '968515759_96851575905823',
+                'peppol_endpoint': '334175221_33417522105821',
                 'peppol_verification_state': 'valid',
                 'pdp_verification_display_state': 'pdp_valid',
             }])

@@ -97,10 +97,11 @@ class SaleOrderLine(models.Model):
         product_uom = self.product_uom_id
         if product_uom == self.env.ref('uom.product_uom_unit'):
             product_uom = self.env.ref('uom.product_uom_hour')
-        if product_uom != company_time_uom_id and product_uom._has_common_reference(company_time_uom_id):
-            allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id, rounding_method='HALF-UP')
-        else:
-            allocated_hours = self.product_uom_qty
+        if product_uom._has_common_reference(company_time_uom_id):
+            if product_uom != company_time_uom_id:
+                allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id, rounding_method='HALF-UP')
+            else:
+                allocated_hours = self.product_uom_qty
         return allocated_hours
 
     def _timesheet_create_project(self):
@@ -120,6 +121,7 @@ class SaleOrderLine(models.Model):
         factor_per_id = {
             uom.id: uom.factor
             for uom in self.order_id.order_line.product_uom_id
+            if uom._has_common_reference(project_uom)
         }
         # if sold as units, assume hours for time allocation
         factor_per_id[uom_unit.id] = uom_hour.factor
@@ -187,7 +189,7 @@ class SaleOrderLine(models.Model):
             else:
                 # No related credit note: invoice exactly what is
                 # calculated for this period
-                qty_to_invoice = max(0.0, mapping.get(line.id, 0.0))
+                qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             elif start_date or end_date:

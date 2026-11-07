@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-08 08:11+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
+"PO-Revision-Date: 2026-11-02 14:40+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/mail/es/>"
 "\n"
@@ -255,12 +255,12 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)sEscriba %(bold_start)s@nombredeusuario%(bold_end)s "
-"para mencionar a alguien.%(new_line)sEscriba %(bold_start)s#canal%(bold_end)"
-"s para mencionar un canal.%(new_line)sEscriba %(bold_start)s/comando%"
-"(bold_end)s para ejecutar un comando.%(new_line)sEscriba %(bold_start)"
-"s::acceso directo%(bold_end)s para insertar una respuesta predeterminada en "
-"el mensaje.%(new_line)sEscriba %(bold_start)s:emoji:%(bold_end)s para "
-"insertar un emoji en el mensaje."
+"para mencionar a alguien.%(new_line)sEscriba %(bold_start)s#canal%"
+"(bold_end)s para mencionar un canal.%(new_line)sEscriba %(bold_start)s/"
+"comando%(bold_end)s para ejecutar un comando.%(new_line)sEscriba %"
+"(bold_start)s::acceso directo%(bold_end)s para insertar una respuesta "
+"predeterminada en el mensaje.%(new_line)sEscriba %(bold_start)s:emoji:%"
+"(bold_end)s para insertar un emoji en el mensaje."
 
 #. module: mail
 #. odoo-javascript
@@ -277,8 +277,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sESC%(close_samp)s %(open_em)spara %(open_cancel)scancelar%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
-"spara %(open_save)sguardar%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)spara %(open_save)sguardar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -289,8 +289,8 @@ msgid ""
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sESC%(close_samp)s %(open_em)spara %(open_cancel)scancelar%"
-"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)"
-"spara %(open_save)sguardar%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
+"(open_em)spara %(open_save)sguardar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -509,6 +509,12 @@ msgstr "---------- Mensaje reenviado ----------"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_message_result.js:0
+msgid "1 message found"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_patch.js:0
 msgid "1 new message"
 msgstr "1 nuevo mensaje"
@@ -583,8 +589,8 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p><b>Chatee con sus compañeros</b> en tiempo real usando mensajes "
-"directos.</p><p><i>Puede que necesite invitar a usuarios de la aplicación de "
+"<p><b>Chatee con sus compañeros</b> en tiempo real usando mensajes directos."
+"</p><p><i>Puede que necesite invitar a usuarios de la aplicación de "
 "configuración primero.</i></p>"
 
 #. module: mail
@@ -786,7 +792,8 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
-"<strong>Guarda</strong> esta página y regresa para configurar la función."
+"<strong>Guarda</strong> esta página y vuelve aquí para configurar la "
+"funcionalidad."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
@@ -945,7 +952,7 @@ msgstr "Cuenta"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account Auth Token"
-msgstr "Token de autenticación de cuenta"
+msgstr "Token de autenticación de la cuenta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
@@ -2235,6 +2242,12 @@ msgstr "Por orden de prioridad del servidor"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
+msgid "CMD"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
 msgid "CTRL"
 msgstr "CTRL"
 
@@ -2912,7 +2925,7 @@ msgstr "Configure sus tipos de actividad"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr "Configure sus propios servidores de correo electrónico"
+msgstr "Configura tus propios servidores de correo electrónico"
 
 #. module: mail
 #. odoo-javascript
@@ -3392,7 +3405,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Customize the look and feel of automated emails"
-msgstr "Personalice la apariencia de los correos electrónicos automatizados"
+msgstr "Personaliza la apariencia de los correos electrónicos automatizados"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_notifications
@@ -5156,7 +5169,8 @@ msgstr "Nombre del grupo"
 msgid ""
 "Group authorization and group auto-subscription are only supported on "
 "channels."
-msgstr "La autorización y autosuscripción de grupos solo es posible en canales."
+msgstr ""
+"La autorización y autosuscripción de grupos solo es posible en canales."
 
 #. module: mail
 #. odoo-javascript
@@ -5532,7 +5546,8 @@ msgstr "Estado de mensajería instantanea"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__manual_im_status
 msgid "IM status manually set by the user"
-msgstr "Estado de mensajería instantánea establecido manualmente por el usuario"
+msgstr ""
+"Estado de mensajería instantánea establecido manualmente por el usuario"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -5822,7 +5837,7 @@ msgstr "Correo electrónico entrante"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Incoming Email Servers"
-msgstr "Servidores de correo de entrada"
+msgstr "Servidores de correo electrónico entrante"
 
 #. module: mail
 #: model:ir.model,name:mail.model_fetchmail_server
@@ -6437,6 +6452,11 @@ msgstr "EN VIVO"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Idioma"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8692,7 +8712,7 @@ msgstr "Correo electrónico saliente"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
-msgstr "Servidores de correo de salida"
+msgstr "Servidores de correo electrónico saliente"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__mail_server_id
@@ -9186,6 +9206,12 @@ msgid "Pop out Attachments"
 msgstr "Archivos adjuntos en ventana flotante"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Puerto"
@@ -9265,7 +9291,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Powered by"
-msgstr "Con tecnología de"
+msgstr "Con la tecnología de"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
@@ -9759,7 +9785,8 @@ msgstr ""
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Rendering of %(field_name)s is not possible as not defined on template."
-msgstr "No es posible visualizar %(field_name)s, no se definió en la plantilla."
+msgstr ""
+"No es posible visualizar %(field_name)s, no se definió en la plantilla."
 
 #. module: mail
 #. odoo-javascript
@@ -9902,8 +9929,8 @@ msgstr "Restringir la creación de plantillas"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Restrict mail templates edition and QWEB placeholders usage."
 msgstr ""
-"Restrinja la edición de plantillas de correo y el uso de marcadores de "
-"posición QWEB"
+"Restringe la edición de plantillas de correo y el uso de marcadores de "
+"posición QWeb."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
@@ -9941,7 +9968,7 @@ msgstr "Revertir"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Review All Templates"
-msgstr "Ver todas las plantillas"
+msgstr "Revisar todas las plantillas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
@@ -10499,12 +10526,12 @@ msgstr "Enviar un correo electrónico"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send and receive emails through your Gmail account."
-msgstr "Envíe y reciba correos electrónicos desde su cuenta de Gmail."
+msgstr "Envía y recibe correos electrónicos desde tu cuenta de Gmail."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send and receive emails through your Outlook account."
-msgstr "Envíe y reciba correos electrónicos desde su cuenta de Outlook."
+msgstr "Envía y recibe correos electrónicos desde tu cuenta de Outlook."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -10668,8 +10695,8 @@ msgstr "Establezca activo en False para ocultar el canal sin eliminarlo."
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
 msgstr ""
-"Configura tu propio servidor para llamadas en grupo grandes mediante el "
-"enrutamiento centralizado de las conexiones"
+"Configura tu propio servidor para llamadas grupales grandes mediante el "
+"enrutamiento centralizado de conexiones"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10717,13 +10744,6 @@ msgid "Shortcut"
 msgstr "Acceso rápido"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr ""
-"Código abreviado del idioma utilizado como destino de la solicitud de "
-"traducción."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -10768,7 +10788,8 @@ msgstr "Mostrar todos los registros cuya próxima fecha de acción sea mañana"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records whose next activity date is past"
-msgstr "Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
+msgstr ""
+"Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
 
 #. module: mail
 #. odoo-javascript
@@ -10803,6 +10824,14 @@ msgid ""
 msgstr ""
 "Se muestran %(result_count)s resultados de %(total_count)s. Refine su "
 "búsqueda para ver más opciones."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_message_result.js:0
+msgid ""
+"Showing the first %(count)s messages found. Narrow your search or scroll to "
+"see more."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -11505,8 +11534,8 @@ msgid ""
 "contact us at %(default_email)s instead."
 msgstr ""
 "La dirección %(alias_display_name)s no pudo aceptar el siguiente mensaje.\n"
-"                 Solo %(contact_description)s puede ponerse en "
-"contacto.<br /><br />\n"
+"                 Solo %(contact_description)s puede ponerse en contacto.<br /"
+"><br />\n"
 "                 Asegúrese de que está utilizando la dirección correcta o "
 "póngase en contacto con nosotros en %(default_email)s."
 
@@ -11717,7 +11746,8 @@ msgstr "Esta acción enviará un correo electrónico."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This applicant has been stuck in this stage for %(numberOfDays)s days."
-msgstr "Este candidato ha estado en esta fase desde hace %(numberOfDays)s días."
+msgstr ""
+"Este candidato ha estado en esta fase desde hace %(numberOfDays)s días."
 
 #. module: mail
 #. odoo-javascript
@@ -11897,7 +11927,8 @@ msgstr "Esta semana"
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
-msgstr "Esos valores no se admiten como opciones al visualizar: %(param_names)s"
+msgstr ""
+"Esos valores no se admiten como opciones al visualizar: %(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -12555,7 +12586,7 @@ msgstr "Actualizar seguidores"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Update Mail Layout"
-msgstr "Actualice diseño del correo"
+msgstr "Actualizar el diseño del correo"
 
 #. module: mail
 #. odoo-javascript
@@ -12687,7 +12718,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use different domains for your mail aliases"
-msgstr "Utilice diferentes dominios para sus alias de correo electrónico"
+msgstr "Utiliza diferentes dominios para tus alias de correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
@@ -12722,9 +12753,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
 msgstr ""
-"Utiliza tus propios servidores para las llamadas a fin de gestionar grandes "
-"volúmenes de tráfico y garantizar la continuidad del servicio si Twilio no "
-"está disponible"
+"Utiliza tus propios servidores en las llamadas para gestionar un tráfico "
+"intenso y garantizar la continuidad del servicio si Twilio no está disponible"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -12732,9 +12762,9 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
-"Utiliza tus propios servidores para las llamadas a fin de gestionar grandes "
-"volúmenes de tráfico y garantizar la continuidad del servicio si Twilio no "
-"está disponible."
+"Utiliza tus propios servidores en las llamadas para gestionar un tráfico "
+"intenso y garantizar la continuidad del servicio si Twilio no está "
+"disponible."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12931,10 +12961,10 @@ msgid ""
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
 msgstr ""
-"El uso de un servidor propio de correo electrónico es necesario para enviar/"
-"recibir correos en las versiones Community y Enterprise. Los usuarios de la "
-"versión Online si tienen disponible un servidor de correo listo para usar "
-"(@micompania.odoo.com)."
+"Es necesario que utilices tu propio servidor de correo electrónico para "
+"enviar y recibir correos en las versiones Community y Enterprise. Los "
+"usuarios de la versión online ya tienen un servidor de correo listo para "
+"usar (@miempresa.odoo.com)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
@@ -13240,8 +13270,8 @@ msgid ""
 msgstr ""
 "Al imprimir documentos y exportar e importar datos, los valores de fechas y "
 "horas se calculan con base en esta zona horaria.\n"
-"Si no se ha fijado una zona horaria, se usa UTC (Tiempo Universal Coordinado)"
-".\n"
+"Si no se ha fijado una zona horaria, se usa UTC (Tiempo Universal "
+"Coordinado).\n"
 "En cualquier otro lado, los valores se calculan de acuerdo al desfase de su "
 "navegador."
 
@@ -13769,12 +13799,6 @@ msgid "created this channel."
 msgstr "creó este canal."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr "d"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "día, mes, año - hh:mm:ss (GMT)"
@@ -13874,7 +13898,7 @@ msgstr "p. ej. \"catchall\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"mycompany.com\""
-msgstr "p. ej. \"micompañía.com\""
+msgstr "p. ej., miempresa.com"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -13959,7 +13983,7 @@ msgstr "p. ej. correo@ejemplo.es"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. mycompany.com"
-msgstr "p. ej. micompañía.com"
+msgstr "p. ej., miempresa.com"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -14326,6 +14350,15 @@ msgstr "“%(member_name)s” en “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr "“%s”"
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr ""
+#~ "Código abreviado del idioma utilizado como destino de la solicitud de "
+#~ "traducción."
+
+#~ msgid "d"
+#~ msgstr "d"
 
 #~ msgid "Search for a GIF"
 #~ msgstr "Buscar un GIF"

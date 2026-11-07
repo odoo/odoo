@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-26 12:00+0000\n"
+"PO-Revision-Date: 2026-09-19 15:33+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "cloud_storage_google/uk/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/cloud_storage_google/models/ir_attachment.py:0
 msgid "%s is not a valid Google Cloud Storage URL."
-msgstr ""
+msgstr "%s не дійсна URL-адреса Google Cloud Storage."
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_ir_attachment
@@ -35,7 +35,7 @@ msgstr "Прикріплення"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "Провайдер хмарного сховища для нових вкладень"
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_res_config_settings
@@ -51,22 +51,22 @@ msgstr "Назва для відображення"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
 msgid "Google Bucket Name"
-msgstr ""
+msgstr "Назва Google Bucket"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields.selection,name:cloud_storage_google.selection__res_config_settings__cloud_storage_provider__google
 msgid "Google Cloud Storage"
-msgstr ""
+msgstr "Google Cloud Storage"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_account_info
 msgid "Google Service Account Info"
-msgstr ""
+msgstr "Інформація облікового запису послуг Google"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
 msgid "Google Service Account Key"
-msgstr ""
+msgstr "Google Service Account Key"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__id
@@ -81,6 +81,8 @@ msgid ""
 "Some Google attachments are in use, please migrate cloud storages before "
 "disable the provider"
 msgstr ""
+"Деякі вкладення Google наразі використовуються; будь ласка, перенесіть дані "
+"з хмарних сховищ, перш ніж вимкнути постачальника послуг"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -89,6 +91,8 @@ msgid ""
 "The account info is not allowed to download blobs from the bucket.\n"
 "%s"
 msgstr ""
+"Дані облікового запису не мають дозволу на завантаження блобів із бакета.\n"
+"%s"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -97,6 +101,8 @@ msgid ""
 "The account info is not allowed to set the bucket's CORS.\n"
 "%s"
 msgstr ""
+"Даний обліковий запис не має дозволу на налаштування CORS для бакета.\n"
+"%s"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -105,3 +111,5 @@ msgid ""
 "The account info is not allowed to upload blobs to the bucket.\n"
 "%s"
 msgstr ""
+"Даний обліковий запис не має дозволу на завантаження блобів у бакет.\n"
+"%s"

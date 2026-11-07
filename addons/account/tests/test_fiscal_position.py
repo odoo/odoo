@@ -111,6 +111,30 @@ class TestFiscalPosition(common.TransactionCase):
 
         self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)
 
+    def test_duplicate_replacement_tax(self):
+        self.env.company.country_id = self.us
+        self.env['account.tax.group'].create({
+            'name': 'Test Tax Group',
+            'company_id': self.env.company.id,
+        })
+        source_tax = self.env['account.tax'].create({'name': 'Domestic 21%', 'amount': 21})
+        fiscal_position = self.fp.create({'name': 'Replacement taxes'})
+        replacement_tax = self.env['account.tax'].create({
+            'name': 'Foreign 19%',
+            'amount': 19,
+            'fiscal_position_ids': [Command.set(fiscal_position.ids)],
+            'original_tax_ids': [Command.set(source_tax.ids)],
+        })
+        self.assertEqual(fiscal_position.map_tax(source_tax), replacement_tax)
+
+        duplicate_tax = replacement_tax.copy()
+
+        mapped_taxes = fiscal_position.map_tax(source_tax)
+        self.assertEqual(mapped_taxes, replacement_tax)
+        self.assertEqual(mapped_taxes.compute_all(100)['total_included'], 119)
+        self.assertEqual(duplicate_tax.fiscal_position_ids, fiscal_position)
+        self.assertFalse(duplicate_tax.original_tax_ids)
+
     def test_30_fp_delivery_address(self):
         # Make sure the billing company is from Belgium (within the EU)
         self.env.company.vat = 'BE0477472701'
@@ -249,7 +273,11 @@ class TestFiscalPosition(common.TransactionCase):
             'code': 'PP',
             'country_group_ids': [Command.set(country_group.ids + a_country_group.ids)],
         })
-        self.env.company.country_id = my_country
+        # Match the fiscal country even when the company address is in another country.
+        self.env.company.write({
+            'country_id': self.us.id,
+            'account_fiscal_country_id': my_country.id,
+        })
 
         # AT case - no sequence, one country_id
         fp_1, fp_2, fp_3 = self.env['account.fiscal.position'].create([{

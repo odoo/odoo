@@ -1106,7 +1106,24 @@ class TestAPI(ThreadRecipients):
             message,
             body=Markup("line1<br>edit<br>line2<br>line3"),
         )
-        self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited"></span></p>'))
+        self.assertEqual(
+            message.body,
+            Markup(
+                '<p>line1<br>edit<br>line2<br>line3 <span class="o-mail-Message-edited"></span></p>'
+            ),
+        )
+
+        ticket_record._message_update_content(message, body=Markup("<p>Hello<b>world</b></p>"))
+        self.assertEqual(
+            message.body,
+            Markup('<p>Hello<b>world</b><span class="o-mail-Message-edited"></span></p>'),
+        )
+
+        ticket_record._message_update_content(message, body=Markup("Hello <b>world</b>"))
+        self.assertEqual(
+            message.body,
+            Markup('<p>Hello <b>world</b><span class="o-mail-Message-edited"></span></p>'),
+        )
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
@@ -1495,6 +1512,33 @@ class TestNoThread(MailCommon, TestRecipients):
                 'notif': [{'partner': self.partner_1, 'type': 'email',}],
             }],
         )
+
+    @users('employee')
+    def test_mail_composer_layout(self):
+        """ Test email layout rendering for non-thread models. Should work
+        even if not inheriting from thread, thread notification methods being
+        called on mixin itself instead of record. """
+        test_records, test_partners = self._create_records_for_batch('mail.test.nothread', 2)
+        test_template = self.env['mail.template'].sudo().create({
+            'body_html': '<p>TemplateBody</p>',
+            'email_layout_xmlid': 'mail.mail_notification_light',
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+            'partner_to': '{{ object.customer_id.id }}',
+        })
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_mail_composer_web_context(test_records, default_template_id=test_template.id)
+        ).create({})
+
+        with self.mock_mail_gateway():
+            composer._action_send_mail()
+
+        for partner in test_partners:
+            self.assertMailMail(
+                partner,
+                'sent',
+                author=self.partner_employee,
+                email_values={'body_content': 'Your NoThread Model'},
+            )
 
     @users('employee')
     def test_mail_composer_mail_with_template(self):

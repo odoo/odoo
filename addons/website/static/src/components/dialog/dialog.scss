@@ -3,7 +3,7 @@
         font-weight: $font-weight-bold;
     }
     ul.oe_menu_editor {
-        &:not(:has(li.o_dragged)) .input-group:hover > * {
+        &:not(.o_menu_editor_dragging) .input-group:hover > :is(.input-group-text, .form-control) {
             background-color: $table-hover-bg !important;
         }
         li.o_dragged {

@@ -1,4 +1,5 @@
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
+import { GloryErrorDialog } from "@pos_glory_cash/app/components/glory_error_dialog";
 import { CancelDialog } from "@pos_glory_cash/app/components/cancel_dialog";
 import { GLORY_STATUS_STRING } from "@pos_glory_cash/utils/constants";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -12,6 +13,8 @@ export class PaymentGlory extends PaymentInterface {
         super.setup(...arguments);
         this.dialog = this.env.services.dialog;
         this.cancellationResolver = null;
+        this.firstStatusReceived = false;
+        this.closeErrorDialog = null;
         this.gloryService = new GloryService(this.onStatusChange.bind(this));
         this.gloryService.connect(
             this.payment_method_id.glory_websocket_address,
@@ -27,9 +30,23 @@ export class PaymentGlory extends PaymentInterface {
     }
 
     onStatusChange(newStatus) {
+        const isFirstStatus = !this.firstStatusReceived;
+        this.firstStatusReceived = true;
+
+        if (isFirstStatus && newStatus !== "IDLE" && this.paymentLine) {
+            this.gloryService
+                .resumePayment()
+                .then((gloryResult) => this.handlePaymentResult(gloryResult))
+                .then((paymentResult) => this.paymentLine?.handlePaymentResponse(paymentResult));
+        }
+
+        if (this.closeErrorDialog && !["ERROR", "WAITING_ERROR_RECOVERY"].includes(newStatus)) {
+            this.closeErrorDialog();
+            this.closeErrorDialog = null;
+        }
+
         switch (newStatus) {
             case "IDLE": {
-                const isFirstStatus = this.gloryService.state.inventory.length === 0;
                 if (isFirstStatus && this.paymentLine) {
                     // In this case we have a stale payment
                     this.pos.getOrder().removePaymentline(this.paymentLine);
@@ -53,7 +70,11 @@ export class PaymentGlory extends PaymentInterface {
                 return;
             }
             case "WAITING_ERROR_RECOVERY": {
-                this.showError(this.currentErrorMessage);
+                this.closeErrorDialog = this.dialog.add(GloryErrorDialog, {
+                    errorCode: this.gloryService.state.errorCode,
+                    errorGif: this.gloryService.state.errorGif,
+                    reset: () => this.gloryService.reset(),
+                });
                 return;
             }
             case "WAITING_CANCEL": {
@@ -128,7 +149,10 @@ export class PaymentGlory extends PaymentInterface {
             this.paymentLine.amount * Math.pow(10, this.pos.currency.decimal_places)
         );
         const paymentResult = await this.gloryService.sendPaymentRequest(amountInCents);
+        return this.handlePaymentResult(paymentResult);
+    }
 
+    async handlePaymentResult(paymentResult) {
         if (!this.paymentLine) {
             console.warn("Glory payment response received, but no payment in progress");
             return false;
@@ -147,7 +171,11 @@ export class PaymentGlory extends PaymentInterface {
             }
             case "ERROR":
             case "WAITING_ERROR_RECOVERY": {
-                this.showError(this.currentErrorMessage);
+                this.closeErrorDialog = this.dialog.add(GloryErrorDialog, {
+                    errorCode: this.gloryService.state.errorCode,
+                    errorGif: this.gloryService.state.errorGif,
+                    reset: () => this.gloryService.reset(),
+                });
                 return false;
             }
             case "COLLECTING":
@@ -163,18 +191,96 @@ export class PaymentGlory extends PaymentInterface {
                 this.setPaymentInfo(paymentResult, true);
                 return true;
             }
-            case "CHANGE_SHORTAGE":
+            case "CHANGE_SHORTAGE": {
+                const amountToRefund =
+                    this.gloryAmountToPosAmount(
+                        paymentResult.cashGiven - paymentResult.cashReturned
+                    ) - this.paymentLine.amount;
+                this.showError(
+                    _t(
+                        "There is insufficient cash in the machine to give change. You will need to refund %s via another method.",
+                        this.env.utils.formatCurrency(amountToRefund)
+                    )
+                );
+                if (paymentResult.cashGiven === 0 && paymentResult.cashReturned === 0) {
+                    // This is the case where we requested a refund but it could not be processed
+                    return false;
+                }
                 this.setPaymentInfo(paymentResult, false);
-                await this.pos.printReceipt({ printBillActionTriggered: true });
-                this.showError(_t("There is insufficient cash in the machine to give change."));
+                return true;
+            }
+            case "CANCEL_CHANGE_SHORTAGE": {
+                const amountToRefund = this.gloryAmountToPosAmount(
+                    paymentResult.cashGiven - paymentResult.cashReturned
+                );
+                this.showError(
+                    _t(
+                        "The cash machine is unable to return the inserted cash, please refund the client %s via another method.",
+                        this.env.utils.formatCurrency(amountToRefund)
+                    )
+                );
                 return false;
-            case "OCCUPIED_BY_OTHER":
+            }
+            case "DEVICE_ERROR": {
+                this.dialog.add(GloryErrorDialog, {
+                    message: _t(
+                        "There is an error with the bill or coin device. The machine will now be reset and the contents verified. Once this is complete, the amount that must be returned to the customer will be displayed."
+                    ),
+                    errorCode: this.gloryService.state.errorCode,
+                    errorGif: this.gloryService.state.errorGif,
+                });
+                this.gloryService.reset(true);
+
+                const difference =
+                    await this.gloryService.waitForIncompleteTransactionAndReturnInventoryDifference();
+                const amountToRefund =
+                    this.gloryAmountToPosAmount(difference) - this.paymentLine.amount;
+                this.showError(
+                    _t(
+                        "There is insufficient cash in the machine to give change. You will need to refund %s via another method.",
+                        this.env.utils.formatCurrency(amountToRefund)
+                    )
+                );
+
+                paymentResult.cashGiven = difference;
+                this.setPaymentInfo(paymentResult, false);
+                return true;
+            }
+            case "WAITING_CASH_OUT_REMOVE":
+            case "WAITING_CASH_IN_REMOVE": {
+                this.showError(
+                    _t(
+                        "Please remove the cash from the exit of the cash machine before starting a transaction."
+                    )
+                );
+                return false;
+            }
+            case "WAITING_INVENTORY": {
+                this.showError(
+                    _t(
+                        "The cash machine is busy counting its inventory, please wait a few seconds and retry."
+                    )
+                );
+                return false;
+            }
+            case "OCCUPIED_BY_OTHER": {
                 this.showError(_t("The cash machine is in use by another POS."));
                 return false;
+            }
             case "EXCLUSIVE_ERROR": {
-                this.showCancelDialog(
-                    _t("The cash machine is busy with another operation. Do you want to cancel it?")
-                );
+                if (this.gloryService.status === "IDLE") {
+                    this.showError(
+                        _t(
+                            "The cash machine is not ready to start a transaction. Check all the covers are closed and then try again."
+                        )
+                    );
+                } else {
+                    this.showCancelDialog(
+                        _t(
+                            "The cash machine is busy with another operation. Do you want to cancel it?"
+                        )
+                    );
+                }
                 return false;
             }
             case "AUTO_RECOVERY_FAILURE": {
@@ -202,6 +308,11 @@ export class PaymentGlory extends PaymentInterface {
 
         if (cancelResult === "DISCONNECTED") {
             this.showError(_t("The cash machine is disconnected."));
+            return false;
+        }
+
+        if (cancelResult !== "SUCCESS") {
+            this.showError(_t("Failed to cancel cash machine transaction: %s.", cancelResult));
             return false;
         }
 

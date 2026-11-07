@@ -20,9 +20,9 @@
                 <t t-else="">
                     <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>
                 </t>
-                <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-1">
-                    <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
-                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread?.parent_channel_id?.open({ focus: true })"/>
+                <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-1 o-min-width-0">
+                    <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1 o-min-width-0">
+                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline text-truncate" t-esc="thread.parent_channel_id.displayName" t-att-title="thread.parent_channel_id.displayName" t-on-click="() => this.thread?.parent_channel_id?.open({ focus: true })"/>
                         <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                     </div>
                     <AutoresizeInput
@@ -35,7 +35,7 @@
                         <div class="flex-shrink-0 mx-1 py-2 border-start"/>
                         <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                         <AutoresizeInput
-                            className="'o-mail-DiscussContent-threadDescription flex-shrink-1 small pt-1'"
+                            className="'o-mail-DiscussContent-threadDescription o-min-width-0 small pt-1'"
                             enabled="thread.is_editable"
                             onValidate.bind="updateThreadDescription"
                             placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"

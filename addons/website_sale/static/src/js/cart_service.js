@@ -345,7 +345,7 @@ export class CartService {
                         uom_id: product.uom_id,
                         productCustomAttributeValues: product.product_custom_attribute_values,
                         noVariantAttributeValues: product.no_variant_attribute_value_ids,
-                        linked_products: optionalProducts.map(this._serializeProduct),
+                        linked_products: optionalProducts.flatMap(p => this._serializeProduct(p)),
                         shouldRedirectToCart: options.goToCart,
                         ...additionalData,
                     }));
@@ -361,7 +361,8 @@ export class CartService {
      * @private
      * @param {Object} product - The product to serialize.
      *
-     * @returns {Object} - The serialized product.
+     * @returns {Object|Object[]} - The serialized product, or an array containing the serialized
+     *     product followed by its serialized combo items if the product is an optional combo.
      */
     _serializeProduct(product) {
         let serializedProduct = {
@@ -392,6 +393,19 @@ export class CartService {
         serializedProduct.no_variant_attribute_value_ids = product.attribute_lines
             .filter(ptal => ptal.create_variant === 'no_variant')
             .flatMap(ptal => ptal.selected_attribute_value_ids);
+
+        // If this optional product is a combo, also serialize its selected combo items so
+        // the server can create the corresponding cart lines linked to this product's line.
+        if (product.selectedComboItems?.length) {
+            return [
+                serializedProduct,
+                ...product.selectedComboItems.map(
+                    comboItem => this._serializeComboItem(
+                        comboItem, product.product_tmpl_id, product.quantity
+                    )
+                ),
+            ];
+        }
 
         return serializedProduct;
     }

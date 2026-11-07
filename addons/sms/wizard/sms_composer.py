@@ -244,7 +244,11 @@ class SmsComposer(models.TransientModel):
                 all_bodies[record.id],
                 subtype_id=subtype_id,
                 number_field=self.number_field_name,
-                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None)
+                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
+                # posting in batch (res_ids, e.g. server actions) uses the queue unless
+                # asked to send directly, so that the SMS are only sent once the
+                # transaction is committed
+                put_in_queue=not self.comment_single_recipient and not self.mass_force_send)
         return messages
 
     def _action_send_sms_mass(self, records=None):

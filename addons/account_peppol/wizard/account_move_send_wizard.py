@@ -21,11 +21,12 @@ class AccountMoveSendWizard(models.TransientModel):
         if not peppol_partner.peppol_eas or not peppol_partner.peppol_endpoint:
             peppol_partner._compute_peppol_endpoint()  # Try to recompute the Peppol credentials.
         eas_label = dict(peppol_partner._fields['peppol_eas']._description_selection(self.env)).get(peppol_partner.peppol_eas)
+        network_name = self.company_id._get_einvoicing_network_name()
         if peppol_partner.peppol_verification_state == 'not_valid':
-            addendum_disable_reason = _(' (Customer not on Peppol)')
+            addendum_disable_reason = _(' (Customer not on %(network_name)s)', network_name=network_name)
         elif peppol_partner.peppol_verification_state == 'not_verified':
             # The recomputation of the Peppol credentials did not manage to fill these fields.
-            addendum_disable_reason = _(' (Customer not on Peppol)')
+            addendum_disable_reason = _(' (Customer not on %(network_name)s)', network_name=network_name)
             if not peppol_partner.peppol_eas or not peppol_partner.peppol_endpoint:
                 if not peppol_partner.vat:
                     addendum_disable_reason = _(' (no VAT)')
@@ -54,7 +55,7 @@ class AccountMoveSendWizard(models.TransientModel):
                     addendum_mode = _(' (Test)')
                 elif peppol_proxy_mode == 'demo':
                     addendum_mode = _(' (Demo)')
-                if addendum_disable_reason or addendum_mode:
+                if peppol_label != peppol_checkbox['label'] or addendum_disable_reason or addendum_mode:
                     wizard.sending_method_checkboxes = {
                         **wizard.sending_method_checkboxes,
                         'peppol': {
@@ -73,8 +74,13 @@ class AccountMoveSendWizard(models.TransientModel):
         # EXTENDS 'account'
         self.ensure_one()
         if self.sending_methods and 'peppol' in self.sending_methods:
-            if self.move_id.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
-                raise UserError(_("Partner doesn't have a valid Peppol configuration."))
-            if registration_action := self._do_peppol_pre_send(self.move_id):
+            move = self.move_id.with_company(self.move_id.company_id)
+            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+            if partner.peppol_verification_state != 'valid':
+                raise UserError(_(
+                    "Partner doesn't have a valid configuration for %(network_name)s.",
+                    network_name=move.company_id._get_einvoicing_network_name(),
+                ))
+            if registration_action := self._do_peppol_pre_send(move):
                 return registration_action
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)

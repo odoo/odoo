@@ -475,7 +475,7 @@ class ForumPost(models.Model):
         return True
 
     def reopen(self):
-        if any(post.parent_id or post.state != 'close' for post in self):
+        if any(post.parent_id or post.state != 'close' or not post.can_close for post in self):
             return False
 
         reason_offensive = self.env.ref('website_forum.reason_7')
@@ -657,6 +657,8 @@ class ForumPost(models.Model):
         is created. Nothing is done if the comment's author already answered the
         question. """
         comment_sudo = self.env['mail.message'].sudo().browse(message_id)
+        if comment_sudo.model != 'forum.post':
+            return False
         post = self.browse(comment_sudo.res_id)
         if not comment_sudo.author_id or not comment_sudo.author_id.user_ids:  # only comment posted by users can be converted
             return False

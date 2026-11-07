@@ -33,8 +33,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
-"PO-Revision-Date: 2026-08-03 20:53+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"PO-Revision-Date: 2026-10-29 13:33+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "im_livechat/pl/>\n"
@@ -45,7 +45,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -117,15 +117,17 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* \"Pokaż\" wyświetla przycisk czatu na stronach.\n"
-"* \"Pokaż z powiadomieniem\" to \"Pokaż\" z dodatkiem tekstu unoszącego się "
-"zaraz obok przycisku\n"
-"* \"Otwórz automatycznie\" wyświetla przycisk i automatycznie otwiera panel "
-"konwersacji.\n"
-"* \"Schowaj\" ukrywa przycisk czatu na stronach.\n"
+"* „Pokaż” wyświetla przycisk czatu na stronach.\n"
+"* „Pokaż z powiadomieniem” to „Pokaż” z dodatkowym pływającym tekstem tuż "
+"obok przycisku.\n"
+"* „Otwórz automatycznie” wyświetla przycisk i automatycznie otwiera okno "
+"konwersacji na większych ekranach. Na małych ekranach działa to jak „Pokaż"
+"”.\n"
+"* „Ukryj” ukrywa przycisk czatu na stronach.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -584,7 +586,8 @@ msgstr "Czatboty"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Choose the live chat channel you want to display on your website."
-msgstr "Wybierz kanał czatu na żywo, który chcesz wyświetlać na swojej stronie."
+msgstr ""
+"Wybierz kanał czatu na żywo, który chcesz wyświetlać na swojej stronie."
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
@@ -1108,12 +1111,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"Przejdź na <strong>Stronę internetową</strong> &gt; <strong>Konfigurację</"
-"strong> &gt; <strong>Ustawienia</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"Przejdź na <strong>Stronę internetową</strong> &gt; <strong>Konfiguracja</"
+"strong> &gt; <strong>Ustawienia</strong> &gt; <strong>Ogólne.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1258,7 +1259,8 @@ msgstr "Jak mogę pomóc?"
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available_demo
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr "Ojej, wygląda na to, że żaden z naszych operatorów nie jest dostępny 🙁"
+msgstr ""
+"Ojej, wygląda na to, że żaden z naszych operatorów nie jest dostępny 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
@@ -2112,7 +2114,8 @@ msgstr "Tylko jeśli"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "Only Live Chat operators can join Live Chat channels"
-msgstr "Jedynie operatorzy czatu na żywo mogą dołączać do kanałów czatu na żywo"
+msgstr ""
+"Jedynie operatorzy czatu na żywo mogą dołączać do kanałów czatu na żywo"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
@@ -2721,6 +2724,12 @@ msgid "Thank you for your feedback"
 msgstr "Dziękujemy za opinię"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr "Wyrażenie regularne URL '%(regex)s' jest nieprawidłowe."
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr "Kanał reguły"
@@ -3135,7 +3144,8 @@ msgstr "Kolory okienek"
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email_demo
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
-msgstr "Czy chcesz podać swój adres e-mail, abyśmy mogli się do Ciebie odezwać?"
+msgstr ""
+"Czy chcesz podać swój adres e-mail, abyśmy mogli się do Ciebie odezwać?"
 
 #. module: im_livechat
 #. odoo-python
@@ -3273,6 +3283,30 @@ msgstr "sekundy"
 #: model:ir.model,name:im_livechat.model_ir_websocket
 msgid "websocket message handling"
 msgstr "obsługa komunikatów websocket"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* \"Pokaż\" wyświetla przycisk czatu na stronach.\n"
+#~ "* \"Pokaż z powiadomieniem\" to \"Pokaż\" z dodatkiem tekstu unoszącego "
+#~ "się zaraz obok przycisku\n"
+#~ "* \"Otwórz automatycznie\" wyświetla przycisk i automatycznie otwiera "
+#~ "panel konwersacji.\n"
+#~ "* \"Schowaj\" ukrywa przycisk czatu na stronach.\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "Przejdź na <strong>Stronę internetową</strong> &gt; <strong>Konfigurację</"
+#~ "strong> &gt; <strong>Ustawienia</strong> &gt; <strong>Email</strong> "
+#~ "&amp; <strong>Marketing.</strong>"
 
 #~ msgid "This livechat conversation has ended"
 #~ msgstr "Ta konwersacja czatu na żywo została zakończona"

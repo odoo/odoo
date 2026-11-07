@@ -45,6 +45,9 @@ class ResUsersSettings(models.Model):
         :param int guest_id:
         """
         self.ensure_one()
+        # Skip a guest id that matches no partner, as the volume stores the guest in a res.partner field.
+        if guest_id and not self.env['res.partner'].browse(guest_id).exists():
+            return
         volume_setting = self.env['res.users.settings.volumes'].search([
             ('user_setting_id', '=', self.id), ('partner_id', '=', partner_id), ('guest_id', '=', guest_id)
         ])

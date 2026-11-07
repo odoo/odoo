@@ -371,6 +371,10 @@ class StockMove(models.Model):
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
 
+    def _should_be_auto_picked(self):
+        self.ensure_one()
+        return (self.manual_consumption or (self.has_tracking != 'none' and self.move_orig_ids and self.lot_ids)) and not self.picked
+
     def action_explode(self):
         """ Explodes pickings """
         # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
@@ -471,9 +475,12 @@ class StockMove(models.Model):
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
-        if self.raw_material_production_id and self.raw_material_production_id.orderpoint_id:
+        if self.raw_material_production_id and self._should_use_production_origin():
             return self.origin
         return super()._prepare_procurement_origin()
+
+    def _should_use_production_origin(self):
+        return True
 
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
@@ -511,6 +518,12 @@ class StockMove(models.Model):
 
     def _is_consuming(self):
         return super()._is_consuming() or self.picking_type_id.code == 'mrp_operation'
+
+    def _get_quantity_to_assign(self):
+        res = super()._get_quantity_to_assign()
+        if self.raw_material_production_id and self.raw_material_production_id.qty_producing:
+            return self.product_uom._compute_quantity(self.should_consume_qty, self.product_id.uom_id)
+        return res
 
     def _get_backorder_move_vals(self):
         self.ensure_one()

@@ -14,6 +14,7 @@ export class Product extends Component {
     static props = {
         id: { type: [Number, {value: false}], optional: true },
         product_tmpl_id: Number,
+        product_type: String,
         display_name: String,
         description_sale: [Boolean, String], // backend sends 'false' when there is no description
         price: Number,

@@ -381,7 +381,9 @@ const threadPatch = {
         if (this.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
             return this.self_member_id.message_unread_counter_ui;
         }
-        if (this.discussAppCategory?.id === "channels") {
+        // Sub channels have no category of their own: they follow the one of their parent.
+        const category = this.discussAppCategory ?? this.parent_channel_id?.discussAppCategory;
+        if (category?.id === "channels") {
             if (this.store.settings.channel_notifications === "no_notif") {
                 return 0;
             }

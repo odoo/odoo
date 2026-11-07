@@ -164,3 +164,30 @@ class TestSeller(TransactionCase):
         vendors.write({'product_id': False})
         self.assertEqual(vendors, self.product_consu.seller_ids,
             "Setting the product_id to False shouldn't affect seller_ids.")
+
+    def test_60_sellers_purchase_ok(self):
+        """A supplierinfo record on a non-purchasable product must not affect
+        its display_name: the Purchase tab (and this data) is hidden from the
+        product form when purchase_ok is False, so it should not leak into
+        the description used on sale orders and invoices.
+        """
+        self.product_service.write({
+            'purchase_ok': False,
+            'seller_ids': [
+                Command.create({'partner_id': self.camptocamp.id, 'product_code': 'C2CCODE'}),
+            ],
+        })
+
+        context_display_name = self.product_service.with_context(partner_id=self.camptocamp.id).display_name
+        self.assertEqual(
+            context_display_name, self.product_service.display_name,
+            "Supplierinfo of a non-purchasable product should not affect its display_name",
+        )
+        self.assertNotIn('C2CCODE', context_display_name)
+
+        # Toggling purchase_ok must invalidate an already computed display_name
+        product_with_partner = self.product_service.with_context(partner_id=self.camptocamp.id)
+        self.product_service.purchase_ok = True
+        self.assertIn('C2CCODE', product_with_partner.display_name)
+        self.product_service.purchase_ok = False
+        self.assertNotIn('C2CCODE', product_with_partner.display_name)

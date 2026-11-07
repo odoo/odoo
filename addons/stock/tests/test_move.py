@@ -804,6 +804,47 @@ class TestStockMove(TestStockCommon):
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, self.shelf_1.id)
 
+    def test_putaway_rules_smart_button(self):
+        """Check that the putaway rule smart button returns exactly the set of putaway rules that could be applied to the product"""
+        parent_category = self.env['product.category'].create({'name': 'Parent Category'})
+        category = self.env['product.category'].create({
+            'name': 'Test Category',
+            'parent_id': parent_category.id,
+        })
+        categorized_product = self.env['product.product'].create({
+            'name': 'Categorized Product',
+            'categ_id': category.id,
+        })
+        rule_a, rule_parent, rule_category, rule_categorized = self.env['stock.putaway.rule'].create([{
+            'product_id': self.productA.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.shelf_1.id,
+        }, {
+            'category_id': parent_category.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.shelf_1.id,
+        }, {
+            'category_id': category.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.shelf_1.id,
+        }, {
+            'product_id': categorized_product.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.shelf_2.id,
+        }])
+
+        # productA has no category: only its own rule, no leaking of other category-less rules
+        self.assertFalse(self.productA.categ_id)
+        action = self.productA.product_tmpl_id.action_view_related_putaway_rules()
+        self.assertEqual(self.env['stock.putaway.rule'].search(action['domain']), rule_a)
+
+        # a categorized product also lists its category's and parent categories' rules
+        action = categorized_product.product_tmpl_id.action_view_related_putaway_rules()
+        self.assertEqual(
+            self.env['stock.putaway.rule'].search(action['domain']),
+            rule_parent | rule_category | rule_categorized,
+        )
+
     def test_putaway_3(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
         the receipt move line.
@@ -7064,3 +7105,22 @@ class TestStockMove(TestStockCommon):
         }).move_ids.action_open_reference()
         self.assertTrue(view['res_id'])
         self.assertEqual(view['res_model'], 'stock.picking')
+
+    def test_show_quant_create_lots_only(self):
+        """
+        On a create-lots-only delivery, `show_quant` is False for a
+        lot-tracked product and True for a non-tracked one.
+        """
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.use_create_lots = True
+        picking_type_out.use_existing_lots = False
+        untracked_move, tracked_move = self.env['stock.move'].create([{
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': picking_type_out.id,
+        } for product in (self.productA, self.product_lot)])
+        self.assertTrue(untracked_move.show_quant)
+        self.assertFalse(tracked_move.show_quant)

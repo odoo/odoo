@@ -5,6 +5,8 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
@@ -244,6 +246,17 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_settle_so_without_downpayment_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.selectNthOrder(1),
+            SelectionPopup.has("Settle the order", { run: "click" }),
+            Dialog.is({ title: "No down payment product" }),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_pos_settle_so_with_downpayment", {
     steps: () =>
         [
@@ -262,6 +275,20 @@ registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_u
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Pomme de Terre", "0.5", "5.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_so_price_unit_not_rounded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Cable", "100", "16,54"),
+            ProductScreen.totalAmountIs("16,54"),
+            ProductScreen.clickNumpad("Price", "0", ",", "2", "5"),
+            ProductScreen.selectedOrderlineHas("Cable", "100", "22,50"),
+            ProductScreen.totalAmountIs("22,50"),
         ].flat(),
 });
 
@@ -752,5 +779,43 @@ registry.category("web_tour.tours").add("test_variant_popup_qty_free", {
                     'div:not(:has(div)):contains("available,"):has(span.fw-bolder:contains("0"):not(:contains("50")))',
             },
             Dialog.confirm("Add"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settled_line_price_is_not_crossed_out", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            {
+                content: "The price of the settled line is not crossed out",
+                trigger: Utils.negate(".oldPrice", ".order-container .orderline"),
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.selectNthOrder(1),
+            {
+                content: "Apply a down payment (percentage)",
+                trigger: ".selection-item:contains('Apply a down payment (percentage)')",
+                run: "click",
+            },
+            Numpad.enterValue("100"),
+            Dialog.confirm("Apply"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickControlButton("Quotation/Order"),
+            {
+                content: "The fully down paid sale order is still listed",
+                trigger: ".modal .o_data_row td:contains('Full Down Payment SO')",
+            },
         ].flat(),
 });

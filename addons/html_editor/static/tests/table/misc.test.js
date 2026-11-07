@@ -315,9 +315,9 @@ describe("selected cell color in toolbar", () => {
 });
 
 describe("normalize table structure", () => {
-    test("should create a tbody and move table styles to it", async () => {
+    test("should create a tbody", async () => {
         // Tables containing only a caption have no tbody. Normalize the table
-        // structure so a tbody is created and table styles can be moved to it.
+        // structure so a tbody is created.
         const { el, editor } = await setupEditor(
             `<table class="table table-bordered o_table" style="width: 500px;"><caption>c</caption></table>`
         );
@@ -325,9 +325,9 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <table class="table table-bordered o_table" style="width: 500px;">
                     <caption>c</caption>
-                    <tbody style="width: 500px;">
+                    <tbody>
                         <tr>
                             <td><div class="o-paragraph"><br></div></td>
                         </tr>
@@ -345,8 +345,8 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table>
-                    <tbody style="width: 500px;">
+                <table style="width: 500px;">
+                    <tbody>
                         <tr>
                             <th class="o_table_header">1</th>
                             <th class="o_table_header">2</th>
@@ -370,8 +370,8 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table>
-                    <tbody style="width: 500px;">
+                <table style="width: 500px;">
+                    <tbody>
                         <tr>
                             <th class="o_table_header">1</th>
                             <th class="o_table_header">2</th>
@@ -380,6 +380,58 @@ describe("normalize table structure", () => {
                             <td>3</td>
                             <td>4</td>
                         </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder=""><br></p>
+            `)
+        );
+    });
+});
+
+describe("table style migration", () => {
+    test("should move tbody width/margin-left back to table", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table>
+                    <tbody style="width: 500px; margin-left: 50px;">
+                        <tr><td>1</td><td>2</td></tr>
+                        <tr><td>3</td><td>4</td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table style="width: 500px; margin-left: 50px;">
+                    <tbody>
+                        <tr><td>1</td><td>2</td></tr>
+                        <tr><td>3</td><td>4</td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder=""><br></p>
+            `)
+        );
+    });
+
+    test("should not move tbody width/margin-left if the table already has them", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table style="width: 700px;">
+                    <tbody style="width: 500px; margin-left: 50px;">
+                        <tr><td>1</td><td>2</td></tr>
+                        <tr><td>3</td><td>4</td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table style="width: 700px;">
+                    <tbody style="width: 500px; margin-left: 50px;">
+                        <tr><td>1</td><td>2</td></tr>
+                        <tr><td>3</td><td>4</td></tr>
                     </tbody>
                 </table>
                 <p data-selection-placeholder=""><br></p>

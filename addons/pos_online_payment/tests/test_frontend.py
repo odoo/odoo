@@ -14,6 +14,7 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
 
 import odoo.tests
+from odoo.tests.common import JsonRpcException
 
 
 @odoo.tests.tagged('post_install', '-at_install', 'is_tour')
@@ -460,6 +461,25 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(order.state, "paid", "The order should be paid.")
         self.assertEqual(len(order.payment_ids), 1, "There should be one payment line in the order.")
         self.assertEqual(order.payment_ids[0].payment_method_id.id, self.cash_payment_method.id, "The payment should be Cash.")
+
+    def test_no_second_online_payment_before_post_processing(self):
+        order = self._open_session_fake_cashier_unpaid_order()
+        payment_context = self._fake_open_pos_order_pay_page(order.id, order.access_token)
+        route_values = {
+            'amount': payment_context['amount'],
+            'access_token': payment_context['access_token'],
+            'landing_route': payment_context['landing_route'],
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
+            'flow': 'direct',
+            'tokenization_requested': False,
+        }
+        processing_values = self._fake_request_pos_order_pay_transaction_page(order.id, route_values)
+        self._get_tx(processing_values['reference'])._set_done()
+
+        with self.assertRaises(JsonRpcException), mute_logger('odoo.http'):
+            self._fake_request_pos_order_pay_transaction_page(order.id, route_values)
 
     @classmethod
     def tearDownClass(cls):

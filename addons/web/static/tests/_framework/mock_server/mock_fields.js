@@ -38,16 +38,18 @@ function camelToPascal(name) {
  * return the actual field descriptors.
  *
  * @template {FieldType} T
- * @template [R=never]
  * @param {T} type
  * @param {{
  *  aggregator?: Aggregator;
- *  requiredKeys?: R[];
+ *  requiredKeys?: (keyof FieldDefinitionsByType[T])[];
  * }} params
  */
-function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
+function makeFieldGenerator(type, { aggregator, requiredKeys } = {}) {
     const constructorFnName = camelToPascal(type);
-    const defaultDef = { ...DEFAULT_FIELD_PROPERTIES };
+    const defaultDef = {
+        ...DEFAULT_FIELD_PROPERTIES,
+        [S_FIELD_REQUIRED_KEYS]: requiredKeys || [],
+    };
     if (aggregator) {
         defaultDef.aggregator = aggregator;
     }
@@ -62,19 +64,7 @@ function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
          */
         [constructorFnName](properties) {
             // Creates a pre-version of the field definition
-            const field = {
-                ...defaultDef,
-                ...properties,
-                [S_FIELD]: true,
-            };
-
-            for (const key of requiredKeys) {
-                if (!(key in field)) {
-                    throw new MockServerError(
-                        `Missing key "${key}" in ${type || "generic"} field definition`
-                    );
-                }
-            }
+            const field = { ...defaultDef, ...properties };
 
             // Fill default values in definition based on given properties
             if (isComputed(field)) {
@@ -127,6 +117,24 @@ export function getFieldDisplayName(value) {
     return str[0].toUpperCase() + str.slice(1);
 }
 
+/**
+ * @param {FieldDefinition} fieldDefinition
+ */
+export function validateAndCleanupField(fieldDefinition) {
+    if (S_FIELD_REQUIRED_KEYS in fieldDefinition) {
+        for (const requiredKey of fieldDefinition[S_FIELD_REQUIRED_KEYS]) {
+            if (!(requiredKey in fieldDefinition)) {
+                const type = fieldDefinition.type || "generic";
+                throw new MockServerError(
+                    `Missing key "${requiredKey}" in ${type} field definition`
+                );
+            }
+        }
+        delete fieldDefinition[S_FIELD_REQUIRED_KEYS];
+    }
+    return fieldDefinition;
+}
+
 // Default field values
 export const DEFAULT_MONEY_FIELD_VALUES = {
     monetary: () => 0,
@@ -173,8 +181,7 @@ export const DEFAULT_FIELD_PROPERTIES = {
     groupable: true,
 };
 
-export const S_FIELD = Symbol("field");
-export const S_SERVER_FIELD = Symbol("field");
+export const S_FIELD_REQUIRED_KEYS = Symbol("field required keys");
 
 export const Binary = makeFieldGenerator("binary");
 
@@ -190,7 +197,12 @@ export const Float = makeFieldGenerator("float", {
     aggregator: "sum",
 });
 
-export const Generic = makeFieldGenerator("generic");
+/**
+ * Defines a custom field type (e.g. `type: "custom_char"`)
+ */
+export const Generic = makeFieldGenerator("generic", {
+    requiredKeys: ["type"],
+});
 
 export const Html = makeFieldGenerator("html");
 

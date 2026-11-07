@@ -27,9 +27,7 @@ export class ProductListPage extends Component {
         this.subCategoryContainerRef = useRef("sub_cat_container");
 
         const initCategories = !this.selfOrder.currentCategory;
-        if (initCategories) {
-            this.selfOrder.computeAvailableCategories();
-        }
+        this.selfOrder.computeAvailableCategories();
         const availableCategories = this.selfOrder.availableCategories;
         const topCategories = availableCategories.filter((category) => !category.parent_id);
         const selectedCategory =
@@ -154,7 +152,11 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        return category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+        const products =
+            category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+        return products.toSorted(
+            (a, b) => a.pos_sequence - b.pos_sequence || a.name.localeCompare(b.name)
+        );
     }
 
     toggleSubCategoryPanel() {

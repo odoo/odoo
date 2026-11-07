@@ -15,8 +15,8 @@ import { Domain } from "@web/core/domain";
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
-    author_id = fields.Generic({ default: () => serverState.partnerId });
-    pinned_at = fields.Generic({ default: false });
+    author_id = fields.Many2one({ default: () => serverState.partnerId });
+    pinned_at = fields.Datetime({ default: false });
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
@@ -66,13 +66,23 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(store, fields, for_current_user, add_followers) {
-        const kwargs = getKwArgs(arguments, "store", "fields", "for_current_user", "add_followers");
+    _to_store(store, fields, for_current_user, add_followers, format_reply) {
+        const kwargs = getKwArgs(
+            arguments,
+            "store",
+            "fields",
+            "for_current_user",
+            "add_followers",
+            "format_reply"
+        );
         store = kwargs.store;
         fields = kwargs.fields;
         for_current_user = kwargs.for_current_user ?? false;
         add_followers = kwargs.add_followers ?? false;
+        format_reply = kwargs.format_reply ?? true;
 
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailMessageLinkPreview} */
@@ -138,6 +148,19 @@ export class MailMessage extends models.ServerModel {
                     makeKwArgs({ as_thread: true, only_id: true })
                 ),
             };
+            if (
+                format_reply &&
+                message.model === "discuss.channel" &&
+                thread?.channel_type === "channel" &&
+                !thread.parent_channel_id
+            ) {
+                data.linkedSubChannel = mailDataHelpers.Store.one(
+                    DiscussChannel.browse(
+                        DiscussChannel.search([["from_message_id", "=", message.id]])
+                    ),
+                    makeKwArgs({ as_thread: true, only_id: true })
+                );
+            }
             if (fields.includes("message_link_preview_ids")) {
                 data.message_link_preview_ids = mailDataHelpers.Store.many(
                     MailMessageLinkPreview.browse(message.message_link_preview_ids).filter(
@@ -525,9 +548,6 @@ export class MailMessage extends models.ServerModel {
                 ]);
             }
             domain = Domain.and([domain, message_domain]).toList();
-        }
-        if (search_term || is_notification !== undefined) {
-            res.count = this.search_count(domain);
         }
         if (around !== undefined) {
             const messagesBefore = this._filter(domain.concat([["id", "<=", around]])).sort(

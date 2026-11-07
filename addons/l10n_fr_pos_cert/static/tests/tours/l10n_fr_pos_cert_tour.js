@@ -48,3 +48,19 @@ registry.category("web_tour.tours").add("test_correct_old_price_upon_price_chang
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_old_price_unit_uses_product_uom_fr", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            Numpad.click("Price"),
+            Numpad.isActive("Price"),
+            Numpad.click("5"),
+            {
+                content: "Old unit price is shown with the unit of the product",
+                trigger: ".order-container .orderline.selected .oldPrice:contains('/ kg')",
+            },
+        ].flat(),
+});

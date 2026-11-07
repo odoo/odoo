@@ -163,10 +163,15 @@ class WebsiteMenu(models.Model):
         self.env.registry.clear_cache('templates')
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
-        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
-            menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
+        default_menus = self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id)
+        if default_menus:
+            # The copies of a default menu are in the main menu of each website
+            # (see create()); menus of other menu trees may link the same URL.
+            website_main_menus = self.env['website'].search([]).menu_id
+            menus_to_remove |= self.env['website.menu'].search([('url', 'in', default_menus.mapped('url')),
                                                                 ('website_id', '!=', False),
-                                                                ('id', '!=', menu.id)])
+                                                                ('parent_id', 'child_of', website_main_menus.ids),
+                                                                ('id', 'not in', default_menus.ids)])
         return super(WebsiteMenu, menus_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)
@@ -181,15 +186,15 @@ class WebsiteMenu(models.Model):
             if menu.page_id and not menu.env.user._is_internal():
                 page_sudo = menu.page_id.sudo()
                 if (not page_sudo.is_visible
-                    or (not page_sudo.view_id._handle_visibility(do_raise=False)
-                        and page_sudo.view_id._get_cached_visibility() != "password")):
+                    or (page_sudo.view_id._get_cached_visibility() != "password"
+                        and not page_sudo.view_id._handle_visibility(do_raise=False))):
                     visible = False
 
             if menu.controller_page_id and not menu.env.user._is_internal():
                 controller_page_sudo = menu.controller_page_id.sudo()
                 if (not controller_page_sudo.is_published
-                    or (not controller_page_sudo.view_id._handle_visibility(do_raise=False)
-                        and controller_page_sudo.view_id._get_cached_visibility() != "password")):
+                    or (controller_page_sudo.view_id._get_cached_visibility() != "password"
+                        and not controller_page_sudo.view_id._handle_visibility(do_raise=False))):
                     visible = False
 
             menu.is_visible = visible

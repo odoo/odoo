@@ -77,6 +77,7 @@ LineItem = {
 
 PartnerParty = {
     'ram:ID': {},
+    'ram:GlobalID': {},
     'ram:Name': {},
     'ram:SpecifiedLegalOrganization': {
         'ram:ID': {},
@@ -166,6 +167,11 @@ SupplyChainTrade = {
                 'ram:BasisPeriodMeasure': {},
                 'ram:CalculationPercent': {},
             },
+        },
+        'ram:InvoiceReferencedDocument': {
+            'ram:IssuerAssignedID': {},
+            'ram:FormattedIssueDateTime': {'qdt:DateTimeString': {}},
+            'ram:TypeCode': {},
         },
         'ram:SpecifiedTradeSettlementHeaderMonetarySummation': {
             'ram:LineTotalAmount': {},

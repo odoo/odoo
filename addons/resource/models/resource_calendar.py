@@ -171,13 +171,13 @@ class ResourceCalendar(models.Model):
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):
-        for calendar in self.filtered(lambda c: not c._origin or (c._origin.company_id != c.company_id and c.company_id)):
+        for calendar in self.filtered(lambda c: (not c._origin or (c._origin.company_id != c.company_id and c.company_id)) and not c.attendance_ids):
             company_calendar = calendar.company_id.resource_calendar_id
             calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
                 'tz': company_calendar.tz,
-                'attendance_ids': [(5, 0, 0)] + [
-                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids],
+                'attendance_ids': [
+                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id],
             })
 
     @api.onchange('attendance_ids')
@@ -551,7 +551,7 @@ class ResourceCalendar(models.Model):
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
-        return {r.id: Intervals(result[r.id]) for r in resources_list}
+        return {r.id: Intervals(result[r.id], keep_distinct=True) for r in resources_list}
 
     def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, compute_leaves=True):
         """ Return the effective work intervals between the given datetimes. """

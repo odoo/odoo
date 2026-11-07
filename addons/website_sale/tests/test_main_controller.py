@@ -2,11 +2,12 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
+from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.payment.models.payment_provider import PaymentProvider
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.sale.tests.common import SaleCommon
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -51,4 +52,51 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
 
         self.assertNotIn(
             restricted_provider.id, providers.ids, "The restricted provider shouldn't be visible."
+        )
+
+
+@tagged('post_install', '-at_install')
+class TestAttributeValueParsing(TransactionCase):
+
+    def test_valid_attribute_values(self):
+        """Well-formed query params keep grouping value ids by attribute id."""
+        self.assertEqual(
+            WebsiteSale._get_attribute_value_dict(['1-2,3']),
+            {1: [2, 3]},
+        )
+        self.assertEqual(
+            WebsiteSale._get_attribute_value_dict(['1-2', '3-4,5']),
+            {1: [2], 3: [4, 5]},
+        )
+
+    def test_malformed_attribute_values_are_ignored(self):
+        """Non-digit parts come straight from a public URL and must not crash the shop.
+
+        Each of these used to raise an uncaught ValueError (or IndexError) and render
+        the bare "Internal Server Error" page instead of the product list.
+        """
+        for value in ('abc', ',,', '1,2', '1', '1--2', '1-', ' '):
+            with self.subTest(value=value):
+                self.assertEqual(
+                    WebsiteSale._get_attribute_value_dict([value]),
+                    {},
+                    f"Malformed attribute_values {value!r} should be ignored.",
+                )
+
+    def test_malformed_value_ids_dont_discard_valid_ones(self):
+        """A bad value id must not take down the valid ids of the same attribute."""
+        self.assertEqual(
+            WebsiteSale._get_attribute_value_dict(['1-2,']),
+            {1: [2]},
+        )
+        self.assertEqual(
+            WebsiteSale._get_attribute_value_dict(['1-,,2']),
+            {1: [2]},
+        )
+
+    def test_malformed_parts_dont_discard_valid_ones(self):
+        """A malformed part must not take down the valid parts of the same request."""
+        self.assertEqual(
+            WebsiteSale._get_attribute_value_dict(['1-2,abc,3', 'nope', '5-6']),
+            {1: [2, 3], 5: [6]},
         )

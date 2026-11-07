@@ -65,8 +65,8 @@ class TransientModel(Model):
 
     def _transient_clean_old_rows(self, max_count: int) -> bool:
         # Check how many rows we have in the table
-        self._cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
-        [count] = self._cr.fetchone()
+        self.env.cr.execute(SQL("SELECT count(*) FROM %s", SQL.identifier(self._table)))
+        [count] = self.env.cr.fetchone()
         if count > max_count:
             return self._transient_clean_rows_older_than(300)
         return False

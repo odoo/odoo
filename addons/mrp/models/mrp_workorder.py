@@ -458,9 +458,13 @@ class MrpWorkorder(models.Model):
         if not workcenter.resource_calendar_id:
             duration_in_seconds = self.duration_expected * 60
             return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
+        domain = [('time_type', 'in', ['leave', 'other'])]
+        if self.leave_id:
+            domain.append(('id', '!=', self.leave_id.id))
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
-            compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+            compute_leaves=True, domain=domain,
+            resource=workcenter.resource_id,
         )
 
     @api.onchange('date_finished')
@@ -635,6 +639,17 @@ class MrpWorkorder(models.Model):
         vals['leave_id'] = leave.id
         self.write(vals)
 
+    def _get_actual_duration(self, date=False):
+        """Return the actual worked duration in hours, merging overlapping intervals.
+
+        :param datetime date: Only account for time_ids that ended before this date
+        """
+        self.ensure_one()
+        return sum_intervals(Intervals([
+            [t.date_start, t.date_end, t]
+            for t in self.time_ids if t.date_end and (not date or t.date_end < date)
+        ]))
+
     def _cal_cost(self, date=False):
         """Returns total cost of time spent on workorder.
 
@@ -645,11 +660,7 @@ class MrpWorkorder(models.Model):
             if workorder._should_estimate_cost():
                 duration = workorder.duration_expected / 60
             else:
-                intervals = Intervals([
-                    [t.date_start, t.date_end, t]
-                    for t in workorder.time_ids if t.date_end and (not date or t.date_end < date)
-                ])
-                duration = sum_intervals(intervals)
+                duration = workorder._get_actual_duration(date)
             total += duration * (workorder.costs_hour or workorder.workcenter_id.costs_hour)
         return total
 
@@ -948,7 +959,7 @@ class MrpWorkorder(models.Model):
         return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
     def _compute_current_operation_cost(self):
-        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        return self._get_actual_duration() * (self.costs_hour or self.workcenter_id.costs_hour)
 
     def _get_current_theorical_operation_cost(self, without_employee_cost=False):
         return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)

@@ -1,14 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_online_payment
+# * pos_online_payment
 #
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-06 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 22:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "pos_online_payment/lt/>\n"
 "Language: lt\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -28,25 +29,29 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>Klaida:</strong> Mokėjimo proceso metu įvyko problema."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 msgid "A POS config cannot have more than one online payment method."
 msgstr ""
+"POS konfigūracijoje negali būti daugiau nei vienas internetinis mokėjimo "
+"būdas."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A payment option must be specified."
-msgstr ""
+msgstr "Būtina nurodyti mokėjimo būdą."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
+"Patvirtinimo mokėjimas negali būti naudojamas internetiniam mokėjimui per "
+"Prekybos sistemą."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -61,6 +66,9 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
+"Visi mokėjimo paslaugų teikėjai, sukonfigūruoti internetiniam mokėjimo "
+"būdui, turi naudoti tą pačią valiutą kaip ir pardavimo žurnale arba, jei ji "
+"nenustatyta, įmonės valiutą, nurodytą POS konfigūracijoje."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -81,13 +89,14 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "Atšaukti mokėjimą"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot create a POS online payment without an accounting payment."
 msgstr ""
+"Be apskaitinės mokėjimo operacijos negalima sukurti POS mokėjimo internete."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -96,12 +105,14 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
+"Negalima sukurti POS mokėjimo, jei naudojamas ne internetinis mokėjimo būdas "
+"ir internetinis apskaitos mokėjimas."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot edit a POS online payment essential data."
-msgstr ""
+msgstr "Negalima redaguoti POS internetinio mokėjimo esminių duomenų."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -110,6 +121,8 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
+"Nepavyko sukurti mokėjimo būdo internete (company_id=%(company_id)d, "
+"pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
@@ -120,12 +133,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Rodomas vardas"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
-msgstr ""
+msgstr "Turi internetinio mokėjimo paslaugų teikėją"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__id
@@ -142,13 +155,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invalid online payment"
-msgstr ""
+msgstr "Neteisingas mokėjimas internetu"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invalid online payments"
-msgstr ""
+msgstr "Neteisingi mokėjimai internetu"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -159,7 +172,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
 msgid "Next online payment amount to pay"
-msgstr ""
+msgstr "Kitas mokėtinas mokėjimo internetu sumos dydis"
 
 #. module: pos_online_payment
 #: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
@@ -171,29 +184,29 @@ msgstr ""
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
-msgstr ""
+msgstr "Internetinis mokėjimas"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr ""
+msgstr "Mokėjimo internetu būdas"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
 msgid "Online accounting payment"
-msgstr ""
+msgstr "Apskaitos mokėjimai internetu"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Online payment unavailable"
-msgstr ""
+msgstr "Mokėjimas internetu negalimas"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
-msgstr ""
+msgstr "Internetiniai mokėjimai negali būti neigiamos sumos (%s: %s)."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -236,33 +249,33 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Payment"
-msgstr ""
+msgstr "Mokėjimas"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Payment Confirmation"
-msgstr ""
+msgstr "Mokėjimo patvirtinimas"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "Payment Providers"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Mokėjimo operacija"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Payment provider requirement"
-msgstr ""
+msgstr "Mokėjimo paslaugų teikėjo reikalavimai"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
 msgid "Payments"
-msgstr ""
+msgstr "Mokėjimai"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -283,12 +296,12 @@ msgstr ""
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Pardavimo taško mokėjimo būdai"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Pardavimų Taško Mokėjimai"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_session
@@ -328,13 +341,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "The %s already has one online payment."
-msgstr ""
+msgstr "„ %s “ jau turi vieną internetinę mokėjimo sistemą."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
-msgstr ""
+msgstr "Nepavyko tinkamai išsaugoti POS mokėjimo internetu (tx.id=%d)"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -343,6 +356,8 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
+"POS internetinio mokėjimo duomenų (tx.id=%d) nepavyko tinkamai išsaugoti, "
+"nes nerastas internetinio mokėjimo būdas"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -353,12 +368,12 @@ msgstr ""
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr ""
+msgstr "Su mokėjimo operacija susietas Pardavimo užsakymas iš Prekybos sistemos"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr ""
+msgstr "Su šiuo mokėjimu susietas Pardavimo užsakymas iš Prekybos sistemos"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -400,13 +415,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
+msgstr "Nepavyko rasti POS internetinio mokėjimo partnerio (id=%d)"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment provider is invalid."
-msgstr ""
+msgstr "Mokėjimo paslaugų teikėjas yra negaliojantis."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -414,18 +429,20 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
+"Mokėjimas turėtų būti tiesioginis, su nukreipimu arba atliekamas naudojant "
+"žetoną."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment token is invalid."
-msgstr ""
+msgstr "Mokėjimo žetonas yra negaliojantis."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The payment transaction (%d) has a negative amount."
-msgstr ""
+msgstr "Mokėjimo operacija (%d) turi neigiamą sumą."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -452,12 +469,14 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
+"Bendras likusių atlikti internetinių mokėjimų skaičius (%s) neatitinka "
+"likusios neapmokėtos užsakymo sumos (%s)."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "There are online payments that were missing in your view."
-msgstr ""
+msgstr "Jūsų peržiūroje trūksta kai kurių mokėjimų internetu."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -466,6 +485,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
 msgstr ""
+"Kilo problema su serveriu. Nepavyksta gauti užsakymo mokėjimo internetu "
+"būsenos."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -474,6 +495,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
+"Kilo problema su serveriu. Nepavyksta gauti užsakymo mokėjimo internetu "
+"būsenos. Ar tikrai už šį užsakymą nebuvo atliktas mokėjimas internetu?"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -481,6 +504,8 @@ msgstr ""
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
 msgstr ""
+"Šiam užsakymui, pateiktam per Prekybos sistemą, nėra sukonfigūruotas joks "
+"mokėjimo internetu būdas."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -505,6 +530,9 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
+"Norint naudoti internetinį mokėjimo būdą POS konfigūracijoje, turi būti bent "
+"vienas paskelbtas mokėjimo paslaugų teikėjas, palaikantis tos POS "
+"konfigūracijos valiutą."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -531,7 +559,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
-msgstr ""
+msgstr "Atnaujinti mokėjimai internetu"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
@@ -539,6 +567,8 @@ msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
 msgstr ""
+"Naudokite šį mokėjimo būdą mokėjimams internete (mokėjimams, atliekamiems "
+"interneto svetainėje per internetinių mokėjimų paslaugų teikėjus)"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -554,9 +584,9 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "payment provider"
-msgstr ""
+msgstr "Mokėjimo paslaugų teikėjas"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
-msgstr ""
+msgstr "kad būtų galima atlikti mokėjimus internetu."

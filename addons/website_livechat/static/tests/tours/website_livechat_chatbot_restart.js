@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 
 const stepsUntilLastMessage = [
     {
-        trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Enter your email address)",
+        trigger: ".o-livechat-root:shadow .o-mail-Message:last:contains(Enter your email address)",
     },
     {
         trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
@@ -14,7 +14,7 @@ const stepsUntilLastMessage = [
     },
     {
         trigger:
-            ".o-livechat-root:shadow .o-mail-Message:contains(Do you want to restart the conversation?)",
+            ".o-livechat-root:shadow .o-mail-Message:last:contains(Do you want to restart the conversation?)",
     },
 ];
 
@@ -68,5 +68,31 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_restart_on_fee
             trigger:
                 '.o-livechat-root:shadow .o-mail-ChatWindow-header:not(:has(button[title="Restart Conversation"]))',
         },
+        // new session from feedback
+        {
+            trigger: ".o-livechat-root:shadow button:contains(New Session)",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Thread[data-transient]",
+        },
+        ...stepsUntilLastMessage,
+        // new session again, welcome steps were completed in previous sessions
+        {
+            trigger: ".o-livechat-root:shadow button[title='Close Chat Window (ESC)']",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow button:contains(Yes, leave conversation)",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow button:contains(New Session)",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Thread[data-transient]",
+        },
+        ...stepsUntilLastMessage,
     ],
 });

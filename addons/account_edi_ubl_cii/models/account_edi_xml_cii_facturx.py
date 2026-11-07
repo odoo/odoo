@@ -172,6 +172,9 @@ class AccountEdiXmlCii(models.AbstractModel):
             tax_details['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
             tax_details['base_amount'] += fixed_tax_details['tax_amount']
 
+        seller_extra_tax_registrations = []
+        if (stnr := invoice.company_id._get_l10n_de_stnr()):
+            seller_extra_tax_registrations.append({'scheme': 'FC', 'value': stnr})
         template_values = {
             **invoice._prepare_edi_vals_to_export(),
             'tax_details': tax_details,
@@ -192,6 +195,7 @@ class AccountEdiXmlCii(models.AbstractModel):
                 and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
             'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
+            'seller_extra_tax_registrations': seller_extra_tax_registrations,
         }
 
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
@@ -205,14 +209,14 @@ class AccountEdiXmlCii(models.AbstractModel):
 
         # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
         # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
-        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
-        billing_start_dates += [line_vals['billing_start'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_start')]
-        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
-        billing_end_dates += [line_vals['billing_end'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_end')]
-        if billing_start_dates:
-            template_values['billing_start'] = min(billing_start_dates)
-        if billing_end_dates:
-            template_values['billing_end'] = max(billing_end_dates)
+        # The invoicing period is only exported when every line has a start and an end date: it then goes from the
+        # earliest start to the latest end, so that it contains every line period (PEPPOL-EN16931-R110/R111), and
+        # the delivery date is not needed. The due date is never used: it is a payment deadline, not a period end.
+        invoice_line_vals_list = template_values['invoice_line_vals_list']
+        if invoice_line_vals_list and all(line_vals.get('billing_start') and line_vals.get('billing_end') for line_vals in invoice_line_vals_list):
+            template_values['billing_start'] = min(line_vals['billing_start'] for line_vals in invoice_line_vals_list)
+            template_values['billing_end'] = max(line_vals['billing_end'] for line_vals in invoice_line_vals_list)
+            template_values['scheduled_delivery_time'] = None
 
         # data used for ApplicableHeaderTradeSettlement / ApplicableTradeTax (at the end of the xml)
         for tax_detail_vals in template_values['tax_details']['tax_details'].values():

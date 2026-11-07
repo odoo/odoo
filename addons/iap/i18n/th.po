@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 11:58+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/iap/th/>\n"
@@ -45,8 +45,7 @@ msgstr "โทเค็นบัญชี"
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
-msgstr ""
-"โทเค็นบัญชีคือคีย์การตรวจสอบสิทธิ์ของคุณสำหรับบริการนี้ โปรดอย่าแชร์ให้กับผู้อื่น"
+msgstr "โทเค็นบัญชีคือคีย์การตรวจสอบสิทธิ์ของคุณสำหรับบริการนี้ โปรดอย่าแชร์ให้กับผู้อื่น"
 
 #. module: iap
 #. odoo-python
@@ -54,8 +53,7 @@ msgstr ""
 msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
-msgstr ""
-"เกิดข้อผิดพลาดขณะเข้าถึง %s โปรดติดต่อฝ่ายสนับสนุน Odoo หากข้อผิดพลาดนี้ยังคงมีอยู่"
+msgstr "เกิดข้อผิดพลาดขณะเข้าถึง %s โปรดติดต่อฝ่ายสนับสนุน Odoo หากข้อผิดพลาดนี้ยังคงมีอยู่"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -71,6 +69,11 @@ msgstr "ถูกแบน"
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "บริษัท"
+
+#. module: iap
+#: model:ir.model,name:iap.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -99,6 +102,7 @@ msgstr "คำอธิบาย"
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -119,9 +123,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data "
 "of your opportunities."
 msgstr ""
-"รับโอกาสทางการขายและลูกค้าเป้าหมายที่มีคุณภาพ: เปลี่ยนผู้เยี่ยมชมเว็บไซต์ของคุณให้กลายเป็นลูกค้าเป้"
-"าหมาย สร้างลูกค้าเป้าหมายโดยอิงตามเกณฑ์ชุดหนึ่ง และเสริมข้อมูลบริษัทเกี่ยวกับโอกาสทางการขายของ"
-"คุณ"
+"รับโอกาสทางการขายและลูกค้าเป้าหมายที่มีคุณภาพ: "
+"เปลี่ยนผู้เยี่ยมชมเว็บไซต์ของคุณให้กลายเป็นลูกค้าเป้าหมาย สร้างลูกค้าเป้าหมายโดยอิงตามเกณฑ์ชุดหนึ่ง "
+"และเสริมข้อมูลบริษัทเกี่ยวกับโอกาสทางการขายของคุณ"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -137,7 +141,6 @@ msgstr "บัญชี IAP"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
 msgstr "บัญชี IAP"
 
@@ -155,8 +158,14 @@ msgstr "บริการ IAP"
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "ไอดี"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "In-App Purchase Accounts"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -174,6 +183,11 @@ msgstr "อัปเดตครั้งล่าสุดโดย"
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_date
 msgid "Last Updated on"
 msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Manage"
+msgstr ""
 
 #. module: iap
 #. odoo-javascript
@@ -223,6 +237,11 @@ msgid "Registered"
 msgstr "ลงทะเบียนแล้ว"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Rotate"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
 msgid "Service"
 msgstr "บริการ"
@@ -246,6 +265,14 @@ msgstr "ชื่อทางเทคนิค"
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
+msgid ""
+"The IAP server is unreachable and the information may not be up to date. "
+"Please try again later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
 msgid "The IAP token provided is invalid or empty."
 msgstr ""
 
@@ -255,8 +282,26 @@ msgstr ""
 msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
+msgstr "การร้องขอไปยังบริการหมดเวลา โปรดติดต่อผู้สร้างแอป URL ที่พยายามติดต่อคือ %s"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid ""
+"This is useful if you think it may have leaked. It will also deactivate auto-"
+"refill if set. Are you sure to rotate your IAP token?"
 msgstr ""
-"การร้องขอไปยังบริการหมดเวลา โปรดติดต่อผู้สร้างแอป URL ที่พยายามติดต่อคือ %s"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unable to rotate token, another process is busy. Please try later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "Unexpected while contacting IAP. Please contact the support."
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
@@ -285,6 +330,3 @@ msgstr "ดูบริการ IAP ของคุณและเติมเ�
 
 #~ msgid "Cancel"
 #~ msgstr "ยกเลิก"
-
-#~ msgid "Config Settings"
-#~ msgstr "ตั้งค่าการกำหนดค่า"

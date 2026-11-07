@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.account.tools import after_commit
 
 _logger = logging.getLogger(__name__)
 
@@ -102,6 +103,15 @@ class AccountMoveSend(models.AbstractModel):
             )
             vals['mail_attachments_widget'] = get_setting('mail_attachments_widget', default_value=mail_attachments_widget)
         return vals
+
+    @api.model
+    def _get_applicable_sending_methods(self, move, move_data=None):
+        sending_settings = move_data or self._get_default_sending_settings(move)
+        return [
+            sending_method
+            for sending_method in sending_settings['sending_methods']
+            if self._is_applicable_to_move(sending_method, move, **sending_settings)
+        ]
 
     # -------------------------------------------------------------------------
     # ALERTS
@@ -410,15 +420,14 @@ class AccountMoveSend(models.AbstractModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
 
-        company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
         for invoice, invoice_data in invoices_data.items():
-            grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
+            grouped_invoices_by_report[invoice_data['pdf_report'], invoice.company_id][invoice] = invoice_data
 
-        for pdf_report, group_invoices_data in grouped_invoices_by_report.items():
+        for (pdf_report, _company), group_invoices_data in grouped_invoices_by_report.items():
             ids = [inv.id for inv in group_invoices_data]
 
-            content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
+            content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
             if len(content_by_id) == 1 and False in content_by_id:
                 raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
@@ -440,7 +449,7 @@ class AccountMoveSend(models.AbstractModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
         pdf_report = invoice_data['pdf_report']
-        content, report_type = self.env['ir.actions.report'].with_company(invoice.company_id)._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
+        content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
         content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
 
         invoice_data['proforma_pdf_attachment_values'] = {
@@ -512,7 +521,9 @@ class AccountMoveSend(models.AbstractModel):
                 continue
 
             try:
-                move.journal_id._notify_invoice_subscribers(
+                move.journal_id.with_context(
+                    einvoice_notification_author_id=move_data.get('author_partner_id')
+                )._notify_invoice_subscribers(
                     invoice=move,
                     mail_params={
                         'attachment_ids': [
@@ -813,6 +824,38 @@ class AccountMoveSend(models.AbstractModel):
         ) if 'sending_methods' in custom_settings else True
 
     @api.model
+    def _generate_and_send_invoices_post_commit(self, moves, **kwargs):
+        """ Generate and send the moves once the current transaction is committed.
+        The moves are flagged as being sent in the current transaction, so that the ones that could not
+        be sent after the commit (locked or failing) are processed later by the sending cron.
+        :param moves: account.move to process
+        :param kwargs: see `_generate_and_send_invoices`
+        """
+        moves.filtered(lambda m: not m.sending_data).sending_data = {
+            'author_user_id': self.env.user.id,
+            'author_partner_id': self.env.user.partner_id.id,
+        }
+        self._generate_and_send_pending_invoices(moves, **kwargs)
+
+    @api.model
+    @after_commit
+    def _generate_and_send_pending_invoices(
+        self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings
+    ):
+        moves = moves.try_lock_for_update().filtered('sending_data')
+        if not moves:
+            return
+        if allow_fallback_pdf:
+            moves.is_move_sent = True
+        self._generate_and_send_invoices(
+            moves,
+            from_cron=from_cron,
+            allow_raising=allow_raising,
+            allow_fallback_pdf=allow_fallback_pdf,
+            **custom_settings,
+        )
+
+    @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
         """ Generate and send the moves given custom_settings if provided, else their default configuration set on related partner/company.
         :param moves: account.move to process
@@ -829,8 +872,25 @@ class AccountMoveSend(models.AbstractModel):
             for move in moves
         }
 
+        moves_without_sending_method = self.env['account.move']
+        if from_cron:
+            moves_without_sending_method = moves.filtered(
+                lambda move: not moves_data[move]['extra_edis']
+                and not self._get_applicable_sending_methods(move, moves_data[move])
+            )
+
         # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
+
+        for move in moves_without_sending_method:
+            if not moves_data[move].get('error'):
+                moves_data[move]['error'] = {
+                    'error_title': _("Invoice generated but not sent."),
+                    'errors': [_(
+                        "No valid sending method could be applied, so this invoice was not sent automatically. "
+                        "Please configure a sending method and send it manually."
+                    )],
+                }
 
         # Manage errors.
         errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}

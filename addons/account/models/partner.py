@@ -26,7 +26,7 @@ _ref_company_registry = {
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
@@ -635,6 +635,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
 
+    @api.depends_context('allowed_company_ids')
     def _compute_supplier_invoice_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
@@ -643,7 +644,7 @@ class ResPartner(models.Model):
         )
         supplier_invoice_groups = self.env['account.move']._read_group(
             domain=[('partner_id', 'in', all_partners.ids),
-                    *self.env['account.move']._check_company_domain(self.env.company),
+                    *self.env['account.move']._check_company_domain(self.env.companies),
                     ('move_type', 'in', ('in_invoice', 'in_refund'))],
             groupby=['partner_id'], aggregates=['__count']
         )
@@ -898,14 +899,17 @@ class ResPartner(models.Model):
     @api.model
     def _import_retrieve_customer_from_vat(self, customer_values):
         vat = customer_values.get('vat')
-        if not vat:
+        if not vat or vat in ('/', 'na', 'NA'):
             return
 
         # Sometimes, the vat is specified with some whitespaces or dots.
         normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
-        criteria = [{'domain': [('vat', 'in', (normalized_vat, vat))]}]
+        criteria = []
+        if country_code := customer_values.get('country_code'):
+            criteria.append({'domain': [('vat', 'in', (normalized_vat, vat)), ('country_id.code', '=', country_code.upper())]})
+        criteria.append({'domain': [('vat', 'in', (normalized_vat, vat))]})
         extra_vat_values = self._get_country_specific_vat_variants(normalized_vat, country_prefix)
         if extra_vat_values:
             criteria.append({'domain': [('vat', 'in', extra_vat_values)]})

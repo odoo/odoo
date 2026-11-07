@@ -140,7 +140,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                         ON  vl.employee_id = oa.employee_id
                         AND vl.leave_type = oa.leave_type
                         AND vl.date_from <= COALESCE(oa.date_to, 'infinity')
-                        AND (oa.date_to IS NULL OR vl.date_to >= oa.date_from)
+                        AND vl.date_to >= oa.date_from
                     GROUP BY vl.leave_id, vl.number_of_days, vl.number_of_hours,
                              vl.employee_id, vl.leave_type, oa.overlap_group
                 ),

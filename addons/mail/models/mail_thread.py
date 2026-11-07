@@ -1678,7 +1678,13 @@ class MailThread(models.AbstractModel):
                 if part.get('Content-Type', '').startswith('pdf;'):
                     part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
 
-                content = part.get_content()
+                is_attachment = bool(filename) or part.get('content-disposition', '').strip().startswith('attachment')
+                content = None
+                if is_attachment:
+                    content = part.get_payload(decode=True)
+                if content is None:
+                    # Parts holding a message, such as a forwarded eml, decode to no payload
+                    content = part.get_content()
                 info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
@@ -1686,7 +1692,7 @@ class MailThread(models.AbstractModel):
                     attachments.append(self._Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
+                if is_attachment:
                     attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
@@ -4022,6 +4028,7 @@ class MailThread(models.AbstractModel):
                 'body': html2plaintext(body, include_references=False) + self._generate_tracking_message(message),
                 'icon': icon,
                 'data': {
+                    "message_id": message.id,
                     'model': model if model else '',
                     'res_id': res_id if res_id else '',
                 }
@@ -4972,7 +4979,12 @@ class MailThread(models.AbstractModel):
                     last_div_element = (
                         children[-1] if children[-1].tag in ["div", "p"] else tree
                     )
-                    last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
+                    if len(last_div_element):
+                        last_child = last_div_element[-1]
+                        if last_child.tail and not last_child.tail.endswith(" "):
+                            last_child.tail += " "
+                    elif last_div_element.text and not last_div_element.text.endswith(" "):
+                        last_div_element.text += " "
                     etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
                     msg_values["body"] = (
                         # markup: it is considered safe, as coming from html.fragment_fromstring

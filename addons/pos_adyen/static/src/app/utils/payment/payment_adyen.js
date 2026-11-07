@@ -5,6 +5,8 @@ import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const { DateTime } = luxon;
 
+const POLLING_INTERVAL_MS = 3000;
+
 export class PaymentAdyen extends PaymentInterface {
     setup() {
         super.setup(...arguments);
@@ -60,23 +62,23 @@ export class PaymentAdyen extends PaymentInterface {
 
     _adyenCommonMessageHeader() {
         var config = this.pos.config;
-        this.most_recent_service_id = Math.floor(Math.random() * Math.pow(2, 64)).toString(); // random ID to identify request/response pairs
-        this.most_recent_service_id = this.most_recent_service_id.substring(0, 10); // max length is 10
+        const serviceId = Math.floor(Math.random() * Math.pow(2, 64))
+            .toString() // random ID to identify request/response pairs
+            .substring(0, 10); // max length is 10
 
         return {
             ProtocolVersion: "3.0",
             MessageClass: "Service",
             MessageType: "Request",
             SaleID: this._adyenGetSaleId(config),
-            ServiceID: this.most_recent_service_id,
+            ServiceID: serviceId,
             POIID: this.payment_method_id.adyen_terminal_identifier,
         };
     }
 
-    _adyenPayData() {
-        var order = this.pos.getOrder();
+    _adyenPayData(line = this.pos.getOrder().getSelectedPaymentline()) {
+        const order = line.pos_order_id;
         var config = this.pos.config;
-        var line = order.getSelectedPaymentline();
         var data = {
             SaleToPOIRequest: {
                 MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
@@ -115,10 +117,12 @@ export class PaymentAdyen extends PaymentInterface {
             return Promise.resolve();
         }
 
-        var data = this._adyenPayData();
         var line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
+        var data = this._adyenPayData(line);
+        // Only payment requests are tracked, so that an abort targets the payment
+        this.most_recent_service_id = data.SaleToPOIRequest.MessageHeader.ServiceID;
         line.setTerminalServiceId(this.most_recent_service_id);
-        return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
+        return this._callAdyen(data).then((data) => this._adyenHandleResponse(data, line));
     }
 
     _adyenCancel(ignore_error) {
@@ -156,6 +160,27 @@ export class PaymentAdyen extends PaymentInterface {
         });
     }
 
+    _adyenCheckPaymentStatus(paymentServiceId) {
+        const data = {
+            SaleToPOIRequest: {
+                MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
+                    MessageCategory: "TransactionStatus",
+                }),
+                TransactionStatusRequest: {
+                    ReceiptReprintFlag: true,
+                    DocumentQualifier: ["CustomerReceipt", "CashierReceipt"],
+                    MessageReference: {
+                        SaleID: this._adyenGetSaleId(),
+                        ServiceID: paymentServiceId,
+                        MessageCategory: "Payment",
+                    },
+                },
+            },
+        };
+
+        return this._callAdyen(data, "payment_status");
+    }
+
     _convertReceiptInfo(output_text) {
         return output_text.reduce((acc, entry) => {
             var params = new URLSearchParams(entry.Text);
@@ -173,9 +198,7 @@ export class PaymentAdyen extends PaymentInterface {
      * This method handles the response that comes from Adyen
      * when we first make a request to pay.
      */
-    _adyenHandleResponse(response) {
-        var line = this.pendingAdyenline();
-
+    _adyenHandleResponse(response, line = this.pendingAdyenline()) {
         if (!response || (response.error && response.error.status_code == 401)) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
             if (line) {
@@ -206,14 +229,82 @@ export class PaymentAdyen extends PaymentInterface {
                 return false;
             }
             line.setPaymentStatus("waitingCard");
-            return this.waitForPaymentConfirmation();
+            return this.waitForPaymentConfirmation(line);
         }
     }
 
-    waitForPaymentConfirmation() {
+    _adyenHandlePaymentStatus(response, paymentLine, resolve, pollingIntervalId) {
+        const transactionStatus = response.SaleToPOIResponse?.TransactionStatusResponse?.Response;
+
+        if (transactionStatus?.Result === "Success") {
+            clearInterval(pollingIntervalId);
+            const repeatedResponseMessage =
+                response.SaleToPOIResponse.TransactionStatusResponse.RepeatedMessageResponse;
+            const body = repeatedResponseMessage.RepeatedResponseMessageBody;
+            const header = repeatedResponseMessage.MessageHeader;
+            this.processPaymentResponse(paymentLine, header, body);
+        } else if (transactionStatus?.ErrorCondition === "NotFound") {
+            clearInterval(pollingIntervalId);
+            resolve(false);
+        }
+    }
+
+    waitForPaymentConfirmation(paymentLine = this.pendingAdyenline()) {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pendingAdyenline().uuid] = resolve;
+            const serviceId = paymentLine.terminalServiceId;
+            this.paymentLineResolvers[paymentLine.uuid] = resolve;
+
+            const intervalId = setInterval(async () => {
+                const isLineRemoved = () =>
+                    !paymentLine.pos_order_id?.payment_ids.some(
+                        (line) => line.uuid === paymentLine.uuid
+                    );
+                const isPaymentStillValid = () =>
+                    this.paymentLineResolvers[paymentLine.uuid] &&
+                    paymentLine.payment_status === "waitingCard" &&
+                    !isLineRemoved();
+
+                if (!isPaymentStillValid()) {
+                    clearInterval(intervalId);
+                    if (isLineRemoved() || paymentLine.payment_status === "retry") {
+                        this.paymentLineResolvers[paymentLine.uuid] = null;
+                        resolve(false);
+                    }
+                    return;
+                }
+
+                const response = await this._adyenCheckPaymentStatus(serviceId);
+                if (response && isPaymentStillValid()) {
+                    this._adyenHandlePaymentStatus(response, paymentLine, resolve, intervalId);
+                }
+            }, POLLING_INTERVAL_MS);
         });
+    }
+
+    processPaymentResponse(line, header, body) {
+        const paymentResponse = body.PaymentResponse;
+        const additionalResponse = new URLSearchParams(paymentResponse.Response.AdditionalResponse);
+        const isPaymentSuccessful = this.isPaymentSuccessful(
+            header,
+            paymentResponse.Response,
+            line
+        );
+        if (isPaymentSuccessful) {
+            this.handleSuccessResponse(line, paymentResponse, additionalResponse);
+        } else {
+            this._show_error(_t("Message from Adyen: %s", additionalResponse.get("message")));
+        }
+        // when starting to wait for the payment response we create a promise
+        // that will be resolved when the payment response is received.
+        // In case this resolver is lost ( for example on a refresh ) we
+        // we use the handlePaymentResponse method on the payment line
+        const resolver = this.paymentLineResolvers?.[line.uuid];
+        if (resolver) {
+            this.paymentLineResolvers[line.uuid] = null;
+            resolver(isPaymentSuccessful);
+        } else {
+            line.handlePaymentResponse(isPaymentSuccessful);
+        }
     }
 
     /**
@@ -231,40 +322,48 @@ export class PaymentAdyen extends PaymentInterface {
             this._handleOdooConnectionFailure();
             return;
         }
-        const line = this.pendingAdyenline();
+
+        const response = notification.SaleToPOIResponse;
+        const header = response?.MessageHeader;
+        const line = this._adyenFindPaymentLine(header, response?.PaymentResponse);
         if (!line) {
+            logPosMessage(
+                "PaymentAdyen",
+                "handleAdyenStatusResponse",
+                "No pending payment line matches the Adyen response",
+                false,
+                [notification]
+            );
             return;
         }
-        const response = notification.SaleToPOIResponse.PaymentResponse.Response;
-        const additional_response = new URLSearchParams(response.AdditionalResponse);
-        const isPaymentSuccessful = this.isPaymentSuccessful(notification, response);
-        if (isPaymentSuccessful) {
-            this.handleSuccessResponse(line, notification, additional_response);
-        } else {
-            this._show_error(_t("Message from Adyen: %s", additional_response.get("message")));
-        }
-        // when starting to wait for the payment response we create a promise
-        // that will be resolved when the payment response is received.
-        // In case this resolver is lost ( for example on a refresh ) we
-        // we use the handlePaymentResponse method on the payment line
-        const resolver = this.paymentLineResolvers?.[line?.uuid];
-        if (resolver) {
-            resolver(isPaymentSuccessful);
-        } else {
-            line?.handlePaymentResponse(isPaymentSuccessful);
-        }
+
+        this.processPaymentResponse(line, header, response);
     }
-    isPaymentSuccessful(notification, response) {
-        return (
-            notification &&
-            notification.SaleToPOIResponse.MessageHeader.ServiceID ==
-                this.pendingAdyenline()?.terminalServiceId &&
-            response.Result === "Success"
+
+    /**
+     * Match the webhook response to a payment line through
+     * termina id / order uuid / service id
+     */
+    _adyenFindPaymentLine(header, paymentResponse) {
+        if (header?.POIID !== this.payment_method_id.adyen_terminal_identifier) {
+            return;
+        }
+        const transactionId = paymentResponse?.SaleData?.SaleTransactionID?.TransactionID;
+        const orderUuid = transactionId?.split("--")[0];
+        const order = orderUuid && this.pos.models["pos.order"].getBy("uuid", orderUuid);
+        return order?.payment_ids.find(
+            (line) =>
+                line.payment_method_id.id === this.payment_method_id.id &&
+                line.terminalServiceId === header.ServiceID &&
+                !line.isDone() &&
+                line.getPaymentStatus() !== "retry"
         );
     }
-    handleSuccessResponse(line, notification, additional_response) {
+    isPaymentSuccessful(header, response, line = this.pendingAdyenline()) {
+        return header.ServiceID === line?.terminalServiceId && response.Result === "Success";
+    }
+    handleSuccessResponse(line, payment_response, additional_response) {
         const config = this.pos.config;
-        const payment_response = notification.SaleToPOIResponse.PaymentResponse;
         const payment_result = payment_response.PaymentResult;
 
         const cashier_receipt = payment_response.PaymentReceipt.find(

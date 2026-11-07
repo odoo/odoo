@@ -705,6 +705,15 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         self.assertEqual(move.value, 0)
         self.assertEqual(move.quantity, 2)
 
+    def test_avco_receipt_unit_price_more_digits_than_precision(self):
+        """ The PO unit price can have more digits than the 'Product Price'
+        precision: the receipt must be valued with the full unit price. """
+        self.env.ref('product.decimal_price').digits = 2
+        po = self._create_purchase(self.product_avco, quantity=100, price_unit=0.124)
+        receipt = self._receive(po)
+        self.assertEqual(receipt.value, 12.4)
+        self.assertAlmostEqual(self.product_avco.standard_price, 0.124)
+
     def test_standard_valuation_return_credit_note(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id = self.category_standard_auto
@@ -1014,6 +1023,53 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
             'standard_price': 125.0,
         }])
         self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('balance')), 125.0)
+
+    def test_pdiff_multi_curr_at_bill_date_rate(self):
+        """
+        The price difference of a foreign-currency bill for a product at
+        standard cost is converted with the rate of the bill date, the same
+        one used to convert the standard cost, not with today's rate.
+        """
+        pdiff_account = self._use_price_diff()
+        product = self.product_standard_auto
+        product.standard_price = 34.0
+        eur = self.env.ref('base.EUR')
+        eur.active = True
+        self.env.company.currency_id = self.env.ref('base.USD').id
+
+        today = fields.Date.today()
+        yesterday = today - timedelta(days=1)
+        self.env['res.currency.rate'].search([('currency_id', '=', eur.id)]).unlink()
+        self.env['res.currency.rate'].create([{
+            'name': day,
+            'rate': 1 / rate,
+            'currency_id': eur.id,
+            'company_id': self.env.company.id,
+        } for (day, rate) in [(today, 4.0), (yesterday, 2.0)]])
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'currency_id': eur.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1.0,
+                'price_unit': 20.0,
+                'tax_ids': False,
+            })],
+        })
+        po.button_confirm()
+        self._receive(po)
+
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        bill.invoice_date = yesterday
+        bill.date = yesterday
+        bill.action_post()
+
+        # Standard cost of 34 USD = 17 EUR at the bill date: the difference
+        # of 3 EUR is worth 6 USD at that date (and 12 USD today).
+        pdiff_line = bill.line_ids.filtered(lambda line: line.account_id == pdiff_account)
+        self.assertEqual(pdiff_line.balance, 6.0)
+        self.assertTrue(bill.currency_id.is_zero(sum(bill.line_ids.mapped('balance'))))
 
     def test_multicurrency_bill_before_receipt_values_at_bill_rate(self):
         """A foreign-currency purchase billed before its goods are received

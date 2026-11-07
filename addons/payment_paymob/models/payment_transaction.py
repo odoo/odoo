@@ -6,6 +6,7 @@ from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_paymob import const
 from odoo.addons.payment_paymob.controllers.main import PaymobController
 
 
@@ -130,9 +131,13 @@ class PaymentTransaction(models.Model):
         amount_cents = float(payment_data.get('amount_cents'))
         amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
         currency_code = payment_data.get('currency')
+        precision_digits = None
+        if payment_data.get('source_data.sub_type') == 'Visa':
+            precision_digits = const.VISA_CURRENCY_DECIMALS.get(self.currency_id.name)
         return {
             'amount': amount,
             'currency_code': currency_code,
+            'precision_digits': precision_digits,
         }
 
     def _apply_updates(self, payment_data):

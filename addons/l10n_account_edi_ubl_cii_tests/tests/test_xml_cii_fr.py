@@ -11,12 +11,16 @@ class TestCIIFR(TestUBLCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.is_l10n_fr_pdp_installed = cls.env['ir.module.module']._get('l10n_fr_pdp').state == 'installed'
+
         cls.partner_1 = cls.env['res.partner'].create({
             'name': "partner_1",
             'street': "Rue Jean Jaurès, 42",
             'zip': "75000",
             'city': "Paris",
             'vat': 'FR05677404089',
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR05677404089',
             'country_id': cls.env.ref('base.fr').id,
             'bank_ids': [(0, 0, {'acc_number': 'FR15001559627230', 'allow_out_payment': True})],
             'phone': '+1 (650) 555-0111',
@@ -31,6 +35,8 @@ class TestCIIFR(TestUBLCommon):
             'zip': "52330",
             'city': "Colombey-les-Deux-Églises",
             'vat': 'FR35562153452',
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR35562153452',
             'country_id': cls.env.ref('base.fr').id,
             'bank_ids': [(0, 0, {'acc_number': 'FR90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
@@ -109,9 +115,30 @@ class TestCIIFR(TestUBLCommon):
             **kwargs,
         )
 
+    def _adapt_expected_etree_to_installed_modules(self, expected_etree):
+        super()._adapt_expected_etree_to_installed_modules(expected_etree)
+        if not self.is_l10n_fr_pdp_installed:
+            ns = {'ram': 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100'}
+            for note in expected_etree.findall('.//ram:IncludedNote', namespaces=ns):
+                subject_code = note.findtext('ram:SubjectCode', namespaces=ns)
+                if subject_code in ('PMT', 'PMD', 'AAB'):
+                    note.getparent().remove(note)
+
     ####################################################
     # Test export - import
     ####################################################
+
+    def test_compute_siren_from_vat(self):
+        partner = self.env['res.partner'].create({
+            'name': 'French partner with only a VAT number',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+        })
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '0225',
+            'peppol_endpoint': '334175221',
+        }])
 
     def test_export_pdf(self):
         acc_bank = self.env['res.partner.bank'].create({
@@ -441,7 +468,7 @@ class TestCIIFR(TestUBLCommon):
             'invoice_lines': [
                 {'price_unit': 95.24, 'price_subtotal': 95.24, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
                 {'price_unit': 100, 'price_subtotal': 100, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
-                {'price_unit': 190.48, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.001049979000411, 'tax_ids': self.tax_5_purchase.ids},
+                {'price_unit': 171.43 + 19.05, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.001049979000426, 'tax_ids': self.tax_5_purchase.ids},
                 {'price_unit': 200, 'price_subtotal': 180, 'quantity': 1, 'discount': 10.0, 'tax_ids': self.tax_5_purchase.ids},
             ]
         }
@@ -450,7 +477,7 @@ class TestCIIFR(TestUBLCommon):
             filename='facturx_out_invoice_tax_incl.xml',
             # Discount of line 3: when exporting the invoice, we compute the price tax excluded = 200/1.05 ~= 190.48
             # then, when computing the discount amount: 190.48 * 0.1 ~= 19.05 => price net amount = 171.43
-            # Thus, at import: price_unit = 190.48, and discount = 100 * (1 - 171.43 / 190.48) = 10.001049979
+            # Thus, at import: price_unit = 171.43 + 19.05, and discount = 100 * (1 - 171.43 / 190.48) = 10.001049979
             move_type='in_invoice',
             invoice_vals=invoice_vals,
         )
@@ -466,7 +493,7 @@ class TestCIIFR(TestUBLCommon):
         invoice_vals = {
             'amount_total': 233.47,
             'amount_tax': 14.99,
-            'invoice_lines': [{'price_subtotal': 20.5}, {'price_subtotal': 198.0}, {'price_subtotal': -0.02}]
+            'invoice_lines': [{'price_subtotal': 20.48}, {'price_subtotal': 198.0}]
         }
         # source: Avoir_FR_type380_EN16931.pdf
         self._assert_imported_invoice_from_file(

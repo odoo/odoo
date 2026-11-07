@@ -42,13 +42,6 @@ patch(PosStore.prototype, {
             }
         });
     },
-    selectOrderLine(order, line) {
-        super.selectOrderLine(order, line);
-        // Ensure the numpadMode should be `price` when the discount line is selected
-        if (line?.isDiscountLine) {
-            this.numpadMode = "price";
-        }
-    },
     getLinesToMerge(sourceOrder, destinationOrder) {
         const res = super.getLinesToMerge(...arguments);
         if (destinationOrder.globalDiscountPc) {
@@ -144,5 +137,11 @@ patch(PosStore.prototype, {
             order.selectOrderline(lastDiscountLine);
             this.numpadMode = "price";
         }
+    },
+    showDiscountLineEditError() {
+        return this.dialog.add(AlertDialog, {
+            title: _t("Error"),
+            body: _t("You cannot edit a discount line."),
+        });
     },
 });

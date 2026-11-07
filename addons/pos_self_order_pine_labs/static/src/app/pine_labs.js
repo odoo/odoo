@@ -26,7 +26,11 @@ export class PineLabs {
         if (paymentRequestResponse) {
             await this.paymentPolling(this.savedOrder);
         }
-        this.removePaymentHandler(["plutusTransactionReferenceID", "paymentRefNo"]);
+        this.removePaymentHandler([
+            "plutusTransactionReferenceID",
+            "paymentRefNo",
+            "pineLabsSignature",
+        ]);
     }
 
     async processPayment(order) {
@@ -53,6 +57,7 @@ export class PineLabs {
             const data = {
                 plutusTransactionReferenceID: localStorage.getItem("plutusTransactionReferenceID"),
                 amount: order.amount_total * 100,
+                order_token: order.access_token,
             };
             const cancelResponse = await rpc("/pos-self-order/pine-labs-cancel-transaction/", {
                 access_token: this.access_token,
@@ -64,7 +69,13 @@ export class PineLabs {
             if (cancelResponse) {
                 // Successfully cancelled the transaction
                 if (cancelResponse.notification) {
-                    this.errorCallback(new PineLabsError(cancelResponse.notification, "warning"));
+                    this.paymentStopped
+                        ? this.errorCallback(
+                              new PineLabsError("Transaction canceled due to inactivity", "warning")
+                          )
+                        : this.errorCallback(
+                              new PineLabsError(cancelResponse.notification, "warning")
+                          );
                     return true;
                 }
                 return this.handlePineLabsResponse(cancelResponse);
@@ -86,6 +97,8 @@ export class PineLabs {
         const data = {
             plutusTransactionReferenceID: localStorage.getItem("plutusTransactionReferenceID"),
             payment_ref_no: localStorage.getItem("paymentRefNo"),
+            pine_labs_signature: localStorage.getItem("pineLabsSignature"),
+            order_token: order.access_token,
         };
         this.stopInactivePayment().then(() => (this.paymentStopped = true));
         const fetchPaymentStatus = async (resolve, reject) => {
@@ -139,6 +152,8 @@ export class PineLabs {
                 response.plutusTransactionReferenceID
             );
         response.payment_ref_no && localStorage.setItem("paymentRefNo", response.payment_ref_no);
+        response.pine_labs_signature &&
+            localStorage.setItem("pineLabsSignature", response.pine_labs_signature);
         return true;
     }
 

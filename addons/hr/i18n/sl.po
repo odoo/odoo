@@ -24,11 +24,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2026-09-10 11:12+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-09-16 07:33+0000\n"
 "Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
-"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/hr/sl/>"
-"\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/hr/sl/"
+">\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,7 +76,6 @@ msgstr ""
 "ali\n"
 "- Ustvarite novega zaposlenega, če naj bi imel ta zaposleni več aktivnih "
 "pogodb.\n"
-"Lokacija: code:addons/hr/models/hr_version.py:0"
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
@@ -148,8 +147,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>PREBERI</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>PREBERI</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -158,8 +157,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Čestitam!</b> Ali vam lahko priporočim, da si pripravite <a href=\"%s\">"
-"načrt uvajanja?</a>"
+"<b>Čestitam!</b> Ali vam lahko priporočim, da si pripravite <a "
+"href=\"%s\">načrt uvajanja?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -363,8 +362,8 @@ msgid ""
 msgstr ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
-"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Nepotrjeno</span>"
-"\n"
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Nepotrjeno</"
+"span>\n"
 "                                                    <span invisible=\"not "
 "is_trusted_bank_account\" class=\"text-success\">Potrjeno</span>\n"
 "                                                </span>"
@@ -1029,8 +1028,8 @@ msgstr ""
 "reševanje problemov kot strateško analizo</b>,\n"
 "                                kar od vas zahteva kritično razmišljanje o "
 "izzivih strank. Pričakujemo, da bodo kandidati\n"
-"                                samomotivirani in z močno miselnostjo »"
-"naredi sam«. Da bi na tem delovnem mestu uspeli, bi\n"
+"                                samomotivirani in z močno miselnostjo "
+"»naredi sam«. Da bi na tem delovnem mestu uspeli, bi\n"
 "                                morali imeti odlične analitične sposobnosti, "
 "sposobnost pretvarjanja vpogledov v\n"
 "                                uporabna priporočila in talent za "
@@ -1117,8 +1116,8 @@ msgstr ""
 "                                <br>\n"
 "                                To delovno mesto je hkrati <b>ustvarjalno in "
 "strukturirano</b>, ter spodbuja nekonvencionalno razmišljanje.\n"
-"                                Iščemo proaktivno osebo z močno miselnostjo »"
-"dokončanja«. Uspešni\n"
+"                                Iščemo proaktivno osebo z močno miselnostjo "
+"»dokončanja«. Uspešni\n"
 "                                kandidati bodo imeli možnost rasti znotraj "
 "podjetja glede na svojo ustreznost in\n"
 "                                uspešnost."
@@ -2736,7 +2735,7 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
 msgstr ""
-"Za  %(channels)s, mora biti channel_type 'channel', da se oddelek samodejno "
+"Za %(channels)s, mora biti channel_type 'channel', da se oddelek samodejno "
 "naroči."
 
 #. module: hr
@@ -4839,20 +4838,19 @@ msgid "Temporary"
 msgstr "Začasno"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"ID značke mora biti alfanumerična brez poudarkov in ne daljša od 18 znakov."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr "ID značke mora biti edinstven, saj je že dodeljen drugemu zaposlenemu."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -4992,7 +4990,7 @@ msgstr "Naziv delovnega mesta mora biti unikaten za oddelek in družbo!"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The user of %s's coach is not set."
-msgstr "Uporabnik  %strenerja ni nastavljen."
+msgstr "Trener uporabnika %s ni nastavljen."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -5652,6 +5650,12 @@ msgstr "Nimate dostopa do tega dokumenta."
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_allocation_wizard_line.py:0
+msgid "You do not have the rights to trust or un-trust accounts."
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set a valid work email address for %s"
 msgstr "Za %s morate nastaviti veljaven delovni e-poštni naslov"
@@ -5891,6 +5895,13 @@ msgstr "delo"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "ime_delovnega_dovoljenja"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "ID značke mora biti alfanumerična brez poudarkov in ne daljša od 18 "
+#~ "znakov."
 
 #~ msgid "&amp;nbsp;"
 #~ msgstr "&amp;nbsp;"

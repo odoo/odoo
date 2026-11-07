@@ -368,12 +368,13 @@ class TestLotValuation(TestStockValuationCommon):
         self._make_in_move(self.product, 6, 8, lot_ids=[self.lot2, self.lot3])
         # c2 move
         self._make_in_move(self.product, 9, 6, company=c2, lot_ids=[self.lot1, self.lot2, self.lot3])
-        self.assertEqual(self.lot1.with_company(c1).total_value, 25)
-        self.assertEqual(self.lot2.with_company(c1).total_value, 49)
-        self.assertEqual(self.lot3.with_company(c1).total_value, 80)
-        self.assertEqual(self.lot1.with_company(c2).total_value, 18)
-        self.assertEqual(self.lot2.with_company(c2).total_value, 18)
-        self.assertEqual(self.lot3.with_company(c2).total_value, 18)
+        self.assertEqual(self.lot1.with_company(c1).with_context(allowed_company_ids=[c1.id]).total_value, 25)
+        self.assertEqual(self.lot2.with_company(c1).with_context(allowed_company_ids=[c1.id]).total_value, 49)
+        self.assertEqual(self.lot3.with_company(c1).with_context(allowed_company_ids=[c1.id]).total_value, 80)
+        self.assertEqual(self.lot1.with_company(c2).with_context(allowed_company_ids=[c2.id]).total_value, 18)
+        self.assertEqual(self.lot2.with_company(c2).with_context(allowed_company_ids=[c2.id]).total_value, 18)
+        self.assertEqual(self.lot3.with_company(c2).with_context(allowed_company_ids=[c2.id]).total_value, 18)
+        self.assertEqual(self.lot1.with_company(c1).with_context(allowed_company_ids=[c1.id, c2.id]).total_value, 43)
 
     def test_change_cost_method(self):
         """ Prevent changing cost method if lot valuated """
@@ -710,3 +711,68 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 1)
         self.assertEqual(in_move_lot1.remaining_qty, 0)
         self.assertEqual(in_move_lot2.remaining_qty, 1)
+
+    def test_lot_fifo_partially_consigned_product_total_value(self):
+        """ Check that when a fifo product is valued by lot and
+        some of the quantities are consigned, the total value of
+        the product and its standard price are correct
+        """
+        self.product.categ_id = self.category_fifo
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1], owner_id=self.vendor)
+        self._make_in_move(self.product, 1, 200, lot_ids=[self.lot1])
+        self.assertEqual(self.product.total_value, 200)
+        self.assertEqual(self.product.standard_price, 200)
+
+    def test_lot_avco_partially_consigned_quant_value(self):
+        """ Check that when an avco product is valued by lot and
+        some of the quantities are consigned, the quant value for
+        the not consigned quant is correct
+        """
+        self.product.categ_id = self.category_avco
+        quants_pre_moves = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
+        self.assertEqual(len(quants_pre_moves), 0)
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1], owner_id=self.vendor)
+        self._make_in_move(self.product, 2, 20, lot_ids=[self.lot1])
+        quants_post_moves = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
+        unconsigned_quant = quants_post_moves.filtered(lambda q: q.lot_id == self.lot1 and not q.owner_id and q.location_id == self.stock_location)
+        self.assertEqual(unconsigned_quant.value, 40)
+
+    def test_lot_fifo_partially_consigned_valuation(self):
+        """Check that when a fifo product is valued by lot and
+        some of the quantities are consigned, the total value of
+        the lot, avg_cost of the lot and standard_price of the lot
+        are correct
+        """
+        self.product.categ_id = self.category_fifo
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1], owner_id=self.vendor)
+        self._make_in_move(self.product, 1, 20, lot_ids=[self.lot1])
+        self._make_in_move(self.product, 1, 40, lot_ids=[self.lot1])
+        self.assertEqual(self.lot1.total_value, 60)
+        self.assertEqual(self.lot1.avg_cost, 30)
+        self.assertEqual(self.lot1.standard_price, 30)
+
+    def test_lot_update_std_price_multi_company(self):
+        """ Check that when validating a move for a lot valuated product, with multiple
+        companies selected, the update of the standard price only considers move from
+        the main company
+        """
+        c1 = self.company
+        c2 = self.other_company
+        self.product.product_tmpl_id.with_company(c2).categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1])
+        self._make_in_move(self.product, 1, 100, company=c2, lot_ids=[self.lot1])
+        self.assertEqual(self.product.standard_price, 10)
+        self.assertEqual(self.product.with_company(c2).standard_price, 100)
+        in_move = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'quantity': 1,
+            'company_id': c1.id,
+            'price_unit': 20,
+            'value_manual': 20,
+        })
+        in_move.move_line_ids.lot_id = self.lot1
+        in_move.picked = True
+        in_move.with_context(allowed_company_ids=[c1.id, c2.id])._action_done()
+        self.assertEqual(self.product.standard_price, 15)

@@ -35,7 +35,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         self._execute_message_post_subtests(
             channel,
             (
-                test_access(self.user_public, True),
+                test_access(self.user_public, False),
                 test_access(self.guest, True),
                 test_access(self.user_portal, True),
                 test_access(self.user_employee, True),
@@ -62,7 +62,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         self._execute_message_post_subtests(
             channel,
             (
-                test_partners(self.user_public, True, self.env["res.partner"]),
+                test_partners(self.user_public, False, self.env["res.partner"]),
                 test_partners(self.guest, True, self.env["res.partner"]),
                 test_partners(self.user_portal, True, self.env["res.partner"]),
                 test_partners(self.user_employee, True, partners),
@@ -93,7 +93,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         self._execute_message_post_subtests(
             channel,
             (
-                test_emails(self.user_public, True, no_emails),
+                test_emails(self.user_public, False, no_emails),
                 test_emails(self.guest, True, no_emails),
                 test_emails(self.user_portal, True, no_emails),
                 # restricted because not base.group_partner_manager: find existing only

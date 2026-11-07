@@ -913,6 +913,16 @@
                                            invisible="adjusting_entry_origin_moves_count == 1"
                                            string="Invoices" widget="statinfo"/>
                             </button>
+                            <button name="action_open_journal_items"
+                                    groups="account.group_account_invoice,account.group_account_readonly"
+                                    invisible="move_type == 'entry'"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Journal Items</span>
+                                    </div>
+                            </button>
                         </div>
 
                         <widget name="web_ribbon" title="Sent"
@@ -1351,7 +1361,7 @@
                                 </field>
                                 <group col="12" class="oe_invoice_lines_tab overflow-hidden">
                                     <group colspan="8">
-                                        <field name="narration" placeholder="Terms and Conditions" nolabel="1"/>
+                                        <field name="narration" placeholder="Terms and Conditions" nolabel="1" colspan="2"/>
                                     </group>
                                     <!-- Totals (only invoices / receipts) -->
                                     <group colspan="4">

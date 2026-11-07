@@ -26,9 +26,8 @@ class Im_LivechatChannel(models.Model):
                 ("livechat_visitor_id", "=", visitor_sudo.id),
                 ("livechat_end_dt", "=", False),
             ]
+            operator_name = operator_partner.user_livechat_username or operator_partner.name
             for discuss_channel in self.env["discuss.channel"].sudo().search(pending_chats_domain):
-                operator = discuss_channel.livechat_operator_id
-                operator_name = operator.user_livechat_username or operator.name
                 discuss_channel._close_livechat_session(cancel=True, operator=operator_name)
                 discuss_channel.is_pending_chat_request = False
 

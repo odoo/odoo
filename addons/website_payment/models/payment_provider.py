@@ -49,7 +49,8 @@ class PaymentProvider(models.Model):
 
     def get_base_url(self):
         # Give priority to url_root to handle multi-website cases
-        if request and request.httprequest.url_root:
+        # except for cron jobs, because SH attaches a request to them, whose url might not be reachable
+        if request and request.httprequest.url_root and not self.env.context.get('cron_id'):
             # Some domain names can use non-Latin script or alphabet or the Latin
             # alphabet-based characters with diacritics or ligatures. They are
             # stored as ASCII strings using Punycode transcription in the DNS

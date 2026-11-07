@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-08-02 19:27+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-10-05 18:33+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "auth_signup/lt/>\n"
 "Language: lt\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -118,6 +118,60 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; "
+"width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"   <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\"> \n"
+"           <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get"
+"('invited_users', [])\"/> \n"
+"               <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\"> \n"
+"                        Laukiami kvietimai\n"
+"                   </span><br/> <br/>\n"
+"                </td> \n"
+"               <tr><td valign=\"top\" style=\"font-size: 13px;\"> \n"
+"                   <div> \n"
+"                        Gerb. „ <t t-out=\"object.name or ''\">“ Mitchell "
+"Admin</t>,<br/> <br/>\n"
+"                        Į savo duomenų bazę įtraukėte šiuos vartotojus, "
+"tačiau jie dar nėra užsiregistravę:\n"
+"                       <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-"
+"as=\"invited_user\"> \n"
+"                               <li t-out=\"invited_user or ''\"> "
+"demo@example.com</li>\n"
+"                            </t>\n"
+"                       </ul> \n"
+"                        Susisiekite su jais, kad jie galėtų prisijungti prie "
+"jūsų duomenų bazės ir pradėti bendradarbiauti su jumis.\n"
+"                       <br/><br/> \n"
+"                        Geros dienos!<br/>\n"
+"                        --<br/>„ <t t-out=\"object.company_id.name or ''\">“ "
+"„YourCompany“</t> komanda\n"
+"                   </div>\n"
+"                </td> </tr>\n"
+"                <tr> <td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/> \n"
+"               </td></tr> \n"
+"           </table>\n"
+"        </td> \n"
+"   </tr>\n"
+"</tbody> \n"
+"</table>\n"
+"</td></tr>\n"
+"</table> \n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -783,7 +837,7 @@ msgstr "Jau turite paskyrą?"
 #: code:addons/auth_signup/controllers/main.py:0
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Another user is already registered using this email address."
-msgstr "Vartotojas su tokių el. paštu jau registruotas."
+msgstr "Šiuo el. pašto adresu jau yra užsiregistravęs kitas vartotojas."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -1013,7 +1067,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr ""
+msgstr "Priminimas neregistruotiems vartotojams"
 
 #. module: auth_signup
 #. odoo-python
@@ -1057,7 +1111,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "Siųsta portalo vartotojui, kuris pats užsiregistravo"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -1077,7 +1131,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "Nustatymai: Priminimas neregistruotiems vartotojams"
 
 #. module: auth_signup
 #. odoo-python
@@ -1169,12 +1223,12 @@ msgstr "Vartotojas"
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "Vartotojai: pranešti apie neregistruotus vartotojus"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Sveiki atvykę į „ {{ object.company_id.name }} “!"
 
 #. module: auth_signup
 #. odoo-python
@@ -1216,7 +1270,7 @@ msgstr "info@jusuimone.com"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "name@example.com"
-msgstr ""
+msgstr "name@example.com"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email

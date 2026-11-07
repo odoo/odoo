@@ -4,15 +4,15 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023, 2026.
 # Vlad Patenko <vlad.patenko@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-02 14:03+0000\n"
-"Last-Translator: Vlad Patenko <vlad.patenko@gmail.com>\n"
+"PO-Revision-Date: 2026-10-20 13:33+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "hr_presence/uk/>\n"
 "Language: uk\n"
@@ -23,13 +23,13 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "%(name)s занотовано як %(state)s сьогодні"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -49,6 +49,21 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Шановні <t t-out=\"object.name or ''\">, Абігейл "
+"Петерсон</t>,<br/><br/>\n"
+"Сподіваємося, що у вас усе гаразд. До нашої уваги потрапила інформація про "
+"те, що ви наразі відсутні на роботі, а запису про подання вами заяви на "
+"відпустку немає. Якщо ця відсутність пов’язана з нашою помилкою, ми щиро "
+"вибачаємося за будь-яку плутанину.\n"
+"Будь ласка, вжийте необхідних заходів для вирішення питання щодо цієї "
+"незапланованої відсутності. Якщо у вас виникнуть запитання або знадобиться "
+"допомога, не вагайтеся звернутися до свого керівника або до відділу кадрів у "
+"найближчий зручний для вас час.\n"
+"Дякуємо за оперативне реагування на це питання.\n"
+"                   <br/> З повагою,<br/><br/>\n"
+"               </div> \n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -60,7 +75,7 @@ msgstr "Відсутній"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
-msgstr ""
+msgstr "Додайте запис у журналі"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -70,12 +85,12 @@ msgstr "Компанії"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
 msgid "Create a Time Off"
-msgstr ""
+msgstr "Створити відпустку"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
@@ -85,7 +100,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -96,7 +111,7 @@ msgstr "Email надіслано"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Співробітник"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -120,6 +135,9 @@ msgid ""
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
+"Привіт, ми помітили, що ви не на роботі, а відпустка не була подана. Якщо це "
+"наша помилка, ми просимо вибачення. Будь ласка, якнайшвидше зв’яжіться зі "
+"своїм керівником або відділом кадрів. Дякуємо"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -140,7 +158,7 @@ msgstr "Відображення етапу присутності відділ�
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -157,7 +175,7 @@ msgstr "З'єднано Ip"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "Встановити присутність вручну"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -176,12 +194,12 @@ msgstr "Відсутній"
 #. odoo-javascript
 #: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
 msgid "Presence Control"
-msgstr ""
+msgstr "Контроль присутності"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Присутність/Відсутність"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -192,18 +210,18 @@ msgstr "Присутній"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Публічний співробітник"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
-msgstr ""
+msgstr "Надішліть SMS"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
 msgid "Send a SMS"
-msgstr ""
+msgstr "Надіслати SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -217,12 +235,12 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
 msgid "Set Absent"
-msgstr ""
+msgstr "Встановити відсутність"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
 msgid "Set Present"
-msgstr ""
+msgstr "Встановити присутність"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -233,7 +251,7 @@ msgstr "Несподівана відстуність"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "Незапланована відсутність"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -253,6 +271,15 @@ msgid ""
 "your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
+"Сподіваємося, що у вас усе гаразд. До нашої уваги потрапила інформація про "
+"те, що ви наразі відсутні на роботі, а запису про подання вами заявки на "
+"відпустку немає. Якщо ця відсутність пов’язана з нашою помилкою, ми щиро "
+"вибачаємося за будь-яку плутанину.\n"
+"Будь ласка, вживіть необхідних заходів для вирішення питання щодо цієї "
+"незапланованої відсутності. Якщо у вас виникнуть запитання або знадобиться "
+"допомога, не вагайтеся звернутися до свого керівника або до Відділу кадрів у "
+"найближчий зручний для вас час.\n"
+"Дякуємо за оперативне вирішення цього питання."
 
 #. module: hr_presence
 #. odoo-python

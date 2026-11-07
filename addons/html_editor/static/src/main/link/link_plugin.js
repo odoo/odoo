@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
-import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { mergeAdjacentTextNodes, removeClass, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -12,6 +12,7 @@ import {
     isPhrasingContent,
     isProtected,
     isProtecting,
+    isTextNode,
     isVisible,
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
@@ -21,7 +22,15 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { removeFormat } from "@html_editor/core/format_plugin";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { FONT_SIZE_CLASSES, formatsSpecs } from "@html_editor/utils/formatting";
+
+const FONT_SIZED_SPAN_SELECTOR = [
+    ...FONT_SIZE_CLASSES.map((className) => `span.${className}`),
+    'span[style*="font-size"]',
+].join(", ");
+const FONT_SIZED_BUTTON_CLASS = "o_btn_with_font_size";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -90,7 +99,7 @@ async function fetchInternalMetaData(url) {
     }
 
     const result = await keepLastPromise
-        .add(fetch(urlParsed))
+        .add(fetch(urlParsed, { headers: { "Odoo-Link-Preview": "True" } }))
         .then((response) => response.text())
         .then(async (content) => {
             const html_parser = new window.DOMParser();
@@ -303,9 +312,17 @@ export class LinkPlugin extends Plugin {
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
-        normalize_handlers: this.normalizeLink.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.removeEmptyLinks(root);
+            this.clearFontSizedButtonClass(root);
+        },
+        normalize_handlers: [
+            this.normalizeLink.bind(this),
+            this.updateFontSizedButtonClass.bind(this),
+        ],
+        system_classes: [FONT_SIZED_BUTTON_CLASS],
         after_insert_handlers: this.handleAfterInsert.bind(this),
+        format_selection_handlers: this.applyFormatToLinks.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -313,6 +330,7 @@ export class LinkPlugin extends Plugin {
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
         delete_backward_overrides: withSequence(15, this.handleDeleteBackward.bind(this)),
+        delete_forward_overrides: withSequence(15, this.handleDeleteForward.bind(this)),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
 
@@ -366,7 +384,7 @@ export class LinkPlugin extends Plugin {
                 caretPosition.offset = range?.startOffset;
             }
             const link = caretPosition?.offsetNode && closestElement(caretPosition.offsetNode, "A");
-            if (clickedEl.nodeName === "A" && isZwnbsp(caretPosition.offsetNode)) {
+            if (clickedEl.closest("a") && isZwnbsp(caretPosition.offsetNode)) {
                 // This handles the case of clicking at the start of the button
                 const isFirstFeff = !caretPosition.offsetNode.previousSibling;
                 if (isFirstFeff && caretPosition.offset === 0) {
@@ -375,20 +393,22 @@ export class LinkPlugin extends Plugin {
                         anchorNode: clickedEl,
                         anchorOffset: 1,
                     });
+                    this.dependencies.selection.focusEditable();
                 }
-            } else if (clickedEl.nodeName !== "A" && link) {
+            } else if (!clickedEl.closest("a") && link) {
                 // This handles the case of clicking outside the link that is
                 // at the start/end of paragraph
-                ev.preventDefault();
                 const anchorFeff =
                     nodeSize(caretPosition.offsetNode) === caretPosition.offset
                         ? link.nextSibling
                         : link.previousSibling;
                 if (anchorFeff && isZwnbsp(anchorFeff)) {
+                    ev.preventDefault();
                     this.dependencies.selection.setSelection({
                         anchorNode: anchorFeff,
                         anchorOffset: 1,
                     });
+                    this.dependencies.selection.focusEditable();
                 }
             }
         });
@@ -508,6 +528,54 @@ export class LinkPlugin extends Plugin {
         return pasteAsURLCommand;
     }
 
+    /**
+     * Apply the format on the fully selected links.
+     *
+     * @param {string} formatName
+     * @param {Object} options
+     */
+    applyFormatToLinks(formatName, { applyStyle, formatProps } = {}) {
+        const formatSpec = formatsSpecs[formatName];
+        if (!formatSpec.addNeutralStyle) {
+            return;
+        }
+        // Links often have styles applied to them by css which can only be
+        // overriden by applying the style to the link itself. Buttons are
+        // excluded as their font size only applies from inside them.
+        const links = new Set();
+        for (const node of this.dependencies.selection.getTargetedNodes()) {
+            if (!isTextNode(node)) {
+                continue;
+            }
+            const link = closestElement(node, "a:not(.btn)");
+            // Keep only the selected text that can be edited and formatted.
+            if (
+                link &&
+                isContentEditable(node) &&
+                (this.checkPredicates("is_formattable_node_predicates", node) ?? true) &&
+                !formatSpec.isFormatted(link.parentElement, formatProps) &&
+                this.dependencies.selection.areNodeContentsFullySelected(link)
+            ) {
+                links.add(link);
+            }
+        }
+        if (!links.size) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const link of links) {
+            for (const node of [link, ...descendants(link).filter(isElement)]) {
+                removeFormat(node, formatSpec, cursors);
+            }
+            if (applyStyle && !formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addStyle(link, formatProps);
+            } else if (!applyStyle && formatSpec.isFormatted(link, formatProps)) {
+                formatSpec.addNeutralStyle(link);
+            }
+        }
+        cursors.restore();
+    }
+
     isLinkAllowedOnSelection() {
         const isLinkCompatible = this.checkPredicates("link_compatible_selection_predicates");
         if (isLinkCompatible !== undefined) {
@@ -536,8 +604,8 @@ export class LinkPlugin extends Plugin {
         this.LinkPopoverState.editing = false;
         let selection = this.dependencies.selection.getEditableSelection();
         const commonAncestor = closestElement(selection.commonAncestorContainer);
-        const isNonEditableLink =
-            commonAncestor.nodeName === "A" && !commonAncestor.isContentEditable;
+        const closestLink = closestElement(commonAncestor, "A");
+        const isNonEditableLink = closestLink && !closestLink.isContentEditable;
         if (!this.isLinkAllowedOnSelection() && !isNonEditableLink) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
@@ -1051,6 +1119,21 @@ export class LinkPlugin extends Plugin {
         );
         if (links.size) {
             for (const link of links) {
+                const styleClasses = [...link.classList].filter(
+                    (c) => !c.startsWith("btn") && !this.getResource("system_classes").includes(c)
+                );
+                const hasStyle = styleClasses.length || link.style.length;
+                if (hasStyle && isVisible(link)) {
+                    const span = this.document.createElement("span");
+                    link.after(span);
+                    cursors.update(callbacksForCursorUpdate.after(link, span));
+                    span.append(link);
+                    cursors.update(callbacksForCursorUpdate.append(span, link));
+                    span.classList.add(...styleClasses);
+                    if (link.style.length) {
+                        span.style.cssText = link.style.cssText;
+                    }
+                }
                 cursors.update(callbacksForCursorUpdate.unwrap(link));
                 unwrapContents(link);
             }
@@ -1065,6 +1148,27 @@ export class LinkPlugin extends Plugin {
             this.removeEmptyLinks(endBlock);
         }
         this.dependencies.history.addStep();
+    }
+
+    updateFontSizedButtonClass(root) {
+        const buttons = [...selectElements(root, ".btn")];
+        const parentButton = closestElement(root, ".btn");
+        if (parentButton && parentButton !== root) {
+            buttons.push(parentButton);
+        }
+        for (const button of buttons) {
+            if (button.querySelector(FONT_SIZED_SPAN_SELECTOR)) {
+                button.classList.add(FONT_SIZED_BUTTON_CLASS);
+            } else if (button.classList.contains(FONT_SIZED_BUTTON_CLASS)) {
+                removeClass(button, FONT_SIZED_BUTTON_CLASS);
+            }
+        }
+    }
+
+    clearFontSizedButtonClass(root) {
+        for (const button of selectElements(root, `.${FONT_SIZED_BUTTON_CLASS}`)) {
+            removeClass(button, FONT_SIZED_BUTTON_CLASS);
+        }
     }
 
     removeEmptyLinks(root) {
@@ -1369,6 +1473,28 @@ export class LinkPlugin extends Plugin {
         this.dependencies.selection.setSelection({
             anchorNode: startContainer.previousSibling,
             anchorOffset: startContainer.previousSibling.childNodes.length - 1,
+        });
+        return true;
+    }
+
+    handleDeleteForward({ startContainer, startOffset }) {
+        if (
+            startContainer?.nextSibling?.textContent !== "\uFEFF" ||
+            nodeSize(startContainer) !== startOffset
+        ) {
+            return;
+        }
+        const feff = startContainer.nextSibling;
+        if (!feff.nextSibling || feff.nextSibling.nodeName !== "A") {
+            return;
+        }
+        const link = feff.nextSibling;
+        if (!link?.matches(".btn")) {
+            return;
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode: link.firstChild,
+            anchorOffset: 1,
         });
         return true;
     }

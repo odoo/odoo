@@ -9,7 +9,7 @@
                 <field name="points" string="Limit"
                     invisible="trigger != 'points_reach'"
                     required="trigger == 'points_reach'"/>
-                <field name="mail_template_id"/>
+                <field name="mail_template_id" context="{'default_model': 'loyalty.card'}"/>
             </list>
         </field>
     </record>

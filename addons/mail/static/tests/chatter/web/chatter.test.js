@@ -17,19 +17,20 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
     asyncStep,
     defineActions,
     getService,
     mockService,
+    onRpc,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, waitFor } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -139,6 +140,32 @@ test("can post a note on a record thread", async () => {
     await click(".o-mail-Composer button:enabled", { text: "Log" });
     await contains(".o-mail-Message");
     await waitForSteps(["/mail/message/post"]);
+});
+
+test("post with reload_on_post keeps the changes of an invalid record", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    onRpcBefore("/mail/message/post", () => expect.step("/mail/message/post"));
+    onRpc("res.partner", "web_read", () => expect.step("web_read"));
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet>
+                    <field name="name" required="1"/>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>`,
+    });
+    await expect.waitForSteps(["web_read"]);
+    await insertText(".o_field_widget[name=name] input", "", { replace: true });
+    await click("button:text('Log note')");
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer button:enabled:text('Log')");
+    await contains(".o-mail-Message");
+    await contains(".o_notification:text('Missing required fields')");
+    await contains(".o_field_invalid[name=name] input:value(/^$/)");
+    await expect.waitForSteps(["/mail/message/post"]);
 });
 
 test("No attachment loading spinner when creating records", async () => {
@@ -313,6 +340,33 @@ test('post message with "CTRL-Enter" keyboard shortcut in chatter', async () => 
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
+    await contains(".o-mail-Message");
+});
+
+test('post message with "CMD-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    mockUserAgent("mac");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Test");
+    await contains(".o-mail-Composer span", { text: "or press CMD + Enter" });
+    triggerHotkey("Enter", false, { metaKey: true });
+    await contains(".o-mail-Message");
+});
+
+test('post message with "CTRL-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    mockUserAgent("mac");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Test");
+    triggerHotkey("Enter", false, { ctrlKey: true });
     await contains(".o-mail-Message");
 });
 
@@ -705,6 +759,50 @@ test("Mentions in composer should still work when using pager", async () => {
     await insertText(".o-mail-Composer-input", "@");
     // all records in DB: Mitchell Admin | Hermit | Public user except OdooBot
     await contains(".o-mail-Composer-suggestion", { count: 3 });
+});
+
+test("open record from push notification", async () => {
+    const pyEnv = await startServer();
+    const [partnerId, otherPartnerId] = pyEnv["res.partner"].create([
+        { name: "John Doe" },
+        { name: "Jane Doe" },
+    ]);
+    pyEnv["mail.message"].create({ body: "Hello", model: "res.partner", res_id: partnerId });
+    await start();
+    // Show another record first: the push must open its record in place of this form view.
+    await openFormView("res.partner", otherPartnerId);
+    expect(".o_form_view .o_field_widget[name='name'] input").toHaveValue("Jane Doe");
+    navigator.serviceWorker.dispatchEvent(
+        new MessageEvent("message", {
+            data: { action: "OPEN_RECORD", data: { id: partnerId, model: "res.partner" } },
+        })
+    );
+    await waitFor(".o_form_view .o-mail-Chatter .o-mail-Message-body:text('Hello')");
+    expect(".o_form_view .o_field_widget[name='name'] input").toHaveValue("John Doe");
+});
+
+test("open record from push notification on mobile", async () => {
+    await patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    navigator.serviceWorker.dispatchEvent(
+        new MessageEvent("message", {
+            data: { action: "OPEN_RECORD", data: { id: partnerId, model: "res.partner" } },
+        })
+    );
+    await waitFor(".o_form_view .o-mail-Chatter");
+    expect(".o_form_view .o_field_widget[name='name'] input").toHaveValue("John Doe");
+    expect(".o-mail-ChatWindow").toHaveCount(0);
+    // A channel push does open a chat window on mobile: proves the selector checked above.
+    navigator.serviceWorker.dispatchEvent(
+        new MessageEvent("message", {
+            data: { action: "OPEN_CHANNEL", data: { id: channelId } },
+        })
+    );
+    await waitFor(".o-mail-ChatWindow-header:text('General')");
+    expect(".o-mail-ChatWindow").toHaveCount(1);
 });
 
 test("form views in dialogs do not have chatter", async () => {

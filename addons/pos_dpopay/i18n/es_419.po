@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 16:54+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -18,6 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"%s. Please ensure the device is online and confirm that the Merchant ID "
+"(MID) and Terminal ID (TID) are correct."
+msgstr ""
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -208,17 +216,6 @@ msgid "Payment is unsuccessful."
 msgstr "No fue posible realizar el pago."
 
 #. module: pos_dpopay
-#. odoo-python
-#: code:addons/pos_dpopay/models/pos_payment_method.py:0
-msgid ""
-"Please ensure the device is online and confirm that the Merchant ID (MID) "
-"and Terminal ID (TID) are correct. %s"
-msgstr ""
-"Asegúrate de que el dispositivo esté conectado y confirma que el ID del "
-"comerciante (MID, por sus siglas en inglés) y el ID de la terminal (TID, por "
-"sus siglas en inglés) sean correctos. %s"
-
-#. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "Métodos de pago del punto de venta"
@@ -292,3 +289,11 @@ msgid ""
 msgstr ""
 "No fue posible obtener el token de portador de DPO Pay: Revisa el ID y el "
 "secreto del cliente."
+
+#~ msgid ""
+#~ "Please ensure the device is online and confirm that the Merchant ID (MID) "
+#~ "and Terminal ID (TID) are correct. %s"
+#~ msgstr ""
+#~ "Asegúrate de que el dispositivo esté conectado y confirma que el ID del "
+#~ "comerciante (MID, por sus siglas en inglés) y el ID de la terminal (TID, "
+#~ "por sus siglas en inglés) sean correctos. %s"

@@ -100,7 +100,7 @@ class ProjectUpdate(models.Model):
         projects = self.project_id
         res = super().unlink()
         for project in projects:
-            project.last_update_id = self.search([('project_id', "=", project.id)], order="date desc", limit=1)
+            project.sudo().last_update_id = self.search([('project_id', "=", project.id)], order="date desc", limit=1)
         return res
 
     # ---------------------------------

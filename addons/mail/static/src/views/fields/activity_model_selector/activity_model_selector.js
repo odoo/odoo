@@ -10,7 +10,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 /** largely taken from documents' DocumentsDetailPanel, which selects arbitrary models and records
  * through two interactions:
  * 1- select the model through a list of accesible and appropriate models (getAvailableResModels)
- * 2- select one of this model's records through a tree view in a new dialog that opens
+ * 2- select one of this model's records through a list view in a new dialog that opens
  **/
 
 // Small hack, memoize uses the first argument as cache key, but we need the orm which will not be the same.

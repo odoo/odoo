@@ -3,10 +3,6 @@ import { models } from "@web/../tests/web_test_helpers";
 export class ResourceCalendarAttendance extends models.ServerModel {
     _name = "resource.calendar.attendance";
 
-    _load_pos_data_fields() {
-        return ["id", "hour_from", "hour_to", "dayofweek", "day_period"];
-    }
-
     _records = [
         {
             id: 1,
@@ -20,7 +16,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_from: 18,
             hour_to: 22,
             dayofweek: "1",
-            day_period: "evening",
+            day_period: "afternoon",
         },
         {
             id: 3,
@@ -34,7 +30,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_from: 18,
             hour_to: 22,
             dayofweek: "2",
-            day_period: "evening",
+            day_period: "afternoon",
         },
         {
             id: 5,
@@ -48,7 +44,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_from: 18,
             hour_to: 22,
             dayofweek: "3",
-            day_period: "evening",
+            day_period: "afternoon",
         },
         {
             id: 7,
@@ -62,7 +58,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_from: 18,
             hour_to: 22,
             dayofweek: "4",
-            day_period: "evening",
+            day_period: "afternoon",
         },
         {
             id: 9,
@@ -76,7 +72,11 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_from: 18,
             hour_to: 22,
             dayofweek: "5",
-            day_period: "evening",
+            day_period: "afternoon",
         },
     ];
+
+    _load_pos_data_fields() {
+        return ["id", "hour_from", "hour_to", "dayofweek", "day_period"];
+    }
 }

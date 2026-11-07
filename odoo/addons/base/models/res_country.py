@@ -20,12 +20,12 @@ FLAG_MAPPING = {
     "RE": "fr",
     "MF": "fr",
     "UM": "us",
-    "XI": "uk",
 }
 
 NO_FLAG_COUNTRIES = [
-    "AQ", #Antarctica
-    "SJ", #Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
+    "AQ",  # Antarctica
+    "SJ",  # Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
+    "XI",  # Nothern Ireland
 ]
 
 
@@ -102,6 +102,16 @@ class ResCountry(models.Model):
         # normal search
         result.extend(super().name_search(name, domain, operator, limit))
         return result
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        if operator in ('=', '!=') and isinstance(value, str) and len(value) > 2:
+            return [('name', operator, value)]
+        if operator in ('in', 'not in'):
+            codes = [code for code in value if not (isinstance(code, str) and len(code) > 2)]
+            aggregator = Domain.AND if operator == 'not in' else Domain.OR
+            return aggregator([[('name', operator, value)], [('code', operator, codes)]])
+        return super()._search_display_name(operator, value)
 
     @api.model
     @tools.ormcache('code', cache='stable')

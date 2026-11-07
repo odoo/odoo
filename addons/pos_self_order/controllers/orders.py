@@ -2,7 +2,7 @@ from odoo import http
 from odoo.fields import Domain
 from odoo.http import request
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, UserError
 from odoo.tools import consteq
 
 
@@ -20,6 +20,14 @@ class PosSelfOrderController(http.Controller):
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
+        # A negative line (a price_extra configured below the product price) would offset
+        # the other lines of the order. A line priced at exactly 0 is still accepted: it can
+        # only come from the merchant's configuration and is auto-paid like any free order.
+        currency = pos_config.currency_id
+        if any(currency.compare_amounts(line.price_subtotal_incl, 0) < 0 for line in order_ids.lines):
+            raise UserError(self.env._("Invalid product configuration"))
+
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
             'state': 'paid' if amount_total == 0 else 'draft',
@@ -39,6 +47,7 @@ class PosSelfOrderController(http.Controller):
         for o in orders:
             del o['email']
             del o['mobile']
+            o['partner_id'] = order._get_signed_self_partner_id(config, o['partner_id']) if o.get('partner_id') else False
 
         return {
             'pos.order': orders,
@@ -64,11 +73,11 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
         pos_config = self._verify_pos_config(access_token)
-        existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
-
+        POSOrder = pos_config.env['pos.order']
+        existing_partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
         if existing_partner and existing_partner.exists():
             return {
-                'res.partner': existing_partner.read(['id'], load=False),
+                'res.partner': [{'id': partner_id}],
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -86,7 +95,7 @@ class PosSelfOrderController(http.Controller):
         })
 
         return {
-            'res.partner': partner_sudo.read(['id'], load=False),
+            'res.partner': [{'id': POSOrder._get_signed_self_partner_id(pos_config, partner_sudo.id)}],
         }
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
@@ -126,7 +135,7 @@ class PosSelfOrderController(http.Controller):
         table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
         domain = False
 
-        if not table_identifier or pos_config.self_ordering_pay_after == 'each':
+        if not table or pos_config.self_ordering_pay_after == 'each':
             domain = [(False, '=', True)]
         else:
             domain = ['&', '&',

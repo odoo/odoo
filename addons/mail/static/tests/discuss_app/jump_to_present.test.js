@@ -1,10 +1,12 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, press, queryFirst, tick } from "@odoo/hoot-dom";
+import { after, describe, expect, test } from "@odoo/hoot";
+import { animationFrame, Deferred, delay, press, queryFirst, tick } from "@odoo/hoot-dom";
 import {
     asyncStep,
+    Command,
     patchWithCleanup,
     serverState,
     waitForSteps,
+    withUser,
 } from "@web/../tests/web_test_helpers";
 
 import {
@@ -23,6 +25,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -49,6 +52,181 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
+test("Jump to present reaches the bottom in a browser without scrollend", async () => {
+    // Simulate a browser without the "scrollend" event.
+    const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
+    delete window.onscrollend;
+    after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that stalls halfway.
+    patchWithCleanup(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                super.scrollTo({ top: args[0].top / 2 });
+                setTimeout(() => super.scrollTo(...args), 1200);
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    await click("[title='Jump to Present']");
+    await contains(".o-mail-Thread", {
+        contains: [".o-mail-Message", { count: 20 }],
+        scroll: "bottom",
+    });
+});
+
+test("Jump to a pinned message during jump to present in a browser without scrollend", async () => {
+    // Simulate a browser without the "scrollend" event.
+    const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
+    delete window.onscrollend;
+    after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that stalls at its start.
+    const smoothScrollStarted = new Deferred();
+    patchWithCleanup(Element.prototype, {
+        scrollIntoView(...args) {
+            if (args[0]?.behavior === "smooth") {
+                return super.scrollIntoView({ ...args[0], behavior: "instant" });
+            }
+            return super.scrollIntoView(...args);
+        },
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                smoothScrollStarted.resolve();
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: i === 14 ? "pinned-message" : "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            pinned_at: i === 14 ? "2020-02-12 08:30:00" : undefined,
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    await click("[title='Pinned Messages']");
+    await contains(".o-discuss-PinnedMessagesPanel a[role='button']:text(Jump):count(1)");
+    await click("[title='Jump to Present']");
+    await smoothScrollStarted;
+    await click(".o-discuss-PinnedMessagesPanel a[role='button']:text(Jump)");
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-body:text(pinned-message)");
+    await contains(".o-mail-Message.o-highlighted", { count: 0 });
+    await isInViewportOf(
+        ".o-mail-Thread .o-mail-Message-body:text(pinned-message)",
+        ".o-mail-Thread"
+    );
+    await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
+});
+
+test("Jump to present keeps the position of a user who scrolls up in a browser without scrollend", async () => {
+    // Simulate a browser without the "scrollend" event.
+    const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
+    delete window.onscrollend;
+    after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that stalls halfway.
+    const smoothScrollStarted = new Deferred();
+    patchWithCleanup(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                super.scrollTo({ top: args[0].top / 2 });
+                smoothScrollStarted.resolve();
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    await click("[title='Jump to Present']");
+    await smoothScrollStarted;
+    await animationFrame();
+    await animationFrame(); // wait for the scroll event of the stalled scroll
+    const userScrollTop = queryFirst(".o-mail-Thread").scrollTop - 200;
+    await scroll(".o-mail-Thread", userScrollTop);
+    await delay(1000); // wait for the end of the smooth scroll check
+    expect(Math.abs(queryFirst(".o-mail-Thread").scrollTop - userScrollTop)).toBeLessThan(2);
+    await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
+});
+
+test("Jump to present reaches the bottom when a message arrives during the smooth scroll", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    const smoothScrollStarted = new Deferred();
+    patchWithCleanup(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                this.addEventListener("scroll", () => smoothScrollStarted.resolve(), {
+                    once: true,
+                });
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    await click("[title='Jump to Present']");
+    await smoothScrollStarted;
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "New message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Thread", {
+        contains: [".o-mail-Message", { count: 21 }],
+        scroll: "bottom",
+    });
 });
 
 test("Basic jump to present when scrolling to outdated messages (DESC, chatter aside)", async () => {

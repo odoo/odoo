@@ -1,5 +1,5 @@
 import { withSequence } from "@html_editor/utils/resource";
-import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
+import { describe, expect, freezeTime, mockUserAgent, test } from "@odoo/hoot";
 import {
     click,
     delay,
@@ -632,7 +632,7 @@ test("should not create empty extra nodes while changing format of link", async 
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p>[<span class="display-1-fs">\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff</span>]</p>`
+        `<p>[\ufeff<a href="http://test.com" class="display-1-fs">\ufefftest.com\ufeff</a>\ufeff]</p>`
     );
 });
 
@@ -650,7 +650,7 @@ test("should not create empty extra nodes while changing format of link on mobil
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p>[<span class="display-1-fs">\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff</span>]</p>`
+        `<p>[\ufeff<a href="http://test.com" class="display-1-fs">\ufefftest.com\ufeff</a>\ufeff]</p>`
     );
 });
 
@@ -1927,6 +1927,9 @@ describe("toolbar open and close on user interaction", () => {
 
             // Double click: first click is synchronous, second schedules debounced update
             await firstClick(p);
+            // Freeze time so the clock only moves with advanceTime, not with real time.
+            // Done after the first click, which waits for its update on the real clock.
+            freezeTime();
             await secondClick(p);
             expect(getContent(el)).toBe("<p>[test] text</p>");
             expect.verifySteps(["updateToolbar", "triggerDebouncedUpdateToolbar"]);

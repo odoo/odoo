@@ -4,7 +4,7 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, status, useExternalListener, useRef, useState } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export class AutoComplete extends Component {
@@ -98,8 +98,8 @@ export class AutoComplete extends Component {
             try {
                 await this.open(true);
                 currentPromise.resolve();
-            } catch {
-                currentPromise.reject();
+            } catch (e) {
+                currentPromise.reject(e);
             } finally {
                 if (currentPromise === this.loadingPromise) {
                     this.loadingPromise = null;
@@ -186,6 +186,15 @@ export class AutoComplete extends Component {
         this.mouseSelectionActive = false;
     }
 
+    discardPendingInput() {
+        this.debouncedProcessInput.cancel();
+        this.pendingPromise?.resolve();
+        if (this.loadingPromise === this.pendingPromise) {
+            this.loadingPromise = null;
+        }
+        this.pendingPromise = null;
+    }
+
     cancel() {
         if (this.inputRef.el.value.length) {
             if (this.props.autoSelect) {
@@ -264,6 +273,7 @@ export class AutoComplete extends Component {
 
     selectOption(option) {
         this.inEdition = false;
+        this.discardPendingInput();
         if (option.unselectable) {
             return;
         }
@@ -403,6 +413,9 @@ export class AutoComplete extends Component {
             }
 
             await this.loadingPromise;
+            if (status(this) === "destroyed") {
+                return;
+            }
         }
 
         switch (hotkey) {

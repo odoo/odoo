@@ -2,7 +2,7 @@
 
 {
     'name': "Payment Provider: Xendit",
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "A payment provider for Indonesian and the Philippines.",

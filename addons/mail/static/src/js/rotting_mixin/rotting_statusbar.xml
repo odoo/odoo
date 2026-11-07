@@ -11,7 +11,7 @@
             <t t-if="props.record.data.is_rotting and item.isSelected">
                 <span class="badge rounded-pill small o_mail_resource_rotting_bg ms-2"
                     t-att-title="title" style="pointer-events: all;">
-                    <t t-out="props.record.data.rotting_days"/>d
+                    <t t-out="dayCount"/>
                 </span>
             </t>
         </xpath> 

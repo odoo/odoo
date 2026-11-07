@@ -50,8 +50,8 @@ class AccountMoveSend(models.AbstractModel):
             if not pdp_info['is_installed']:
                 install_pdp_action = pdp_info['action']
         else:
-            name = self.env._("Why should I use PEPPOL ?")
-            action_text = self.env._("Why should you use it ?")
+            name = self.env._("Why should I use Peppol?")
+            action_text = self.env._("Why should you use it?")
 
         if install_pdp_action:
             action = install_pdp_action
@@ -176,7 +176,11 @@ class AccountMoveSend(models.AbstractModel):
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
 
         if len(xml_file) > 64000000:
-            invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Peppol.", invoice.name)
+            invoice_data['error'] = self.env._(
+                "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %(network_name)s.",
+                invoice_name=invoice.name,
+                network_name=invoice.company_id._get_einvoicing_network_name(),
+            )
             return None, None
 
         document = {
