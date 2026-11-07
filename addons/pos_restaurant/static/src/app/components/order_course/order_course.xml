@@ -9,7 +9,8 @@
                   'cursor-pointer': !this.course.fired}"
                  t-on-click="(event) => this.clickCourse(event, this.course)">
                 <span class="fw-bolder" t-out="this.course.name"/>
-                <span t-if="this.course.fired" class="rounded text-bg-info fs-6 px-2 ms-auto">Fired</span>
+                <span class="fw-bolder ms-auto" t-if="this.state.duration" t-out="this.state.duration"/>
+                <span t-if="this.course.fired" class="rounded text-bg-info fs-6 px-2" t-attf-class="{{this.state.duration ? 'ms-2' :'ms-auto'}}">Fired</span>
             </div>
             <t t-foreach="this.comboSortedLines" t-as="line" t-key="line_index">
                 <t t-call-slot="default" line="line" />
