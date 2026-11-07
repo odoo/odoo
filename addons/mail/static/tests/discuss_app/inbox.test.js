@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     onRpcAfter,
@@ -811,4 +812,27 @@ test("can reply to email message", async () => {
     await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer", { text: "Replying to md@oilcompany.fr" });
+});
+
+test("no reply on a message of an archived channel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ active: false, name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "discuss.channel",
+        needaction: true,
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-Message");
+    await hover(".o-mail-Message");
+    await contains("[title='Mark as Read']");
+    await contains("[title='Reply']", { count: 0 });
 });

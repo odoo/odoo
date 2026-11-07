@@ -53,7 +53,7 @@ class PublicPageController(http.Controller):
     @add_guest_to_context
     def discuss_channel(self, channel_id, *, highlight_message_id=None):
         # highlight_message_id is used JS side by parsing the query string
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"]._find_channels(channel_id)
         if request.env.user._is_public() and (
             not channel or not request.env["mail.guest"]._get_guest_from_context()
         ):

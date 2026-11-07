@@ -267,3 +267,26 @@ class TestDiscussSubChannels(HttpCase):
             ),
             notifications,
         )
+
+    def test_13_archive_cascades_to_sub_channels(self):
+        sub_channel = self.general._create_sub_channel(name="Sub Channel")
+        self.general.action_archive()
+        self.assertFalse(sub_channel.active)
+        self.general.action_unarchive()
+        self.assertTrue(sub_channel.active)
+
+    def test_14_sub_channel_fetch_archived(self):
+        self.authenticate("user_employee", "user_employee")
+        active_sub = self.general._create_sub_channel(name="Active Sub Channel")
+        archived_sub = self.general._create_sub_channel(name="Archived Sub Channel")
+        archived_sub.action_archive()
+
+        def fetch_sub_channel_ids():
+            res = self.make_jsonrpc_request(
+                "/discuss/channel/sub_channel/fetch", {"parent_channel_id": self.general.id}
+            )
+            return {c["id"] for c in res["discuss.channel"] if c["id"] != self.general.id}
+
+        self.assertEqual(fetch_sub_channel_ids(), {active_sub.id})
+        self.general.action_archive()
+        self.assertEqual(fetch_sub_channel_ids(), {active_sub.id, archived_sub.id})

@@ -9,10 +9,12 @@ class MailMessage(models.Model):
 
     def _extras_to_store(self, store: Store, format_reply):
         super()._extras_to_store(store, format_reply=format_reply)
+        channel_ids = self.filtered(lambda m: m.model == "discuss.channel").mapped("res_id")
+        # sudo: discuss.channel - can read the active state and the type of the channel of an
+        # accessible message
+        channels = self.env["discuss.channel"].sudo().browse(channel_ids)
+        store.add(channels, fields=["active"], as_thread=True)
         if format_reply:
-            channel_ids = self.filtered(lambda m: m.model == "discuss.channel").mapped("res_id")
-            # sudo: discuss.channel - can read the type of the channel of an accessible message
-            channels = self.env["discuss.channel"].sudo().browse(channel_ids)
             top_channel_ids = channels.filtered(
                 lambda channel: channel.channel_type == "channel" and not channel.parent_channel_id,
             ).ids
