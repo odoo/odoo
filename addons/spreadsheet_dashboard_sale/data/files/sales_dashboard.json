@@ -545,14 +545,14 @@
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
         "D3:D6": { "R": "+R1" },
-        "D7": "-234",
+        "D7": "=FORMAT.LARGE.NUMBER(B7)",
         "D8": "=FORMAT.LARGE.NUMBER(B8)",
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
         "E3:E8": { "R": "+R1" }
       },
       "styles": { "A1:E1": 1 },
-      "formats": { "D7": 1 },
+      "formats": {},
       "borders": {},
       "conditionalFormats": [
         {
@@ -651,7 +651,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(5,50,FALSE,FALSE)" },
       "styles": { "A1": 2, "A2:C3": 3, "A4:A51": 4, "B1:C1": 5, "B4:C51": 6 },
-      "formats": { "A2:A13": 2, "C2:C51": 3 },
+      "formats": { "A2:A13": 2 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -739,7 +739,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(6,50,false,false)" },
       "styles": { "A2:C51": 6, "A1": 7, "A52:C100": 8, "B1:C1": 9 },
-      "formats": { "A2:A13": 2, "C2:C51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -830,7 +830,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(4,50,false,false)" },
       "styles": { "A2:D51": 6, "A1": 7, "B1:D1": 9 },
-      "formats": { "A2:A13": 2, "C2:D51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -921,7 +921,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(3,50,false,false)" },
       "styles": { "A2:C51": 6, "A1": 7, "B1:C1": 9 },
-      "formats": { "A2:A13": 2, "C2:C51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -1010,7 +1010,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(7,50,false,false)" },
       "styles": { "A2:C51": 6, "A1": 7, "B1:C1": 9 },
-      "formats": { "A2:A13": 2, "C2:C51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -1099,7 +1099,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(8,50,false,false)" },
       "styles": { "A2:C51": 6, "A1": 7, "B1:C1": 9 },
-      "formats": { "A2:A13": 2, "C2:C51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -1188,7 +1188,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(9,50,false,false)" },
       "styles": { "A2:C51": 6, "A1": 7, "B1:C1": 9 },
-      "formats": { "A2:A13": 2, "C2:C51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -1277,7 +1277,7 @@
       "merges": [],
       "cells": { "A1": "=PIVOT(10,50,false,false)" },
       "styles": { "A2:C51": 6, "A1": 7, "B1:C1": 9 },
-      "formats": { "A2:A13": 2, "C2:C51": 3, "A14:A51": 4 },
+      "formats": { "A2:A13": 2, "A14:A51": 4 },
       "borders": {},
       "conditionalFormats": [
         {
@@ -1335,7 +1335,7 @@
     "10": {},
     "11": { "textColor": "#434343" }
   },
-  "formats": { "1": "[$$]#,##0[$]", "2": "@", "3": "[$$]#,##0.00", "4": "@* " },
+  "formats": { "2": "@", "4": "@* " },
   "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
