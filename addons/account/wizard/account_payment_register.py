@@ -82,7 +82,7 @@ class AccountPaymentRegister(models.TransientModel):
     )
     custom_user_amount = fields.Monetary(currency_field='currency_id')
     custom_user_currency_id = fields.Many2one(comodel_name='res.currency')
-    unreconciled_paid_amount = fields.Monetary(currency_field="currency_id", compute="_compute_unreconciled_paid_amount")
+    unreconciled_paid_amount = fields.Monetary(currency_field='currency_id', compute='_compute_unreconciled_paid_amount')
     exchange_rate = fields.Float(
         compute="_compute_exchange_rate",
         digits=0,
@@ -778,10 +778,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.amount = wizard.amount
             else:
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
-                if total_amount_values['epd_applied']:
-                    wizard.amount = total_amount_values['amount_by_default']
-                else:
-                    wizard.amount = max(0.0, total_amount_values['amount_by_default'] - wizard.unreconciled_paid_amount)
+                wizard.amount = max(0.0, total_amount_values['amount_by_default'] - wizard.unreconciled_paid_amount)
 
     @api.depends('amount')
     def _compute_installments_mode(self):
@@ -862,8 +859,8 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.early_payment_discount_mode = (
                     total_amount_values['epd_applied']
                     and (
-                        wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['amount_by_default']) == 0
-                        or wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['full_amount']) == 0
+                        wizard.currency_id.compare_amounts(wizard.amount + wizard.unreconciled_paid_amount, total_amount_values['amount_by_default']) == 0
+                        or wizard.currency_id.compare_amounts(wizard.amount + wizard.unreconciled_paid_amount, total_amount_values['full_amount']) == 0
                     )
                 )
 
@@ -873,11 +870,11 @@ class AccountPaymentRegister(models.TransientModel):
             if wizard.payment_date:
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
                 if wizard.installments_mode in ('overdue', 'next', 'before_date'):
-                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount - wizard.unreconciled_paid_amount
                 elif wizard.installments_mode == 'full':
-                    wizard.payment_difference = total_amount_values['full_amount_for_difference'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['full_amount_for_difference'] - wizard.amount - wizard.unreconciled_paid_amount
                 else:
-                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount - wizard.unreconciled_paid_amount
             else:
                 wizard.payment_difference = 0.0
 
@@ -946,26 +943,6 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             wizard.is_register_payment_on_draft = any(l.parent_state == 'draft' for l in wizard.line_ids)
 
-    @api.depends('line_ids.move_id.reconciled_payment_ids', 'company_id', 'currency_id')
-    def _compute_unreconciled_paid_amount(self):
-        for wizard in self:
-            paid_payments = wizard.line_ids.move_id.reconciled_payment_ids.filtered(
-                lambda p: (
-                    not p.is_reconciled
-                    and not p.is_matched
-                    and p.state == 'paid'
-                )
-            )
-            wizard.unreconciled_paid_amount = sum(
-                payment.currency_id._convert(
-                    payment.amount,
-                    wizard.currency_id,
-                    wizard.company_id,
-                    payment.date
-                )
-                for payment in paid_payments
-            )
-
     @api.depends('company_currency_id', 'source_currency_id', 'currency_id', 'payment_date', 'company_id')
     def _compute_exchange_rate(self):
         for wizard in self:
@@ -979,6 +956,11 @@ class AccountPaymentRegister(models.TransientModel):
                 )
             else:
                 wizard.exchange_rate = 1.0
+
+    @api.depends('line_ids.move_id.unreconciled_paid_amount')
+    def _compute_unreconciled_paid_amount(self):
+        for wizard in self:
+            wizard.unreconciled_paid_amount = sum(wizard.line_ids.move_id.mapped('unreconciled_paid_amount'))
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
