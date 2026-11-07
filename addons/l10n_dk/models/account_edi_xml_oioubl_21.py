@@ -1,7 +1,6 @@
 from odoo import _, models
 from odoo.tools import html2plaintext
 from odoo.tools.business_data import street_split
-from odoo.tools.float_utils import float_round
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -268,43 +267,10 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
             ]
 
-    def _add_document_line_price_nodes(self, line_node, vals):
-        # Override 'account.edi.xml.ubl_20' to accomodate to oioubl_21 specific rules
-        currency_suffix = vals['currency_suffix']
-        base_line = vals['base_line']
-        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
-
-        line_node['cac:Price'] = {
-            # Rule F-INV348 enforces that lineExtensionAmount equals directly PriceAmount * Quantity, while other
-            # rules enforce that lineExtensionAmount should not change compared to what we do in ubl_20
-            'cbc:PriceAmount': {
-                '_text': float_round(
-                    vals[f'gross_price_unit{currency_suffix}'] * (1 - base_line['discount'] / 100),
-                    precision_digits=product_price_dp,
-                ),
-                'currencyID': vals['currency_name'],
-            },
-        }
-
-    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
+    def _retrieve_rebate_val(self, tree, xpath_dict, quantity, net_price_unit):
         # Override 'account.edi.xml.ubl_20' to include AllowanceCharge in it, as PriceAmount is different in OIOUBL
-        rebate = super()._retrieve_rebate_val(tree, xpath_dict, quantity)
+        rebate = super()._retrieve_rebate_val(tree, xpath_dict, quantity, net_price_unit)
 
-        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
-        charge_amount = sum(d['amount'] for d in charges)
-
-        return rebate + (discount_amount - charge_amount) / quantity
-
-    def _get_line_discount_allowance_charge_node(self, vals):
-        if not (charge_node := super()._get_line_discount_allowance_charge_node(vals)):
-            return None
-
-        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(vals['base_line'], vals['tax_grouping_function'])
-        return {
-            **charge_node,
-            'cac:TaxCategory': [
-                self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
-                for grouping_key in aggregated_tax_details
-                if grouping_key
-            ],
-        }
+        allowance_charge_vals, _ = self._retrieve_allowance_charge_vals(tree, xpath_dict)
+        allowance_charge_sum = self._get_allowance_charge_sum(allowance_charge_vals)
+        return rebate - allowance_charge_sum / quantity

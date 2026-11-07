@@ -178,6 +178,20 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         })
 
     @classmethod
+    def _create_allowance_charge_tax(cls, name, amount_type, amount, reason_code, reason, is_charge, is_emptying, **kwargs):
+        return cls.env['account.tax'].create({
+            'name': name,
+            'amount_type': amount_type,
+            'amount': amount,
+            'ubl_cii_category': 'charge' if is_charge else 'allowance',
+            'ubl_cii_charge_reason_code': reason_code if is_charge else False,
+            'ubl_cii_allowance_reason_code': reason_code if not is_charge else False,
+            'ubl_cii_category_reason': reason,
+            'include_base_amount': not is_emptying,
+            **kwargs,
+        })
+
+    @classmethod
     def subfolders(cls):
         return None, None, None
 
@@ -209,7 +223,6 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
         if 'EXTERNAL_MODE' in config['test_tags']:
             self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw)
-
         self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=subfolder)
 
     # -------------------------------------------------------------------------

@@ -7,18 +7,13 @@
     <cac:InvoiceLine>
         <cbc:InvoicedQuantity unitCode="C62">2.0</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">0.00</cbc:LineExtensionAmount>
-        <cac:AllowanceCharge>
-            <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-            <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-            <cbc:Amount currencyID="EUR">0.50</cbc:Amount>
-        </cac:AllowanceCharge>
-        <cac:AllowanceCharge>
-            <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-            <cbc:AllowanceChargeReasonCode>AEO</cbc:AllowanceChargeReasonCode>
-            <cbc:Amount currencyID="EUR">0.50</cbc:Amount>
-        </cac:AllowanceCharge>
         <cac:Price>
             <cbc:PriceAmount currencyID="EUR">0.0</cbc:PriceAmount>
+            <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="EUR">10.0</cbc:Amount>
+                <cbc:BaseAmount currencyID="EUR">10.0</cbc:BaseAmount>
+            </cac:AllowanceCharge>
         </cac:Price>
     </cac:InvoiceLine>
 </Invoice>
