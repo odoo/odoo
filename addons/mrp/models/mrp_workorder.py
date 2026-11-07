@@ -458,10 +458,12 @@ class MrpWorkorder(models.Model):
     def _calculate_duration_expected(self, date_start=False, date_finished=False):
         if not self.workcenter_id.resource_calendar_id:
             return ((date_finished or self.date_finished) - (date_start or self.date_start)).total_seconds() / 60
-        interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
-            date_start or self.date_start, date_finished or self.date_finished,
-            domain=[('time_type', 'in', ['leave', 'other'])]
-        )
+        domain = [('time_type', 'in', ['leave', 'other'])]
+        if self.leave_id:
+            domain.append(('id', '!=', self.leave_id.id))
+        interval = self.workcenter_id._get_work_days_data_batch(
+            date_start or self.date_start, date_finished or self.date_finished, domain=domain,
+        )[self.workcenter_id.id]
         return interval['hours'] * 60
 
     @api.onchange('finished_lot_id')
