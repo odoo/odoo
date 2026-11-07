@@ -33,13 +33,7 @@ class AccountMoveSend(models.AbstractModel):
         if (bool(self.env.context.get('ir_cron_progress_id'))
             and invoice.l10n_ch_is_qr_valid
             and self.env['ir.actions.report']._is_invoice_report(invoice_data.get('pdf_report'))
-            and (qr_code_errors := invoice.partner_bank_id._check_for_qr_code_errors(
-                qr_method='ch_qr',
-                amount=invoice.amount_residual,
-                currency=invoice.currency_id,
-                debtor_partner=invoice.partner_id,
-                free_communication=invoice.payment_reference or invoice.name,
-                structured_communication=invoice.payment_reference))):
+            and (qr_code_errors := invoice._l10n_ch_get_qr_bill_errors())):
             invoice_data['error'] = {
                 'error_title': _('Errors occured during the generation of the "Swiss QR bill" QR-code.'),
                 'errors': [qr_code_errors],
