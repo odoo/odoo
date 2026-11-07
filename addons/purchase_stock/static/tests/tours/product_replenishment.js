@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add("test_product_replenishment", {
         },
         {
             content: "Save the Rule",
-            trigger: 'button:contains("Save")',
+            trigger: "button.o_list_button_save",
             run: "click",
         },
         {
