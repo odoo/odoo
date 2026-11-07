@@ -330,3 +330,45 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(product_a.standard_price, 7.5)
         self.assertEqual(so.order_line.purchase_price, 7.5)
+
+    def test_fifo_kit_return_and_redelivery_purchase_price(self):
+        """ A FIFO kit of 2 components is delivered with components at 100, returned, then the return
+        is returned to the customer and consumes the components received at 1. The cost of the
+        delivered kit is the one of the second delivery: 2 x 1 = 2.
+        """
+        warehouse = self.company_data['default_warehouse']
+        kit = self._cls_create_product('Kit', self.uom_unit)
+        (kit + self.component_a).categ_id = self.stock_account_product_categ
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 2.0})],
+        })
+        for price_unit in (100.0, 1.0):
+            receipt_move = self.env['stock.move'].create({
+                'product_id': self.component_a.id,
+                'product_uom_qty': 2.0,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+                'picking_type_id': warehouse.in_type_id.id,
+                'price_unit': price_unit,
+                'value_manual': 2.0 * price_unit,
+            })
+            receipt_move._action_confirm()
+            receipt_move.picked = True
+            receipt_move._action_done()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_uom_qty': 1.0})],
+        })
+        so.action_confirm()
+        picking = so.picking_ids
+        picking.button_validate()
+        for _ in range(2):
+            return_wizard = Form(self.env['stock.return.picking']
+                .with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking')).save()
+            return_wizard.product_return_moves.quantity = 2.0
+            picking = self.env['stock.picking'].browse(return_wizard.action_create_returns()['res_id'])
+            picking.button_validate()
+        self.assertRecordValues(so.order_line, [{'qty_delivered': 1.0, 'purchase_price': 2.0}])
