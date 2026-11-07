@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("test_link_to_document", {
         },
         {
             content: "Click on link to an uploaded document",
-            trigger: ".o-we-linkpopover div.o-autocomplete ~ span > button",
+            trigger: ".o-we-linkpopover .o_we_upload_link",
             run: "click",
         },
         ...saveLinkPopup(),

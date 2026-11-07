@@ -3,7 +3,7 @@ import { deleteBackward, insertLineBreak, insertText, undo } from "../_helpers/u
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { click, press, waitFor, queryOne, queryAll, waitForNone } from "@odoo/hoot-dom";
+import { click, press, waitFor, queryOne, waitForNone } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
@@ -283,7 +283,7 @@ describe("format links", () => {
         await animationFrame();
         expect(".o_we_label_link").toHaveValue("link2");
         expect(".o_we_href_input_link").toHaveValue("http://test.com/");
-        expect(queryOne("button[name='link_type']").textContent).toBe("Button Primary");
+        expect(".o_we_link_type .active").toHaveText("Primary");
     });
     test("after changing the link format, the link should be updated", async () => {
         const { el } = await setupEditor(
@@ -293,11 +293,9 @@ describe("format links", () => {
         await click(".o_we_edit_link");
         await animationFrame();
 
-        expect(queryOne("button[name='link_type']").textContent).toBe("Button Secondary");
+        expect(".o_we_link_type .active").toHaveText("Secondary");
 
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')");
+        await click(".o_we_link_type [data-link-type='primary']");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p><a href="http://test.com/" class="btn btn-fill-primary">link2</a></p>`
@@ -311,11 +309,9 @@ describe("format links", () => {
         await click(".o_we_edit_link");
         await animationFrame();
 
-        expect(queryOne("button[name='link_type']").textContent).toBe("Button Secondary");
+        expect(".o_we_link_type .active").toHaveText("Secondary");
 
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')");
+        await click(".o_we_link_type [data-link-type='primary']");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.com/" class="btn btn-primary">link2</a></p>'
@@ -329,11 +325,9 @@ describe("format links", () => {
         await click(".o_we_edit_link");
         await animationFrame();
 
-        expect(queryOne("button[name='link_type']").textContent).toBe("Button Secondary");
+        expect(".o_we_link_type .active").toHaveText("Secondary");
 
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')");
+        await click(".o_we_link_type [data-link-type='primary']");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p><a href="http://test.com/" class="random-css-class text-muted btn btn-outline-primary">link2</a></p>`
@@ -344,11 +338,9 @@ describe("format links", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        expect(queryOne("button[name='link_type']").textContent).toBe("Link");
+        expect(".o_we_link_type .active").toHaveText("Link");
 
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Secondary')");
+        await click(".o_we_link_type [data-link-type='secondary']");
         await animationFrame();
 
         await click(".o_we_apply_link");
@@ -361,9 +353,7 @@ describe("format links", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await contains(".o-we-linkpopover input.o_we_label_link").edit("link2");
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Secondary')");
+        await click(".o_we_link_type [data-link-type='secondary']");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.com/" class="btn btn-secondary">link2</a></p>'
@@ -396,9 +386,7 @@ describe("format links", () => {
             confirm: false,
         });
 
-        await click("button[name='link_type']");
-        await animationFrame();
-        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Secondary')");
+        await click(".o_we_link_type [data-link-type='secondary']");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="#" class="btn btn-secondary">link1</a></p>'
@@ -427,20 +415,17 @@ describe("format links", () => {
             '<p>ab<a href="https://newtest.com">newtest.com[]</a></p>'
         );
     });
-    test("link_type dropdown should show a preview of preset with primary and secondary color.", async () => {
+    test("link style control should mark the current style and apply the picked one", async () => {
         const { el } = await setupEditor(`<p><a href="http://test.com/">link1[]</a></p>`);
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        await click("button[name='link_type']");
+        expect(".o_we_link_type [data-link-type='link']").toHaveAttribute("aria-pressed", "true");
+        expect(".o_we_link_type [data-link-type='primary']").toHaveAttribute("aria-pressed", "false");
+        // The styles are previewed on the link itself.
+        await click(".o_we_link_type [data-link-type='primary']");
         await animationFrame();
-        const dropdownItems = queryAll(".o-we-link-type-dropdown .dropdown-item span");
-        expect(dropdownItems[0]).toHaveStyle({ color: "rgb(0, 143, 140)" });
-        expect(dropdownItems[1]).toHaveClass("btn btn-primary btn-sm");
-        expect(dropdownItems[2]).toHaveClass("btn btn-secondary btn-sm");
-        await click(dropdownItems[1]);
-        await animationFrame();
-        expect("button[name='link_type'] span").toHaveClass("btn btn-primary btn-sm");
+        expect(".o_we_link_type .active").toHaveText("Primary");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p><a href="http://test.com/" class="btn btn-primary">link1</a></p>`
         );
