@@ -403,6 +403,9 @@ function eliminateInRangeOperators(tree, options = {}) {
  */
 function introduceBetweenOperators(tree, options = {}) {
     function _introduceBetweenOperator(c, options) {
+        if (!isSimpleAnd(c)) {
+            return;
+        }
         const res = isBetween(c);
         if (!res) {
             return;
