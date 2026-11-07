@@ -30,10 +30,10 @@
                 </div>
                 <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
                 <button class="btn btn-hover-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="this.onClickSearch">
-                    <i class="oi oi-fw" data-icon="search" role="img"/>
+                    <i class="oi oi-fw" data-icon="search" aria-hidden="true"/>
                 </button>
                 <button t-if="this.hasPinnedMessages" class="btn btn-hover-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
-                    <i class="oi oi-fw" data-icon="push_pin" role="img"/>
+                    <i class="oi oi-fw" data-icon="push_pin" aria-hidden="true"/>
                 </button>
                 <button t-if="this.showsAttachmentPopout" class="btn btn-hover-action px-1" t-on-click="this.popoutAttachment">
                     <i class="oi oi-fw" data-icon="fullscreen_exit" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
@@ -47,7 +47,7 @@
                 <div class="o-mail-Followers d-flex">
                     <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + this.store.discussDropdownMenuClass(this.ancestors)" state="this.followerListDropdown">
                         <button t-att-class="'o-mail-Followers-button btn btn-hover-action d-flex align-items-center text-action px-1 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
-                            <i class="oi oi-fw" role="img" t-attf-class="{{ this.state.thread.selfFollower ? 'oi-filled' : '' }}" t-attf-data-icon="person"/>
+                            <i class="oi oi-fw" aria-hidden="true" t-attf-class="{{ this.state.thread.selfFollower ? 'oi-filled' : '' }}" t-attf-data-icon="person"/>
                             <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="oi oi-spin" data-icon="autorenew"/>
                             <sup t-else="" class="o-mail-Followers-counter" t-out="this.state.thread.followersCount ?? 0"/>
                         </button>

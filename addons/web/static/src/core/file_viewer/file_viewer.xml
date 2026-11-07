@@ -17,16 +17,16 @@
                     <div class="flex-grow-1"/>
                     <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="this.onClickDownload">
                         <div class="text-reset d-flex align-items-baseline">
-                            <i class="oi oi-fw me-1" data-icon="download" role="img"/>
+                            <i class="oi oi-fw me-1" data-icon="download" aria-hidden="true"/>
                             <span>Download</span>
                         </div>
                     </div>
                     <div t-if="this.canUnlink" class="o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Remove" aria-label="Remove" t-on-click.stop="this.onClickUnlink">
-                        <i class="oi oi-fw oi-filled text-danger" data-icon="delete" role="img"/>
+                        <i class="oi oi-fw oi-filled text-danger" data-icon="delete" aria-hidden="true"/>
                     </div>
 
                     <div t-on-click.stop="this.close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
-                        <i class="oi oi-fw" data-icon="close" role="img"/>
+                        <i class="oi oi-fw" data-icon="close" aria-hidden="true"/>
                     </div>
                 </div>
                 <div t-on-click.stop="this.close" t-on-mousemove="this.onMouseMoveImage" t-on-touchmove.prevent="this.onTouchMoveImage" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': this.state.file.isImage }">
@@ -79,10 +79,10 @@
                 </div>
                 <t t-if="this.props.files.length > 1">
                     <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle bg-dark text-white" t-on-click.stop="this.previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
-                        <span class="oi" data-icon="chevron_backward" role="img"/>
+                        <span class="oi" data-icon="chevron_backward" aria-hidden="true"/>
                     </div>
                     <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle bg-dark text-white" t-on-click.stop="this.next" title="Next (Right-Arrow)" aria-label="Next" role="button">
-                        <span class="oi" data-icon="chevron_forward" role="img"/>
+                        <span class="oi" data-icon="chevron_forward" aria-hidden="true"/>
                     </div>
                 </t>
             </div>
