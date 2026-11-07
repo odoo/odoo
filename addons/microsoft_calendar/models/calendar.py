@@ -402,15 +402,23 @@ class Meeting(models.Model):
             if email_normalize(a.get('emailAddress').get('address'))
         ]
         existing_attendees = self.env['calendar.attendee']
+        partners_to_keep = self.env['res.partner']
+        update_existing = False
         if microsoft_event.match_with_odoo_events(self.env):
-            existing_attendees = self.env['calendar.attendee'].search([
-                ('event_id', '=', microsoft_event.odoo_id(self.env)),
-                ('partner_id.email_normalized', 'in', emails)])
+            if microsoft_event.is_recurrence():
+                # applied event by event in _write_attendees_from_microsoft: no attendee ids
+                events = self.env['calendar.recurrence'].browse(microsoft_event.odoo_id(self.env)).calendar_event_ids
+            else:
+                events = self.browse(microsoft_event.odoo_id(self.env))
+                update_existing = True
+            existing_attendees = events.attendee_ids
+            # the organizer is not sent to Outlook as attendee and may have another email there
+            partners_to_keep = events.user_id.partner_id | self.env.user.partner_id
         elif self.env.user.partner_id.email_normalized not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
         partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
-        attendees_by_emails = {a.partner_id.email_normalized: a for a in existing_attendees}
+        attendees_by_emails = {a.partner_id.email_normalized: a for a in existing_attendees} if update_existing else {}
         for email, partner, attendee_info in zip(emails, partners, microsoft_attendees):
             # Responses from external invitations are stored in the 'responseStatus' field.
             # This field only carries the current user's event status because Microsoft hides other user's status.
@@ -429,11 +437,19 @@ class Meeting(models.Model):
                 commands_partner += [(4, partner.id)]
                 if attendee_info.get('emailAddress').get('name') and not partner.name:
                     partner.name = attendee_info.get('emailAddress').get('name')
-        for odoo_attendee in attendees_by_emails.values():
-            # Remove old attendees
-            if odoo_attendee.partner_id.email_normalized not in emails:
+        # Remove old attendees, but keep the event organizer and the current user
+        organizer_email = email_normalize(
+            microsoft_event.organizer and microsoft_event.organizer.get('emailAddress', {}).get('address') or ''
+        )
+        emails_to_keep = set(emails) | ({organizer_email} if organizer_email else set())
+        for odoo_attendee in existing_attendees:
+            partner = odoo_attendee.partner_id
+            if partner in partners_to_keep or partner.email_normalized in emails_to_keep:
+                continue
+            if update_existing:
                 commands_attendee += [(2, odoo_attendee.id)]
-                commands_partner += [(3, odoo_attendee.partner_id.id)]
+            if (3, partner.id) not in commands_partner:
+                commands_partner += [(3, partner.id)]
         return commands_attendee, commands_partner
 
     @api.model
