@@ -41,7 +41,7 @@ class AccountMove(models.Model):
     def _compute_l10n_in_ewaybill_details(self):
         for move in self:
             ewaybill = move.l10n_in_ewaybill_ids and move.l10n_in_ewaybill_ids[0]
-            if move.country_code == 'IN' and move.company_id.l10n_in_ewaybill_feature and ewaybill.state == 'generated':
+            if move.country_code == 'IN' and move.company_id.l10n_in_ewaybill_feature and ewaybill.state in ('generated', 'extended'):
                 move.l10n_in_ewaybill_name = ewaybill.name
                 move.l10n_in_ewaybill_expiry_date = ewaybill.ewaybill_expiry_date
             else:
@@ -50,7 +50,7 @@ class AccountMove(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_l10n_in_ewaybill_moves(self):
-        if moves := self.filtered(lambda m: m.l10n_in_ewaybill_ids.filtered(lambda e: e.state == 'generated')):
+        if moves := self.filtered(lambda m: m.l10n_in_ewaybill_ids.filtered(lambda e: e.state in ('generated', 'extended'))):
             raise UserError(_(
                 "This documents (%s) cannot be deleted since it already has a generated E-waybill.",
                 ", ".join(moves.mapped('name'))
