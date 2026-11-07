@@ -25,11 +25,20 @@ This module includes contact phone and mobile numbers validation.""",
     'installable': True,
     'auto_install': True,
     'assets': {
+        'web.assets_frontend': [
+            'website_crm/static/src/interactions/**/*',
+        ],
         'website.website_builder_assets': [
             'website_crm/static/src/js/website_crm_editor.js',
         ],
         'web.assets_tests': [
-            'website_crm/static/tests/**/*',
+            'website_crm/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'website_crm/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_crm/static/src/interactions/**/*',
         ],
     },
     'author': 'Odoo S.A.',
