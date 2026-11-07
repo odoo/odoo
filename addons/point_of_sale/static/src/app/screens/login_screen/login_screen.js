@@ -9,6 +9,7 @@ export class LoginScreen extends Component {
     static template = "point_of_sale.LoginScreen";
     static props = {};
     static storeOnOrder = false;
+    static coversApp = true;
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
