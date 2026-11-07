@@ -52,6 +52,7 @@ export class TourStepAutomatic extends TourStep {
                         }, 20000);
                     }
                     await this.doAction(this.element);
+                    this.element = null;
                     if (this.tour.debugMode) {
                         console.log(trigger);
                         if (this.skipped) {
