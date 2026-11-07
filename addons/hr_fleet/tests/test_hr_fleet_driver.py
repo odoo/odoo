@@ -31,13 +31,15 @@ class TestHrFleetDriver(common.TransactionCase):
             "model_id": cls.model.id,
             "future_driver_id": cls.test_employee.work_contact_id.id,
             "plan_to_change_vehicle": False,
-            "fuel_type": "diesel"
+            "fuel_type": "diesel",
+            "co2": 90
         })
 
         cls.car2 = cls.env["fleet.vehicle"].create({
             "model_id": cls.model.id,
             "plan_to_change_vehicle": False,
-            "fuel_type": "diesel"
+            "fuel_type": "diesel",
+            "co2": 90
         })
 
     def test_driver_sync_with_employee(self):
