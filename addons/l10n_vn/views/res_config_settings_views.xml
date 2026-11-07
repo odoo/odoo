@@ -24,8 +24,18 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='account']" position="inside">
+            <xpath expr="//block[@id='peppol']" position="after">
                 <block title="Vietnamese E-invoice" id="vn_localization" invisible="country_code != 'VN'">
+                    <setting id="l10n_vn_edi_activate_setting"
+                             string="E-invoicing"
+                             help="Submit e-invoices to the General Department of Taxation (GDT) through SInvoice by Viettel."
+                             documentation="/applications/finance/fiscal_localizations/vietnam.html"
+                             invisible="module_l10n_vn_edi_viettel">
+                        <button string="Activate SInvoice"
+                                type="object"
+                                name="action_l10n_vn_activate_edi_viettel"
+                                class="btn btn-primary mt-2"/>
+                    </setting>
                     <setting id="l10n_vn_edi_symbol_setting"
                              string="Set up Symbol"
                              help="Track E-invoice data."
