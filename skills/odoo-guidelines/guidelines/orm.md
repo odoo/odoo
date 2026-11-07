@@ -29,6 +29,44 @@
   `_sql_constraints`: on master it is **ignored** with a log warning, the
   constraint is never created.
 
+# End `_order` on a unique field
+
+A model's `_order` ends with a field that is unique per record, usually `id`:
+`sequence, id`, `name, id`, `date desc, id desc`. The default `_order = 'id'`
+is unique already. When records sorted by `_order` come back in a random
+order in a caller or a test, add the tiebreaker to `_order`; do not change the
+test so it stops reading the order.
+
+```python
+# bad: two books with the same sequence come back in any order
+class LibraryBook(models.Model):
+    _name = 'library.book'
+    _order = 'sequence'
+
+# good
+class LibraryBook(models.Model):
+    _name = 'library.book'
+    _order = 'sequence, id'
+```
+
+## Why
+
+- The ORM adds no tiebreaker to `ORDER BY`. Records equal on every field of
+  `_order` come back in the order PostgreSQL picks, and that order can change
+  from one query to the next.
+- A paged list runs one `LIMIT`/`OFFSET` query per page: with ties, a record
+  shows on two pages and another one on none.
+- `search(..., limit=1)`, `records[0]` and a test that reads a position get a
+  different record from one run to the next.
+- The tie spreads: `_order` also sorts the one2many and many2many fields that
+  point to the model, and any order on a many2one to it.
+
+## Exceptions
+
+- Fields already unique together (a required `code` under a unique
+  constraint) need no `id`.
+- After a `desc` term that means "newest first", write `id desc`.
+
 # Methods and extension points
 
 - Methods are private (`_` prefix) by default. A public name is an RPC entry
