@@ -594,6 +594,213 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertTrue(event.recurrence_id.tue)
         self.assertTrue(event.recurrence_id.fri)
 
+    def test_update_future_timezone(self):
+        for event_tz, start, extra_day in [
+            ('Australia/Melbourne', datetime(2026, 9, 13, 23, 0), 'sun'),  # Monday 09:00, Sunday in UTC
+            ('America/Mexico_City', datetime(2026, 9, 15, 4, 0), 'tue'),  # Monday 22:00, Tuesday in UTC
+        ]:
+            with self.subTest(event_tz=event_tz):
+                events = self.env['calendar.event'].create({
+                    'name': 'Recurrent Event',
+                    'start': start,
+                    'stop': start + relativedelta(hours=1),
+                    'recurrency': True,
+                    'rrule_type': 'weekly',
+                    'mon': True,
+                    'count': 4,
+                    'event_tz': event_tz,
+                }).recurrence_id.calendar_event_ids.sorted('start')
+                events[1].write({'recurrence_update': 'future_events'})
+                new_recurrence = events[1].recurrence_id
+                self.assertFalse(new_recurrence[extra_day])
+                self.assertEventDates(new_recurrence.calendar_event_ids, [(e.start, e.stop) for e in events[1:]])
+
+    def test_update_future_change_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 4, 22, 0),  # Monday 09:00 in Melbourne, Sunday in UTC
+            'stop': datetime(2026, 10, 4, 23, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 3,
+            'event_tz': 'Australia/Melbourne',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({'recurrence_update': 'future_events', 'event_tz': 'UTC'})
+        new_recurrence = events[1].recurrence_id
+        self.assertFalse(new_recurrence.mon)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [(e.start, e.stop) for e in events[1:]])
+
+    def test_update_future_monthly_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 4, 22, 0),  # 5th at 09:00 in Melbourne, 4th in UTC
+            'stop': datetime(2026, 10, 4, 23, 0),
+            'recurrency': True,
+            'rrule_type': 'monthly',
+            'month_by': 'date',
+            'day': 5,
+            'count': 3,
+            'event_tz': 'Australia/Melbourne',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({'recurrence_update': 'future_events'})
+        new_recurrence = events[1].recurrence_id
+        self.assertEqual(new_recurrence.day, 5)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [
+            (datetime(2026, 11, 4, 22, 0), datetime(2026, 11, 4, 23, 0)),
+            (datetime(2026, 12, 4, 22, 0), datetime(2026, 12, 4, 23, 0)),
+        ])
+
+    def test_all_day_update_future_timezone(self):
+        # Monday at noon UTC is Tuesday in Auckland: all day events must keep their stored date
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start_date': datetime(2026, 10, 5),
+            'stop_date': datetime(2026, 10, 5),
+            'allday': True,
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 3,
+            'event_tz': 'Pacific/Auckland',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({'recurrence_update': 'future_events'})
+        new_recurrence = events[1].recurrence_id
+        self.assertFalse(new_recurrence.tue)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [(e.start, e.stop) for e in events[1:]])
+
+    def test_update_future_to_all_day_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 5, 15, 0),  # Monday 09:00 in Mexico City
+            'stop': datetime(2026, 10, 5, 16, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 4,
+            'event_tz': 'America/Mexico_City',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({
+            'recurrence_update': 'future_events',
+            'allday': True,
+            'start': '2026-10-12',  # all day Monday, Sunday in Mexico City at midnight UTC
+            'stop': '2026-10-12',
+        })
+        new_recurrence = events[1].recurrence_id
+        self.assertTrue(new_recurrence.mon)
+        self.assertFalse(new_recurrence.sun)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [
+            (datetime(2026, 10, 12, 8, 0), datetime(2026, 10, 12, 18, 0)),
+            (datetime(2026, 10, 19, 8, 0), datetime(2026, 10, 19, 18, 0)),
+            (datetime(2026, 10, 26, 8, 0), datetime(2026, 10, 26, 18, 0)),
+        ])
+
+    def test_update_future_from_all_day_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start_date': datetime(2026, 10, 5),
+            'stop_date': datetime(2026, 10, 5),
+            'allday': True,
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 4,
+            'event_tz': 'Australia/Melbourne',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({
+            'recurrence_update': 'future_events',
+            'allday': False,
+            'start': datetime(2026, 10, 11, 22, 0),  # Monday 09:00 in Melbourne, Sunday in UTC
+            'stop': datetime(2026, 10, 11, 23, 0),
+        })
+        new_recurrence = events[1].recurrence_id
+        self.assertTrue(new_recurrence.mon)
+        self.assertFalse(new_recurrence.sun)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [
+            (datetime(2026, 10, 11, 22, 0), datetime(2026, 10, 11, 23, 0)),
+            (datetime(2026, 10, 18, 22, 0), datetime(2026, 10, 18, 23, 0)),
+            (datetime(2026, 10, 25, 22, 0), datetime(2026, 10, 25, 23, 0)),
+        ])
+
+    def test_shift_all_timezone(self):
+        event = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 4, 22, 0),  # Monday 09:00 in Melbourne, Sunday in UTC
+            'stop': datetime(2026, 10, 4, 23, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'sun': True,
+            'count': 4,
+            'event_tz': 'Australia/Melbourne',
+        })
+        event.write({
+            'recurrence_update': 'all_events',
+            'start': event.start + relativedelta(hours=2),
+            'stop': event.stop + relativedelta(hours=2),
+        })
+        self.assertTrue(event.recurrence_id.sun)
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2026, 10, 5, 0, 0), datetime(2026, 10, 5, 1, 0)),
+            (datetime(2026, 10, 11, 0, 0), datetime(2026, 10, 11, 1, 0)),
+            (datetime(2026, 10, 12, 0, 0), datetime(2026, 10, 12, 1, 0)),
+            (datetime(2026, 10, 18, 0, 0), datetime(2026, 10, 18, 1, 0)),
+        ])
+
+    def test_shift_all_timezone_other_weekday(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 4, 22, 0),  # Monday 09:00 in Melbourne, Sunday in UTC
+            'stop': datetime(2026, 10, 4, 23, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'sun': True,
+            'count': 4,
+            'event_tz': 'Australia/Melbourne',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        event = events[1]  # Sunday 09:00 in Melbourne, Saturday in UTC
+        event.write({
+            'recurrence_update': 'all_events',
+            'start': event.start + relativedelta(hours=2),
+            'stop': event.stop + relativedelta(hours=2),
+        })
+        recurrence = events[0].recurrence_id
+        self.assertTrue(recurrence.mon)
+        self.assertTrue(recurrence.sun)
+        self.assertEventDates(recurrence.calendar_event_ids, [
+            (datetime(2026, 10, 5, 0, 0), datetime(2026, 10, 5, 1, 0)),
+            (datetime(2026, 10, 11, 0, 0), datetime(2026, 10, 11, 1, 0)),
+            (datetime(2026, 10, 12, 0, 0), datetime(2026, 10, 12, 1, 0)),
+            (datetime(2026, 10, 18, 0, 0), datetime(2026, 10, 18, 1, 0)),
+        ])
+
+    def test_shift_all_to_all_day_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 5, 15, 0),  # Monday 09:00 in Mexico City
+            'stop': datetime(2026, 10, 5, 16, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 3,
+            'event_tz': 'America/Mexico_City',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({
+            'recurrence_update': 'all_events',
+            'allday': True,
+            'start': '2026-10-13',  # all day Tuesday, Monday in Mexico City at midnight UTC
+            'stop': '2026-10-13',
+        })
+        recurrence = events[0].recurrence_id
+        self.assertTrue(recurrence.tue)
+        self.assertFalse(recurrence.mon)
+        self.assertEventDates(recurrence.calendar_event_ids, [
+            (datetime(2026, 10, 6, 8, 0), datetime(2026, 10, 6, 18, 0)),
+            (datetime(2026, 10, 13, 8, 0), datetime(2026, 10, 13, 18, 0)),
+            (datetime(2026, 10, 20, 8, 0), datetime(2026, 10, 20, 18, 0)),
+        ])
+
     def test_update_name_future(self):
         # update regular event (not the base event)
         old_events = self.events[1:]
@@ -865,6 +1072,22 @@ class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 10, 24, 1, 0), datetime(2019, 10, 27, 18, 0)),
             (datetime(2019, 10, 31, 1, 0), datetime(2019, 11, 3, 18, 0)),
             (datetime(2019, 11, 7, 1, 0), datetime(2019, 11, 10, 18, 0)),
+        ])
+
+    def test_shift_all_multiple_weekdays_other_weekday(self):
+        event = self.events[1]  # Friday
+        event.write({
+            'recurrence_update': 'all_events',
+            'start': event.start + relativedelta(hours=1),
+            'stop': event.stop + relativedelta(hours=1),
+        })
+        recurrence = self.events[0].recurrence_id
+        self.assertTrue(recurrence.tue)
+        self.assertTrue(recurrence.fri)
+        self.assertEventDates(recurrence.calendar_event_ids, [
+            (datetime(2019, 10, 22, 2, 0), datetime(2019, 10, 24, 19, 0)),
+            (datetime(2019, 10, 25, 2, 0), datetime(2019, 10, 27, 19, 0)),
+            (datetime(2019, 10, 29, 2, 0), datetime(2019, 10, 31, 19, 0)),
         ])
 
     def test_shift_future_multiple_weekdays(self):
