@@ -19,12 +19,12 @@ export class PageBreadcrumb extends Interaction {
     }
 
     /**
-     * Calculates the breadcrumb position so it stays aligned directly below the
-     * header.
+     * Exposes the header height as a CSS variable, used to keep the breadcrumb
+     * below the header when the header is over the content.
      */
     updatePageBreadcrumbOnResize() {
         const headerHeight = this.headerEl.getBoundingClientRect().height;
-        this.el.style.top = `${headerHeight}px`;
+        this.el.style.setProperty("--o-header-height", `${headerHeight}px`);
     }
 }
 

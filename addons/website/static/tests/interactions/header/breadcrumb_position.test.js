@@ -28,8 +28,8 @@ test("Breadcrumb adjusts its position on header resize", async () => {
     expect(breadcrumb.getBoundingClientRect().top).toBe(header.getBoundingClientRect().height);
     header.style.height = "50px";
     await animationFrame();
-    expect(breadcrumb.style.top).toBe("50px");
+    expect(breadcrumb.style.getPropertyValue("--o-header-height")).toBe("50px");
     header.classList.add("d-none");
     await animationFrame();
-    expect(breadcrumb.style.top).toBe("0px");
+    expect(breadcrumb.style.getPropertyValue("--o-header-height")).toBe("0px");
 });
