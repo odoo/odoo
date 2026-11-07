@@ -170,10 +170,33 @@ class ProjectProject(models.Model):
             projects._ensure_sale_order_linked(list(sol_ids))
         return projects
 
+    def _fetch_linked_products(self, project_ids, limit=None):
+        return self.env["product.template"].search([
+            ("service_tracking", "!=", "no"),
+            "|",
+                ("project_id", "in", project_ids),
+                ("project_template_id", "in", project_ids),
+        ], limit=limit)
+
+    def _fetch_linked_sale_orders(self, project_ids, limit=None):
+        return self.env["sale.order"].search([("project_id", "in", project_ids)], limit=limit)
+
+    def check_allow_billable_projects(self):
+        """ return if the project is linked to product or sales order """
+        self.ensure_one()
+        return bool(self._fetch_linked_products(self.ids, limit=1) or
+                    self._fetch_linked_sale_orders(self.ids, limit=1))
+
+    def _unlink_billable_products(self):
+        linked_product_ids = self._fetch_linked_products(self.ids)
+        linked_product_ids.write({'project_id': False, 'project_template_id': False})
+
     def write(self, vals):
         project = super().write(vals)
         if sol_id := vals.get('sale_line_id'):
             self._ensure_sale_order_linked([sol_id])
+        if vals.get('allow_billable') is False:
+            self._unlink_billable_products()
         return project
 
     def action_view_sols(self):
