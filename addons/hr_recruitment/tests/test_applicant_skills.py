@@ -616,3 +616,22 @@ class TestApplicantSkills(TransactionCase):
         })
         job = self.t_job.with_context(active_applicant_id=self.t_applicant.id)
         self.assertEqual(job.applicant_matching_score, 0)
+
+    def test_display_name_with_matching_score_context(self):
+        """ Assert display_name formats correctly using existing applicant and skills """
+        target_job = self.env["hr.job"].create({"name": "Target Job"})
+        self.env["hr.job.skill"].create({
+            "job_id": target_job.id,
+            "skill_id": self.t_skill_1.id,
+            "skill_type_id": self.t_skill_type.id,
+            "skill_level_id": self.t_skill_level_2.id,
+        })
+
+        self.assertEqual(self.t_applicant.display_name, "Test Applicant")
+
+        applicant_with_context = self.t_applicant.with_context(
+            show_matching_score_in_name=True,
+            matching_job_id=target_job.id,
+        )
+        applicant_with_context._compute_display_name()
+        self.assertEqual(applicant_with_context.display_name, "Test Applicant \t --100%--")
