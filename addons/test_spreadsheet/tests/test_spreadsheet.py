@@ -9,9 +9,9 @@ class ValidateSpreadsheetMixinData(TransactionCase):
     def test_onchange_json_data(self):
         spreadsheet_form = Form(self.env["spreadsheet.test"])
 
-        spreadsheet_form.spreadsheet_binary_data = BinaryBytes(json.dumps({'key': 'value'}).encode('utf-8'))
+        spreadsheet_form.spreadsheet_binary_data_computed = BinaryBytes(json.dumps({'key': 'value'}).encode('utf-8'))
         with self.assertRaises(ValidationError, msg='Invalid JSON Data'):
-            spreadsheet_form.spreadsheet_binary_data = BinaryBytes(b'invalid json')
+            spreadsheet_form.spreadsheet_binary_data_computed = BinaryBytes(b'invalid json')
 
     def test_spreadsheet_pivot(self):
         data = {
