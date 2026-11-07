@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-10-31 10:33+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-11-05 13:23+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/sv/>\n"
 "Language: sv\n"
@@ -79,7 +79,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully"
-msgstr ""
+msgstr "%(proxy_type)s-dokument (UUID: %(uuid)s) har tagits emot"
 
 #. module: account_peppol
 #. odoo-python
@@ -137,7 +137,7 @@ msgstr "En anslutning till '%s' finns redan."
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "A contact email is required."
-msgstr ""
+msgstr "En e-post krävs för kontakten."
 
 #. module: account_peppol
 #. odoo-python
@@ -225,13 +225,13 @@ msgstr "Aktivera Peppol (Test)"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Allow incoming invoices"
-msgstr ""
+msgstr "Tillåt inkommande fakturor"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Allow reception"
-msgstr ""
+msgstr "Tillåt mottagande"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -244,6 +244,8 @@ msgstr "Tillåt att skicka och ta emot fakturor via PEPPOL-nätverket"
 msgid ""
 "Authentication is required but not available. Please contact Odoo support."
 msgstr ""
+"Autentisering krävs men är inte tillgängligt. Vänligen kontakta Odoos "
+"kundtjänst."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -300,6 +302,8 @@ msgstr ""
 msgid ""
 "Cannot initiate KYC for your selected scheme. Please try a different one"
 msgstr ""
+"Kunde inte initiera kundkännedom för det valda systemet. Vänligen försök med "
+"ett annat"
 
 #. module: account_peppol
 #. odoo-python
@@ -348,7 +352,7 @@ msgstr "Företagets namn"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Complete your registration"
-msgstr ""
+msgstr "Fullfölj din registrering"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
@@ -392,7 +396,7 @@ msgstr "E-postadress och telefonnummer krävs."
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Could not connect to Peppol proxy"
-msgstr ""
+msgstr "Kunde inte ansluta till Peppol-proxyn"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -530,7 +534,7 @@ msgstr "Fel"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
-msgstr ""
+msgstr "Fel vid import av %(proxy_type)s dokument (UUID: %(uuid)s):"
 
 #. module: account_peppol
 #. odoo-python
@@ -608,6 +612,8 @@ msgstr "ID"
 msgid ""
 "If not check, you will only be able to send invoices but not receive them."
 msgstr ""
+"Om rutan inte är markerad, kan du endast skicka fakturor men inte ta emot "
+"dem."
 
 #. module: account_peppol
 #. odoo-python
@@ -998,7 +1004,7 @@ msgstr "Peppol elektroniska adresser (EAS)"
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 msgid "Peppol error:"
-msgstr ""
+msgstr "Peppol-fel:"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1060,6 +1066,8 @@ msgid ""
 "Please install the 'France - E-Invoicing (Approved Platform)' module "
 "(l10n_fr_pdp) first"
 msgstr ""
+"Vänligen installera förstmodulen 'Frankrike - Digital fakturering (Godkänd "
+"plattform)' (l10n_fr_pdp)"
 
 #. module: account_peppol
 #. odoo-python
@@ -1125,12 +1133,14 @@ msgstr "Registrera som mottagare"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
 msgid "Register using the current company"
-msgstr ""
+msgstr "Registrera dig med nuvarande företag"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Register using the parent company by setting the same EAS/Endpoint"
 msgstr ""
+"Registrera dig med det överordnade företaget genom att ange samma EAS/"
+"slutdestination"
 
 #. module: account_peppol
 #. odoo-python
@@ -1159,7 +1169,7 @@ msgstr "Avvisad"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Remove from Approved Platform"
-msgstr ""
+msgstr "Ta bort som Godkänd plattform"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1174,6 +1184,8 @@ msgid ""
 "Route your vendor bills elsewhere while maintaining the ability to send "
 "customer invoices."
 msgstr ""
+"Skicka dina leverantörsfakturor någon annanstans samtidigt som du bibehåller "
+"möjligheten att skicka kundfakturor."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
@@ -1276,8 +1288,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "The database you are trying to connect to is not suitable for Peppol."
-msgstr ""
-"Databasen som du försöker ansluta till går inte att använda med Peppol."
+msgstr "Databasen som du försöker ansluta till går inte att använda med Peppol."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1334,12 +1345,14 @@ msgid ""
 "The partner has indicated it does not accept this document type, so you "
 "cannot send this invoice via %(network_name)s."
 msgstr ""
+"Partnern har angett att den inte accepterar den här dokumenttypen, därmed "
+"kan fakturan inte skickas via %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "The partner is missing their %(identifier_name)s."
-msgstr ""
+msgstr "%(identifier_name)s saknas för partnern."
 
 #. module: account_peppol
 #. odoo-python
@@ -1386,6 +1399,8 @@ msgstr ""
 msgid ""
 "This feature is deprecated. Contact Odoo support if you need a migration key."
 msgstr ""
+"Funktionen är föråldrad. Vänligen kontakta Odoos kundtjänst om du vill "
+"migrera den."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1409,7 +1424,7 @@ msgstr "Denna verifieringskod har gått ut. Vänligen begär en ny."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "This will delete your Approved Platform registration."
-msgstr ""
+msgstr "Detta kommer att radera din registrering som Godkänd plattform."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1579,6 +1594,8 @@ msgid ""
 "You accept that any fraudulent activity or spam will result in immediate and "
 "permanent exclusion from the Peppol network."
 msgstr ""
+"Du godkänner att all bedräglig aktivitet eller skräppost kommer att "
+"resultera i omedelbar och permanent avstängning från Peppol-nätverket."
 
 #. module: account_peppol
 #. odoo-python
@@ -1603,6 +1620,8 @@ msgid ""
 "You authorize Odoo to act as your Peppol Service Provider to send and "
 "receive e-invoices on your behalf."
 msgstr ""
+"Du har godkänt att Odoo får fungera som din tjänsteleverantör för Peppol för "
+"att skicka och ta emot digitala fakturor å dina vägnar."
 
 #. module: account_peppol
 #. odoo-python
@@ -1654,6 +1673,8 @@ msgid ""
 "You confirm that you are authorized to register this company on the Peppol "
 "network as a legal representative."
 msgstr ""
+"Du bekräftar att du har behörighet att registrera företaget på Peppol-"
+"nätverket i rollen som juridisk representant."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1673,6 +1694,8 @@ msgid ""
 "You remain fully responsible for the content, accuracy, and legal compliance "
 "of your invoices."
 msgstr ""
+"Du bär fullt ansvar för innehållet, korrektheten och den juridiska "
+"efterlevnaden för dina fakturor."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1681,6 +1704,8 @@ msgid ""
 "You will no longer be able to send or receive Peppol documents in Odoo. Are "
 "you sure you want to proceed?"
 msgstr ""
+"Du kommer inte längre att kunna skicka eller ta emot Peppol-dokument genom "
+"Odoo. Är du säker på att du vill gå vidare?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1689,6 +1714,8 @@ msgid ""
 "You will no longer be able to send or receive documents via the Odoo "
 "Approved Platform. Are you sure you want to proceed?"
 msgstr ""
+"Du kommer inte längre kunna skicka eller ta emot dokument via den Godkända "
+"plattformen genom Odoo. Är du säker på att du vill gå vidare?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1712,18 +1739,20 @@ msgid ""
 "Your company is already registered on another Access Point for receiving "
 "invoices.We will register you as a sender only."
 msgstr ""
+"Företaget är redan registrerat vid en annan accesspunkt för att ta emot "
+"fakturor. Vi kommer endast att registrera dig som avsändare."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Your identifier does not have a valid format."
-msgstr ""
+msgstr "Din identifierare har inte ett giltigt format."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Your identifier does not have a valid format. Expected format: %s."
-msgstr ""
+msgstr "Din identifierare har inte ett giltigt format. Förväntat format: %s."
 
 #. module: account_peppol
 #. odoo-python
@@ -1803,7 +1832,7 @@ msgstr "kunde inte skickas via"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "invoices and credit notes."
-msgstr ""
+msgstr "fakturor och kreditfakturor."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol

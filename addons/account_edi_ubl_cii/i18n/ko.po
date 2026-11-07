@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
 "PO-Revision-Date: 2026-10-28 00:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
@@ -306,8 +306,8 @@ msgstr "연락처"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
-"partner was created."
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -1105,6 +1105,15 @@ msgid ""
 msgstr ""
 "Peppol 엔드포인트가 유효하지 않습니다. 정확히 10자리(회사 등록 번호)를 포함해"
 "야 합니다. 예상 형식은 다음과 같습니다: 1234567890."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python

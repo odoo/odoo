@@ -7,13 +7,14 @@
 # Larissa Manderfeld, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 09:28+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"PO-Revision-Date: 2026-11-06 11:34+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
 "account_payment/es/>\n"
 "Language: es\n"
@@ -267,7 +268,7 @@ msgstr "Habilite pagos con tarjeta de crédito y débito compatibles con Stripe.
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
-msgstr "Completos solamente"
+msgstr "Solo íntegro"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -310,9 +311,9 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"En el modo de prueba, se procesa un pago falso a través de una interfaz de "
-"pago de prueba.\n"
-"Este modo se recomienda al configurar el método de pago."
+"En el modo de prueba, se procesa un pago simulado a través de una interfaz "
+"de pago de prueba.\n"
+"Se recomienda este modo al configurar el proveedor."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -420,7 +421,7 @@ msgstr "La opción de pago en línea no está habilitada en la configuración."
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
-msgstr "Las facturas vencidas deben compartir la misma compañía."
+msgstr "Las facturas vencidas deben compartir la misma empresa."
 
 #. module: account_payment
 #. odoo-python
@@ -705,7 +706,7 @@ msgstr "Esta factura no se puede pagar en línea."
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "This invoice has already been paid."
-msgstr "Esta factura ya ha sido pagada."
+msgstr "Esta factura ya se ha pagado."
 
 #. module: account_payment
 #. odoo-python
@@ -755,8 +756,8 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"No puede eliminar un método de pago vinculado a un proveedor en el estado "
-"habilitado o de prueba.\n"
+"No puede eliminar un método de pago vinculado a un proveedor que esté en "
+"estado habilitado o de prueba.\n"
 "Proveedores vinculados: %s"
 
 #. module: account_payment

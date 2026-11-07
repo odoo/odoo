@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
 "PO-Revision-Date: 2026-10-27 22:55+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -325,11 +325,9 @@ msgstr "Contacto"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
-"partner was created."
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
 msgstr ""
-"No se pudo recuperar un contacto correspondiente a %s con el mismo número de "
-"identificación fiscal. Creamos un nuevo contacto."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -432,8 +430,8 @@ msgstr "Descuento"
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
 msgstr ""
-"Cargo de documento %(charge)s de la línea %(line)s: falta el importe [IBR-"
-"031]."
+"Cargo de documento %(charge)s de la línea %(line)s: falta el importe "
+"[IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -451,8 +449,8 @@ msgstr ""
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
 msgstr ""
-"Cargo de documento %(charge)s de la línea %(line)s: falta el importe [IBR-"
-"036]."
+"Cargo de documento %(charge)s de la línea %(line)s: falta el importe "
+"[IBR-036]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -831,7 +829,8 @@ msgstr "Línea %s: falta el precio neto del artículo [IBR-026]."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr "Línea %s: falta el código de categoría fiscal del artículo [IBR-SR-58]."
+msgstr ""
+"Línea %s: falta el código de categoría fiscal del artículo [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0200
@@ -1168,6 +1167,15 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
 msgstr ""
 "El punto de conexión Peppol no es válido. El formato esperado es: 0239843188"
@@ -1456,6 +1464,13 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid ""
+#~ "Could not retrieve a partner corresponding to '%s' with the same VAT. A "
+#~ "new partner was created."
+#~ msgstr ""
+#~ "No se pudo recuperar un contacto correspondiente a %s con el mismo número "
+#~ "de identificación fiscal. Creamos un nuevo contacto."
 
 #~ msgid "Factur-x/XRechnung CII 2.2.0"
 #~ msgstr "Factur-x/XRechnung CII 2.2.0"

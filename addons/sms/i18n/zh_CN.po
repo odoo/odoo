@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 17:39+0000\n"
-"PO-Revision-Date: 2026-10-20 12:57+0000\n"
+"POT-Creation-Date: 2026-11-06 17:40+0000\n"
+"PO-Revision-Date: 2026-11-07 10:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/sms/zh_Hans/>\n"
@@ -42,7 +42,8 @@ msgstr "#有效的收件人"
 msgid ""
 "%(count)s out of the %(total)s selected SMS Text Messages have successfully "
 "been resent."
-msgstr "已成功重新发送 %(count)s 个 SMS 文字信息。原本选取的总数为 %(total)s 个。"
+msgstr ""
+"已成功重新发送 %(count)s 个 SMS 文字信息。原本选取的总数为 %(total)s 个。"
 
 #. module: sms
 #. odoo-python
@@ -67,7 +68,8 @@ msgstr "，需要"
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
-msgstr "<i class=\"fa fa-warning\"/> 您的帐户出现错误。请联系支持部门获取更多信息..."
+msgstr ""
+"<i class=\"fa fa-warning\"/> 您的帐户出现错误。请联系支持部门获取更多信息..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -1651,7 +1653,8 @@ msgstr "我们无法在数据库中找到您的账户。"
 msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
-msgstr "我们无法通过您的电话号码联系到您。如果您最近申请了多个代码，请稍后再试。"
+msgstr ""
+"我们无法通过您的电话号码联系到您。如果您最近申请了多个代码，请稍后再试。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1717,6 +1720,18 @@ msgstr "您的SMS短信息必须至少包括一个非空格字符"
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
 msgstr "您的 SMS 账户已成功注册。"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your country is not supported due to sender registration legislation"
+msgstr "由于发件人注册法规限制，不支持您所在的国家/地区"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your database is not activated"
+msgstr "您的数据库未激活"
 
 #. module: sms
 #. odoo-python

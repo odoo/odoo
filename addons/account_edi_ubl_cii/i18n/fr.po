@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
 "PO-Revision-Date: 2026-10-28 00:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/"
@@ -323,11 +323,9 @@ msgstr "Contact"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
-"partner was created."
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
 msgstr ""
-"Impossible de récupérer un partenaire correspondant à '%s' avec la même TVA. "
-"Un nouveau partenaire a été créé."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -819,7 +817,8 @@ msgstr "Ligne %s : le nom de l’article est manquant [IBR-025]."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr "Ligne %s : le prix net de l’article NE DOIT PAS être négatif [IBR-027]."
+msgstr ""
+"Ligne %s : le prix net de l’article NE DOIT PAS être négatif [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -832,8 +831,8 @@ msgstr "Ligne %s : le prix net de l’article est manquant [IBR-026]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
 msgstr ""
-"Ligne %s : le code de catégorie de taxe de l’article est manquant [IBR-SR-"
-"58]."
+"Ligne %s : le code de catégorie de taxe de l’article est manquant [IBR-"
+"SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0200
@@ -1052,8 +1051,8 @@ msgstr "Le code pays du vendeur est manquant [IBR-009]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
 msgstr ""
-"L’adresse électronique / l’ID de point de terminaison du vendeur est manquant"
-"(e) [IBR-081]."
+"L’adresse électronique / l’ID de point de terminaison du vendeur est "
+"manquant(e) [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1162,6 +1161,15 @@ msgstr ""
 "Le point de terminaison Peppol n'est pas valide. Il doit contenir exactement "
 "10 chiffres (numéro d'entreprise de la société). Le format à respecter est "
 "le suivant : 1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1449,6 +1457,13 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid ""
+#~ "Could not retrieve a partner corresponding to '%s' with the same VAT. A "
+#~ "new partner was created."
+#~ msgstr ""
+#~ "Impossible de récupérer un partenaire correspondant à '%s' avec la même "
+#~ "TVA. Un nouveau partenaire a été créé."
 
 #~ msgid "Factur-x/XRechnung CII 2.2.0"
 #~ msgstr "Factur-x/XRechnung CII 2.2.0"

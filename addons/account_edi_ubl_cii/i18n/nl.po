@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-10-28 00:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"PO-Revision-Date: 2026-11-07 10:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/nl/>\n"
@@ -127,7 +127,7 @@ msgstr "Andorra BTW"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "At least one Invoice Line is required [IBR-016]."
-msgstr ""
+msgstr "Er is ten minste één factuurregel vereist [IBR-016]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -179,7 +179,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Basishelpers voor CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -215,25 +215,27 @@ msgstr "Business Registers Netwerk"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Country Code is missing [IBR-011]."
-msgstr ""
+msgstr "Landcode van de koper ontbreekt [IBR-011]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
-msgstr ""
+msgstr "Elektronisch adres / Endpoint-ID van de koper ontbreekt [IBR-080]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
 msgstr ""
+"Schema-identificatie voor het elektronisch adres van de koper ontbreekt [IBR-"
+"063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Name is missing [IBR-007]."
-msgstr ""
+msgstr "Naam van de koper ontbreekt [IBR-007]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -255,7 +257,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
-msgstr ""
+msgstr "Kost"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -321,11 +323,9 @@ msgstr "Contact"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
-"partner was created."
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
 msgstr ""
-"Er kon geen partner worden gevonden die overeenkomt met '%s' met hetzelfde "
-"btw-nummer. Er is een nieuwe partner aangemaakt."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -376,7 +376,7 @@ msgstr "Kroatië BTW"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Currency Code is missing [IBR-005]."
-msgstr ""
+msgstr "Valutacode ontbreekt [IBR-005]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9928
@@ -425,6 +425,7 @@ msgstr "Korting"
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
 msgstr ""
+"Documentkorting %(charge)s van regel %(line)s: bedrag ontbreekt [IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -433,13 +434,15 @@ msgid ""
 "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-033]."
 msgstr ""
+"Documentkorting %(charge)s van regel %(line)s: reden of reden-code is "
+"vereist [IBR-033]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
-msgstr ""
+msgstr "Documentkost %(charge)s van regel %(line)s: bedrag ontbreekt [IBR-036]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -448,6 +451,8 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
+"Documentkost %(charge)s van regel %(line)s: reden of reden-code is vereist "
+"[IBR-038]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -696,7 +701,7 @@ msgstr "Intracommunautaire levering"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Invoice Issue Date is missing [IBR-003]."
-msgstr ""
+msgstr "Datum van uitgifte van de factuur ontbreekt [IBR-003]."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -779,43 +784,45 @@ msgstr "Liechtenstein BTW"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoice line net amount is missing [IBR-024]."
-msgstr ""
+msgstr "Regel %s: netto bedrag van de factuurregel ontbreekt [IBR-024]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity is missing [IBR-022]."
-msgstr ""
+msgstr "Regel %s: Gefactureerde hoeveelheid ontbreekt [IBR-022]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity unit of measure code is missing [IBR-023]."
 msgstr ""
+"Regel %s: Maateenheidcode van de gefactureerde hoeveelheid ontbreekt [IBR-"
+"023]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item name is missing [IBR-025]."
-msgstr ""
+msgstr "Regel %s: Naam van het item ontbreekt [IBR-025]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr ""
+msgstr "Regel %s: De nettoprijs van het item MAG NIET negatief zijn [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price is missing [IBR-026]."
-msgstr ""
+msgstr "Regel %s: Nettoprijs van het item ontbreekt [IBR-026]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr ""
+msgstr "Regel %s: Belastingcategoriecode van het item ontbreekt [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0200
@@ -968,6 +975,12 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Verleggingsregeling: Bij gebrek aan schriftelijk bezwaar binnen één maand na "
+"ontvangst van de factuur, wordt de klant geacht te erkennen dat hij een "
+"belastingplichtige is die periodieke aangiften moet indienen. Indien aan "
+"deze voorwaarde niet is voldaan, is de klant aansprakelijk voor de betaling "
+"van de belasting, rente en boetes die in verband met deze voorwaarde "
+"verschuldigd zijn."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -1021,25 +1034,27 @@ msgstr "San Marino BTW"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Country Code is missing [IBR-009]."
-msgstr ""
+msgstr "Landcode van de verkoper ontbreekt [IBR-009]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
-msgstr ""
+msgstr "Elektronisch adres / Endpoint-ID van de verkoper ontbreekt [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
 msgstr ""
+"Schema-identificatie voor het elektronisch adres van de verkoper ontbreekt "
+"[IBR-062]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Name is missing [IBR-006]."
-msgstr ""
+msgstr "Naam van de verkoper ontbreekt [IBR-006]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9948
@@ -1133,6 +1148,15 @@ msgid ""
 msgstr ""
 "Het Peppol-eindpunt is niet geldig. Het moet exact 10 cijfers bevatten "
 "(bedrijfsregistratienummer). Het verwachte formaat is: 1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1424,6 +1448,13 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid ""
+#~ "Could not retrieve a partner corresponding to '%s' with the same VAT. A "
+#~ "new partner was created."
+#~ msgstr ""
+#~ "Er kon geen partner worden gevonden die overeenkomt met '%s' met "
+#~ "hetzelfde btw-nummer. Er is een nieuwe partner aangemaakt."
 
 #~ msgid "Factur-x/XRechnung CII 2.2.0"
 #~ msgstr "Factur-x/XRechnung CII 2.2.0"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
 "PO-Revision-Date: 2026-10-28 00:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
-"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_edi_ubl_cii
@@ -308,8 +308,8 @@ msgstr "Kontakt"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
-"partner was created."
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -1117,6 +1117,15 @@ msgid ""
 msgstr ""
 "Koncový bod Peppol nie je platný. Mal by obsahovať presne 10 číslic "
 "(registračné číslo spoločnosti). Očakávaný formát je: 1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python

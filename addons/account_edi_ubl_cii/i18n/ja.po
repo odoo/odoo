@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
 "PO-Revision-Date: 2026-10-28 00:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
@@ -312,11 +312,9 @@ msgstr "連絡先"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
-"partner was created."
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
 msgstr ""
-"同じVATを持つ'%s' に対応する取引先を取得できませんでした。新しい取引先が作成"
-"されました。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -415,7 +413,8 @@ msgstr "値引"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
-msgstr "ドキュメント許容値%(charge)s の明細行%(line)s ：金額が未設定です [IBR-031]。"
+msgstr ""
+"ドキュメント許容値%(charge)s の明細行%(line)s ：金額が未設定です [IBR-031]。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -432,7 +431,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
-msgstr "ドキュメント請求%(charge)s の明細行%(line)s ：金額が未設定です [IBR-036]。"
+msgstr ""
+"ドキュメント請求%(charge)s の明細行%(line)s ：金額が未設定です [IBR-036]。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -806,7 +806,8 @@ msgstr "明細行 %s: 品目の正味価格(単価)が未入力です [IBR-026]�
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr "明細行 %s: 品目の税カテゴリコード(税区分コード)が未入力です [IBR-SR-58]。"
+msgstr ""
+"明細行 %s: 品目の税カテゴリコード(税区分コード)が未入力です [IBR-SR-58]。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0200
@@ -960,9 +961,9 @@ msgid ""
 "penalties due in relation to this condition."
 msgstr ""
 "リバースチャージ：請求書受領後1か月以内に書面による異議申立てがない場合、顧客"
-"は、定期申告を行う義務を有する課税事業者であることを認めたものとみなされます"
-"。この条件が満たされない場合、顧客は、本条件に関連して支払うべき税額、利息お"
-"よび罰金の支払い責任を負うものとします。"
+"は、定期申告を行う義務を有する課税事業者であることを認めたものとみなされま"
+"す。この条件が満たされない場合、顧客は、本条件に関連して支払うべき税額、利息"
+"および罰金の支払い責任を負うものとします。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -1127,6 +1128,15 @@ msgid ""
 msgstr ""
 "Peppol エンドポイントが無効です。10桁の数字(会社登記番号)が必要です。要求され"
 "ているフォーマット: 1234567890"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+msgid ""
+"The Peppol endpoint is not valid. Please enter a valid 10-digit Tax "
+"Identification Number (TIN). If your business is VAT-registered, this is the "
+"first 10 digits of your 15-digit TRN. Expected format: 1001234567."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1409,6 +1419,13 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid ""
+#~ "Could not retrieve a partner corresponding to '%s' with the same VAT. A "
+#~ "new partner was created."
+#~ msgstr ""
+#~ "同じVATを持つ'%s' に対応する取引先を取得できませんでした。新しい取引先が作"
+#~ "成されました。"
 
 #~ msgid "Factur-x/XRechnung CII 2.2.0"
 #~ msgstr "Factur-x/XRechnung CII 2.2.0"
