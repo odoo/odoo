@@ -612,6 +612,37 @@ test("datetime field in list with show_time option", async () => {
     });
 });
 
+test("datetime field with warning option in list view", async () => {
+    mockTimeZone(0);
+    onRpc("has_group", () => true);
+    Partner._records.push({ id: 3, datetime: "2999-01-01 10:00:00" });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="datetime" options="{'warning': 'future'}"/>
+                <field name="datetime" widget="datetime" readonly="1" options="{'warning': 'future'}"/>
+            </list>
+        `,
+    });
+
+    expect(".o_data_row:eq(0) .o_data_cell > .text-danger").toHaveCount(0);
+    expect(".o_data_row:eq(1) .o_data_cell > .text-danger").toHaveCount(0);
+    expect(".o_data_row:eq(2) .o_data_cell > .text-danger").toHaveCount(1);
+    expect(".o_data_row:eq(2) .o_data_cell > .text-danger").toHaveAttribute(
+        "data-tooltip",
+        "01/01/2999 10:00: This date is in the future"
+    );
+    expect(".o_data_row:eq(0) .o_field_datetime span").not.toHaveClass("text-danger");
+    expect(".o_data_row:eq(2) .o_field_datetime span").toHaveClass("text-danger");
+    expect(".o_data_row:eq(2) .o_field_datetime span").toHaveAttribute(
+        "data-tooltip",
+        "01/01/2999 10:00: This date is in the future"
+    );
+});
+
 test("placeholder_field shows as placeholder (char)", async () => {
     Partner._fields.char = fields.Char({
         default: "My Placeholder",

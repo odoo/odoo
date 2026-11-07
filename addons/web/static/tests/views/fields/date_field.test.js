@@ -302,7 +302,7 @@ test("date field with warning option: future date", async () => {
     await contains(getPickerCell("22")).click();
     expect(".o_field_date button").toHaveClass("text-danger");
     await contains(".o_field_date button").click();
-    expect(".o_field_date input").toHaveAttribute("title", "This date is in the future");
+    expect(".o_field_date input").toHaveAttribute("data-tooltip", "This date is in the future");
     await fieldInput("date").clear();
     expect(".o_field_date input").not.toHaveClass("text-danger");
 });
@@ -319,8 +319,84 @@ test("date field with warning option: past date", async () => {
     });
 
     expect(".o_field_date button").toHaveClass("text-danger");
+    expect(".o_field_date button").toHaveAttribute(
+        "data-tooltip",
+        "02/03/2017: This date is in the past"
+    );
     await contains(".o_field_date button").click();
-    expect(".o_field_date input").toHaveAttribute("title", "This date is in the past");
+    expect(".o_field_date input").toHaveAttribute("data-tooltip", "This date is in the past");
+});
+
+test("date field with warning option in readonly list view", async () => {
+    onRpc("has_group", () => true);
+    Partner._records.push({ id: 2, date: "2999-01-01" });
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        arch: `<list><field name="date" options="{'warning': 'past'}"/></list>`,
+    });
+
+    expect(".o_data_row:eq(0) .o_data_cell > .text-danger").toHaveCount(1);
+    expect(".o_data_row:eq(0) .o_data_cell > .text-danger").toHaveAttribute(
+        "data-tooltip",
+        "02/03/2017: This date is in the past"
+    );
+    expect(".o_data_row:eq(1) .o_data_cell > .text-danger").toHaveCount(0);
+});
+
+test("date field with warning option in kanban view", async () => {
+    onRpc("has_group", () => true);
+    Partner._records.push({ id: 2, date: "2999-01-01" });
+    await mountView({
+        type: "kanban",
+        resModel: "res.partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_test_formatted">
+                            <field name="date" options="{'warning': 'past'}"/>
+                        </div>
+                        <field name="date" widget="date" options="{'warning': 'past'}"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    expect(".o_kanban_record:eq(0) .o_test_formatted .text-danger").toHaveCount(1);
+    expect(".o_kanban_record:eq(0) .o_test_formatted .text-danger").toHaveAttribute(
+        "data-tooltip",
+        "02/03/2017: This date is in the past"
+    );
+    expect(".o_kanban_record:eq(1) .o_test_formatted .text-danger").toHaveCount(0);
+    expect(".o_kanban_record:eq(0) .o_field_date span").toHaveClass("text-danger");
+    expect(".o_kanban_record:eq(0) .o_field_date span").toHaveAttribute(
+        "data-tooltip",
+        "02/03/2017: This date is in the past"
+    );
+    expect(".o_kanban_record:eq(1) .o_field_date span").toHaveAttribute(
+        "data-tooltip",
+        "01/01/2999"
+    );
+    expect(".o_kanban_record:eq(1) .o_field_date span").not.toHaveClass("text-danger");
+});
+
+test("date field with warning option in readonly form view", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="date" readonly="1" options="{'warning': 'past'}"/>
+            </form>`,
+    });
+
+    expect(".o_field_date span").toHaveClass("text-danger");
+    expect(".o_field_date span").toHaveAttribute(
+        "data-tooltip",
+        "02/03/2017: This date is in the past"
+    );
 });
 
 test("date field with warning option: do not overwrite datepicker option", async () => {

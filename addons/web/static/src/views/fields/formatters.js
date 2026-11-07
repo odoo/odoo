@@ -3,6 +3,7 @@ import {
     formatDateTime as _formatDateTime,
     toLocaleDateString,
     toLocaleDateTimeString,
+    today,
 } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -18,6 +19,8 @@ import { exprToBoolean } from "@web/core/utils/strings";
 import { markup } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { normalizeTimeStr } from "@web/core/l10n/time";
+
+const { DateTime } = luxon;
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -70,31 +73,101 @@ formatChar.extractOptions = ({ attrs }) => ({
     isPassword: exprToBoolean(attrs.password),
 });
 
-export function formatDate(value, options = {}) {
-    if (options.numeric) {
-        return _formatDate(value, options);
-    } else {
-        return toLocaleDateString(value);
+/**
+ * @param {import("luxon").DateTime | false} value
+ * @param {"date" | "datetime"} type
+ * @param {"none" | "future" | "past"} [warning]
+ * @returns {boolean}
+ */
+export function hasDateWarning(value, type, warning) {
+    if (!value || !warning || warning === "none") {
+        return false;
     }
+    const referenceDate = type === "datetime" ? DateTime.local() : today();
+    return warning === "future" ? value > referenceDate : value < referenceDate;
+}
+
+/**
+ * @param {"future" | "past"} warning
+ * @returns {string}
+ */
+export function getDateWarningMessage(warning) {
+    return warning === "future" ? _t("This date is in the future") : _t("This date is in the past");
+}
+
+/**
+ * @param {string} numericValue
+ * @param {"future" | "past"} warning
+ * @returns {string}
+ */
+export function getDateWarningTooltip(numericValue, warning) {
+    return `${numericValue}: ${getDateWarningMessage(warning)}`;
+}
+
+function withDateWarning(formattedValue, numericValue, warning) {
+    return markup`<span class="text-danger" data-tooltip="${getDateWarningTooltip(
+        numericValue,
+        warning
+    )}">${formattedValue}</span>`;
+}
+
+/**
+ * @param {import("luxon").DateTime | false} value
+ * @param {Object} [options]
+ * @param {boolean} [options.numeric]
+ * @param {"none" | "future" | "past"} [options.warning]
+ * @returns {string | import("@odoo/owl").Markup} a Markup when the warning applies
+ */
+export function formatDate(value, options = {}) {
+    const { warning, ...formatOptions } = options;
+    const formattedValue = formatOptions.numeric
+        ? _formatDate(value, formatOptions)
+        : toLocaleDateString(value);
+    return hasDateWarning(value, "date", warning)
+        ? withDateWarning(
+              formattedValue,
+              formatDate(value, { ...formatOptions, numeric: true }),
+              warning
+          )
+        : formattedValue;
 }
 formatDate.extractOptions = ({ options }) => ({
     numeric: options.numeric ?? false,
+    warning: options.warning,
 });
 
+/**
+ * @param {import("luxon").DateTime | false} value
+ * @param {Object} [options]
+ * @param {boolean} [options.numeric]
+ * @param {boolean} [options.showSeconds]
+ * @param {boolean} [options.showTime]
+ * @param {"none" | "future" | "past"} [options.warning]
+ * @returns {string | import("@odoo/owl").Markup} a Markup when the warning applies
+ */
 export function formatDateTime(value, options = {}) {
-    const { numeric, showSeconds, showTime } = options;
+    const { warning, ...formatOptions } = options;
+    const { numeric, showSeconds, showTime } = formatOptions;
     if (numeric && showTime && !showSeconds) {
         options = { ...options, format: l10n.dateTimeFormat.replace(/:ss/, "") };
     }
 
+    let formattedValue;
     if (options.numeric) {
-        if (options.showTime === false) {
-            return _formatDate(value, options);
-        }
-        return _formatDateTime(value, options);
+        formattedValue =
+            options.showTime === false
+                ? _formatDate(value, options)
+                : _formatDateTime(value, options);
     } else {
-        return toLocaleDateTimeString(value, options);
+        formattedValue = toLocaleDateTimeString(value, options);
     }
+    return hasDateWarning(value, "datetime", warning)
+        ? withDateWarning(
+              formattedValue,
+              formatDateTime(value, { ...formatOptions, numeric: true }),
+              warning
+          )
+        : formattedValue;
 }
 formatDateTime.extractOptions = ({ attrs, options }) => ({
     ...formatDate.extractOptions({ attrs, options }),
