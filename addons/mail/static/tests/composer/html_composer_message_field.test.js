@@ -352,3 +352,42 @@ test("wait for attachments to be uploaded before sending message", async functio
     await mailSent;
     expect.verifySteps(["web_save", "action_send_mail"]);
 });
+
+describe("Full composer focus", () => {
+    beforeEach(() => {
+        mailModels.MailComposeMessage._views = {
+            "form,false": `
+            <form js_class="mail_composer_form" disable_autofocus="1">
+                <field name="composition_comment_option" invisible="1"/>
+                <field name="partner_ids" widget="many2many_tags_email"
+                    context="{'forward_mode': composition_comment_option == 'forward'}"/>
+                <field name="body" type="html" widget="html_composer_message"/>
+            </form>`,
+        };
+    });
+
+    test("should focus the body when expanding the chatter composer", async () => {
+        await start();
+        await openFormView("res.partner", serverState.partnerId);
+        await click("button", { text: "Send message" });
+        await click("button[title='Open Full Composer']");
+        await waitFor("[name='body'] .odoo-editor-editable");
+        expect("[name='body'] .odoo-editor-editable").toBeFocused();
+    });
+
+    test("should focus the recipients when forwarding a message", async () => {
+        const pyEnv = await startServer();
+        pyEnv["mail.message"].create({
+            body: "Forward me",
+            message_type: "comment",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+        });
+        await start();
+        await openFormView("res.partner", serverState.partnerId);
+        await click(".o-mail-Message [title='Expand']");
+        await click(".o-dropdown-item:contains('Forward')");
+        await waitFor("[name='body'] .odoo-editor-editable");
+        expect("[name='partner_ids'] input").toBeFocused();
+    });
+});
