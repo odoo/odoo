@@ -214,3 +214,22 @@ test("Show conditionally hidden elements should not be tracked in history", asyn
         "visibility_off"
     );
 });
+
+test("Removing the visibility condition removes the visibility datetime range", async () => {
+    await setupWebsiteBuilder(websiteContent);
+
+    await contains(":iframe section").click();
+    await contains("[data-label='Visibility'] button.dropdown").click();
+    await contains("div[data-action-id='forceVisible']:contains(Conditionally)").click();
+    await contains("[data-label='Visible From'] input").edit("10/10/2026 10:00");
+    await contains("[data-label='Visible Until'] input").edit("11/11/2026 10:00");
+    expect(":iframe section").toHaveAttribute("data-visibility-from");
+    expect(":iframe section").toHaveAttribute("data-visibility-until");
+
+    await contains("[data-label='Visibility'] button.dropdown").click();
+    await contains("div[data-action-id='forceVisible']").click();
+    expect(":iframe section").not.toHaveAttribute("data-visibility-from");
+    expect(":iframe section").not.toHaveAttribute("data-visibility-until");
+    expect("[data-label='Visible From']").toHaveCount(0);
+    expect("[data-label='Visible Until']").toHaveCount(0);
+});

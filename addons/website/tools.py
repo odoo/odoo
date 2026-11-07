@@ -219,6 +219,32 @@ def add_form_signature(html_fragment, env_sudo):
         form_values['email_to'].addnext(hash_node)
 
 
+def parse_visibility_timestamp(value):
+    """ Convert ``value`` to a POSIX timestamp in seconds. The
+    BuilderDateTimePicker keeps the date and time in this format. Return None
+    if ``value`` is empty or not valid. """
+    if not value:
+        return None
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
+
+def is_in_datetime_range(now, visible_from, visible_until):
+    """ Return True if ``now`` is in the visibility range. The range includes
+    ``visible_from`` and does not include ``visible_until``. A limit that is
+    None does not apply. All values are POSIX timestamps in seconds. """
+    return (visible_from is None or visible_from <= now) and (visible_until is None or now < visible_until)
+
+
+def get_next_visibility_change(now, visible_from, visible_until):
+    """ Return the first limit of the visibility range that is after ``now``.
+    Return None if the visibility does not change again. """
+    limits = [limit for limit in (visible_from, visible_until) if limit is not None and limit > now]
+    return min(limits, default=None)
+
+
 def create_image_attachment(env, image_path, image_name):
     """
     Creates an image attachment.
