@@ -21,6 +21,7 @@ import { applyTags } from "./tag";
 //-----------------------------------------------------------------------------
 
 const {
+    AbortController,
     Object: { assign: $assign, entries: $entries },
     Symbol,
 } = globalThis;
@@ -67,6 +68,17 @@ export class Job {
     /** @type {Tag[]} */
     tags = [];
 
+    /**
+     * @private
+     * @type {AbortController | null}
+     */
+    _controller = null;
+
+    get abortSignal() {
+        this._controller ||= new AbortController();
+        return this._controller.signal;
+    }
+
     get isMinimized() {
         return S_MINIMIZED in this;
     }
@@ -96,18 +108,6 @@ export class Job {
         this.key = normalize(this.fullName);
 
         this.configure(config);
-    }
-
-    after() {
-        for (const tag of this.tags) {
-            tag.after?.(this);
-        }
-    }
-
-    before() {
-        for (const tag of this.tags) {
-            tag.before?.(this);
-        }
     }
 
     /**

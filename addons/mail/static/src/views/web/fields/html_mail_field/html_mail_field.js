@@ -2,6 +2,7 @@ import { HtmlField, htmlField } from "@html_editor/fields/html_field";
 import { registry } from "@web/core/registry";
 import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
+import { status } from "@odoo/owl";
 
 const cssRulesByElement = new WeakMap();
 
@@ -25,7 +26,9 @@ export class HtmlMailField extends HtmlField {
 
     async getEditorContent() {
         const el = await super.getEditorContent();
-        await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
+        if (status(this) !== "destroyed") {
+            await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
+        }
         return el;
     }
 
