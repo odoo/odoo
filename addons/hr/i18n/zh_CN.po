@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-22 03:56+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -2622,6 +2622,18 @@ msgstr "试用期结束日期（如果有的话）。"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
 msgstr "协作结束"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration cancelled"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration planned"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -5790,13 +5802,6 @@ msgstr "此工作安排由以下对象共享："
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
-msgid ""
-"This working schedule is used by  employee(s), are you sure you want change "
-"it for all employees?"
-msgstr "此工作安排正被员工使用，您确定要为所有员工更改它吗？"
-
-#. module: hr
-#. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/resource_calendar_plugin_patch.js:0
 msgid ""
 "This working schedule is used by %s employee(s), are you sure you want "
@@ -6570,6 +6575,12 @@ msgid "You do not have the rights to load the Employees sample data."
 msgstr "您没有权限导入员工示例数据。"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_allocation_wizard_line.py:0
+msgid "You do not have the rights to trust or un-trust accounts."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
 msgid ""
 "You participate to the update of our tutorial tools and pre-sales tools "
@@ -6835,6 +6846,11 @@ msgstr "工作"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "工作许可名称"
+
+#~ msgid ""
+#~ "This working schedule is used by  employee(s), are you sure you want "
+#~ "change it for all employees?"
+#~ msgstr "此工作安排正被员工使用，您确定要为所有员工更改它吗？"
 
 #~ msgid "Company Executive"
 #~ msgstr "公司高管"

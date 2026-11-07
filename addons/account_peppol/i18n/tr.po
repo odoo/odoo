@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-10-29 13:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"PO-Revision-Date: 2026-11-04 08:01+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "account_peppol/tr/>\n"
@@ -144,6 +144,11 @@ msgid "<span>This information will be sent with your response.</span>"
 msgstr "<span>Bu bilgiler yanıtınızla birlikte gönderilecektir.</span>"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "<strong>Contact us</strong>"
+msgstr ""
+
+#. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
@@ -164,7 +169,7 @@ msgid ""
 "                                <td valign=\"middle\">\n"
 "                                    <span style=\"font-size: 10px;"
 "\">Notification</span>\n"
-"                                    <br/>\n"
+"                                    <br>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
 "                                        Welcome to Peppol\n"
@@ -185,7 +190,7 @@ msgid ""
 "object.uses_default_logo\">\n"
 "                                        <img t-att-src=\"'/logo.png?"
 "company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"10px;\" t-att-alt=\"'%s' % object.name\">\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
@@ -193,7 +198,7 @@ msgid ""
 "                                <td colspan=\"2\" style=\"text-align:center;"
 "\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
-"border:none; height:1px; margin:16px 0;\"/>\n"
+"border:none; height:1px; margin:16px 0;\">\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -232,92 +237,6 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
-"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\">\n"
-"    <tr>\n"
-"       <td align=\"center\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"590\" style=\"padding: 16px; background-color: white; color: "
-"#454748; border-collapse:separate;\"> \n"
-"               <!-- HEADER -->\n"
-"                <tr> \n"
-"                   <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" "
-"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
-"collapse:separate;\"> \n"
-"                           <tr>\n"
-"                                <td valign=\"middle\"> \n"
-"                                   <span style=\"font-size: 10px;\"> "
-"Bildirim</span>\n"
-"                                    <br/>\n"
-"                                   <span style=\"font-size: 20px; font-"
-"weight: bold;\"> \n"
-"                                        Peppol'a hoş geldiniz\n"
-"                                   </span>\n"
-"                                    <div style=\"margin-bottom: 5px; margin-"
-"top: 18px;\"> \n"
-"                                       <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\"> \n"
-"                                            Fatura gönder\n"
-"                                       </a>\n"
-"                                    </div> \n"
-"                               </td>\n"
-"                                <td valign=\"middle\" align=\"right\"> \n"
-"                                   <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/> \n"
-"                                   </t>\n"
-"                                </td> \n"
-"                           </tr>\n"
-"                            <tr> \n"
-"                               <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
-"                                    <hr style=\"background-color:#CCCCCC; "
-"border:none; height:1px; margin:16px 0;\"/> \n"
-"                               </td>\n"
-"                            </tr> \n"
-"                       </table>\n"
-"                    </td> \n"
-"               </tr>\n"
-"                <!-- BODY --> \n"
-"               <tr>\n"
-"                    <td align=\"center\"> \n"
-"                       <table width=\"590\" cellpadding=\"0\" "
-"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
-"collapse:separate;\">\n"
-"                            <tr> \n"
-"                               <td style=\"font-size: 14px;\">\n"
-"                                    <p> Sayın <t t-out=\"object.name or "
-"''\">YourCompany</t>,</p>\n"
-"\n"
-"                                    <p>Şirketinizi <strong>Peppol Network</"
-"strong>.</p>\n"
-"\n"
-"                                    <p>adresine başarıyla ekledik. Artık "
-"<strong>send<t t-if=\"object.account_peppol_proxy_state == 'receiver'\"> ve "
-"Odoo aracılığıyla</t></strong> elektronik faturaları tamamen ücretsiz olarak "
-"alabilirsiniz.</p>\n"
-"\n"
-"                                    <p>Saygılarımızla,</p>\n"
-"\n"
-"                                    <p style=\"margin-bottom: 24px;\">Odoo "
-"Ekibi</p>\n"
-"                                </td>\n"
-"                           </tr>\n"
-"                        </table> \n"
-"                   </td>\n"
-"                </tr> \n"
-"           </table>\n"
-"        </td> \n"
-"   </tr>\n"
-"</table>\n"
-"            "
 
 #. module: account_peppol
 #. odoo-python
@@ -378,7 +297,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "'%s Zaten bir bağlantı mevcuttur."
 
 #. module: account_peppol
 #. odoo-python
@@ -492,7 +411,7 @@ msgstr "Teşekkür"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Actions to suggest"
-msgstr ""
+msgstr "Önerilecek eylemler"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -694,7 +613,7 @@ msgstr "Bir Peppol faturasını reddederken en az bir neden belirtilmelidir."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "Kimlik doğrulama iptal edildi"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -728,12 +647,12 @@ msgstr "UBL için temel yardımcılar"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_response
 msgid "Business Level Responses for Peppol"
-msgstr ""
+msgstr "Peppol için İş Seviyesi Yanıtlar"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "By clicking the button below:"
-msgstr ""
+msgstr "Aşağıdaki düğmeye tıklayarak:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__receiver
@@ -774,6 +693,8 @@ msgid ""
 "Cannot initiate KYC for the selected scheme (unsupported, deprecated, or "
 "removed). Please select a different scheme."
 msgstr ""
+"Seçilen plan için KYC başlatılamıyor (desteklenmiyor, kullanımdan kaldırıldı "
+"veya silindi). Lütfen farklı bir plan seçin."
 
 #. module: account_peppol
 #. odoo-python
@@ -836,7 +757,7 @@ msgstr "İletişim e-posta adresi ve telefon numarası zorunludur."
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Could not connect to Proxy Server."
-msgstr ""
+msgstr "Proxy sunucusuna bağlanılamadı."
 
 #. module: account_peppol
 #. odoo-python
@@ -943,25 +864,25 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
 msgid "Display Use Parent Connection Selection"
-msgstr ""
+msgstr "Ekran Kullanımı Ebeveyn Bağlantısı Seçimi"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "Devam etmek istiyor musunuz?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Belge başarıyla iptal edildi"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Belge başarıyla taslak haline getirildi"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -990,7 +911,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Does not support Invoice Responses"
-msgstr ""
+msgstr "Fatura Yanıtlarını desteklemez"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -1089,7 +1010,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "Fransa - E-Faturalama (Onaylı Platform)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1107,7 +1028,7 @@ msgstr "Tam otomatik"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Go to module"
-msgstr ""
+msgstr "Modüle git"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1357,7 +1278,7 @@ msgstr "Geçerli AS4 katılımcı uç noktası bulunamadı."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "Hayır, olduğu gibi bırakın"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__not_serviced
@@ -1442,7 +1363,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "Ortak formatı alamıyor"
 
 #. module: account_peppol
 #. odoo-python
@@ -1453,7 +1374,7 @@ msgstr "İş ortağının %(network_name)s için geçerli bir yapılandırması 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "Ortak Peppol'da değil"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1483,7 +1404,7 @@ msgstr "Peppol Adresi sağlanmalıdır."
 #. module: account_peppol
 #: model:ir.actions.client,name:account_peppol.action_peppol_auth_callback
 msgid "Peppol Auth Callback action"
-msgstr ""
+msgstr "Peppol Kimlik Doğrulama Geri Çağırma eylemi"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_can_connect_data
@@ -1510,25 +1431,25 @@ msgstr "Peppol İletişim E-postası"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Peppol Disconnected"
-msgstr ""
+msgstr "Peppol Bağlantısı Kesildi"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppol Belgeleri Silinemez"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppol Belgeleri: Fatura Silinemez"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Peppol EAS and/or Endpoint identifier"
-msgstr ""
+msgstr "Peppol EAS ve/veya Uç nokta tanımlayıcısı"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1621,7 +1542,7 @@ msgstr "Peppol Registration"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_rejection_wizard
 msgid "Peppol Rejection wizard"
-msgstr ""
+msgstr "Peppol Reddetme sihirbazı"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_response_ids
@@ -1634,7 +1555,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_response_support
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_response_support
 msgid "Peppol Response Service"
-msgstr ""
+msgstr "Peppol Yanıt Hizmeti"
 
 #. module: account_peppol
 #. odoo-python
@@ -1671,12 +1592,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol business response error: %s"
-msgstr ""
+msgstr "Peppol iş yanıt hatası: %s"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_clarification
 msgid "Peppol clarifications used for rejection"
-msgstr ""
+msgstr "Reddetme için kullanılan Peppol açıklamaları"
 
 #. module: account_peppol
 #. odoo-python
@@ -1908,7 +1829,7 @@ msgstr "Kayıt reddedildi."
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reject Peppol Document"
-msgstr ""
+msgstr "Peppol Belgesini Reddet"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__re
@@ -1935,7 +1856,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Taslağa Ayarla"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__response_code
@@ -1967,7 +1888,7 @@ msgstr "Seçilen Şirket"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Selected authentication method is not available."
-msgstr ""
+msgstr "Seçilen kimlik doğrulama yöntemi kullanılamıyor."
 
 #. module: account_peppol
 #. odoo-python
@@ -2015,7 +1936,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "Ortak Fatura Gönderme Sihirbazı İşlevleri"
 
 #. module: account_peppol
 #. odoo-python
@@ -2045,18 +1966,18 @@ msgstr "İsteğinizde bir sorun oluştu"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Suggested actions:"
-msgstr ""
+msgstr "Önerilen eylemler:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_supported_documents
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_supported_documents
 msgid "Supported Peppol Documents"
-msgstr ""
+msgstr "Desteklenen Peppol Belgeleri"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Supports Invoice Responses"
-msgstr ""
+msgstr "Fatura Yanıtlarını Destekler"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -2607,7 +2528,7 @@ msgstr "İşaretlenmemiş"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__uq
 msgid "Under query"
-msgstr ""
+msgstr "Sorgu altında"
 
 #. module: account_peppol
 #. odoo-python
@@ -2625,7 +2546,7 @@ msgstr "Bilinmeyen Peppol Hatası: %s"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Update App List"
-msgstr ""
+msgstr "Uygulama Listesini Güncelle"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
@@ -2641,7 +2562,7 @@ msgstr "Ebeveyn Bağlantısı Seçimi Kullanın"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "Doğrulama beklemede"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2651,7 +2572,7 @@ msgstr "Doğrulayın"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's Peppol endpoint"
-msgstr ""
+msgstr "Ortağın Peppol uç noktasını doğrulayın"
 
 #. module: account_peppol
 #. odoo-python
@@ -2702,13 +2623,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Evet, İptal Et"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Evet, Devam Et"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2716,13 +2637,9 @@ msgid ""
 "You accept that any fraudulent activity or spam will result in immediate and "
 "permanent exclusion from the Peppol network."
 msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid ""
-"You are a legal representative authorized to register this company on the "
-"Peppol network."
-msgstr ""
+"Herhangi bir hileli faaliyet veya istenmeyen e-postanın (spam), Peppol "
+"ağından derhal ve kalıcı olarak çıkarılmanızla sonuçlanacağını kabul "
+"edersiniz."
 
 #. module: account_peppol
 #. odoo-python
@@ -2752,6 +2669,8 @@ msgid ""
 "You authorize Odoo to act as your Peppol Service Provider to send and "
 "receive e-invoices on your behalf."
 msgstr ""
+"Adınıza e-fatura göndermek ve almak için Odoo'yu Peppol Hizmet Sağlayıcınız "
+"olarak hareket etmesi için yetkilendirirsiniz."
 
 #. module: account_peppol
 #. odoo-python
@@ -2808,6 +2727,13 @@ msgstr ""
 "borç notu düzenlemelisiniz."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You confirm that you are authorized to register this company on the Peppol "
+"network as a legal representative."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
@@ -2828,7 +2754,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You need to authenticate to continue."
-msgstr ""
+msgstr "Devam etmek için kimlik doğrulaması yapmanız gerekir."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2848,6 +2774,8 @@ msgid ""
 "You remain fully responsible for the content, accuracy, and legal compliance "
 "of your invoices."
 msgstr ""
+"Faturalarınızın içeriği, doğruluğu ve yasal uyumluluğu konusunda tam "
+"sorumluluk size aittir."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2884,13 +2812,8 @@ msgstr ""
 msgid ""
 "Your database is not linked to Peppol anymore. This might be due to a "
 "database duplication or restoration.\n"
-"                                        Make sure to reconnect the correct "
-"database."
+"                                        <br/>"
 msgstr ""
-"Veritabanınız artık Peppol'a bağlı değildir. Bunun nedeni veritabanının "
-"yinelenmesi veya geri yüklenmesi olabilir.\n"
-"                                        Doğru veritabanını yeniden "
-"bağladığınızdan emin olun."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2966,7 +2889,7 @@ msgstr "by Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via"
-msgstr ""
+msgstr "aracılığıyla gönderilemedi"
 
 #. module: account_peppol
 #. odoo-python
@@ -2989,12 +2912,17 @@ msgstr "Reddedildi"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "aracılığıyla gönderildi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "support"
 msgstr "destek"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "to reconnect your database to Peppol."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -3005,6 +2933,197 @@ msgstr "fatura göndermek için, ancak bu"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "kullanır"
+
+#~ msgid ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#~ "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#~ "serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"padding: 16px; background-color: white; color: "
+#~ "#454748; border-collapse:separate;\">\n"
+#~ "                <!-- HEADER -->\n"
+#~ "                <tr>\n"
+#~ "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "                        <table width=\"590\" cellpadding=\"0\" "
+#~ "cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; "
+#~ "border-collapse:separate;\">\n"
+#~ "                            <tr>\n"
+#~ "                                <td valign=\"middle\">\n"
+#~ "                                    <span style=\"font-size: 10px;"
+#~ "\">Notification</span>\n"
+#~ "                                    <br/>\n"
+#~ "                                    <span style=\"font-size: 20px; font-"
+#~ "weight: bold;\">\n"
+#~ "                                        Welcome to Peppol\n"
+#~ "                                    </span>\n"
+#~ "                                    <div style=\"margin-bottom: 5px; "
+#~ "margin-top: 18px;\">\n"
+#~ "                                        <a t-attf-href=\"/odoo/accounting/"
+#~ "\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; "
+#~ "color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: "
+#~ "none !important; font-weight: 400; background-color: "
+#~ "{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+#~ "                                            Send invoices\n"
+#~ "                                        </a>\n"
+#~ "                                    </div>\n"
+#~ "                                </td>\n"
+#~ "                                <td valign=\"middle\" align=\"right\">\n"
+#~ "                                    <t t-if=\"not "
+#~ "object.uses_default_logo\">\n"
+#~ "                                        <img t-att-src=\"'/logo.png?"
+#~ "company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+#~ "right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+#~ "                                    </t>\n"
+#~ "                                </td>\n"
+#~ "                            </tr>\n"
+#~ "                            <tr>\n"
+#~ "                                <td colspan=\"2\" style=\"text-"
+#~ "align:center;\">\n"
+#~ "                                    <hr style=\"background-color:#CCCCCC; "
+#~ "border:none; height:1px; margin:16px 0;\"/>\n"
+#~ "                                </td>\n"
+#~ "                            </tr>\n"
+#~ "                        </table>\n"
+#~ "                    </td>\n"
+#~ "                </tr>\n"
+#~ "                <!-- BODY -->\n"
+#~ "                <tr>\n"
+#~ "                    <td align=\"center\">\n"
+#~ "                        <table width=\"590\" cellpadding=\"0\" "
+#~ "cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; "
+#~ "border-collapse:separate;\">\n"
+#~ "                            <tr>\n"
+#~ "                                <td style=\"font-size: 14px;\">\n"
+#~ "                                    <p>Dear <t t-out=\"object.name or "
+#~ "''\">YourCompany</t>,</p>\n"
+#~ "\n"
+#~ "                                    <p>We have successfully added your "
+#~ "company to the <strong>Peppol Network</strong>.</p>\n"
+#~ "\n"
+#~ "                                    <p>You can now <strong>send<t t-"
+#~ "if=\"object.account_peppol_proxy_state == 'receiver'\"> and receive</t></"
+#~ "strong> electronic invoices via Odoo — completely free of charge.</p>\n"
+#~ "\n"
+#~ "                                    <p>Best regards,</p>\n"
+#~ "\n"
+#~ "                                    <p style=\"margin-bottom: 24px;\">The "
+#~ "Odoo Team</p>\n"
+#~ "                                </td>\n"
+#~ "                            </tr>\n"
+#~ "                        </table>\n"
+#~ "                    </td>\n"
+#~ "                </tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "</table>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#~ "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#~ "serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+#~ "    <tr>\n"
+#~ "       <td align=\"center\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"padding: 16px; background-color: white; color: "
+#~ "#454748; border-collapse:separate;\"> \n"
+#~ "               <!-- HEADER -->\n"
+#~ "                <tr> \n"
+#~ "                   <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "                        <table width=\"590\" cellpadding=\"0\" "
+#~ "cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; "
+#~ "border-collapse:separate;\"> \n"
+#~ "                           <tr>\n"
+#~ "                                <td valign=\"middle\"> \n"
+#~ "                                   <span style=\"font-size: 10px;\"> "
+#~ "Bildirim</span>\n"
+#~ "                                    <br/>\n"
+#~ "                                   <span style=\"font-size: 20px; font-"
+#~ "weight: bold;\"> \n"
+#~ "                                        Peppol'a hoş geldiniz\n"
+#~ "                                   </span>\n"
+#~ "                                    <div style=\"margin-bottom: 5px; "
+#~ "margin-top: 18px;\"> \n"
+#~ "                                       <a t-attf-href=\"/odoo/accounting/"
+#~ "\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; "
+#~ "color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: "
+#~ "none !important; font-weight: 400; background-color: "
+#~ "{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\"> \n"
+#~ "                                            Fatura gönder\n"
+#~ "                                       </a>\n"
+#~ "                                    </div> \n"
+#~ "                               </td>\n"
+#~ "                                <td valign=\"middle\" align=\"right\"> \n"
+#~ "                                   <t t-if=\"not "
+#~ "object.uses_default_logo\">\n"
+#~ "                                        <img t-att-src=\"'/logo.png?"
+#~ "company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+#~ "right: 10px;\" t-att-alt=\"'%s' % object.name\"/> \n"
+#~ "                                   </t>\n"
+#~ "                                </td> \n"
+#~ "                           </tr>\n"
+#~ "                            <tr> \n"
+#~ "                               <td colspan=\"2\" style=\"text-"
+#~ "align:center;\">\n"
+#~ "                                    <hr style=\"background-color:#CCCCCC; "
+#~ "border:none; height:1px; margin:16px 0;\"/> \n"
+#~ "                               </td>\n"
+#~ "                            </tr> \n"
+#~ "                       </table>\n"
+#~ "                    </td> \n"
+#~ "               </tr>\n"
+#~ "                <!-- BODY --> \n"
+#~ "               <tr>\n"
+#~ "                    <td align=\"center\"> \n"
+#~ "                       <table width=\"590\" cellpadding=\"0\" "
+#~ "cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; "
+#~ "border-collapse:separate;\">\n"
+#~ "                            <tr> \n"
+#~ "                               <td style=\"font-size: 14px;\">\n"
+#~ "                                    <p> Sayın <t t-out=\"object.name or "
+#~ "''\">YourCompany</t>,</p>\n"
+#~ "\n"
+#~ "                                    <p>Şirketinizi <strong>Peppol "
+#~ "Network</strong>.</p>\n"
+#~ "\n"
+#~ "                                    <p>adresine başarıyla ekledik. Artık "
+#~ "<strong>send<t t-if=\"object.account_peppol_proxy_state == 'receiver'\"> "
+#~ "ve Odoo aracılığıyla</t></strong> elektronik faturaları tamamen ücretsiz "
+#~ "olarak alabilirsiniz.</p>\n"
+#~ "\n"
+#~ "                                    <p>Saygılarımızla,</p>\n"
+#~ "\n"
+#~ "                                    <p style=\"margin-bottom: 24px;"
+#~ "\">Odoo Ekibi</p>\n"
+#~ "                                </td>\n"
+#~ "                           </tr>\n"
+#~ "                        </table> \n"
+#~ "                   </td>\n"
+#~ "                </tr> \n"
+#~ "           </table>\n"
+#~ "        </td> \n"
+#~ "   </tr>\n"
+#~ "</table>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "You are a legal representative authorized to register this company on the "
+#~ "Peppol network."
+#~ msgstr ""
+#~ "Bu şirketi Peppol ağında kaydettirmek için yetkili yasal temsilcisiniz."
+
+#~ msgid ""
+#~ "Your database is not linked to Peppol anymore. This might be due to a "
+#~ "database duplication or restoration.\n"
+#~ "                                        Make sure to reconnect the "
+#~ "correct database."
+#~ msgstr ""
+#~ "Veritabanınız artık Peppol'a bağlı değildir. Bunun nedeni veritabanının "
+#~ "yinelenmesi veya geri yüklenmesi olabilir.\n"
+#~ "                                        Doğru veritabanını yeniden "
+#~ "bağladığınızdan emin olun."
 
 #~ msgid "I accept that Odoo may process my e-invoices,"
 #~ msgstr "Odoo'nun e-faturalarımı işleyebileceğini kabul ediyorum,"

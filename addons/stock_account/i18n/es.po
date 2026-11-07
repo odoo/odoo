@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-09-22 08:29+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"PO-Revision-Date: 2026-11-05 11:40+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/es/>\n"
@@ -44,6 +44,21 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"Módulo contables del SGA\n"
+"==============================\n"
+"Este módulo sirve como enlace entre los módulos 'stock' y 'account' y le "
+"permite crear asientos contables para valorar los movimientos de stock.\n"
+"\n"
+"Características clave\n"
+"------------\n"
+"* Valoración de stock (periódica o automática)\n"
+"* Facturación desde albarán de picking\n"
+"\n"
+"El tablero y los informes para la gestión de almacén incluye:\n"
+"-------------------------------------------------------------\n"
+"* Valoración de stock en una fecha específica (compatible con fechas "
+"anteriores)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -111,7 +126,7 @@ msgstr "Valor AVCO"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupos de acceso"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
@@ -258,7 +273,7 @@ msgstr "Compañía"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__company_currency_id
 msgid "Company Currency"
-msgstr "Moneda de la compañía"
+msgstr "Moneda de la empresa"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__computed_value_description
@@ -517,7 +532,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Inventario, logística, valoración, contabilidad"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
@@ -805,8 +820,6 @@ msgid "Stock Replenishment Report"
 msgstr "Informe de reposición de stock"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "Valoración de stock"
@@ -1013,7 +1026,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Contabilidad del SGA"
 
 #. module: stock_account
 #. odoo-python

@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:10+0000\n"
+"PO-Revision-Date: 2026-11-03 06:52+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "sale_expense/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,13 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly "
 "on the expense.\n"
 msgstr ""
+"\n"
+"Onkosten van werknemers doorfactureren\n"
+"==========================\n"
+"\n"
+"Maak een aantal producten waarvoor je de onkosten kunt doorfactureren.\n"
+"Met deze module kun je de onkosten doorfactureren aan klanten door de "
+"verkooporder toe te voegen aan de onkost.\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -44,7 +51,7 @@ msgstr "# onkosten"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid "Attach receipts to future customer invoices"
-msgstr ""
+msgstr "Voeg bonnetjes toe aan toekomstige facturen aan klanten"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__attach_receipts_to_invoice
@@ -52,19 +59,21 @@ msgid ""
 "Attach the expense receipts to customer invoices generated later from the "
 "related sales order"
 msgstr ""
+"Voeg de onkostenbonnetjes toe aan verkoopfacturen die later gegenereerd "
+"worden vanuit de gerelateerde verkooporder"
 
 #. module: sale_expense
 #. odoo-javascript
 #: code:addons/sale_expense/static/src/views/attachment_selector.js:0
 #: model:ir.model,name:sale_expense.model_expense_attachment_selection_wizard
 msgid "Attachment Selection"
-msgstr ""
+msgstr "Selectie van bijlagen"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "Attachments Selection"
-msgstr ""
+msgstr "Selectie van bijlagen"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -75,12 +84,12 @@ msgstr "Kan opnieuw gefactureerd worden"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Aangemaakt door"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Aangemaakt op"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
@@ -168,12 +177,12 @@ msgstr ""
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.expense_attachment_selection_wizard_view
 msgid "Import Attachments"
-msgstr ""
+msgstr "Bijlagen importeren"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Import Expense Attachments"
-msgstr ""
+msgstr "Onkostenbijlagen importeren"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -183,7 +192,7 @@ msgstr "Facturatie"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__is_linked_to_expense_with_attachment
 msgid "Is Linked To Expense With Attachment"
-msgstr ""
+msgstr "Is gekoppeld aan onkost met bijlage"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
@@ -198,24 +207,24 @@ msgstr "Boekingsregel"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Laatst bijgewerkt door"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Laatst bijgewerkt op"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "No attachment found to import from linked expense(s)"
-msgstr ""
+msgstr "Geen bijlage gevonden om te importeren vanuit gekoppelde onkost(en)"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "Please select at least one attachment to import."
-msgstr ""
+msgstr "Selecteer ten minste één bijlage om te importeren."
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -225,7 +234,7 @@ msgstr "Product"
 #. module: sale_expense
 #: model:ir.module.module,summary:base.module_sale_expense
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Offertes, Verkooporders, Aflevering & Factuurcontrole"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
@@ -236,7 +245,7 @@ msgstr "Doorfactureren aan"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Verkooporder"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
@@ -246,7 +255,7 @@ msgstr "Verkooporderregel"
 #. module: sale_expense
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Verkoopuitgaven"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -262,10 +271,11 @@ msgstr "Verkooporderregel"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__selected_attachments
 msgid "Selected Attachments"
-msgstr ""
+msgstr "Geselecteerde bijlagen"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "The following expense receipts were attached from reinvoiced expenses."
 msgstr ""
+"De volgende onkostenbonnetjes zijn bijgevoegd vanuit doorbelaste onkosten."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-11 11:47+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -194,6 +194,7 @@ msgstr "显示名称"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Enter Code"
 msgstr "输入代码"
 
@@ -345,8 +346,8 @@ msgid ""
 "(needed)s, available: %(available)s). Remove the reward lines from the order "
 "and validate again."
 msgstr ""
-"积分不足以领取方案“%(program)s”的奖励（需要：%(needed)s，可用：%(available)s"
-"）。请从订单中移除奖励明细行后重新验证。"
+"积分不足以领取方案“%(program)s”的奖励（需要：%(needed)s，可用：%"
+"(available)s）。请从订单中移除奖励明细行后重新验证。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
@@ -475,6 +476,8 @@ msgid ""
 msgstr "仅在这些商店中发布。注意：方案只会用于使用与方案相同币别的商店。"
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
 msgid "Reward"
 msgstr "优惠类型"
@@ -688,6 +691,24 @@ msgstr "实体礼品卡的数量与价格不允许修改。"
 #: code:addons/pos_loyalty/models/loyalty_program.py:0
 msgid "You must set '%(mail_template)s' before setting '%(report)s'."
 msgstr "您必须在设置%(report)s之前设定%(mail_template)s。"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "eWallet"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "eWallet Pay"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "eWallet Refund"
+msgstr ""
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt

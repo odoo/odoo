@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 14:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -347,6 +347,7 @@ msgid "Design, send and track SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -446,6 +447,7 @@ msgid "Highest Click Rate"
 msgstr "Taxa de clic més alta"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -557,6 +559,11 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "Rastrejador d'enllaços"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -773,7 +780,9 @@ msgid "Phone Blacklisted"
 msgstr "Telèfon a la llista negra"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "Número de telèfon"
 
@@ -1136,21 +1145,21 @@ msgstr "s'ha eliminat correctament de"
 msgid "📵 Blacklisted"
 msgstr ""
 
-msgid ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Text Message have been cancelled and will not be sent.</span>"
-msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">Els "
-"missatges de text SMS han estat cancel·lats i no s'enviaran.</span>"
+#~ msgid ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Message have been cancelled and will not be sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">Els "
+#~ "missatges de text SMS han estat cancel·lats i no s'enviaran.</span>"
 
-msgid "Mailing List Contacts"
-msgstr "Contactes de llista de correu"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "Contactes de llista de correu"
 
-msgid "Open Recipient"
-msgstr "Obre el destinatari"
+#~ msgid "Open Recipient"
+#~ msgstr "Obre el destinatari"
 
-msgid "Website Messages"
-msgstr "Missatges del lloc web"
+#~ msgid "Website Messages"
+#~ msgstr "Missatges del lloc web"
 
-msgid "Website communication history"
-msgstr "Historial de comunicacions del lloc web"
+#~ msgid "Website communication history"
+#~ msgstr "Historial de comunicacions del lloc web"

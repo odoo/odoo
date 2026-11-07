@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 17:16+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -204,36 +204,6 @@ msgstr ""
 #, fuzzy
 msgid "%Click (Total)"
 msgstr "% Bosish (Jami)"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Dining Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Loft Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Nordic Chair'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Oak Drawer'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_people_snippets.xml:0
-msgid "'Rating'"
-msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -1347,6 +1317,11 @@ msgid "Attach a file"
 msgstr "Faylni biriktirish"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 #, fuzzy
@@ -1978,11 +1953,6 @@ msgstr "Tahrirlash uchun ushbu paragrafni bosing."
 #, fuzzy
 msgid "Clicked"
 msgstr "Bosilgan"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
-msgid "Clicked By"
-msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -2666,6 +2636,7 @@ msgid "Disk"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__display_name
@@ -2925,6 +2896,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__mailing_type__mail
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
+#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 #, fuzzy
 msgid "Email"
 msgstr "Elektron pochta"
@@ -3418,6 +3390,33 @@ msgstr "Sarlavha"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+#, fuzzy
+msgid "Heading 1"
+msgstr "1-sarlavha"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+#, fuzzy
+msgid "Heading 2"
+msgstr "2-sarlavha"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+#, fuzzy
+msgid "Heading 3"
+msgstr "3-sarlavha"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 4"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_marketing_snippets.xml:0
 #, fuzzy
 msgid "Here's your coupon code - but hurry! Ends 9/28"
@@ -3493,6 +3492,7 @@ msgid "I receive too many emails from this list"
 msgstr "Bu ro‘yxatdan juda ko‘p xat olayapman"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__id
@@ -5651,6 +5651,13 @@ msgid "Preview for"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+#, fuzzy
+msgid "Primary Button"
+msgstr "Asosiy tugma"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__process
 #, fuzzy
 msgid "Process"
@@ -6145,6 +6152,13 @@ msgstr "{{0}} da rejalashtirilgan"
 #, fuzzy
 msgid "Second list of Features"
 msgstr "Xususiyatlarning ikkinchi ro‘yxati"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+#, fuzzy
+msgid "Secondary Button"
+msgstr "Ikkilamchi tugma"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6892,6 +6906,7 @@ msgstr "Sinab ko‘rildi"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_inner_snippets.xml:0
 #, fuzzy
 msgid "Text"
@@ -8477,23 +8492,3 @@ msgstr ""
 #, fuzzy
 #~ msgid "Website communication history"
 #~ msgstr "Veb-sayt bilan aloqa tarixi"
-
-#, fuzzy
-#~ msgid "Heading 1"
-#~ msgstr "1-sarlavha"
-
-#, fuzzy
-#~ msgid "Heading 2"
-#~ msgstr "2-sarlavha"
-
-#, fuzzy
-#~ msgid "Heading 3"
-#~ msgstr "3-sarlavha"
-
-#, fuzzy
-#~ msgid "Primary Button"
-#~ msgstr "Asosiy tugma"
-
-#, fuzzy
-#~ msgid "Secondary Button"
-#~ msgstr "Ikkilamchi tugma"

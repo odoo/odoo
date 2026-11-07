@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 14:21+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -345,6 +345,7 @@ msgid "Design, send and track SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -439,6 +440,7 @@ msgid "Highest Click Rate"
 msgstr "อัตราการคลิกสูงสุด"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -546,6 +548,11 @@ msgstr "เชื่อมโยง SMS กับโมเดลการติ�
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "ตัวติดตามลิงก์"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -764,7 +771,9 @@ msgid "Phone Blacklisted"
 msgstr "โทรศัพท์ขึ้นบัญชีดำ"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "หมายเลขโทรศัพท์"
 
@@ -1123,35 +1132,35 @@ msgstr "ได้ถูกลบออกจาก"
 msgid "📵 Blacklisted"
 msgstr ""
 
-msgid ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Text Message have been cancelled and will not be sent.</span>"
-msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">ข้อความ "
-"SMS ถูกยกเลิกและจะไม่ถูกส่ง</span>"
+#~ msgid ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Message have been cancelled and will not be sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != "
+#~ "'sms'\">ข้อความ SMS ถูกยกเลิกและจะไม่ถูกส่ง</span>"
 
-msgid ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages could not be delivered.</span>"
-msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != "
-"'sms'\">ไม่สามารถส่งข้อความ SMS ได้</span>"
+#~ msgid ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Messages could not be delivered.</span>"
+#~ msgstr ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != "
+#~ "'sms'\">ไม่สามารถส่งข้อความ SMS ได้</span>"
 
-msgid ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages have been sent.</span>"
-msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">ข้อความ SMS "
-"ถูกส่งไปแล้ว</span>"
+#~ msgid ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+#~ "Messages have been sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">ข้อความ SMS "
+#~ "ถูกส่งไปแล้ว</span>"
 
-msgid "Mailing List Contacts"
-msgstr "รายชื่อผู้รับอีเมล"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "รายชื่อผู้รับอีเมล"
 
-msgid "Open Recipient"
-msgstr "เปิดผู้รับ"
+#~ msgid "Open Recipient"
+#~ msgstr "เปิดผู้รับ"
 
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
 
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารของเว็บไซต์"
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารของเว็บไซต์"

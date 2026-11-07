@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-10-28 12:34+0000\n"
+"PO-Revision-Date: 2026-11-06 14:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/populate/"
 "de/>\n"
@@ -83,6 +83,8 @@ msgid ""
 "A job with this reference already exists in this session. References must be "
 "unique for create operations within a session."
 msgstr ""
+"Ein Job mit dieser Referenz existiert bereits in dieser Sitzung. Referenzen "
+"müssen für Erstellungsvorgänge innerhalb einer Sitzung eindeutig sein."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -91,6 +93,9 @@ msgid ""
 "function jobs are allowed to have no record_count, whose cardinality is "
 "unknown at creation time."
 msgstr ""
+"Die record_count eines Jobs muss eine positive, von Null verschiedene "
+"Ganzzahl sein. Nur Schreib- und Funktionsjobs dürfen keinen record_count "
+"haben, da deren Kardinalität zum Zeitpunkt der Erstellung unbekannt ist."
 
 #. module: populate
 #. odoo-python
@@ -104,12 +109,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "An import namespace cannot be empty."
-msgstr ""
+msgstr "Ein Import-Namespace darf nicht leer sein."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__batched
 msgid "Batched"
-msgstr ""
+msgstr "Gestapelt"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id
@@ -126,6 +131,9 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"Blaupause „%(blueprint)s“: %(reason)s\n"
+"Fehlgeschlagene Definition:\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
@@ -176,6 +184,8 @@ msgid ""
 "Cannot infer valid targets for a generated value. The 'valid_targets' "
 "parameter must be explicitly provided."
 msgstr ""
+"Gültige Ziele für einen generierten Wert können nicht abgeleitet werden. Der "
+"Parameter „valid_targets“ muss explizit angegeben werden."
 
 #. module: populate
 #. odoo-python
@@ -239,6 +249,7 @@ msgstr ""
 #: code:addons/populate/generators/generator.py:0
 msgid "Couldn't find a unique value for target %(target)s."
 msgstr ""
+"Es konnte kein eindeutiger Wert für das Ziel %(target)s gefunden werden."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__create
@@ -249,13 +260,13 @@ msgstr "Erstellen"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks cannot define 'batched'."
-msgstr ""
+msgstr "Erstellungsblöcke können nicht „gestapelt“ definieren."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks use 'id', not 'ref'."
-msgstr ""
+msgstr "Erstellungsblöcke verwenden „id“, nicht „ref“."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_create_job_without_domain
@@ -266,7 +277,7 @@ msgstr "Die Erstellung von Jobs erstellen kann keine Domain definieren."
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create reference '%(ref)s' is declared more than once."
-msgstr ""
+msgstr "Die Erstellungsreferenz „%(ref)s“ wurde mehr als einmal gemeldet."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
@@ -329,6 +340,8 @@ msgid ""
 "Error applying blueprint inheritance from '%(parent)s' to '%(child)s': %"
 "(error)s"
 msgstr ""
+"Fehler beim Anwenden der Blueprint-Vererbung von %(parent)s an %(child)s: %"
+"(error)s"
 
 #. module: populate
 #. odoo-python
@@ -346,6 +359,8 @@ msgid ""
 "For write/function jobs: generate one value set and perform one call per "
 "executable job."
 msgstr ""
+"Für Schreib-/Funktionsjobs: Erstellen Sie einen Werte-Satz und führen Sie "
+"einen Aufruf pro ausführbarem Job aus."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__function
@@ -356,24 +371,24 @@ msgstr "Funktion"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks require 'name'."
-msgstr ""
+msgstr "Funktionsblöcke erfordern einen „name“."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'arg', not 'field'."
-msgstr ""
+msgstr "Funktionsblöcke verwenden „arg'“, nicht „field“."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "Funktionsblöcke verwenden „ref“, nicht „id“."
 
 #. module: populate
 #: model:ir.module.module,summary:base.module_populate
 msgid "Generate synthetic data for an Odoo database"
-msgstr ""
+msgstr "Synthetische Daten für eine Odoo-Datenbank generieren"
 
 #. module: populate
 #: model:ir.module.module,description:base.module_populate
@@ -381,6 +396,8 @@ msgid ""
 "Generate synthetic data for an Odoo database, following a predefined "
 "blueprint. Used for performance testing."
 msgstr ""
+"Generieren Sie synthetische Daten für eine Odoo-Datenbank gemäß einer "
+"vordefinierten Vorlage. Wird für Leistungstests verwendet."
 
 #. module: populate
 #. odoo-python
@@ -418,13 +435,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' must use XML."
-msgstr ""
+msgstr "Importierte Blaupause „%(import_ref)s“ muss XML verwenden."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' was not found."
-msgstr ""
+msgstr "Die importierte Blaupause „%(import_ref)s“ wurde nicht gefunden."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
@@ -440,7 +457,7 @@ msgstr "Anweisungen"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Invalid import namespace '%(namespace)s'."
-msgstr ""
+msgstr "Ungültiger Import-Namespace „%(namespace)s“."
 
 #. module: populate
 #. odoo-python
@@ -459,6 +476,8 @@ msgid ""
 "Invalid target dependencies: %(invalid_targets)s. These targets do not exist "
 "in the operation block."
 msgstr ""
+"Ungültige Zielabhängigkeiten: %(invalid_targets)s. Diese Ziele existieren im "
+"Vorgangsblock nicht."
 
 #. module: populate
 #. odoo-python
@@ -477,6 +496,8 @@ msgid ""
 "Invalid values %(invalid_values)s for %(target_type)s target. Allowed values "
 "are: %(possible_values)s."
 msgstr ""
+"Ungültige Werte %(invalid_values)s für das Ziel %(target_type)s. Zulässige "
+"Werte sind: %(possible_values)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__is_done
@@ -523,24 +544,24 @@ msgstr "Zuletzt aktualisiert am"
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__method_name
 msgid "Method Name"
-msgstr ""
+msgstr "Name der Methode"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__method_name
 msgid "Method called by function jobs."
-msgstr ""
+msgstr "Von Funktionsjobs aufgerufene Methode."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'model'."
-msgstr ""
+msgstr "„model'“ fehlt."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'operation'."
-msgstr ""
+msgstr "„operation“ fehlt."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
@@ -566,7 +587,7 @@ msgstr "Modellname"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Names used for multiple generated targets: %(names)s."
-msgstr ""
+msgstr "Für mehrere generierte Ziele verwendete Namen: %(names)s."
 
 #. module: populate
 #. odoo-python
@@ -575,6 +596,8 @@ msgid ""
 "No generator specified for target '%(target)s' of type '%(type)s', and no "
 "default generator is registered for that target type."
 msgstr ""
+"Kein Generator für das Ziel „%(target)s“ vom Typ „%(type)s“ angegeben, und "
+"es ist kein Standardgenerator für diesen Zieltyp registriert."
 
 #. module: populate
 #. odoo-python
@@ -593,7 +616,7 @@ msgstr "Anzahl der parallelen Worker, die Jobs gleichzeitig ausführen"
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__operation
 msgid "Operation"
-msgstr ""
+msgstr "Vorgang"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
@@ -613,13 +636,13 @@ msgstr "Übergeordneter Pfad"
 #. module: populate
 #: model:ir.module.module,shortdesc:base.module_populate
 msgid "Populate"
-msgstr ""
+msgstr "Ausfüllen"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Positional arg names must be contiguous indexes from '0'."
-msgstr ""
+msgstr "Positionsargumente müssen fortlaufend ab Index „0“ nummeriert sein."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_json
@@ -645,7 +668,7 @@ msgstr "Anzahl Datensätze"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Recursive blueprint composition detected for '%(blueprint)s'."
-msgstr ""
+msgstr "Rekursive Blaupause-Zusammensetzung für „%(blueprint)s“ erkannt."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__ref
@@ -670,6 +693,12 @@ msgid ""
 "said reference.\n"
 "    "
 msgstr ""
+"Referenzieren Sie den Stapel von Datensätzen, der vom Job verwendet wird.\n"
+"    Wenn der Job-Vorgang 'create' ist -> Kommentiert die Datensätze für die "
+"Referenzierung.\n"
+"    Wenn der Job-Vorgang 'write' oder 'function' ist -> Verweist auf "
+"Datensätze mit besagter Referenz.\n"
+"    "
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_model_data
@@ -709,7 +738,7 @@ msgstr "Die Größe muss eine positive ganze Zahl sein, %(size)s angegeben."
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Some blueprint definition(s) are invalid."
-msgstr ""
+msgstr "Einige Blaupausen-Definitionen sind ungültig."
 
 #. module: populate
 #. odoo-python
@@ -735,7 +764,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Target: '%s'"
-msgstr ""
+msgstr "Ziel: „%s“"
 
 #. module: populate
 #. odoo-python
@@ -744,6 +773,8 @@ msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
 "inherits from it."
 msgstr ""
+"Die Blaupause „%(parent)s“ hat keine XML-Definition, aber „%(child)s“ leitet "
+"davon ab."
 
 #. module: populate
 #. odoo-python
@@ -810,32 +841,32 @@ msgstr "„Unique“ kann nicht mit dem Auswahlgenerator verwendet werden."
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown <import> attribute(s): %(attributes)s."
-msgstr ""
+msgstr "Unbekannte(s) <import>-Attribut(e): %(attributes)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown field(s) on '%(model)s': %(fields)s."
-msgstr ""
+msgstr "Unbekannte(s) Feld(er) in „%(model)s“: %(fields)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown model '%(model)s'."
-msgstr ""
+msgstr "Unbekanntes Modell „%(model)s“."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown operation '%(operation)s'."
-msgstr ""
+msgstr "Unbekannter Vorgang „%(operation)s“."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 #: code:addons/populate/models/job.py:0
 msgid "Unknown or non-callable method '%(method)s' on '%(model)s'."
-msgstr ""
+msgstr "Unbekannte oder nicht aufrufbare Methode „%(method)s“ in „%(model)s“."
 
 #. module: populate
 #. odoo-python
@@ -882,7 +913,7 @@ msgstr "Schreiben"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Write blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "Schreibblöcke verwenden „ref“, nicht „id“."
 
 #. module: populate
 #. odoo-python

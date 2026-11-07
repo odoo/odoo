@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-28 16:44+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-20/"
@@ -351,6 +351,7 @@ msgid "Design, send and track SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -448,6 +449,7 @@ msgid "Highest Click Rate"
 msgstr "Taxa de clique mais alta"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -559,6 +561,11 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "Rastrear Ligações"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -775,7 +782,9 @@ msgid "Phone Blacklisted"
 msgstr "Telefone na lista de bloqueio"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "Número de Telefone"
 
@@ -1138,14 +1147,14 @@ msgstr "foi removido com sucesso da"
 msgid "📵 Blacklisted"
 msgstr ""
 
-msgid "Mailing List Contacts"
-msgstr "Contatos da lista de distribuição"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "Contatos da lista de distribuição"
 
-msgid "Open Recipient"
-msgstr "Abrir recipiente"
+#~ msgid "Open Recipient"
+#~ msgstr "Abrir recipiente"
 
-msgid "Website Messages"
-msgstr "Mensagens do Website"
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do Website"
 
-msgid "Website communication history"
-msgstr "Histórico de comunicação do Website"
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de comunicação do Website"

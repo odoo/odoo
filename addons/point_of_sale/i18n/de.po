@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-10-22 07:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 09:49+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/de/>\n"
@@ -299,19 +299,19 @@ msgstr "Jeans aus Baumwoll-Denim mit 5 Taschen."
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
+"value=\"object.partner_id.name\"></t>\n"
 "                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
+"value=\"object.config_id.name\"></t>\n"
 "                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"user.lang\"></t>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Hello,</t>\n"
 "                    </div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <div>Thank you for purchasing from <t t-"
 "out=\"store_name\">Store name</t>!</div>\n"
 "                    <div>Attached, you will find your receipt for the "
@@ -321,44 +321,13 @@ msgid ""
 "time_format='short',                          lang_code=lg)\">time</t>.</"
 "span>\n"
 "                    </div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <div>With kind regards,</div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <t t-out=\"store_name\">Store name</t>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
-"                    <div>\n"
-"                        <t t-if=\"client_name\">Guten Tag <t t-"
-"out=\"client_name\">Name des Kunden</t>,</t>\n"
-"                        <t t-else=\"\">Guten Tag,</t>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>vielen Dank für Ihren Einkauf bei <t t-"
-"out=\"store_name\">Name des Shops</t>!</div>\n"
-"                    <div>Im Anhang finden Sie Ihren Beleg für den Einkauf "
-"vom <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
-"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
-"''\">''\">                          lang_code=lg) or ''\">Datum</t> <t t-"
-"out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">Uhrzeit</t>.</"
-"span>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>Mit freundlichen Grüßen</div>\n"
-"                    <br/>\n"
-"                    <t t-out=\"store_name\">Name des Shops</t>\n"
-"                </div>\n"
-"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -622,6 +591,12 @@ msgstr "? Klicken Sie auf „Bestätigen“, um die Zahlung zu validieren."
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "A customer is required on the order to create an invoice."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "A customer is required to use the payment method %s."
 msgstr "Ein Kunde muss die Zahlungsmethode %s verwenden."
@@ -631,6 +606,8 @@ msgstr "Ein Kunde muss die Zahlungsmethode %s verwenden."
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
+"Ein Kunde muss im Auftrag bzw. der Bestellung hinterlegt sein, um mit einem "
+"Kundenkonto zu bezahlen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1627,6 +1604,7 @@ msgstr "Zurück"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
 msgstr "Backend"
@@ -1777,6 +1755,12 @@ msgid "Before 19.1:"
 msgstr "Vor 19.1:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Bill"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Bill Printing"
@@ -1844,6 +1828,12 @@ msgstr "Brote"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Break Combo"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Browser LNA Prompt"
 msgstr "Eingabeaufforderung des Browser-LNZ"
@@ -1908,6 +1898,8 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.actions.server,name:point_of_sale.pos_order_set_cancel
 msgid "Cancel Order"
 msgstr "Bestellung stornieren"
@@ -2064,6 +2056,7 @@ msgstr "Ein-/Auszahlung"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
 msgstr "Ein-/Auszahlung"
@@ -2463,6 +2456,7 @@ msgstr "Schließen"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
 msgstr "Kasse schließen"
@@ -3005,6 +2999,12 @@ msgid "Create Partner"
 msgstr "Partner erstellen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Create Product"
+msgstr "Produkt erstellen"
+
+#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
 msgstr "Kunden erstellen"
@@ -3176,6 +3176,8 @@ msgid "Customer Account"
 msgstr "Kundenkonto"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
 msgstr "Kundendisplay"
@@ -4771,9 +4773,21 @@ msgstr ""
 "Dies kann mit einer Mindestmenge von 0 verglichen werden."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Info"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
 msgstr "Informationen zu Ihrem Produkt."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Install App"
+msgstr "App installieren"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -7278,6 +7292,8 @@ msgid "Payment Method"
 msgstr "Zahlungsmethode"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_method_form
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__payment_method_ids
@@ -8089,6 +8105,8 @@ msgid "Priced Product"
 msgstr "Bepreistes Produkt"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__pricelist_id
@@ -8145,6 +8163,12 @@ msgstr "Drucken"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__print_history
 msgid "Print History"
 msgstr "Verlauf drucken"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Print Report"
+msgstr "Druckdokument"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8283,6 +8307,7 @@ msgstr "Die lokale IP-Adresse des Druckers wird ausgegeben"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -8812,6 +8837,7 @@ msgstr "Neu laden"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -9259,7 +9285,7 @@ msgstr "Wählen Sie einen Kunden mit einer gültigen Adresse aus."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Select a journal"
-msgstr ""
+msgstr "Journal auswählen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9296,7 +9322,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 msgid "Select your default payment method"
-msgstr ""
+msgstr "Wählen Sie Ihre Standardzahlungsmethode"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -9869,7 +9895,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/loader.js:0
 msgid "Still loading, thank you for your patience…"
-msgstr ""
+msgstr "Wird geladen, vielen Dank für Ihre Geduld…"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10057,6 +10083,8 @@ msgid "Tare Weight:"
 msgstr "Taragewicht:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_account_tax
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Tax"
@@ -10546,6 +10574,8 @@ msgid ""
 "The payment method you choose will be linked to your device. You can change "
 "it later from the menu on top right."
 msgstr ""
+"Die von Ihnen gewählte Zahlungsmethode wird mit Ihrem Gerät verknüpft. Sie "
+"können diese später über das Menü oben rechts ändern."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -12702,6 +12732,70 @@ msgstr "mit einem Wert von"
 msgid "x"
 msgstr "x"
 
+#~ msgid ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"client_name\" t-"
+#~ "value=\"object.partner_id.name\"/>\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Hello <t t-"
+#~ "out=\"client_name\">Client name</t>,</t>\n"
+#~ "                        <t t-else=\"\">Hello,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Thank you for purchasing from <t t-"
+#~ "out=\"store_name\">Store name</t>!</div>\n"
+#~ "                    <div>Attached, you will find your receipt for the "
+#~ "purchase of <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+#~ "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) "
+#~ "or ''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+#~ "time_format='short',                          lang_code=lg)\">time</t>.</"
+#~ "span>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>With kind regards,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <t t-out=\"store_name\">Store name</t>\n"
+#~ "                </div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"client_name\" t-"
+#~ "value=\"object.partner_id.name\"/>\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Guten Tag <t t-"
+#~ "out=\"client_name\">Name des Kunden</t>,</t>\n"
+#~ "                        <t t-else=\"\">Guten Tag,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>vielen Dank für Ihren Einkauf bei <t t-"
+#~ "out=\"store_name\">Name des Shops</t>!</div>\n"
+#~ "                    <div>Im Anhang finden Sie Ihren Beleg für den Einkauf "
+#~ "vom <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+#~ "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) "
+#~ "or ''\">''\">                          lang_code=lg) or ''\">Datum</t> <t "
+#~ "t-out=\"format_time(time=object.date_order, tz=tz, "
+#~ "time_format='short',                          lang_code=lg)\">Uhrzeit</t>."
+#~ "</span>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Mit freundlichen Grüßen</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <t t-out=\"store_name\">Name des Shops</t>\n"
+#~ "                </div>\n"
+#~ "            "
+
 #~ msgid "Leave empty to use the receivable account of customer"
 #~ msgstr "Leer lassen, um das Debitorenkonto des Kunden zu verwenden"
 
@@ -12736,15 +12830,6 @@ msgstr "x"
 
 #~ msgid "Counterpart for invoice payment %s"
 #~ msgstr "Gegenposten für Rechnungszahlung %s"
-
-#~ msgid "Create Product"
-#~ msgstr "Produkt erstellen"
-
-#~ msgid "Install App"
-#~ msgstr "App installieren"
-
-#~ msgid "Print Report"
-#~ msgstr "Druckdokument"
 
 #~ msgid ""
 #~ "Whenever you close a session, one entry is generated in the following "

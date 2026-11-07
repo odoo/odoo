@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-11 06:35+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -78,8 +78,8 @@ msgid ""
 "<i class=\"oi oi-filled text-primary me-2\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
-"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"phone\" title=\"电"
-"话\"/>"
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"phone\" title=\"电话"
+"\"/>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -357,6 +357,7 @@ msgid "Design, send and track SMS"
 msgstr "设计、发送并跟踪短信"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -451,6 +452,7 @@ msgid "Highest Click Rate"
 msgstr "最高的点击率"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -558,6 +560,11 @@ msgstr "将短信与邮件/短信跟踪模型联系起来"
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "链接追踪器"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -772,7 +779,9 @@ msgid "Phone Blacklisted"
 msgstr "电话加黑"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "电话号码"
 
@@ -1131,35 +1140,35 @@ msgstr "已成功从"
 msgid "📵 Blacklisted"
 msgstr "📵 已列入黑名单"
 
-msgid ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Text Message have been cancelled and will not be sent.</span>"
-msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">短信文本"
-"已被取消，不会发送。</span>"
+#~ msgid ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Message have been cancelled and will not be sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">短信"
+#~ "文本已被取消，不会发送。</span>"
 
-msgid ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages could not be delivered.</span>"
-msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS 文本信"
-"息无法发送。</span>"
+#~ msgid ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Messages could not be delivered.</span>"
+#~ msgstr ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS 文"
+#~ "本信息无法发送。</span>"
 
-msgid ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages have been sent.</span>"
-msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">已发送 SMS 短信。"
-"</span>"
+#~ msgid ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+#~ "Messages have been sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">已发送 SMS 短"
+#~ "信。</span>"
 
-msgid "Mailing List Contacts"
-msgstr "邮件列表联系人"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "邮件列表联系人"
 
-msgid "Open Recipient"
-msgstr "开放的收件人"
+#~ msgid "Open Recipient"
+#~ msgstr "开放的收件人"
 
-msgid "Website Messages"
-msgstr "网站消息"
+#~ msgid "Website Messages"
+#~ msgstr "网站消息"
 
-msgid "Website communication history"
-msgstr "网站沟通记录"
+#~ msgid "Website communication history"
+#~ msgstr "网站沟通记录"

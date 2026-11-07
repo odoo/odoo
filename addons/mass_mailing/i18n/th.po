@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-22 10:31+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-05 08:15+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/"
 "mass_mailing/th/>\n"
@@ -196,36 +196,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
 msgid "%Click (Total)"
 msgstr "% คลิก (ทั้งหมด)"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Dining Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Loft Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Nordic Chair'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Oak Drawer'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_people_snippets.xml:0
-msgid "'Rating'"
-msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -1267,6 +1237,11 @@ msgid "Attach a file"
 msgstr "แนบเอกสาร"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 msgid "Attachment Count"
@@ -1831,11 +1806,6 @@ msgid "Clicked"
 msgstr "การคลิก"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
-msgid "Clicked By"
-msgstr ""
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_list_simplified
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -2151,7 +2121,7 @@ msgstr "สร้างเวอร์ชันทางเลือก"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "Created"
-msgstr ""
+msgstr "สร้างแล้ว"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_list_template
@@ -2451,6 +2421,7 @@ msgid "Disk"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__display_name
@@ -2691,6 +2662,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__mailing_type__mail
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
+#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Email"
 msgstr "อีเมล"
 
@@ -3146,6 +3118,30 @@ msgstr "หัวเรื่อง"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 1"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 2"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 3"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 4"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_marketing_snippets.xml:0
 msgid "Here's your coupon code - but hurry! Ends 9/28"
 msgstr "นี่คือรหัสคูปองของคุณ แต่ต้องรีบแล้ว! เพราะหมดเขตวันที่ 28 ก.ย"
@@ -3212,6 +3208,7 @@ msgid "I receive too many emails from this list"
 msgstr "ฉันได้รับอีเมลจากรายการนี้มากเกินไป"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__id
@@ -4773,15 +4770,15 @@ msgstr ""
 "ส่งจดหมายกลุ่มไปยังลูกค้าเป้าหมายโอกาสหรือลูกค้าของคุณได้อย่างง่ายดาย\n"
 "ด้วย Odoo<a href=\"https://www.odoo.com/app/email-marketing\">อีเมลมาร์เก็ตติ้ง</"
 "a> \n"
-"ติดตามประสิทธิภาพแคมเปญการตลาดเพื่อปรับปรุงอัตราการแปลง ออกแบบอีเมลแบบมืออาชีพและใช้เทมเพ"
-"ลตซ้ำได้ในไม่กี่คลิก \n"
+"ติดตามประสิทธิภาพแคมเปญการตลาดเพื่อปรับปรุงอัตราการแปลง "
+"ออกแบบอีเมลแบบมืออาชีพและใช้เทมเพลตซ้ำได้ในไม่กี่คลิก \n"
 "\n"
 "ส่งอีเมลระดับมืออาชีพ \n"
 "------------------------ \n"
 "\n"
-"นำเข้าฐานข้อมูลของผู้มีโอกาสเป็นลูกค้าหรือกรองโอกาสในการขายที่มีอยู่โอกาสและลูกค้าในไม่กี่คลิก กำห"
-"นดเทมเพลตอีเมลเพื่อใช้ซ้ำเนื้อหาหรือการออกแบบเฉพาะสำหรับจดหมายข่าวของคุณ ตั้งค่าเซิร์ฟเวอร์อีเม"
-"ลหลายเครื่องด้วย IP / โดเมนของตนเองเพื่อเพิ่มประสิทธิภาพอัตราการเปิด \n"
+"นำเข้าฐานข้อมูลของผู้มีโอกาสเป็นลูกค้าหรือกรองโอกาสในการขายที่มีอยู่โอกาสและลูกค้าในไม่กี่คลิก "
+"กำหนดเทมเพลตอีเมลเพื่อใช้ซ้ำเนื้อหาหรือการออกแบบเฉพาะสำหรับจดหมายข่าวของคุณ "
+"ตั้งค่าเซิร์ฟเวอร์อีเมลหลายเครื่องด้วย IP / โดเมนของตนเองเพื่อเพิ่มประสิทธิภาพอัตราการเปิด \n"
 "\n"
 "จัดแคมเปญการตลาด \n"
 "---------------------------- \n"
@@ -4790,33 +4787,32 @@ msgstr ""
 "marketing\">Lead Automation</a> ของเรา \n"
 "\n"
 "รับสถิติแบบเรียลไทม์เกี่ยวกับประสิทธิภาพของแคมเปญเพื่อปรับปรุงอัตรา Conversion ของคุณ \n"
-"ติดตามอีเมลที่ส่งรับเปิดและตอบ จัดการแคมเปญการตลาดกลุ่มสนทนาโอกาสในการขายและโอกาสได้อย่าง"
-"ง่ายดายในแพลตฟอร์มเดียวที่เรียบง่ายและทรงพลัง \n"
+"ติดตามอีเมลที่ส่งรับเปิดและตอบ "
+"จัดการแคมเปญการตลาดกลุ่มสนทนาโอกาสในการขายและโอกาสได้อย่างง่ายดายในแพลตฟอร์มเดียวที่เรียบง่ายและทรงพลัง \n"
 "\n"
 "ผสานรวมกับแอป Odoo \n"
 "------------------------- \n"
 "\n"
 "เข้าถึงคุณสมบัติการส่งจดหมายจำนวนมากจากทุกแอป Odoo เพื่อปรับปรุงวิธีการสื่อสารของผู้ใช้ \n"
 "\n"
-"ส่งเทมเพลตอีเมลจาก <a href=\"https://www.odoo.com/app/email-marketing\">โอกาสกา"
-"รขายของ Odoo CRM</a> เลือกลูกค้าเป้าหมายตามกลุ่ม\n"
-"การตลาดส่ง <a href=\"https://www.odoo.com/app/recruitment\">ข้อเสนองาน</a> และค"
-"ำตอบอัตโนมัติให้กับผู้สมัครใช้เทมเพลตอีเมลซ้ำใน\n"
+"ส่งเทมเพลตอีเมลจาก <a href=\"https://www.odoo.com/app/email-"
+"marketing\">โอกาสการขายของ Odoo CRM</a> เลือกลูกค้าเป้าหมายตามกลุ่ม\n"
+"การตลาดส่ง <a href=\"https://www.odoo.com/app/recruitment\">ข้อเสนองาน</a> "
+"และคำตอบอัตโนมัติให้กับผู้สมัครใช้เทมเพลตอีเมลซ้ำใน\n"
 "แคมเปญการตลาดอัตโนมัติสำหรับลูกค้าเป้าหมาย คำตอบอีเมลของคุณจะปรากฏโดยอัตโนมัติ\n"
 "ในประวัติของเอกสารทุกฉบับด้วยโมดูลโซเชียลเน็ตเวิร์ก \n"
 "\n"
 "ทำความสะอาดฐานข้อมูลลูกค้าเป้าหมาย \n"
 "------------------------ \n"
 "\n"
-"รับฐานข้อมูลลูกค้าเป้าหมายที่สะอาดซึ่งปรับปรุงตลอดเวลาโดยใช้ประสิทธิภาพของอีเมลของคุณ Odoo จัดก"
-"ารอีเมลตีกลับอย่างมีประสิทธิภาพตั้งค่าสถานะโอกาสในการขายที่ผิดพลาดตามนั้นและให้สถิติเกี่ยวกับคุณภาพ"
-"ของโอกาสในการขายของคุณ \n"
+"รับฐานข้อมูลลูกค้าเป้าหมายที่สะอาดซึ่งปรับปรุงตลอดเวลาโดยใช้ประสิทธิภาพของอีเมลของคุณ Odoo "
+"จัดการอีเมลตีกลับอย่างมีประสิทธิภาพตั้งค่าสถานะโอกาสในการขายที่ผิดพลาดตามนั้นและให้สถิติเกี่ยวกับคุณภาพของโอกาสในการขายของคุณ \n"
 "\n"
 "คลิกเดียวอีเมลส่ง\n"
 " --------------------- \n"
 "\n"
-"ฝ่ายการตลาดชอบทำงานเกี่ยวกับแคมเปญ แต่คุณยังสามารถมอบสิ่งอำนวยความสะดวกในการส่งจดหมายกลุ่"
-"ม\n"
+"ฝ่ายการตลาดชอบทำงานเกี่ยวกับแคมเปญ "
+"แต่คุณยังสามารถมอบสิ่งอำนวยความสะดวกในการส่งจดหมายกลุ่ม\n"
 "ในคลิกเดียวให้กับผู้ใช้คนทั้งหมดในกลุ่มเป้าหมายหรือเอกสารของพวกเขาเอง\n"
 "\n"
 "เลือกเอกสารสองสามอย่าง (เช่นลูกค้าเป้าหมาย ทิกเก็ตช่วยเหลือ ซัพพลายเออร์ ผู้สมัคร ... ) \n"
@@ -4825,36 +4821,35 @@ msgstr ""
 "ติดตามผลของคำตอบ\n"
 " -------------------- \n"
 "\n"
-"ฟีเจอร์ chatter จะช่วยให้คุณสามารถสื่อสารกับลูกค้าของคุณได้เร็วขึ้นและมีประสิทธิภาพมากขึ้น รับเอกส"
-"ารที่สร้างขึ้นโดยอัตโนมัติ (โอกาสในการขายโอกาสงาน ... ) ตามคำตอบสำหรับแคมเปญการส่งจดหมา"
-"ยจำนวนมากของคุณติดตามการสนทนาโดยตรงบนเอกสารทางธุรกิจภายใน Odoo หรือทางอีเมล \n"
+"ฟีเจอร์ chatter จะช่วยให้คุณสามารถสื่อสารกับลูกค้าของคุณได้เร็วขึ้นและมีประสิทธิภาพมากขึ้น "
+"รับเอกสารที่สร้างขึ้นโดยอัตโนมัติ (โอกาสในการขายโอกาสงาน ... ) "
+"ตามคำตอบสำหรับแคมเปญการส่งจดหมายจำนวนมากของคุณติดตามการสนทนาโดยตรงบนเอกสารทางธุรกิจภายใน "
+"Odoo หรือทางอีเมล \n"
 "\n"
-"รับการเจรจาและการอภิปรายทั้งหมดที่แนบมากับเอกสารที่ถูกต้องและผู้จัดการที่เกี่ยวข้องจะได้รับแจ้งเกี่ยว"
-"กับเหตุการณ์ที่เฉพาะเจาะจง \n"
+"รับการเจรจาและการอภิปรายทั้งหมดที่แนบมากับเอกสารที่ถูกต้องและผู้จัดการที่เกี่ยวข้องจะได้รับแจ้งเกี่ยวกับเหตุการณ์ที่เฉพาะเจาะจง \n"
 "\n"
 "แดชบอร์ดแคมเปญ \n"
 "------------------- \n"
 "\n"
-"รับข้อมูลเชิงลึกที่คุณต้องการเพื่อสร้างแคมเปญการตลาดที่ชาญฉลาดขึ้น ติดตามสถิติต่อแคมเปญ: อัตราตีกลับ"
-"อีเมลที่ส่งเนื้อหาที่ดีที่สุดและอื่นๆ แดชบอร์ดที่ชัดเจนช่วยให้คุณเห็นภาพรวมโดยตรงเกี่ยวกับประสิทธิภาพแคม"
-"เปญของคุณ \n"
+"รับข้อมูลเชิงลึกที่คุณต้องการเพื่อสร้างแคมเปญการตลาดที่ชาญฉลาดขึ้น ติดตามสถิติต่อแคมเปญ: "
+"อัตราตีกลับอีเมลที่ส่งเนื้อหาที่ดีที่สุดและอื่นๆ "
+"แดชบอร์ดที่ชัดเจนช่วยให้คุณเห็นภาพรวมโดยตรงเกี่ยวกับประสิทธิภาพแคมเปญของคุณ \n"
 "\n"
 "การผสานการใช้งานกับแอปอื่นอย่างสมบูรณ์\n"
 " --------------------------------- \n"
 "\n"
-"กำหนดการดำเนินการอัตโนมัติ (เช่นขอให้พนักงานขาย โทร ส่งอีเมล ... ) ตามทริกเกอร์ (ไม่มีกิจกร"
-"รมตั้งแต่ 20 วันตอบอีเมลส่งเสริมการขาย และอื่นๆ ) \n"
+"กำหนดการดำเนินการอัตโนมัติ (เช่นขอให้พนักงานขาย โทร ส่งอีเมล ... ) ตามทริกเกอร์ "
+"(ไม่มีกิจกรรมตั้งแต่ 20 วันตอบอีเมลส่งเสริมการขาย และอื่นๆ ) \n"
 "\n"
-"เพิ่มประสิทธิภาพแคมเปญจากลูกค้าเป้าหมายให้เป็นลูกค้าในทุกช่องทาง ตัดสินใจอย่างชาญฉลาดว่าจะลงทุน"
-"ที่ไหนและแสดงผลกระทบของกิจกรรมทางการตลาดที่มีต่อผลกำไรของบริษัท \n"
+"เพิ่มประสิทธิภาพแคมเปญจากลูกค้าเป้าหมายให้เป็นลูกค้าในทุกช่องทาง "
+"ตัดสินใจอย่างชาญฉลาดว่าจะลงทุนที่ไหนและแสดงผลกระทบของกิจกรรมทางการตลาดที่มีต่อผลกำไรของบริษัท \n"
 "\n"
-"รวมแบบฟอร์มการติดต่อในเว็บไซต์ของคุณได้อย่างง่ายดาย การส่งแบบฟอร์มสร้างโอกาสในการขายโดยอัต"
-"โนมัติใน Odoo CRM นำไปใช้ในแคมเปญการตลาดได้ \n"
+"รวมแบบฟอร์มการติดต่อในเว็บไซต์ของคุณได้อย่างง่ายดาย "
+"การส่งแบบฟอร์มสร้างโอกาสในการขายโดยอัตโนมัติใน Odoo CRM นำไปใช้ในแคมเปญการตลาดได้ \n"
 "\n"
-"จัดการ <a href=\"https://www.odoo.com/app/crm\">ช่องทางการขาย</a> ของคุณโดยไม่ต้อง"
-"ใช้ความพยายาม ดึงดูดลูกค้าเป้าหมายติดตามผลทางโทรศัพท์และการประชุม วิเคราะห์คุณภาพของลูกค้าเป้"
-"าหมายของคุณเพื่อทำการตัดสินใจอย่างชาญฉลาดและประหยัดเวลาด้วยการรวมอีเมลไว้ในแอปพลิเคชันโดย"
-"ตรง\n"
+"จัดการ <a href=\"https://www.odoo.com/app/crm\">ช่องทางการขาย</a> "
+"ของคุณโดยไม่ต้องใช้ความพยายาม ดึงดูดลูกค้าเป้าหมายติดตามผลทางโทรศัพท์และการประชุม "
+"วิเคราะห์คุณภาพของลูกค้าเป้าหมายของคุณเพื่อทำการตัดสินใจอย่างชาญฉลาดและประหยัดเวลาด้วยการรวมอีเมลไว้ในแอปพลิเคชันโดยตรง\n"
 "\n"
 
 #. module: mass_mailing
@@ -5238,6 +5233,12 @@ msgstr "ดูตัวอย่างข้อความ"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_record_ref
 msgid "Preview for"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Primary Button"
 msgstr ""
 
 #. module: mass_mailing
@@ -5687,6 +5688,12 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Second list of Features"
 msgstr "รายการฟีเจอร์ที่สอง"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Secondary Button"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6361,6 +6368,7 @@ msgstr "ทดสอบแล้ว"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_inner_snippets.xml:0
 msgid "Text"
 msgstr "ข้อความ"
@@ -6735,7 +6743,7 @@ msgstr "ประเภทกิจกรรมข้อยกเว้นบน
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign

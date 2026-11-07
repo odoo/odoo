@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-18 16:33+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/survey/lo/>\n"
@@ -160,7 +160,7 @@ msgid ""
 "                <a href=\"/\"><img t-if=\"not "
 "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
 "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name "
 "or ''\">Feedback Form</t>\n"
@@ -180,49 +180,13 @@ msgid ""
 "                    certification\n"
 "                </p>\n"
 "                <p>Congratulations for passing the test with a score of "
-"<strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"<strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
-"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"    <table style=\"width:600px;margin:5px auto;\">\n"
-"        <tbody>\n"
-"            <tr><td>\n"
-"                <!-- We use the logo of the company that created the survey "
-"(to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
-"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    ໃບຢັ້ງຢືນ: <t t-out=\"object.survey_id.display_name or ''\">"
-"ແບບຟອມຄຳຕິຊົມ</t>\n"
-"            </td></tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
-"solid #e1e1e1;\">\n"
-"        <tbody>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>ຮຽນ <span t-out=\"object.partner_id.name or "
-"'participant'\">ຜູ້ເຂົ້າຮ່ວມ</span></p>\n"
-"                <p>\n"
-"                    ກະລຸນາກວດເບິ່ງໃບຢັ້ງຢືນທີ່ຄັດຕິດມານີ້\n"
-"                        <strong t-out=\"object.survey_id.display_name or "
-"''\">Furniture Creation</strong>\n"
-"                    ຂອງທ່ານ\n"
-"                </p>\n"
-"                <p>ຂໍສະແດງຄວາມຍິນດີທີ່ທ່ານສອບເສັງຜ່ານດ້ວຍຄະແນນ <strong t-"
-"out=\"object.scoring_percentage\"/>%!</p>\n"
-"            </td></tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"</div>\n"
-"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -230,7 +194,7 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or "
-"'participant'\">participant</t><br/><br/>\n"
+"'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
@@ -254,7 +218,7 @@ msgid ""
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
 "            Please answer the survey for <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -266,43 +230,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        ຮຽນ <t t-out=\"object.partner_id.name or 'participant'\">ຜູ້ເຂົ້າຮ່ວມ</t>"
-"<br/><br/>\n"
-"        <t t-if=\"object.survey_id.certification\">\n"
-"            ທ່ານໄດ້ຮັບການເຊີນໃຫ້ເຂົ້າຮ່ວມການສອບເສັງເອົາໃບຢັ້ງຢືນໃໝ່.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            ພວກເຮົາກຳລັງດຳເນີນການສຳຫຼວດ ແລະ ຂໍຂອບໃຈເປັນຢ່າງຍິ່ງສຳລັບຄຳຕອບຂອງທ່ານ.\n"
-"        </t>\n"
-"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
-"style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
-"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
-"font-size:13px;\">\n"
-"                <t t-if=\"object.survey_id.certification\">\n"
-"                    ເລີ່ມການຢັ້ງຢືນ\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    ເລີ່ມແບບສຳຫຼວດ\n"
-"                </t>\n"
-"            </a>\n"
-"        </div>\n"
-"        <t t-if=\"object.deadline\">\n"
-"            ກະລຸນາຕອບແບບສຳຫຼວດພາຍໃນວັນທີ <t t-out=\"format_date(object.deadline) "
-"or ''\">05/05/2021</t>.<br/><br/>\n"
-"        </t>\n"
-"        <t t-if=\"object.survey_id.certification\">\n"
-"            ຂໍອວຍພອນໃຫ້ທ່ານໂຊກດີ!\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            ຂໍຂອບໃຈລ່ວງໜ້າສຳລັບການເຂົ້າຮ່ວມຂອງທ່ານ.\n"
-"        </t>\n"
-"    \n"
-"</div>\n"
-"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -324,8 +251,8 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"edit\" aria-hidden=\"true\"/>Edit "
 "the survey"
 msgstr ""
-"<i class=\"oi oi-filled me-2\" data-icon=\"edit\" aria-hidden=\"true\"/>ແກ້ໄຂແ"
-"ບບສຳຫຼວດ"
+"<i class=\"oi oi-filled me-2\" data-icon=\"edit\" aria-hidden=\"true\"/"
+">ແກ້ໄຂແບບສຳຫຼວດ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -340,8 +267,8 @@ msgid ""
 "<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
 ">Review answers"
 msgstr ""
-"<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/>ກວດສ"
-"ອບຄຳຕອບ"
+"<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
+">ກວດສອບຄຳຕອບ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_multiple_choice
@@ -367,8 +294,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
 "><span class=\"d-none d-lg-inline ms-2\">Stats</span>"
 msgstr ""
-"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/>"
-"<span class=\"d-none d-lg-inline ms-2\">ສະຖິຕິ</span>"
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
+"><span class=\"d-none d-lg-inline ms-2\">ສະຖິຕິ</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -376,8 +303,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
 ">Download certification"
 msgstr ""
-"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/>ດາ"
-"ວໂຫຼດໃບຢັ້ງຢືນ"
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
+">ດາວໂຫຼດໃບຢັ້ງຢືນ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -396,8 +323,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "<i class=\"oi\" data-icon=\"bar_chart\" aria-hidden=\"true\"/> Results"
-msgstr ""
-"<i class=\"oi\" data-icon=\"bar_chart\" aria-hidden=\"true\"/> ຜົນໄດ້ຮັບ"
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\" aria-hidden=\"true\"/> ຜົນໄດ້ຮັບ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -405,8 +331,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"warning\"/> It is currently not possible to pass "
 "this assessment because no question is configured to give any points."
 msgstr ""
-"<i class=\"oi\" data-icon=\"warning\"/> ປະຈຸບັນຍັງບໍ່ສາມາດສອບເສັງຜ່ານການປະເມີນນີ້ໄດ້ ເນື່ອ"
-"ງຈາກບໍ່ມີຄຳຖາມໃດທີ່ຖືກຕັ້ງຄ່າໃຫ້ຄະແນນ."
+"<i class=\"oi\" data-icon=\"warning\"/> ປະຈຸບັນຍັງບໍ່ສາມາດສອບເສັງຜ່ານການປະເມີນນີ້ໄດ້ "
+"ເນື່ອງຈາກບໍ່ມີຄຳຖາມໃດທີ່ຖືກຕັ້ງຄ່າໃຫ້ຄະແນນ."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -414,8 +340,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\"> or "
 "press CTRL+Enter</small>"
 msgstr ""
-"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\"> ຫຼື ກົ"
-"ດ CTRL+Enter</small>"
+"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\"> ຫຼື "
+"ກົດ CTRL+Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -423,8 +349,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">or "
 "press CTRL+Enter</small>"
 msgstr ""
-"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">ຫຼື ກົ"
-"ດ CTRL+Enter</small>"
+"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">ຫຼື "
+"ກົດ CTRL+Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -432,8 +358,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">or "
 "press Enter</small>"
 msgstr ""
-"<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">ຫຼື ກົ"
-"ດ Enter</small>"
+"<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">ຫຼື "
+"ກົດ Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -490,8 +416,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">ໃບຢັ້ງຢື"
-"ນ</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
+"2\">ໃບຢັ້ງຢືນ</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">ໃບຢັ້ງຢືນ</span>"
 
@@ -665,16 +591,14 @@ msgstr "ລາຄາແພງເກີນໄປຫຼາຍ"
 msgid ""
 "A positive default time limit is required when the session rewards quick "
 "answers."
-msgstr ""
-"ຕ້ອງມີການກຳນົດເວລາເລີ່ມຕົ້ນເປັນຄ່າບວກ ເມື່ອເຊສຊັນມີການໃຫ້ລາງວັນສຳລັບການຕອບໄວ."
+msgstr "ຕ້ອງມີການກຳນົດເວລາເລີ່ມຕົ້ນເປັນຄ່າບວກ ເມື່ອເຊສຊັນມີການໃຫ້ລາງວັນສຳລັບການຕອບໄວ."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
-msgstr ""
-"ຄະແນນບວກສະແດງເຖິງຕົວເລືອກທີ່ຖືກຕ້ອງ; ຄະແນນລົບ ຫຼື ສູນ ສະແດງເຖິງຄຳຕອບທີ່ຜິດ"
+msgstr "ຄະແນນບວກສະແດງເຖິງຕົວເລືອກທີ່ຖືກຕ້ອງ; ຄະແນນລົບ ຫຼື ສູນ ສະແດງເຖິງຄຳຕອບທີ່ຜິດ"
 
 #. module: survey
 #. odoo-javascript
@@ -800,8 +724,7 @@ msgstr "ເຫັນດີ"
 msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
-msgstr ""
-"ທຸກຄຳຖາມທີ່ \"ເປັນຄຳຖາມທີ່ມີຄະແນນ = ແມ່ນ\" ແລະ \"ປະເພດຄຳຖາມ: ວັນທີ\" ຕ້ອງມີຄຳຕອບ"
+msgstr "ທຸກຄຳຖາມທີ່ \"ເປັນຄຳຖາມທີ່ມີຄະແນນ = ແມ່ນ\" ແລະ \"ປະເພດຄຳຖາມ: ວັນທີ\" ຕ້ອງມີຄຳຕອບ"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
@@ -988,8 +911,7 @@ msgstr "ຈຳນວນຄັ້ງທີ່ເຫຼືອ:"
 msgid ""
 "Attendee nickname, mainly used to identify them in the survey session "
 "leaderboard."
-msgstr ""
-"ຊື່ຫຼິ້ນຂອງຜູ້ເຂົ້າຮ່ວມ, ໃຊ້ເປັນຫຼັກເພື່ອລະບຸຕົວຕົນໃນຕາຕະລາງຜູ້ນຳຂອງເຊສຊັນແບບສຳຫຼວດ."
+msgstr "ຊື່ຫຼິ້ນຂອງຜູ້ເຂົ້າຮ່ວມ, ໃຊ້ເປັນຫຼັກເພື່ອລະບຸຕົວຕົນໃນຕາຕະລາງຜູ້ນຳຂອງເຊສຊັນແບບສຳຫຼວດ."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1125,8 +1047,7 @@ msgstr "ມະນຸດສາມາດເບິ່ງເຫັນໂຟຕອນ
 msgid ""
 "Cannot deactivate a language currently used by survey(s) only supporting "
 "that language."
-msgstr ""
-"ບໍ່ສາມາດປິດການໃຊ້ງານພາສາທີ່ກຳລັງຖືກໃຊ້ໂດຍແບບສຳຫຼວດທີ່ຮອງຮັບສະເພາະພາສານັ້ນໄດ້."
+msgstr "ບໍ່ສາມາດປິດການໃຊ້ງານພາສາທີ່ກຳລັງຖືກໃຊ້ໂດຍແບບສຳຫຼວດທີ່ຮອງຮັບສະເພາະພາສານັ້ນໄດ້."
 
 #. module: survey
 #. odoo-python
@@ -1134,8 +1055,7 @@ msgstr ""
 msgid ""
 "Cannot deactivate languages currently used by survey(s) only supporting "
 "those languages."
-msgstr ""
-"ບໍ່ສາມາດປິດການໃຊ້ງານພາສາທີ່ກຳລັງຖືກໃຊ້ໂດຍແບບສຳຫຼວດທີ່ຮອງຮັບສະເພາະພາສາເຫຼົ່ານັ້ນໄດ້."
+msgstr "ບໍ່ສາມາດປິດການໃຊ້ງານພາສາທີ່ກຳລັງຖືກໃຊ້ໂດຍແບບສຳຫຼວດທີ່ຮອງຮັບສະເພາະພາສາເຫຼົ່ານັ້ນໄດ້."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -1341,8 +1261,8 @@ msgid ""
 "possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
-"ບໍ່ສາມາດຮວມການເລື່ອນໄປມາ ແລະ \"ການໃຫ້ຄະແນນພ້ອມຄຳຕອບຫຼັງຈາກແຕ່ລະໜ້າ\" ພ້ອມກັນໄດ້; ກະລຸນາອັບເດ"
-"ດແບບສຳຫຼວດຕໍ່ໄປນີ້:\n"
+"ບໍ່ສາມາດຮວມການເລື່ອນໄປມາ ແລະ \"ການໃຫ້ຄະແນນພ້ອມຄຳຕອບຫຼັງຈາກແຕ່ລະໜ້າ\" ພ້ອມກັນໄດ້; "
+"ກະລຸນາອັບເດດແບບສຳຫຼວດຕໍ່ໄປນີ້:\n"
 "- %(survey_names)s"
 
 #. module: survey
@@ -1413,8 +1333,7 @@ msgstr "ຂໍສະແດງຄວາມຍິນດີ! ຕອນນີ້ທ�
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
 msgid "Congratulations, you are now official vendor of MyCompany"
-msgstr ""
-"ຂໍສະແດງຄວາມຍິນດີ, ຕອນນີ້ທ່ານເປັນຜູ້ສະໜອງຢ່າງເປັນທາງການຂອງ MyCompany ແລ້ວ"
+msgstr "ຂໍສະແດງຄວາມຍິນດີ, ຕອນນີ້ທ່ານເປັນຜູ້ສະໜອງຢ່າງເປັນທາງການຂອງ MyCompany ແລ້ວ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -1564,8 +1483,7 @@ msgstr "ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ສ
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr ""
-"ສຳລັບແບບສຳຫຼວດພາຍໃນ, ບໍ່ອະນຸຍາດໃຫ້ສ້າງໂທເຄັນໃຫ້ບຸກຄົນອື່ນທີ່ບໍ່ແມ່ນພະນັກງານ."
+msgstr "ສຳລັບແບບສຳຫຼວດພາຍໃນ, ບໍ່ອະນຸຍາດໃຫ້ສ້າງໂທເຄັນໃຫ້ບຸກຄົນອື່ນທີ່ບໍ່ແມ່ນພະນັກງານ."
 
 #. module: survey
 #. odoo-python
@@ -1579,8 +1497,7 @@ msgstr "ບໍ່ອະນຸຍາດໃຫ້ສ້າງໂທເຄັນສ
 msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
-msgstr ""
-"ບໍ່ອະນຸຍາດໃຫ້ສ້າງໂທເຄັນສຳລັບບຸກຄົນພາຍນອກ ສຳລັບແບບສຳຫຼວດທີ່ຕ້ອງການການຢືນຢັນຕົວຕົນ."
+msgstr "ບໍ່ອະນຸຍາດໃຫ້ສ້າງໂທເຄັນສຳລັບບຸກຄົນພາຍນອກ ສຳລັບແບບສຳຫຼວດທີ່ຕ້ອງການການຢືນຢັນຕົວຕົນ."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
@@ -2069,8 +1986,7 @@ msgstr "ແມ່ນ້ຳ White Nile ມີຄວາມຍາວເທົ່າ
 #: model:survey.question,title:survey.vendor_certification_page_3_question_6
 msgid ""
 "How many chairs do you think we should aim to sell in a year (not rated)?"
-msgstr ""
-"ທ່ານຄິດວ່າພວກເຮົາຄວນຕັ້ງເປົ້າໝາຍຂາຍຕັ່ງໃຫ້ໄດ້ຈັກໜ່ວຍຕໍ່ປີ? (ບໍ່ຄິດຄະແນນ)?"
+msgstr "ທ່ານຄິດວ່າພວກເຮົາຄວນຕັ້ງເປົ້າໝາຍຂາຍຕັ່ງໃຫ້ໄດ້ຈັກໜ່ວຍຕໍ່ປີ? (ບໍ່ຄິດຄະແນນ)?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_1
@@ -2109,8 +2025,8 @@ msgid ""
 "I actually don't like thinking. I think people think I like to think a lot. "
 "And I don't. I do not like to think at all."
 msgstr ""
-"ຕົວຈິງແລ້ວຂ້ອຍບໍ່ມັກຄິດເລີຍ. ຂ້ອຍຄິດວ່າຄົນອື່ນຄິດວ່າຂ້ອຍມັກຄິດຫຼາຍ. ແຕ່ຂ້ອຍບໍ່ໄດ້ເປັນແບບນັ້ນ. ຂ້ອຍບໍ່ມັກຄິດເລີຍແ"
-"ມ່ນແຕ່ໜ້ອຍດຽວ."
+"ຕົວຈິງແລ້ວຂ້ອຍບໍ່ມັກຄິດເລີຍ. ຂ້ອຍຄິດວ່າຄົນອື່ນຄິດວ່າຂ້ອຍມັກຄິດຫຼາຍ. ແຕ່ຂ້ອຍບໍ່ໄດ້ເປັນແບບນັ້ນ. "
+"ຂ້ອຍບໍ່ມັກຄິດເລີຍແມ່ນແຕ່ໜ້ອຍດຽວ."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug2
@@ -2118,8 +2034,8 @@ msgid ""
 "I am fascinated by air. If you remove the air from the sky, all the birds "
 "would fall to the ground. And all the planes, too."
 msgstr ""
-"ຂ້ອຍຫຼົງໄຫຼໃນອາກາດຫຼາຍ. ຖ້າທ່ານເອົາອາກາດອອກຈາກທ້ອງຟ້າ, ນົກທຸກໂຕກໍ່ຈະຕົກລົງສູ່ພື້ນດິນ. ແລະ ຍົນທຸກລຳກໍ່ຄື"
-"ກັນ."
+"ຂ້ອຍຫຼົງໄຫຼໃນອາກາດຫຼາຍ. ຖ້າທ່ານເອົາອາກາດອອກຈາກທ້ອງຟ້າ, ນົກທຸກໂຕກໍ່ຈະຕົກລົງສູ່ພື້ນດິນ. ແລະ "
+"ຍົນທຸກລຳກໍ່ຄືກັນ."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row5
@@ -2169,24 +2085,21 @@ msgstr "ໂທເຄັນຢືນຢັນຕົວຕົນ"
 msgid ""
 "If Number is selected, it will display the number of questions answered on "
 "the total number of question to answer."
-msgstr ""
-"ຫາກເລືອກຕົວເລກ, ມັນຈະສະແດງຈຳນວນຄຳຖາມທີ່ຕອບແລ້ວ ທຽບໃສ່ຈຳນວນຄຳຖາມທັງໝົດທີ່ຕ້ອງຕອບ."
+msgstr "ຫາກເລືອກຕົວເລກ, ມັນຈະສະແດງຈຳນວນຄຳຖາມທີ່ຕອບແລ້ວ ທຽບໃສ່ຈຳນວນຄຳຖາມທັງໝົດທີ່ຕ້ອງຕອບ."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_3
 msgid ""
 "If a customer purchases a 1 year warranty on 6 January 2020, when do we "
 "expect the warranty to expire?"
-msgstr ""
-"ຫາກລູກຄ້າຊື້ການຮັບປະກັນ 1 ປີ ໃນວັນທີ 6 ມັງກອນ 2020, ການຮັບປະກັນຈະໝົດອາຍຸເມື່ອໃດ?"
+msgstr "ຫາກລູກຄ້າຊື້ການຮັບປະກັນ 1 ປີ ໃນວັນທີ 6 ມັງກອນ 2020, ການຮັບປະກັນຈະໝົດອາຍຸເມື່ອໃດ?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_2
 msgid ""
 "If a customer purchases a product on 6 January 2020, what is the latest day "
 "we expect to ship it?"
-msgstr ""
-"ຫາກລູກຄ້າຊື້ສິນຄ້າໃນວັນທີ 6 ມັງກອນ 2020, ວັນທີຊ້າສຸດທີ່ພວກເຮົາຄາດວ່າຈະຈັດສົ່ງແມ່ນມື້ໃດ?"
+msgstr "ຫາກລູກຄ້າຊື້ສິນຄ້າໃນວັນທີ 6 ມັງກອນ 2020, ວັນທີຊ້າສຸດທີ່ພວກເຮົາຄາດວ່າຈະຈັດສົ່ງແມ່ນມື້ໃດ?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
@@ -2206,8 +2119,7 @@ msgstr "ຫາກເລືອກໄວ້, ບາງຂໍ້ຄວາມມີ�
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_email
 msgid ""
 "If checked, this option will save the user's answer as its email address."
-msgstr ""
-"ຫາກເລືອກໄວ້, ຕົວເລືອກນີ້ຈະບັນທຶກຄຳຕອບຂອງຜູ້ໃຊ້ເປັນທີ່ຢູ່ອີເມວຂອງພວກເຂົາ."
+msgstr "ຫາກເລືອກໄວ້, ຕົວເລືອກນີ້ຈະບັນທຶກຄຳຕອບຂອງຜູ້ໃຊ້ເປັນທີ່ຢູ່ອີເມວຂອງພວກເຂົາ."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_nickname
@@ -2229,8 +2141,7 @@ msgstr "ຫາກເລືອກໄວ້, ຜູ້ໃຊ້ສາມາດເ�
 #: model:ir.model.fields,help:survey.field_survey_survey__users_login_required
 msgid ""
 "If checked, users have to login before answering even with a valid token."
-msgstr ""
-"ຫາກເລືອກໄວ້, ຜູ້ໃຊ້ຕ້ອງເຂົ້າສູ່ລະບົບກ່ອນຕອບ ເຖິງແມ່ນວ່າຈະມີໂທເຄັນທີ່ຖືກຕ້ອງກໍ່ຕາມ."
+msgstr "ຫາກເລືອກໄວ້, ຜູ້ໃຊ້ຕ້ອງເຂົ້າສູ່ລະບົບກ່ອນຕອບ ເຖິງແມ່ນວ່າຈະມີໂທເຄັນທີ່ຖືກຕ້ອງກໍ່ຕາມ."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_container
@@ -2251,8 +2162,8 @@ msgid ""
 "If randomized is selected, you can configure the number of random questions "
 "by section. This mode is ignored in live session."
 msgstr ""
-"ຫາກເລືອກແບບສຸ່ມ, ທ່ານສາມາດກຳນົດຄ່າຈຳນວນຄຳຖາມສຸ່ມຕາມພາກສ່ວນໄດ້. ຮູບແບບນີ້ຈະຖືກລະເລີຍໃນເຊສຊັນສົ"
-"ດ."
+"ຫາກເລືອກແບບສຸ່ມ, ທ່ານສາມາດກຳນົດຄ່າຈຳນວນຄຳຖາມສຸ່ມຕາມພາກສ່ວນໄດ້. "
+"ຮູບແບບນີ້ຈະຖືກລະເລີຍໃນເຊສຊັນສົດ."
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_1_question_5
@@ -2299,8 +2210,8 @@ msgid ""
 "Include this question as part of quiz scoring. Requires an answer and answer "
 "score to be taken into account."
 msgstr ""
-"ຮວມຄຳຖາມນີ້ເຂົ້າໃນການຄິດຄະແນນແບບທົດສອບ. ຈຳເປັນຕ້ອງມີຄຳຕອບ ແລະ ຄະແນນຄຳຕອບເພື່ອປະກອບການພິຈາ"
-"ລະນາ."
+"ຮວມຄຳຖາມນີ້ເຂົ້າໃນການຄິດຄະແນນແບບທົດສອບ. ຈຳເປັນຕ້ອງມີຄຳຕອບ ແລະ "
+"ຄະແນນຄຳຕອບເພື່ອປະກອບການພິຈາລະນາ."
 
 #. module: survey
 #. odoo-javascript
@@ -2505,8 +2416,7 @@ msgstr "ປ້າຍກຳກັບທີ່ໃຊ້ສຳລັບຕົວເ
 msgid ""
 "Labels used for proposed choices: simple choice, multiple choice and columns "
 "of matrix"
-msgstr ""
-"ປ້າຍກຳກັບທີ່ໃຊ້ສຳລັບຕົວເລືອກທີ່ສະເໜີ: ຕົວເລືອກດຽວ, ຫຼາຍຕົວເລືອກ ແລະ ຖັນແນວຕັ້ງຂອງມາຕຣິກສ໌"
+msgstr "ປ້າຍກຳກັບທີ່ໃຊ້ສຳລັບຕົວເລືອກທີ່ສະເໜີ: ຕົວເລືອກດຽວ, ຫຼາຍຕົວເລືອກ ແລະ ຖັນແນວຕັ້ງຂອງມາຕຣິກສ໌"
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_lang
@@ -3122,8 +3032,7 @@ msgstr "ເລື້ອຍໆ (1-3 ຄັ້ງຕໍ່ອາທິດ)"
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid ""
 "On Survey questions, one can define \"placeholders\". But what are they for?"
-msgstr ""
-"ໃນຄຳຖາມແບບສຳຫຼວດ, ສາມາດກຳນົດ \"placeholders\" ໄດ້. ແຕ່ພວກມັນມີໄວ້ເພື່ອຫຍັງ?"
+msgstr "ໃນຄຳຖາມແບບສຳຫຼວດ, ສາມາດກຳນົດ \"placeholders\" ໄດ້. ແຕ່ພວກມັນມີໄວ້ເພື່ອຫຍັງ?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p1_q3_sug1
@@ -3242,17 +3151,16 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"ພາສາການແປທາງເລືອກ (ລະຫັດ ISO) ທີ່ຈະເລືອກເມື່ອສົ່ງອີເມວ. ຫາກບໍ່ໄດ້ຕັ້ງຄ່າ, ຈະໃຊ້ພາສາຫຼັກຂອງຄູ່ຄ້າ. ໂ"
-"ດຍປົກກະຕິແລ້ວຄວນເປັນ placeholder expression ທີ່ລະບຸພາສາທີ່ເໝາະສົມ, ເຊັ່ນ: {{ "
-"object.partner_id.lang }}."
+"ພາສາການແປທາງເລືອກ (ລະຫັດ ISO) ທີ່ຈະເລືອກເມື່ອສົ່ງອີເມວ. ຫາກບໍ່ໄດ້ຕັ້ງຄ່າ, ຈະໃຊ້ພາສາຫຼັກຂອງຄູ່ຄ້າ. "
+"ໂດຍປົກກະຕິແລ້ວຄວນເປັນ placeholder expression ທີ່ລະບຸພາສາທີ່ເໝາະສົມ, ເຊັ່ນ: "
+"{{ object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "Optional: provide extra guidelines, instructions, pictures... here, to help "
 "attendees answer"
-msgstr ""
-"ທາງເລືອກ: ໃຫ້ຄຳແນະນຳເພີ່ມເຕີມ, ຄຳສັ່ງ, ຮູບພາບ... ຢູ່ນີ້, ເພື່ອຊ່ວຍໃຫ້ຜູ້ເຂົ້າຮ່ວມຕອບຄຳຖາມໄດ້"
+msgstr "ທາງເລືອກ: ໃຫ້ຄຳແນະນຳເພີ່ມເຕີມ, ຄຳສັ່ງ, ຮູບພາບ... ຢູ່ນີ້, ເພື່ອຊ່ວຍໃຫ້ຜູ້ເຂົ້າຮ່ວມຕອບຄຳຖາມໄດ້"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3439,8 +3347,7 @@ msgstr "ຂໍ້ຄວາມຕົວຢ່າງ (Placeholder)"
 msgid ""
 "Please complete this very short survey to let us know how satisfied your are "
 "with our products."
-msgstr ""
-"ກະລຸນາຕອບແບບສຳຫຼວດສັ້ນໆນີ້ ເພື່ອໃຫ້ພວກເຮົາຮູ້ເຖິງຄວາມເພິ່ງພໍໃຈຂອງທ່ານຕໍ່ກັບສິນຄ້າຂອງພວກເຮົາ."
+msgstr "ກະລຸນາຕອບແບບສຳຫຼວດສັ້ນໆນີ້ ເພື່ອໃຫ້ພວກເຮົາຮູ້ເຖິງຄວາມເພິ່ງພໍໃຈຂອງທ່ານຕໍ່ກັບສິນຄ້າຂອງພວກເຮົາ."
 
 #. module: survey
 #. odoo-python
@@ -3459,8 +3366,8 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section to use the \"Page per section\" layout."
 msgstr ""
-"ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າທ່ານມີຢ່າງໜ້ອຍໜຶ່ງຄຳຖາມໃນແບບສຳຫຼວດ. ທ່ານຍັງຕ້ອງການຢ່າງໜ້ອຍໜຶ່ງພາກສ່ວນເພື່ອໃ"
-"ຊ້ຮູບແບບການຈັດວາງ \"ໜຶ່ງໜ້າຕໍ່ໜຶ່ງພາກສ່ວນ\"."
+"ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າທ່ານມີຢ່າງໜ້ອຍໜຶ່ງຄຳຖາມໃນແບບສຳຫຼວດ. "
+"ທ່ານຍັງຕ້ອງການຢ່າງໜ້ອຍໜຶ່ງພາກສ່ວນເພື່ອໃຊ້ຮູບແບບການຈັດວາງ \"ໜຶ່ງໜ້າຕໍ່ໜຶ່ງພາກສ່ວນ\"."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -4450,15 +4357,13 @@ msgstr "ຄຳຕອບຂໍ້ຄວາມ"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Thank you for your participation, hope you had a blast!"
-msgstr ""
-"ຂໍຂອບໃຈສຳລັບການເຂົ້າຮ່ວມຂອງທ່ານ, ຫວັງວ່າທ່ານຈະໄດ້ຮັບຄວາມມ່ວນຊື່ນຢ່າງເຕັມທີ່!"
+msgstr "ຂໍຂອບໃຈສຳລັບການເຂົ້າຮ່ວມຂອງທ່ານ, ຫວັງວ່າທ່ານຈະໄດ້ຮັບຄວາມມ່ວນຊື່ນຢ່າງເຕັມທີ່!"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
-"ຂໍຂອບໃຈເປັນຢ່າງຍິ່ງສຳລັບຄຳຕິຊົມຂອງທ່ານ. ພວກເຮົາເຫັນຄຸນຄ່າຄວາມຄິດເຫັນຂອງທ່ານສະເໝີ!"
+msgstr "ຂໍຂອບໃຈເປັນຢ່າງຍິ່ງສຳລັບຄຳຕິຊົມຂອງທ່ານ. ພວກເຮົາເຫັນຄຸນຄ່າຄວາມຄິດເຫັນຂອງທ່ານສະເໝີ!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4507,8 +4412,7 @@ msgstr "ຄຳຕອບທີ່ທ່ານປ້ອນບໍ່ຖືກຕ້
 msgid ""
 "The attempts limit needs to be a positive number if the survey has a limited "
 "number of attempts."
-msgstr ""
-"ຈຳນວນຄັ້ງທີ່ຈຳກັດຕ້ອງເປັນຄ່າບວກ ຫາກແບບສຳຫຼວດມີການຈຳກັດຈຳນວນຄັ້ງໃນການຕອບ."
+msgstr "ຈຳນວນຄັ້ງທີ່ຈຳກັດຕ້ອງເປັນຄ່າບວກ ຫາກແບບສຳຫຼວດມີການຈຳກັດຈຳນວນຄັ້ງໃນການຕອບ."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
@@ -4532,8 +4436,8 @@ msgid ""
 "use this to give the purpose and guidelines to your candidates before they "
 "start it."
 msgstr ""
-"ຄຳອະທິບາຍຈະສະແດງຢູ່ໜ້າທຳອິດຂອງແບບສຳຫຼວດ. ທ່ານສາມາດໃຊ້ສິ່ງນີ້ເພື່ອບອກຈຸດປະສົງ ແລະ ຄຳແນະນຳແກ່ຜູ້ສະ"
-"ໝັກກ່ອນທີ່ພວກເຂົາຈະເລີ່ມຕົ້ນ."
+"ຄຳອະທິບາຍຈະສະແດງຢູ່ໜ້າທຳອິດຂອງແບບສຳຫຼວດ. ທ່ານສາມາດໃຊ້ສິ່ງນີ້ເພື່ອບອກຈຸດປະສົງ ແລະ "
+"ຄຳແນະນຳແກ່ຜູ້ສະໝັກກ່ອນທີ່ພວກເຂົາຈະເລີ່ມຕົ້ນ."
 
 #. module: survey
 #. odoo-python
@@ -4554,8 +4458,8 @@ msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
 msgstr ""
-"ຜູ້ຮັບຕໍ່ໄປນີ້ຍັງບໍ່ມີບັນຊີຜູ້ໃຊ້: %s. ທ່ານຄວນສ້າງບັນຊີຜູ້ໃຊ້ໃຫ້ພວກເຂົາ ຫຼື ອະນຸຍາດໃຫ້ບຸກຄົນພາຍນອກລົງທະບຽນໄດ້ໃ"
-"ນການຕັ້ງຄ່າ."
+"ຜູ້ຮັບຕໍ່ໄປນີ້ຍັງບໍ່ມີບັນຊີຜູ້ໃຊ້: %s. ທ່ານຄວນສ້າງບັນຊີຜູ້ໃຊ້ໃຫ້ພວກເຂົາ ຫຼື "
+"ອະນຸຍາດໃຫ້ບຸກຄົນພາຍນອກລົງທະບຽນໄດ້ໃນການຕັ້ງຄ່າ."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -4586,8 +4490,7 @@ msgstr "ຄຳຖາມມີການຈຳກັດເວລາ"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scale
 msgid ""
 "The scale must be a growing non-empty range between 0 and 10 (inclusive)"
-msgstr ""
-"ມາດຕາສ່ວນຕ້ອງເປັນຂອບເຂດທີ່ເພີ່ມຂຶ້ນ ແລະ ບໍ່ວ່າງເປົ່າ ລະຫວ່າງ 0 ຫາ 10 (ຮວມທັງສອງຄ່ານີ້)"
+msgstr "ມາດຕາສ່ວນຕ້ອງເປັນຂອບເຂດທີ່ເພີ່ມຂຶ້ນ ແລະ ບໍ່ວ່າງເປົ່າ ລະຫວ່າງ 0 ຫາ 10 (ຮວມທັງສອງຄ່ານີ້)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -4678,8 +4581,7 @@ msgstr "ໃບຢັ້ງຢືນນີ້ມອບໃຫ້ແກ່"
 msgid ""
 "This code will be used by your attendees to reach your session. Feel free to "
 "customize it however you like!"
-msgstr ""
-"ລະຫັດນີ້ຈະຖືກໃຊ້ໂດຍຜູ້ເຂົ້າຮ່ວມເພື່ອເຂົ້າສູ່ເຊສຊັນຂອງທ່ານ. ທ່ານສາມາດປັບແຕ່ງໄດ້ຕາມໃຈມັກ!"
+msgstr "ລະຫັດນີ້ຈະຖືກໃຊ້ໂດຍຜູ້ເຂົ້າຮ່ວມເພື່ອເຂົ້າສູ່ເຊສຊັນຂອງທ່ານ. ທ່ານສາມາດປັບແຕ່ງໄດ້ຕາມໃຈມັກ!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -4745,8 +4647,8 @@ msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
-"ແບບສຳຫຼວດນີ້ບໍ່ອະນຸຍາດໃຫ້ບຸກຄົນພາຍນອກເຂົ້າຮ່ວມ. ທ່ານຄວນສ້າງບັນຊີຜູ້ໃຊ້ ຫຼື ອັບເດດຮູບແບບການເຂົ້າເຖິງແບບສ"
-"ຳຫຼວດໃຫ້ເໝາະສົມ."
+"ແບບສຳຫຼວດນີ້ບໍ່ອະນຸຍາດໃຫ້ບຸກຄົນພາຍນອກເຂົ້າຮ່ວມ. ທ່ານຄວນສ້າງບັນຊີຜູ້ໃຊ້ ຫຼື "
+"ອັບເດດຮູບແບບການເຂົ້າເຖິງແບບສຳຫຼວດໃຫ້ເໝາະສົມ."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -4929,16 +4831,14 @@ msgstr "ໃຊ້ອາລົມຂັນ ແລະ ຢອກຫຼິ້ນ"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
-msgstr ""
-"ໃຊ້ແຖບເສັ້ນທາງນຳທາງ (breadcrumbs) ເພື່ອຍ້ອນກັບໄປທີ່ໜ້າກະດານຄວບຄຸມຢ່າງໄວວາ."
+msgstr "ໃຊ້ແຖບເສັ້ນທາງນຳທາງ (breadcrumbs) ເພື່ອຍ້ອນກັບໄປທີ່ໜ້າກະດານຄວບຄຸມຢ່າງໄວວາ."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
 msgid ""
 "Use this field to add additional explanations about your question or to "
 "illustrate it with pictures or a video"
-msgstr ""
-"ໃຊ້ຊ່ອງນີ້ເພື່ອເພີ່ມຄຳອະທິບາຍເພີ່ມເຕີມກ່ຽວກັບຄຳຖາມຂອງທ່ານ ຫຼື ໃສ່ຮູບພາບ ຫຼື ວິດີໂອປະກອບ"
+msgstr "ໃຊ້ຊ່ອງນີ້ເພື່ອເພີ່ມຄຳອະທິບາຍເພີ່ມເຕີມກ່ຽວກັບຄຳຖາມຂອງທ່ານ ຫຼື ໃສ່ຮູບພາບ ຫຼື ວິດີໂອປະກອບ"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
@@ -5052,8 +4952,7 @@ msgstr "ພວກເຮົາໄດ້ບັນທຶກຄຳຕອບຂອງ
 msgid ""
 "Welcome to this Odoo certification. You will receive 2 random questions out "
 "of a pool of 3."
-msgstr ""
-"ຍິນດີຕ້ອນຮັບສູ່ການຢັ້ງຢືນ Odoo ນີ້. ທ່ານຈະໄດ້ຮັບ 2 ຄຳຖາມແບບສຸ່ມຈາກທັງໝົດ 3 ຄຳຖາມ."
+msgstr "ຍິນດີຕ້ອນຮັບສູ່ການຢັ້ງຢືນ Odoo ນີ້. ທ່ານຈະໄດ້ຮັບ 2 ຄຳຖາມແບບສຸ່ມຈາກທັງໝົດ 3 ຄຳຖາມ."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_5
@@ -5068,8 +4967,7 @@ msgstr ""
 msgid ""
 "What day to you think is best for us to start having an annual sale (not "
 "rated)?"
-msgstr ""
-"ທ່ານຄິດວ່າມື້ໃດດີທີ່ສຸດສຳລັບພວກເຮົາໃນການເລີ່ມຈັດງານຫຼຸດລາຄາປະຈຳປີ? (ບໍ່ຄິດຄະແນນ)?"
+msgstr "ທ່ານຄິດວ່າມື້ໃດດີທີ່ສຸດສຳລັບພວກເຮົາໃນການເລີ່ມຈັດງານຫຼຸດລາຄາປະຈຳປີ? (ບໍ່ຄິດຄະແນນ)?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q2
@@ -5178,16 +5076,15 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
-"ໃຜໄດ້ຮັບລາງວັນໂນເບວສາຂາຟີຊິກສຳລັບການຄົ້ນພົບການກວັດແກວ່ງຂອງນິວຕຣິໂນ (neutrino oscillations)"
-", ເຊິ່ງສະແດງໃຫ້ເຫັນວ່ານິວຕຣິໂນມີມວນສານ?"
+"ໃຜໄດ້ຮັບລາງວັນໂນເບວສາຂາຟີຊິກສຳລັບການຄົ້ນພົບການກວັດແກວ່ງຂອງນິວຕຣິໂນ (neutrino "
+"oscillations), ເຊິ່ງສະແດງໃຫ້ເຫັນວ່ານິວຕຣິໂນມີມວນສານ?"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid ""
 "Why should you consider making your presentation more fun with a small quiz?"
-msgstr ""
-"ເປັນຫຍັງທ່ານຈຶ່ງຄວນເຮັດໃຫ້ການນຳສະເໜີຂອງທ່ານມ່ວນຂຶ້ນດ້ວຍການຕອບຄຳຖາມທົດສອບສັ້ນໆ?"
+msgstr "ເປັນຫຍັງທ່ານຈຶ່ງຄວນເຮັດໃຫ້ການນຳສະເໜີຂອງທ່ານມ່ວນຂຶ້ນດ້ວຍການຕອບຄຳຖາມທົດສອບສັ້ນໆ?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_3
@@ -5239,8 +5136,7 @@ msgstr "ທ່ານສາມາດສ້າງໃບຢັ້ງຢືນໄດ
 msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
-msgstr ""
-"ທ່ານສາມາດແບ່ງປັນລິ້ງຂອງທ່ານຜ່ານຊ່ອງທາງຕ່າງໆ: ອີເມວ, ທາງລັດຄຳເຊີນ, ການນຳສະເໜີສົດ, ..."
+msgstr "ທ່ານສາມາດແບ່ງປັນລິ້ງຂອງທ່ານຜ່ານຊ່ອງທາງຕ່າງໆ: ອີເມວ, ທາງລັດຄຳເຊີນ, ການນຳສະເໜີສົດ, ..."
 
 #. module: survey
 #. odoo-python
@@ -5267,8 +5163,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
 msgstr ""
-"ທ່ານບໍ່ສາມາດສົ່ງຄຳເຊີນສຳລັບແບບສຳຫຼວດແບບ \"ໜຶ່ງໜ້າຕໍ່ໜຶ່ງພາກສ່ວນ\" ໄດ້ ຫາກແບບສຳຫຼວດມີພຽງແຕ່ພາກສ່ວນທີ່"
-"ວ່າງເປົ່າ."
+"ທ່ານບໍ່ສາມາດສົ່ງຄຳເຊີນສຳລັບແບບສຳຫຼວດແບບ \"ໜຶ່ງໜ້າຕໍ່ໜຶ່ງພາກສ່ວນ\" ໄດ້ "
+"ຫາກແບບສຳຫຼວດມີພຽງແຕ່ພາກສ່ວນທີ່ວ່າງເປົ່າ."
 
 #. module: survey
 #. odoo-python
@@ -5298,8 +5194,7 @@ msgstr "ທ່ານໄດ້ຄະແນນ"
 msgid ""
 "Your responses will help us improve our product range to serve you even "
 "better."
-msgstr ""
-"ຄຳຕອບຂອງທ່ານຈະຊ່ວຍໃຫ້ພວກເຮົາປັບປຸງລາຍການສິນຄ້າເພື່ອໃຫ້ບໍລິການທ່ານໄດ້ດียິ່ງຂຶ້ນ."
+msgstr "ຄຳຕອບຂອງທ່ານຈະຊ່ວຍໃຫ້ພວກເຮົາປັບປຸງລາຍການສິນຄ້າເພື່ອໃຫ້ບໍລິການທ່ານໄດ້ດียິ່ງຂຶ້ນ."
 
 #. module: survey
 #. odoo-javascript
@@ -5468,5 +5363,157 @@ msgstr "ຫາ"
 msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
-msgstr ""
-"⚠️ ຄຳຖາມນີ້ຖືກວາງໄວ້ກ່ອນໜ້າຕົວກະຕຸ້ນບາງອັນ ຫຼື ທັງໝົດຂອງມັນ ແລະ ອາດຈະຖືກຂ້າມໄດ້."
+msgstr "⚠️ ຄຳຖາມນີ້ຖືກວາງໄວ້ກ່ອນໜ້າຕົວກະຕຸ້ນບາງອັນ ຫຼື ທັງໝົດຂອງມັນ ແລະ ອາດຈະຖືກຂ້າມໄດ້."
+
+#~ msgid ""
+#~ "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+#~ "family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+#~ "    <table style=\"width:600px;margin:5px auto;\">\n"
+#~ "        <tbody>\n"
+#~ "            <tr><td>\n"
+#~ "                <!-- We use the logo of the company that created the "
+#~ "survey (to handle multi company cases) -->\n"
+#~ "                <a href=\"/\"><img t-if=\"not "
+#~ "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+#~ "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+#~ "style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+#~ "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+#~ "                    Certification: <t t-"
+#~ "out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
+#~ "            </td></tr>\n"
+#~ "        </tbody>\n"
+#~ "    </table>\n"
+#~ "    <table style=\"width:600px;margin:0px "
+#~ "auto;background:white;border:1px solid #e1e1e1;\">\n"
+#~ "        <tbody>\n"
+#~ "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+#~ "                <p>Dear <span t-out=\"object.partner_id.name or "
+#~ "'participant'\">participant</span></p>\n"
+#~ "                <p>\n"
+#~ "                    Please find attached your\n"
+#~ "                        <strong t-out=\"object.survey_id.display_name or "
+#~ "''\">Furniture Creation</strong>\n"
+#~ "                    certification\n"
+#~ "                </p>\n"
+#~ "                <p>Congratulations for passing the test with a score of "
+#~ "<strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+#~ "            </td></tr>\n"
+#~ "        </tbody>\n"
+#~ "    </table>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+#~ "family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+#~ "    <table style=\"width:600px;margin:5px auto;\">\n"
+#~ "        <tbody>\n"
+#~ "            <tr><td>\n"
+#~ "                <!-- We use the logo of the company that created the "
+#~ "survey (to handle multi company cases) -->\n"
+#~ "                <a href=\"/\"><img t-if=\"not "
+#~ "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+#~ "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+#~ "style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+#~ "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+#~ "                    ໃບຢັ້ງຢືນ: <t t-out=\"object.survey_id.display_name or "
+#~ "''\">ແບບຟອມຄຳຕິຊົມ</t>\n"
+#~ "            </td></tr>\n"
+#~ "        </tbody>\n"
+#~ "    </table>\n"
+#~ "    <table style=\"width:600px;margin:0px "
+#~ "auto;background:white;border:1px solid #e1e1e1;\">\n"
+#~ "        <tbody>\n"
+#~ "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+#~ "                <p>ຮຽນ <span t-out=\"object.partner_id.name or "
+#~ "'participant'\">ຜູ້ເຂົ້າຮ່ວມ</span></p>\n"
+#~ "                <p>\n"
+#~ "                    ກະລຸນາກວດເບິ່ງໃບຢັ້ງຢືນທີ່ຄັດຕິດມານີ້\n"
+#~ "                        <strong t-out=\"object.survey_id.display_name or "
+#~ "''\">Furniture Creation</strong>\n"
+#~ "                    ຂອງທ່ານ\n"
+#~ "                </p>\n"
+#~ "                <p>ຂໍສະແດງຄວາມຍິນດີທີ່ທ່ານສອບເສັງຜ່ານດ້ວຍຄະແນນ <strong t-"
+#~ "out=\"object.scoring_percentage\"/>%!</p>\n"
+#~ "            </td></tr>\n"
+#~ "        </tbody>\n"
+#~ "    </table>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Dear <t t-out=\"object.partner_id.name or "
+#~ "'participant'\">participant</t><br/><br/>\n"
+#~ "        <t t-if=\"object.survey_id.certification\">\n"
+#~ "            You have been invited to take a new certification.\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            We are conducting a survey and your response would be "
+#~ "appreciated.\n"
+#~ "        </t>\n"
+#~ "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+#~ "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+#~ "style=\"background-color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+#~ "{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+#~ "font-size:13px;\">\n"
+#~ "                <t t-if=\"object.survey_id.certification\">\n"
+#~ "                    Start Certification\n"
+#~ "                </t>\n"
+#~ "                <t t-else=\"\">\n"
+#~ "                    Start Survey\n"
+#~ "                </t>\n"
+#~ "            </a>\n"
+#~ "        </div>\n"
+#~ "        <t t-if=\"object.deadline\">\n"
+#~ "            Please answer the survey for <t t-"
+#~ "out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+#~ "        </t>\n"
+#~ "        <t t-if=\"object.survey_id.certification\">\n"
+#~ "            We wish you good luck!\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            Thank you in advance for your participation.\n"
+#~ "        </t>\n"
+#~ "    \n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        ຮຽນ <t t-out=\"object.partner_id.name or 'participant'\">ຜູ້ເຂົ້າຮ່ວມ</"
+#~ "t><br/><br/>\n"
+#~ "        <t t-if=\"object.survey_id.certification\">\n"
+#~ "            ທ່ານໄດ້ຮັບການເຊີນໃຫ້ເຂົ້າຮ່ວມການສອບເສັງເອົາໃບຢັ້ງຢືນໃໝ່.\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            ພວກເຮົາກຳລັງດຳເນີນການສຳຫຼວດ ແລະ ຂໍຂອບໃຈເປັນຢ່າງຍິ່ງສຳລັບຄຳຕອບຂອງທ່ານ.\n"
+#~ "        </t>\n"
+#~ "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+#~ "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+#~ "style=\"background-color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+#~ "{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+#~ "font-size:13px;\">\n"
+#~ "                <t t-if=\"object.survey_id.certification\">\n"
+#~ "                    ເລີ່ມການຢັ້ງຢືນ\n"
+#~ "                </t>\n"
+#~ "                <t t-else=\"\">\n"
+#~ "                    ເລີ່ມແບບສຳຫຼວດ\n"
+#~ "                </t>\n"
+#~ "            </a>\n"
+#~ "        </div>\n"
+#~ "        <t t-if=\"object.deadline\">\n"
+#~ "            ກະລຸນາຕອບແບບສຳຫຼວດພາຍໃນວັນທີ <t t-"
+#~ "out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+#~ "        </t>\n"
+#~ "        <t t-if=\"object.survey_id.certification\">\n"
+#~ "            ຂໍອວຍພອນໃຫ້ທ່ານໂຊກດີ!\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            ຂໍຂອບໃຈລ່ວງໜ້າສຳລັບການເຂົ້າຮ່ວມຂອງທ່ານ.\n"
+#~ "        </t>\n"
+#~ "    \n"
+#~ "</div>\n"
+#~ "            "

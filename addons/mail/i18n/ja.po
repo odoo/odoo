@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-10-26 04:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 03:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/mail/ja/"
 ">\n"
@@ -1189,7 +1189,7 @@ msgstr "そのアドレスは個人用メールサーバで使用中です。ご
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "A place to connect and exchange news with colleagues across the company."
 msgstr "社内の同僚とつながり、情報を交換する場です。"
@@ -1769,7 +1769,7 @@ msgstr "管理者"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Administrators"
 msgstr "管理者"
 
@@ -2090,6 +2090,12 @@ msgstr "および他の1会員。"
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
 msgid "Applies to"
 msgstr "適用"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Apply a privacy blur to your surroundings."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2467,6 +2473,12 @@ msgstr "自動サブスクリプション"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Auto-focus speaker"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Auto-translate future messages?"
 msgstr "今後メッセージを自動翻訳しますか?"
@@ -2493,6 +2505,12 @@ msgstr "自動アクティビティ"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Automated message"
 msgstr "自動メッセージ"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Automatically enlarge the person currently speaking."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -2668,6 +2686,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur Background"
 msgstr "背景ぼかし"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Blur video background"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -5538,6 +5562,12 @@ msgstr "順序付き追跡を有効にする"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Enable Push-to-talk"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Enable background blur"
 msgstr "背景ぼかしを有効化"
@@ -6297,13 +6327,13 @@ msgstr "ゲートウェイ"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "General"
 msgstr "一般"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "General channel for administrators."
 msgstr "管理者向けの一般チャネルです。"
 
@@ -8179,6 +8209,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Log Now"
 msgstr "今すぐログ"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Log RTC events"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -12073,6 +12109,12 @@ msgstr "テンプレートとして保存"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Save detailed RTC connection logs for troubleshooting."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Save editing"
@@ -13995,13 +14037,13 @@ msgid ""
 "This field is used to search on email address as the primary email field can "
 "contain more than strictly an email address."
 msgstr ""
-"プライマリ電子メールフィールドには厳密に電子メールアドレス以上のものを含める"
-"ことができるため、このフィールドは電子メールアドレスを検索するために使用され"
-"ます。"
+"メイン電子メールフィールドには厳密に電子メールアドレス以上のものを含めること"
+"ができるため、このフィールドは電子メールアドレスを検索するために使用されま"
+"す。"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "This is a space for the whole team to connect and share updates."
 msgstr "ここは、チーム全体がつながり、最新情報をシェアするための場です。"
 
@@ -15638,7 +15680,7 @@ msgstr "#%(channelName)s へようこそ!"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Welcome to the #General channel 🎉"
 msgstr "#General チャネルへようこそ 🎉"
 

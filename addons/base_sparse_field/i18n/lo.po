@@ -4,14 +4,15 @@
 #
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 14:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-04 06:28+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "base_sparse_field/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -29,69 +30,74 @@ msgid ""
 "limitation on the number of columns in a table. The values of all sparse\n"
 "fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 msgstr ""
+"\n"
+"ຈຸດປະສົງຂອງໂມດູນນີ້ແມ່ນເພື່ອນໍາໃຊ້ຊ່ອງຂໍ້ມູນແບບ \"sparse\", ຄື ຊ່ອງຂໍ້ມູນ\n"
+"ທີ່ສ່ວນຫຼາຍເປັນຄ່າວ່າງ (null). ການຈັດຕັ້ງປະຕິບັດນີ້ຊ່ວຍຫຼີກລ່ຽງຂໍ້ຈໍາກັດຂອງ PostgreSQL\n"
+"ກ່ຽວກັບຈໍານວນຖັນໃນຕາຕະລາງ. ຄ່າຂອງຊ່ອງຂໍ້ມູນ sparse ທັງໝົດ\n"
+"ແມ່ນຖືກເກັບໄວ້ໃນຊ່ອງຂໍ້ມູນແບບ \"serialized\" ໃນຮູບແບບ JSON mapping.\n"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_base
 msgid "Base"
-msgstr ""
+msgstr "ພື້ນຖານ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
 msgid "Boolean"
-msgstr ""
+msgstr "ບູລີນ"
 
 #. module: base_sparse_field
 #. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr ""
+msgstr "ບໍ່ອະນຸຍາດໃຫ້ປ່ຽນລະບົບການຈັດເກັບສໍາລັບຊ່ອງຂໍ້ມູນ \"%s\"."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__char
 msgid "Char"
-msgstr ""
+msgstr "ຕົວອັກສອນ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__data
 msgid "Data"
-msgstr ""
+msgstr "ຂໍ້ມູນ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_ir_model_fields
 msgid "Field"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
 msgid "Field Type"
-msgstr ""
+msgstr "ປະເພດຊ່ອງຂໍ້ມູນ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__float
 msgid "Float"
-msgstr ""
+msgstr "ເລກທົດສະນິຍົມ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
@@ -100,52 +106,54 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"ຖ້າຫາກເລືອກ, ຊ່ອງຂໍ້ມູນນີ້ຈະຖືກເກັບໄວ້ໃນໂຄງສ້າງ sparse ຂອງຊ່ອງຂໍ້ມູນ serialization, ແທນທີ່ຈະມີຖັນ"
+"ຖານຂໍ້ມູນຂອງຕົນເອງ. ສິ່ງນີ້ບໍ່ສາມາດປ່ຽນແປງໄດ້ຫຼັງຈາກສ້າງແລ້ວ."
 
 #. module: base_sparse_field
 #: model:ir.module.module,summary:base.module_base_sparse_field
 msgid "Implementation of sparse fields."
-msgstr ""
+msgstr "ການຈັດຕັ້ງປະຕິບັດຊ່ອງຂໍ້ມູນ sparse."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
-msgstr ""
+msgstr "ຈໍານວນຖ້ວນ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ່າສຸດໂດຍ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ່າສຸດເມື່ອ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
 msgid "One"
-msgstr ""
+msgstr "ໜຶ່ງ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
 msgid "Partner"
-msgstr "ຄຸ່ຄ້າ"
+msgstr "ຄູ່ຄ້າ"
 
 #. module: base_sparse_field
 #. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "ບໍ່ອະນຸຍາດໃຫ້ປ່ຽນຊື່ຊ່ອງຂໍ້ມູນ sparse \"%s\""
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__selection
 msgid "Selection"
-msgstr ""
+msgstr "ຕົວເລືອກ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid "Serialization Field"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນ Serialization"
 
 #. module: base_sparse_field
 #. odoo-python
@@ -154,23 +162,25 @@ msgid ""
 "Serialization field \"%(serialization_field)s\" not found for sparse field %"
 "(sparse_field)s!"
 msgstr ""
+"ບໍ່ພົບຊ່ອງຂໍ້ມູນ serialization \"%(serialization_field)s\" ສໍາລັບຊ່ອງຂໍ້ມູນ sparse %"
+"(sparse_field)s!"
 
 #. module: base_sparse_field
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
 msgid "Sparse Fields"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນ Sparse"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "Sparse fields Test"
-msgstr ""
+msgstr "ທົດສອບຊ່ອງຂໍ້ມູນ Sparse"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
 msgid "Two"
-msgstr ""
+msgstr "ສອງ"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
-msgstr ""
+msgstr "ແບບ serialized"

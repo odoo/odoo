@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-28 08:03+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/hr/th/>\n"
@@ -637,8 +637,8 @@ msgid ""
 "A portal user already exist with the following login: %(login)s. User Name: %"
 "(user_name)s. You should set another email address on the employee."
 msgstr ""
-"มีผู้ใช้พอร์ทัลอยู่แล้วด้วยข้อมูลการเข้าสู่ระบบดังต่อไปนี้: %(login)s ชื่อผู้ใช้:%(user_name)s คุณควรตั้"
-"งค่าที่อยู่อีเมลอื่นสำหรับพนักงานนี้"
+"มีผู้ใช้พอร์ทัลอยู่แล้วด้วยข้อมูลการเข้าสู่ระบบดังต่อไปนี้: %(login)s ชื่อผู้ใช้:%(user_name)s "
+"คุณควรตั้งค่าที่อยู่อีเมลอื่นสำหรับพนักงานนี้"
 
 #. module: hr
 #. odoo-python
@@ -653,8 +653,8 @@ msgid ""
 "A user already exist with the following login: %(login)s. User Name: %"
 "(user_name)s. Please link the user instead before sending invitation."
 msgstr ""
-"มีผู้ใช้ที่มีข้อมูลการเข้าสู่ระบบดังต่อไปนี้อยู่แล้ว: %(login)s ชื่อผู้ใช้: %(user_name)s โปรดเชื่อมโยง"
-"ผู้ใช้ดังกล่าวก่อนส่งคำเชิญ"
+"มีผู้ใช้ที่มีข้อมูลการเข้าสู่ระบบดังต่อไปนี้อยู่แล้ว: %(login)s ชื่อผู้ใช้: %(user_name)s "
+"โปรดเชื่อมโยงผู้ใช้ดังกล่าวก่อนส่งคำเชิญ"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -668,8 +668,8 @@ msgid ""
 "A user with the same login (%(login)s) already has an employee in this "
 "company. User Name: %(user_name)s / Employee Name: %(employee)s"
 msgstr ""
-"ผู้ใช้ที่มีชื่อผู้ใช้เดียวกัน (%(login)s) มีพนักงานในบริษัทนี้อยู่แล้ว ชื่อผู้ใช้: %(user_name)s / ชื่อพนัก"
-"งาน: %(employee)s"
+"ผู้ใช้ที่มีชื่อผู้ใช้เดียวกัน (%(login)s) มีพนักงานในบริษัทนี้อยู่แล้ว ชื่อผู้ใช้: %(user_name)s / "
+"ชื่อพนักงาน: %(employee)s"
 
 #. module: hr
 #. odoo-javascript
@@ -1326,8 +1326,8 @@ msgid ""
 "Cannot create light user for an employee without login (email address or "
 "related contact)."
 msgstr ""
-"ไม่สามารถสร้าง light user สำหรับพนักงานที่ไม่มีข้อมูลเข้าสู่ระบบ (ที่อยู่อีเมลหรือข้อมูลติดต่อที่เกี่ยวข้"
-"อง) ได้"
+"ไม่สามารถสร้าง light user สำหรับพนักงานที่ไม่มีข้อมูลเข้าสู่ระบบ "
+"(ที่อยู่อีเมลหรือข้อมูลติดต่อที่เกี่ยวข้อง) ได้"
 
 #. module: hr
 #. odoo-python
@@ -2629,6 +2629,18 @@ msgstr "วันที่สิ้นสุดระยะเวลาทดล
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
 msgstr "สิ้นสุดการร่วมมือ"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration cancelled"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration planned"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -4258,8 +4270,8 @@ msgstr ""
 "Odoo Human Resources \n"
 "-------------------- \n"
 "\n"
-"ด้วย Odoo <a href=\"https://www.odoo.com/page/employees\">Human Resources</a> "
-"\n"
+"ด้วย Odoo <a href=\"https://www.odoo.com/page/employees\">Human Resources</"
+"a> \n"
 "จัดการทรัพย์สินที่สำคัญที่สุดในบริษัทของคุณ: พนักงาน\n"
 "\n"
 "จัดการงานทรัพยากรบุคคลทั้งหมดของคุณได้อย่างง่ายดาย: การแบ่งปันความรู้การสรรหาบุคลากร,\n"
@@ -4270,8 +4282,9 @@ msgstr ""
 " จัดการพนักงานของคุณ \n"
 "--------------------- \n"
 "\n"
-"ดูแลข้อมูลสำคัญทั้งหมดในสมุดที่อยู่ บริษัท ของคุณ ข้อมูลบางอย่างถูก จำกัด ไว้สำหรับผู้จัดการฝ่ายทรัพยาก"
-"รบุคคลส่วนข้อมูลอื่น ๆ เป็นข้อมูลสาธารณะเพื่อให้เพื่อนร่วมงานมองได้ง่าย \n"
+"ดูแลข้อมูลสำคัญทั้งหมดในสมุดที่อยู่ บริษัท ของคุณ ข้อมูลบางอย่างถูก จำกัด "
+"ไว้สำหรับผู้จัดการฝ่ายทรัพยากรบุคคลส่วนข้อมูลอื่น ๆ "
+"เป็นข้อมูลสาธารณะเพื่อให้เพื่อนร่วมงานมองได้ง่าย \n"
 "บันทึกสัญญาของพนักงานและรับการแจ้งเตือนเมื่อต้องต่ออายุ \n"
 "\n"
 "ปรับปรุงกระบวนการสรรหาของคุณ \n"
@@ -4280,11 +4293,11 @@ msgstr ""
 "ดัชนีประวัติย่อติดตามผู้สมัครค้นหาโปรไฟล์ด้วย <a href=\"https://www.odoo.com/page/"
 "employees\">Odoo HR</a>\n"
 "\n"
-"โพสต์ข้อเสนองานและติดตามแต่ละใบสมัครที่ได้รับ ติดตามผู้สมัครในกระบวนการรับสมัครของคุณด้วยมุมมอง"
-"คัมบังอัจฉริยะ \n"
+"โพสต์ข้อเสนองานและติดตามแต่ละใบสมัครที่ได้รับ "
+"ติดตามผู้สมัครในกระบวนการรับสมัครของคุณด้วยมุมมองคัมบังอัจฉริยะ \n"
 "\n"
-"ประหยัดเวลาด้วยการสื่อสารอัตโนมัติด้วยเทมเพลตอีเมล เรซูเม่จะถูกจัดทำดัชนีโดยอัตโนมัติช่วยให้คุณค้นห"
-"าโปรไฟล์ที่ต้องการได้อย่างง่ายดาย \n"
+"ประหยัดเวลาด้วยการสื่อสารอัตโนมัติด้วยเทมเพลตอีเมล "
+"เรซูเม่จะถูกจัดทำดัชนีโดยอัตโนมัติช่วยให้คุณค้นหาโปรไฟล์ที่ต้องการได้อย่างง่ายดาย \n"
 "\n"
 "เครือข่ายสังคมขององค์กร\n"
 " ------------------------- \n"
@@ -4328,8 +4341,8 @@ msgstr ""
 "\n"
 "### กำหนดวัตถุประสงค์ที่ชัดเจนและให้ข้อเสนอแนะแบบเรียลไทม์\n"
 "\n"
-" สร้างแรงบันดาลใจในการประสบความสำเร็จกับความท้าทายต่อเป้าหมายและรางวัล กำหนดวัตถุประสงค์"
-"ที่ชัดเจน\n"
+" สร้างแรงบันดาลใจในการประสบความสำเร็จกับความท้าทายต่อเป้าหมายและรางวัล "
+"กำหนดวัตถุประสงค์ที่ชัดเจน\n"
 "และให้ข้อเสนอแนะแบบเรียลไทม์และผลลัพธ์ที่เป็นรูปธรรม แสดงผู้มีผลงานชั้นนำ\n"
 "ให้ทั้งช่องและให้สาธารณชนรับรู้ถึงงานที่ทำได้ดี \n"
 "\n"
@@ -5801,13 +5814,6 @@ msgstr ""
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
-msgid ""
-"This working schedule is used by  employee(s), are you sure you want change "
-"it for all employees?"
-msgstr ""
-
-#. module: hr
-#. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/resource_calendar_plugin_patch.js:0
 msgid ""
 "This working schedule is used by %s employee(s), are you sure you want "
@@ -6578,6 +6584,12 @@ msgstr "คุณไม่มีสิทธิ์เข้าถึงเอก
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have the rights to load the Employees sample data."
 msgstr "คุณไม่มีสิทธิ์ในการโหลดข้อมูลตัวอย่างของพนักงาน"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_allocation_wizard_line.py:0
+msgid "You do not have the rights to trust or un-trust accounts."
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee

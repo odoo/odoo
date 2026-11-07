@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-10-12 12:39+0000\n"
+"PO-Revision-Date: 2026-11-05 15:35+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "sale_timesheet/fi/>\n"
@@ -96,6 +96,14 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"Mahdollistaa työaikakirjausten myynnin myyntitilauksessasi\n"
+"=============================================\n"
+"\n"
+"Tämä moduuli asettaa oikean tuotteen kaikille työaikakirjausriveille\n"
+"sen tilauksen/sopimuksen mukaisesti, jonka parissa työskentelet. Tämän "
+"avulla\n"
+"saat myyntitilauksiin todelliset toimitetut määrät.\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -112,7 +120,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.actions.report,print_report_name:sale_timesheet.timesheet_report_account_move
 msgid "('%s Timesheets' % (object.name))"
-msgstr ""
+msgstr "('%s Työaikakirjaukset' % (object.name))"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -245,11 +253,13 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as </span>"
 msgstr ""
+"<span class=\"text-muted\">Työaikakirjaukset ilman myyntitilausriviä "
+"raportoidaan muodossa </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 msgid "<span>Sales Order Item: </span>"
-msgstr ""
+msgstr "<span>Myyntitilausrivi: </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -441,7 +451,7 @@ msgstr "Laskutettava aika"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_type
 msgid "Billable Type"
-msgstr "Laskutettavuuden tyyppi"
+msgstr "Laskutettavuustyyppi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -608,7 +618,7 @@ msgstr "Työntekijä"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee_departure
 msgid "Employee Departure"
-msgstr ""
+msgstr "Työntekijän lähtö"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
@@ -785,7 +795,7 @@ msgstr "Päiväkirjan kirjaus"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "Päiväkirjan kirjauksen kumoaminen"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
@@ -867,7 +877,7 @@ msgstr "Välitavoitepalvelut"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_search
 msgid "Mine"
-msgstr ""
+msgstr "Minun"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -958,7 +968,7 @@ msgstr "Ei laskutettu"
 msgid ""
 "Notify the salesperson about an upsell opportunity when completed work "
 "exceeds"
-msgstr ""
+msgstr "Ilmoita myyjälle lisämyyntimahdollisuudesta, kun tehty työ ylittää"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -995,7 +1005,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Order"
-msgstr ""
+msgstr "Tilaus"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1174,7 +1184,7 @@ msgstr "Myyntitilaukset"
 #. module: sale_timesheet
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Myynnin työaikakirjaukset"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1235,7 +1245,7 @@ msgstr "Haku myyntitilauksen kohteesta"
 #. module: sale_timesheet
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr ""
+msgstr "Myy työaikakirjausten perusteella"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1273,7 +1283,7 @@ msgstr "Palvelut"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "Ohjattu jaetun laskun lähetystoiminto"
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1467,13 +1477,13 @@ msgstr "Työaikakirjaukset (kiinteä hinta)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Manual)"
-msgstr ""
+msgstr "Työaikakirjaukset (Manuaalinen)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Milestones)"
-msgstr ""
+msgstr "Työaikakirjaukset (Välitavoitteet)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1485,7 +1495,7 @@ msgstr "Työaikakirjaukset (ei laskutettavat)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Time & Materials)"
-msgstr ""
+msgstr "Työaikakirjaukset (Aika & materiaalit)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1660,13 +1670,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "You cannot modify timsheets that are already invoiced."
-msgstr ""
+msgstr "Et voi muokata jo laskutettuja työaikakirjauksia."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "You cannot remove timsheets that are already invoiced."
-msgstr ""
+msgstr "Et voi poistaa jo laskutettuja työaikakirjauksia."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
@@ -1687,7 +1697,7 @@ msgstr "ei laskutettava"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of the hours sold."
-msgstr ""
+msgstr "myydyistä tunneista."
 
 #. module: sale_timesheet
 #. odoo-python

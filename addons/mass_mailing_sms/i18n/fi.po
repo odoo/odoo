@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-09-09 14:11+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 13:12+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "mass_mailing_sms/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -344,9 +344,10 @@ msgstr "Päivämäärä"
 #. module: mass_mailing_sms
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
 msgid "Design, send and track SMS"
-msgstr ""
+msgstr "Suunnittele, lähetä ja seuraa tekstiviestejä"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -444,6 +445,7 @@ msgid "Highest Click Rate"
 msgstr "Korkein klikkausprosentti"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -554,6 +556,11 @@ msgstr "Linkitä tekstiviestit postitus-/tekstiviestiseurantamalleihin"
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "Klikkiseuranta"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -776,7 +783,9 @@ msgid "Phone Blacklisted"
 msgstr "Puhelin on markkinointikiellossa"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "Puhelinnumero"
 
@@ -1143,35 +1152,35 @@ msgstr "on onnistuneesti poistettu"
 msgid "📵 Blacklisted"
 msgstr ""
 
-msgid ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Text Message have been cancelled and will not be sent.</span>"
-msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != "
-"'sms'\">Tekstiviesti on peruutettu eikä sitä lähetetä.</span>"
+#~ msgid ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Message have been cancelled and will not be sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != "
+#~ "'sms'\">Tekstiviesti on peruutettu eikä sitä lähetetä.</span>"
 
-msgid ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages could not be delivered.</span>"
-msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != "
-"'sms'\">Tekstiviestejä ei voitu toimittaa.</span>"
+#~ msgid ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Messages could not be delivered.</span>"
+#~ msgstr ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != "
+#~ "'sms'\">Tekstiviestejä ei voitu toimittaa.</span>"
 
-msgid ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages have been sent.</span>"
-msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">Tekstiviestit on "
-"lähetetty.</span>"
+#~ msgid ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+#~ "Messages have been sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">Tekstiviestit "
+#~ "on lähetetty.</span>"
 
-msgid "Mailing List Contacts"
-msgstr "Postituslistan yhteystiedot"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "Postituslistan yhteystiedot"
 
-msgid "Open Recipient"
-msgstr "Avoin vastaanottaja"
+#~ msgid "Open Recipient"
+#~ msgstr "Avoin vastaanottaja"
 
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
+#~ msgid "Website Messages"
+#~ msgstr "Verkkosivun ilmoitukset"
 
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+#~ msgid "Website communication history"
+#~ msgstr "Verkkosivun viestihistoria"

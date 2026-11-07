@@ -44,8 +44,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-10-27 08:34+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-05 08:15+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/fi/>\n"
@@ -322,19 +322,19 @@ msgstr "Puuvillafarkut viidellä taskulla..."
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
+"value=\"object.partner_id.name\"></t>\n"
 "                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
+"value=\"object.config_id.name\"></t>\n"
 "                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"user.lang\"></t>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Hello,</t>\n"
 "                    </div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <div>Thank you for purchasing from <t t-"
 "out=\"store_name\">Store name</t>!</div>\n"
 "                    <div>Attached, you will find your receipt for the "
@@ -344,43 +344,13 @@ msgid ""
 "time_format='short',                          lang_code=lg)\">time</t>.</"
 "span>\n"
 "                    </div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <div>With kind regards,</div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <t t-out=\"store_name\">Store name</t>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
-"                    <div>\n"
-"                        <t t-if=\"client_name\">Hei <t t-"
-"out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
-"                        <t t-else=\"\">Hei,</t>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>Kiitos ostoksestasi <t t-"
-"out=\"store_name\">Myymälän nimi</t>!</div>\n"
-"                    <div>Löydät liitteenä kuitin ostoksestasi <span><t t-"
-"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
-"MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> <t "
-"t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">aika</t>.</"
-"span>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>Ystävällisin terveisin,</div>\n"
-"                    <br/>\n"
-"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
-"                </div>\n"
-"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -628,6 +598,12 @@ msgstr "<sup title=\"Only works for online and self order\">?</sup>"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Klikkaamalla \"Vahvista\" hyväksyt maksun."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "A customer is required on the order to create an invoice."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1608,6 +1584,7 @@ msgstr "Takaisin"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
 msgstr "Taustajärjestelmä"
@@ -1755,6 +1732,12 @@ msgid "Before 19.1:"
 msgstr "Ennen 19.1:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Bill"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Bill Printing"
@@ -1822,6 +1805,12 @@ msgstr "Leivät"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Break Combo"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Browser LNA Prompt"
 msgstr "Selaimen LNA-kehote"
@@ -1886,6 +1875,8 @@ msgid "Cancel"
 msgstr "Peruuta"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.actions.server,name:point_of_sale.pos_order_set_cancel
 msgid "Cancel Order"
 msgstr "Peru tilaus"
@@ -2042,6 +2033,7 @@ msgstr "Käteinen sisään / ulos"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
 msgstr "Käteinen sisään / ulos"
@@ -2440,6 +2432,7 @@ msgstr "Sulje"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
 msgstr "Sulje kassa"
@@ -2974,6 +2967,12 @@ msgid "Create Partner"
 msgstr "Luo kumppani"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Create Product"
+msgstr "Luo tuote"
+
+#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
 msgstr "Luo asiakas"
@@ -3118,7 +3117,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__custom_attribute_value_ids
 msgid "Custom Values"
-msgstr "Muokatut arvot"
+msgstr "Mukautetut arvot"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3145,6 +3144,8 @@ msgid "Customer Account"
 msgstr "Asiakastili"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
 msgstr "Asiakasnäyttö"
@@ -4710,9 +4711,21 @@ msgstr ""
 "vähimmäismäärään 0."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Info"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
 msgstr "Tietoa tuotteestasi."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Install App"
+msgstr "Asenna sovellus"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -7167,6 +7180,8 @@ msgid "Payment Method"
 msgstr "Maksutapa"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_method_form
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__payment_method_ids
@@ -7967,6 +7982,8 @@ msgid "Priced Product"
 msgstr "Hinnoiteltu tuote"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__pricelist_id
@@ -8023,6 +8040,12 @@ msgstr "Tulosta"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__print_history
 msgid "Print History"
 msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Print Report"
+msgstr "Tulosta raportti"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8154,6 +8177,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -8223,7 +8247,7 @@ msgstr "Tuotteen määrite"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Tuotteen määritteen mukautettu arvo"
+msgstr "Tuoteominaisuuden mukautettu arvo"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_category
@@ -8681,6 +8705,7 @@ msgstr "Lataa uudelleen"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -9391,7 +9416,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "Aseta useita hintoja tuotteille, automaattisia alennuksia ym."
+msgstr "Määritä useita hintoja per tuote, automatisoituja alennuksia, jne."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9913,6 +9938,8 @@ msgid "Tare Weight:"
 msgstr "Omapaino:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_account_tax
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Tax"
@@ -12429,6 +12456,69 @@ msgstr "arvolla"
 msgid "x"
 msgstr "x"
 
+#~ msgid ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"client_name\" t-"
+#~ "value=\"object.partner_id.name\"/>\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Hello <t t-"
+#~ "out=\"client_name\">Client name</t>,</t>\n"
+#~ "                        <t t-else=\"\">Hello,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Thank you for purchasing from <t t-"
+#~ "out=\"store_name\">Store name</t>!</div>\n"
+#~ "                    <div>Attached, you will find your receipt for the "
+#~ "purchase of <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+#~ "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) "
+#~ "or ''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+#~ "time_format='short',                          lang_code=lg)\">time</t>.</"
+#~ "span>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>With kind regards,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <t t-out=\"store_name\">Store name</t>\n"
+#~ "                </div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+#~ "                    <t t-set=\"client_name\" t-"
+#~ "value=\"object.partner_id.name\"/>\n"
+#~ "                    <t t-set=\"store_name\" t-"
+#~ "value=\"object.config_id.name\"/>\n"
+#~ "                    <t t-set=\"tz\" t-"
+#~ "value=\"object.company_id.partner_id.tz\"/>\n"
+#~ "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+#~ "user.lang\"/>\n"
+#~ "                    <div>\n"
+#~ "                        <t t-if=\"client_name\">Hei <t t-"
+#~ "out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+#~ "                        <t t-else=\"\">Hei,</t>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Kiitos ostoksestasi <t t-"
+#~ "out=\"store_name\">Myymälän nimi</t>!</div>\n"
+#~ "                    <div>Löydät liitteenä kuitin ostoksestasi <span><t t-"
+#~ "out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+#~ "MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> "
+#~ "<t t-out=\"format_time(time=object.date_order, tz=tz, "
+#~ "time_format='short',                          lang_code=lg)\">aika</t>.</"
+#~ "span>\n"
+#~ "                    </div>\n"
+#~ "                    <br/>\n"
+#~ "                    <div>Ystävällisin terveisin,</div>\n"
+#~ "                    <br/>\n"
+#~ "                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+#~ "                </div>\n"
+#~ "            "
+
 #~ msgid "Leave empty to use the receivable account of customer"
 #~ msgstr "Jätä tyhjäksi, jos haluat käyttää asiakkaan saamistiliä"
 
@@ -12453,15 +12543,6 @@ msgstr "x"
 #~ "Pankkipäiväkirjassa kirjoitetaan maksamattomien saatavien tilille, joka "
 #~ "on määritetty tässä maksutavassa.\n"
 #~ "Vain käteis- ja pankkipäiväkirjat ovat sallittuja."
-
-#~ msgid "Create Product"
-#~ msgstr "Luo tuote"
-
-#~ msgid "Install App"
-#~ msgstr "Asenna sovellus"
-
-#~ msgid "Print Report"
-#~ msgstr "Tulosta raportti"
 
 #~ msgid ""
 #~ "Whenever you close a session, one entry is generated in the following "

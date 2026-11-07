@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-29 04:34+0000\n"
+"PO-Revision-Date: 2026-11-06 03:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "hr_timesheet/id/>\n"
@@ -42,6 +42,18 @@ msgid ""
 "to set\n"
 "up a management by affair.\n"
 msgstr ""
+"\n"
+"Modul ini mengimplementasikan sistem timesheet.\n"
+"==========================================\n"
+"\n"
+"Setiap karyawan dapat meng-encode dan melacak waktu yang mereka gunakan pada "
+"project-project yang berbeda.\n"
+"\n"
+"Lot untuk reporting tepat waktu dan pelacakan karyawan juga disediakan.\n"
+"\n"
+"Terintegrasi sepenuhnya dengan modul cost accounting. Ini memungkinkan Anda "
+"untuk menetapkan\n"
+"manajemen berdasarkan peristiwa.\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -89,13 +101,13 @@ msgstr "%(project_name)s (%(days)shari)"
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sj%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sj)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -117,12 +129,12 @@ msgstr "(Tersisa %s hari)"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "(incl."
-msgstr ""
+msgstr "(termasuk"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 msgid "0h"
-msgstr ""
+msgstr "0j"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -149,6 +161,17 @@ msgid ""
 "data-icon=\"schedule\" title=\"Over Due\" invisible=\"not stat_success_rate "
 "or stat_success_rate &lt;= 100\"/>"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon\" data-icon=\"schedule\" "
+"title=\"Timesheets\" invisible=\"stat_success_rate\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-success\" "
+"data-icon=\"schedule\" title=\"On Due\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt;= 80\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-warning\" "
+"data-icon=\"schedule\" title=\"Warning\" invisible=\"not stat_success_rate "
+"or stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-danger\" "
+"data-icon=\"schedule\" title=\"Over Due\" invisible=\"not stat_success_rate "
+"or stat_success_rate &lt;= 100\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -165,17 +188,17 @@ msgstr "<span class=\"o_stat_text\">Timesheet</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_kanban_inherit
 msgid "<span class=\"oi oi-fw me-1\" data-icon=\"schedule\" title=\"Time\"/>"
-msgstr ""
+msgstr "<span class=\"oi oi-fw me-1\" data-icon=\"schedule\" title=\"Waktu\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span class=\"pe-1\">Total (Days)</span>"
-msgstr ""
+msgstr "<span class=\"pe-1\">Total (Hari)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span class=\"pe-1\">Total</span>"
-msgstr ""
+msgstr "<span class=\"pe-1\">Total</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -184,6 +207,9 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"has_timesheet\">\n"
+"                        Yakin ingin menghapus karyawan-karyawan ini?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -307,7 +333,7 @@ msgstr "Pengingat Approver"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr ""
+msgstr "Arsipkan Karyawan"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -345,6 +371,8 @@ msgid ""
 "Can manage and approve all timesheets, with access to reporting and "
 "configuration."
 msgstr ""
+"Dapat mengelola dan menyetujui semua timesheet, dengan akses ke pelaporan "
+"dan konfigurasi."
 
 #. module: hr_timesheet
 #: model:res.groups,comment:hr_timesheet.group_hr_timesheet_approver
@@ -352,11 +380,14 @@ msgid ""
 "Can manage timesheets for all employees, but can only approve timesheets and "
 "billing targets for their team members. Has access to reporting."
 msgstr ""
+"Dapat mengelola timesheet untuk semua karyawan, tetapi hanya dapat "
+"menyetujui timesheet dan target tagihan untuk anggota timnya. Memiliki akses "
+"ke pelaporan."
 
 #. module: hr_timesheet
 #: model:res.groups,comment:hr_timesheet.group_hr_timesheet_user
 msgid "Can only manage their own timesheets."
-msgstr ""
+msgstr "Hanya dapat mengelola timesheetnya sendiri."
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -372,7 +403,7 @@ msgstr "Kolaborator dalam project yang di-share"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__color
 msgid "Color Index"
-msgstr ""
+msgstr "Indeks Warna"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -394,7 +425,7 @@ msgstr "Konfigurasi"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "Confirmation"
-msgstr ""
+msgstr "Konfirmasi"
 
 #. module: hr_timesheet
 #: model:ir.model,website_form_label:hr_timesheet.model_project_task
@@ -447,7 +478,7 @@ msgstr "Nonaktifkan akun."
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time type."
-msgstr ""
+msgstr "Value project default untuk timesheet yang dibuat dari jenis waktu."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -460,12 +491,12 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
 msgid "Delete"
-msgstr ""
+msgstr "Hapus"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Delete Employee"
-msgstr ""
+msgstr "Hapus Karyawan"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__milestone_id
@@ -491,7 +522,7 @@ msgstr "Deskripsikan kegiatan Anda"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.quick_create_account_analytic_line_form
 msgid "Describe your activity..."
-msgstr ""
+msgstr "Deskripsikan aktivitas Anda..."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -552,12 +583,12 @@ msgstr "Karyawan"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
 msgid "Employee Delete Wizard"
-msgstr ""
+msgstr "Wizard Hapus Karyawan"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_departure
 msgid "Employee Departure"
-msgstr ""
+msgstr "Karyawan Keluar"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
@@ -568,7 +599,7 @@ msgstr "Pengingat Karyawan"
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employees' Timesheets"
-msgstr ""
+msgstr "Timesheet Karyawan"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
@@ -717,7 +748,7 @@ msgstr "Update Departemen Saya"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Projects/Tasks"
-msgstr ""
+msgstr "Project/Tugas Saya"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
@@ -741,7 +772,7 @@ msgstr "Terbaru"
 #. module: hr_timesheet
 #: model:res.groups.privilege,placeholder:hr_timesheet.res_groups_privilege_timesheets
 msgid "No"
-msgstr ""
+msgstr "Tidak"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -787,12 +818,12 @@ msgstr "Jumlah jam yang dialokasi dikurangi jumlah jam yang digunakan."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Ok"
-msgstr ""
+msgstr "Oke"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Overrun Hours"
-msgstr ""
+msgstr "Jam Lembur"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
@@ -822,7 +853,7 @@ msgstr "Filter-Filter Pribadi di Karyawan untuk tampilan Kalender"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Please first delete all of their timesheets."
-msgstr ""
+msgstr "Harap hapus semua timesheet-nya terlebih dahulu."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -875,7 +906,7 @@ msgstr "Timesheet Project"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
 msgid "Project:"
-msgstr ""
+msgstr "Project:"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_public
@@ -947,7 +978,7 @@ msgstr "Cari di Task"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "See Timesheets"
-msgstr ""
+msgstr "Lihat Timesheet"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -982,7 +1013,7 @@ msgstr "Pengaturan"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__show_portal_timesheets
 msgid "Show Portal Timesheets"
-msgstr ""
+msgstr "Tampilkan Timesheet Portal"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1029,7 +1060,7 @@ msgstr "Task"
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Log Tugas"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
@@ -1045,7 +1076,7 @@ msgstr "Analisis Task"
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "Template for Timesheets"
-msgstr ""
+msgstr "Template untuk Timesheet"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1067,13 +1098,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "There are no timesheets to print for this project"
-msgstr ""
+msgstr "Tidak ada timesheet untuk dicetak dalam project ini"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "There are no timesheets to print for this task"
-msgstr ""
+msgstr "Tidak ada timesheet untuk dicetak dalam tugas ini"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1229,7 +1260,7 @@ msgstr "Waktu yang Digunakan untuk Sub-task"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Spent on Sub-tasks:"
-msgstr ""
+msgstr "Waktu Terpakai di Sub-tugas:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1414,7 +1445,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Timesheets of %(name)s"
-msgstr ""
+msgstr "TImesheet %(name)s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1463,7 +1494,7 @@ msgstr "Total Hari yang Digunakan"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Hours Spent"
-msgstr ""
+msgstr "Total Jam Terpakai"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1482,7 +1513,7 @@ msgstr "Total:"
 #. module: hr_timesheet
 #: model:ir.module.module,summary:base.module_hr_timesheet
 msgid "Track employee time on tasks"
-msgstr ""
+msgstr "Lacak waktu karyawan mengerjakan tugas"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1511,6 +1542,12 @@ msgid ""
 "those timesheets or consider archiving the employee instead.\n"
 "                        </span>"
 msgstr ""
+"Waduh! Karyawan yang hendak dihapus ini masih memiliki beberapa timesheet "
+"dan tidak bisa dihapus.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Ada dua opsi: hapus timesheet atau arsipkan saja "
+"karyawan tersebut.\n"
+"                        </span>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
@@ -1583,7 +1620,7 @@ msgstr "Anda tidak dapat mengakses timesheet yang bukan milik Anda."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "You cannot delete employees who have timesheets."
-msgstr ""
+msgstr "Anda tidak dapat menghapus karyawan yang memiliki timesheet."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -1642,6 +1679,8 @@ msgid ""
 "on\n"
 "                            <span class=\"fw-bold\">Sub-tasks</span>)"
 msgstr ""
+"pada\n"
+"                            <span class=\"fw-bold\">Sub-tugas</span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1649,3 +1688,5 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold\">Sub-tasks</span>)"
 msgstr ""
+"pada\n"
+"                        <span class=\"fw-bold\">Sub-tugas</span>)"

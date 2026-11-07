@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 17:51+0000\n"
+"PO-Revision-Date: 2026-11-03 12:33+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/"
 "privacy_lookup/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr "Ta bort markering"
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 msgid "Deleted"
-msgstr "Borttagen"
+msgstr "Raderad"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__display_name
@@ -121,12 +121,12 @@ msgstr "E-post"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__execution_details
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__execution_details
 msgid "Execution Details"
-msgstr "Utförandedetaljer"
+msgstr "Tillämpningsinformation"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__records_description
 msgid "Found Records"
-msgstr "Hittade poster"
+msgstr "Hittade handlingar"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
@@ -161,7 +161,7 @@ msgstr "Är aktiv"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
-msgstr "Är osannolikt"
+msgstr "Är ej kopplad"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__write_uid
@@ -195,7 +195,7 @@ msgstr "Logg"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
 msgid "Lookup"
-msgstr "Slå upp"
+msgstr "Uppslagning"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
@@ -210,7 +210,7 @@ msgstr "Namn"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "Open Record"
-msgstr "Öppen post"
+msgstr "Öppen handling"
 
 #. module: privacy_lookup
 #: model:ir.module.module,shortdesc:base.module_privacy_lookup
@@ -222,7 +222,7 @@ msgstr "Integritet"
 #: model:ir.model,name:privacy_lookup.model_privacy_log
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_log_view_form
 msgid "Privacy Log"
-msgstr "Sekretesslogg"
+msgstr "Integritetslogg"
 
 #. module: privacy_lookup
 #: model:ir.actions.act_window,name:privacy_lookup.privacy_log_action
@@ -230,7 +230,7 @@ msgstr "Sekretesslogg"
 #: model:ir.ui.menu,name:privacy_lookup.pricacy_log_menu
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_log_view_list
 msgid "Privacy Logs"
-msgstr "Sekretessloggar"
+msgstr "Integritetsloggar"
 
 #. module: privacy_lookup
 #. odoo-python
@@ -250,22 +250,22 @@ msgstr "Integritetsrapportrad"
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard
 msgid "Privacy Lookup Wizard"
-msgstr "Guide till integritetsrapport"
+msgstr "Verktygsguide för integritetsrapport"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard_line
 msgid "Privacy Lookup Wizard Line"
-msgstr "Guide till integritetsrapportsrad"
+msgstr "Rad i verktygsguide för integritetsrapport"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__resource_ref
 msgid "Record"
-msgstr "Post"
+msgstr "Handling"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__records_description
 msgid "Records Description"
-msgstr "Postbeskrivning"
+msgstr "Beskrivning av handlingar"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
@@ -280,7 +280,7 @@ msgstr "Modell för relaterade dokument"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__res_id
 msgid "Resource ID"
-msgstr "Resurs ID"
+msgstr "ID-nummer för resurs"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__res_name
@@ -290,13 +290,13 @@ msgstr "Resursnamn"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
 msgid "Search References"
-msgstr "Sök referenser"
+msgstr "Sök bland referenser"
 
 #. module: privacy_lookup
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 msgid "The record is already unlinked."
-msgstr "Posten är redan bortkopplad."
+msgstr "Handlingen är redan frånkopplad."
 
 #. module: privacy_lookup
 #. odoo-python
@@ -310,15 +310,15 @@ msgid ""
 "This operation is irreversible. Do you wish to proceed to the record "
 "deletion?"
 msgstr ""
-"Denna operation är oåterkallelig. Vill du gå vidare till att radera posten?"
+"Operationen är oåterkallelig. Vill du gå vidare till att radera handlingen?"
 
 #. module: privacy_lookup
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 msgid "Unarchived"
-msgstr "Avarkivera"
+msgstr "Avarkiverade"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
 msgid "Wizard"
-msgstr "Guide"
+msgstr "Verktygsguide"

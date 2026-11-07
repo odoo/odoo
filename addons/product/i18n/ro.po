@@ -12,15 +12,16 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Iulian Tanasa <iulian.tanasa@qbsretail.ro>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
-"product/ro/>\n"
+"PO-Revision-Date: 2026-11-02 22:33+0000\n"
+"Last-Translator: Iulian Tanasa <iulian.tanasa@qbsretail.ro>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/product/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +53,27 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 msgstr ""
+"Acesta este modulul de bază pentru gestionarea produselor și a listelor de "
+"prețuri în Odoo.\n"
+"============================================================================================\n"
+"\n"
+"Produsele suportă variante, diferite metode de calcul al prețului, "
+"informații despre furnizori,\n"
+"aprovizionare pe stoc sau la comandă, diferite unități de măsură, ambalaje "
+"și proprietăți.\n"
+"\n"
+"Listele de prețuri suportă:\n"
+"---------------------------\n"
+"    * Mai multe niveluri de reducere (pe produs, categorie, cantități)\n"
+"    * Calcularea prețului pe baza unor criterii diferite:\n"
+"        * Altă listă de prețuri\n"
+"        * Preț de cost\n"
+"        * Preț de listă\n"
+"        * Preț furnizor\n"
+"\n"
+"Preferințe de liste de prețuri pe produs și/sau partener.\n"
+"\n"
+"Tipărirea etichetelor de produs cu cod de bare.\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -90,7 +112,7 @@ msgstr "%(percentage)s %% %(discount_type)s pe %(base)s %(extra)s"
 #: model_terms:ir.ui.view,arch_db:product.report_label_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.action_report_product_label_dymo
@@ -122,6 +144,7 @@ msgstr "- %(amount)s rabat"
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to %(product_list)s"
 msgstr ""
+"- Codul de bare \"%(barcode)s\" este deja alocat pentru %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -165,7 +188,7 @@ msgstr "160x80cm, cu picioare mari"
 #: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__2x7
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7
 msgid "2 x 7"
-msgstr ""
+msgstr "2 x 7"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_2
@@ -197,17 +220,17 @@ msgstr "4 x 12"
 #: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__print_format__4x7
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7
 msgid "4 x 7"
-msgstr ""
+msgstr "4 x 7"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
 msgid "4XL"
-msgstr ""
+msgstr "4XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_5xl
 msgid "5XL"
-msgstr ""
+msgstr "5XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_6
@@ -249,7 +272,7 @@ msgstr "<span class=\"o_stat_text\"> Produse</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "<span class=\"o_stat_text\">Daily Rates</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Cursuri zilnice</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
@@ -267,27 +290,29 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Pe "
+"baza variantelor</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">În stoc</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span class=\"text-nowrap\">% on</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">% din</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "<span>per</span>"
-msgstr ""
+msgstr "<span>pe</span>"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
@@ -375,12 +400,12 @@ msgstr "Un produs combo vândabil poate conține doar produse vândabile."
 #: model:ir.model.fields,help:product.field_product_product__is_storable
 #: model:ir.model.fields,help:product.field_product_template__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Un produs stocabil este un produs pentru care țineți evidența stocului."
 
 #. module: product
 #: model:ir.model,name:product.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupuri de acces"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -444,7 +469,7 @@ msgstr "Activitate Excepție Decorare"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_plans_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activități"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
@@ -465,13 +490,13 @@ msgstr "Pictograma tipului de activitate"
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Add"
-msgstr ""
+msgstr "Adaugă"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "Adaugă produse"
 
 #. module: product
 #. odoo-javascript
@@ -497,6 +522,8 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Adăugați produse cu butonul \"Adaugă produse\" din dreapta sus,\n"
+"                                 pentru a le include în raport."
 
 #. module: product
 #. odoo-python
@@ -535,7 +562,7 @@ msgstr "Toate"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "All Companies"
-msgstr ""
+msgstr "Toate companiile"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
@@ -591,13 +618,13 @@ msgstr "Permite clienților să-și stabilească propria valoare"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__allowed_uom_ids
 #: model:ir.model.fields,field_description:product.field_product_uom__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Unități de măsură permise"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__zpl_template__alternative
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__alternative
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "Alternativ (2.00\" x 1.00\")"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
@@ -617,12 +644,12 @@ msgstr "Aplicat în"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
 msgid "Applied on"
-msgstr ""
+msgstr "Se aplică pe"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply"
-msgstr ""
+msgstr "Aplică"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -648,7 +675,7 @@ msgstr "Arhivat"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Archived Products"
-msgstr ""
+msgstr "Produse arhivate"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
@@ -659,7 +686,7 @@ msgstr "Ariel"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Assigned Pricelist"
-msgstr ""
+msgstr "Listă de prețuri atribuită"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -732,7 +759,7 @@ msgstr "Valori atribute"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attribute name (e.g. Color, Size, ... )"
-msgstr ""
+msgstr "Numele atributului (de exemplu Culoare, Mărime, ...)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -750,7 +777,7 @@ msgstr "Atribute & variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__available_packaging_ids
 msgid "Available Packaging"
-msgstr ""
+msgstr "Ambalaje disponibile"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__free_qty
@@ -764,6 +791,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Cantitate disponibilă (calculată ca Cantitate în stoc - cantitate "
+"rezervată - cantitate de scos)\n"
+"Într-un context cu o singură locație de stoc, include bunurile depozitate în "
+"această locație sau în oricare dintre sublocațiile sale.\n"
+"Într-un context cu un singur depozit, include bunurile depozitate în locația "
+"de stoc a acestui depozit sau în oricare dintre sublocațiile sale.\n"
+"În celelalte cazuri, include bunurile depozitate în orice locație de stoc de "
+"tip 'internal'."
 
 #. module: product
 #. odoo-javascript

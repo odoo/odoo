@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-10-28 22:54+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-05 19:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/hr_expense/es_419/>\n"
@@ -181,19 +181,30 @@ msgid "<span class=\"o_stat_text\">Payment</span>"
 msgstr "<span class=\"o_stat_text\">Pago</span>"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"<span class=\"text-muted\" invisible=\"standard_price\">Per expense</span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"text-muted\">A bill is sent separately</span>"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<span>@</span>"
 msgstr "<span>@</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<span>Employee:</span>"
-msgstr "<span>Empleado:</span>"
+msgid "<span>Approver:</span>"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<span>Manager:</span>"
-msgstr "<span>Gerente:</span>"
+msgid "<span>Employee:</span>"
+msgstr "<span>Empleado:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -414,6 +425,11 @@ msgid "Approved"
 msgstr "Aprobado"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__manager_id
+msgid "Approver"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Archived"
 msgstr "Archivado"
@@ -457,6 +473,11 @@ msgstr "Archivos adjuntos"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
 msgstr "Validación automática"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Bill"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__bill_paid_by_employee
@@ -529,6 +550,11 @@ msgstr "Comunicación"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
 msgstr "Empresa"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
+msgid "Company Card"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -604,7 +630,6 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__currency_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Currency"
 msgstr "Moneda"
 
@@ -742,15 +767,12 @@ msgstr ""
 #: model:ir.model,name:hr_expense.model_hr_employee
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__employee_id
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
+#: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Employee"
 msgstr "Empleado"
-
-#. module: hr_expense
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
-msgid "Employee (Through a Purchase Receipt)"
-msgstr "Empleado (mediante un recibo de compra)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -794,7 +816,6 @@ msgstr "Supera el límite de la empresa"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Existing Bill"
 msgstr "Factura existente"
 
@@ -1309,6 +1330,11 @@ msgid "Journal Entry Reset to Draft"
 msgstr "Restablecer asiento contable a borrador"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_move_state
+msgid "Journal Entry Status"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Apunte contable"
@@ -1423,7 +1449,6 @@ msgid "Main Attachment"
 msgstr "Archivo adjunto principal"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__manager_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__manager_id
 msgid "Manager"
 msgstr "Gerente"
@@ -1489,8 +1514,8 @@ msgstr "Mitchell Admin"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
-msgid "Multiple Managers"
-msgstr "Varios gerentes"
+msgid "Multiple Approvers"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -1559,16 +1584,6 @@ msgid "Next Activity Type"
 msgstr "Siguiente tipo de actividad"
 
 #. module: hr_expense
-#: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
-msgid "No"
-msgstr "No"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "No (Direct Expense)"
-msgstr "No (Gasto directo)"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No attachment was provided"
@@ -1598,11 +1613,6 @@ msgid "No work contact found for the employee %(name)s, please configure one."
 msgstr ""
 "No se encontró un contacto de trabajo para el empleado %(name)s, configure "
 "uno."
-
-#. module: hr_expense
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
-msgid "None (Paid by Company)"
-msgstr "Ninguno (pagado por la empresa)"
 
 #. module: hr_expense
 #. odoo-python
@@ -1763,9 +1773,15 @@ msgid "Paid"
 msgstr "Pagado"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Paid by Company"
-msgstr "Pagado por la empresa"
+msgid "Paid by"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Paid by Company card"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1980,12 +1996,6 @@ msgid "Reimburse in Payslip"
 msgstr "Reembolsar en el recibo de nómina"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Reimbursement"
-msgstr "Reembolso"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Related"
 msgstr "Relacionado"
@@ -2059,11 +2069,6 @@ msgid "Scan"
 msgstr "Escanear"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Select Bill..."
-msgstr "Selecciona una factura..."
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select a product to proceed."
@@ -2089,6 +2094,11 @@ msgid ""
 "expense approver), otherwise by the employee's manager. If there is none, "
 "the expense is auto-validated."
 msgstr ""
+"Selecciona al usuario responsable de aprobar los gastos de este empleado.\n"
+"Si dejas este campo vacío, la aprobación queda a cargo de la persona "
+"responsable del departamento (si tiene permisos para aprobar gastos). De lo "
+"contrario, queda a cargo del gerente del empleado. Si no hay ninguno, el "
+"sistema valida los gastos de forma automática."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -2277,6 +2287,11 @@ msgid "Taxes"
 msgstr "Impuestos"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Taxes included"
+msgstr ""
+
+#. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
 msgstr "Responsable de aprobar en el equipo"
@@ -2313,29 +2328,16 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
-msgstr "El usuario actual no tiene empleados relacionados. Cree uno."
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/res_company.py:0
 msgid "The employee expense journal must be a purchase journal."
 msgstr "El diario de gastos del empleado debe ser un diario de compras."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The existing bill must be set."
-msgstr "Debes establecer la factura existente."
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"The expense existing bill is not linked, please reference it before "
-"approving."
-msgstr ""
-"La factura existente del gasto no está vinculada. Vincúlala antes de aprobar "
-"el gasto."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2486,11 +2488,6 @@ msgid "Total Untaxed Amount In Currency"
 msgstr "Importe total sin impuestos en la moneda"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Total With Conversion"
-msgstr "Total con conversión"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount of the original Expense that we are splitting"
 msgstr "Importe total del gasto original que estamos dividiendo"
@@ -2538,6 +2535,7 @@ msgstr "Precio unitario"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -2630,11 +2628,6 @@ msgstr "Si el impuesto se define en un producto seleccionado"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
 msgid "Wizard"
 msgstr "Asistente"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Yes (Match to Bill)"
-msgstr "Sí (coincidir con la factura)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2852,6 +2845,52 @@ msgstr "ya existe con la misma categoría, fecha, importe y empleado."
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "con el mismo recibo."
+
+#~ msgid "<span>Manager:</span>"
+#~ msgstr "<span>Gerente:</span>"
+
+#~ msgid "Employee (Through a Purchase Receipt)"
+#~ msgstr "Empleado (mediante un recibo de compra)"
+
+#~ msgid "Multiple Managers"
+#~ msgstr "Varios gerentes"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "No (Direct Expense)"
+#~ msgstr "No (Gasto directo)"
+
+#~ msgid "None (Paid by Company)"
+#~ msgstr "Ninguno (pagado por la empresa)"
+
+#~ msgid "Paid by Company"
+#~ msgstr "Pagado por la empresa"
+
+#~ msgid "Reimbursement"
+#~ msgstr "Reembolso"
+
+#~ msgid "Select Bill..."
+#~ msgstr "Selecciona una factura..."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr "El usuario actual no tiene empleados relacionados. Cree uno."
+
+#~ msgid "The existing bill must be set."
+#~ msgstr "Debes establecer la factura existente."
+
+#~ msgid ""
+#~ "The expense existing bill is not linked, please reference it before "
+#~ "approving."
+#~ msgstr ""
+#~ "La factura existente del gasto no está vinculada. Vincúlala antes de "
+#~ "aprobar el gasto."
+
+#~ msgid "Total With Conversion"
+#~ msgstr "Total con conversión"
+
+#~ msgid "Yes (Match to Bill)"
+#~ msgstr "Sí (coincidir con la factura)"
 
 #~ msgid ""
 #~ "Select the user responsible for approving \"Expenses\" of this employee.\n"

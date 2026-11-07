@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-28 10:42+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/hr/nl/>\n"
@@ -955,8 +955,8 @@ msgid ""
 "An inactive user already exist with the following login: %(login)s. User "
 "Name: %(user_name)s."
 msgstr ""
-"Er bestaat al een inactieve gebruiker met de volgende inloggegevens %(login)"
-"s. Gebruikersnaam: %(user_name)s."
+"Er bestaat al een inactieve gebruiker met de volgende inloggegevens %"
+"(login)s. Gebruikersnaam: %(user_name)s."
 
 #. module: hr
 #. odoo-javascript
@@ -2665,6 +2665,18 @@ msgstr "Einddatum van de proefperiode (als die er is)."
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
 msgstr "Einde van de samenwerking"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration cancelled"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration planned"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -5385,8 +5397,8 @@ msgstr ""
 msgid ""
 "Some of these fields %(field_name)s don't exist on this model (hr.version)."
 msgstr ""
-"Sommige van deze velden %(field_name)s bestaan niet in dit model (hr.version)"
-"."
+"Sommige van deze velden %(field_name)s bestaan niet in dit model "
+"(hr.version)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
@@ -5912,15 +5924,6 @@ msgstr "Deze werktijden worden gedeeld door"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
-msgid ""
-"This working schedule is used by  employee(s), are you sure you want change "
-"it for all employees?"
-msgstr ""
-"Deze werktijden worden gebruikt door  werknemer(s). Weet je zeker dat je dit "
-"voor alle werknemers wilt wijzigen?"
-
-#. module: hr
-#. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/resource_calendar_plugin_patch.js:0
 msgid ""
 "This working schedule is used by %s employee(s), are you sure you want "
@@ -6718,6 +6721,12 @@ msgstr ""
 "laden."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_allocation_wizard_line.py:0
+msgid "You do not have the rights to trust or un-trust accounts."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
 msgid ""
 "You participate to the update of our tutorial tools and pre-sales tools "
@@ -6997,6 +7006,13 @@ msgstr "werk"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "This working schedule is used by  employee(s), are you sure you want "
+#~ "change it for all employees?"
+#~ msgstr ""
+#~ "Deze werktijden worden gebruikt door  werknemer(s). Weet je zeker dat je "
+#~ "dit voor alle werknemers wilt wijzigen?"
 
 #~ msgid "Company Executive"
 #~ msgstr "Bedrijfsleider"

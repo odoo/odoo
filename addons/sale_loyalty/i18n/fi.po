@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 13:53+0000\n"
+"PO-Revision-Date: 2026-11-05 10:17+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "sale_loyalty/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -30,28 +30,28 @@ msgstr " - Tuotteista, joihin sovelletaan seuraavia veroja: %(taxes)s"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "%(points_name)s Issued"
-msgstr ""
+msgstr "%(points_name)s myönnetty"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "%(points_name)s Used"
-msgstr ""
+msgstr "%(points_name)s käytetty"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<small class=\"fw-bold\">Total</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">Yhteensä</small>"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<small class=\"text-muted\">Issued</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Myönnetty</small>"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<small class=\"text-muted\">Used</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Käytetty</small>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -60,12 +60,16 @@ msgid ""
 "<span>You must <a href='/web/login?redirect=/shop/checkout'>login</a> to use "
 "this code</span>"
 msgstr ""
+"<span>Sinun on <a href='/web/login?redirect=/shop/checkout'>kirjauduttava "
+"sisään</a> käyttääksesi tätä koodia</span>"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid ""
 "<strong class=\"smaller text-uppercase text-muted\">Loyalty Card</strong>"
 msgstr ""
+"<strong class=\"smaller text-uppercase text-muted\">Kanta-asiakaskortti</"
+"strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -102,13 +106,13 @@ msgstr "Koodi:"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Copy code"
-msgstr ""
+msgstr "Kopioi koodi"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/interactions/gift_card.js:0
 msgid "Could not send the gift card. Please try again later."
-msgstr ""
+msgstr "Lahjakortin lähettäminen epäonnistui. Yritä myöhemmin uudelleen."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
@@ -163,7 +167,7 @@ msgstr "Alennus %(desc)s%(tax_str)s"
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
-msgstr "Alennus ja kanta-asiakkuus"
+msgstr "Alennus & kanta-asiakkuus"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
@@ -182,7 +186,7 @@ msgstr "Näyttönimi"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Email Address"
-msgstr ""
+msgstr "Sähköpostiosoite"
 
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
@@ -209,18 +213,18 @@ msgstr "Lahjakortit"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift card"
-msgstr ""
+msgstr "Lahjakortti"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/interactions/gift_card.js:0
 msgid "Gift card sent to %s"
-msgstr ""
+msgstr "Lahjakortti lähetetty osoitteeseen %s"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
 msgid "Gift cards & eWallet"
-msgstr "Lahjakortit & eWallet"
+msgstr "Lahjakortit & eLompakko"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_history
@@ -250,6 +254,7 @@ msgstr "ID"
 #: model:ir.module.module,description:base.module_sale_loyalty
 msgid "Integrate discount and loyalty programs mechanisms in sales orders."
 msgstr ""
+"Integroi alennus- ja kanta-asiakasohjelmien mekanismit myyntitilauksiin."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -290,7 +295,7 @@ msgstr "Viimeksi päivitetty"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_template
 msgid "Loyalty Card"
-msgstr ""
+msgstr "Kanta-asiakaskortti"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -342,7 +347,7 @@ msgstr "Ei valittua palkkiota."
 #. odoo-python
 #: code:addons/sale_loyalty/tests/common.py:0
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "Ei lunastettavia palkintoja tällä kupongilla"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -394,7 +399,7 @@ msgstr "Pisteen kustannukset"
 #: model:ir.ui.menu,name:sale_loyalty.menu_sale_promotions
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Promotions"
-msgstr ""
+msgstr "Tarjoukset"
 
 #. module: sale_loyalty
 #. odoo-javascript
@@ -429,7 +434,7 @@ msgstr "Palkintoja saatavilla"
 #. module: sale_loyalty
 #: model:ir.module.module,shortdesc:base.module_sale_loyalty
 msgid "Sale Loyalty"
-msgstr ""
+msgstr "Myynnin kanta-asiakkuus"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -482,7 +487,7 @@ msgstr "Valittu palkinto"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Send as gift"
-msgstr ""
+msgstr "Lähetä lahjana"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -604,7 +609,7 @@ msgstr "Tämän ohjelman käyttäminen vaatii koodin."
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "This promo code can only be used once."
-msgstr ""
+msgstr "Tätä kampanjakoodia voi käyttää vain kerran."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -631,7 +636,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model:ir.module.module,summary:base.module_sale_loyalty
 msgid "Use discounts and loyalty programs in sales orders"
-msgstr ""
+msgstr "Käytä alennuksia ja kanta-asiakasohjelmia myyntitilauksissa"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -640,6 +645,8 @@ msgid ""
 "You don't have enough coupon points to proceed. Please check your applied "
 "rewards and coupon balance. "
 msgstr ""
+"Sinulla ei ole riittävästi kuponkipisteitä jatkaaksesi. Tarkista käytetyt "
+"palkinnot ja kuponkisi saldo. "
 
 #. module: sale_loyalty
 #. odoo-python
@@ -651,17 +658,17 @@ msgstr "Myyntitilauksessasi ei ole vaadittuja tuotemääriä."
 #. odoo-python
 #: code:addons/sale_loyalty/controllers/gift_card.py:0
 msgid "You've received a gift card from %s"
-msgstr ""
+msgstr "Olet saanut lahjakortin lähettäjältä %s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Your gift card is ready to use"
-msgstr ""
+msgstr "Lahjakorttisi on valmis käytettäväksi"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Your gift cards are ready to use"
-msgstr ""
+msgstr "Lahjakorttisi ovat valmiita käytettäviksi"
 
 #. module: sale_loyalty
 #. odoo-python

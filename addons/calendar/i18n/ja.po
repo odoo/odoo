@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-27 12:15+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 03:33+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "calendar/ja/>\n"
 "Language: ja\n"
@@ -41,6 +41,17 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 msgstr ""
+"\n"
+"これはフル機能のカレンダーシステムです。\n"
+"==========================\n"
+"\n"
+"サポートしているもの：\n"
+"------------\n"
+"- イベントのカレンダー\n"
+"- 定期的なイベント\n"
+"\n"
+"ミーティングを管理する必要がある場合は、CRMモジュールをインストールする必要が"
+"あります\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -62,13 +73,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
-msgstr ""
+msgstr "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(date_start)s, %(time_start)s - %(time_stop)s"
-msgstr ""
+msgstr "%(date_start)s, %(time_start)s - %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
@@ -80,13 +91,13 @@ msgstr "%(day)s 以下における(%(start)s から %(end)s) (%(timezone)s)"
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(time_start)s - %(date_stop)s, %(time_stop)s"
-msgstr ""
+msgstr "%(time_start)s - %(date_stop)s, %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(time_start)s - %(time_stop)s"
-msgstr ""
+msgstr "%(time_start)s - %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
@@ -124,7 +135,7 @@ msgstr "(タイトルなし)"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_filter_section.js:0
 msgid "+ Add guests"
-msgstr ""
+msgstr "+ ゲストを追加"
 
 #. module: calendar
 #. odoo-javascript
@@ -138,23 +149,23 @@ msgid ""
 "<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
-"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"object.event_id and object.event_id.appointment_type_id\"></t>\n"
 "    <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()"
-"\"/>\n"
+"\"></t>\n"
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
-"object.event_id.partner_id\"/>\n"
-"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/"
-">\n"
+"object.event_id.partner_id\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></"
+"t>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
-"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
-"    <t t-set=\"organizer\" t-value=\"object.event_id.user_id\"/>\n"
+"ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"organizer\" t-value=\"object.event_id.user_id\"></t>\n"
 "\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
 "bottom: 28px;\">\n"
 "        Date Updated\n"
 "        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
 "width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
-"align: middle; padding-bottom: 2px;\"/>\n"
+"align: middle; padding-bottom: 2px;\">\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "        <span style=\"display: block; margin-bottom: 8px;\">Hello <t t-"
@@ -281,7 +292,7 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
-"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"></t>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
 "weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
 "\">Attendees</h2>\n"
@@ -289,7 +300,7 @@ msgid ""
 "\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
 "img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
-"15px; vertical-align: text-bottom;\"/>\n"
+"15px; vertical-align: text-bottom;\">\n"
 "            <t t-if=\"attendee != object\">\n"
 "                <span style=\"margin-left: 5px;\" t-"
 "out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -312,7 +323,7 @@ msgid ""
 "        <t t-out=\"object.event_id.description\">Internal meeting for "
 "discussion for new pricing for product and services.</t>\n"
 "    </div>\n"
-"    <br/>\n"
+"    <br>\n"
 "    <strong>Add to calendar</strong>\n"
 "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
 "        <tr>\n"
@@ -323,7 +334,7 @@ msgid ""
 "radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/apple-"
 "calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -333,7 +344,7 @@ msgid ""
 "left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/outlook-"
 "calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -343,7 +354,7 @@ msgid ""
 "background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/google-"
 "calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "        </tr>\n"
@@ -364,13 +375,13 @@ msgstr ""
 msgid ""
 "<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
-"\"/>\n"
+"\"></t>\n"
 "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
-"object.event_id.partner_id\"/>\n"
+"object.event_id.partner_id\"></t>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
-"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
-"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"object.event_id and object.event_id.appointment_type_id\"></t>\n"
 "\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
 "bottom: 28px;\">\n"
@@ -488,7 +499,7 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
-"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"></t>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
 "weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
 "\">Attendees</h2>\n"
@@ -496,7 +507,7 @@ msgid ""
 "\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
 "img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
-"15px; vertical-align: text-bottom;\"/>\n"
+"15px; vertical-align: text-bottom;\">\n"
 "            <t t-if=\"attendee != object\">\n"
 "                <span style=\"margin-left: 5px;\" t-"
 "out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -519,7 +530,7 @@ msgid ""
 "        <t t-out=\"object.event_id.description\">Internal meeting for "
 "discussion for new pricing for product and services.</t>\n"
 "    </div>\n"
-"    <br/>\n"
+"    <br>\n"
 "    <strong>Add to calendar</strong>\n"
 "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
 "        <tr>\n"
@@ -530,7 +541,7 @@ msgid ""
 "radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/apple-"
 "calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -540,7 +551,7 @@ msgid ""
 "left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/outlook-"
 "calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -550,7 +561,7 @@ msgid ""
 "background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/google-"
 "calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "        </tr>\n"
@@ -571,17 +582,17 @@ msgstr ""
 msgid ""
 "<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
-"object.appointment_type_id\"/>\n"
+"object.appointment_type_id\"></t>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
-"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
+"ctx.get('mail_tz')\"></t>\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
 "bottom: 28px;\">\n"
 "        Event updated\n"
 "        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
 "width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
-"align: middle; padding-bottom: 2px;\"/>\n"
+"align: middle; padding-bottom: 2px;\">\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
 "        <span style=\"display: block; margin-bottom: 8px;\">Hello,</span>\n"
@@ -663,7 +674,7 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
-"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"></t>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
 "weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
 "\">Attendees</h2>\n"
@@ -671,7 +682,7 @@ msgid ""
 "as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
 "img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
-"15px; vertical-align: text-bottom;\"/>\n"
+"15px; vertical-align: text-bottom;\">\n"
 "            <t t-if=\"attendee.common_name\">\n"
 "                <span style=\"margin-left: 5px\" t-"
 "out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -694,7 +705,7 @@ msgid ""
 "        <t t-out=\"object.description\">Internal meeting for discussion for "
 "new pricing for product and services.</t>\n"
 "    </div>\n"
-"    <br/>\n"
+"    <br>\n"
 "    <strong>Add to calendar</strong>\n"
 "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
 "        <tr>\n"
@@ -705,7 +716,7 @@ msgid ""
 "3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/apple-"
 "calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -715,7 +726,7 @@ msgid ""
 "8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/outlook-"
 "calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -725,7 +736,7 @@ msgid ""
 "\">\n"
 "                    <img src=\"/calendar/static/src/img/google-"
 "calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "        </tr>\n"
@@ -746,19 +757,19 @@ msgstr ""
 msgid ""
 "<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
-"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"object.event_id and object.event_id.appointment_type_id\"></t>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
-"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
 "bottom: 28px;\">\n"
 "        Reminder\n"
 "        <img src=\"/calendar/static/src/img/bell.png\" style=\"border:0; "
 "width: 16px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
-"align: middle; padding-bottom: 2px;\"/>\n"
+"align: middle; padding-bottom: 2px;\">\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
-"        Hello <t t-out=\"object.common_name or ''\">Gemini Furniture</t>,<br/"
-">\n"
+"        Hello <t t-out=\"object.common_name or ''\">Gemini Furniture</t>,"
+"<br>\n"
 "        <span style=\"display: block; margin-top: 8px;\">This is a reminder "
 "for the event below.</span>\n"
 "    </p>\n"
@@ -854,7 +865,7 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
-"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"></t>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
 "weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
 "\">Attendees</h2>\n"
@@ -862,7 +873,7 @@ msgid ""
 "\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
 "img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
-"15px; vertical-align: text-bottom;\"/>\n"
+"15px; vertical-align: text-bottom;\">\n"
 "            <t t-if=\"attendee != object\">\n"
 "                <span style=\"margin-left: 5px;\" t-"
 "out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -885,7 +896,7 @@ msgid ""
 "        <t t-out=\"object.event_id.description\">Internal meeting for "
 "discussion for new pricing for product and services.</t>\n"
 "    </div>\n"
-"    <br/>\n"
+"    <br>\n"
 "    <strong>Add to calendar</strong>\n"
 "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
 "        <tr>\n"
@@ -896,7 +907,7 @@ msgid ""
 "radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/apple-"
 "calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -906,7 +917,7 @@ msgid ""
 "left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/outlook-"
 "calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
@@ -916,7 +927,7 @@ msgid ""
 "background-color: #E7E9ED;\">\n"
 "                    <img src=\"/calendar/static/src/img/google-"
 "calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
-"vertical-align: baseline;\"/>\n"
+"vertical-align: baseline;\">\n"
 "                </a>\n"
 "            </td>\n"
 "        </tr>\n"
@@ -937,18 +948,18 @@ msgstr ""
 msgid ""
 "<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
-"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
-"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+"ctx.get('mail_tz')\"></t>\n"
+"    <t t-set=\"event_name\" t-value=\"object.name or ''\"></t>\n"
+"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"></t>\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
 "bottom: 28px;\">\n"
 "        Event canceled\n"
 "        <img src=\"/calendar/static/src/img/times-circle.png\" "
 "style=\"border:0; width: 20px; height: 20px; margin-left: 10px; text-"
-"decoration:none; vertical-align: middle; padding-bottom: 2px;\"/>\n"
+"decoration:none; vertical-align: middle; padding-bottom: 2px;\">\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
-"        Hello,<br/>\n"
+"        Hello,<br>\n"
 "        <span style=\"display: block; margin-top: 8px;\">\n"
 "            This is to inform you that the event <strong t-out=\"event_name "
 "or ''\">Follow-up for Project proposal</strong> <t t-"
@@ -1004,7 +1015,7 @@ msgid ""
 "    </div>\n"
 "    <p style=\"margin: 32px 0 0;\">\n"
 "        If you have any questions or concerns, please feel free to contact "
-"us. <br/>\n"
+"us. <br>\n"
 "        Best regards,\n"
 "        <span style=\"display: block; margin-top: 8px;\">The Calendar Team</"
 "span>\n"
@@ -1018,11 +1029,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
 msgid "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Manage my calendars"
 msgstr ""
+"<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>自分のカレンダーを管理"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"日付\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
@@ -1031,47 +1043,51 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Calendar\"/>\n"
 "                    <span class=\"text-muted\">Pick a date and time</span>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"カレンダー\"/"
+">\n"
+"                    <span class=\"text-muted\">日時を選択</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"Show as\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"表示方法\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"Booking Name\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"予約名\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"Visibility\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"公開設定\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"場所\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Participants\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"参加者\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"Notes\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"メモ\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"Videocall URL\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"ビデオコールURL\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Calendar\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"calendar_today\" title=\"カレンダー\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1084,6 +1100,8 @@ msgid ""
 "<i title=\"Clear meeting\" data-tooltip=\"Clear meeting\" class=\"oi\" data-"
 "icon=\"close\"/>"
 msgstr ""
+"<i title=\"ミーティングを削除\" data-tooltip=\"Clear meeting\" class=\"oi\" "
+"data-icon=\"close\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1091,6 +1109,8 @@ msgid ""
 "<i title=\"Join Video Call\" data-tooltip=\"Join video call\" class=\"oi\" "
 "data-icon=\"login\"/>"
 msgstr ""
+"<i title=\"ビデオコールに参加\" data-tooltip=\"Join video call\" "
+"class=\"oi\" data-icon=\"login\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1114,6 +1134,8 @@ msgid ""
 "<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
 "conference</span>"
 msgstr ""
+"<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>ビデオ会議</"
+"span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
@@ -1121,6 +1143,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
 "uid\">Calendar</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
+"uid\">カレンダー</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
@@ -1128,6 +1152,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Calendar</"
 "span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">カレンダー"
+"</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1154,6 +1180,8 @@ msgid ""
 "<span invisible=\"block_mail\">Notify attendees of confirmed events that the "
 "event was canceled?</span>"
 msgstr ""
+"<span invisible=\"block_mail\">確定したイベントの参加者に、イベントがキャンセ"
+"ルされたことを通知しますか?</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
@@ -1173,6 +1201,20 @@ msgid ""
 "this occurrence will be archived.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"requested_action != 'unlink'\">これらのイベントを削除しても"
+"よろしいですか?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">これら"
+"のイベントをアーカイブしてもよろしいですか?</span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'unlink'\">\n"
+"                        定期的な予定を含むイベントが選択されています。この回"
+"のみが削除されます。\n"
+"                    </span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'archive'\">\n"
+"                        定期的な予定を含むイベントが選択されています。この回"
+"のみがアーカイブされます。\n"
+"                    </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -1182,6 +1224,10 @@ msgid ""
 "                    <span invisible=\"requested_action != 'archive'\">Are "
 "you sure you want to archive this event ?</span>"
 msgstr ""
+"<span invisible=\"requested_action != 'unlink'\">このイベントを削除してもよろ"
+"しいですか?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">このイ"
+"ベントをアーカイブしてもよろしいですか?</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1204,12 +1250,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/calendar_calendar.py:0
 msgid "A primary calendar cannot be deleted."
-msgstr ""
+msgstr "メインカレンダーは削除できません。"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_check_no_recurrent_draft
 msgid "A recurring event cannot be a draft."
-msgstr ""
+msgstr "定期的なイベントを下書きにすることはできません。"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -1231,12 +1277,12 @@ msgstr "受け入れられた数"
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__user_access_role
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__access_role
 msgid "Access Role"
-msgstr ""
+msgstr "アクセス権限ロール"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
 msgid "Access token should be unique"
-msgstr ""
+msgstr "アクセストークンは一意である必要があります"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -1318,7 +1364,7 @@ msgstr "件名を追加"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add attendees..."
-msgstr ""
+msgstr "参加者を追加..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1363,7 +1409,7 @@ msgstr "終日、%(day)s"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "All calendars"
-msgstr ""
+msgstr "すべてのカレンダー"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1380,35 +1426,35 @@ msgstr "すべてのイベント"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__all_events
 msgid "All the events"
-msgstr ""
+msgstr "すべてのイベント"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Archive"
-msgstr ""
+msgstr "アーカイブ"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Archive event"
-msgstr ""
+msgstr "イベントをアーカイブ"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Archive events"
-msgstr ""
+msgstr "イベントをアーカイブ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 msgid "Archive or Delete Event"
-msgstr ""
+msgstr "イベントをアーカイブまたは削除"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Archive or Delete Events"
-msgstr ""
+msgstr "イベントをアーカイブまたは削除"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1420,7 +1466,7 @@ msgstr "アーカイブ済"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Are you sure you want to unsubscribe from this calendar?"
-msgstr ""
+msgstr "このカレンダーの登録を解除してもよろしいですか?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -1446,7 +1492,7 @@ msgstr "参加者数"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Attendees will be notified upon confirmation."
-msgstr ""
+msgstr "確認後、参加者に通知されます。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -1483,7 +1529,7 @@ msgstr "ベースイベント"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__block_mail
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__block_mail
 msgid "Block Mail"
-msgstr ""
+msgstr "メールをブロック"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body_has_template_value
@@ -1551,12 +1597,12 @@ msgstr "カレンダーイベント"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_archive_or_unlink_wizard
 msgid "Calendar Event Archive Or Unlink Wizard"
-msgstr ""
+msgstr "カレンダーイベントのアーカイブまたはリンク解除ウィザード"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_multi_archive_or_unlink_wizard
 msgid "Calendar Event Multi Archive Or Unlink Wizard"
-msgstr ""
+msgstr "カレンダーイベントの複数アーカイブまたはリンク解除ウィザード"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -1576,7 +1622,7 @@ msgstr "カレンダミーティング"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
 msgid "Calendar Members Only"
-msgstr ""
+msgstr "カレンダーメンバーのみ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1586,12 +1632,12 @@ msgstr "カレンダ設定"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_user_ids
 msgid "Calendar User"
-msgstr ""
+msgstr "カレンダーユーザ"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_user
 msgid "Calendar User Manager"
-msgstr ""
+msgstr "カレンダーユーザマネジャー"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1601,7 +1647,7 @@ msgstr "カレンダーの説明"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
 msgid "Calendar name"
-msgstr ""
+msgstr "カレンダー名"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -1611,7 +1657,7 @@ msgstr "カレンダ: 日程変更"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
 msgid "Calendar: Event Canceled"
-msgstr ""
+msgstr "カレンダー：イベントがキャンセルされました"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1648,7 +1694,7 @@ msgstr "本文編集可"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
 msgid "Canceled event: {{ object.name }}"
-msgstr ""
+msgstr "キャンセルされたイベント: {{ object.name }}"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1686,7 +1732,7 @@ msgstr "一般名"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
@@ -1738,7 +1784,7 @@ msgstr "カウント"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Create Calendar"
-msgstr ""
+msgstr "カレンダーを作成"
 
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
@@ -1781,7 +1827,7 @@ msgstr "現在の参加者"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_id
 msgid "Current Membership Record"
-msgstr ""
+msgstr "現在の会員記録"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1854,7 +1900,7 @@ msgstr "デフォルトプライバシー"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
 msgid "Default visibility"
-msgstr ""
+msgstr "デフォルトの公開設定"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -1866,13 +1912,13 @@ msgstr "削除"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Delete event"
-msgstr ""
+msgstr "イベントを削除"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Delete events"
-msgstr ""
+msgstr "イベントを削除"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1904,7 +1950,7 @@ msgstr "ディスカッションチャンネル"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__calendar_is_displayed
 msgid "Display Calendar"
-msgstr ""
+msgstr "カレンダーを表示"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -1954,7 +2000,7 @@ msgstr "ドキュメントモデル名"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Draft"
-msgstr ""
+msgstr "下書き"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
@@ -1982,7 +2028,7 @@ msgstr "Eメール"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Edit Calendar"
-msgstr ""
+msgstr "カレンダーを編集"
 
 #. module: calendar
 #. odoo-javascript
@@ -1994,7 +2040,7 @@ msgstr "定期イベントを編集"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.xml:0
 msgid "Edit filter"
-msgstr ""
+msgstr "フィルターを編集"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2015,7 +2061,7 @@ msgstr "メール"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1_day
 msgid "Email - 1 day"
-msgstr ""
+msgstr "メール - 1日"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
@@ -2077,7 +2123,7 @@ msgstr "イベント繰返ルール"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Event Tag"
-msgstr ""
+msgstr "イベントタグ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -2087,17 +2133,17 @@ msgstr "イベント 時間"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.mt_calendar_event_updated
 msgid "Event Updates"
-msgstr ""
+msgstr "イベント更新"
 
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
 msgid "Event updated"
-msgstr ""
+msgstr "イベントが更新されました"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__event_ids
 msgid "Events"
-msgstr ""
+msgstr "イベント"
 
 #. module: calendar
 #. odoo-python
@@ -2202,7 +2248,7 @@ msgstr "フィードバック：%s"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_checked
 msgid "Filter Enabled"
-msgstr ""
+msgstr "フィルタ有効"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -2284,7 +2330,7 @@ msgstr "Googleカレンダ"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__google_calendar_url
 msgid "Google Calendar URL"
-msgstr ""
+msgstr "GoogleカレンダーURL"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -2299,7 +2345,7 @@ msgstr "メッセージあり"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__has_recurrent_events
 msgid "Has Recurrent Events"
-msgstr ""
+msgstr "定期イベントあり"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -2385,6 +2431,10 @@ msgid ""
 "\n"
 "This action cannot be reversed."
 msgstr ""
+"このカレンダーを使用しているのがあなただけの場合、すべてのイベントが削除され"
+"ます。本当に実行しますか？\n"
+"\n"
+"この操作は取り消せません。"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
@@ -2450,7 +2500,7 @@ msgstr "フォロー中"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_draft
 msgid "Is draft"
-msgstr ""
+msgstr "下書き"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -2466,18 +2516,18 @@ msgstr "主催者だけ"
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "Join Meeting"
-msgstr ""
+msgstr "ミーティングに参加"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Keep this calendar"
-msgstr ""
+msgstr "このカレンダーを保持"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__name
 msgid "Label"
-msgstr ""
+msgstr "ラベル"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__lang
@@ -2538,7 +2588,7 @@ msgstr "イベントをその間隔で自動的に繰り返します。"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__google_calendar_url
 msgid "Link to manually add the meeting to Google Calendar"
-msgstr ""
+msgstr "Googleカレンダーに手動で会議を追加するためのリンク"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_record
@@ -2569,7 +2619,7 @@ msgstr "メール Tz"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols のアイコン (例：checklist)"
 
 #. module: calendar
 #. odoo-javascript
@@ -2604,7 +2654,7 @@ msgstr "ミーティング活動"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_display_label
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "ミーティング表示ラベル"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
@@ -2637,7 +2687,7 @@ msgstr "ミーティング"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
@@ -2709,7 +2759,7 @@ msgstr "自分の活動期限"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "My Calendars"
-msgstr ""
+msgstr "自分のカレンダー"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2740,7 +2790,7 @@ msgstr "新規"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "New Calendar"
-msgstr ""
+msgstr "新規カレンダー"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_calendar_event_id
@@ -2773,7 +2823,7 @@ msgstr "次の活動タイプ"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_next_date
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_next_date
 msgid "Next Meeting"
-msgstr ""
+msgstr "次のミーティング"
 
 #. module: calendar
 #. odoo-javascript
@@ -2798,12 +2848,12 @@ msgstr "いいえ、そのつもりはありません"
 #. odoo-python
 #: code:addons/calendar/models/res_partner.py:0
 msgid "No Meetings"
-msgstr ""
+msgstr "ミーティングなし"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "No calendar"
-msgstr ""
+msgstr "カレンダーなし"
 
 #. module: calendar
 #. odoo-javascript
@@ -2936,6 +2986,7 @@ msgstr "内部ユーザのみに見える"
 #: code:addons/calendar/models/calendar_calendar.py:0
 msgid "Only the calendar owner can modify these fields: %(fields)s"
 msgstr ""
+"これらのフィールドを変更できるのはカレンダーの所有者のみです：%(fields)s"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -2945,7 +2996,7 @@ msgstr "オプション"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Optional message"
-msgstr ""
+msgstr "任意のメッセージ"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__lang
@@ -2990,14 +3041,14 @@ msgstr "Outlook カレンダー"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__owned_calendar_ids
 msgid "Owned Calendar"
-msgstr ""
+msgstr "所有カレンダー"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__owner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_owner_id
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__owner
 msgid "Owner"
-msgstr ""
+msgstr "所有者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -3028,12 +3079,12 @@ msgstr "電話"
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__is_primary
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_primary
 msgid "Primary"
-msgstr ""
+msgstr "メイン"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__primary_calendar_id
 msgid "Primary Calendar"
-msgstr ""
+msgstr "メインカレンダー"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -3082,7 +3133,7 @@ msgstr "繰返し"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
 msgid "Recurrence Choice"
-msgstr ""
+msgstr "繰り返しの選択"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
@@ -3103,7 +3154,7 @@ msgstr "定期アップデート"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__recurrence_ids
 msgid "Recurrences"
-msgstr ""
+msgstr "繰り返し"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -3125,7 +3176,7 @@ msgstr "リマインダ"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Reminder"
-msgstr ""
+msgstr "リマインダ"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -3174,7 +3225,7 @@ msgstr "x回繰返し"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__requested_action
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__requested_action
 msgid "Requested Action"
-msgstr ""
+msgstr "要求されたアクション"
 
 #. module: calendar
 #. odoo-javascript
@@ -3228,13 +3279,13 @@ msgstr "ミーティングをスケジュール"
 #. module: calendar
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Schedule employees' meetings"
-msgstr ""
+msgstr "従業員の会議のスケジューリング"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/messaging_menu_model_patch.js:0
 msgid "Schedule for later"
-msgstr ""
+msgstr "後でスケジュール"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
@@ -3279,7 +3330,7 @@ msgstr "Eメールを送信"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Send and archive"
-msgstr ""
+msgstr "送信してアーカイブ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -3322,13 +3373,13 @@ msgstr "管理設定"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__members_only
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__members_only
 msgid "Shared Calendar Members Only"
-msgstr ""
+msgstr "共有カレンダーメンバーのみ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__share_user_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_share_user_ids
 msgid "Shared with"
-msgstr ""
+msgstr "以下と共有:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
@@ -3353,7 +3404,7 @@ msgstr "表示"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_active
 msgid "Shown in Filters List"
-msgstr ""
+msgstr "フィルタリストに表示"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -3446,7 +3497,7 @@ msgstr "同期に失敗しました"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync with"
-msgstr ""
+msgstr "同期先:"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -3562,7 +3613,7 @@ msgstr "これらのイベントの参加者がいません"
 #. odoo-python
 #: code:addons/calendar/models/calendar_user.py:0
 msgid "These fields cannot be modified: %(fields)s"
-msgstr ""
+msgstr "以下のフィールドは変更できません: %(fields)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -3592,6 +3643,8 @@ msgid ""
 "This field allows to perform the archiving or deletion on several events "
 "belonging to the         selected event's recurrence."
 msgstr ""
+"このフィールドでは、選択したイベントの繰り返しに属する複数のイベントに対し"
+"て、アーカイブまたは削除を実行できます。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -3699,7 +3752,7 @@ msgstr "単位"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Unsubscribe from calendar"
-msgstr ""
+msgstr "カレンダーの登録を解除"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -3728,7 +3781,7 @@ msgstr "ユーザ"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_calendar
 msgid "User Calendar"
-msgstr ""
+msgstr "ユーザカレンダー"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
@@ -3749,7 +3802,7 @@ msgstr "ユーザデフォルト"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_ids
 msgid "Users"
-msgstr ""
+msgstr "ユーザ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3777,7 +3830,7 @@ msgstr "会議を表示"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
 msgid "Visibility"
-msgstr ""
+msgstr "公開範囲"
 
 #. module: calendar
 #. odoo-javascript
@@ -4040,6 +4093,458 @@ msgstr "{{ object.event_id.name }}: 日付が更新されました"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: イベント更新"
+
+#~ msgid ""
+#~ "<div style=\"font-size: 13px; color: #374151; background-color: white;"
+#~ "\">\n"
+#~ "\n"
+#~ "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+#~ "object.event_id and object.event_id.appointment_type_id\"/>\n"
+#~ "    <t t-set=\"customer\" t-"
+#~ "value=\"object.event_id.find_partner_customer()\"/>\n"
+#~ "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
+#~ "object.event_id.partner_id\"/>\n"
+#~ "    <t t-set=\"target_customer\" t-value=\"object.partner_id == "
+#~ "customer\"/>\n"
+#~ "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+#~ "ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+#~ "    <t t-set=\"organizer\" t-value=\"object.event_id.user_id\"/>\n"
+#~ "\n"
+#~ "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; "
+#~ "margin-bottom: 28px;\">\n"
+#~ "        Date Updated\n"
+#~ "        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
+#~ "width: 20px; height: 20px; margin-left: 10px; text-decoration:none; "
+#~ "vertical-align: middle; padding-bottom: 2px;\"/>\n"
+#~ "    </h1>\n"
+#~ "    <p style=\"margin: 0;\">\n"
+#~ "        <span style=\"display: block; margin-bottom: 8px;\">Hello <t t-"
+#~ "out=\"object.common_name or ''\">Ready Mat</t>,</span>\n"
+#~ "        <t t-if=\"is_online and target_responsible\">\n"
+#~ "            <t t-if=\"customer\">\n"
+#~ "                Your appointment with <t t-out=\"customer.name or "
+#~ "''\">Jesse Brown</t> has been updated:\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                Your appointment has been updated:\n"
+#~ "            </t>\n"
+#~ "            <strong t-out=\"object.event_id.appointment_type_id.name or "
+#~ "''\">Schedule a Demo</strong> is now scheduled for\n"
+#~ "            <t t-"
+#~ "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+#~ "''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+#~ "        </t>\n"
+#~ "        <t t-elif=\"is_online and target_customer\">\n"
+#~ "            Your appointment <strong t-"
+#~ "out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</"
+#~ "strong> <t t-if=\"organizer\">with </t><t t-"
+#~ "out=\"organizer.partner_id.name or ''\">Colleen Diaz</t>\n"
+#~ "            is now scheduled for <t t-"
+#~ "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+#~ "''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            The date of the meeting <strong t-out=\"object.event_id.name "
+#~ "or ''\">Follow-up for Project proposal</strong> <t t-"
+#~ "if=\"organizer\">created by </t><t t-out=\"organizer.partner_id.name or "
+#~ "''\">Colleen Diaz</t> is now scheduled for\n"
+#~ "            <t t-"
+#~ "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+#~ "''\">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+#~ "        <a t-attf-href=\"/calendar/meeting/view?"
+#~ "token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+#~ "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
+#~ "color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
+#~ "radius: 3px;\">\n"
+#~ "            View</a>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 16px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">Details</h2>\n"
+#~ "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+#~ "style=\"font-size: 13px; color: #374151;\">\n"
+#~ "\t\t    <tr>\n"
+#~ "                <td style=\"width: 100px; color: #676F7B;\">Date &amp; "
+#~ "Time</td>\n"
+#~ "                <td style=\"font-weight: bold;\">\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+#~ "tz=object.mail_tz if not object.event_id.allday else None, "
+#~ "dt_format='EEEE', lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+#~ "tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+#~ "lang_code=object.env.lang) or ''\">4</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+#~ "tz=object.mail_tz if not object.event_id.allday else None, "
+#~ "dt_format='MMMM y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+#~ "                    <t t-if=\"not object.event_id.allday\">\n"
+#~ "                        <t t-"
+#~ "out=\"format_time(time=object.event_id.start, tz=object.mail_tz, "
+#~ "time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+#~ "                        <t t-if=\"object.mail_tz\">\n"
+#~ "                            <span style=\"font-size: 11px; font-weight: "
+#~ "normal;\">\n"
+#~ "                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+#~ "Brussels</t>)\n"
+#~ "                            </span>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"recurrent\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">When</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-"
+#~ "out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, "
+#~ "for 3 events</t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"not object.event_id.allday and "
+#~ "object.event_id.duration\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">Duration</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+#~ "(object.event_id.duration,round(object.event_id.duration*60)%60)) or "
+#~ "''\">0H30</t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.event_id.location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B; vertical-align: top;\">Location</td>\n"
+#~ "                <td style=\"padding-top: 6px;\">\n"
+#~ "                    <t t-out=\"object.event_id.location or "
+#~ "''\">Bruxelles</t>\n"
+#~ "                    <a target=\"_blank\" t-if=\"not is_online or "
+#~ "is_online and object.event_id.location != "
+#~ "object.event_id.appointment_type_id.location_id.name\" t-attf-"
+#~ "href=\"http://maps.google.com/maps?"
+#~ "oi=map&amp;q={{object.event_id.location}}\" style=\"margin-left: 12px; "
+#~ "font-size: 12px; color: #008f8c; text-decoration: underline;\">View Map</"
+#~ "a>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.event_id.videocall_location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">\n"
+#~ "                    <t t-if=\"object.event_id.videocall_source == "
+#~ "'discuss'\">Join with</t>\n"
+#~ "                    <t t-else=\"\">Join</t>\n"
+#~ "                </td>\n"
+#~ "                <td style=\"padding-top: 6px;\">\n"
+#~ "                    <a t-att-href=\"object.event_id.videocall_location\" "
+#~ "target=\"_blank\" style=\"color: #008f8c;\">\n"
+#~ "                        <t t-if=\"object.event_id.videocall_source == "
+#~ "'discuss'\">Odoo Discuss</t>\n"
+#~ "                        <t t-else=\"\">Video meeting</t>\n"
+#~ "                    </a>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 32px 0 0;\">\n"
+#~ "        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">Attendees</h2>\n"
+#~ "        <div t-"
+#~ "foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-"
+#~ "as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+#~ "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/"
+#~ "src/img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; "
+#~ "height: 15px; vertical-align: text-bottom;\"/>\n"
+#~ "            <t t-if=\"attendee != object\">\n"
+#~ "                <span style=\"margin-left: 5px;\" t-"
+#~ "out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                <span style=\"margin-left: 5px;\">You</span>\n"
+#~ "            </t>\n"
+#~ "        </div>\n"
+#~ "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
+#~ "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+#~ "            ... and <t t-out=\"len(object.event_id.attendee_ids) - "
+#~ "max_shown_attendees\">2</t> more\n"
+#~ "        </div>\n"
+#~ "    </div>\n"
+#~ "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+#~ "style=\"margin: 32px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">Description of the event</h2>\n"
+#~ "        <t t-out=\"object.event_id.description\">Internal meeting for "
+#~ "discussion for new pricing for product and services.</t>\n"
+#~ "    </div>\n"
+#~ "    <br/>\n"
+#~ "    <strong>Add to calendar</strong>\n"
+#~ "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+#~ "        <tr>\n"
+#~ "            <td>\n"
+#~ "                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+#~ "{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-"
+#~ "top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; "
+#~ "border-radius: 3px; background-color: #E7E9ED;\">\n"
+#~ "                    <img src=\"/calendar/static/src/img/apple-"
+#~ "calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+#~ "vertical-align: baseline;\"/>\n"
+#~ "                </a>\n"
+#~ "            </td>\n"
+#~ "            <td>\n"
+#~ "                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+#~ "{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-"
+#~ "top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; "
+#~ "margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+#~ "                    <img src=\"/calendar/static/src/img/outlook-"
+#~ "calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: "
+#~ "20px; vertical-align: baseline;\"/>\n"
+#~ "                </a>\n"
+#~ "            </td>\n"
+#~ "            <td>\n"
+#~ "                <a t-att-href=\"object.event_id.google_calendar_url\" "
+#~ "target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+#~ "bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+#~ "background-color: #E7E9ED;\">\n"
+#~ "                    <img src=\"/calendar/static/src/img/google-"
+#~ "calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+#~ "vertical-align: baseline;\"/>\n"
+#~ "                </a>\n"
+#~ "            </td>\n"
+#~ "        </tr>\n"
+#~ "    </table>\n"
+#~ "    <p style=\"margin: 32px 0 0;\">\n"
+#~ "        Thank you!\n"
+#~ "        <t t-if=\"organizer.signature\">\n"
+#~ "            <span style=\"display: block; margin-top: 8px;\"><t t-"
+#~ "out=\"organizer.signature or ''\">Mitchell Admin</t></span>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"font-size: 13px; color: #374151; background-color: white;"
+#~ "\">\n"
+#~ "\n"
+#~ "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+#~ "object.event_id and object.event_id.appointment_type_id\"/>\n"
+#~ "    <t t-set=\"customer\" t-"
+#~ "value=\"object.event_id.find_partner_customer()\"/>\n"
+#~ "    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
+#~ "object.event_id.partner_id\"/>\n"
+#~ "    <t t-set=\"target_customer\" t-value=\"object.partner_id == "
+#~ "customer\"/>\n"
+#~ "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+#~ "ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+#~ "    <t t-set=\"organizer\" t-value=\"object.event_id.user_id\"/>\n"
+#~ "\n"
+#~ "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; "
+#~ "margin-bottom: 28px;\">\n"
+#~ "        Date Updated\n"
+#~ "        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
+#~ "width: 20px; height: 20px; margin-left: 10px; text-decoration:none; "
+#~ "vertical-align: middle; padding-bottom: 2px;\"/>\n"
+#~ "    </h1>\n"
+#~ "    <p style=\"margin: 0;\">\n"
+#~ "        <span style=\"display: block; margin-bottom: 8px;\"><t t-"
+#~ "out=\"object.common_name or ''\">Ready Mat</t>様</span>\n"
+#~ "        <t t-if=\"is_online and target_responsible\">\n"
+#~ "            <t t-if=\"customer\">\n"
+#~ "                <t t-out=\"customer.name or ''\">Jesse Brown</t> とのアポ"
+#~ "イントが更新されました。\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                アポイントが更新されました:\n"
+#~ "            </t>\n"
+#~ "            <strong t-out=\"object.event_id.appointment_type_id.name or "
+#~ "''\">デモを予約</strong>の新しい日時は\n"
+#~ "            <t t-"
+#~ "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+#~ "''\">2021年5月4日 (11:00:00 ~ 11:30:00) (Europe/Brussels)</t>です。\n"
+#~ "        </t>\n"
+#~ "        <t t-elif=\"is_online and target_customer\">\n"
+#~ "            アポイント<strong t-"
+#~ "out=\"object.event_id.appointment_type_id.name or ''\">デモを予約</"
+#~ "strong> <t t-if=\"organizer\">担当：</t><t t-"
+#~ "out=\"organizer.partner_id.name or ''\">Colleen Diaz</t>\n"
+#~ "            の新しい日時は<t t-"
+#~ "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+#~ "''\">2021年5月4日 (11:00:00 ~ 11:30:00) (Europe/Brussels)</t>です。\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            ミーティング：<strong t-out=\"object.event_id.name or ''\">プ"
+#~ "ロジェクト提案フォローアップ</strong> <t t-if=\"organizer\">作成者：</"
+#~ "t><t t-out=\"organizer.partner_id.name or ''\">Colleen Diaz</t> の新しい日"
+#~ "時は\n"
+#~ "            <t t-"
+#~ "out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or "
+#~ "''\">2021年5月4日 (11:00:00 〜 11:30:00) (Europe/Brussels)</t>です。\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+#~ "        <a t-attf-href=\"/calendar/meeting/view?"
+#~ "token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" "
+#~ "style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; "
+#~ "color: #111827; text-decoration: none; background-color: #E7E9ED; border-"
+#~ "radius: 3px;\">\n"
+#~ "            表示</a>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 16px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">詳細</h2>\n"
+#~ "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+#~ "style=\"font-size: 13px; color: #374151;\">\n"
+#~ "\t\t    <tr>\n"
+#~ "                <td style=\"width: 100px; color: #676F7B;\">日時</td>\n"
+#~ "                <td style=\"font-weight: bold;\">\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+#~ "tz=object.mail_tz if not object.event_id.allday else None, "
+#~ "dt_format='EEEE', lang_code=object.env.lang) or ''\">火曜日</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+#~ "tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+#~ "lang_code=object.env.lang) or ''\">4日</t>\n"
+#~ "                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+#~ "tz=object.mail_tz if not object.event_id.allday else None, "
+#~ "dt_format='MMMM y', lang_code=object.env.lang) or ''\">2021年5月</t>\n"
+#~ "                    <t t-if=\"not object.event_id.allday\">\n"
+#~ "                        <t t-"
+#~ "out=\"format_time(time=object.event_id.start, tz=object.mail_tz, "
+#~ "time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+#~ "                        <t t-if=\"object.mail_tz\">\n"
+#~ "                            <span style=\"font-size: 11px; font-weight: "
+#~ "normal;\">\n"
+#~ "                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+#~ "Brussels</t>)\n"
+#~ "                            </span>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"recurrent\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">開催頻度</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-"
+#~ "out=\"object.recurrence_id.get_recurrence_name() or ''\">週1回、6回開催</"
+#~ "t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"not object.event_id.allday and "
+#~ "object.event_id.duration\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">所要時間</td>\n"
+#~ "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+#~ "(object.event_id.duration,round(object.event_id.duration*60)%60)) or "
+#~ "''\">0H30</t></td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.event_id.location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B; vertical-align: top;\">場所</td>\n"
+#~ "                <td style=\"padding-top: 6px;\">\n"
+#~ "                    <t t-out=\"object.event_id.location or "
+#~ "''\">Bruxelles</t>\n"
+#~ "                    <a target=\"_blank\" t-if=\"not is_online or "
+#~ "is_online and object.event_id.location != "
+#~ "object.event_id.appointment_type_id.location_id.name\" t-attf-"
+#~ "href=\"http://maps.google.com/maps?"
+#~ "oi=map&amp;q={{object.event_id.location}}\" style=\"margin-left: 12px; "
+#~ "font-size: 12px; color: #008f8c; text-decoration: underline;\">地図を見る"
+#~ "</a>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.event_id.videocall_location\">\n"
+#~ "                <td style=\"width: 100px; padding-top: 6px; color: "
+#~ "#676F7B;\">\n"
+#~ "                    <t t-if=\"object.event_id.videocall_source == "
+#~ "'discuss'\">参加方法</t>\n"
+#~ "                    <t t-else=\"\">参加する</t>\n"
+#~ "                </td>\n"
+#~ "                <td style=\"padding-top: 6px;\">\n"
+#~ "                    <a t-att-href=\"object.event_id.videocall_location\" "
+#~ "target=\"_blank\" style=\"color: #008f8c;\">\n"
+#~ "                        <t t-if=\"object.event_id.videocall_source == "
+#~ "'discuss'\">Odooディスカス</t>\n"
+#~ "                        <t t-else=\"\">ビデオ会議</t>\n"
+#~ "                    </a>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 32px 0 0;\">\n"
+#~ "        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">参加者</h2>\n"
+#~ "        <div t-"
+#~ "foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-"
+#~ "as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+#~ "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/"
+#~ "src/img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; "
+#~ "height: 15px; vertical-align: text-bottom;\"/>\n"
+#~ "            <t t-if=\"attendee != object\">\n"
+#~ "                <span style=\"margin-left: 5px;\" t-"
+#~ "out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                <span style=\"margin-left: 5px;\">あなた</span>\n"
+#~ "            </t>\n"
+#~ "        </div>\n"
+#~ "        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
+#~ "max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+#~ "            その他<t t-out=\"len(object.event_id.attendee_ids) - "
+#~ "max_shown_attendees\">2</t>名\n"
+#~ "        </div>\n"
+#~ "    </div>\n"
+#~ "    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+#~ "style=\"margin: 32px 0 0;\">\n"
+#~ "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+#~ "weight: bold; color: {{user.company_id.email_secondary_color or "
+#~ "'#875A7B'}};\">イベントの説明</h2>\n"
+#~ "        <t t-out=\"object.event_id.description\">製品・サービスの新しい価"
+#~ "格についての社内打ち合わせ</t>\n"
+#~ "    </div>\n"
+#~ "    <br/>\n"
+#~ "    <strong>カレンダーに追加</strong>\n"
+#~ "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+#~ "        <tr>\n"
+#~ "            <td>\n"
+#~ "                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+#~ "{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-"
+#~ "top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; "
+#~ "border-radius: 3px; background-color: #E7E9ED;\">\n"
+#~ "                    <img src=\"/calendar/static/src/img/apple-"
+#~ "calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+#~ "vertical-align: baseline;\"/>\n"
+#~ "                </a>\n"
+#~ "            </td>\n"
+#~ "            <td>\n"
+#~ "                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/"
+#~ "{{ object.event_id._calendar_event_ensure_token() }}\" style=\"padding-"
+#~ "top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; "
+#~ "margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+#~ "                    <img src=\"/calendar/static/src/img/outlook-"
+#~ "calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: "
+#~ "20px; vertical-align: baseline;\"/>\n"
+#~ "                </a>\n"
+#~ "            </td>\n"
+#~ "            <td>\n"
+#~ "                <a t-att-href=\"object.event_id.google_calendar_url\" "
+#~ "target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+#~ "bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+#~ "background-color: #E7E9ED;\">\n"
+#~ "                    <img src=\"/calendar/static/src/img/google-"
+#~ "calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+#~ "vertical-align: baseline;\"/>\n"
+#~ "                </a>\n"
+#~ "            </td>\n"
+#~ "        </tr>\n"
+#~ "    </table>\n"
+#~ "    <p style=\"margin: 32px 0 0;\">\n"
+#~ "        よろしくお願いいたします。\n"
+#~ "        <t t-if=\"organizer.signature\">\n"
+#~ "            <span style=\"display: block; margin-top: 8px;\"><t t-"
+#~ "out=\"organizer.signature or ''\">Mitchell Admin</t></span>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
 
 #~ msgid "Synchronize with"
 #~ msgstr "以下と同期"

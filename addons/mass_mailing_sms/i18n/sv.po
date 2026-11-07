@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-10-22 10:31+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-05 15:34+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/"
 "mass_mailing_sms/sv/>\n"
@@ -348,6 +348,7 @@ msgid "Design, send and track SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -445,6 +446,7 @@ msgid "Highest Click Rate"
 msgstr "Högsta klickfrekvens"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -555,6 +557,11 @@ msgstr "Koppla SMS till modeller för utskick/spårning av SMS"
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "Länkspårning"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -775,7 +782,9 @@ msgid "Phone Blacklisted"
 msgstr "Telefon svartlistad"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "Telefonnummer"
 
@@ -1137,35 +1146,35 @@ msgstr "har framgångsrikt avlägsnats från"
 msgid "📵 Blacklisted"
 msgstr ""
 
-msgid ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Text Message have been cancelled and will not be sent.</span>"
-msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\"> SMS-"
-"meddelandet har avbrutits och kommer inte att skickas. </span>"
+#~ msgid ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Message have been cancelled and will not be sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\"> SMS-"
+#~ "meddelandet har avbrutits och kommer inte att skickas. </span>"
 
-msgid ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages could not be delivered.</span>"
-msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS-"
-"textmeddelanden kunde inte levereras.</span>"
+#~ msgid ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Messages could not be delivered.</span>"
+#~ msgstr ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS-"
+#~ "textmeddelanden kunde inte levereras.</span>"
 
-msgid ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages have been sent.</span>"
-msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Textmeddelanden har skickats.</span>"
+#~ msgid ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+#~ "Messages have been sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Textmeddelanden har skickats.</span>"
 
-msgid "Mailing List Contacts"
-msgstr "Kontakter i e-postlista"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "Kontakter i e-postlista"
 
-msgid "Open Recipient"
-msgstr "Öppen mottagare"
+#~ msgid "Open Recipient"
+#~ msgstr "Öppen mottagare"
 
-msgid "Website Messages"
-msgstr "Webbplatsmeddelanden"
+#~ msgid "Website Messages"
+#~ msgstr "Webbplatsmeddelanden"
 
-msgid "Website communication history"
-msgstr "Webbplatsens kommunikationshistorik"
+#~ msgid "Website communication history"
+#~ msgstr "Webbplatsens kommunikationshistorik"

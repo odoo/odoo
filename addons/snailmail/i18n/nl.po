@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-10-16 10:03+0000\n"
+"PO-Revision-Date: 2026-11-03 14:33+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/snailmail/"
 "nl/>\n"
@@ -301,13 +301,13 @@ msgstr "Brief"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Letter Undeliverable"
-msgstr ""
+msgstr "Brief onbestelbaar"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter is delivered successfully"
-msgstr ""
+msgstr "Brief is succesvol bezorgd"
 
 #. module: snailmail
 #. odoo-python
@@ -319,7 +319,7 @@ msgstr "Brief verzonden met de post via Snailmail"
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter was unable to be delivered"
-msgstr ""
+msgstr "Brief kon niet worden bezorgd"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -409,7 +409,7 @@ msgstr "In kleur afdrukken"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
 msgid "Processing"
-msgstr ""
+msgstr "Verwerken"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -452,7 +452,7 @@ msgstr "Verzonden door"
 #: model:iap.service,name:snailmail.iap_service_snailmail
 #: model:ir.module.module,shortdesc:base.module_snailmail
 msgid "Snail Mail"
-msgstr ""
+msgstr "Post"
 
 #. module: snailmail
 #. odoo-python
@@ -528,7 +528,7 @@ msgstr "Briefpost testfout"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
 msgid "Snailmail Undeliverable"
-msgstr ""
+msgstr "Briefpost onbestelbaar"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
@@ -538,7 +538,7 @@ msgstr "Briefpost onbekende fout"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
 msgid "Snailmail letter ID"
-msgstr ""
+msgstr "ID van briefpost"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
@@ -610,6 +610,8 @@ msgid ""
 "The document has been accepted by postal service provider and is being "
 "processed.<br>The tracking id is %s"
 msgstr ""
+"Het document is geaccepteerd door de postdienst en wordt verwerkt.<br>De "
+"tracking-id is %s"
 
 #. module: snailmail
 #. odoo-python
@@ -669,6 +671,13 @@ msgid ""
 "If not sent or delivered, it will got in state 'Error' and the error message "
 "will be displayed in the field 'Error Message'."
 msgstr ""
+"Wanneer een brief wordt aangemaakt, is de status 'In afwachting'.\n"
+"Als de brief correct is verzonden naar de provider, verandert de status in "
+"'In behandeling',\n"
+"Als de provider bevestigt dat de brief is bezorgd, verandert de status in "
+"'Verzonden'.\n"
+"Indien niet verzonden of niet bezorgd, krijgt de brief de status 'Fout' en "
+"wordt het foutbericht weergegeven in het veld 'Foutbericht'."
 
 #. module: snailmail
 #. odoo-python

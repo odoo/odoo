@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-10-22 10:32+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 11:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "pos_loyalty/de/>\n"
@@ -197,6 +197,7 @@ msgstr "Anzeigename"
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Enter Code"
 msgstr "Code eingeben"
 
@@ -238,7 +239,7 @@ msgstr "Geschenkkarte"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__gift_card_vals
 msgid "Gift Card Vals"
-msgstr ""
+msgstr "Geschenkkartenwerte"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -250,7 +251,7 @@ msgstr "Geschenkkarte oder Gutscheincode"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
 msgid "Gift card printing failed"
-msgstr ""
+msgstr "Druck der Geschenkkarte fehlgeschlagen"
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
@@ -261,7 +262,7 @@ msgstr "Geschenkkarten & E-Geldbörse"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
 msgid "How many points this reward cost."
-msgstr ""
+msgstr "Wie viele Punkte diese Belohnung kostet."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
@@ -332,7 +333,7 @@ msgstr "Treueregel"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
 msgid "Negative quantity not allowed"
-msgstr ""
+msgstr "Negative Menge nicht zulässig"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -348,11 +349,15 @@ msgid ""
 "(needed)s, available: %(available)s). Remove the reward lines from the order "
 "and validate again."
 msgstr ""
+"Nicht genügend Punkte, um die Belohnungen des Programms „%(program)s“ zu "
+"erhalten (benötigt: %(needed)s, verfügbar: %(available)s). Entfernen Sie die "
+"Belohnungszeilen aus dem Auftrag bzw. der Bestellung und validieren Sie "
+"erneut."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "POS Order Reference"
-msgstr ""
+msgstr "Kassenauftragsreferenz"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__gift_card_vals
@@ -361,6 +366,10 @@ msgid ""
 "expiration date) this funding line sold. The loyalty.card is created from it "
 "when the order is saved; afterwards card_id holds the durable link."
 msgstr ""
+"Nur Kassensystem: das Geschenkkarten-/E-Geldbörsen-Programm (und optionaler "
+"physischer Code und Ablaufdatum), das diese Finanzierungsposition verkauft "
+"hat. Die loyalty.card wird daraus erstellt, wenn der Auftrag gespeichert "
+"wird; danach enthält card_id die dauerhafte Verknüpfung."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -380,7 +389,7 @@ msgstr "Bitte wählen Sie ein Produkt für diese Belohnung aus"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "Please select a reward"
-msgstr ""
+msgstr "Bitte wählen Sie eine Belohnung"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
@@ -480,6 +489,8 @@ msgstr ""
 "verwenden."
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
 msgid "Reward"
 msgstr "Belohnung"
@@ -712,6 +723,24 @@ msgstr ""
 msgid "You must set '%(mail_template)s' before setting '%(report)s'."
 msgstr ""
 "Sie müssen „%(mail_template)s“ einstellen, bevor Sie „%(report)s“ einstellen."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "eWallet"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "eWallet Pay"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "eWallet Refund"
+msgstr ""
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt

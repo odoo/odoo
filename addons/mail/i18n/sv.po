@@ -37,8 +37,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-10-29 13:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-03 16:39+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/mail/sv/"
 ">\n"
@@ -1169,10 +1169,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "A place to connect and exchange news with colleagues across the company."
 msgstr ""
+"Ett ställe där man kan knyta samman med och dela nyheter med kollegor från "
+"hela företaget."
 
 #. module: mail
 #. odoo-javascript
@@ -1750,7 +1752,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Administrators"
 msgstr ""
 
@@ -2074,6 +2076,12 @@ msgstr "Och 1 annan medlem."
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
 msgid "Applies to"
 msgstr "Gäller"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Apply a privacy blur to your surroundings."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2449,6 +2457,12 @@ msgstr "Automatisk prenumeration"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Auto-focus speaker"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Auto-translate future messages?"
 msgstr ""
@@ -2475,6 +2489,12 @@ msgstr "Automatiserad aktivitet"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Automated message"
 msgstr "Automatiserat meddelande"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Automatically enlarge the person currently speaking."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -2645,6 +2665,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur Background"
 msgstr "Oskärpa bakgrund"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Blur video background"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -3606,7 +3632,7 @@ msgstr "Närsökning"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "Collaborate with coworkers and customers in video calls."
-msgstr ""
+msgstr "Samarbeta med kollegor och kunder genom videosamtal."
 
 #. module: mail
 #. odoo-javascript
@@ -5504,6 +5530,12 @@ msgstr "Aktivera spårning av beställningar"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Enable Push-to-talk"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Enable background blur"
 msgstr ""
@@ -6249,15 +6281,15 @@ msgstr "Gateway"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "General"
 msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "General channel for administrators."
-msgstr ""
+msgstr "Allmän kanal för administratörer."
 
 #. module: mail
 #. odoo-javascript
@@ -7789,7 +7821,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
 msgid "Last Activity"
-msgstr ""
+msgstr "Senaste aktivitet"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8128,6 +8160,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Log Now"
 msgstr "Logga in nu"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Log RTC events"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -8652,7 +8690,7 @@ msgstr "Meddelande \"%(subChannelName)s\""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message #%(channelName)s…"
-msgstr ""
+msgstr "Skicka meddelanden till #%(channelName)s…"
 
 #. module: mail
 #. odoo-javascript
@@ -9344,7 +9382,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "No install needed."
-msgstr ""
+msgstr "Ingen installation krävs."
 
 #. module: mail
 #. odoo-python
@@ -9469,7 +9507,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "No video conference planned!"
-msgstr ""
+msgstr "Inga planerade videosamtal!"
 
 #. module: mail
 #. odoo-javascript
@@ -9525,7 +9563,7 @@ msgstr "Inte bekräftad"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Not Joined"
-msgstr ""
+msgstr "Övriga kanaler"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
@@ -12005,6 +12043,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+msgid "Save detailed RTC connection logs for troubleshooting."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Save editing"
@@ -13009,13 +13053,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "Startades av %(authorName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_preview.js:0
 msgid "Started by %(name)s"
-msgstr ""
+msgstr "Startades av %(name)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -13924,21 +13968,23 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "This is a space for the whole team to connect and share updates."
 msgstr ""
+"Det här är ett utrymme där hela teamet kan knytas samman och dela "
+"uppdateringar."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
-msgstr ""
+msgstr "Det här är början på gruppen %(conversationName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of the #%(channelName)s channel"
-msgstr ""
+msgstr "Det här är början på kanalen #%(channelName)s"
 
 #. module: mail
 #. odoo-javascript
@@ -15552,11 +15598,11 @@ msgstr "Veckor"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "Välkommen till #%(channelName)s!"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/__init__.py:0
+#: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Welcome to the #General channel 🎉"
 msgstr ""
 

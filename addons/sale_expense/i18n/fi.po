@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-10-15 13:35+0000\n"
+"PO-Revision-Date: 2026-11-04 08:01+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "sale_expense/fi/>\n"
@@ -38,6 +38,13 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly "
 "on the expense.\n"
 msgstr ""
+"\n"
+"Laskuta työntekijöiden kulut uudelleen\n"
+"==========================\n"
+"\n"
+"Luo tuotteita, joiden kustannukset voit laskuttaa uudelleen.\n"
+"Tämän moduulin avulla voit laskuttaa työntekijän kulut uudelleen "
+"määrittämällä myyntitilauksen suoraan kuluihin.\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -47,7 +54,7 @@ msgstr "# Kuluista"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid "Attach receipts to future customer invoices"
-msgstr ""
+msgstr "Liitä kuitit tuleviin asiakaslaskuihin"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__attach_receipts_to_invoice
@@ -55,19 +62,21 @@ msgid ""
 "Attach the expense receipts to customer invoices generated later from the "
 "related sales order"
 msgstr ""
+"Liitä kulukuitit asiakaslaskuihin, jotka on luotu myöhemmin niihin "
+"liittyvästä myyntitilauksesta"
 
 #. module: sale_expense
 #. odoo-javascript
 #: code:addons/sale_expense/static/src/views/attachment_selector.js:0
 #: model:ir.model,name:sale_expense.model_expense_attachment_selection_wizard
 msgid "Attachment Selection"
-msgstr ""
+msgstr "Liitteen valinta"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "Attachments Selection"
-msgstr ""
+msgstr "Liitteiden valinta"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -170,12 +179,12 @@ msgstr ""
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.expense_attachment_selection_wizard_view
 msgid "Import Attachments"
-msgstr ""
+msgstr "Tuo liitteet"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Import Expense Attachments"
-msgstr ""
+msgstr "Tuo kululiitteet"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -185,7 +194,7 @@ msgstr "Laskutus"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__is_linked_to_expense_with_attachment
 msgid "Is Linked To Expense With Attachment"
-msgstr ""
+msgstr "On linkitetty liitteen sisältävään kuluun"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
@@ -200,7 +209,7 @@ msgstr "Kirjausrivi"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_date
@@ -211,13 +220,13 @@ msgstr "Viimeksi päivitetty"
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "No attachment found to import from linked expense(s)"
-msgstr ""
+msgstr "Linkitetyistä kuluista ei löytynyt tuotavia liitteitä"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "Please select at least one attachment to import."
-msgstr ""
+msgstr "Valitse vähintään yksi tuotava liite."
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -227,7 +236,7 @@ msgstr "Tuote"
 #. module: sale_expense
 #: model:ir.module.module,summary:base.module_sale_expense
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Tarjousten, myyntitilausten, toimitusten & laskutuksen valvonta"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
@@ -238,7 +247,7 @@ msgstr "Lähetä lasku uudelleen osoitteeseen"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Myyntitilaus"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
@@ -248,7 +257,7 @@ msgstr "Myyntitilauksen rivi"
 #. module: sale_expense
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Myyntikulu"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -264,10 +273,10 @@ msgstr "Myyntitilauksen rivi"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__selected_attachments
 msgid "Selected Attachments"
-msgstr ""
+msgstr "Valitut liitteet"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "The following expense receipts were attached from reinvoiced expenses."
-msgstr ""
+msgstr "Seuraavat kulukuitit liitettiin uudelleenlaskutetuista kuluista."

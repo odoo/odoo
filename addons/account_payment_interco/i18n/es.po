@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-22 08:30+0000\n"
+"PO-Revision-Date: 2026-11-06 09:49+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "account_payment_interco/es/>\n"
@@ -22,12 +22,12 @@ msgstr ""
 #. module: account_payment_interco
 #: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
 msgid "Account Payable"
-msgstr ""
+msgstr "Cuenta a pagar"
 
 #. module: account_payment_interco
 #: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
 msgid "Account Receivable"
-msgstr ""
+msgstr "Cuenta a cobrar"
 
 #. module: account_payment_interco
 #: model:ir.model,name:account_payment_interco.model_res_company
@@ -37,7 +37,7 @@ msgstr "Compañía"
 #. module: account_payment_interco
 #: model:ir.model,name:account_payment_interco.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ajustes de configuración"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,field_description:account_payment_interco.field_account_move__display_name
@@ -50,6 +50,8 @@ msgstr "Nombre para mostrar"
 #: model:ir.module.module,summary:base.module_account_payment_interco
 msgid "Enable Intercompany payments to reconcile with their invoices on post."
 msgstr ""
+"Habilita los pagos entre empresas para conciliarlos con sus facturas al "
+"registrarlos."
 
 #. module: account_payment_interco
 #: model:ir.model.fields,field_description:account_payment_interco.field_account_move__id
@@ -62,35 +64,35 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_payment_interco/models/account_move.py:0
 msgid "Interco Settlement - %s"
-msgstr ""
+msgstr "Liquidación entre empresas - %s"
 
 #. module: account_payment_interco
 #: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
 msgid "Intercompany Clearing"
-msgstr ""
+msgstr "Compensación entre empresas"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,field_description:account_payment_interco.field_res_company__account_interco_clearing_journal_id
 #: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__account_interco_clearing_journal_id
 msgid "Intercompany Clearing Journal"
-msgstr ""
+msgstr "Diario de compensación entre empresas"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,field_description:account_payment_interco.field_res_company__account_interco_payable_id
 #: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__account_interco_payable_id
 msgid "Intercompany Clearing Payable Account"
-msgstr ""
+msgstr "Cuenta a pagar de compensación intercompañía"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,field_description:account_payment_interco.field_res_company__account_interco_receivable_id
 #: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__account_interco_receivable_id
 msgid "Intercompany Clearing Receivable Account"
-msgstr ""
+msgstr "Cuenta a cobrar de compensación intercompañía"
 
 #. module: account_payment_interco
 #: model:ir.module.module,shortdesc:base.module_account_payment_interco
 msgid "Intercompany Payment - Account"
-msgstr ""
+msgstr "Pago intercompañía - Contabilidad"
 
 #. module: account_payment_interco
 #: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
@@ -100,22 +102,24 @@ msgstr "Diario"
 #. module: account_payment_interco
 #: model:ir.model,name:account_payment_interco.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,help:account_payment_interco.field_res_company__account_interco_receivable_id
 #: model:ir.model.fields,help:account_payment_interco.field_res_config_settings__account_interco_receivable_id
 msgid "The account where Intercompany credit note payments will be cleared"
 msgstr ""
+"La cuenta en la que se compensarán los pagos de facturas rectificativas "
+"intercompañía"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,help:account_payment_interco.field_res_company__account_interco_payable_id
 #: model:ir.model.fields,help:account_payment_interco.field_res_config_settings__account_interco_payable_id
 msgid "The account where Intercompany invoice payments will be cleared"
-msgstr ""
+msgstr "La cuenta en la que se compensarán los pagos de facturas intercompañía"
 
 #. module: account_payment_interco
 #: model:ir.model.fields,help:account_payment_interco.field_res_company__account_interco_clearing_journal_id
 #: model:ir.model.fields,help:account_payment_interco.field_res_config_settings__account_interco_clearing_journal_id
 msgid "The accounting journal where Intercompany payments will be cleared"
-msgstr ""
+msgstr "El diario contable en el que se compensarán los pagos intercompañía"

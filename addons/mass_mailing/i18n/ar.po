@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-12 10:35+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
@@ -193,36 +193,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
 msgid "%Click (Total)"
 msgstr "نسبة النقرات (الإجمالي)"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Dining Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Loft Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Nordic Chair'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Oak Drawer'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_people_snippets.xml:0
-msgid "'Rating'"
-msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -1280,6 +1250,11 @@ msgid "Attach a file"
 msgstr "إرفاق ملف"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 msgid "Attachment Count"
@@ -1844,11 +1819,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Clicked"
 msgstr "تم النقر عليها"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
-msgid "Clicked By"
-msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -2469,6 +2439,7 @@ msgid "Disk"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__display_name
@@ -2541,8 +2512,8 @@ msgid ""
 "Don't settle for the ordinary. Our artisans obsess over every detail to "
 "create the perfection your home demands. Own a masterpiece today."
 msgstr ""
-"لا تكتفِ بالتفاصيل العادية. يهتم فنانونا بأدق التفاصيل لخلق الكمال الذي يتطلبه "
-"منزلك. امتلك تحفة فنية اليوم."
+"لا تكتفِ بالتفاصيل العادية. يهتم فنانونا بأدق التفاصيل لخلق الكمال الذي "
+"يتطلبه منزلك. امتلك تحفة فنية اليوم."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2713,6 +2684,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__mailing_type__mail
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
+#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Email"
 msgstr "البريد الإلكتروني"
 
@@ -3173,6 +3145,30 @@ msgstr "الترويسة"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 1"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 2"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 3"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 4"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_marketing_snippets.xml:0
 msgid "Here's your coupon code - but hurry! Ends 9/28"
 msgstr "إليك رمز القسيمة - ولكن أسرع! ينتهي في 9/28"
@@ -3239,6 +3235,7 @@ msgid "I receive too many emails from this list"
 msgstr "تصلني العديد من الرسائل من هذه القائمة"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__id
@@ -5207,6 +5204,12 @@ msgid "Preview for"
 msgstr ""
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Primary Button"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__process
 msgid "Process"
 msgstr "معالجة"
@@ -5653,6 +5656,12 @@ msgstr "تمت جدولتها في {{0}}"
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Second list of Features"
 msgstr "قائمة الخصائص الثانية"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Secondary Button"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6332,6 +6341,7 @@ msgstr "تم الاختبار"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_inner_snippets.xml:0
 msgid "Text"
 msgstr "النص"
@@ -6467,8 +6477,8 @@ msgid ""
 "turning a house into a haven that truly moves you..."
 msgstr ""
 "ثمة سحر خفي في الغرفة التي تشعر فيها بالراحة التامة. إنه ذلك الانسجام "
-"التلقائي الذي يحدث عندما تلتقي الصورة الأنيقة مع الملمس الناعم والمريح، ليحول "
-"المنزل إلى ملاذ يثير مشاعرك حقًا..."
+"التلقائي الذي يحدث عندما تلتقي الصورة الأنيقة مع الملمس الناعم والمريح، "
+"ليحول المنزل إلى ملاذ يثير مشاعرك حقًا..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -7001,8 +7011,8 @@ msgid ""
 "We provide 24/7 support through various channels, including live chat, "
 "email, and phone, to assist with any queries."
 msgstr ""
-"نحن نوفر الدعم على مدار الساعة طوال أيام الأسبوع من خلال قنوات مختلفة، بما في "
-"ذلك الدردشة المباشرة والبريد الإلكتروني والهاتف، للمساعدة في أي استفسارات."
+"نحن نوفر الدعم على مدار الساعة طوال أيام الأسبوع من خلال قنوات مختلفة، بما "
+"في ذلك الدردشة المباشرة والبريد الإلكتروني والهاتف، للمساعدة في أي استفسارات."
 
 #. module: mass_mailing
 #. odoo-javascript

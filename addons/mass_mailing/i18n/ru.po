@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 17:15+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-04 08:01+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-20/"
 "mass_mailing/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -192,36 +192,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
 msgid "%Click (Total)"
 msgstr "%Клик (Всего)"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Dining Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Loft Table'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Nordic Chair'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Oak Drawer'"
-msgstr ""
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_people_snippets.xml:0
-msgid "'Rating'"
-msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -1287,6 +1257,11 @@ msgid "Attach a file"
 msgstr "Прикрепить файл"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 msgid "Attachment Count"
@@ -1404,7 +1379,7 @@ msgstr "С уважением,"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Big"
-msgstr ""
+msgstr "Большой"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
@@ -1866,11 +1841,6 @@ msgid "Clicked"
 msgstr "Нажатый"
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
-msgid "Clicked By"
-msgstr ""
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_list_simplified
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -2192,7 +2162,7 @@ msgstr "Создание альтернативной версии"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "Created"
-msgstr ""
+msgstr "Создано"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_list_template
@@ -2495,6 +2465,7 @@ msgid "Disk"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__display_name
@@ -2741,6 +2712,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__mailing_type__mail
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
+#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Email"
 msgstr "Email"
 
@@ -3202,6 +3174,30 @@ msgstr "Заголовок"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 1"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 2"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 3"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 4"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_marketing_snippets.xml:0
 msgid "Here's your coupon code - but hurry! Ends 9/28"
 msgstr "Вот ваш код купона - но поторопитесь! Окончание 9/28"
@@ -3268,6 +3264,7 @@ msgid "I receive too many emails from this list"
 msgstr "Я получаю слишком много писем из этого списка"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__id
@@ -3738,7 +3735,7 @@ msgstr "Дата последнего обновления:"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Layout"
-msgstr ""
+msgstr "Макет"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4511,7 +4508,7 @@ msgstr "Следующий Отъезд в прошлое"
 #. module: mass_mailing
 #: model:res.groups.privilege,placeholder:mass_mailing.res_groups_privilege_email_marketing
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4633,7 +4630,7 @@ msgstr "Не найден действующий адрес электронно
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__email_normalized
@@ -5111,7 +5108,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Paste"
-msgstr ""
+msgstr "Вставить"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__pending
@@ -5251,6 +5248,12 @@ msgstr "Предварительный просмотр текста"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_record_ref
 msgid "Preview for"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Primary Button"
 msgstr ""
 
 #. module: mass_mailing
@@ -5555,7 +5558,7 @@ msgstr "Ошибка доставки SMS"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_images_snippets.xml:0
 msgid "SOFAS"
-msgstr ""
+msgstr "ДИВАНЫ"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5578,7 +5581,7 @@ msgstr "Мастер создания образцов писем"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Saturday"
-msgstr ""
+msgstr "Суббота"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5586,7 +5589,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/builder/mass_mailing_builder.xml:0
 #: code:addons/mass_mailing/static/src/components/mass_mailing_save_as_template_cog_menu/mass_mailing_save_as_template_cog_menu.js:0
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5700,6 +5703,12 @@ msgstr "Запланировано на {{0}}"
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Second list of Features"
 msgstr "Второй список характеристик"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Secondary Button"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5975,7 +5984,7 @@ msgstr "Показать в настройках"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Side"
-msgstr ""
+msgstr "Сторона"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -5992,7 +6001,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Simple"
-msgstr ""
+msgstr "Простой"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -6074,7 +6083,7 @@ msgstr "Разделить имя и фамилию"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
 msgid "Square"
-msgstr ""
+msgstr "Квадрат"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6325,7 +6334,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_template_menu
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_list_template
 msgid "Templates"
-msgstr ""
+msgstr "Шаблоны"
 
 #. module: mass_mailing
 #. odoo-python
@@ -6380,6 +6389,7 @@ msgstr "Проверено"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_inner_snippets.xml:0
 msgid "Text"
 msgstr "Текст"
@@ -6613,7 +6623,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Thursday"
-msgstr ""
+msgstr "Четверг"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6776,7 +6786,7 @@ msgstr "Тип задачи-исключения в записи."
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -6971,7 +6981,7 @@ msgstr "Действительные получатели электронной
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 #: model:ir.model,name:mass_mailing.model_ir_ui_view
 msgid "View"
-msgstr ""
+msgstr "Просмотр"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6989,7 +6999,7 @@ msgstr "Видимость"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_footer_snippets.xml:0
 msgid "Visit"
-msgstr ""
+msgstr "Посетить"
 
 #. module: mass_mailing
 #. odoo-python
@@ -7465,7 +7475,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "close"
-msgstr ""
+msgstr "закрыть"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -7659,7 +7669,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "style."
-msgstr ""
+msgstr "стиль."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7710,7 +7720,7 @@ msgstr "получит эту версию.<br/>"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 msgid "www.example.com"
-msgstr ""
+msgstr "www.example.com"
 
 #. module: mass_mailing
 #. odoo-javascript

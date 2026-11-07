@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-10-30 13:56+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 15:07+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/website/"
 "de/>\n"
@@ -5282,6 +5282,7 @@ msgstr "Rötlich"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
@@ -7014,6 +7015,8 @@ msgid "Countdown is over - Firework"
 msgstr "Countdown ist vorbei - Feuerwerk"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Country"
@@ -9350,6 +9353,7 @@ msgstr "Externe ID"
 #: code:addons/website/models/ir_ui_view.py:0
 msgid "External ID can not be loaded: %(error)s (website: %(website_id)s)"
 msgstr ""
+"Externe ID konnte nicht geladen werden: %(error)s (Website: %(website_id)s)"
 
 #. module: website
 #. odoo-javascript
@@ -12633,6 +12637,8 @@ msgid "Language from the website when visitor has been created"
 msgstr "Sprache von der Website, wenn ein Besucher erzeugt wurde"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
 #: model:ir.model.fields,field_description:website.field_website__language_ids
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -12962,6 +12968,7 @@ msgstr "Bibliothek"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
@@ -16853,6 +16860,7 @@ msgstr "Liste der Route aktualisieren"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/base_visibility_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_option.xml:0
@@ -19402,7 +19410,7 @@ msgstr "Vorlagen-Fallback"
 #. odoo-python
 #: code:addons/website/models/ir_ui_view.py:0
 msgid "Template not found: '%(error)s' (website: %(website_id)s)"
-msgstr ""
+msgstr "Vorlage nicht gefunden: '%(error)s' (Website: %(website_id)s)"
 
 #. module: website
 #. odoo-javascript
@@ -20113,6 +20121,8 @@ msgstr "Diese Schriftart verfügt nicht über alle Schriftstärken"
 msgid ""
 "This form cannot be submitted. Please contact the website administrator."
 msgstr ""
+"Dieses Formular kann nicht gesendet werden. Bitte kontaktieren Sie den "
+"Website-Administrator."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -20925,6 +20935,24 @@ msgstr "URL muss mit „#“ beginnen."
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
 msgstr "URL zu"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
+msgid "UTM Campaign"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
+msgid "UTM Medium"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
+msgid "UTM Source"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -24616,12 +24644,6 @@ msgid "rows"
 msgstr "Zeilen"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
-msgid "scope.data.label"
-msgstr "scope.data.label"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "scrolling, depth, effect, backgrounds, layer, visual, movement, parallax"
@@ -24801,12 +24823,6 @@ msgstr "diese Seite"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
-msgid "this.state.type === 'xml' ? resource.name : resource.label"
-msgstr "this.state.type === 'xml' ? resource.name : resource.label"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "to"
 msgstr "bis"
@@ -24910,6 +24926,12 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Was wir bieten"
+
+#~ msgid "scope.data.label"
+#~ msgstr "scope.data.label"
+
+#~ msgid "this.state.type === 'xml' ? resource.name : resource.label"
+#~ msgstr "this.state.type === 'xml' ? resource.name : resource.label"
 
 #~ msgid "%(error)s (website: %(website_id)s)"
 #~ msgstr "%(error)s (Website: %(website_id)s)"

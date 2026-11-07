@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-09-11 09:33+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -287,19 +287,19 @@ msgstr "牛仔褲，棉質牛仔布，五袋"
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"client_name\" t-"
-"value=\"object.partner_id.name\"/>\n"
+"value=\"object.partner_id.name\"></t>\n"
 "                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
+"value=\"object.config_id.name\"></t>\n"
 "                    <t t-set=\"tz\" t-"
-"value=\"object.company_id.partner_id.tz\"/>\n"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
+"user.lang\"></t>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Hello,</t>\n"
 "                    </div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <div>Thank you for purchasing from <t t-"
 "out=\"store_name\">Store name</t>!</div>\n"
 "                    <div>Attached, you will find your receipt for the "
@@ -309,9 +309,9 @@ msgid ""
 "time_format='short',                          lang_code=lg)\">time</t>.</"
 "span>\n"
 "                    </div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <div>With kind regards,</div>\n"
-"                    <br/>\n"
+"                    <br>\n"
 "                    <t t-out=\"store_name\">Store name</t>\n"
 "                </div>\n"
 "            "
@@ -563,6 +563,12 @@ msgstr "<sup title=\"只適用於線上及自助訂購\">?</sup>"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? 點選 \"確認\"  將驗證付款。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "A customer is required on the order to create an invoice."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1512,6 +1518,7 @@ msgstr "返回"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Backend"
 msgstr "後端"
@@ -1659,6 +1666,12 @@ msgid "Before 19.1:"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Bill"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Bill Printing"
@@ -1721,6 +1734,12 @@ msgstr "卡品牌"
 #: model:pos.category,name:point_of_sale.pos_category_breads
 msgid "Breads"
 msgstr "麵包"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Break Combo"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1788,6 +1807,8 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.actions.server,name:point_of_sale.pos_order_set_cancel
 msgid "Cancel Order"
 msgstr "取消訂單"
@@ -1944,6 +1965,7 @@ msgstr "現金進出"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash In/Out"
 msgstr "現金進出"
@@ -2328,6 +2350,7 @@ msgstr "關閉"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Close Register"
 msgstr "關閉收銀機"
@@ -2859,6 +2882,12 @@ msgid "Create Partner"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Create Product"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
 msgstr "建立客戶"
@@ -3028,6 +3057,8 @@ msgid "Customer Account"
 msgstr "客戶帳戶"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
 msgstr "客戶顯示"
@@ -4560,9 +4591,21 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Info"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
 msgstr "關於你產品的資訊。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Install App"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -6843,6 +6886,8 @@ msgid "Payment Method"
 msgstr "付款方法"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_method_form
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__payment_method_ids
@@ -7635,6 +7680,8 @@ msgid "Priced Product"
 msgstr "標價產品"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_product_pricelist
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__pricelist_id
@@ -7690,6 +7737,12 @@ msgstr "列印"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__print_history
 msgid "Print History"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
+msgid "Print Report"
 msgstr ""
 
 #. module: point_of_sale
@@ -7820,6 +7873,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_printers
@@ -8344,6 +8398,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
@@ -9559,6 +9614,8 @@ msgid "Tare Weight:"
 msgstr "自重/空載重量："
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_account_tax
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Tax"

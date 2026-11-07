@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-10-28 16:43+0000\n"
+"PO-Revision-Date: 2026-11-05 11:40+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "auth_totp/es/>\n"
@@ -38,6 +38,24 @@ msgid ""
 "where it is enabled. In order to be able to execute RPC scripts, the user\n"
 "can setup API keys to replace their main password.\n"
 msgstr ""
+"\n"
+"Autenticación de dos factores\n"
+"================================\n"
+"Permite a los usuarios configurar la autenticación de dos factores en su "
+"cuenta de usuario\n"
+"para mayor seguridad mediante un algoritmo de contraseña de un solo uso "
+"(TOTP).\n"
+"\n"
+"Una vez habilitada, el usuario deberá ingresar el código de 6 dígitos que le "
+"proporcionará \n"
+"su aplicación de autenticación antes de que se le otorgue acceso al "
+"sistema.\n"
+"Se admiten todas las aplicaciones de autenticación populares.\n"
+"\n"
+"Nota: lógicamente, dos factores previenen el acceso RPC basado en contraseña "
+"para los usuarios\n"
+"donde está habilitado. Para poder ejecutar scripts RPC, el usuario\n"
+"puede configurar claves API para reemplazar su contraseña principal.\n"
 
 #. module: auth_totp
 #. odoo-python
@@ -201,7 +219,7 @@ msgstr "Fecha de expiración"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Enrutamiento HTTP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
@@ -307,7 +325,7 @@ msgstr "Dispositivos de confianza"
 #. module: auth_totp
 #: model:ir.module.module,shortdesc:base.module_auth_totp
 msgid "Two-Factor Authentication (TOTP)"
-msgstr ""
+msgstr "Autenticación de dos factores (TOTP)"
 
 #. module: auth_totp
 #. odoo-python

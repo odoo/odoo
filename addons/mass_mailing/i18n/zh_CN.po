@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-11 06:35+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -206,36 +206,6 @@ msgid "%Click (Total)"
 msgstr "%点击（总计）"
 
 #. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Dining Table'"
-msgstr "“餐桌”"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Loft Table'"
-msgstr "“阁楼桌”"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Nordic Chair'"
-msgstr "“北欧椅”"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
-msgid "'Oak Drawer'"
-msgstr "“橡木抽屉”"
-
-#. module: mass_mailing
-#. odoo-javascript
-#: code:addons/mass_mailing/static/src/snippets/mass_mailing_people_snippets.xml:0
-msgid "'Rating'"
-msgstr "“评分”"
-
-#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/ir_mail_server.py:0
 msgid "(scheduled for %s)"
@@ -247,7 +217,8 @@ msgstr "（预定%s）"
 msgid ""
 ", I've focused on creating elegant, user-centric designs that are both "
 "scalable and easy to maintain."
-msgstr "，我一直专注于打造优雅、以用户为中心的设计，既具备可扩展性，又易于维护。"
+msgstr ""
+"，我一直专注于打造优雅、以用户为中心的设计，既具备可扩展性，又易于维护。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -851,7 +822,8 @@ msgstr "采样"
 msgid ""
 "A similar template with subject %(subject)s and model %(modelName)s already "
 "exists.\\n\\nDo you want to proceed ?"
-msgstr "已存在主题为 %(subject)s、模型为 %(modelName)s 的相似模板。\\n\\n是否继续？"
+msgstr ""
+"已存在主题为 %(subject)s、模型为 %(modelName)s 的相似模板。\\n\\n是否继续？"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_mailing_id
@@ -1289,6 +1261,11 @@ msgstr "您试图存档的邮件列表中至少有一个是用于正在进行的
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
 msgstr "附文件"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_attachment
+msgid "Attachment"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
@@ -1854,11 +1831,6 @@ msgstr "点击此区块即可编辑。"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Clicked"
 msgstr "点击"
-
-#. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
-msgid "Clicked By"
-msgstr "点击者"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -2479,6 +2451,7 @@ msgid "Disk"
 msgstr "磁盘"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__display_name
@@ -2723,6 +2696,7 @@ msgstr "今天就提升您的家居格调。"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__email
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__mailing_type__mail
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_type__mail
+#: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Email"
 msgstr "电子邮件"
 
@@ -3122,8 +3096,8 @@ msgid ""
 msgstr ""
 "出色的设计不只是填满一个房间，而是创造一种既奢华又有意义的生活方式。我们的家"
 "具精心制作，为您的空间注入灵魂，将现代理念与传统工艺的温暖融为一体。每一个细"
-"节都是深思熟虑的选择，只为把您的房子变成一座可以真正放松、尽享格调的个人画廊"
-"。"
+"节都是深思熟虑的选择，只为把您的房子变成一座可以真正放松、尽享格调的个人画"
+"廊。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3175,6 +3149,30 @@ msgstr "设计主管"
 #: code:addons/mass_mailing/static/src/builder/plugins/design_tab_plugin.js:0
 msgid "Heading"
 msgstr "标题"
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 1"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 2"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 3"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Heading 4"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3244,6 +3242,7 @@ msgid "I receive too many emails from this list"
 msgstr "我收到太多来自该列表的电子邮件"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_ir_attachment__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_http__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__id
@@ -3583,7 +3582,8 @@ msgstr "加入我们的核心圈子，尊享专属权益与优先体验。"
 msgid ""
 "Join our inner circle to enjoy exclusive privileges and turn every curated "
 "choice into a journey of refined inspiration."
-msgstr "加入我们的核心圈子，尊享专属特权，让每一次精选之选都成为一场雅致灵感的旅程。"
+msgstr ""
+"加入我们的核心圈子，尊享专属特权，让每一次精选之选都成为一场雅致灵感的旅程。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3591,7 +3591,8 @@ msgstr "加入我们的核心圈子，尊享专属特权，让每一次精选之
 msgid ""
 "Join our mailing list to receive carefully curated resources, tips, and "
 "updates straight to your inbox."
-msgstr "加入我们的邮件列表，将精心挑选的资源、技巧与最新动态直接发送到您的收件箱。"
+msgstr ""
+"加入我们的邮件列表，将精心挑选的资源、技巧与最新动态直接发送到您的收件箱。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5278,6 +5279,12 @@ msgid "Preview for"
 msgstr "预览"
 
 #. module: mass_mailing
+#. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Primary Button"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__process
 msgid "Process"
 msgstr "处理"
@@ -5729,6 +5736,12 @@ msgstr "第二功能列表"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
+msgid "Secondary Button"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Secure payment"
 msgstr "安全支付"
@@ -6085,7 +6098,8 @@ msgstr "指定的邮件地址"
 msgid ""
 "Speed and efficiency ensure tasks are completed quickly and resources are "
 "used optimally, enhancing productivity and satisfaction."
-msgstr "速度和效率可确保任务快速完成，资源得到最佳利用，从而提高生产率和满意度。"
+msgstr ""
+"速度和效率可确保任务快速完成，资源得到最佳利用，从而提高生产率和满意度。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_split_contact_name
@@ -6400,6 +6414,7 @@ msgstr "已测试"
 
 #. module: mass_mailing
 #. odoo-javascript
+#: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_inner_snippets.xml:0
 msgid "Text"
 msgstr "文本"
@@ -6941,8 +6956,8 @@ msgid ""
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
 msgstr ""
-"使用此代码段构建各种类型的组件，这些组件具有左对齐或右对齐的图像以及文本内容"
-"。复制元素以创建适合您需要的列表。"
+"使用此代码段构建各种类型的组件，这些组件具有左对齐或右对齐的图像以及文本内"
+"容。复制元素以创建适合您需要的列表。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7037,8 +7052,8 @@ msgid ""
 "is engineered to streamline your workflow, eliminate bottlenecks, and help "
 "you scale faster than ever before."
 msgstr ""
-"我们提供的不只是工具，更是竞争优势。我们的平台旨在简化您的工作流程、消除瓶颈"
-"，帮助您以前所未有的速度扩张。"
+"我们提供的不只是工具，更是竞争优势。我们的平台旨在简化您的工作流程、消除瓶"
+"颈，帮助您以前所未有的速度扩张。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7062,7 +7077,8 @@ msgstr ""
 msgid ""
 "We provide transparent pricing that offers great value, ensuring you always "
 "get the best deal without hidden costs."
-msgstr "我们的定价透明、物超所值，确保您始终能获得最优惠的价格，而不会产生隐藏费用。"
+msgstr ""
+"我们的定价透明、物超所值，确保您始终能获得最优惠的价格，而不会产生隐藏费用。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7688,6 +7704,24 @@ msgstr "您会满心自豪"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "✉ Blacklisted"
 msgstr "✉ 列入黑名单"
+
+#~ msgid "'Dining Table'"
+#~ msgstr "“餐桌”"
+
+#~ msgid "'Loft Table'"
+#~ msgstr "“阁楼桌”"
+
+#~ msgid "'Nordic Chair'"
+#~ msgstr "“北欧椅”"
+
+#~ msgid "'Oak Drawer'"
+#~ msgstr "“橡木抽屉”"
+
+#~ msgid "'Rating'"
+#~ msgstr "“评分”"
+
+#~ msgid "Clicked By"
+#~ msgstr "点击者"
 
 #~ msgid "Favorite"
 #~ msgstr "收藏夹"

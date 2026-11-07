@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_tax_python
+# * account_tax_python
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-02 03:37+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "account_tax_python/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -32,6 +33,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - ກຸ່ມອາກອນ: ອາກອນແມ່ນຊຸດຂອງອາກອນຍ່ອຍ.\n"
+"    - ຄົງທີ່: ມູນຄ່າອາກອນຍັງຄືເກົ່າບໍ່ວ່າລາຄາຈະເປັນເທົ່າໃດ.\n"
+"    - ເປີເຊັນ: ມູນຄ່າອາກອນແມ່ນ % ຂອງລາຄາ:\n"
+"        ຕົວຢ່າງ: 100 * (1 + 10%) = 110 (ບໍ່ລວມໃນລາຄາ)\n"
+"        ຕົວຢ່າງ: 110 / (1 + 10%) = 100 (ລວມໃນລາຄາ)\n"
+"    - ເປີເຊັນລວມອາກອນ: ມູນຄ່າອາກອນແມ່ນຜົນຫານຂອງລາຄາ:\n"
+"        ຕົວຢ່າງ: 180 / (1 - 10%) = 200 (ບໍ່ລວມໃນລາຄາ)\n"
+"        ຕົວຢ່າງ: 200 * (1 - 10%) = 180 (ລວມໃນລາຄາ)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -45,6 +56,13 @@ msgid ""
 "\n"
 "\"Python Code\" defines the amount of the tax.\n"
 msgstr ""
+"\n"
+"ອາກອນທີ່ກຳນົດເປັນໂຄດ Python ປະກອບດ້ວຍສອງສ່ວນຂອງໂຄດ Python ເຊິ່ງຖືກປະມວນຜົນໃນສະພາບແວດລ້ອມ"
+"ພາຍໃນ ທີ່ມີຂໍ້ມູນເຊັ່ນ: ລາຄາຕໍ່ໜ່ວຍ, ສິນຄ້າ ຫຼື ຄູ່ຮ່ວມຄ້າ.\n"
+"\n"
+"\"Applicable Code\" ກຳນົດວ່າຈະນຳໃຊ້ອາກອນຫຼືບໍ່.\n"
+"\n"
+"\"Python Code\" ກຳນົດມູນຄ່າຂອງອາກອນ.\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -56,108 +74,115 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"ຄິດໄລ່ມູນຄ່າຂອງອາກອນ.\n"
+"\n"
+":param base: float, ມູນຄ່າຕົວຈິງທີ່ນຳໃຊ້ອາກອນ\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: ວັດຖຸທີ່ສະແດງເຖິງສິນຄ້າ\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "ສູດຄິດໄລ່ກຳນົດເອງ"
 
 #. module: account_tax_python
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
 msgid "Define Taxes as Python Code"
-msgstr ""
+msgstr "ກຳນົດອາກອນດ້ວຍໂຄດ Python"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Field '%s' is not accessible"
-msgstr ""
+msgstr "ຟິວ '%s' ບໍ່ສາມາດເຂົ້າເຖິງໄດ້"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
 msgid "Formula"
-msgstr ""
+msgstr "ສູດຄິດໄລ່"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "ຂໍ້ມູນຖອດລະຫັດສູດຄິດໄລ່"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid AST node: %s"
-msgstr ""
+msgstr "ໂນດ AST ບໍ່ຖືກຕ້ອງ: %s"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid formula"
-msgstr ""
+msgstr "ສູດຄິດໄລ່ບໍ່ຖືກຕ້ອງ"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Kwargs are not allowed"
-msgstr ""
+msgstr "ບໍ່ອະນຸຍາດໃຫ້ນຳໃຊ້ Kwargs"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only int, float or None are allowed as constant values"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ພຽງແຕ່ int, float ຫຼື None ເປັນຄ່າຄົງທີ່ເທົ່ານັ້ນ"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ພຽງແຕ່ປະເພດ primitive ເທົ່ານັ້ນໃນບໍລິບົດສູດອາກອນ python."
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only product['string'] or uom['string'] read-access is allowed"
 msgstr ""
+"ອະນຸຍາດໃຫ້ເຂົ້າເຖິງການອ່ານພຽງແຕ່ product['string'] ຫຼື uom['string'] ເທົ່ານັ້ນ"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ເຂົ້າເຖິງເພື່ອອ່ານຕົວລະບຸເທົ່ານັ້ນ"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "ອາກອນ"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "ການຄິດໄລ່ອາກອນ"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown function call"
-msgstr ""
+msgstr "ການເອີ້ນໃຊ້ຟັງຊັນທີ່ບໍ່ຮູ້ຈັກ"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
-msgstr ""
+msgstr "ຕົວລະບຸທີ່ບໍ່ຮູ້ຈັກ: %s"
 
 #. module: account_tax_python
 #: model:ir.module.module,summary:base.module_account_tax_python
 msgid "Use python code to define taxes"
-msgstr ""
+msgstr "ນຳໃຊ້ໂຄດ python ເພື່ອກຳນົດອາກອນ"

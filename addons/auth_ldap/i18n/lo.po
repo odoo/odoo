@@ -4,14 +4,15 @@
 #
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/auth_ldap/"
+"PO-Revision-Date: 2026-11-04 06:28+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/auth_ldap/"
 "lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -40,6 +41,20 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    ຕົວກັ່ນຕອງທີ່ໃຊ້ເພື່ອຄົ້ນຫາບັນຊີຜູ້ໃຊ້ໃນຖານຂໍ້ມູນ LDAP. ມັນແມ່ນຕົວກັ່ນຕອງ LDAP ແບບກຳນົດເອງໃນຮູບແບບ"
+"ຂໍ້ຄວາມ. ຕົວແທນ `%s` ໃດໜຶ່ງ ຈະຖືກແທນທີ່ດ້ວຍຊື່ເຂົ້າສູ່ລະບົບ (ຕົວລະບຸ) ທີ່ຜູ້ໃຊ້ປ້ອນເຂົ້າມາ, ຕົວກັ່ນຕອງຄວນມີ"
+"ຕົວແທນດັ່ງກ່າວຢ່າງໜ້ອຍໜຶ່ງຕົວ.\n"
+"\n"
+"    ຕົວກັ່ນຕອງຕ້ອງໃຫ້ຜົນຮັບພຽງແຕ່ໜຶ່ງ (1) ຜົນຮັບເທົ່ານັ້ນ, ບໍ່ດັ່ງນັ້ນ ການເຂົ້າສູ່ລະບົບຈະຖືວ່າບໍ່ຖືກຕ້ອງ.\n"
+"\n"
+"    ຕົວຢ່າງ (ຄຸນລັກສະນະຕົວຈິງແມ່ນຂຶ້ນກັບເຊີເວີ LDAP ແລະ ການຕິດຕັ້ງ):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    ຫຼື\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.module.module,description:base.module_auth_ldap
@@ -133,17 +148,83 @@ msgid ""
 "         user to a username that does not exist in LDAP, and setup its "
 "groups\n"
 msgstr ""
+"ເພີ່ມການຮອງຮັບການຢືນຢັນຕົວຕົນຜ່ານເຊີເວີ LDAP.\n"
+"===============================================\n"
+"ໂມດູນນີ້ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ເຂົ້າສູ່ລະບົບດ້ວຍຊື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານ LDAP ຂອງພວກເຂົາ, ແລະ\n"
+"ຈະສ້າງຜູ້ໃຊ້ Odoo ໃຫ້ພວກເຂົາໂດຍອັດຕະໂນມັດໃນທັນທີ.\n"
+"\n"
+"**ໝາຍເຫດ:** ໂມດູນນີ້ເຮັດວຽກໄດ້ສະເພາະເທິງເຊີເວີທີ່ມີການຕິດຕັ້ງໂມດູນ ``python-ldap`` ຂອງ "
+"Python ເທົ່ານັ້ນ.\n"
+"\n"
+"ການກຳນົດຄ່າ:\n"
+"--------------\n"
+"ຫຼັງຈາກຕິດຕັ້ງໂມດູນນີ້ແລ້ວ, ທ່ານຈຳເປັນຕ້ອງກຳນົດຄ່າພາຣາມິເຕີ LDAP ໃນເມນູ\n"
+"ການຕັ້ງຄ່າທົ່ວໄປ. ແຕ່ລະບໍລິສັດອາດມີເຊີເວີ LDAP ທີ່ແຕກຕ່າງກັນ,\n"
+"ຕາບໃດທີ່ພວກເຂົາມີຊື່ຜູ້ໃຊ້ທີ່ບໍ່ຊໍ້າກັນ (ຊື່ຜູ້ໃຊ້ຕ້ອງບໍ່ຊໍ້າກັນ\n"
+"ໃນ Odoo, ແມ່ນແຕ່ໃນຫຼາຍບໍລິສັດກໍຕາມ).\n"
+"\n"
+"ຮອງຮັບການເຊື່ອມຕໍ່ LDAP ແບບບໍ່ລະບຸຕົວຕົນ ເຊັ່ນກັນ (ສຳລັບເຊີເວີ LDAP ທີ່ອະນຸຍາດ),\n"
+"ໂດຍພຽງແຕ່ປະຊື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານ LDAP ໃຫ້ຫວ່າງເປົ່າໄວ້ໃນການກຳນົດຄ່າ LDAP.\n"
+"ວິທີນີ້ບໍ່ໄດ້ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ຢືນຢັນຕົວຕົນແບບບໍ່ລະບຸຊື່, ມັນມີໄວ້ສຳລັບບັນຊີ LDAP ຫຼັກ\n"
+"ທີ່ໃຊ້ເພື່ອກວດສອບວ່າມີຜູ້ໃຊ້ນັ້ນຢູ່ແທ້ຫຼືບໍ່ ກ່ອນທີ່ຈະພະຍາຍາມ\n"
+"ຢືນຢັນຕົວຕົນ.\n"
+"\n"
+"ມີລະບົບຮັກສາຄວາມປອດໄພການເຊື່ອມຕໍ່ດ້ວຍ STARTTLS ສຳລັບເຊີເວີ LDAP ທີ່ຮອງຮັບ,\n"
+"ໂດຍການເປີດໃຊ້ຕົວເລືອກ TLS ໃນການກຳນົດຄ່າ LDAP.\n"
+"\n"
+"ສຳລັບຕົວເລືອກເພີ່ມເຕີມໃນການກຳນົດຄ່າ LDAP, ສາມາດເບິ່ງໄດ້ທີ່ໜ້າຄູ່ມື ldap.conf:\n"
+"manpage:`ldap.conf(5)`.\n"
+"\n"
+"ຂໍ້ຄວນພິຈາລະນາດ້ານຄວາມປອດໄພ:\n"
+"------------------------\n"
+"ລະຫັດຜ່ານ LDAP ຂອງຜູ້ໃຊ້ຈະບໍ່ຖືກບັນທຶກໄວ້ໃນຖານຂໍ້ມູນ Odoo ເລີຍ, ເຊີເວີ LDAP\n"
+"ຈະຖືກສອບຖາມທຸກຄັ້ງທີ່ຜູ້ໃຊ້ຕ້ອງການຢືນຢັນຕົວຕົນ. ຈະບໍ່ມີການສ້າງລະຫັດຜ່ານຊໍ້າຊ້ອນ,\n"
+"ແລະ ລະຫັດຜ່ານຈະຖືກຈັດການຢູ່ບ່ອນດຽວເທົ່ານັ້ນ.\n"
+"\n"
+"Odoo ບໍ່ໄດ້ຈັດການການປ່ຽນແປງລະຫັດຜ່ານໃນ LDAP, ດັ່ງນັ້ນ ການປ່ຽນລະຫັດຜ່ານໃດໆ\n"
+"ຄວນດຳເນີນການຜ່ານຊ່ອງທາງອື່ນໃນລະບົບ LDAP ໂດຍກົງ (ສຳລັບຜູ້ໃຊ້ LDAP).\n"
+"\n"
+"ນອກຈາກນີ້ ຍັງສາມາດມີຜູ້ໃຊ້ Odoo ພາຍໃນຖານຂໍ້ມູນຮ່ວມກັບ\n"
+"ຜູ້ໃຊ້ທີ່ຢືນຢັນຕົວຕົນຜ່ານ LDAP ໄດ້ (ບັນຊີ Administrator ແມ່ນຕົວຢ່າງທີ່ຊັດເຈນ).\n"
+"\n"
+"ວິທີການເຮັດວຽກ:\n"
+"---------------------\n"
+"    * ທຳອິດ ລະບົບຈະພະຍາຍາມຢືນຢັນຕົວຕົນຜູ້ໃຊ້ກັບຖານຂໍ້ມູນພາຍໃນ Odoo ກ່ອນ;\n"
+"    * ຖ້າການຢືນຢັນຕົວຕົນນີ້ລົ້ມເຫຼວ (ຕົວຢ່າງ: ເນື່ອງຈາກຜູ້ໃຊ້ບໍ່ມີລະຫັດຜ່ານພາຍໃນ),\n"
+"      ລະບົບຈະພະຍາຍາມຢືນຢັນຕົວຕົນກັບ LDAP ຕໍ່ໄປ;\n"
+"\n"
+"ເນື່ອງຈາກຜູ້ໃຊ້ LDAP ຈະມີລະຫັດຜ່ານຫວ່າງເປົ່າໂດຍເລີ່ມຕົ້ນໃນຖານຂໍ້ມູນ Odoo ພາຍໃນ\n"
+"(ຊຶ່ງໝາຍຄວາມວ່າບໍ່ສາມາດເຂົ້າເຖິງໄດ້), ຂັ້ນຕອນທຳອິດຈຶ່ງລົ້ມເຫຼວສະເໝີ ແລະ ເຊີເວີ LDAP\n"
+"ຈະຖືກຮຽກສອບຖາມເພື່ອດຳເນີນການຢືນຢັນຕົວຕົນ.\n"
+"\n"
+"ການເປີດໃຊ້ STARTTLS ຊ່ວຍຮັບປະກັນວ່າ ຄຳຮ້ອງຂໍຢືນຢັນຕົວຕົນໄປຍັງເຊີເວີ LDAP ຈະຖືກເຂົ້າລະຫັດໄວ້.\n"
+"\n"
+"ແມ່ແບບຜູ້ໃຊ້:\n"
+"--------------\n"
+"ໃນການກຳນົດຄ່າ LDAP ທີ່ການຕັ້ງຄ່າທົ່ວໄປ, ສາມາດເລືອກ *ແມ່ແບບຜູ້ໃຊ້* ໄດ້.\n"
+"ຖ້າຫາກຕັ້ງໄວ້, ຜູ້ໃຊ້ນີ້ຈະຖືກນຳໃຊ້ເປັນແມ່ແບບເພື່ອສ້າງຜູ້ໃຊ້ພາຍໃນລະບົບ\n"
+"ເມື່ອໃດກໍຕາມທີ່ມີຄົນຢືນຢັນຕົວຕົນຜ່ານ LDAP ເປັນຄັ້ງທຳອິດ.\n"
+"ວິທີນີ້ຊ່ວຍໃຫ້ສາມາດຕັ້ງຄ່າກຸ່ມ ແລະ ເມນູເລີ່ມຕົ້ນໄວ້ລ່ວງໜ້າສຳລັບຜູ້ໃຊ້ໃໝ່ໄດ້.\n"
+"\n"
+"**ຄຳເຕືອນ:** ຖ້າທ່ານຕັ້ງລະຫັດຜ່ານໃຫ້ກັບແມ່ແບບຜູ້ໃຊ້, ລະຫັດຜ່ານນີ້ຈະຖືກ\n"
+"         ກຳນົດເປັນລະຫັດຜ່ານພາຍໃນສຳລັບຜູ້ໃຊ້ LDAP ໃໝ່ທຸກຄົນ, ເຊິ່ງເທົ່າກັບເປັນການຕັ້ງ\n"
+"         *ລະຫັດຜ່ານຫຼັກ (Master password)* ສຳລັບຜູ້ໃຊ້ເຫຼົ່ານີ້ (ຈົນກວ່າຈະມີການປ່ຽນແປງດ້ວຍຕົນເອ"
+"ງ).\n"
+"         ໂດຍທົ່ວໄປແລ້ວທ່ານຄົງບໍ່ຕ້ອງການແບບນີ້. ວິທີງ່າຍໆໃນການສ້າງແມ່ແບບຜູ້ໃຊ້ແມ່ນ\n"
+"         ໃຫ້ເຂົ້າສູ່ລະບົບຄັ້ງໜຶ່ງດ້ວຍບັນຊີ LDAP ທີ່ໃຊ້ງານໄດ້, ປ່ອຍໃຫ້ Odoo ສ້າງຜູ້ໃຊ້ພາຍໃນທີ່ຫວ່າງເປົ່າ\n"
+"         ດ້ວຍຊື່ເຂົ້າສູ່ລະບົບດຽວກັນ (ແລະ ລະຫັດຜ່ານຫວ່າງເປົ່າ), ຈາກນັ້ນປ່ຽນຊື່ຜູ້ໃຊ້ໃໝ່ນີ້\n"
+"         ເປັນຊື່ທີ່ບໍ່ມີຢູ່ໃນ LDAP, ແລ້ວຈຶ່ງຕັ້ງຄ່າກຸ່ມຂອງຜູ້ໃຊ້ນັ້ນ\n"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "An error occurred: %(error)s"
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດ: %(error)s"
 
 #. module: auth_ldap
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນຜ່ານ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -151,12 +232,13 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"ສ້າງບັນຊີຜູ້ໃຊ້ພາຍໃນລະບົບໂດຍອັດຕະໂນມັດ ສຳລັບຜູ້ໃຊ້ໃໝ່ທີ່ຢືນຢັນຕົວຕົນຜ່ານ LDAP"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Cannot contact LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "ບໍ່ສາມາດຕິດຕໍ່ເຊີເວີ LDAP ທີ່ %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -167,45 +249,45 @@ msgstr "ບໍລິສັດ"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ LDAP ຂອງບໍລິສັດ"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າ"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "ການທົດສອບການເຊື່ອມຕໍ່ລົ້ມເຫຼວ!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Successful!"
-msgstr ""
+msgstr "ການທົດສອບການເຊື່ອມຕໍ່ສຳເລັດ!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
-msgstr ""
+msgstr "ການເຊື່ອມຕໍ່ຫາເຊີເວີ LDAP ທີ່ %(server)s:%(port)d ໝົດເວລາ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr ""
+msgstr "ສ້າງຜູ້ໃຊ້"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
@@ -213,6 +295,7 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN ຂອງຂອບເຂດການຄົ້ນຫາຜູ້ໃຊ້: ລາຍການຍ່ອຍທັງໝົດພາຍໃຕ້ຖານນີ້ຈະຖືກຄົ້ນຫາຜູ້ໃຊ້."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
@@ -220,7 +303,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
@@ -228,86 +311,87 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Invalid credentials for bind DN %(binddn)s"
-msgstr ""
+msgstr "ຂໍ້ມູນປະຈຳຕົວບໍ່ຖືກຕ້ອງສຳລັບ bind DN %(binddn)s"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "ພາຣາມິເຕີ LDAP"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "ເຊີເວີ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "ທີ່ຢູ່ເຊີເວີ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "ພອດເຊີເວີ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "LDAP base"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "ຕົວກັ່ນຕອງ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "ລະຫັດຜ່ານ LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr ""
+msgstr "ຂໍ້ມູນການເຂົ້າສູ່ລະບົບ"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"ບໍ່ພົບຜູ້ໃຊ້ພາຍໃນລະບົບສຳລັບການເຂົ້າສູ່ລະບົບ LDAP ນີ້ ແລະ ບໍ່ໄດ້ກຳນົດຄ່າໃຫ້ສ້າງຜູ້ໃຊ້ໃໝ່"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "ພາຣາມິເຕີປະມວນຜົນ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
@@ -316,44 +400,46 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication "
 "attempts will fail."
 msgstr ""
+"ຮ້ອງຂໍການເຂົ້າລະຫັດ TLS/SSL ທີ່ປອດໄພເມື່ອເຊື່ອມຕໍ່ຫາເຊີເວີ LDAP. ຕົວເລືອກນີ້ຕ້ອງການເຊີເວີທີ່ເປີດໃຊ້ "
+"STARTTLS, ບໍ່ດັ່ງນັ້ນ ການພະຍາຍາມຢືນຢັນຕົວຕົນທັງໝົດຈະລົ້ມເຫຼວ."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "ຂໍ້ມູນເຊີເວີ"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "ຕັ້ງຄ່າເຊີເວີ LDAP ຂອງທ່ານ"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "ເຊື່ອມຕໍ່ຫາເຊີເວີ LDAP ທີ່ %(server)s:%(port)d ສຳເລັດແລ້ວ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr ""
+msgstr "ແມ່ແບບຜູ້ໃຊ້"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Test Connection"
-msgstr ""
+msgstr "ທົດສອບການເຊື່ອມຕໍ່"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
-msgstr ""
+msgstr "ລະຫັດຜ່ານຂອງບັນຊີຜູ້ໃຊ້ໃນເຊີເວີ LDAP ທີ່ໃຊ້ສຳລັບສອບຖາມໄດເຣັກທໍຣີ."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -361,23 +447,24 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"ບັນຊີຜູ້ໃຊ້ໃນເຊີເວີ LDAP ທີ່ໃຊ້ສຳລັບສອບຖາມໄດເຣັກທໍຣີ. ປະຫວ່າງໄວ້ເພື່ອເຊື່ອມຕໍ່ແບບບໍ່ລະບຸຕົວຕົນ."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "ນຳໃຊ້ TLS"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "ຂໍ້ມູນຜູ້ໃຊ້"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ທີ່ຈະຄັດລອກເມື່ອສ້າງຜູ້ໃຊ້ໃໝ່"

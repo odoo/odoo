@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-10-20 08:48+0000\n"
+"PO-Revision-Date: 2026-11-03 12:33+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/resource/"
 "nl/>\n"
@@ -63,6 +63,14 @@ msgid ""
 "calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 msgstr ""
+"\n"
+"Module voor het beheer van resources.\n"
+"===============================\n"
+"\n"
+"Een resource is iets dat geboekt/ingepland kan worden (een ontwikkelaar op "
+"een taak of een werkplek op een productieorder). Deze module beheert een "
+"resourcekalender gekoppeld aan resources. Het beheert ook de afwezigheden "
+"van elk resource.\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -100,7 +108,7 @@ msgstr "40 uur/week"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "<i class=\"oi\" data-icon=\"east\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"east\" title=\"tot\"/>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -186,7 +194,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Average hours per day must be between 0 and 24."
-msgstr ""
+msgstr "Het gemiddelde aantal uren per dag moet tussen 0 en 24 liggen."
 
 #. module: resource
 #. odoo-javascript
@@ -208,7 +216,7 @@ msgstr "Dagen gesloten"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__color
 msgid "Color"
-msgstr ""
+msgstr "Kleur"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_company
@@ -304,6 +312,8 @@ msgid ""
 "Define the working schedule of the resource. Assign a flexible calendar for "
 "fully flexible working hours."
 msgstr ""
+"Definieer het werkschema van de resource. Wijs een flexibele agenda toe voor "
+"volledig flexibele werkuren."
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -436,7 +446,7 @@ msgstr "Uren per week"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Hours per week must be between 0 and 168."
-msgstr ""
+msgstr "Het aantal uren per week moet tussen 0 en 168 liggen."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -535,7 +545,7 @@ msgstr "Materiaal"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_material_from_calendar
 msgid "Material Resources"
-msgstr ""
+msgstr "Materiële resources"
 
 #. module: resource
 #. odoo-javascript
@@ -602,7 +612,7 @@ msgstr "Telefoon"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Preview"
-msgstr ""
+msgstr "Voorbeeld"
 
 #. module: resource
 #. odoo-python
@@ -942,7 +952,7 @@ msgstr "Soort"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__undefined
 msgid "Undefined"
-msgstr ""
+msgstr "Niet gedefinieerd"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__date
@@ -966,7 +976,7 @@ msgstr "Variabel"
 #: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
 msgid "Variable (%(hours)sh on %(days)s days / week)"
-msgstr ""
+msgstr "Variabel (%(hours)su op %(days)s dagen / week)"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -1044,7 +1054,7 @@ msgstr "Werkuren"
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 msgid "Working Hours by Day"
-msgstr ""
+msgstr "Werkuren per dag"
 
 #. module: resource
 #. odoo-python
@@ -1092,7 +1102,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "from company"
-msgstr ""
+msgstr "van bedrijf"
 
 #~ msgid ""
 #~ "Define the working schedule of the resource. If not set, the resource "

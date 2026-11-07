@@ -10,10 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 14:21+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-04 08:01+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-20/"
 "mass_mailing_sms/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -293,7 +293,7 @@ msgstr "Конфигурация"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_country_not_supported
@@ -352,6 +352,7 @@ msgid "Design, send and track SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
@@ -451,6 +452,7 @@ msgid "Highest Click Rate"
 msgstr "Самый высокий показатель кликов"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact_to_list__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
@@ -562,6 +564,11 @@ msgstr "Свяжите SMS с моделями рассылки/отслежив
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
 msgstr "Трекер ссылок"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -784,7 +791,9 @@ msgid "Phone Blacklisted"
 msgstr "Телефон в черном списке"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__sms_number
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.link_tracker_click_view_search_sms
 msgid "Phone Number"
 msgstr "Номер телефона"
 
@@ -1149,35 +1158,35 @@ msgstr "был успешно удален из"
 msgid "📵 Blacklisted"
 msgstr ""
 
-msgid ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Text Message have been cancelled and will not be sent.</span>"
-msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">СМС "
-"сообщения были отменены и не будут отправлены.</span>"
+#~ msgid ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Message have been cancelled and will not be sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">СМС "
+#~ "сообщения были отменены и не будут отправлены.</span>"
 
-msgid ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages could not be delivered.</span>"
-msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
-"Текстовые сообщения не могут быть доставлены.</span>"
+#~ msgid ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Text Messages could not be delivered.</span>"
+#~ msgstr ""
+#~ "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+#~ "Текстовые сообщения не могут быть доставлены.</span>"
 
-msgid ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
-"Messages have been sent.</span>"
-msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Текстовые "
-"сообщения отправлены.</span>"
+#~ msgid ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+#~ "Messages have been sent.</span>"
+#~ msgstr ""
+#~ "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Текстовые "
+#~ "сообщения отправлены.</span>"
 
-msgid "Mailing List Contacts"
-msgstr "Контакты рассылки"
+#~ msgid "Mailing List Contacts"
+#~ msgstr "Контакты рассылки"
 
-msgid "Open Recipient"
-msgstr "Открытый получатель"
+#~ msgid "Open Recipient"
+#~ msgstr "Открытый получатель"
 
-msgid "Website Messages"
-msgstr "Веб-сайт сообщения"
+#~ msgid "Website Messages"
+#~ msgstr "Веб-сайт сообщения"
 
-msgid "Website communication history"
-msgstr "История общений с сайта"
+#~ msgid "Website communication history"
+#~ msgstr "История общений с сайта"

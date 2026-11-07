@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-10-19 10:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"PO-Revision-Date: 2026-11-04 09:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/delivery/"
 "it/>\n"
@@ -76,62 +76,32 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"<br><br>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"object.tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "                <t t-if=\"object.tracking_url\">\n"
 "                    <a t-attf-href=\"{{ object.tracking_url }}\" "
-"target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
+"target=\"_blank\" t-out=\"object.tracking_ref\"></a>.\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <t t-out=\"object.tracking_ref\"/>.\n"
+"                    <t t-out=\"object.tracking_ref\"></t>.\n"
 "                </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/"
-">\n"
+"        <br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"            <br>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"><t t-"
 "out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Ciao <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
-"        siamo felici di informarti che il tuo ordine è stato spedito.\n"
-"        <t t-if=\"object.tracking_ref\">\n"
-"            Di seguito, il codice di tracciamento\n"
-"            <strong>\n"
-"                <t t-if=\"object.tracking_url\">\n"
-"                    <a t-attf-href=\"{{ object.tracking_url }}\" "
-"target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    <t t-out=\"object.tracking_ref\"/>.\n"
-"                </t>\n"
-"            </strong>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        In allegato trovi l'ordine di consegna con maggiori dettagli.<br/"
-"><br/>\n"
-"        Grazie,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: delivery
 #. odoo-python
@@ -323,12 +293,12 @@ msgstr "Vettore"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices
 msgid "Carrier Prices"
-msgstr ""
+msgstr "Prezzi corriere"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_prices_dumped
 msgid "Carrier Prices Dumped"
-msgstr ""
+msgstr "Prezzi corriere scaricati"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
@@ -346,7 +316,7 @@ msgstr "Pagamento alla consegna"
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery is only allowed if a sales order exists"
-msgstr ""
+msgstr "Il contrassegno è consentito solo se esiste un ordine di vendita"
 
 #. module: delivery
 #. odoo-python
@@ -361,6 +331,8 @@ msgstr ""
 msgid ""
 "Cash on delivery not allowed to pay less than the order remaining balance"
 msgstr ""
+"Contrassegno non consentito per importi inferiori al saldo residuo "
+"dell'ordine"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -482,7 +454,7 @@ msgstr "Costi di consegna"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_currency_id
 msgid "Delivery Currency"
-msgstr ""
+msgstr "Valuta di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
@@ -748,7 +720,7 @@ msgstr "Calcolare tariffa e creare spedizione"
 #. odoo-javascript
 #: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Get all rates"
-msgstr ""
+msgstr "Ottieni tutte le tariffe"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
@@ -841,7 +813,7 @@ msgstr "Politica di fatturazione"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__is_loading_prices
 msgid "Is Loading Prices"
-msgstr ""
+msgstr "Caricamento prezzi in corso"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -872,7 +844,7 @@ msgstr "Ultimo aggiornamento il"
 #. odoo-javascript
 #: code:addons/delivery/static/src/backend/widgets/carrier_rates_loader.xml:0
 msgid "Loading Rates"
-msgstr ""
+msgstr "Caricamento tariffe in corso"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
@@ -954,7 +926,7 @@ msgstr "Riferimento nota"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__show_delivery_rates_button
 msgid "Number of carriers"
-msgstr ""
+msgstr "Numero di corrieri"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
@@ -989,7 +961,7 @@ msgstr "Fornitore di pagamenti"
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transazione di pagamento"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1143,7 +1115,7 @@ msgstr "Spedito"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Shipping"
-msgstr ""
+msgstr "Spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
@@ -1290,7 +1262,7 @@ msgstr "Peso totale ordine"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Total Weight"
-msgstr ""
+msgstr "Peso totale"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
@@ -1425,7 +1397,7 @@ msgstr "Il pagamento è stato annullato."
 #. module: delivery
 #: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "Il pagamento è stato elaborato."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1456,6 +1428,67 @@ msgid ""
 msgstr ""
 "{{ object.so_id.company_id.name }} Conferma spedizione (Rif "
 "{{ object.so_id.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+#~ "t>,<br/><br/>\n"
+#~ "        We are glad to inform you that your order has been shipped.\n"
+#~ "        <t t-if=\"object.tracking_ref\">\n"
+#~ "            Your tracking reference is\n"
+#~ "            <strong>\n"
+#~ "                <t t-if=\"object.tracking_url\">\n"
+#~ "                    <a t-attf-href=\"{{ object.tracking_url }}\" "
+#~ "target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
+#~ "                </t>\n"
+#~ "                <t t-else=\"\">\n"
+#~ "                    <t t-out=\"object.tracking_ref\"/>.\n"
+#~ "                </t>\n"
+#~ "            </strong>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Please find your delivery order attached for more details.<br/"
+#~ "><br/>\n"
+#~ "        Thank you,\n"
+#~ "        <t t-if=\"user.signature\">\n"
+#~ "            <br/>\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Ciao <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+#~ "t>,<br/><br/>\n"
+#~ "        siamo felici di informarti che il tuo ordine è stato spedito.\n"
+#~ "        <t t-if=\"object.tracking_ref\">\n"
+#~ "            Di seguito, il codice di tracciamento\n"
+#~ "            <strong>\n"
+#~ "                <t t-if=\"object.tracking_url\">\n"
+#~ "                    <a t-attf-href=\"{{ object.tracking_url }}\" "
+#~ "target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
+#~ "                </t>\n"
+#~ "                <t t-else=\"\">\n"
+#~ "                    <t t-out=\"object.tracking_ref\"/>.\n"
+#~ "                </t>\n"
+#~ "            </strong>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        In allegato trovi l'ordine di consegna con maggiori dettagli.<br/"
+#~ "><br/>\n"
+#~ "        Grazie,\n"
+#~ "        <t t-if=\"user.signature\">\n"
+#~ "            <br/>\n"
+#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
+#~ "><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+#~ "        </t>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
 
 #~ msgid "Add shipping"
 #~ msgstr "Aggiungi spedizione"

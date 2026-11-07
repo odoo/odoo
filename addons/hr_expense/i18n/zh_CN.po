@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-22 03:56+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -178,19 +178,30 @@ msgid "<span class=\"o_stat_text\">Payment</span>"
 msgstr "<span class=\"o_stat_text\">付款</span>"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"<span class=\"text-muted\" invisible=\"standard_price\">Per expense</span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"text-muted\">A bill is sent separately</span>"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<span>@</span>"
 msgstr "<span>@</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<span>Employee:</span>"
-msgstr "<span>员工：</span>"
+msgid "<span>Approver:</span>"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<span>Manager:</span>"
-msgstr "<span>经理</span>"
+msgid "<span>Employee:</span>"
+msgstr "<span>员工：</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -407,6 +418,11 @@ msgid "Approved"
 msgstr "已批准"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__manager_id
+msgid "Approver"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Archived"
 msgstr "已归档"
@@ -450,6 +466,11 @@ msgstr "附件"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
 msgstr "自动验证"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Bill"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__bill_paid_by_employee
@@ -520,6 +541,11 @@ msgstr "附言"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
 msgstr "公司"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
+msgid "Company Card"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -595,7 +621,6 @@ msgstr "创建日期"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__currency_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Currency"
 msgstr "币别"
 
@@ -730,15 +755,12 @@ msgstr "公司支付的每笔费用都必须有单独的专用日记账分录。
 #: model:ir.model,name:hr_expense.model_hr_employee
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__employee_id
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
+#: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Employee"
 msgstr "员工"
-
-#. module: hr_expense
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
-msgid "Employee (Through a Purchase Receipt)"
-msgstr "员工（通过采购收据）"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -782,7 +804,6 @@ msgstr "超出公司上限"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Existing Bill"
 msgstr "现有账单"
 
@@ -1293,6 +1314,11 @@ msgid "Journal Entry Reset to Draft"
 msgstr "日记账记项重设为草稿"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_move_state
+msgid "Journal Entry Status"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "日记账项目"
@@ -1405,7 +1431,6 @@ msgid "Main Attachment"
 msgstr "主要附件"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__manager_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__manager_id
 msgid "Manager"
 msgstr "管理员"
@@ -1468,8 +1493,8 @@ msgstr "米切尔 管理员"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
-msgid "Multiple Managers"
-msgstr "多个经理"
+msgid "Multiple Approvers"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -1538,16 +1563,6 @@ msgid "Next Activity Type"
 msgstr "下一活动类型"
 
 #. module: hr_expense
-#: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
-msgid "No"
-msgstr "否"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "No (Direct Expense)"
-msgstr "否（直接费用）"
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No attachment was provided"
@@ -1575,11 +1590,6 @@ msgstr "未找到费用产品。让我们创建一个！"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
 msgstr "未找到员工%(name)s的工作联系人，请设定一个。"
-
-#. module: hr_expense
-#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
-msgid "None (Paid by Company)"
-msgstr "无（由公司支付）"
 
 #. module: hr_expense
 #. odoo-python
@@ -1733,9 +1743,15 @@ msgid "Paid"
 msgstr "已支"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Paid by Company"
-msgstr "由公司支付"
+msgid "Paid by"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Paid by Company card"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1947,12 +1963,6 @@ msgid "Reimburse in Payslip"
 msgstr "在工资单中报销"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Reimbursement"
-msgstr "报销"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Related"
 msgstr "相关的"
@@ -2024,11 +2034,6 @@ msgstr "保存该页面，返回该页面，以设置功能。"
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Scan"
 msgstr "扫描"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Select Bill..."
-msgstr "选择账单..."
 
 #. module: hr_expense
 #. odoo-python
@@ -2241,6 +2246,11 @@ msgid "Taxes"
 msgstr "税项"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Taxes included"
+msgstr ""
+
+#. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
 msgstr "团队审批者"
@@ -2273,27 +2283,16 @@ msgstr "创建员工费用时使用的公司默认日记账。"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
-msgstr "当前账号没有关联员工。请创建一个。"
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/res_company.py:0
 msgid "The employee expense journal must be a purchase journal."
 msgstr "员工费用日记账必须是采购日记账。"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The existing bill must be set."
-msgstr "必须设置现有账单。"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"The expense existing bill is not linked, please reference it before "
-"approving."
-msgstr "该费用的现有账单尚未关联，请在批准前引用它。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2436,11 +2435,6 @@ msgid "Total Untaxed Amount In Currency"
 msgstr "以币别计算的未税总额"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Total With Conversion"
-msgstr "换算后的总计"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount of the original Expense that we are splitting"
 msgstr "我们要拆分的原始费用总额"
@@ -2488,6 +2482,7 @@ msgstr "单价"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Unknown"
 msgstr "未知"
 
@@ -2576,11 +2571,6 @@ msgstr "是否对所选产品定义税费"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
 msgid "Wizard"
 msgstr "向导"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Yes (Match to Bill)"
-msgstr "是（匹配账单）"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2790,6 +2780,50 @@ msgstr "，其类别、日期、金额和员工与已有费用相同。"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "连通相同的收据，已经存在。"
+
+#~ msgid "<span>Manager:</span>"
+#~ msgstr "<span>经理</span>"
+
+#~ msgid "Employee (Through a Purchase Receipt)"
+#~ msgstr "员工（通过采购收据）"
+
+#~ msgid "Multiple Managers"
+#~ msgstr "多个经理"
+
+#~ msgid "No"
+#~ msgstr "否"
+
+#~ msgid "No (Direct Expense)"
+#~ msgstr "否（直接费用）"
+
+#~ msgid "None (Paid by Company)"
+#~ msgstr "无（由公司支付）"
+
+#~ msgid "Paid by Company"
+#~ msgstr "由公司支付"
+
+#~ msgid "Reimbursement"
+#~ msgstr "报销"
+
+#~ msgid "Select Bill..."
+#~ msgstr "选择账单..."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr "当前账号没有关联员工。请创建一个。"
+
+#~ msgid "The existing bill must be set."
+#~ msgstr "必须设置现有账单。"
+
+#~ msgid ""
+#~ "The expense existing bill is not linked, please reference it before "
+#~ "approving."
+#~ msgstr "该费用的现有账单尚未关联，请在批准前引用它。"
+
+#~ msgid "Total With Conversion"
+#~ msgstr "换算后的总计"
+
+#~ msgid "Yes (Match to Bill)"
+#~ msgstr "是（匹配账单）"
 
 #~ msgid ""
 #~ "Select the user responsible for approving \"Expenses\" of this employee.\n"

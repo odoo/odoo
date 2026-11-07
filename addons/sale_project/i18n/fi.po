@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 13:52+0000\n"
+"PO-Revision-Date: 2026-11-04 10:40+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "sale_project/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -50,12 +50,16 @@ msgid ""
 "=============================================\n"
 "This module allows to generate a project/task from sales orders.\n"
 msgstr ""
+"\n"
+"Mahdollistaa tehtävän luomisen myyntitilauksesta\n"
+"=============================================\n"
+"Tämä moduuli mahdollistaa projektin/tehtävän luomisen myyntitilauksista.\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Margins"
-msgstr ""
+msgstr "%(name)s:n katteet"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -169,7 +173,7 @@ msgstr "Laskentakohderivi"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivery (Manual)"
-msgstr ""
+msgstr "Toimitukseen perustuva (manuaalinen)"
 
 #. module: sale_project
 #. odoo-python
@@ -187,17 +191,17 @@ msgstr "Laskutettava"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
 msgid "Billable Type"
-msgstr ""
+msgstr "Laskutettavuustyyppi"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_line_search
 msgid "Category"
-msgstr ""
+msgstr "Kategoria"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__category_report
 msgid "Category Report"
-msgstr ""
+msgstr "Kategoriaraportti"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
@@ -208,7 +212,7 @@ msgstr "Vahvista & sulje"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/views/project_form/project_project_form_controller.js:0
 msgid "Confirmation Required"
-msgstr ""
+msgstr "Vahvistus vaaditaan"
 
 #. module: sale_project
 #. odoo-python
@@ -223,7 +227,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__costs
 msgid "Costs"
-msgstr ""
+msgstr "Kustannukset"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -386,6 +390,9 @@ msgid ""
 "create tasks in it or use it as a template. Are you sure you want to "
 "continue?"
 msgstr ""
+"Tämän projektin muuttaminen ei-laskutettavaksi poistaa sen linkitykset "
+"tuotteisiin, jotka luovat siinä tehtäviä tai käyttävät sitä mallipohjana. "
+"Haluatko varmasti jatkaa?"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -410,13 +417,13 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
 #: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
 msgid "Margins"
-msgstr ""
+msgstr "Katteet"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Materials"
-msgstr ""
+msgstr "Materiaalit"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -463,13 +470,13 @@ msgstr "Toimistokalustesarja (tehtävä)"
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Other Costs"
-msgstr ""
+msgstr "Muut kustannukset"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Other Revenue"
-msgstr ""
+msgstr "Muut tuotot"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -562,7 +569,7 @@ msgstr "Projektin välitavoitteet"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_required
 msgid "Project Required"
-msgstr ""
+msgstr "Projekti vaaditaan"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -574,7 +581,7 @@ msgstr "Projektipohja"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__sale_warning_text
 msgid "Project Template Warning"
-msgstr ""
+msgstr "Projektipohjan varoitus"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
@@ -584,7 +591,7 @@ msgstr "Projektin mallipohjan ohjattu luomistoiminto"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_warning_text
 msgid "Project Warning"
-msgstr ""
+msgstr "Projektin varoitus"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -606,17 +613,17 @@ msgstr "Määrä (%)"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr "Tarjouspohjarivi"
+msgstr "Tarjouspohjan rivi"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Real Costs"
-msgstr ""
+msgstr "Todelliset kustannukset"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
 msgid "Revenue"
-msgstr ""
+msgstr "Liikevaihto"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
@@ -626,7 +633,7 @@ msgstr "Rooli käyttäjille"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales"
-msgstr ""
+msgstr "Myynti"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -636,7 +643,7 @@ msgstr "Myynti ja laskutus"
 #. module: sale_project
 #: model:ir.module.module,shortdesc:base.module_sale_project
 msgid "Sales - Project"
-msgstr ""
+msgstr "Myynti - Projekti"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
@@ -771,25 +778,25 @@ msgstr "Palvelun laskutustapa"
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Fixed Price)"
-msgstr ""
+msgstr "Palveluiden liikevaihto (kiinteä hinta)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Manual)"
-msgstr ""
+msgstr "Palveluiden liikevaihto (manuaalinen)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Milestones)"
-msgstr ""
+msgstr "Palveluiden liikevaihto (välitavoitteet)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Time & Materials)"
-msgstr ""
+msgstr "Palveluiden liikevaihto (aika & materiaalit)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
@@ -811,7 +818,7 @@ msgstr "Tehtävä on luotu (%(name)s): %(link)s"
 #. module: sale_project
 #: model:ir.module.module,summary:base.module_sale_project
 msgid "Task Generation from Sales Orders"
-msgstr ""
+msgstr "Tehtävien luonti myyntitilauksista"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -832,7 +839,7 @@ msgstr "Tehtävän mallipohja"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_warning_text
 msgid "Task Warning"
-msgstr ""
+msgstr "Tehtävän varoitus"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -886,6 +893,8 @@ msgid ""
 "The project couldn't be created because you don't have the right to create a "
 "project"
 msgstr ""
+"Projektin luominen ei onnistunut, koska sinulla ei ole oikeutta luoda "
+"projektia"
 
 #. module: sale_project
 #. odoo-python
@@ -951,7 +960,7 @@ msgstr "Näytä myyntitilaus"
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_warning_text
 #: model:ir.model.fields,help:sale_project.field_project_template_create_wizard__sale_warning_text
 msgid "Warning for the partner as set by the user."
-msgstr ""
+msgstr "Käyttäjän määrittämä varoitus kumppanille."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template

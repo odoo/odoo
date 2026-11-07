@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
 "PO-Revision-Date: 2026-10-23 08:20+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/hr/de/>\n"
@@ -647,9 +647,9 @@ msgid ""
 "A portal user already exist with the following login: %(login)s. User Name: %"
 "(user_name)s. You should set another email address on the employee."
 msgstr ""
-"Es existiert bereits ein Portalbenutzer mit folgenden Anmeldedaten: %(login)"
-"s. Benutzername: %(user_name)s. Sie sollten für den Mitarbeiter eine andere "
-"E-Mail-Adresse festlegen."
+"Es existiert bereits ein Portalbenutzer mit folgenden Anmeldedaten: %"
+"(login)s. Benutzername: %(user_name)s. Sie sollten für den Mitarbeiter eine "
+"andere E-Mail-Adresse festlegen."
 
 #. module: hr
 #. odoo-python
@@ -683,8 +683,8 @@ msgid ""
 "company. User Name: %(user_name)s / Employee Name: %(employee)s"
 msgstr ""
 "Es existiert bereits ein Mitarbeiter für dieses Benutzerkonto mit denselben "
-"Anmeldedaten (%(login)s) in diesem Unternehmen. Benutzername: %(user_name)"
-"s / Name des Mitarbeiters: %(employee)s"
+"Anmeldedaten (%(login)s) in diesem Unternehmen. Benutzername: %"
+"(user_name)s / Name des Mitarbeiters: %(employee)s"
 
 #. module: hr
 #. odoo-javascript
@@ -2676,6 +2676,18 @@ msgstr "Enddatum der Probezeit (falls vorhanden)."
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
 msgstr "Ende der Zusammenarbeit"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration cancelled"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_departure.py:0
+msgid "End of Collaboration planned"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -5962,15 +5974,6 @@ msgstr "Dieser Arbeitsplan gilt für"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/form_controller.js:0
-msgid ""
-"This working schedule is used by  employee(s), are you sure you want change "
-"it for all employees?"
-msgstr ""
-"Dieser Arbeitsplan wird von Mitarbeiter(n) verwendet. Möchten Sie ihn "
-"wirklich für alle Mitarbeiter ändern?"
-
-#. module: hr
-#. odoo-javascript
 #: code:addons/hr/static/src/components/resource_calendar_form/resource_calendar_plugin_patch.js:0
 msgid ""
 "This working schedule is used by %s employee(s), are you sure you want "
@@ -6768,6 +6771,12 @@ msgid "You do not have the rights to load the Employees sample data."
 msgstr "Sie sind nicht berechtigt, die Beispieldaten für Mitarbeiter zu laden."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_allocation_wizard_line.py:0
+msgid "You do not have the rights to trust or un-trust accounts."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
 msgid ""
 "You participate to the update of our tutorial tools and pre-sales tools "
@@ -7049,6 +7058,13 @@ msgstr "Arbeit"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "This working schedule is used by  employee(s), are you sure you want "
+#~ "change it for all employees?"
+#~ msgstr ""
+#~ "Dieser Arbeitsplan wird von Mitarbeiter(n) verwendet. Möchten Sie ihn "
+#~ "wirklich für alle Mitarbeiter ändern?"
 
 #~ msgid "Company Executive"
 #~ msgstr "Führungskraft"
