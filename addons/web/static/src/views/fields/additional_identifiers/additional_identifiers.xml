@@ -4,7 +4,7 @@
     <t t-name="web.AdditionalIdentifiersButton">
         <div class="ms-2 d-inline-block">
              <Dropdown t-if="this.identifiersInDropdown.length > 0">
-                <button class="btn btn-link p-0" type="button">
+                <button class="btn btn-link p-0" type="button" aria-label="Add an identifier">
                     <i class="oi me-1" data-icon="add"/>
                 </button>
                 <t t-set-slot="content">
