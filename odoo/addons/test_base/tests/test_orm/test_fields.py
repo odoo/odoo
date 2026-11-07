@@ -11,7 +11,8 @@ from PIL import Image
 from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tests import TransactionCase, tagged, users
+from odoo.orm.registry import TriggerTree
+from odoo.tests import BaseCase, TransactionCase, tagged, users
 from odoo.tools import BinaryBytes, float_repr, mute_logger, sql
 from odoo.tools.image import binary_to_image, image_data_uri
 
@@ -5567,6 +5568,90 @@ class TestModifiedPerformance(TransactionCase):
         # One INSERT
         with self.assertQueryCount(1):
             self.ModifiedLine.create({})
+
+    def test_modified_trigger_cache_state_changes(self):
+        # the trigger tree of 'price' is cached by the registry, but which
+        # non-stored fields it keeps depends on the cache state at each write
+        line = self.modified_line_a_child_child
+        with self.assertQueryCount(0, flush=False):
+            # nothing in cache: the subtree of `total_price` is discarded
+            line.price = 4
+        self.assertEqual(self.modified_line_a.total_price, 7)
+
+        # now `total_price` is in cache, and must be invalidated
+        line.price = 10
+        self.assertEqual(self.modified_line_a.total_price, 13)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 65)
+
+        # and discarded again once the cache is empty
+        self.env.invalidate_all()
+        line.price = 1
+        self.assertEqual(self.modified_line_a.total_price, 4)
+
+    def test_modified_trigger_custom_field(self):
+        """ The trigger trees cached by the registry must follow the
+        dependencies added and removed at runtime. """
+        # cache the trigger tree of 'price'
+        self.modified_line_a.price = 2
+        self.env.flush_all()
+
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_double_price',
+            'model_id': self.env['ir.model']._get_id('test_orm.modified.line'),
+            'field_description': 'Double price',
+            'ttype': 'float',
+            'store': True,
+            'depends': 'price',
+            'compute': "for rec in self: rec['x_double_price'] = 2 * rec.price",
+        })
+        line = self.env['test_orm.modified.line'].browse(self.modified_line_a.id)
+        self.assertEqual(line.x_double_price, 4)
+
+        line.price = 5
+        self.assertEqual(line.x_double_price, 10)
+        self.env.flush_all()
+        line.invalidate_recordset()
+        self.assertEqual(line.x_double_price, 10)
+
+        # once the field is removed, modifying its dependency must still work
+        field.unlink()
+        line = self.env['test_orm.modified.line'].browse(self.modified_line_a.id)
+        line.price = 7
+        self.env.flush_all()
+        self.assertEqual(line.total_price, 12)
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestTriggerTree(BaseCase):
+
+    @classmethod
+    def as_tuple(cls, tree):
+        """ Comparable representation of a tree: (root, {label: subtree}) """
+        return (list(tree.root), {label: cls.as_tuple(subtree) for label, subtree in tree.items()})
+
+    def test_filtered(self):
+        """ The registry caches merged trees and filters them at each call:
+        filtering a merged tree must be like merging with the same selection. """
+        tree1 = TriggerTree(['a', 'x'], {'l1': TriggerTree(['b']), 'l2': TriggerTree(['y'])})
+        tree2 = TriggerTree(['y'], {'l1': TriggerTree(['x'])})
+        merged = TriggerTree.merge([tree1, tree2])
+        self.assertEqual(self.as_tuple(merged), (
+            ['a', 'x', 'y'], {'l1': (['b', 'x'], {}), 'l2': (['y'], {})},
+        ))
+
+        for selected in ([], ['a'], ['x'], ['y'], ['a', 'b'], ['a', 'b', 'x', 'y']):
+            with self.subTest(selected=selected):
+                expected = TriggerTree.merge([tree1, tree2], lambda field: field in selected)
+                result = merged.filtered(lambda field: field in selected)
+                self.assertEqual(self.as_tuple(result), self.as_tuple(expected))
+
+        # empty subtrees are discarded, and the merged tree is left unchanged
+        result = merged.filtered(lambda field: field == 'b')
+        self.assertEqual(self.as_tuple(result), ([], {'l1': (['b'], {})}))
+        self.assertFalse(merged.filtered(lambda field: False))
+        self.assertEqual(self.as_tuple(merged), (
+            ['a', 'x', 'y'], {'l1': (['b', 'x'], {}), 'l2': (['y'], {})},
+        ))
 
 
 @tagged('at_install', '-post_install')
