@@ -139,6 +139,25 @@ class PosOrder(models.Model):
 
         self_comp = self.with_company(pos_order.company_id)
         self_comp._process_payment_lines(order, pos_order, pos_session, draft)
+
+        # Lines changed on another device while this one was paying offline: keep the
+        # payments but leave the order draft so the difference can be settled
+        if not draft and existing_order:
+            # The order total comes from the device, it doesn't include the lines added meanwhile by another device
+            total = pos_order.with_context(active_test=False)._get_order_tax_totals()['total_amount_currency']
+            # The frontend and backend may apply the cash rounding differently or drift by a cent
+            tolerance = max(
+                pos_order.config_id.cash_rounding and pos_order.config_id.rounding_method.rounding or 0.0,
+                pos_order.currency_id.rounding,
+            )
+            if pos_order.currency_id.compare_amounts(abs(abs(total) - abs(pos_order.amount_paid)), tolerance) > 0:
+                draft = True
+                pos_order.message_post(body=_(
+                    "The order was validated with a total of %(paid)s, but its lines now amount to %(total)s because they were changed on another device. The order stays open until the difference is settled.",
+                    paid=formatLang(self.env, pos_order.amount_paid, currency_obj=pos_order.currency_id),
+                    total=formatLang(self.env, total, currency_obj=pos_order.currency_id),
+                ))
+
         return pos_order._process_saved_order(draft)
 
     def _process_saved_order(self, draft):
@@ -476,8 +495,6 @@ class PosOrder(models.Model):
 
     def _get_order_tax_totals(self):
         self.ensure_one()
-        self.amount_paid = sum(payment.amount for payment in self.payment_ids)
-        self.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in self.payment_ids)
         base_lines = self.lines._prepare_base_lines_for_taxes_computation()
         self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
         self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
@@ -507,6 +524,8 @@ class PosOrder(models.Model):
             rounding_base_amount_currency = tax_totals.get('cash_rounding_base_amount_currency', 0)
             amount_total = tax_totals['total_amount_currency'] - rounding_base_amount_currency
             refund_factor = -1 if order.is_refund_or_negative() else 1
+            order.amount_paid = sum(payment.amount for payment in order.payment_ids)
+            order.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in order.payment_ids)
             order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
             order.amount_total = refund_factor * amount_total
             order.amount_difference = order.amount_paid - amount_total
