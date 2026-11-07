@@ -32,7 +32,7 @@ class MrpFinishedProductLabelLayout(models.TransientModel):
             product = move.product_id
             label_uom = move.production_id.uom_id if product == move.production_id.product_id else move.uom_id
             label_values = [(product.barcode, move.quantity, move.uom_id)]
-            if product.tracking != 'none':
+            if product.tracking:
                 label_values = [
                     (line.lot_name or line.lot_id.name, line.quantity, line.uom_id)
                     for line in move.move_line_ids
