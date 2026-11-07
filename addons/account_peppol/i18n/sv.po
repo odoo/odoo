@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-10-28 09:33+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-11-04 13:52+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_peppol/sv/>\n"
@@ -128,6 +128,11 @@ msgstr "<span><strong>Ej ansluten till Peppol!</strong></span>"
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "<span>This information will be sent with your response.</span>"
 msgstr "<span>Följande information kommer att anges i ditt svar.</span>"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "<strong>Contact us</strong>"
+msgstr ""
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -1041,7 +1046,7 @@ msgstr "Fel"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
-msgstr ""
+msgstr "Fel vid import av %(proxy_type)s dokument (UUID: %(uuid)s):"
 
 #. module: account_peppol
 #. odoo-python
@@ -2724,13 +2729,8 @@ msgid ""
 "You accept that any fraudulent activity or spam will result in immediate and "
 "permanent exclusion from the Peppol network."
 msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid ""
-"You are a legal representative authorized to register this company on the "
-"Peppol network."
-msgstr ""
+"Du godkänner att all bedräglig aktivitet eller skräppost kommer att "
+"resultera i omedelbar och permanent avstängning från Peppol-nätverket."
 
 #. module: account_peppol
 #. odoo-python
@@ -2761,6 +2761,8 @@ msgid ""
 "You authorize Odoo to act as your Peppol Service Provider to send and "
 "receive e-invoices on your behalf."
 msgstr ""
+"Du har godkänt att Odoo får fungera som din tjänsteleverantör för Peppol för "
+"att skicka och ta emot digitala fakturor å dina vägnar."
 
 #. module: account_peppol
 #. odoo-python
@@ -2817,6 +2819,13 @@ msgstr ""
 "en kredit- eller ändringsfaktura."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You confirm that you are authorized to register this company on the Peppol "
+"network as a legal representative."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
@@ -2857,6 +2866,8 @@ msgid ""
 "You remain fully responsible for the content, accuracy, and legal compliance "
 "of your invoices."
 msgstr ""
+"Du bär fullt ansvar för innehållet, korrektheten och den juridiska "
+"efterlevnaden för dina fakturor."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2893,13 +2904,8 @@ msgstr ""
 msgid ""
 "Your database is not linked to Peppol anymore. This might be due to a "
 "database duplication or restoration.\n"
-"                                        Make sure to reconnect the correct "
-"database."
+"                                        <br/>"
 msgstr ""
-"Din databas är inte längre ansluten till Peppol. Detta kan bero på en "
-"dubblerad databas eller en återställning av databasen.\n"
-"                                        Försäkra dig om att återansluta till "
-"rätt databas."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -3006,6 +3012,11 @@ msgid "support"
 msgstr "stöd"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "to reconnect your database to Peppol."
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
 msgstr "att skicka fakturor, men den här"
@@ -3014,6 +3025,24 @@ msgstr "att skicka fakturor, men den här"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "använder"
+
+#~ msgid ""
+#~ "You are a legal representative authorized to register this company on the "
+#~ "Peppol network."
+#~ msgstr ""
+#~ "Du är en juridisk representant med befogenhet att registrera företaget i "
+#~ "Peppol-nätverket."
+
+#~ msgid ""
+#~ "Your database is not linked to Peppol anymore. This might be due to a "
+#~ "database duplication or restoration.\n"
+#~ "                                        Make sure to reconnect the "
+#~ "correct database."
+#~ msgstr ""
+#~ "Din databas är inte längre ansluten till Peppol. Detta kan bero på en "
+#~ "dubblerad databas eller en återställning av databasen.\n"
+#~ "                                        Försäkra dig om att återansluta "
+#~ "till rätt databas."
 
 #~ msgid "I accept that Odoo may process my e-invoices,"
 #~ msgstr "Jag godkänner att Odoo får behandla mina digitala fakturor,"

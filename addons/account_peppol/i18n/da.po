@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
 "PO-Revision-Date: 2026-09-03 12:13+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -126,6 +126,11 @@ msgstr "<span><strong>Afbrudt fra Peppol!</strong></span>"
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "<span>This information will be sent with your response.</span>"
 msgstr "<span>Denne information vil blive sendt sammen med dit svar.</span>"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "<strong>Contact us</strong>"
+msgstr ""
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -2662,13 +2667,6 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid ""
-"You are a legal representative authorized to register this company on the "
-"Peppol network."
-msgstr ""
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2743,6 +2741,13 @@ msgstr ""
 msgid ""
 "You cannot reset to draft invoices that were sent via Peppol / PDP. If you "
 "need to modify them, you must issue a credit or debit note."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You confirm that you are authorized to register this company on the Peppol "
+"network as a legal representative."
 msgstr ""
 
 #. module: account_peppol
@@ -2821,13 +2826,8 @@ msgstr ""
 msgid ""
 "Your database is not linked to Peppol anymore. This might be due to a "
 "database duplication or restoration.\n"
-"                                        Make sure to reconnect the correct "
-"database."
+"                                        <br/>"
 msgstr ""
-"Din database er ikke længere forbundet til Peppol. Dette kan skyldes en "
-"duplikering eller gendannelse af databasen.\n"
-"                                        Sørg for at genoprette forbindelse "
-"til den korrekte database."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2933,6 +2933,11 @@ msgid "support"
 msgstr "support"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "to reconnect your database to Peppol."
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
 msgstr "for at sende fakturaer, men denne"
@@ -2941,6 +2946,17 @@ msgstr "for at sende fakturaer, men denne"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "bruger"
+
+#~ msgid ""
+#~ "Your database is not linked to Peppol anymore. This might be due to a "
+#~ "database duplication or restoration.\n"
+#~ "                                        Make sure to reconnect the "
+#~ "correct database."
+#~ msgstr ""
+#~ "Din database er ikke længere forbundet til Peppol. Dette kan skyldes en "
+#~ "duplikering eller gendannelse af databasen.\n"
+#~ "                                        Sørg for at genoprette "
+#~ "forbindelse til den korrekte database."
 
 #~ msgid "I accept that Odoo may process my e-invoices,"
 #~ msgstr "Jeg er indforstået med, at Odoo behandler mine e-fakturaer,"

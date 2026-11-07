@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
 "PO-Revision-Date: 2026-10-28 14:17+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -127,6 +127,11 @@ msgstr "<span><strong>Non connesso a Peppol!</strong></span>"
 msgid "<span>This information will be sent with your response.</span>"
 msgstr ""
 "<span>Queste informazioni saranno inviate insieme alla tua risposta.</span>"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "<strong>Contact us</strong>"
+msgstr ""
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -2728,13 +2733,6 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid ""
-"You are a legal representative authorized to register this company on the "
-"Peppol network."
-msgstr ""
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2817,6 +2815,13 @@ msgstr ""
 "Se hai bisogno di modificarle, devi emettere una nota di credito o di debito."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You confirm that you are authorized to register this company on the Peppol "
+"network as a legal representative."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
@@ -2892,13 +2897,8 @@ msgstr ""
 msgid ""
 "Your database is not linked to Peppol anymore. This might be due to a "
 "database duplication or restoration.\n"
-"                                        Make sure to reconnect the correct "
-"database."
+"                                        <br/>"
 msgstr ""
-"Il tuo database non è più collegato a Peppol. Questo potrebbe essere dovuto "
-"alla duplicazione o al ripristino del database stesso.\n"
-"                                        Assicurati di collegare di nuovo il "
-"database corretto."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -3005,6 +3005,11 @@ msgid "support"
 msgstr "supporto"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "to reconnect your database to Peppol."
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
 msgstr "per inviare fatture, ma questa"
@@ -3013,6 +3018,17 @@ msgstr "per inviare fatture, ma questa"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#~ msgid ""
+#~ "Your database is not linked to Peppol anymore. This might be due to a "
+#~ "database duplication or restoration.\n"
+#~ "                                        Make sure to reconnect the "
+#~ "correct database."
+#~ msgstr ""
+#~ "Il tuo database non è più collegato a Peppol. Questo potrebbe essere "
+#~ "dovuto alla duplicazione o al ripristino del database stesso.\n"
+#~ "                                        Assicurati di collegare di nuovo "
+#~ "il database corretto."
 
 #~ msgid "I accept that Odoo may process my e-invoices,"
 #~ msgstr "Accetto che Odoo possa elaborare le mie fatture elettroniche,"

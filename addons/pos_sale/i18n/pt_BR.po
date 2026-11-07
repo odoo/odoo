@@ -9,13 +9,15 @@
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 19:11+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-11-06 21:34+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-4/pos_sale/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -42,13 +44,13 @@ msgstr "%(old_name)s (Cancelado)"
 #. odoo-python
 #: code:addons/pos_sale/models/pos_config.py:0
 msgid "%s needs a Default Product"
-msgstr ""
+msgstr "%s precisa de um produto padrão"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_config.py:0
 msgid "%s needs a Down Payment Product"
-msgstr ""
+msgstr "%s precisa de um produto de entrada"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -134,7 +136,7 @@ msgstr "Quantidade da entrega"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_name
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -196,7 +198,7 @@ msgstr "Saldo devedor: %s"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__has_default_product
 msgid "Has Default Product"
-msgstr ""
+msgstr "Possui produto padrão"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__id
@@ -278,13 +280,13 @@ msgstr "Pago"
 #. odoo-python
 #: code:addons/pos_sale/models/pos_config.py:0
 msgid "Please set a Default Product on %s before opening a session."
-msgstr ""
+msgstr "Defina um produto padrão em %s antes de abrir uma sessão."
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/pos_config.py:0
 msgid "Please set a Down Payment Product on %s before opening a session."
-msgstr ""
+msgstr "Defina um produto de entrada em %s antes de abrir uma sessão."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
@@ -334,8 +336,9 @@ msgstr "Produto"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Cotação / Pedido"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -414,7 +417,7 @@ msgstr "A taxa da moeda para a moeda da taxa aplicável na data do pedido"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "There is nothing left to settle on this sale order."
-msgstr ""
+msgstr "Não há nada restante para liquidar neste pedido de venda."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -429,6 +432,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied on description only Sale order lines."
 msgstr ""
+"Este produto será aplicado em linhas de pedido de venda apenas de descrição."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -440,6 +444,8 @@ msgstr "Este produto será aplicado quando o pagamento de entrada for feito"
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "This product will be used as default product on productless SOLs."
 msgstr ""
+"Este produto será usado como produto padrão em linhas de pedido de venda sem "
+"produto."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
@@ -454,6 +460,9 @@ msgid ""
 "To check whether the product is default product from pos.config or not. In "
 "case of description only SOLs we use default product from pos.config."
 msgstr ""
+"Para verificar se o produto é o produto padrão da pos.config ou não. No caso "
+"de linhas de pedido de venda apenas de descrição, usamos o produto padrão da "
+"pos.config."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale

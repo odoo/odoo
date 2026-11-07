@@ -8,13 +8,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 15:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-11-06 17:37+0000\n"
+"PO-Revision-Date: 2026-11-06 21:33+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-4/pos_restaurant/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -73,7 +74,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 msgid "<span class=\"text-bold\">T </span>"
-msgstr ""
+msgstr "<span class=\"text-bold\">T </span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
@@ -545,7 +546,7 @@ msgstr "Editar planta baixa"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr ""
+msgstr "Editar plano"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -598,6 +599,14 @@ msgstr "Queijo extra"
 #: model:product.attribute,name:pos_restaurant.pa_extras_pizza
 msgid "Extras"
 msgstr "Adicionais"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"Failed to read data from the server. If the order was updated by someone "
+"else, you might not have the latest changes."
+msgstr ""
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -790,7 +799,7 @@ msgstr "Itálico"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
 msgid "Jump"
-msgstr ""
+msgstr "Pular"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__write_uid
@@ -931,7 +940,7 @@ msgstr "Ainda não há tabelas disponíveis."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1001,7 +1010,7 @@ msgstr "Pagar"
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Payment"
-msgstr ""
+msgstr "Pagamento"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_4formaggi_product_template
@@ -1051,7 +1060,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "Ponto de Venda"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_category
@@ -1106,7 +1115,7 @@ msgstr "Batatas com tomilho"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1152,7 +1161,7 @@ msgstr "Remover imagem de fundo"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Reprint"
-msgstr ""
+msgstr "Reimprimir"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1233,7 +1242,7 @@ msgstr "Selecionar formato da tabela"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Select table to transfer order"
-msgstr ""
+msgstr "Selecione a mesa para transferir o pedido"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -1285,21 +1294,22 @@ msgstr "Sequência"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Set Order Name"
-msgstr ""
+msgstr "Definir nome do pedido"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Tab"
-msgstr ""
+msgstr "Definir aba"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Table"
-msgstr ""
+msgstr "Definir mesa"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1342,15 +1352,27 @@ msgid "Solid"
 msgstr "Sólido"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Someone else just updated the order; please check it before paying."
+msgstr ""
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
 msgid "Spicy Tuna Sandwich"
 msgstr "Sanduíche de atum apimentado"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Split"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Split Order"
-msgstr ""
+msgstr "Dividir pedido"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -1388,7 +1410,7 @@ msgstr "Batata-doce frita"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Switch Floor View"
-msgstr ""
+msgstr "Alternar visualização de piso"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1489,7 +1511,7 @@ msgstr "Topo"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Transfer"
-msgstr ""
+msgstr "Transferência"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1507,7 +1529,7 @@ msgstr "Transferência/Mesclagem"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer Course"
-msgstr ""
+msgstr "Transferir prato"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1585,7 +1607,7 @@ msgstr "Rum branco, açúcar, suco de limão, água com gás e hortelã."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "With"
-msgstr ""
+msgstr "Com"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1659,7 +1681,7 @@ msgstr "Não é possível transferir um pedido para ele mesmo"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "discount"
-msgstr ""
+msgstr "desconto"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1677,10 +1699,10 @@ msgstr "solto"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
-msgstr ""
+msgstr "itens"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
-msgstr ""
+msgstr "produto(s) selecionado(s)"

@@ -4,13 +4,14 @@
 #
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 19:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"PO-Revision-Date: 2026-11-06 21:34+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-4/pos_glory_cash/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -52,7 +53,7 @@ msgstr "IP do Caixa eletrônico"
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__glory_use_lna
 msgid "Cash Machine Local Network Access"
-msgstr ""
+msgstr "Acesso à rede local do caixa"
 
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__glory_password
@@ -168,7 +169,7 @@ msgstr "Erro"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Error code:"
-msgstr ""
+msgstr "Código de erro:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -179,7 +180,7 @@ msgstr "Falha na autenticação"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "Failed to cancel cash machine transaction."
+msgid "Failed to cancel cash machine transaction: %s."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -220,6 +221,12 @@ msgid "Glory Settings"
 msgstr "Definições do Glory"
 
 #. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Glory error animation."
+msgstr ""
+
+#. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__id
 msgid "ID"
 msgstr "ID"
@@ -243,6 +250,8 @@ msgid ""
 "Local Network Access for the Glory machine is not supported on this browser. "
 "Please update your browser or disable Local Network Access."
 msgstr ""
+"O acesso à rede local para a máquina Glory não é suportado neste navegador. "
+"Atualize seu navegador ou desative o acesso à rede local."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -260,7 +269,7 @@ msgstr "Abrir página de administração"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
 msgid "Please configure the IP address before opening the admin page"
-msgstr ""
+msgstr "Configure o endereço IP antes de abrir a página de administração"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -269,6 +278,8 @@ msgid ""
 "Please remove the cash from the exit of the cash machine before starting a "
 "transaction."
 msgstr ""
+"Por favor, remova o dinheiro da saída do caixa eletrônico antes de iniciar "
+"uma transação."
 
 #. module: pos_glory_cash
 #: model:ir.model,name:pos_glory_cash.model_pos_payment_method
@@ -279,7 +290,7 @@ msgstr "Método de pagamento no Ponto de Venda"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Reset"
-msgstr ""
+msgstr "Redefinir"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -313,6 +324,12 @@ msgstr "Início do pagamento"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "The Glory machine is in an unknown error state."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr "Erro no caixa. Consulte o visor para obter mais detalhes."
@@ -330,6 +347,8 @@ msgid ""
 "The cash machine is busy counting its inventory, please wait a few seconds "
 "and retry."
 msgstr ""
+"O caixa eletrônico está ocupado contando seu inventário; por favor, aguarde "
+"alguns segundos e tente novamente."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -367,6 +386,8 @@ msgid ""
 "The cash machine is not ready to start a transaction. Check all the covers "
 "are closed and then try again."
 msgstr ""
+"O caixa eletrônico não está pronto para iniciar uma transação. Verifique se "
+"todas as tampas estão fechadas e tente novamente."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -379,7 +400,7 @@ msgstr "O caixa está ficando sem as seguintes moedas/notas:"
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is unable to return the inserted cash, please refund the "
-"client via another method."
+"client %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -409,8 +430,17 @@ msgstr "O pagamento falhou por um motivo desconhecido: %s"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
+"There is an error with the bill or coin device. The machine will now be "
+"reset and the contents verified. Once this is complete, the amount that must "
+"be returned to the customer will be displayed."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
 "There is insufficient cash in the machine to give change. You will need to "
-"refund the difference via another method."
+"refund %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -470,6 +500,23 @@ msgstr "Aguardando inserção de dinheiro"
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Waiting for inventory"
 msgstr "Aguardando estoque"
+
+#~ msgid "Failed to cancel cash machine transaction."
+#~ msgstr "Falha ao cancelar a transação do caixa eletrônico."
+
+#~ msgid ""
+#~ "The cash machine is unable to return the inserted cash, please refund the "
+#~ "client via another method."
+#~ msgstr ""
+#~ "O caixa eletrônico não consegue devolver o dinheiro inserido; por favor, "
+#~ "reembolse o cliente por outro método."
+
+#~ msgid ""
+#~ "There is insufficient cash in the machine to give change. You will need "
+#~ "to refund the difference via another method."
+#~ msgstr ""
+#~ "Não há dinheiro suficiente na máquina para fornecer troco. Você precisará "
+#~ "reembolsar a diferença por outro método."
 
 #~ msgid "There is insufficient cash in the machine to give change."
 #~ msgstr "Não há dinheiro suficiente na máquina para dar troco."

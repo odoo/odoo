@@ -1,14 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* populate
+# * populate
 #
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-08-31 16:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-06 21:33+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-4/populate/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -22,31 +23,32 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "%(count)s parallel job(s) failed"
-msgstr ""
+msgstr "%(count)s trabalho(s) paralelo(s) falhou/falharam"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(comodel_name)s' isn't a valid model name."
-msgstr ""
+msgstr "'%(comodel_name)s' não é um nome de modelo válido."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(groupby)s' isn't a valid field for model '%(comodel_name)s'."
-msgstr ""
+msgstr "'%(groupby)s' não é um campo válido para o modelo '%(comodel_name)s'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for virtual fields."
-msgstr ""
+msgstr "'comodel_name' precisa ser fornecido para campos virtuais."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "A created session should have jobs associated from a blueprint."
 msgstr ""
+"Uma sessão criada deve ter trabalhos associados a partir de um blueprint."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_unique_ref_per_session
@@ -54,6 +56,8 @@ msgid ""
 "A job with this reference already exists in this session. References must be"
 " unique for create-type jobs within a session."
 msgstr ""
+"Já existe um trabalho com esta referência nesta sessão. As referências devem "
+"ser únicas para trabalhos do tipo criação dentro de uma sessão."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -62,19 +66,22 @@ msgid ""
 "jobs are allowed to have no record_count, whose cardinality is unknown at "
 "creation time."
 msgstr ""
+"O 'record_count' de um trabalho precisa ser um número inteiro positivo "
+"diferente de zero. Apenas trabalhos de gravação podem não ter "
+"'record_count', cuja cardinalidade é desconhecida no momento da criação."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Adapt the generator parameter to generate values within the constraint"
-msgstr ""
+msgstr "Adapte o parâmetro do gerador para gerar valores dentro da restrição"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__blueprint_id
 #: model:ir.model.fields,field_description:populate.field_populate_session__blueprint_id
 msgid "Blueprint"
-msgstr ""
+msgstr "Blueprint"
 
 #. module: populate
 #. odoo-python
@@ -84,6 +91,9 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"Blueprint '%(blueprint)s': O modelo '%(model)s' não existe.\n"
+"Definição que falhou:\n"
+"%(definition)s"
 
 #. module: populate
 #. odoo-python
@@ -93,11 +103,15 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"Blueprint '%(blueprint)s': O modelo '%(model)s' não possui o(s) campo(s): %"
+"(fields)s.\n"
+"Definição que falhou:\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
 msgid "Blueprint Name"
-msgstr ""
+msgstr "Nome do Blueprint"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_blueprint__inherit_id
@@ -105,17 +119,19 @@ msgid ""
 "Blueprint to inherit from. Use XPath expressions in definition_xml to modify"
 " the parent."
 msgstr ""
+"Blueprint do qual herdar. Use expressões XPath em definition_xml para "
+"modificar o pai."
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__parallel
 msgid "Can the job be executed in parallel?"
-msgstr ""
+msgstr "O trabalho pode ser executado em paralelo?"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Cannot grab the advisory lock on the session %s."
-msgstr ""
+msgstr "Não é possível obter o bloqueio consultivo na sessão %s."
 
 #. module: populate
 #. odoo-python
@@ -124,12 +140,14 @@ msgid ""
 "Cannot have both a distribution and weighted values. Please provide either "
 "'distribution' or 'values' with weights, but not both."
 msgstr ""
+"Não é possível ter uma distribuição e valores ponderados ao mesmo tempo. Por "
+"favor, forneça 'distribution' ou 'values' com pesos, mas não ambos."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Cannot have repeated entries in `values`."
-msgstr ""
+msgstr "Não é possível ter entradas repetidas em `values`."
 
 #. module: populate
 #. odoo-python
@@ -138,12 +156,14 @@ msgid ""
 "Cannot infer valid fields for a virtual field. The 'valid_fields' parameter "
 "must be explicitly provided."
 msgstr ""
+"Não é possível inferir campos válidos para um campo virtual. O parâmetro "
+"'valid_fields' deve ser fornecido explicitamente."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Cannot run a parallel session during tests."
-msgstr ""
+msgstr "Não é possível executar uma sessão paralela durante os testes."
 
 #. module: populate
 #. odoo-python
@@ -152,6 +172,8 @@ msgid ""
 "Cannot specify a null fraction for a required field. Field '%(field_name)s' "
 "is required and cannot have null values."
 msgstr ""
+"Não é possível especificar uma fração nula para um campo obrigatório. O "
+"campo '%(field_name)s' é obrigatório e não pode conter valores nulos."
 
 #. module: populate
 #. odoo-python
@@ -160,11 +182,13 @@ msgid ""
 "Cannot specify a null fraction when using weighted values. The 'null_ratio' "
 "parameter is incompatible with custom weights."
 msgstr ""
+"Não é possível especificar uma fração nula ao usar valores ponderados. O "
+"parâmetro 'null_ratio' é incompatível com pesos personalizados."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__child_ids
 msgid "Child"
-msgstr ""
+msgstr "Filho"
 
 #. module: populate
 #. odoo-python
@@ -173,11 +197,13 @@ msgid ""
 "Consider using a generator (or combination of) that produces more varied "
 "values"
 msgstr ""
+"Considere usar um gerador (ou uma combinação) que produza valores mais "
+"variados"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__context
 msgid "Context"
-msgstr ""
+msgstr "Contexto"
 
 #. module: populate
 #. odoo-python
@@ -186,51 +212,53 @@ msgid ""
 "Could not generate a value because required dependencies are missing: "
 "%(missing_deps)s. Expected dependencies: %(expected_deps)s."
 msgstr ""
+"Não foi possível gerar um valor porque faltam dependências obrigatórias: %"
+"(missing_deps)s. Dependências esperadas: %(expected_deps)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Couldn't find a unique value for field %(field)s."
-msgstr ""
+msgstr "Não foi possível encontrar um valor exclusivo para o campo %(field)s."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__type__create
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_create_job_without_domain
 msgid "Create jobs cannot define a domain."
-msgstr ""
+msgstr "Trabalhos de criação não podem definir um domínio."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_date
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_date
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_blueprint
 msgid "Data Population Blueprint"
-msgstr ""
+msgstr "Blueprint de População de Dados"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_job
 msgid "Data Population Job"
-msgstr ""
+msgstr "Trabalho de População de Dados"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_session
 msgid "Data Population Session"
-msgstr ""
+msgstr "Sessão de População de Dados"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__display_name
@@ -238,22 +266,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__display_name
 #: model:ir.model.fields,field_description:populate.field_populate_session__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome de exibição"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__domain
 msgid "Domain"
-msgstr ""
+msgstr "Domínio"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__domain
 msgid "Domain selecting target records for jobs that update existing records."
 msgstr ""
+"Domínio que seleciona registros de destino para trabalhos que atualizam "
+"registros existentes."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_blueprint_has_definition
 msgid "Either XML or JSON definition must be provided"
-msgstr ""
+msgstr "Deve ser fornecida uma definição XML ou JSON"
 
 #. module: populate
 #. odoo-python
@@ -262,6 +292,7 @@ msgid ""
 "Error applying blueprint inheritance from %(parent)s' to %(child)s: "
 "%(error)s"
 msgstr ""
+"Erro ao aplicar herança de blueprint de %(parent)s' para %(child)s: %(error)s"
 
 #. module: populate
 #. odoo-python
@@ -270,18 +301,20 @@ msgid ""
 "Field path '%(path)s' from '%(ref)s' resulted in model '%(got)s', but "
 "expected '%(expected)s'"
 msgstr ""
+"O caminho do campo '%(path)s' a partir de '%(ref)s' resultou no modelo '%"
+"(got)s', mas esperava-se '%(expected)s'"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Field: '%s'"
-msgstr ""
+msgstr "Campo: '%s'"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Generator: '%s'"
-msgstr ""
+msgstr "Gerador: '%s'"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__id
@@ -289,7 +322,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__id
 #: model:ir.model.fields,field_description:populate.field_populate_session__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: populate
 #. odoo-python
@@ -298,22 +331,26 @@ msgid ""
 "If `props` are provided, neither `count` or `allowed_types` or "
 "`possible_values` can be set."
 msgstr ""
+"Se 'props' forem fornecidos, nem 'count', nem 'allowed_types', nem "
+"'possible_values' podem ser definidos."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/binary.py:0
 msgid "Image dimensions must be positive integers, got %(width)sx%(height)s."
 msgstr ""
+"As dimensões da imagem devem ser números inteiros positivos, obtido %(width)"
+"sx%(height)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
 msgid "Inherited Blueprint"
-msgstr ""
+msgstr "Blueprint herdado"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__instructions
 msgid "Instructions"
-msgstr ""
+msgstr "Instruções"
 
 #. module: populate
 #. odoo-python
@@ -322,6 +359,8 @@ msgid ""
 "Invalid field dependencies: %(invalid_fields)s. These fields do not exist in"
 " the model's blueprint."
 msgstr ""
+"Dependências de campo inválidas: %(invalid_fields)s. Estes campos não "
+"existem no modelo de blueprint."
 
 #. module: populate
 #. odoo-python
@@ -330,6 +369,8 @@ msgid ""
 "Invalid parameters: %(invalid_params)s. Only these parameters are allowed "
 "(besides method's arguments): %(allowed_params)s"
 msgstr ""
+"Parâmetros inválidos: %(invalid_params)s. Apenas estes parâmetros são "
+"permitidos (além dos argumentos do método): %(allowed_params)s"
 
 #. module: populate
 #. odoo-python
@@ -338,6 +379,8 @@ msgid ""
 "Invalid values %(invalid)s for selection field. Allowed values are: "
 "%(possible)s."
 msgstr ""
+"Valores inválidos %(invalid)s para o campo de seleção. Os valores permitidos "
+"são: %(possible)s."
 
 #. module: populate
 #. odoo-python
@@ -346,53 +389,55 @@ msgid ""
 "Invalid values %(invalid_values)s for %(field_type)s field. Allowed values "
 "are: %(possible_values)s."
 msgstr ""
+"Valores inválidos %(invalid_values)s para o campo %(field_type)s. Os valores "
+"permitidos são: %(possible_values)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition
 msgid "JSON Definition"
-msgstr ""
+msgstr "Definição JSON"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__job_id
 #: model:ir.model.fields,field_description:populate.field_populate_session__job_ids
 msgid "Job"
-msgstr ""
+msgstr "Vaga"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Job hierarchy cannot be recursive."
-msgstr ""
+msgstr "A hierarquia de tarefas não pode ser recursiva."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Jobs in the same hierarchy should share the same session."
-msgstr ""
+msgstr "Tarefas na mesma hierarquia devem compartilhar a mesma sessão."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__write_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__write_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__write_date
 #: model:ir.model.fields,field_description:populate.field_populate_job__write_date
 #: model:ir.model.fields,field_description:populate.field_populate_session__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #. module: populate
 #. odoo-python
@@ -401,11 +446,13 @@ msgid ""
 "Model '%(model_name)s' is not in the allowed models for reference field "
 "'%(field_name)s': %(model_names)s."
 msgstr ""
+"O modelo '%(model_name)s' não está nos modelos permitidos para o campo de "
+"referência '%(field_name)s': %(model_names)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__model_name
 msgid "Model Name"
-msgstr ""
+msgstr "Nome do modelo"
 
 #. module: populate
 #. odoo-python
@@ -414,6 +461,8 @@ msgid ""
 "No generator specified for field '%(field)s' of type '%(type)s', and no "
 "default generator is registered for that field type."
 msgstr ""
+"Nenhum gerador especificado para o campo '%(field)s' do tipo '%(type)s', e "
+"nenhum gerador padrão está registrado para esse tipo de campo."
 
 #. module: populate
 #. odoo-python
@@ -421,58 +470,60 @@ msgstr ""
 msgid ""
 "Null fraction must be strictly between 0 and 1, got %(null_ratio)s instead."
 msgstr ""
+"A fração nula deve estar estritamente entre 0 e 1, obteve-se %(null_ratio)s "
+"em vez disso."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_session__worker_count
 msgid "Number of parallel workers that will run jobs at the same time"
-msgstr ""
+msgstr "Número de trabalhadores paralelos que executarão tarefas ao mesmo tempo"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
 msgid "Parallel"
-msgstr ""
+msgstr "Paralelo"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Superior"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Caminho pai"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_json
 msgid "Raw JSON Definition"
-msgstr ""
+msgstr "Definição JSON bruta"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_xml
 msgid "Raw XML Definition"
-msgstr ""
+msgstr "Definição XML bruta"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_id
 msgid "Record"
-msgstr ""
+msgstr "Registro"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__record_count
 msgid "Record Count"
-msgstr ""
+msgstr "Contagem de registros"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__ref
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__ref
 msgid "Ref"
-msgstr ""
+msgstr "Ref."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Ref: '%s'"
-msgstr ""
+msgstr "Ref: '%s'"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__ref
@@ -483,46 +534,52 @@ msgid ""
 "    If the job type is 'write' -> Refers to records with said reference.\n"
 "    "
 msgstr ""
+"Referenciar o lote de registros usado pelo trabalho.\n"
+"    Se o tipo de trabalho for 'create' -> Anota os registros para "
+"referência.\n"
+"    Se o tipo de trabalho for 'write' -> Refere-se aos registros com a "
+"referida referência.\n"
+"    "
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_model_data
 msgid "Reference to Populated Records."
-msgstr ""
+msgstr "Referência a registros populados."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_session__scaling_factor
 msgid "Scaling Factor"
-msgstr ""
+msgstr "Fator de escala"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__seed
 #: model:ir.model.fields,field_description:populate.field_populate_session__seed
 msgid "Seed"
-msgstr ""
+msgstr "Seed"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__session_id
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__session_id
 msgid "Session"
-msgstr ""
+msgstr "Sessão"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Session %(session_id)s is already running."
-msgstr ""
+msgstr "A sessão %(session_id)s já está em execução."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/binary.py:0
 msgid "Size must be a positive integer, got %(size)s."
-msgstr ""
+msgstr "O tamanho deve ser um número inteiro positivo, obtido %(size)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Some blueprint's definition(s) have inexistent models/fields used."
-msgstr ""
+msgstr "Alguma(s) definição(ões) de blueprint usam modelos/campos inexistentes."
 
 #. module: populate
 #. odoo-python
@@ -531,6 +588,8 @@ msgid ""
 "Step cannot be zero for the counter generator. Use `eval` with a static "
 "value instead."
 msgstr ""
+"O passo não pode ser zero para o gerador de contador. Use `eval` com um "
+"valor estático em vez disso."
 
 #. module: populate
 #. odoo-python
@@ -539,6 +598,8 @@ msgid ""
 "Subjobs cannot have subjobs themselves. Only one level of hierarchy is "
 "allowed."
 msgstr ""
+"Subtrabalhos não podem ter subtrabalhos. Apenas um nível de hierarquia é "
+"permitido."
 
 #. module: populate
 #. odoo-python
@@ -547,6 +608,8 @@ msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
 "inherit from it."
 msgstr ""
+"O blueprint '%(parent)s' não possui uma definição XML, mas '%(child)s' herda "
+"dele."
 
 #. module: populate
 #. odoo-python
@@ -555,12 +618,15 @@ msgid ""
 "The eval generator takes an expression directly instead of a lambda. Use 'x "
 "+ y' instead of 'lambda x, y: x + y'."
 msgstr ""
+"O gerador eval aceita uma expressão diretamente em vez de um lambda. Use 'x "
+"+ y' em vez de 'lambda x, y: x + y'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "The field is implicitly required, consider adding `null_ratio=0`"
 msgstr ""
+"O campo é implicitamente obrigatório, considere adicionar `null_ratio=0`"
 
 #. module: populate
 #. odoo-python
@@ -569,59 +635,61 @@ msgid ""
 "The multiprocessing feature of the populate module has been disabled at the "
 "platform level."
 msgstr ""
+"O recurso de multiprocessamento do módulo de povoamento (populate) foi "
+"desativado no nível da plataforma."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "The session %(session_id)s is already done. Create a new session."
-msgstr ""
+msgstr "A sessão %(session_id)s já foi concluída. Crie uma nova sessão."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "This Eval returns the same value, so it cannot be unique."
-msgstr ""
+msgstr "Este Eval retorna o mesmo valor, por isso não pode ser único."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__type
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "Unique cannot be used with the '%s' generator."
-msgstr ""
+msgstr "Unique não pode ser usado com o gerador '%s'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/scalar.py:0
 msgid "Unique cannot be used with the boolean generator."
-msgstr ""
+msgstr "Unique não pode ser usado com o gerador booleano."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Unique cannot be used with the selection generator."
-msgstr ""
+msgstr "Unique não pode ser usado com o gerador de seleção."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Values cannot be empty for the %s generator."
-msgstr ""
+msgstr "Os valores não podem estar vazios para o gerador %s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "Values cannot be empty for the cycle generator."
-msgstr ""
+msgstr "Os valores não podem estar vazios para o gerador de ciclo."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "Weights cannot be provided for the cycle generator."
-msgstr ""
+msgstr "Não é possível fornecer pesos para o gerador de ciclo."
 
 #. module: populate
 #. odoo-python
@@ -629,6 +697,8 @@ msgstr ""
 msgid ""
 "When step is negative, end (%(end)s) must be less than start (%(start)s)."
 msgstr ""
+"Quando o passo é negativo, o fim (%(end)s) deve ser menor que o início (%"
+"(start)s)."
 
 #. module: populate
 #. odoo-python
@@ -636,17 +706,19 @@ msgstr ""
 msgid ""
 "When step is positive, end (%(end)s) must be greater than start (%(start)s)."
 msgstr ""
+"Quando o passo é positivo, o fim (%(end)s) deve ser maior que o início (%"
+"(start)s)."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__type__write
 msgid "Write"
-msgstr ""
+msgstr "Gravar"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "You cannot create recursive inherited blueprints."
-msgstr ""
+msgstr "Não é possível criar blueprints herdados recursivos."
 
 #. module: populate
 #. odoo-python
@@ -655,6 +727,8 @@ msgid ""
 "`possible_values` must be provided for prop_type '%(prop_type)s' in "
 "generator %(generator_name)s of field %(field_name)s"
 msgstr ""
+"`possible_values` deve ser fornecido para prop_type '%(prop_type)s' no "
+"gerador %(generator_name)s do campo %(field_name)s"
 
 #. module: populate
 #. odoo-python
@@ -663,6 +737,8 @@ msgid ""
 "`possible_values` must be provided when `allowed_types` includes 'selection'"
 " or 'tags'. "
 msgstr ""
+"`possible_values` deve ser fornecido quando `allowed_types` incluir "
+"'selection' ou 'tags'. "
 
 #. module: populate
 #. odoo-python
@@ -671,9 +747,11 @@ msgid ""
 "`prop_type` expected to be in fields.Properties.ALLOWED_TYPES '%(allowed)s'."
 " Got %(actual)s instead."
 msgstr ""
+"`prop_type` esperado estar em fields.Properties.ALLOWED_TYPES '%(allowed)s'. "
+"Recebido %(actual)s em vez disso."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "in Job %s"
-msgstr ""
+msgstr "no trabalho %s"
