@@ -1296,6 +1296,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
     def test_view_to_translate_tag(self):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.env['res.lang']._activate_lang('nl_NL')
         self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
         self.assertFalse(self.base_view.website_id)
         website = self.env.ref('base.default_website')
@@ -1319,6 +1320,8 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # specific view with website_id
         self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
+        specific_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+        self.assertIn('to_translate', specific_view.with_context(lang='nl_NL', edit_translations=True).arch)
 
     def test_view_to_translate_tag_render_template(self):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')
