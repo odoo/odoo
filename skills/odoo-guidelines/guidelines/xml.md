@@ -18,6 +18,8 @@
 - CSS classes in views and templates: prefix with `o_<module>` (`o_` alone is
   reserved for the web client), never style through ids, and keep names flat
   (`o_element_entry`) rather than mirroring the DOM nesting.
+- Icons in views and templates: see
+  [Give every icon `role="img"` and a label or `aria-hidden`](../../odoo-web-guidelines/guidelines/templates.md#give-every-icon-roleimg-and-a-label-or-aria-hidden).
 - Inheriting a view: see
   [Anchor view inheritance on names, never on position](#anchor-view-inheritance-on-names-never-on-position).
 
