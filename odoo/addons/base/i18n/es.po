@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-09 15:28+0000\n"
-"PO-Revision-Date: 2026-10-30 14:33+0000\n"
+"PO-Revision-Date: 2026-11-06 14:10+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/base/"
 "es/>\n"
@@ -712,11 +712,11 @@ msgid ""
 "tax calculation.\n"
 msgstr ""
 "\n"
-"Cálculo de impuestos hecho por terceros\n"
-"=========================\n"
+"Cálculo de impuestos de terceros\n"
+"=================================\n"
 "\n"
-"Brinda una interfaz común que se puede usar al implementar aplicaciones que "
-"hagan el cálculo de impuestos por usted.\n"
+"Proporciona una interfaz común para usar al implementar aplicaciones para "
+"externalizar el cálculo de impuestos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_external_tax
@@ -757,10 +757,11 @@ msgid ""
 "European Union."
 msgstr ""
 "\n"
-"Un módulo que añade la gestión de inventarios en informes intrastat.\n"
+"Un módulo que añade la gestión de existencias en los informes de Intrastat.\n"
 "============================================================\n"
 "\n"
-"Este módulo ofrece detalles de los bienes comerciados entre países de la "
+"Este módulo ofrece los detalles de las mercancías comercializadas entre los "
+"países de la\n"
 "Unión Europea."
 
 #. module: base
@@ -1378,7 +1379,7 @@ msgid ""
 "==================\n"
 msgstr ""
 "\n"
-"Importación de contabilidad\n"
+"Importación contable\n"
 "==================\n"
 
 #. module: base
@@ -3003,7 +3004,7 @@ msgid ""
 "Allow clients to Schedule Appointments through the Portal\n"
 msgstr ""
 "\n"
-"Permita que los clientes programen citas desde el portal\n"
+"Permite a los clientes programar citas a través del portal\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment
@@ -3433,10 +3434,10 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Administración de activos\n"
-"=================\n"
-"Administre activos pertenecientes a una empresa o persona.\n"
-"Lleva la cuenta de la depreciación y crea los asientos contables "
+"Gestión de activos\n"
+"==================\n"
+"Gestiona los activos pertenecientes a una empresa o persona.\n"
+"Realiza un seguimiento de las amortizaciones y crea los asientos contables "
 "correspondientes.\n"
 "\n"
 
@@ -4067,7 +4068,7 @@ msgid ""
 "Bill timesheets logged on helpdesk tickets.\n"
 msgstr ""
 "\n"
-"Facture partes de horas registrados en los tickets del servicio de "
+"Factura los partes de horas registrados en los tickets de servicio de "
 "asistencia\n"
 
 #. module: base
@@ -4267,7 +4268,7 @@ msgid ""
 "Bridge module between purchase and intrastat.\n"
 msgstr ""
 "\n"
-"Módulo de enlace para compra e intrastat.\n"
+"Módulo de enlace entre compra e intrastat.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_intrastat
@@ -5818,12 +5819,12 @@ msgstr ""
 "\n"
 "Intercambio electrónico de datos\n"
 "=======================================\n"
-"EDI (Electronic Data Interchange) es el intercambio electrónico de "
-"información comercial utilizando un formato estandarizado.\n"
+"EDI es el intercambio electrónico de información empresarial mediante un "
+"formato estandarizado.\n"
 "\n"
 "Este es el módulo base para la importación y exportación de facturas en "
-"varios formatos EDI y\n"
-"la transmisión de dichos documentos a varias partes involucradas en el "
+"varios formatos EDI, y la\n"
+"transmisión de dichos documentos a las diversas partes involucradas en el "
 "intercambio (otra empresa,\n"
 "gobiernos, etc.)\n"
 
@@ -8070,31 +8071,31 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 msgstr ""
 "\n"
-"Gestione la coincidencia de tres vías en las facturas del proveedor\n"
-"=====================================\n"
+"Gestiona la conciliación triple en las facturas de proveedor\n"
+"==========================================================\n"
 "\n"
-"En el sector de fabricación es común recibir las facturas de los proveedores "
+"En el sector de la fabricación, a menudo recibes las facturas de proveedor "
 "antes\n"
-"de recibir la compra, pero también es común querer pagar la factura hasta "
-"después de haber recibido los\n"
-"bienes.\n"
+"de recibir tu compra, pero no quieres pagar la factura hasta que se hayan "
+"entregado\n"
+"los productos.\n"
 "\n"
-"La solución a esta situación es crear la factura del proveedor a la "
-"recepción\n"
-"(según las cantidades pedidas), pero pagar la factura solo cuando las "
-"cantidades\n"
-"recibidas (indicadas en el pedido de compra) coincidan con lo indicado en la "
-"factura del proveedor.\n"
+"La solución a esta situación es crear la factura de proveedor cuando la "
+"recibes\n"
+"(basada en las cantidades pedidas) pero pagar la factura solo cuando las\n"
+"cantidades recibidas (en las líneas del pedido de compra) coincidan con la "
+"factura\n"
+"de proveedor registrada.\n"
 "\n"
-"Este módulo introduce un mecanismo de \"emisión del pago\" que marca en cada "
-"una de las\n"
-"facturas de los proveedores si estas se pueden pagar o no.\n"
+"Este módulo introduce un mecanismo de \"liberar para pago\" que marca en "
+"cada factura\n"
+"de proveedor si se puede pagar o no.\n"
 "\n"
-"Cada factura recibe uno de los siguientes tres estados:\n"
+"Cada factura de proveedor recibe uno de los siguientes tres estados:\n"
 "\n"
-"- Sí (la factura se puede pagar)\n"
-"- No (la factura no se puede pagar, todavía no se ha entregado nada)\n"
-"- Excepción (las cantidades recibidas y facturadas son diferentes)\n"
+"    - Sí (la factura se puede pagar)\n"
+"    - No (la factura no se puede pagar, aún no se ha entregado nada)\n"
+"    - Excepción (las cantidades recibidas y facturadas difieren)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_stock
@@ -9098,15 +9099,16 @@ msgstr ""
 "Módulo para importación de extractos bancarios CSV.\n"
 "==========================================\n"
 "\n"
-"Este módulo le permite importar los archivos CSV en Odoo: se analizan y se "
-"almacenan en formato legible por humanos en\n"
-"Contabilidad \\ Banco y caja \\ Extractos bancarios.\n"
+"Este módulo permite importar los archivos CSV en Odoo: se analizan y se "
+"almacenan en formato legible en\n"
+"Contabilidad \\ Banco y efectivo \\ Extractos bancarios.\n"
 "\n"
 "Nota importante\n"
 "---------------------\n"
-"Debido a la limitación del formato CSV, no podemos asegurar que las mismas "
-"transacciones no se importen varias veces o que manejen moneda múltiple.\n"
-"Siempre que sea posible, debe utilizar un formato de archivo más apropiado "
+"Debido a las limitaciones del formato CSV, no podemos garantizar que las "
+"mismas transacciones no se importen varias veces o que gestionen varias "
+"monedas.\n"
+"Siempre que sea posible, debes utilizar un formato de archivo más apropiado, "
 "como OFX.\n"
 
 #. module: base
@@ -9128,12 +9130,12 @@ msgstr ""
 "Módulo para importar extractos bancarios en formato OFX\n"
 "===============================================\n"
 "\n"
-"Este módulo le permite importar archivos OFX legibles por máquina en Odoo: "
+"Este módulo te permite importar archivos OFX legibles por máquina en Odoo: "
 "se analizan y almacenan en formato legible en\n"
-"Contabilidad \\ Bancos y caja \\ Extractos bancarios\n"
+"Contabilidad \\ Bancos y efectivo \\ Extractos bancarios\n"
 "\n"
 "Se pueden generar extractos bancarios que contengan un subconjunto de la "
-"información OFX (sólo las líneas de transacción necesarias para la\n"
+"información OFX (solo las líneas de transacción necesarias para la\n"
 "creación de registros contables).\n"
 
 #. module: base
@@ -9154,19 +9156,19 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"Módulo para importación de extractos bancarios QIF.\n"
-"==========================================\n"
+"Módulo para importar extractos bancarios QIF.\n"
+"======================================\n"
 "\n"
-"Este módulo le permite importar los archivos QIF legibles por máquina en "
-"Odoo: se analizan y se almacenan en formato legible por humanos en\n"
-"Contabilidad \\ Banco y caja \\ Extractos bancarios.\n"
+"Este módulo te permite importar archivos QIF legibles por máquina en Odoo: "
+"se analizan y almacenan en un formato legible para humanos en\n"
+"Contabilidad \\ Bancos y efectivo \\ Extractos bancarios.\n"
 "\n"
 "Nota importante\n"
-"---------------------\n"
-"Debido a la limitación del formato QIF, no podemos asegurar que las mismas "
-"transacciones no se importen varias veces o que manejen moneda múltiple.\n"
-"Siempre que sea posible, debe utilizar un formato de archivo más apropiado "
-"como OFX.\n"
+"---------------------------------------------\n"
+"Debido a las limitaciones del formato QIF, no podemos garantizar que las "
+"mismas transacciones no se importen varias veces ni gestionar multidivisa.\n"
+"Siempre que sea posible, deberías utilizar un formato de archivo más "
+"adecuado como OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_soda
@@ -11302,7 +11304,7 @@ msgid ""
 "If you need to manage your meetings, you should install the CRM module.\n"
 msgstr ""
 "\n"
-"Esto es un sistema completo de calendario.\n"
+"Este es un sistema completo de calendario.\n"
 "========================================\n"
 "\n"
 "Compatible con:\n"
@@ -11310,7 +11312,7 @@ msgstr ""
 "    - Calendario de eventos\n"
 "    - Eventos recurrentes\n"
 "\n"
-"Si necesita gestionar sus reuniones, debería instalar el módulo CRM.\n"
+"Si necesitas gestionar tus reuniones, instala el módulo CRM.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mrp
@@ -12565,11 +12567,12 @@ msgid ""
 "actions(Check in/Check out) performed by them.\n"
 msgstr ""
 "\n"
-"Este módulo tiene como objetivo gestionar la asistencia de los empleados.\n"
+"Este módulo tiene como objetivo gestionar el control horario y la asistencia "
+"de los empleados.\n"
 "==================================================\n"
 "\n"
-"Lleva el número de asistencias de los empleados según las acciones que "
-"realicen (como registrar su entrada o salida).\n"
+"Lleva el registro de la asistencia de los empleados a partir de las\n"
+"acciones que realicen (registrar entrada/registrar salida).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_mondialrelay
@@ -12969,9 +12972,9 @@ msgid ""
 "if the product doesn't exists, inside barcode application.\n"
 msgstr ""
 "\n"
-"Con este módulo podrá crear productos desde un código de barras usando una "
-"clave API de Barcode Lookup,\n"
-"si el producto no existe dentro de la aplicación Código de barras.\n"
+"Este módulo te permite crear productos a partir del código de barras usando "
+"la clave API de búsqueda de códigos de barras\n"
+"si el producto no existe, dentro de la aplicación de código de barras.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
@@ -13138,9 +13141,9 @@ msgid ""
 "appropriate views and selling choices.\n"
 msgstr ""
 "\n"
-"Este módulo le permite vender productos de suscripción en su comercio "
+"Este módulo te permite vender productos de suscripción en tu Comercio "
 "electrónico con\n"
-"vistas apropiadas y elecciones de venta.\n"
+"vistas apropiadas y opciones de venta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports_account_saft
@@ -14195,12 +14198,12 @@ msgid ""
 "page.\n"
 msgstr ""
 "\n"
-"Este módulo ofrece las funcionalidades básicas para pagar mediante cheque "
-"impreso.\n"
-"Debe utilizarse como una dependencia para módulos que proporcionan formatos "
-"específicos de cheques para un país determinado.\n"
-"Los ajustes de cheques se encuentran en la página de configuración de "
-"diarios contables.\n"
+"Este módulo ofrece las funcionalidades básicas para realizar pagos mediante "
+"la impresión de cheques.\n"
+"Debe utilizarse como dependencia para módulos que proporcionen plantillas de "
+"cheques específicas de cada país.\n"
+"Los ajustes de cheques se encuentran en la página de configuración de los "
+"diarios de Contabilidad.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_enterprise
@@ -14803,7 +14806,7 @@ msgid ""
 "--------------------------------------------------------------\n"
 msgstr ""
 "\n"
-"Use presupuestos para comparar los ingresos y costes reales con los "
+"Utiliza presupuestos para comparar los ingresos y costes reales con los "
 "esperados\n"
 "--------------------------------------------------------------\n"
 
@@ -15566,7 +15569,7 @@ msgstr "Empresa logística 3PL"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
 msgid "3rd Party Tax Calculation"
-msgstr "Cálculo de impuestos con una aplicación externa"
+msgstr "Cálculo de impuestos de terceros"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_external_tax
@@ -16934,7 +16937,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extract
 msgid "Account Bank Statement Extract"
-msgstr "Extracto bancario"
+msgstr "Extracto del extracto bancario de la cuenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
@@ -17428,8 +17431,8 @@ msgid ""
 "Add a payment step at the end of appointment and resource bookings, on "
 "website"
 msgstr ""
-"Añada un paso de pago al final en reservas de citas y recursos en el sitio "
-"web."
+"Añade un paso de pago al final de las reservas de citas y recursos en el "
+"sitio web"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_purchase_stock
@@ -18577,7 +18580,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_check_printing
 msgid "Allows using Reconciliation with the account check printing."
-msgstr "Permite usar la conciliación con la impresión de cheques de la cuenta."
+msgstr "Permite utilizar la conciliación con la impresión de cheques contables."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_sendcloud
@@ -20431,7 +20434,7 @@ msgstr "Gestión de activos fijos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
 msgid "Assets/Fleet bridge"
-msgstr "Enlace entre activos y flota"
+msgstr "Enlace entre activos y Flota"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -22926,7 +22929,7 @@ msgstr "Revisión"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr "Impresión base de cheques"
+msgstr "Base de impresión de cheques"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__is_company
@@ -25682,7 +25685,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_extract
 msgid "Digitise and extract data from documents."
-msgstr "Digitalice y extraiga datos de los documentos."
+msgstr "Digitaliza y extrae datos de los documentos."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__digits
@@ -25936,7 +25939,7 @@ msgstr "Mostrar moneda"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_order_tracking_display
 msgid "Display customer's order status"
-msgstr "Mostre el estado del pedido del cliente"
+msgstr "Mostrar el estado del pedido del cliente"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_format
@@ -26933,7 +26936,7 @@ msgstr "Contrapartida Enterprise para distribuidores"
 #: model:ir.module.module,description:base.module_website_crm_iap_reveal_enterprise
 #: model:ir.module.module,summary:base.module_website_crm_iap_reveal_enterprise
 msgid "Enterprise counterpart of Visits -> Leads"
-msgstr "Contrapartida Enterprise de visitas -> Leads"
+msgstr "Equivalente en Enterprise de Visitas -> Leads"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder
@@ -28152,7 +28155,8 @@ msgstr "Extrae datos de los gastos escaneados para llenarlas automáticamente"
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
 msgstr ""
-"Extraiga datos de los escaneos de facturas para rellenarlas automáticamente"
+"Extrae la información de las facturas escaneadas para completarlas "
+"automáticamente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_loans_extract
@@ -28637,7 +28641,7 @@ msgstr "Finanzas/Seguros"
 #: model:ir.module.module,summary:base.module_data_merge_crm
 #: model:ir.module.module,summary:base.module_data_merge_utm
 msgid "Find duplicate records and merge them"
-msgstr "Encuentre registros duplicados y fusiónelos"
+msgstr "Encuentra registros duplicados y fusiónalos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
@@ -29149,7 +29153,7 @@ msgstr "Pantalla completa"
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp_workorder_quality
 #: model:ir.module.module,summary:base.module_purchase_mrp_workorder_quality
 msgid "Full Traceability Report Demo Data"
-msgstr "Informe de trazabilidad completo de los Datos del demo"
+msgstr "Datos de demostración del informe de trazabilidad completa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__func
@@ -29374,7 +29378,7 @@ msgstr ""
 "\n"
 "(Este módulo no incluye ningún tipo de formato de importación.)\n"
 "\n"
-"Los importes OFX y QIF están disponibles en la versión empresarial."
+"Las importaciones OFX y QIF están disponibles en la versión Enterprise."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_html_builder
@@ -30007,7 +30011,7 @@ msgstr "Gestione la analítica en el picking de stock con Proyecto"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Handle checkouts and payments for shops and restaurants."
-msgstr "Gestione los pagos y las cuentas para tiendas y restaurantes."
+msgstr "Gestiona cobros y pagos en tiendas y restaurantes."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
@@ -33238,7 +33242,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
 msgstr ""
-"Deje que sus empleados compartan puestos de trabajo y refieran a sus amigos"
+"Permite que tus empleados compartan ofertas de empleo y recomienden a sus "
+"amigos y conocidos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_hr_referral
@@ -33246,8 +33251,8 @@ msgstr ""
 msgid ""
 "Let your employees share job positions and refer their friends by WhatsApp"
 msgstr ""
-"Deje que sus empleados compartan puestos de trabajo y refieran a sus amigos "
-"por WhatsApp"
+"Permite que tus empleados compartan ofertas de empleo y recomienden a sus "
+"amigos y conocidos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_mondialrelay
@@ -33574,7 +33579,7 @@ msgstr "Tipo de cambio en vivo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
 msgid "Live Event Tracks"
-msgstr "Sesiones de eventos en vivo"
+msgstr "Sesiones del evento en directo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -34201,7 +34206,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_fleet
 msgid "Manage accounting with fleet features"
-msgstr "Gestione la contabilidad con funciones de Flota"
+msgstr "Gestiona la contabilidad con las funcionalidades de Flota"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
@@ -34231,7 +34236,7 @@ msgstr "Gestione y publica en una plataforma eLearning"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_asset_fleet
 msgid "Manage assets with fleets"
-msgstr "Gestione activos con Flota"
+msgstr "Gestiona activos con Flota"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_certificate
@@ -40753,7 +40758,7 @@ msgstr "TPV IoT Worldline"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_order_tracking_display
 msgid "PoS Order Tracking Customer Display"
-msgstr "Pantalla que el cliente verá al rastrear su pedido en el TPV"
+msgstr "Pantalla de seguimiento de pedidos para el cliente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
@@ -41136,7 +41141,7 @@ msgstr "Barcode Lookup para productos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_product_barcodelookup
 msgid "Product Barcode Lookup for eCommerce"
-msgstr "Barcode Lookup para productos para el comercio electrónico"
+msgstr "Búsqueda de código de barras de producto para comercio electrónico"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -41803,7 +41808,7 @@ msgstr "Acuerdos de compra"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_intrastat
 msgid "Purchase Intrastat"
-msgstr "Intrastat de compra"
+msgstr "Compra e Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_product_matrix
@@ -43702,7 +43707,7 @@ msgstr "Programa las reuniones de empleados"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_social
 msgid "Schedule push notifications on attendees"
-msgstr "Programa notificaciones push para asistentes"
+msgstr "Programar notificaciones push para los asistentes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
@@ -43965,7 +43970,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_subscription
 msgid "Sell subscription products on your eCommerce"
-msgstr "Venda productos de alquiler en su comercio electrónico"
+msgstr "Vende productos de suscripción en tu comercio electrónico"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
@@ -45502,12 +45507,12 @@ msgstr "Contabilidad de stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_barcodelookup
 msgid "Stock Barcode - Barcode Lookup"
-msgstr "Códigos de barras para stock - Barcode Lookup"
+msgstr "Código de barras de stock - Búsqueda de código de barras"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_intrastat
 msgid "Stock Intrastat"
-msgstr "Stock Intrastat"
+msgstr "Existencias e Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_intrastat_pos
@@ -47807,8 +47812,8 @@ msgid ""
 "This module allows you to display data get from barcode lookup API in the "
 "eCommerce"
 msgstr ""
-"Con este módulo podrá visualizar datos que recibió desde un código de barras "
-"usando una clave API de Barcode Lookup"
+"Este módulo te permite mostrar datos obtenidos de la API de búsqueda de "
+"códigos de barras en el comercio electrónico"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_server_actions
@@ -48134,7 +48139,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_delivery
 msgid "This module integrates Delivery with WhatsApp"
-msgstr "Este módulo integra Entregas con WhatsApp"
+msgstr "Este módulo integra Envíos con WhatsApp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp
@@ -48566,7 +48571,7 @@ msgstr "Ponentes de sesiones en marketing por SMS"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
 msgid "Track employee attendance"
-msgstr "Seguimiento de la asistencias de los empleados"
+msgstr "Seguimiento de la asistencia de los empleados"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
@@ -50609,7 +50614,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_iap_reveal_enterprise
 msgid "Website Visits Lead Generation Enterprise"
-msgstr "Generación de leads empresariales por visitas al sitio web"
+msgstr ""
+"Generación de clientes potenciales a partir de visitas al sitio web de la "
+"empresa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
@@ -51870,7 +51877,7 @@ msgstr "Alquiler por comercio electrónico con gestión de stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_subscription
 msgid "eCommerce Subscription"
-msgstr "Suscripción por comercio electrónico"
+msgstr "Suscripción y Comercio electrónico"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_appointment_sale

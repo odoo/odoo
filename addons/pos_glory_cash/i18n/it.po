@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-08-13 00:35+0000\n"
+"POT-Creation-Date: 2026-11-06 17:41+0000\n"
+"PO-Revision-Date: 2026-11-04 08:17+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_glory_cash/it/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -170,7 +170,7 @@ msgstr "Errore"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Error code:"
-msgstr ""
+msgstr "Codice di errore:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -181,7 +181,7 @@ msgstr "Impossibile completare l'autenticazione"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "Failed to cancel cash machine transaction."
+msgid "Failed to cancel cash machine transaction: %s."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -220,6 +220,12 @@ msgstr "TRANSAZIONE GLORY AVVENUTA CON SUCCESSO"
 #: model_terms:ir.ui.view,arch_db:pos_glory_cash.pos_payment_method_view_form_inherit_pos_glory_cash
 msgid "Glory Settings"
 msgstr "Impostazioni Glory"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Glory error animation."
+msgstr ""
 
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__id
@@ -263,6 +269,8 @@ msgid ""
 "Please remove the cash from the exit of the cash machine before starting a "
 "transaction."
 msgstr ""
+"Rimuovi i contanti dall'uscita del terminale di cassa prima di avviare una "
+"transazione."
 
 #. module: pos_glory_cash
 #: model:ir.model,name:pos_glory_cash.model_pos_payment_method
@@ -307,6 +315,12 @@ msgstr "Pagamento iniziale"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "The Glory machine is in an unknown error state."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr "L'ATM ha un errore, controlla lo schermo per avere più dettagli."
@@ -324,6 +338,8 @@ msgid ""
 "The cash machine is busy counting its inventory, please wait a few seconds "
 "and retry."
 msgstr ""
+"Il terminale di cassa è occupato a contare le scorte, attendi qualche "
+"secondo e riprova."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -362,6 +378,8 @@ msgid ""
 "The cash machine is not ready to start a transaction. Check all the covers "
 "are closed and then try again."
 msgstr ""
+"Il terminale di cassa non è pronto per avviare una transazione. Verifica che "
+"tutti i coperchi siano chiusi e riprova."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -374,7 +392,7 @@ msgstr "L'ATM ha quasi finito le seguenti monete/banconote:"
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is unable to return the inserted cash, please refund the "
-"client via another method."
+"client %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -403,8 +421,17 @@ msgstr "Il pagamento non è andato a buon fine per un motivo sconosciuto: %s"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
+"There is an error with the bill or coin device. The machine will now be "
+"reset and the contents verified. Once this is complete, the amount that must "
+"be returned to the customer will be displayed."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
 "There is insufficient cash in the machine to give change. You will need to "
-"refund the difference via another method."
+"refund %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -464,6 +491,23 @@ msgstr "In attesa dell'inserimento del contante"
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Waiting for inventory"
 msgstr "In attesa del magazzino"
+
+#~ msgid "Failed to cancel cash machine transaction."
+#~ msgstr "Impossibile annullare la transazione del terminale di cassa."
+
+#~ msgid ""
+#~ "The cash machine is unable to return the inserted cash, please refund the "
+#~ "client via another method."
+#~ msgstr ""
+#~ "Il terminale di cassa non è in grado di restituire il contante inserito, "
+#~ "rimborsa il cliente tramite un altro metodo."
+
+#~ msgid ""
+#~ "There is insufficient cash in the machine to give change. You will need "
+#~ "to refund the difference via another method."
+#~ msgstr ""
+#~ "Contanti insufficienti nel terminale per dare il resto. Sarà necessario "
+#~ "rimborsare la differenza tramite un altro metodo."
 
 #~ msgid "There is insufficient cash in the machine to give change."
 #~ msgstr "Non c'è abbastanza contante nella macchina per dare il resto."
