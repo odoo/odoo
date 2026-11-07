@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll, press, queryAllTexts, pointerDown } from "@odoo/hoot-dom";
+import { drag, queryAll, queryFirst, press, queryAllTexts, pointerDown } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData, Product } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -66,14 +66,48 @@ test("display the active spreadsheet", async () => {
     expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
 });
 
+async function foldSearchPanel() {
+    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 0 } });
+    await animationFrame();
+}
+
 test("Fold/unfold the search panel", async function () {
     await createSpreadsheetDashboard();
-    await contains(".o_spreadsheet_dashboard_search_panel button").click();
+    await foldSearchPanel();
     expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(0);
     expect(".o_search_panel_sidebar").toHaveText("Container 1 / Dashboard CRM 1");
-    await contains(".o_search_panel_sidebar button").click();
+    await contains(".o_search_panel_sidebar").click();
     expect(".o_search_panel_sidebar").toHaveCount(0);
     expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(1);
+});
+
+test("Resize the search panel and unfold it by dragging its resize handle", async function () {
+    await createSpreadsheetDashboard();
+    const originalWidth = queryFirst(".o_spreadsheet_dashboard_search_panel").offsetWidth;
+    let resizeHandle = queryFirst(".o_search_panel_resize");
+    let { moveTo, drop } = await drag(resizeHandle);
+    await moveTo(resizeHandle, { position: { x: 100 }, relative: true });
+    await drop();
+    await animationFrame();
+    const resizedWidth = queryFirst(".o_spreadsheet_dashboard_search_panel").offsetWidth;
+    expect(resizedWidth).toBeGreaterThan(originalWidth);
+
+    await foldSearchPanel();
+    expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(0);
+
+    resizeHandle = queryFirst(".o_search_panel_resize");
+    ({ moveTo, drop } = await drag(resizeHandle));
+    await moveTo(resizeHandle, { position: { x: 500 } });
+    await animationFrame();
+    expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(1);
+    expect(".o_search_panel_sidebar").toHaveCount(0);
+    await drop(".o_search_panel_resize", { position: { x: 500 } });
+    await animationFrame();
+    expect(queryFirst(".o_spreadsheet_dashboard_search_panel").offsetWidth).toBeGreaterThan(
+        originalWidth
+    );
 });
 
 test("Folding dashboard from 'FAVORITES' group shows correct active dashboard group", async function () {
@@ -94,17 +128,9 @@ test("Folding dashboard from 'FAVORITES' group shows correct active dashboard gr
     expect(".o_search_panel_category header b:first").toHaveText("FAVORITES");
     expect.verifySteps(["action_toggle_favorite"]);
 
-    await contains(".o_spreadsheet_dashboard_search_panel button").click();
+    await foldSearchPanel();
     expect(".o_spreadsheet_dashboard_search_panel").toHaveCount(0);
     expect(".o_search_panel_sidebar").toHaveText("Container 1 / Dashboard CRM 1");
-});
-
-test("Fold button invisible in the search panel without any dashboard", async function () {
-    const serverData = getDashboardServerData();
-    serverData.models["spreadsheet.dashboard"].records = [];
-    serverData.models["spreadsheet.dashboard.group"].records = [];
-    await createSpreadsheetDashboard({ serverData });
-    expect(".o_spreadsheet_dashboard_search_panel button").toHaveCount(0);
 });
 
 test("load action with specific dashboard", async () => {

@@ -1,6 +1,7 @@
-import { Component, proxy, useProps } from "@odoo/owl";
+import { Component, proxy, signal, useProps } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
+import { useResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
@@ -14,12 +15,35 @@ export class CalendarSidePanel extends Component {
     static template = "web.CalendarSidePanel";
     props = useProps(["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"]);
 
+    rootRef = signal.ref();
+    handleRef = signal.ref();
+    foldedRef = signal.ref();
+
     setup() {
         this.state = proxy({ isDragging: false });
         useBus(this.props.model.bus, "CALENDAR_EVENT_DRAG", ({ detail }) => {
             this.state.isDragging = detail.dragging;
         });
         this.uiService = useService("ui");
+
+        const getWidth = () =>
+            parseFloat(
+                getComputedStyle(this.handleRef()).getPropertyValue(
+                    "--o-datetime-picker-reduced-width"
+                )
+            );
+        useResizablePanel({
+            containerRef: this.rootRef,
+            handleRef: this.handleRef,
+            foldedRef: this.foldedRef,
+            resizeOnMount: false,
+            getMinWidth: getWidth,
+            getMaxWidth: getWidth,
+            getHandlerSpacing: () => 0,
+            getResizeSide: () => "start",
+            onFold: () => this.props.toggleSidePanel(),
+            onUnfold: () => this.props.toggleSidePanel(),
+        });
     }
 
     get datePickerProps() {

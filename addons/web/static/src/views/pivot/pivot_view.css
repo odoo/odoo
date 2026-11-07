@@ -1,4 +1,15 @@
 /* ------- Pivot renderer ------- */
+.o_pivot_renderer {
+    .o_search_panel_resize + &,
+    .o_search_panel_sidebar + & {
+        flex-grow: 1;
+        min-width: 0;
+        border: var(--border-width) solid var(--border-color);
+        border-bottom: 0;
+        padding-top: var(--o-bs-spacer-2);
+    }
+}
+
 .o_pivot table {
     width: var(--PivotView-width, auto);
 

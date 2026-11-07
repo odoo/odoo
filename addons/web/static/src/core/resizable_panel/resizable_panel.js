@@ -1,28 +1,88 @@
 import {
     Component,
     onMounted,
-    onWillUnmount,
+    onWillPatch,
     signal,
     t,
+    useEffect,
     useListener,
-    useOnChange,
     useProps,
 } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
-function useResizable({
+export function useResizablePanel({
     containerRef,
     handleRef,
+    foldedRef = () => null,
     initialWidth = 400,
-    getMinWidth = () => 400,
+    getMinWidth,
+    getMaxWidth = () => Infinity,
+    onFold,
+    onUnfold = () => {},
     onResize = () => {},
     getResizeSide = () => "end",
+    resizeOnMount = true,
+    getHandlerSpacing = (handleEl) => (handleEl ? handleEl.offsetWidth / 2 : 10),
 }) {
     const resizeableProps = useProps(resizablePanelProps);
 
     const isChangingSize = signal(false);
     let grabOffset = 0;
+    let isFolded = false;
+    let docDirection;
+    let currentWidth;
+    let pendingMountResize = false;
 
-    useListener(document, "mouseup", () => onMouseUp());
+    let cssWidth;
+    useEffect(() => {
+        const el = containerRef();
+        if (!el) {
+            return;
+        }
+        if (cssWidth === undefined) {
+            cssWidth = el.offsetWidth;
+        }
+        if (pendingMountResize) {
+            pendingMountResize = false;
+            resize(getMountWidth());
+        } else if (currentWidth !== undefined) {
+            el.style.setProperty("width", `${currentWidth}px`);
+        }
+    });
+    const resolveMinWidth = getMinWidth || (() => cssWidth ?? 0);
+
+    let wasFolded;
+    let lastWidth;
+    let sizeAnimation;
+    let sizeAnimationFrom;
+    const getSizeKeyframes = (to) => ({ width: [`${sizeAnimationFrom}px`, `${to}px`] });
+    onWillPatch(() => {
+        lastWidth = (containerRef() || foldedRef())?.offsetWidth;
+    });
+    useEffect(() => {
+        const el = containerRef() || foldedRef();
+        if (!el) {
+            return;
+        }
+        const folded = !containerRef();
+        if (
+            wasFolded !== undefined &&
+            folded !== wasFolded &&
+            !browser.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            sizeAnimationFrom = lastWidth;
+            sizeAnimation = el.animate(getSizeKeyframes(el.offsetWidth), {
+                duration: 125,
+                easing: "ease-out",
+            });
+            el.animate({ opacity: [0, 1] }, { duration: 200, easing: "ease-out" });
+            el.style.setProperty("overflow", "hidden", "important");
+            sizeAnimation.addEventListener("finish", () => el.style.removeProperty("overflow"));
+        }
+        wasFolded = folded;
+    });
+
+    useListener(document, "mouseup", () => stopChangingSize());
     useListener(document, "mousemove", (ev) => onMouseMove(ev));
 
     useListener(window, "resize", () => {
@@ -35,48 +95,73 @@ function useResizable({
         }
     });
 
-    let docDirection;
-    useOnChange(
-        () => [containerRef()],
-        (container) => {
-            if (container) {
-                docDirection = getComputedStyle(container).direction;
+    onMounted(() => {
+        if (resizeOnMount && handleRef()) {
+            if (containerRef()) {
+                resize(getMountWidth());
+            } else {
+                pendingMountResize = true;
             }
         }
-    );
-
-    onMounted(() => {
-        const handleEl = handleRef();
-        if (handleEl) {
-            resize(Math.max(initialWidth, getMinWidth(resizeableProps) || 0));
-            handleEl.addEventListener("mousedown", onMouseDown);
-        }
     });
 
-    onWillUnmount(() => {
-        handleRef()?.removeEventListener("mousedown", onMouseDown);
-    });
+    useListener(handleRef, "mousedown", onMouseDown);
+
+    function getMountWidth() {
+        return Math.max(initialWidth, resolveMinWidth(resizeableProps) || 0);
+    }
 
     function onMouseDown(ev) {
         isChangingSize.set(true);
-        grabOffset = getContainerRect().width - getPointerWidth(ev);
+        isFolded = !containerRef();
+        docDirection = getComputedStyle(handleRef()).direction;
+        const el = containerRef() || foldedRef();
+        grabOffset = getContainerRect(el).width - getPointerWidth(ev, el);
         document.body.classList.add("pe-none", "user-select-none");
+        document.documentElement.style.cursor = "col-resize";
     }
 
-    function onMouseUp() {
+    function stopChangingSize() {
         isChangingSize.set(false);
         document.body.classList.remove("pe-none", "user-select-none");
+        document.documentElement.style.cursor = "";
     }
 
     function onMouseMove(ev) {
-        if (!isChangingSize() || !containerRef()) {
+        const container = containerRef();
+        const foldedEl = foldedRef();
+        if (!isChangingSize() || !(container || foldedEl)) {
             return;
         }
-        resize(computeFinalWidth(getPointerWidth(ev) + grabOffset));
+        const el = container || foldedEl;
+        const newWidth = getPointerWidth(ev, el) + grabOffset;
+        const minWidth = resolveMinWidth(resizeableProps) || 0;
+        if (isFolded) {
+            const unfoldWidth = Math.max(
+                0.75 * minWidth,
+                foldedEl ? getContainerRect(foldedEl).width : 0
+            );
+            if (newWidth >= unfoldWidth) {
+                isFolded = false;
+                onUnfold();
+            }
+            return;
+        }
+        if (onFold && newWidth <= minWidth / 2) {
+            isFolded = true;
+            onFold();
+            return;
+        }
+        if (container) {
+            resize(computeFinalWidth(newWidth));
+        }
     }
 
-    /** @param {MouseEvent} ev */
-    function getPointerWidth(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @param {HTMLElement} el
+     */
+    function getPointerWidth(ev, el) {
         const resizeSide = getResizeSide(resizeableProps);
         const direction =
             (docDirection === "ltr" && resizeSide === "end") ||
@@ -84,19 +169,17 @@ function useResizable({
                 ? 1
                 : -1;
         const fixedSide = direction === 1 ? "left" : "right";
-        return (ev.clientX - getContainerRect()[fixedSide]) * direction;
+        return (ev.clientX - getContainerRect(el)[fixedSide]) * direction;
     }
 
     function computeFinalWidth(targetContainerWidth) {
-        const handleEl = handleRef();
-        const handlerSpacing = handleEl ? handleEl.offsetWidth / 2 : 10;
-        const w = Math.max(getMinWidth(resizeableProps), targetContainerWidth);
-        const limit = getLimitWidth();
+        const handlerSpacing = getHandlerSpacing(handleRef());
+        const w = Math.max(resolveMinWidth(resizeableProps), targetContainerWidth);
+        const limit = Math.min(getLimitWidth(), getMaxWidth(resizeableProps));
         return Math.min(w, limit - handlerSpacing);
     }
 
-    function getContainerRect() {
-        const container = containerRef();
+    function getContainerRect(container = containerRef()) {
         const offsetParent = container.offsetParent;
         let containerRect = {};
         if (!offsetParent) {
@@ -115,6 +198,10 @@ function useResizable({
     }
 
     function resize(width) {
+        if (sizeAnimation?.playState === "running") {
+            sizeAnimation.effect.setKeyframes(getSizeKeyframes(width));
+        }
+        currentWidth = width;
         containerRef().style.setProperty("width", `${width}px`);
         onResize(width);
     }
@@ -132,7 +219,7 @@ export const resizablePanelProps = {
 };
 
 export class ResizablePanel extends Component {
-    static template = "web_studio.ResizablePanel";
+    static template = "web.ResizablePanel";
 
     static components = {};
     props = useProps(resizablePanelProps);
@@ -141,7 +228,7 @@ export class ResizablePanel extends Component {
     handleRef = signal.ref();
 
     setup() {
-        this.resizable = useResizable({
+        this.resizable = useResizablePanel({
             containerRef: this.containerRef,
             handleRef: this.handleRef,
             onResize: this.props.onResize,
