@@ -19,3 +19,8 @@ class MailingContact(models.Model):
         return super()._from_partners_get_create_vals(partner) | {
             'mobile': partner.phone,
         }
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        super()._onchange_partner_id()
+        self.mobile = self.partner_id.phone if self.partner_id.phone else False
