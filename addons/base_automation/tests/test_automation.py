@@ -288,7 +288,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
         date = datetime(2025, 6, 24, 18)
         self.env['resource.calendar.leaves'].create({
             'name': "Long Leaves",
-            'calendar_id': calendar.id,
+            'calendar_ids': [calendar.id],
             'date_from': datetime(2021, 6, 5, 8),
             'date_to': date,
         })

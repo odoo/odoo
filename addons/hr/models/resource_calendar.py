@@ -65,13 +65,13 @@ class ResourceCalendar(models.Model):
         """
         from_date = from_date or fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         domain = [
-            ('calendar_id', 'in', self.ids),
+            ('calendar_ids', 'in', self.ids),
             ('date_from', '>=', from_date),
         ]
         domain = Domain.AND([domain, [('resource_id', 'in', resources.ids)]]) if resources else domain
 
         self.env['resource.calendar.leaves'].search(domain).write({
-            'calendar_id': other_calendar.id,
+            'calendar_ids': [other_calendar.id],
         })
 
     def action_duplicate_and_apply_to_employee(self):

@@ -417,7 +417,7 @@
     <record id="resource_public_time_off_1" model="resource.calendar.leaves">
         <field name="name">Public Time Off</field>
         <field name="company_id" ref="base.main_company"/>
-        <field name="calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="calendar_ids" eval="[(6, 0, [ref('resource.resource_calendar_std')])]"/>
         <field name="date_from" eval="time.strftime('%Y-02-13 05:00:00')"/>
         <field name="date_to" eval="time.strftime('%Y-02-13 17:00:00')"/>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_leave"></field>

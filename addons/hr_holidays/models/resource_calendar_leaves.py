@@ -18,7 +18,7 @@ class ResourceCalendarLeaves(models.Model):
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', default=False,
         help="If checked, this time type will be taken into account for accruals computation.")
 
-    @api.constrains('date_from', 'date_to', 'calendar_id')
+    @api.constrains('date_from', 'date_to', 'calendar_ids')
     def _check_compare_dates(self):
         """Forbid overlapping public holidays in the same company and calendar."""
         all_existing_leaves = self.env['resource.calendar.leaves'].search([
@@ -34,9 +34,9 @@ class ResourceCalendarLeaves(models.Model):
                         and record['company_id'] == leave['company_id']
                         and record['date_from'] <= leave['date_to']
                         and record['date_to'] >= leave['date_from'])
-                if record.calendar_id:
+                if record.calendar_ids:
                     existing_leaves = existing_leaves.filtered(
-                        lambda leave: not leave.calendar_id or leave.calendar_id == record.calendar_id)
+                        lambda leave: not leave.calendar_ids or leave.calendar_ids == record.calendar_ids)
                 if existing_leaves:
                     raise ValidationError(self.env._('Two public holidays cannot overlap each other for the same working hours.'))
 
@@ -156,10 +156,11 @@ class ResourceCalendarLeaves(models.Model):
 
         return res
 
-    @api.depends('calendar_id')
+    @api.depends('calendar_ids')
     def _compute_company_id(self):
         for leave in self:
-            leave.company_id = leave.holiday_id.employee_id.company_id or leave.calendar_id.company_id or leave.company_id or self.env.company
+            for calendar in leave.calendar_ids:
+                leave.company_id = leave.holiday_id.employee_id.company_id or calendar.company_id or leave.company_id or self.env.company
 
     def load_public_holidays(self):
         return {
