@@ -21,11 +21,61 @@ export default class DevicesSynchronisation {
     setup(dynamicModels, staticModels, posStore) {
         this.dynamicModels = new Set(dynamicModels);
         this.staticModels = new Set(staticModels);
+        this.orderNotifications = new Map();
+        this.activeSound = null;
+
         this.pos = posStore;
+        this.sound = posStore.soundEffects;
+        this.notification = posStore.notification;
         this.models = posStore.models;
 
         // Connect websocket to receive synchronisation notification
         this.pos.data.connectWebSocket("SYNCHRONISATION", this.collect.bind(this));
+        this.pos.data.connectWebSocket("SNOOZE_NOTIFICATION", (orderId) =>
+            this.snoozeNotification(orderId)
+        );
+    }
+
+    /**
+     * When an order is received from another device, display a notification to the user.
+     * @param {Object} order - The order object received from another device.
+     */
+    displayNotification(order, { message, name, onClick }, sound = "order-receive-tone") {
+        if (this.orderNotifications.has(order.id)) {
+            return;
+        }
+        if (!this.activeSound) {
+            this.activeSound = sound;
+            this.sound.play(sound, { loop: true, volume: 1 });
+        }
+        const closeNotification = this.notification.add(message, {
+            type: "success",
+            sticky: true,
+            buttons: [{ name, onClick }],
+            onClose: () => this.snoozeNotification(order.id, true),
+        });
+        this.orderNotifications.set(order.id, closeNotification);
+    }
+
+    /**
+     * When another device snoozes a notification for an order.
+     * @param {Number} orderId - The ID of the order for which the notification was snoozed.
+     */
+    snoozeNotification(orderId, notify = false) {
+        const closeNotification = this.orderNotifications.get(orderId);
+        if (!closeNotification) {
+            return;
+        }
+        if (this.activeSound) {
+            this.sound.stop(this.activeSound);
+            this.activeSound = null;
+        }
+        // Delete before closing: onClose calls back into this method.
+        this.orderNotifications.delete(orderId);
+        closeNotification();
+        if (notify) {
+            this.pos.data.call("pos.order", "snooze_notification", [orderId]);
+        }
     }
 
     /**
