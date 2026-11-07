@@ -833,6 +833,8 @@ registry.category("web_tour.tours").add("test_weight_product", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Acme Corporation"),
             ProductScreen.clickDisplayedProduct("Vanela Gathiya"),
             inLeftSide([
                 Numpad.click("Price"),
@@ -846,7 +848,8 @@ registry.category("web_tour.tours").add("test_weight_product", {
                 }),
             ]),
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
-            ProductConfiguratorPopup.pickRadio("Leather"),
+            ProductConfiguratorPopup.pickRadio("Other"),
+            ProductConfiguratorPopup.fillCustomAttribute("Test custom value"),
             Chrome.clickBtn("Add"),
             inLeftSide([
                 Numpad.click("Price"),
@@ -860,6 +863,7 @@ registry.category("web_tour.tours").add("test_weight_product", {
                 }),
             ]),
             ProductScreen.clickPayButton(),
+            PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
