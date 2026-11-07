@@ -39,6 +39,7 @@ import {
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Meeting } from "@mail/discuss/call/common/meeting";
 import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_plugin";
+import { TalkingDetector } from "@mail/discuss/call/common/talking_detector";
 
 import {
     advanceTime,
@@ -53,7 +54,7 @@ import {
     queryFirst,
     test,
 } from "@odoo/hoot";
-import { animationFrame, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
+import { animationFrame, press, tick, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import {
     Command,
     contains,
@@ -2892,4 +2893,98 @@ test("meeting ready banner is hidden in chat but shown in channel", async () => 
     await waitUntil(() => meeting?.channel?.id === channelId);
     expect(meeting.showInviteBanner).toBe(true);
     await waitFor(".o-mail-MeetingReadyBanner button:text('Add Others'):count(1)");
+});
+
+async function setTalkingForXdutyCycle(session, dutyCycle, clock, talking) {
+    const durationMs = TalkingDetector.WINDOW_MS * dutyCycle;
+    session.isTalking = talking;
+    await tick();
+    clock.now += durationMs;
+    if (talking) {
+        session.isTalking = false;
+        await tick();
+    }
+}
+
+test("intentional talking while muted shows the suggestion", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    const clock = { now: 0 };
+    rtc.talkingDetector.now = () => clock.now;
+    const session = rtc.selfSession;
+    session.is_muted = true;
+    // talk half the threshold
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD / 2, clock, true);
+    // don't talk for 10% of window, speech breaks (10% inactive)
+    await setTalkingForXdutyCycle(session, 0.1, clock, false);
+    // talk for the other half of the threshold
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD / 2, clock, true);
+    await waitFor(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion:count(1)");
+    // toggle mic off and on, the suggestion should disappear
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await waitForNone(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion");
+    // unsustained talking should not show the suggestion
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD / 2, clock, true);
+    await animationFrame();
+    await waitForNone(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion");
+});
+
+test("mute suggestion auto-hides after prolonged silence", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    const clock = { now: 0 };
+    rtc.talkingDetector.now = () => clock.now;
+    const session = rtc.selfSession;
+    session.is_muted = true;
+    freezeTime();
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, clock, true);
+    await waitFor(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion:count(1)");
+    await advanceTime(TalkingDetector.AUTO_HIDE_DELAY_MS - 100);
+    clock.now += TalkingDetector.AUTO_HIDE_DELAY_MS - 100;
+    await waitFor(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion:count(1)");
+    await advanceTime(100);
+    clock.now += 100;
+    await waitForNone(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion");
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, clock, true);
+    await waitFor(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion:count(1)");
+});
+
+test("mute suggestion dismissal, reappearance and denial", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    const rtc = getService("discuss.rtc");
+    const clock = { now: 0 };
+    rtc.talkingDetector.now = () => clock.now;
+    const session = rtc.selfSession;
+    session.is_muted = true;
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, clock, true);
+    await waitFor(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion:count(1)");
+    await contains("div[title='Dismiss warning']:count(1)").click();
+    await waitForNone(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion");
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, clock, true);
+    await waitFor(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion:count(1)");
+    await contains(".o-discuss-MicrophoneWarning-disableButton:count(1)").click();
+    await waitForNone(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion");
+    await contains("button[title='Unmute']:count(1)").click();
+    await contains("button[title='Mute']:count(1)").click();
+    await setTalkingForXdutyCycle(session, TalkingDetector.DUTY_CYCLE_THRESHOLD, clock, true);
+    await animationFrame();
+    await waitForNone(".o_popover .o-discuss-MicrophoneWarning-talkWhileMutedSuggestion");
 });
