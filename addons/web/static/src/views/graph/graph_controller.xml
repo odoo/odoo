@@ -5,9 +5,9 @@
         <div class="btn-group" role="toolbar" aria-label="Main actions">
             <ReportViewMeasures
                 measures="this.model.metaData.measures"
-                activeMeasures="[this.model.metaData.measure]"
+                activeMeasures="this.displayedMeasures"
+                multiSelect="this.model.metaData.mode === 'pie'"
                 onMeasureSelected.bind="this.onMeasureSelected"
-                multiSelect="false"
             />
         </div>
 
