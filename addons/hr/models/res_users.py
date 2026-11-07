@@ -13,7 +13,7 @@ from odoo.addons.mail.tools.discuss import Store
 from .hr_employee_location import DAYS
 
 
-def related_employee_field(name: str, *, field_name: str | None = None, string: str = '__default__'):
+def related_employee_field(name: str, *, field_name: str | None = None, string: str = '__default__', sudo: bool = False):
     """Simulating a related field "employee_id.{name}".
 
     Current user is read and updated with `sudo()`. Otherwise, behaves as a
@@ -22,6 +22,8 @@ def related_employee_field(name: str, *, field_name: str | None = None, string: 
     :param field_name: provide if you name your field in some other way than
         on the employee model
     :param string: field label override
+    :param sudo: read the employee of every user with `sudo()`, like a related
+        field with `related_sudo=True` (for public fields like the job title)
     """
     # simulating a related field which bypasses access only for the current user
     if field_name is None:
@@ -32,7 +34,7 @@ def related_employee_field(name: str, *, field_name: str | None = None, string: 
     def compute_employee_field(self):
         current_user = self.env.user
         for user in self:
-            if user == current_user:
+            if sudo or user == current_user:
                 employee = user.sudo().employee_id.with_prefetch()
             else:
                 employee = user.employee_id
@@ -98,13 +100,13 @@ class ResUsers(models.Model):
         compute='_compute_company_employee', search='_search_company_employee', readonly=True)
     department_id = fields.Many2one(related='employee_id.department_id', string='Department')
 
-    job_title = fields.Char(**related_employee_field('job_title'), user_writeable=True)
+    job_title = fields.Char(**related_employee_field('job_title', sudo=True), user_writeable=True)
     work_phone = fields.Char(**related_employee_field('work_phone'), user_writeable=True)
     mobile_phone = fields.Char(**related_employee_field('mobile_phone'), user_writeable=True)
     work_email = fields.Char(**related_employee_field('work_email'), user_writeable=True)
     category_ids = fields.Many2many('hr.employee.category', **related_employee_field('category_ids', string="Employee Tags"), user_writeable=True)
     work_contact_id = fields.Many2one('res.partner', **related_employee_field('work_contact_id'))
-    work_location_id = fields.Many2one('hr.work.location', **related_employee_field('work_location_id'), user_writeable=True)
+    work_location_id = fields.Many2one('hr.work.location', **related_employee_field('work_location_id', sudo=True), user_writeable=True)
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
     private_street = fields.Char(**related_employee_field('private_street'), user_writeable=True)
