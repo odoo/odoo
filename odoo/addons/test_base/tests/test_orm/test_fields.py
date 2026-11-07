@@ -1468,6 +1468,59 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             with self.subTest(fname=fname):
                 self.assertEqual(self._search(Foo, [(fname, '=', False)]), foo_empty)
 
+    def test_25_related_inverse_value(self):
+        """ after inverting a related field, its value must be the value of the
+        target field, as computed by the related field """
+        # non-stored: 'priority' is inherited from test_orm.message, whose
+        # write() forces priority to 5
+        email = self.env['test_orm.emailmessage'].create({'body': 'Hello'})
+        email.priority = 4
+        self.assertEqual(email.message.priority, 5)
+        self.assertEqual(email.priority, 5)
+
+        email.invalidate_recordset(['priority'])
+        self.assertEqual(email.priority, 5)
+
+        # stored: the target's value must end up in database, as the field is
+        # not recomputed after its inverse
+        record = self.env['test_orm.related'].create({'message': email.message.id})
+        record.message_priority = 3
+        self.assertEqual(record.message_priority, 5)
+
+        record.flush_recordset(['message_priority'])
+        self.env.invalidate_all()
+        self.assertEqual(record.message_priority, 5)
+
+    def test_25_related_inverse_empty_path(self):
+        """ assigning a related field whose path is empty leaves the null value,
+        as computed by the related field """
+        # non-stored, on records with and without target
+        discussion = self.env['test_orm.discussion'].create({
+            'name': 'D',
+            'participants': [Command.link(self.env.user.id)],
+        })
+        message0 = self.env['test_orm.message'].create({'body': 'Hello'})
+        message1 = self.env['test_orm.message'].create({'body': 'Hi', 'discussion': discussion.id})
+        (message0 + message1).discussion_name = 'Foo'
+        self.assertEqual(discussion.name, 'Foo')
+        self.assertFalse(message0.discussion_name)
+        self.assertEqual(message1.discussion_name, 'Foo')
+
+        message0.invalidate_recordset(['discussion_name'])
+        self.assertFalse(message0.discussion_name)
+
+        # stored, on create and write
+        record = self.env['test_orm.related'].create({'message_priority': 4})
+        self.assertFalse(record.message)
+        self.assertEqual(record.message_priority, 0)
+
+        record.message_priority = 3
+        self.assertEqual(record.message_priority, 0)
+
+        record.flush_recordset(['message_priority'])
+        self.env.invalidate_all()
+        self.assertEqual(record.message_priority, 0)
+
     def test_25_one2many_inverse_related(self):
         left = self.env['test_orm.trigger.left'].create({})
         right = self.env['test_orm.trigger.right'].create({})

@@ -103,40 +103,67 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
     def test_08_purchases_multi_linkages(self):
         """Directly link POs to each other as 'Alternatives': check linking/unlinking
         POs that are already linked correctly work."""
+
+        def assert_groups(expected_groups):
+            self.env.invalidate_all()
+            pos = self.env['purchase.order'].concat(po for group in expected_groups for po in group)
+            po_groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
+            expected_group_names = sorted(sorted(po.name for po in group) for group in expected_groups)
+            real_group_names = []
+            for purchase_group, pos_ in pos.grouped('purchase_group_id').items():
+                if purchase_group:
+                    real_group_names.append(sorted(po.name for po in pos_))
+                else:
+                    for po in pos_:
+                        real_group_names.append([po.name])
+            real_group_names.sort()
+            self.assertEqual(real_group_names, expected_group_names)
+            self.assertEqual(len(po_groups), len([group for group in expected_groups if len(group) > 1]))
+
         pos = []
-        for _ in range(5):
+        for i in range(1, 6):
             pos += self.env['purchase.order'].create({
+                'name': f'PO{i}',
                 'partner_id': self.res_partner_1.id,
             }).ids
         pos = self.env['purchase.order'].browse(pos)
         po_1, po_2, po_3, po_4, po_5 = pos
 
-        po_1.alternative_po_ids |= po_2
-        po_3.alternative_po_ids |= po_4
-        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
-        self.assertEqual(len(po_1.alternative_po_ids), 2, "PO1 and PO2 should only be linked to each other")
-        self.assertEqual(len(po_3.alternative_po_ids), 2, "PO3 and PO4 should only be linked to each other")
-        self.assertEqual(len(groups), 2, "There should only be 2 groups: (PO1,PO2) and (PO3,PO4)")
+        po_1.alternative_po_ids = [Command.link(po_2.id)]
+        po_3.alternative_po_ids = [Command.link(po_4.id)]
+        assert_groups([[po_1, po_2], [po_3, po_4], [po_5]])
 
         # link non-linked PO to already linked PO
-        po_5.alternative_po_ids |= po_4
-        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
-        self.assertEqual(len(po_3.alternative_po_ids), 3, "PO3 should now be linked to PO4 and PO5")
-        self.assertEqual(len(po_4.alternative_po_ids), 3, "PO4 should now be linked to PO3 and PO5")
-        self.assertEqual(len(po_5.alternative_po_ids), 3, "PO5 should now be linked to PO3 and PO4")
-        self.assertEqual(len(groups), 2, "There should only be 2 groups: (PO1,PO2) and (PO3,PO4,PO5)")
+        po_5.alternative_po_ids = [Command.link(po_4.id)]
+        assert_groups([[po_1, po_2], [po_3, po_4, po_5]])
 
         # link already linked PO to already linked PO
-        po_5.alternative_po_ids |= po_1
-        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
-        self.assertEqual(len(po_1.alternative_po_ids), 5, "All 5 POs should be linked to each other now")
-        self.assertEqual(len(groups), 1, "There should only be 1 group containing all 5 POs (other group should have auto-deleted")
+        po_5.alternative_po_ids = [Command.link(po_1.id)]
+        assert_groups([[po_1, po_2, po_3, po_4, po_5]])
 
-        # remove all links, make sure group auto-deletes
-        (pos - po_5).alternative_po_ids = [Command.clear()]
-        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
-        self.assertEqual(len(po_5.alternative_po_ids), 0, "Last PO should auto unlink from itself since group should have auto-deleted")
-        self.assertEqual(len(groups), 0, "The group should have auto-deleted")
+        po_1.alternative_po_ids = [Command.unlink(po_2.id)]
+        assert_groups([[po_1, po_3, po_4, po_5], [po_2]])
+
+        po_1.alternative_po_ids = [Command.unlink(po_4.id), Command.unlink(po_5.id), Command.link(po_2.id)]
+        assert_groups([[po_1, po_2, po_3], [po_4], [po_5]])
+
+        # not possible from UI, but the behavior is described below
+
+        # clear all links
+        pos.alternative_po_ids = [Command.clear()]
+        assert_groups([[po_1], [po_2], [po_3], [po_4], [po_5]])
+
+        # union update when po.alternative_po_ids was empty
+        po_1.alternative_po_ids |= po_2
+        assert_groups([[po_1, po_2], [po_3], [po_4], [po_5]])
+
+        # union update when po.alternative_po_ids was not empty
+        po_1.alternative_po_ids |= po_3 + po_4
+        assert_groups([[po_1, po_2, po_3, po_4], [po_5]])
+
+        # remove self from the group
+        po_1.alternative_po_ids = [Command.unlink(po_1.id)]
+        assert_groups([[po_1], [po_2, po_3, po_4], [po_5]])
 
     def test_09_alternative_po_line_price_unit(self):
         """Checks PO line's `price_unit` is keep even if a line from an
