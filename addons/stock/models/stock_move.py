@@ -2970,7 +2970,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def action_scrap(self):
         self.ensure_one()
-        if self.uom_id.is_zero(self.quantity):
+        if self.uom_id.compare(self.quantity, 0) <= 0:
             raise UserError(_("You can only enter positive quantities."))
         if self.product_id.tracking in ['lot', 'serial'] and not self.lot_ids:
             raise UserError(_("You must select a lot/serial number."))
