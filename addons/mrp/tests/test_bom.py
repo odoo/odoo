@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions, Command, fields
-from odoo.tests import Form
+from odoo.tests import Form, new_test_user
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tools import float_compare, float_round, float_repr
 
@@ -2557,3 +2557,18 @@ class TestBoM(TestMrpCommon):
         mo_form.bom_id = test_bom
         mo = mo_form.save()
         self.assertEqual(mo.workorder_ids.operation_id, kit_bom.operation_ids.filtered(lambda op: op.bom_product_template_attribute_value_ids == blue))
+
+    def test_archive_product_without_bom_access(self):
+        """ A user who may edit products but not read the BoMs can archive them: the BoMs
+        of an archived product follow it, and archiving a component still warns that it is
+        used in an active BoM. """
+        user = new_test_user(self.env, login='product_editor', groups='base.group_user,base.group_system')
+        for component in (self.product_2.product_tmpl_id, self.product_1):
+            res = component.with_user(user).action_archive()
+            self.assertFalse(component.active)
+            self.assertEqual(res['params']['type'], 'warning')
+
+        self.product_4.product_tmpl_id.with_user(user).action_archive()
+        self.product_5.with_user(user).action_archive()
+        self.assertFalse(self.bom_1.active)
+        self.assertFalse(self.bom_2.active)

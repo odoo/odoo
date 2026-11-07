@@ -594,7 +594,7 @@ class Product(models.Model):
 
     def write(self, values):
         if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).orderpoint_ids.write({
+            self.filtered(lambda p: p.active != values['active']).sudo().with_context(active_test=False).orderpoint_ids.write({
                 'active': values['active']
             })
         return super().write(values)
