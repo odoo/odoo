@@ -102,6 +102,9 @@ class PosConfig(models.Model):
             'pos_restaurant.pos_takeout_preset',
             'pos_restaurant.pos_delivery_preset',
         ]) + self.env['pos.preset'].search([]).ids
+        presets = self.env['pos.preset'].sudo().browse(presets).filtered(
+            lambda p: not p.company_id or p.company_id == self.env.company
+        ).ids
         config = self.env['pos.config'].create({
             'name': _('Restaurant'),
             'company_id': self.env.company.id,
