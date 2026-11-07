@@ -81,6 +81,14 @@ class IrModuleModule(models.Model):
                         ChartTemplate = self.env['account.chart.template'].with_company(company)
                         module_template_data = ChartTemplate._get_chart_template_data(company.chart_template, demo, self.name)
                         module_template_data.pop('template_data', None)
+                        if demo:
+                            # Demo data is only loaded once: keep records already loaded on the company
+                            # (e.g. by the module's own demo company), some of them may be posted moves.
+                            for model, records in list(module_template_data.items()):
+                                for xmlid in [x for x in records if ChartTemplate.ref(x, raise_if_not_found=False)]:
+                                    del records[xmlid]
+                                if not records:
+                                    del module_template_data[model]
                         if module_template_data:
                             ChartTemplate._pre_reload_data(company, {}, module_template_data, force_update=True)
                             ChartTemplate._pre_load_data(company.chart_template, company, {}, module_template_data)
