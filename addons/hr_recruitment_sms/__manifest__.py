@@ -7,6 +7,7 @@
     'depends': ['hr_recruitment', 'sms'],
     'data': [
         'views/hr_applicant_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

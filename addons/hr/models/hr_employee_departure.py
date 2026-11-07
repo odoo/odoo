@@ -45,7 +45,9 @@ class HrEmployeeDeparture(models.Model):
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
     action_date = fields.Date(string="Archive Employee On", compute="_compute_action_date",
-        store=True, help="Date at which the departure actually takes place.")
+        store=True, help="Date at which the employee (and their user, if they have no other active employee)"
+                         " is archived, by default the day after the departure. If it is today or earlier,"
+                         " the departure is applied on confirmation; otherwise it is scheduled for that date.")
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,

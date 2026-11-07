@@ -65,7 +65,7 @@ class HrAttendance(models.Model):
     out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_longitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
-    out_ip_address = fields.Char(readonly=True)
+    out_ip_address = fields.Char(string="Out IP Address", readonly=True)
     out_browser = fields.Char(readonly=True)
     out_mode = fields.Selection(selection=[('kiosk', "Kiosk"),
                                            ('systray', "Systray"),
