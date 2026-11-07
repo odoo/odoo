@@ -404,44 +404,6 @@
                     </record>
                 </field>
             </record>
-            <record id="l10n_ca_tr_pst_mb_2" model="account.report.line">
-                <field name="name">2 - Commission</field>
-                <field name="code">CaMb2</field>
-                <field name="hierarchy_level">3</field>
-                <field name="expression_ids">
-                    <!--
-                    We need to handle very special computation for commissions
-                    if CaMb1.balance <= 3 then CaMb1.balance
-                    elif CaMb1.balance <= 20 then 3
-                    elif CaMb1.balance <= 3000 then (max(200, CaMb1.balance) * 15 + min(0, CaMb1.balance-200)) / 100
-                    else: => 0
-                    -->
-                    <record id="l10n_ca_tr_pst_mb_2_under_3" model="account.report.expression">
-                        <field name="label">under_3</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">CaMb1.balance - 3</field>
-                        <field name="subformula">if_below(CAD(0))</field>
-                    </record>
-                    <record id="l10n_ca_tr_pst_mb_2_under_200" model="account.report.expression">
-                        <field name="label">under_200</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">(CaMb1.balance - 20) * 0.15</field>
-                        <field name="subformula">if_above(CAD(0))</field>
-                    </record>
-                    <record id="l10n_ca_tr_pst_mb_2_under_3000" model="account.report.expression">
-                        <field name="label">under_3000</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">-(CaMb1.balance - 200) * 0.14</field>
-                        <field name="subformula">if_below(CAD(0))</field>
-                    </record>
-                    <record id="l10n_ca_tr_pst_mb_2_balance" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">3 + CaMb2.under_3 + CaMb2.under_200 + CaMb2.under_3000</field>
-                        <field name="subformula">if_between(CAD(0), CAD(58))</field>
-                    </record>
-                </field>
-            </record>
             <record id="l10n_ca_tr_pst_mb_3" model="account.report.line">
                 <field name="name">3 - Tax Owing on Purchases</field>
                 <field name="name@fr">3 - Taxe sur les achats frappés d'une taxe</field>
@@ -473,7 +435,7 @@
                 <field name="name">4 - Total Amount Due</field>
                 <field name="name@fr">4 - Montant total dû</field>
                 <field name="code">CaMb4</field>
-                <field name="aggregation_formula">CaMb1.balance - CaMb2.balance + CaMb3.balance + CaMb35.balance</field>
+                <field name="aggregation_formula">CaMb1.balance + CaMb3.balance + CaMb35.balance</field>
             </record>
         </field>
     </record>
