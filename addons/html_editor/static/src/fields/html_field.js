@@ -167,7 +167,7 @@ export class HtmlField extends Component {
         // Update the actual editable if still in the DOM.
         if (this.editor.editable && oldSrcToNewSrcMap) {
             this.editor.editable
-                .querySelectorAll('.o_b64_image_to_save, .o_modified_image_to_save')
+                .querySelectorAll('.o_b64_image_to_save, .o_modified_image_to_save, img[src*=".webp"]')
               .forEach((unsavedImage) => {
                 const oldSrc = unsavedImage.getAttribute('src');
                 if (oldSrcToNewSrcMap.has(oldSrc)) {
