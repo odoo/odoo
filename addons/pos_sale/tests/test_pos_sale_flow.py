@@ -2441,6 +2441,52 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
 
+    def test_order_without_picking(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'name': self.product_a.name,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                    'product_uom': self.product_a.uom_id.id
+                })
+            ],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        self.env['pos.order'].create({
+            'amount_paid': 0,
+            'amount_return': 0,
+            'amount_tax': sale_order.amount_tax,
+            'amount_total': sale_order.amount_total,
+            'session_id': current_session.id,
+            'config_id': current_session.config_id.id,
+            'user_id': self.env.user.id,
+            'partner_id': sale_order.partner_id.id,
+            'pricelist_id': sale_order.pricelist_id.id,
+            'fiscal_position_id': sale_order.fiscal_position_id.id,
+            'state': 'done',
+            'lines': [
+                Command.create({
+                    'product_id': line.product_id.id,
+                    'qty': line.product_uom_qty,
+                    'price_unit': line.price_unit,
+                    'discount': line.discount,
+                    'tax_ids': [Command.set(line.tax_id.ids)],
+                    'price_subtotal': line.price_subtotal,
+                    'price_subtotal_incl': line.price_total,
+                    'sale_order_origin_id': line.order_id.id,
+                    'sale_order_line_id': line.id,
+                })
+                for line in sale_order.order_line
+            ],
+        })
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosSaleAccount(TestPoSCommon):
