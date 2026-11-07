@@ -1,3 +1,5 @@
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
+
 import { _t } from "@web/core/l10n/translation";
 import { FormController } from "@web/views/form/form_controller";
 import { useService } from "@web/core/utils/hooks";
@@ -10,6 +12,7 @@ export class ProjectSharingFormController extends FormController {
 
     setup() {
         super.setup();
+        useAncestors({ projectSharingId: this.props.context.active_id_chatter });
         this.notification = useService("notification");
         useListener(window, "paste", this.onGlobalPaste.bind(this), { capture: true });
         useListener(window, "drop", this.onGlobalDrop.bind(this), { capture: true });

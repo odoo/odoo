@@ -67,6 +67,36 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Go to the form view of this new task',
     run: "click",
 }, {
+    trigger: '.o-mail-Composer-html',
+    content: 'Write a message in the chatter of the task',
+    run: "editor I create a new task for testing purpose.",
+}, {
+    trigger: '.o-mail-Composer-send:enabled',
+    content: 'Send the message',
+    run: "click",
+}, {
+    trigger: '.o-mail-Message:has(:text(I create a new task for testing purpose.))',
+    content: 'Hover the sent message to display its actions',
+    run: "hover",
+}, {
+    trigger: ".o-mail-Message:has(:text(I create a new task for testing purpose.)) [title='Expand']",
+    content: 'Open the actions of the sent message',
+    run: "click",
+}, {
+    trigger: '.o-dropdown-item:text(Delete)',
+    content: 'Delete the sent message',
+    run: "click",
+}, {
+    trigger: '.modal-body p:text(Are you sure you want to permanently delete this message?)',
+    content: 'Check that the delete confirmation is displayed',
+}, {
+    trigger: '.modal .btn:text(Delete)',
+    content: 'Confirm the deletion',
+    run: "click",
+}, {
+    trigger: '.o-mail-Thread:not(:has(.o-mail-Message))',
+    content: 'Check that the deleted message is removed from the chatter',
+}, {
     trigger: 'div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
     content: 'Change the stage of the task.',
     run: "click",
@@ -77,14 +107,6 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: '.o-mail-Message-body.o_track:contains(Done)',
     content: 'The stage change tracking must be visible in the chatter',
-}, {
-    trigger: '.o-mail-Composer-html',
-    content: 'Write a message in the chatter of the task',
-    run: "editor I create a new task for testing purpose.",
-}, {
-    trigger: '.o-mail-Composer-send:enabled',
-    content: 'Send the message',
-    run: "click",
 }, {
     trigger: 'ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',
     content: 'Go back to the kanban view',

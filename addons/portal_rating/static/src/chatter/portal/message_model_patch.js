@@ -10,7 +10,7 @@ patch(Message.prototype, {
         return super.bubbleColor;
     },
 
-    shouldHideFromMessageListOnDelete(_env) {
+    shouldHideFromMessageListOnDelete(_ancestors) {
         if (this.thread?.ratingChatter && this.rating_value !== null) {
             return true;
         }
