@@ -558,6 +558,9 @@ export class StaticList extends DataPoint {
                         const linkToIndex = ownCommands.findIndex((x) => x.command[0] === LINK);
                         if (linkToIndex >= 0) {
                             ownCommands.splice(linkToIndex, 1);
+                        } else if (ownCommands.some((x) => x.command[0] === CREATE)) {
+                            // the record is new: forget it instead of unlinking it
+                            ownCommands.splice(0);
                         } else {
                             addOwnCommand([UNLINK, command[1]]);
                         }
