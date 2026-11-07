@@ -4,7 +4,6 @@ import { useProps, t } from "@odoo/owl";
 export class SpacingOption extends BaseOptionComponent {
     static template = "website.SpacingOption";
     props = useProps({
-        level: t.number().optional(0),
         applyTo: t.string().optional(),
     });
 }

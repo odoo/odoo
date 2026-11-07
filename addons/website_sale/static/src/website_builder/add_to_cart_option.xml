@@ -11,7 +11,7 @@
             domain="[['is_published', '=', true], ['sale_ok', '=', true]]"
         />
     </BuilderRow>
-    <BuilderRow label.translate="Variant" level="1" t-if="(this.getItemValueJSON('product_template_picker_opt')?.product_variant_ids.length || 0) > 1">
+    <BuilderRow label.translate="Variant" level="true" t-if="(this.getItemValueJSON('product_template_picker_opt')?.product_variant_ids.length || 0) > 1">
         <BuilderMany2One
             action="'variantToCart'"
             model="'product.product'"
