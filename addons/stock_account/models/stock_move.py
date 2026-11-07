@@ -375,10 +375,9 @@ class StockMove(models.Model):
 
         stock_valuation_layers._check_company()
 
-        # For every in move, run the vacuum for the linked product.
-        products_to_vacuum = valued_moves['in'].mapped('product_id')
-        company = valued_moves['in'].mapped('company_id') and valued_moves['in'].mapped('company_id')[0] or self.env.company
-        products_to_vacuum._run_fifo_vacuum(company)
+        # For every in move in each company, run the vacuum for the linked product.
+        for company, moves in valued_moves['in'].grouped('company_id').items():
+            moves.product_id._run_fifo_vacuum(company)
 
         return res
 
