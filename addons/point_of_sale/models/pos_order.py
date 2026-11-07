@@ -110,6 +110,7 @@ class PosOrder(models.Model):
             # when vals change the state to 'paid'
             for field in ['lines', 'payment_ids']:
                 if order.get(field):
+                    order[field] = self._merge_creations_by_uuid(order[field], pos_order[field])
                     existing_record_ids = self.env[pos_order[field]._name].browse([r[1] for r in order[field] if r[1] != 0]).exists().ids
                     existing_records_vals = [r for r in order[field] if r[0] not in [1, 2, 3, 4] or r[1] in existing_record_ids]
                     existing_ids = set(pos_order[field].ids)
@@ -129,6 +130,35 @@ class PosOrder(models.Model):
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
         return pos_order._process_saved_order(draft)
+
+    def _merge_creations_by_uuid(self, commands, records):
+        """Turn the creation of a record whose uuid is already on the order into an update of that record.
+
+        Devices identify order lines and payments by uuid. A device that rebuilds a line keeps the uuid
+        and sends the line as new, and another device holding the same order can do the same. Both saves
+        belong to the record that is already in the database. If the payload also deletes that record,
+        the deletion is dropped, because the device has just rebuilt it.
+
+        Args:
+            commands (list): x2many commands received from the device.
+            records (recordset): records currently linked to the order.
+
+        Returns:
+            list: the commands to write.
+        """
+        id_by_uuid = {record.uuid: record.id for record in records if record.uuid}
+        merged_ids = set()
+        merged_commands = []
+        for command in commands:
+            record_id = command[0] == Command.CREATE and id_by_uuid.get(command[2].get('uuid'))
+            if record_id:
+                merged_ids.add(record_id)
+                command = Command.update(record_id, command[2])
+            merged_commands.append(command)
+        return [
+            command for command in merged_commands
+            if not (command[0] in (Command.DELETE, Command.UNLINK) and command[1] in merged_ids)
+        ]
 
     def _prepare_combo_line_uuids(self, order_vals):
         acc = {}

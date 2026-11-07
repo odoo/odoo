@@ -132,6 +132,32 @@ class TestUi(TestPointOfSaleHttpCommon):
             programs[name] = program
         return programs
 
+    def test_reward_line_identity_is_kept_when_reopening(self):
+        """Reopening a saved order must keep its reward line instead of saving a new one."""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Reward Line Identity',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        self.main_pos_config.trusted_config_ids += self.main_pos_config.copy()
+        self.start_pos_tour("PosLoyaltyRewardLineIdentityTour")
+
     def test_pos_loyalty_tour_basic(self):
         """PoS Loyalty Basic Tour"""
         ##

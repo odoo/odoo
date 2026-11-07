@@ -847,6 +847,31 @@ patch(PosOrder.prototype, {
         return result;
     },
     /**
+     * Build the uuid of a reward line from the order and from what the line grants.
+     * Reward lines are rebuilt after every change, on every device. Since the uuid stays the same
+     * between rebuilds, a rebuild replaces the saved line instead of adding a second one.
+     * All global discounts share one slot, so switching to another global discount also
+     * replaces the line.
+     * @param {Object} rewardLine - Values returned by `_getRewardLineValues`
+     * @returns {string}
+     */
+    _getRewardLineUuid(rewardLine) {
+        const reward = rewardLine.reward_id;
+        const taxKey = rewardLine.tax_ids
+            .map((tax) => tax.id)
+            .sort((a, b) => a - b)
+            .join("_");
+        const grantKey = reward.is_global_discount
+            ? "global"
+            : `${reward.id}_${(rewardLine._reward_product_id || rewardLine.product_id).id}`;
+        const baseUuid = `${this.uuid}-reward-${grantKey}-${taxKey}`;
+        let uuid = baseUuid;
+        for (let index = 1; this.models["pos.order.line"].getBy("uuid", uuid); index++) {
+            uuid = `${baseUuid}-${index}`;
+        }
+        return uuid;
+    },
+    /**
      * TODO JCB: make the second parameter not id, but the loyalty.card object itself.
      * Applies a reward to the order, `pos.updateRewards` is expected to be called right after.
      *
@@ -890,6 +915,7 @@ patch(PosOrder.prototype, {
         for (const rewardLine of rewardLines) {
             const prepareRewards = {
                 ...rewardLine,
+                uuid: this._getRewardLineUuid(rewardLine),
                 reward_id: rewardLine.reward_id,
                 coupon_id: this.models["loyalty.card"].get(rewardLine.coupon_id),
                 tax_ids: rewardLine.tax_ids.map((tax) => ["link", tax]),
