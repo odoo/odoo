@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
-from odoo.fields import Datetime
+from odoo.fields import Command, Datetime
 from odoo import tests
 from odoo.tests.common import users
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
@@ -20,6 +20,7 @@ class TestUi(TestUICommon):
 
         cls.furniture_survey = cls.env['survey.survey'].create({
             'title': 'Furniture Creation Certification',
+            'lang_ids': [Command.set(cls.env.ref('base.lang_en').ids)],
             'access_token': '5632a4d7-48cf-aaaa-8c52-2174d58cf50b',
             'access_mode': 'public',
             'questions_layout': 'one_page',

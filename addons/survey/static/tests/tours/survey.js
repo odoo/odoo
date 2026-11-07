@@ -91,29 +91,29 @@ registry.category("web_tour.tours").add("test_survey_multilang", {
     steps: () => {
         return [
             {
-                content: "Select French",
+                content: "Select Parseltongue",
                 trigger: "select[name='lang_code']",
-                run: "select fr_BE",
+                run: "select pa_GB",
                 expectUnloadPage: true,
             },
             {
-                content: "Check French translation",
-                trigger: "h1.o_survey_main_title:contains('Enquête de satisfaction')",
+                content: "Check Parseltongue translation",
+                trigger: "h1.o_survey_main_title:contains('Parseltongue Feedback Form')",
             },
             {
-                content: "Select French",
+                content: "Select Parseltongue",
                 trigger: "select[name='lang_code']",
-                run: "select fr_BE",
+                run: "select pa_GB",
                 expectUnloadPage: true,
             },
             {
-                content: "Check French translation",
-                trigger: "h1.o_survey_main_title:contains('Enquête de satisfaction')",
+                content: "Check Parseltongue translation",
+                trigger: "h1.o_survey_main_title:contains('Parseltongue Feedback Form')",
             },
             ...survey_steps([
                 {
                     content: "Check Page translation",
-                    trigger: ".o_survey_question h2:contains('FR: ')",
+                    trigger: ".o_survey_question h2:contains('PA: ')",
                 },
             ]),
         ];

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo import Command
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -13,6 +14,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
 
         self.survey_certification = self.env['survey.survey'].create({
             'title': 'MyCompany Vendor Certification',
+            'lang_ids': [Command.set(self.env.ref('base.lang_en').ids)],
             'access_token': '4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
             'access_mode': 'public',
             'questions_layout': 'one_page',

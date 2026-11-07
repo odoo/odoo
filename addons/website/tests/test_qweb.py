@@ -8,6 +8,7 @@ from odoo.tests.common import TransactionCase, tagged
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.tests.common import set_url_code
 
 
 class TestQweb(TransactionCaseWithUserDemo):
@@ -304,6 +305,7 @@ class TestQwebProcessAtt(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
         cls.website = cls.env.ref('base.default_website')
         cls.env['res.lang']._activate_lang('fr_FR')
         cls.website.language_ids = cls.env.ref('base.lang_en') + cls.env.ref('base.lang_fr')

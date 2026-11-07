@@ -15,6 +15,7 @@ from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.tests.common import set_url_code
 
 import werkzeug
 
@@ -313,6 +314,11 @@ class TestPage(common.TransactionCase):
 
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
+
     def setUp(self):
         super().setUp()
         Page = self.env['website.page']
@@ -635,7 +641,6 @@ class WithContext(HttpCase):
     def test_07_alternatives(self):
         website = self.env.ref('base.default_website')
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
-        lang_fr.write({'url_code': 'fr'})
         website.language_ids = self.env.ref('base.lang_en') + lang_fr
         website.default_lang_id = self.env.ref('base.lang_en')
 

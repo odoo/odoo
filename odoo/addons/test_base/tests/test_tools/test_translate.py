@@ -3051,13 +3051,13 @@ class TestStoredTranslations(TransactionCase):
 class TestLanguageInstallPerformance(TransactionCase):
     def test_language_install(self):
         """ Install a language on a complete database. """
-        fr_BE = self.env.ref('base.lang_fr_BE')
-        self.assertFalse(fr_BE.active)
+        fr_CA = self.env.ref('base.lang_fr_CA')
+        self.assertFalse(fr_CA.active)
 
         t0 = time.time()
-        fr_BE.action_unarchive()
+        fr_CA.action_unarchive()
         t1 = time.time()
-        _stats_logger.info("installed language fr_BE in %.3fs", t1 - t0)
+        _stats_logger.info("installed language fr_CA in %.3fs", t1 - t0)
 
 
 @tagged('at_install', '-post_install')

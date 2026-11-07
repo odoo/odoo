@@ -8,7 +8,7 @@ import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.html_editor.controllers.main import HTML_Editor
-from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
+from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser, set_url_code
 from odoo.fields import Command
 from odoo.tools import mute_logger
 
@@ -219,6 +219,11 @@ class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        set_url_code(cls.env.ref('base.lang_fr'))
+
     def test_admin_tour_rte_translator(self):
         self.env['res.lang'].create({
             'name': 'Parseltongue',
