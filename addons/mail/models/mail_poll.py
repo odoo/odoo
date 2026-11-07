@@ -41,7 +41,9 @@ class MailPoll(models.Model):
     def _store_poll_fields(self, res: Store.FieldList, *, with_start_message_id=True):
         res.extend(["allow_multiple_options", "create_date", "create_uid", "end_message_id"])
         res.many("option_ids", "_store_poll_option_fields")
-        res.extend(["poll_end_dt", "poll_question", "winning_option_id"])
+        res.extend(["poll_end_dt", "poll_question"])
+        # Computed from the votes, which do not write the poll.
+        res.one("winning_option_id", [], version=False)
         if with_start_message_id:
             res.one("start_message_id", "_store_message_fields")
 

@@ -22,7 +22,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         ])
         for channel in channels:
             channel._close_livechat_session(message=channel._get_visitor_leave_message())
-        store.add(channels, {"close_chat_window": True})
+        store.add(channels, lambda res: res.attr("close_chat_window", True, version=False))
 
         discuss_channel_values = {
             "channel_member_ids": [

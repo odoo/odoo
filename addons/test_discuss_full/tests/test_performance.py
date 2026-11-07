@@ -7,6 +7,7 @@ from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
 from odoo.fields import Domain
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
@@ -45,11 +46,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
-    #   30: init_messaging:
+    #   29: init_messaging:
     #       - search_fetch discuss_channel (channels_domain)
     #       - fetch discuss_channel (_search_is_member)
     #       - search_fetch discuss_channel (odoobot chat)
-    #       27: store add channel:
+    #       26: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
@@ -79,8 +80,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - _compute_message_unread
     #           - fetch res_groups (group_public_id)
-    #           - select the current db snapshot
-    _query_count_init_messaging = 33
+    _query_count_init_messaging = 32
     # Queries for _query_count_messaging_menu_channels (in order):
     #   5: chat tab:
     #       - fetch res_users (current persona, first occurrence)
@@ -175,8 +175,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - search mail_message_schedule (last message of the needaction message)
     #       - search discuss_channel (linkedSubChannel of the needaction message)
-    #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 81
+    _query_count_messaging_menu_channels = 80
     # Queries for _query_count_init_messaging_with_chat_hub (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -241,8 +240,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users (OdooBot)
     #       - fetch discuss_call_history
     #       - search mail_call_artifact
-    #   1: select the current db snapshot
-    _query_count_init_messaging_with_chat_hub = 57
+    _query_count_init_messaging_with_chat_hub = 56
     # Queries for _query_count_page_load (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -326,8 +324,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users (OdooBot)
     #       - fetch discuss_call_history
     #       - search mail_call_artifact
-    #   1: select the current db snapshot
-    _query_count_page_load = 75
+    _query_count_page_load = 74
     # Queries for _query_count_open_channel (in order):
     #   1: fetch res_users (current user)
     #   1: search discuss_channel JOIN member (_search_is_member, first occurrence)
@@ -377,9 +374,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search rating_rating
     #       - fetch res_partner (reactions)
     #       - fetch mail_message_subtype
-    #   1: select the current db snapshot
     #   1: insert bus_bus (mail.message/mark_as_read)
-    _query_count_open_channel = 44
+    _query_count_open_channel = 43
     # Queries for _query_count_open_chatter (in order):
     #   6: /mail/thread/messages:
     #       - search res_partner (_get_thread_with_access)
@@ -427,8 +423,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search res_users (author)
     #       - fetch res_users (author)
     #       - fetch mail_message_subtype
-    #   1: select the current db snapshot
-    _query_count_open_chatter = 42
+    _query_count_open_chatter = 41
 
     def setUp(self):
         super().setUp()
@@ -641,7 +636,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     res = fn()
             else:
                 res = fn()
-        res.pop("__store_version__", False)
+        pop_store_version(res)
         if not preserve_order:
             res = self._sort_store_records(res)
             results = self._sort_store_records(results)

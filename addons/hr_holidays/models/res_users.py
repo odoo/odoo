@@ -50,5 +50,10 @@ class ResUsers(models.Model):
     def _store_main_user_fields(self, res: Store.FieldList):
         super()._store_main_user_fields(res)
         res.many(
-            "all_employee_ids", ["active", "company_id", "leave_date_to", "user_id"], internal=True,
+            "all_employee_ids",
+            lambda res: (
+                res.extend(["active", "company_id", "user_id"]),
+                res.attr("leave_date_to", version=False),
+            ),
+            internal=True,
         )

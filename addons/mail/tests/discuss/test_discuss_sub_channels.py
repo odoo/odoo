@@ -295,11 +295,12 @@ class TestDiscussSubChannels(HttpCase):
                     "payload": {
                         "mail.message": [
                             {
+                                "__field_versions__": {"linkedSubChannel": ANY},
+                                "__version__": ANY,
                                 "id": self.general_message.id,
                                 "linkedSubChannel": sub_channel.id,
                             },
                         ],
-                        "__store_version__": ANY,
                     },
                 },
             ),

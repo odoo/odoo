@@ -26,7 +26,7 @@ class MailPresence(models.Model):
 
     user_id = fields.Many2one("res.users", "Users", ondelete="cascade")
     guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade")
-    last_poll = fields.Datetime("Last Poll", default=lambda self: fields.Datetime.now())
+    last_poll = fields.Datetime("Last Poll", default=lambda self: self.env.cr.now())
     last_presence = fields.Datetime("Last Presence", default=lambda self: fields.Datetime.now())
     status = fields.Selection(
         [("online", "Online"), ("away", "Away"), ("offline", "Offline")],
@@ -57,7 +57,7 @@ class MailPresence(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_send_presence(self):
-        self._send_presence("offline")
+        self._send_presence("offline", version=self.env.cr.now())
 
     @api.model
     def _try_update_presence(self, user_or_guest, inactivity_period=0):
@@ -80,7 +80,7 @@ class MailPresence(models.Model):
     @api.model
     def _update_presence(self, user_or_guest, inactivity_period=0):
         values = {
-            "last_poll": fields.Datetime.now(),
+            "last_poll": self.env.cr.now(),
             "last_presence": fields.Datetime.now() - timedelta(milliseconds=inactivity_period),
             "status": "away" if inactivity_period > AWAY_TIMER * 1000 else "online",
         }
@@ -93,21 +93,33 @@ class MailPresence(models.Model):
             # sudo: res.users/mail.guest can update presence of accessible user/guest
             self.env["mail.presence"].sudo().create(values)
 
-    def _send_presence(self, im_status=None):
+    def _send_presence(self, im_status=None, version=None):
         """Send notification related to bus presence update.
 
         :param im_status: 'online', 'away' or 'offline'
+        :param version: explicit version to use instead of the persona's current one (e.g. when
+          the update isn't reflected by it, as unlink() doesn't touch `last_poll`).
         """
         stores = Store.Stores()
         for presence in self:
             persona = presence.guest_id or presence.user_id
+            presence_version = version or (
+                presence.user_id._get_im_status_version() if presence.user_id else presence.last_poll
+            )
+            # Values bound now: add() is deferred, by then the presence may be unlinked.
+            persona_im_status = im_status or persona.im_status
+            presence_status = im_status or presence.status
             stores[persona, "presence"].add(
                 persona,
-                {"im_status": im_status or persona.im_status},
+                lambda res, value=persona_im_status, version=presence_version: res.attr(
+                    "im_status", value, version=version,
+                ),
             )
             stores[persona].add(
                 persona,
-                {"presence_status": im_status or presence.status},
+                lambda res, value=presence_status, version=presence_version: res.attr(
+                    "presence_status", value, version=version,
+                ),
             )
 
     @api.autovacuum
