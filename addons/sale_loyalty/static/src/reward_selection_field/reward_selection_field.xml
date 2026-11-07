@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale_loyalty.RewardSelectionField">
+        <div t-foreach="this.groups" t-as="group" t-key="group.coupon_id" class="mb-3" role="radiogroup">
+            <div class="mb-1">
+                <strong t-out="group.program_name"/>
+                <span t-if="group.points" class="ms-1 text-muted" t-out="group.points"/>
+            </div>
+            <t t-set="name" t-value="`${this.props.id or this.props.name}_${group.coupon_id}`"/>
+            <t t-set="selectedOption" t-value="this.getSelectedOption(group)"/>
+            <div t-foreach="group.options" t-as="option" t-key="option_index" class="form-check o_radio_item">
+                <input
+                    type="radio"
+                    class="form-check-input o_radio_input"
+                    t-att-checked="option === selectedOption"
+                    t-att-name="name"
+                    t-att-id="`${name}_${option_index}`"
+                    t-on-change="() => this.onSelect(group, option)"
+                />
+                <label class="form-check-label o_form_label" t-att-for="`${name}_${option_index}`" t-out="option.label"/>
+            </div>
+        </div>
+    </t>
+
+</templates>
