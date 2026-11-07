@@ -228,6 +228,8 @@ class WebsitePage(models.Model):
             website_id = self.website_id.id
             for lang, url in translations.items():
                 # Slugify the translated url
+                if not url:
+                    continue
                 url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
                 translations[lang] = self._handle_url_update(self, website_id, url, lang)
         return super()._update_field_translations(field_name, translations, digest, source_lang)
