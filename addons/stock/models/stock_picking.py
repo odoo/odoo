@@ -1418,13 +1418,22 @@ class StockPicking(models.Model):
 
     def _create_backorder_picking(self):
         self.ensure_one()
-        return self.copy({
+        if open_backorder := self.env['stock.picking'].search([('backorder_id', '=', self.id), ('state', 'not in', ('done', 'cancel'))], order='id', limit=1):
+            return open_backorder
+
+        backorder_picking = self.copy({
             'name': '/',
             'move_ids': [],
             'move_line_ids': [],
             'backorder_id': self.id,
             'return_id': self.return_id.id,
         })
+        self.message_post(
+            body=self.env._('The backorder %(backorder_picking_link)s has been created.',
+            backorder_picking_link=backorder_picking._get_html_link()),
+            subtype_xmlid='stock.mt_picking_state',
+        )
+        return backorder_picking
 
     def _create_backorder(self, backorder_moves=None, from_manual_backorder=False):
         """ This method is called when the user chose to create a backorder. It will create a new
@@ -1448,11 +1457,6 @@ class StockPicking(models.Model):
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
                 backorder_picking.user_id = False
-                picking.message_post(
-                    body=self.env._('The backorder %(backorder_picking_link)s has been created.',
-                    backorder_picking_link=backorder_picking._get_html_link()),
-                    subtype_xmlid='stock.mt_picking_state',
-                )
                 if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
                     bo_to_assign |= backorder_picking
                 elif from_manual_backorder:
