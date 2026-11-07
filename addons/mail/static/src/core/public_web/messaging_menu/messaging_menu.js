@@ -2,9 +2,17 @@ import { DiscussSearch } from "@mail/core/public_web/discuss_search";
 import { MessageInDialog } from "@mail/core/public_web/messaging_menu/message_in_dialog";
 import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messaging_menu_empty";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
+import { useMessagingMenuTabActions } from "@mail/core/public_web/messaging_menu/messaging_menu_tab_actions";
+import { MessagingMenuTabContextMenu } from "@mail/core/public_web/messaging_menu/messaging_menu_tab_context_menu";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { onClickIntent, useOnBottomScrolled, usePeek, useSearch } from "@mail/utils/common/hooks";
+import {
+    onClickIntent,
+    useOnBottomScrolled,
+    usePeek,
+    useRightClickMenu,
+    useSearch,
+} from "@mail/utils/common/hooks";
 import { computedShallowEqual, incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -34,6 +42,7 @@ export class MessagingMenu extends Component {
         IsolatedDropdown,
         MessagingMenuItem,
         MessagingMenuEmpty,
+        MessagingMenuTabContextMenu,
         NotificationItem,
     };
     static template = "mail.MessagingMenu";
@@ -44,6 +53,8 @@ export class MessagingMenu extends Component {
     canPeek = computed(() => this.isCollapsible() && this.store.discuss.isSidebarCollapsed);
     /** @type {import("@odoo/owl").Signal<import("models").MessagingMenuUIState|undefined>} */
     peekedTabState = signal(undefined);
+    /** @type {import("@odoo/owl").Signal<import("models").MessagingMenuTab|undefined>} */
+    contextMenuTab = signal(undefined);
     /** The tab shown as active: the peeked one only has the look of a hovered tab. */
     selectedTab = computed(() => this.selectedState().activeTab);
     containerRef = signal.ref();
@@ -139,11 +150,15 @@ export class MessagingMenu extends Component {
             }
         }, PEEK_TAB_DELAY);
         onClickIntent(this.navRef, (ev) => {
-            const tabId = ev.target.closest?.(".o-mail-MessagingMenu-tab")?.dataset.id;
-            const tab = this.visibleTabs.find((t) => String(t.id) === tabId);
+            const tab = this.getTabOfEvent(ev);
             if (tab?.getLoadStatus(tab.defaultFilter) === "new") {
                 tab.loadMore({ filter: tab.defaultFilter });
             }
+        });
+        this.tabActions = useMessagingMenuTabActions({ tab: this.contextMenuTab });
+        this.tabContextMenu = useRightClickMenu(this.navRef, {
+            extraMenuProps: () => ({ actionsList: this.tabActions.actionsComputed }),
+            onContextMenu: (ev) => this.onContextMenuNav(ev),
         });
     }
 
@@ -153,6 +168,15 @@ export class MessagingMenu extends Component {
 
     get visibleTabs() {
         return this.store.messagingMenu.sortedVisibleTabs;
+    }
+
+    /**
+     * @param {Event} ev
+     * @returns {import("models").MessagingMenuTab|undefined}
+     */
+    getTabOfEvent(ev) {
+        const tabId = ev.target.closest?.(".o-mail-MessagingMenu-tab")?.dataset.id;
+        return this.visibleTabs.find((t) => String(t.id) === tabId);
     }
 
     /** Counter shown on a tab's badge, if any. */
@@ -300,6 +324,15 @@ export class MessagingMenu extends Component {
             this.peekTabLater(tab);
         } else {
             this.peekTab(tab);
+        }
+    }
+
+    /** @param {MouseEvent} ev */
+    onContextMenuNav(ev) {
+        const tab = this.getTabOfEvent(ev);
+        this.contextMenuTab.set(tab);
+        if (this.tabActions.actions.length) {
+            this.tabContextMenu.open(ev, tab);
         }
     }
 

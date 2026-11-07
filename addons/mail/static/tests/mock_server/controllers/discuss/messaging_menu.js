@@ -297,6 +297,45 @@ registerStoreHandler(
 );
 
 registerStoreHandler(
+    "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+    function store_messaging_menu_discuss_channel_mark_all_as_read(store, params) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+        const domain = _get_menu_tab_full_domain(this.env, params.tab_id);
+        const channelIds = DiscussChannel.search(_resolve_self_member_domain.call(this, domain));
+        const channelMessages = MailMessage._filter([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "in", channelIds],
+        ]);
+        for (const member of DiscussChannelMember._filter([
+            ["channel_id", "in", channelIds],
+            ["is_self", "=", true],
+        ])) {
+            const messageIds = channelMessages
+                .filter((message) => message.res_id === member.channel_id)
+                .map((message) => message.id);
+            if (messageIds.length) {
+                DiscussChannelMember._mark_as_read([member.id], Math.max(...messageIds));
+            }
+        }
+        if (ResUsers._is_internal(this.env.uid)) {
+            MailMessage.set_message_done(
+                channelMessages
+                    .filter((message) => MailMessage._needaction(message))
+                    .map((message) => message.id)
+            );
+        }
+    },
+    { audience: "everyone", readonly: false }
+);
+
+registerStoreHandler(
     "/mail/messaging_menu/get_most_popular_channels",
     function store_messaging_menu_get_most_popular_channels(store) {
         /** @type {import("mock_models").DiscussChannel} */

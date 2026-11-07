@@ -40,6 +40,32 @@ const messagingMenuTabPatch = {
     },
 
     /** @override */
+    get canMarkAllAsRead() {
+        return this.recordType === "discuss.channel" || super.canMarkAllAsRead;
+    },
+
+    /** @override */
+    async markAllAsRead() {
+        if (this.recordType !== "discuss.channel") {
+            return super.markAllAsRead();
+        }
+        await this.store.fetchStoreData("/mail/messaging_menu/discuss.channel/mark_all_as_read", {
+            tab_id: this.id,
+        });
+        // The bus only updates what is loaded: not the counted channels nor their needactions.
+        this.init_counter_ids = [];
+        for (const channel of this.channels) {
+            channel.thread.message_needaction_counter = 0;
+        }
+        // Any filter combination on unread channels is now empty and fully loaded.
+        for (const key of Object.keys(this.loadStatusByFilterId)) {
+            if (key.split("__").some((filterId) => filterId.endsWith("_unread"))) {
+                this.loadStatusByFilterId[key] = "loaded";
+            }
+        }
+    },
+
+    /** @override */
     _computeCounter() {
         if (this.recordType !== "discuss.channel") {
             return super._computeCounter();
