@@ -13,5 +13,6 @@ export class CalendarEvent extends Record {
     start = fields.Datetime();
     stop = fields.Datetime();
     partner_ids = fields.Many("res.partner");
+    videocall_channel_id = fields.One("discuss.channel");
 }
 CalendarEvent.register();
