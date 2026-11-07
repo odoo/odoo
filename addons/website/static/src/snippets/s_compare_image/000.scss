@@ -1,0 +1,104 @@
+.s_compare_image {
+    // Fallback: the JS and the builder option both write this inline on the
+    // root, but the snippet must still render before either of them runs.
+    --compare-pos: 50%;
+
+    .s_compare_image_before {
+        display: block;
+        width: 100%;
+    }
+
+    .s_compare_image_after {
+        position: absolute;
+        inset: 0;
+        clip-path: inset(0 0 0 var(--compare-pos));
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .s_compare_image_divider {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        bottom: 0;
+        left: var(--compare-pos);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        transform: translateX(-50%);
+        width: 4px;
+        background: rgba($white, .9);
+        cursor: ew-resize;
+        touch-action: none; // the pointer gesture is ours, not the page's
+        user-select: none;
+    }
+
+    .s_compare_image_handle {
+        flex: 0 0 auto;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        // Keeps the arrows readable over a light image, since they sit on the
+        // picture rather than on a solid handle.
+        filter: drop-shadow(0 1px 2px rgba($black, .5));
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+        color: $white;
+
+        .oi {
+            flex: 0 0 auto;
+        }
+    }
+
+    .s_compare_image_labels {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        justify-content: space-between;
+        align-items: flex-start;
+        display: flex;
+        padding: .75rem;
+        pointer-events: none; // the container is only a positioning frame
+    }
+
+    .s_compare_image_label {
+        pointer-events: auto;
+    }
+
+    .s_compare_image_labels_center {
+        align-items: center;
+    }
+
+    .s_compare_image_labels_end {
+        align-items: flex-end;
+    }
+
+    // Horizontal divider: the images are stacked and the wipe runs top to
+    // bottom. Everything is the default variant with the two axes swapped.
+    &.s_compare_image_horizontal {
+        .s_compare_image_after {
+            clip-path: inset(var(--compare-pos) 0 0 0);
+        }
+
+        .s_compare_image_divider {
+            top: var(--compare-pos);
+            bottom: auto;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            width: auto;
+            height: 4px;
+            cursor: ns-resize;
+        }
+
+        .s_compare_image_handle {
+            transform: rotate(90deg);
+        }
+
+        .s_compare_image_labels {
+            flex-direction: column;
+        }
+    }
+}
