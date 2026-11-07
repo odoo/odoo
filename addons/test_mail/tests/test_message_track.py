@@ -1234,6 +1234,32 @@ class TestTrackingInternals(TestTrackingCommon):
         self.assertFalse(monetary_tracking.new_value_float)
 
     @users('employee')
+    def test_mail_track_properties_unlink(self):
+        """ Unlinking some records after writing on them should not prevent
+        tracking the others, as finding the tracked fields reads the properties
+        definition of the tracked records. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        properties_record_1 = self.properties_record_1.with_env(self.env)
+        properties_record_2 = self.properties_record_2.with_env(self.env)
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_2.char_field = 'new char value'
+            properties_record_1.char_field = 'new char value'
+            properties_record_2.unlink()
+            # tracked fields are cached: force computing them again at flush
+            self.env.transaction.invalidate_ormcache()
+            self.flush_tracking()
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'model': 'mail.test.track.all',
+                'res_id': properties_record_1.id,
+                'tracking_values': [
+                    ('char_field', 'char', False, 'new char value'),
+                ],
+            }
+        )
+
+    @users('employee')
     def test_mail_track_selection_invalid(self):
         """ Check that initial invalid selection values are allowed when tracking """
         self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
@@ -1418,6 +1444,24 @@ class TestTrackingInternals(TestTrackingCommon):
         # it will crash and it shouldn't
         record = record_form.save()
         self.assertEqual(record.name, 'TestDoNoCrash')
+
+    def test_track_record_unlinked(self):
+        """ Tracking finalization is bound to the records that prepared it. If
+        those are unlinked while other records still have values to track, and
+        tracked fields are not cached (properties definitions read on records),
+        it should not crash and still track the remaining records. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        record_unlinked, record = self.test_tracking_records[:2].with_env(self.env)
+        record_unlinked.write({'integer_field': 1})
+        record.write({'integer_field': 2})
+        record_unlinked.unlink()
+        self.env.transaction.invalidate_ormcache()
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.flush_tracking()
+        self.assertMessageFields(self._new_msgs, {'tracking_values': [
+            ('integer_field', 'integer', 0, 2),
+        ]})
 
     @users('employee')
     def test_track_invalid(self):

@@ -145,7 +145,7 @@ class MailTrackMixin(models.AbstractModel):
 
         # tracked fields to check are those at model level as well as those
         # manually put in initial values
-        fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
+        fnames = self.browse(ids)._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
         if not fnames:
             return
 
@@ -201,14 +201,9 @@ class MailTrackMixin(models.AbstractModel):
         self._track_clear()
         return records_su, initial_values, trackings
 
-    @api.ormcache('self.env.uid', 'self.env.su')
     def _track_get_fields(self) -> set[str]:
         """ Return the set of tracked fields names for the current model. """
-        model_fields = {
-            name
-            for name, field in self._fields.items()
-            if getattr(field, 'tracking', None)
-        }
+        model_fnames = self._track_get_field_names_model()
 
         # track properties if any property definition contains a tracking = True
         for fname, f in self._fields.items():
@@ -216,8 +211,17 @@ class MailTrackMixin(models.AbstractModel):
                 properties = self.sudo()[f.definition_record].mapped(f.definition_record_field)
                 tracking_properties = [any(x.get('tracking') for x in p) for p in properties]
                 if any(tracking_properties):
-                    model_fields.add(fname)
+                    model_fnames.add(fname)
 
+        return model_fnames and set(self.fields_get(model_fnames, attributes=()))
+
+    @api.ormcache('self.env.uid', 'self.env.su')
+    def _track_get_field_names_model(self):
+        model_fields = {
+            name
+            for name, field in self._fields.items()
+            if getattr(field, 'tracking', None)
+        }
         # track the properties changes if the parent changed
         model_fields |= {
             fname for fname, f in self._fields.items()
@@ -226,8 +230,7 @@ class MailTrackMixin(models.AbstractModel):
             and f.definition_record in model_fields
             and getattr(f, "tracking", None) is not False
         }
-
-        return model_fields and set(self.fields_get(model_fields, attributes=()))
+        return model_fields
 
     def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
         tracked_fields_get = self.fields_get(
