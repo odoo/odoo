@@ -473,6 +473,17 @@ been taken for this time off type. Changing it now would affect existing employe
     # Leave - Allocation link methods
     # ------------------------------------------------------------
 
+    def _get_allocation_work_entry_type_per_leave_type(self):
+        """
+        By default, the requests of a type are deducted from the allocations of the same type.
+        Localizations can deduct the requests of other types from the allocations of ``self``
+        See :meth:`~odoo.addons.hr_holidays.models.hr_employee.HrEmployee._get_consumed_leaves`.
+
+        :return: ``{request type: allocation type}``, the allocation types being in ``self``
+        :rtype: dict
+        """
+        return {work_entry_type: work_entry_type for work_entry_type in self}
+
     @api.model
     def get_allocation_data_request(self, target_date=None, hidden_allocations=True, same_year_only=False):
         """Return the balances of the contextual employee for every type.
