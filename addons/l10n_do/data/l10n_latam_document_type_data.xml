@@ -1,6 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <odoo>
     <data noupdate="1">
+
+        <record model="l10n_latam.document.type" id="ncf_01">
+            <field name="sequence">10</field>
+            <field name="code">B01</field>
+            <field name="name">Tax Credit Receipt / Invoice</field>
+            <field name="name@es_419">Comprobante de Crédito Fiscal</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B01</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_02">
+            <field name="sequence">30</field>
+            <field name="code">B02</field>
+            <field name="name">Consumer Invoice</field>
+            <field name="name@es_419">Factura de Consumo</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B02</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_03">
+            <field name="sequence">40</field>
+            <field name="code">B03</field>
+            <field name="name">Debit Note</field>
+            <field name="name@es_419">Nota de Débito</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">debit_note</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B03</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_04">
+            <field name="sequence">60</field>
+            <field name="code">B04</field>
+            <field name="name">Credit Note</field>
+            <field name="name@es_419">Nota de Crédito</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">credit_note</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B04</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_11">
+            <field name="sequence">80</field>
+            <field name="code">B11</field>
+            <field name="name">Purchase Receipt (Informal Supplier)</field>
+            <field name="name@es_419">Comprobante de Compra</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B11</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_12">
+            <field name="sequence">90</field>
+            <field name="code">B12</field>
+            <field name="name">Single Income Invoice</field>
+            <field name="name@es_419">Comprobante de Único Ingreso</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B12</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_13">
+            <field name="sequence">100</field>
+            <field name="code">B13</field>
+            <field name="name">Minor Expense Receipt</field>
+            <field name="name@es_419">Comprobante de Gasto Menor</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B13</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_14">
+            <field name="sequence">110</field>
+            <field name="code">B14</field>
+            <field name="name">Special Regime Receipt</field>
+            <field name="name@es_419">Comprobante de Régimen Especial</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B14</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_15">
+            <field name="sequence">120</field>
+            <field name="code">B15</field>
+            <field name="name">Governmental Invoice</field>
+            <field name="name@es_419">Factura Gubernamental</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B15</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_16">
+            <field name="sequence">130</field>
+            <field name="code">B16</field>
+            <field name="name">Export Invoice</field>
+            <field name="name@es_419">Factura de Exportación</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B16</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ncf_17">
+            <field name="sequence">140</field>
+            <field name="code">B17</field>
+            <field name="name">Foreign Payment Receipt</field>
+            <field name="name@es_419">Comprobante de Pago al Exterior</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">B17</field>
+        </record>
+
+
         <record model="l10n_latam.document.type" id="ecf_31">
             <field name="sequence">10</field>
             <field name="code">31</field>
@@ -44,5 +168,72 @@
             <field name="active" eval="True"/>
             <field name="doc_code_prefix">E34</field>
         </record>
+
+        <record model="l10n_latam.document.type" id="ecf_41">
+            <field name="sequence">200</field>
+            <field name="code">E41</field>
+            <field name="name">Electronic Purchase Invoice</field>
+            <field name="name@es_419">Compras Electrónicas</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E41</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_43">
+            <field name="sequence">220</field>
+            <field name="code">E43</field>
+            <field name="name">Electronic Minor Expense Invoice</field>
+            <field name="name@es_419">Gastos Menores Electrónicos</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E43</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_44">
+            <field name="sequence">230</field>
+            <field name="code">E44</field>
+            <field name="name">Electronic Special Regime Invoice</field>
+            <field name="name@es_419">Régimen Especial Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E44</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_45">
+            <field name="sequence">240</field>
+            <field name="code">E45</field>
+            <field name="name">Electronic Governmental Invoice</field>
+            <field name="name@es_419">Factura Gubernamental Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E45</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_46">
+            <field name="sequence">250</field>
+            <field name="code">E46</field>
+            <field name="name">Electronic Export Invoice</field>
+            <field name="name@es_419">Exportación Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E46</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_47">
+            <field name="sequence">260</field>
+            <field name="code">E47</field>
+            <field name="name">Electronic Foreign Payment Invoice</field>
+            <field name="name@es_419">Pagos al Exterior Electrónicos</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E47</field>
+        </record>
+
     </data>
 </odoo>
