@@ -189,6 +189,36 @@ export class PosPayment extends Base {
      */
     updateRefundPaymentLine(refundedPaymentLine) {}
 
+    /**
+     * Duplicates this payment line, similar to the backend copy()
+     *
+     * @param {object} vals - Values overriding the copied ones.
+     * @returns {PosPayment} The new payment line.
+     */
+    copy(vals = {}) {
+        const excludedFields = [
+            "id",
+            "uuid",
+            "create_date",
+            "create_uid",
+            "write_date",
+            "write_uid",
+        ];
+        const copiedVals = {};
+        for (const [name, field] of Object.entries(this.model.fields)) {
+            if (
+                excludedFields.includes(name) ||
+                field.related ||
+                field.compute ||
+                ["one2many", "many2many"].includes(field.type)
+            ) {
+                continue;
+            }
+            copiedVals[name] = this[name];
+        }
+        return this.model.create({ ...copiedVals, ...vals });
+    }
+
     canBeAdjusted() {
         if (this.payment_interface) {
             return this.payment_interface.canBeAdjusted(this.uuid);

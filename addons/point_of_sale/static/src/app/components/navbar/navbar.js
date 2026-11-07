@@ -34,7 +34,6 @@ export class Navbar extends Component {
         this.state = proxy({ searchBarOpen: false });
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.dialog = useService("dialog");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         this.timeout = null;
         this.bufferedInput = "";
