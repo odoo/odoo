@@ -12,6 +12,9 @@ export class HrWorkLocation extends models.ServerModel {
         ],
     });
 
+    latitude = fields.Float();
+    longitude = fields.Float();
+
     _views = {
         search: `<search><field name="display_name" string="Name" /></search>`,
         list: `<list><field name="display_name"/></list>`,

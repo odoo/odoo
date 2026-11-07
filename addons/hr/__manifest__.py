@@ -12,6 +12,7 @@
     ],
     'depends': [
         'auth_signup',
+        'base_geolocalize',
         'base_setup',
         'digest',
         'phone_validation',
