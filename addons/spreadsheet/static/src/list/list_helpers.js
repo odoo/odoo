@@ -1,8 +1,10 @@
 // @ts-check
 
 /**
+ * @typedef {import("@odoo/o-spreadsheet").CellPosition} CellPosition
  * @typedef {import("@odoo/o-spreadsheet").CompiledFormula} CompiledFormula
  * @typedef {import("@odoo/o-spreadsheet").CoreGetters} CoreGetters
+ * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
  * @typedef  {import("../helpers/odoo_functions_helpers").OdooFunctionDescription} OdooFunctionDescription
  * */
 
@@ -52,4 +54,25 @@ export function addListDependencies(evalContext, listId, columns) {
         evalContext.updateDependencies?.(originPosition);
         evalContext.addDependencies?.(originPosition, dependencies);
     }
+}
+
+/**
+ * Get the static formula of a cell of a dynamic list (=ODOO.LIST), e.g.
+ * =ODOO.LIST.HEADER(1,"name") for the header row and
+ * =ODOO.LIST.VALUE(1,3,"name") for the third record.
+ *
+ * @param {CellPosition} position
+ * @param {OdooGetters} getters
+ *
+ * @returns {string}
+ */
+export function getListStaticFormula(position, getters) {
+    const listId = getters.getListIdFromPosition(position);
+    const spreader = getters.getArrayFormulaSpreadingOn(position);
+    const columns = getters.getListDefinition(listId).columns.filter((col) => !col.hidden);
+    const fieldName = columns[position.col - spreader.col].name;
+    const index = position.row - spreader.row;
+    return index === 0
+        ? `=ODOO.LIST.HEADER(${listId},"${fieldName}")`
+        : `=ODOO.LIST.VALUE(${listId},${index},"${fieldName}")`;
 }
