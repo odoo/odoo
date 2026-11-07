@@ -43,6 +43,11 @@ export class BackgroundPositionOverlay extends Component {
         const editableDocument = this.props.editable.ownerDocument;
         useExternalListener(editableDocument, "pointerdown", this.discard.bind(this));
         useExternalListener(document, "pointerdown", this.discard.bind(this));
+        useExternalListener(document, "click", (ev) => {
+            if (!this.backgroundOverlayRef.el.contains(ev.target)) {
+                this.discard();
+            }
+        });
 
         useExternalListener(window, "resize", this._dimensionOverlay);
         useExternalListener(this.iframe.contentWindow, "resize", this._dimensionOverlay);
