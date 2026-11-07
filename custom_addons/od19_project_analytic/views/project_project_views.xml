@@ -5,13 +5,26 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="before">
-                <field name="job_no" placeholder="e.g. JOB-2026-001" required="1"/>
+            <!-- Title bar: job_no is the prominent heading, project name hangs below it -->
+            <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                <div class="oe_title">
+                    <h1 class="d-flex flex-row">
+                        <field name="is_favorite" nolabel="1" widget="project_is_favorite" class="me-2" options="{'autosave': False}"/>
+                        <field name="job_no" nolabel="1" class="o_text_overflow" placeholder="e.g. JOB-2026-001" required="1"/>
+                    </h1>
+                    <h2 class="d-flex flex-row mt-1">
+                        <field name="name" nolabel="1" widget="text" options="{'line_breaks': False}" class="o_text_overflow" placeholder="e.g. Project Name"/>
+                    </h2>
+                </div>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="od19_department_id" options="{'no_create': True}"/>
                 <field name="project_owner_id" domain="[('od19_is_project_owner', '=', True)]"/>
                 <field name="contractor_ids" widget="many2many_tags" domain="[('od19_is_contractor', '=', True)]"/>
+            </xpath>
+            <!-- Rename the analytic field label: 'Project Account' -> 'บัญชีวิเคราะห์' -->
+            <xpath expr="//group[@name='analytic']/field[@name='account_id']" position="attributes">
+                <attribute name="string">บัญชีวิเคราะห์</attribute>
             </xpath>
         </field>
     </record>

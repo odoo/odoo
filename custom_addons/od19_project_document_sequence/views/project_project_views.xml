@@ -7,9 +7,9 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="after">
+                <!-- Move fields out of the title bar into the labelled info group -->
+                <xpath expr="//field[@name='user_id']" position="before">
                     <field name="od19_project_type"/>
-                    <field name="od19_department_id"/>
                     <field name="od19_sale_person_id"/>
                 </xpath>
             </field>
@@ -22,7 +22,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="od19_project_type" optional="hide"/>
-                    <field name="od19_department_id" optional="hide"/>
                 </xpath>
             </field>
         </record>
