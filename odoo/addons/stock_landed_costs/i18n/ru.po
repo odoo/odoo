@@ -1,0 +1,775 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_landed_costs
+# 
+# Translators:
+# Андрей Гусев <gaussgss@gmail.com>, 2023
+# Максим Дронь <dronmax@gmail.com>, 2023
+# Vasiliy Korobatov <korobatov@gmail.com>, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Alena Vlasova, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# alenafairy, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid " already out"
+msgstr " уже выбыл"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "<span class=\"o_stat_text\">Valuation</span>"
+msgstr "<span class=\"o_stat_text\">Оценка</span>"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Складируемый продукт — это ТМЦ, запасами которых вы управляете. Должно быть установлено приложение «Склад».\n"
+"Расходный продукт — это ТМЦ, запасы которых не контролируются.\n"
+"Услуга — это нематериальный продукт."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
+msgid "Account"
+msgstr "Аккаунт"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
+msgid "Account Journal"
+msgstr "Журнал счетов"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "Action Needed"
+msgstr "Требуются действия"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
+msgid "Activities"
+msgstr "Активность"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Оформление исключения активности"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Activity State"
+msgstr "Состояние активности"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Значок типа активности"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Additional Costs"
+msgstr "Дополнительные расходы"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
+msgid "Additional Landed Cost"
+msgstr "Дополнительная стоимость земли"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
+msgid "Apply On"
+msgstr "Применить на"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
+msgid "Attachment Count"
+msgstr "Количество вложений"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_current_cost_price
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_current_cost_price
+msgid "By Current Cost"
+msgstr "По текущей стоимости"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_quantity
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_quantity
+msgid "By Quantity"
+msgstr "По количеству"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_volume
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_volume
+msgid "By Volume"
+msgstr "По объему"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_weight
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_weight
+msgid "By Weight"
+msgstr "По весу"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__cancel
+msgid "Cancelled"
+msgstr "Отменен"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Compute"
+msgstr "Вычислять"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__price_unit
+msgid "Cost"
+msgstr "Стоимость"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_line_id
+msgid "Cost Line"
+msgstr "Линия затрат"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cost Lines"
+msgstr "Линии затрат"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+"Стоимость и строки корректировки не сходятся. Может есть необходимость "
+"пересчитать стоимость с издержками."
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
+msgid "Create Landed Costs"
+msgstr "Создание наземных расходов"
+
+#. module: stock_landed_costs
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid "Create a new landed cost"
+msgstr "Создайте новую наземную стоимость"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__currency_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__currency_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__currency_id
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Date"
+msgstr "Дата"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Default Journal"
+msgstr "Журнал по умолчанию"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
+msgid "Default Split Method"
+msgstr "Метод разделения по умолчанию"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
+msgid "Default Split Method when used for Landed Cost"
+msgstr ""
+"Метод разделения по умолчанию при использовании для определения стоимости "
+"земли"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__name
+msgid "Description"
+msgstr "Описание"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Done"
+msgstr "Готово"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__equal
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__equal
+msgid "Equal"
+msgstr "Равно"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
+msgid ""
+"Equal: Cost will be equally divided.\n"
+"By Quantity: Cost will be divided according to product's quantity.\n"
+"By Current cost: Cost will be divided according to product's current cost.\n"
+"By Weight: Cost will be divided depending on its weight.\n"
+"By Volume: Cost will be divided depending on its volume."
+msgstr ""
+"Поровну: Стоимость будет разделена поровну.\n"
+"По количеству: Стоимость будет разделена в зависимости от количества продукта.\n"
+"По текущей стоимости: Стоимость будет разделена в соответствии с текущей стоимостью продукта.\n"
+"По весу: Стоимость будет разделена в зависимости от веса продукта.\n"
+"По объему: Стоимость будет разделена в зависимости от объема."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
+msgid "Followers"
+msgstr "Подписчики"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Подписчики"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Шрифт, отличный значок, например. к.-а.-задачи"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Future Activities"
+msgstr "Планируемые действия"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Group By"
+msgstr "Группировать по"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
+msgid "Has Message"
+msgstr "Есть сообщение"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
+msgid "Icon"
+msgstr "Иконка"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Значок, обозначающий исключение Дела."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Если отмечено, некоторые сообщения имеют ошибку доставки."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
+msgstr ""
+"Указывает, является ли данный продукт наземной стоимостью: при получении "
+"счета от поставщика вы можете распределить эту стоимость по предыдущим "
+"поступлениям."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
+msgid "Is Follower"
+msgstr "Является подписчиком"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
+msgid "Is Landed Costs Line"
+msgstr "Линия стоимости земли"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
+msgid "Is a Landed Cost"
+msgstr "Являются базовым типом затрат"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
+msgid "Item Description"
+msgstr "Описание"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_account_move
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
+msgid "Journal Entry"
+msgstr "Запись в журнале"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_account_move_line
+msgid "Journal Item"
+msgstr "Наименование в журнале"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed Cost"
+msgstr "Приземленная стоимость"
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
+#: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree2
+msgid "Landed Costs"
+msgstr "Посадочные расходы"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
+msgid "Landed Costs Visible"
+msgstr "Приземленные расходы Видимые"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
+msgid "Landed cost validated"
+msgstr "Приземленная стоимость подтверждена"
+
+#. module: stock_landed_costs
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
+msgstr ""
+"Наземная стоимость позволяет включить в стоимость товара дополнительные "
+"расходы (пересылку, страховку, таможенные пошлины и т. д.)."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Late Activities"
+msgstr "Поздние Мероприятия"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
+msgid "Lc Journal"
+msgstr "Журнал Lc"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "Message Delivery error"
+msgstr "Ошибка доставки сообщения"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
+msgid "Messages"
+msgstr "Сообщения"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Крайний срок моей активности"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Name"
+msgstr "Имя"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "New"
+msgstr "Новый"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
+msgid "New Value"
+msgstr "Новое Значение"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Следующее событие календаря активности"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Следующий срок мероприятия"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
+msgid "Next Activity Summary"
+msgstr "Резюме следующего действия"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
+msgid "Next Activity Type"
+msgstr "Следующий Тип Мероприятия"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Число действий"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of errors"
+msgstr "Число ошибок"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Количество сообщений, требующих принятия мер"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Количество недоставленных сообщений"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Only draft landed costs can be validated"
+msgstr "Подтвердить можно только проект стоимости земли"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
+msgid "Original Value"
+msgstr "Первоначальная стоимость"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Picking"
+msgstr "Выбор"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Please configure Stock Expense Account for product: %s."
+msgstr "Пожалуйста, настройте счет расходов на запасы для продукта: %s."
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Please define %s on which those additional costs should apply."
+msgstr ""
+"Пожалуйста, определите %s, на которые должны распространяться эти "
+"дополнительные расходы."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
+msgid "Posted"
+msgstr "Опубликовано"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_product_template
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__product_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__product_id
+msgid "Product"
+msgstr "Товар"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
+msgid "Product Type"
+msgstr "Тип товара"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Позиция заказа на покупку"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
+msgid "Quantity"
+msgstr "Количество"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
+msgid "Ratings"
+msgstr "Рейтинги"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
+msgid "Responsible User"
+msgstr "Ответственный пользователь"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Ошибка доставки SMS"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Показать все записи, у которых дата следующего действия наступает до "
+"сегодняшнего дня"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
+msgid "Split Method"
+msgstr "Метод разделения"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
+msgid "State"
+msgstr "Область"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Status"
+msgstr "Статус"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Статус, основанный на мероприятии\n"
+"Просроченная: Дата, уже прошла\n"
+"Сегодня: Дата мероприятия сегодня\n"
+"Запланировано: будущая деятельность."
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
+msgid "Stock Landed Cost"
+msgstr "Запасы Посадочная стоимость"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
+msgid "Stock Landed Cost Line"
+msgstr "Запасы Посаженные Линия затрат"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
+msgid "Stock Move"
+msgstr "Движение запасов"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
+msgstr "Уровень оценки запасов"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Today Activities"
+msgstr "Сегодняшние Дела"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
+msgid "Total"
+msgstr "Всего"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__picking_ids
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__target_model__picking
+msgid "Transfers"
+msgstr "Трансферы"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Тип Дела для исключения в записи."
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Validate"
+msgstr "Проверка"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"Утвержденные наземные расходы нельзя отменить, но можно создать "
+"отрицательные наземные расходы, чтобы отменить их"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+msgid "Valuation Adjustment Lines"
+msgstr "Линии корректировки оценки"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation Adjustments"
+msgstr "Корректировки оценки"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
+msgid "Vendor Bill"
+msgstr "Счет от Поставщика"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
+msgid "Volume"
+msgstr "Объем"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website Messages"
+msgstr "Веб-сайт сообщения"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website communication history"
+msgstr "История общений с сайта"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
+msgid "Weight"
+msgstr "Вес"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
+msgstr ""
+"Вы не можете применить наземные расходы к выбранному %s(ам). Посадочные "
+"расходы можно применять только для продуктов с методом калькуляции "
+"себестоимости FIFO или средней себестоимости."
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/product.py:0
+#, python-format
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr ""
+"Вы не можете изменить тип продукта или отключить опцию landed cost, потому "
+"что продукт используется в строке перемещения счета."

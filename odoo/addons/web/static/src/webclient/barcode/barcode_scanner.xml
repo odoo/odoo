@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BarcodeDialog">
+        <Dialog title="'Barcode Scanner'" fullscreen="true" footer="false" contentClass="'o-barcode-modal'">
+            <CropOverlay onResize.bind="this.onResize" isReady="state.isReady">
+                <video t-ref="videoPreview" muted="true" autoplay="true" playsinline="true" class="w-100 h-100"/>
+            </CropOverlay>
+        </Dialog>
+    </t>
+</templates>

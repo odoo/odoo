@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_timesheet_from_invoice" model="ir.actions.act_window">
+        <field name="name">Timesheets</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">tree,form,graph,pivot,kanban</field>
+        <field name="context">{
+            'create': False,
+            'edit': False,
+            'delete': False,
+            "is_timesheet": 1,
+        }</field>
+        <field name="domain">[('timesheet_invoice_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activities found
+            </p>
+            <p>
+                Track your working hours by projects every day and invoice this time to your customers.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_timesheet_from_invoice_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="act_window_id" ref="action_timesheet_from_invoice"/>
+    </record>
+
+    <record id="action_timesheet_from_invoice_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="act_window_id" ref="action_timesheet_from_invoice"/>
+    </record>
+
+    <record id="action_timesheet_from_invoice_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="act_window_id" ref="action_timesheet_from_invoice"/>
+    </record>
+
+    <record id="action_timesheet_from_invoice_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="6"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+        <field name="act_window_id" ref="action_timesheet_from_invoice"/>
+    </record>
+
+    <record id="action_timesheet_from_invoice_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="7"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+        <field name="act_window_id" ref="action_timesheet_from_invoice"/>
+    </record>
+
+    <record id="account_invoice_view_form_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit.timesheet</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="timesheet_count" invisible="1"/>
+                <button name="%(sale_timesheet.action_timesheet_from_invoice)d" type="action" class="oe_stat_button" icon="fa-clock-o" invisible="timesheet_count == 0" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="timesheet_total_duration" class="mr4" nolabel="1"/>
+                            <field name="timesheet_encode_uom_id" options="{'no_open': True}"/>
+                        </span>
+                        <span class="o_stat_text">Recorded</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

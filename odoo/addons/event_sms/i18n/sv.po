@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_sms
+# 
+# Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Martin Trigaux, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Larissa Manderfeld, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail
+msgid "Event Automated Mailing"
+msgstr "Automatiska evenemangsutskick"
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_registration
+msgid "Event: Registration"
+msgstr "Evenemang: anmälan"
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_reminder
+msgid "Event: Reminder"
+msgstr "Evenemang: påminnelse"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr "Schemalägg e-post för evenemangskategori"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_reminder
+msgid ""
+"Ready for \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
+"{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
+msgstr ""
+"Redo för \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
+"{{ 'Det börjar kl %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', kl %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSå ses vi där!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Gå med oss på %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail_registration
+msgid "Registration Mail Scheduler"
+msgstr "Schemaläggare för evenemangsanmälningar"
+
+#. module: event_sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
+msgid "SMS"
+msgstr "SMS"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_sms_template
+msgid "SMS Templates"
+msgstr "SMS-mallar"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "Skicka"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_registration
+msgid ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: We are happy to confirm your registration for the "
+"{{ object.event_id.name }} event."
+msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Vi är glada att bekräfta din registrering till {{ "
+"object.event_id.name }}."

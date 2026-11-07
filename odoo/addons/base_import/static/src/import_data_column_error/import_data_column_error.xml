@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImportDataColumnError">
+        <div class="o_import_report alert alert-danger mb-2">
+            <t t-if="props.errors.length > 1">
+                <p>
+                    <t t-if="props.errors[0].value">No matching records found for the following name </t>
+                    <t t-else="">Multiple errors occurred </t>
+                      in field <b t-esc="props.fieldInfo.label"/>:
+                </p>
+                <ul>
+                    <t t-foreach="props.errors" t-as="error" t-key="error_index">
+                        <a t-if="error_index === 3" href="#" class="o_import_report_count" t-on-click="() => this.state.isExpanded = !this.state.isExpanded">
+                            <i t-attf-class="fa fa-chevron-{{state.isExpanded ? 'up' : 'down'}}"></i> <t t-esc="props.errors.length - error_index"/> more
+                        </a>
+                        <li t-if="isErrorVisible(error_index)" t-attf-class="o_import_report_more p-0 text-{{error.priority}} {{error_index > 2 ? 'list-unstyled' : ''}}">
+                            <t t-if="error.rows.from === error.rows.to">
+                                <b t-esc="error.value"/> at row <t t-esc="error.rows.from + 1"/>
+                                <t t-if="props.resultNames and props.resultNames.length > error.rows.from and props.resultNames[error.rows.from] !== ''">
+                                    (<t t-esc="props.resultNames[error.rows.from]"/>)
+                                </t>
+                            </t>
+                            <t t-else=""><b t-esc="error.value || error.message"/> at multiple rows</t>
+                        </li>
+                    </t>
+                </ul>
+            </t>
+            <p t-else="" t-attf-class="mb-0 p-2 alert-{{props.errors[0].type}}" t-esc="props.errors[0].message" />
+            <t t-if="moreInfo">
+                <t t-if="typeof moreInfo === 'string'" t-esc="moreInfo"/>
+                <div t-else="" class="o_import_moreinfo" t-on-click="onMoreInfoClicked">
+                    <a href="#" class="o_import_see_all">
+                        <i class="oi oi-arrow-right"></i> See possible values
+                    </a>
+                </div>
+                <ul t-if="state.moreInfoContent" class="o_import_report_more">
+                    <li t-foreach="state.moreInfoContent" t-as="msg" t-key="msg_index"><t t-esc="msg"/></li>
+                </ul>
+            </t>
+        </div>
+    </t>
+</templates>

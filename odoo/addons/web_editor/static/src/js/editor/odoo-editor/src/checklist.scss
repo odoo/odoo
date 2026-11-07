@@ -1,0 +1,27 @@
+ul.o_checklist {
+    > li {
+        list-style: none;
+        position: relative;
+        margin-left: 20px;
+
+        &:not(.oe-nested):before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            display: block;
+            height: 14px;
+            width: 14px;
+            top: 1px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+        &.o_checked:after {
+            content: "✓";
+            transition: opacity .5s;
+            position: absolute;
+            left: -18px;
+            top: -1px;
+            opacity: 1;
+        }
+    }
+}

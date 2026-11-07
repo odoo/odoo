@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <template id="used_gift_card">
+        <div class="text-muted d-md-block small"
+            t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
+            <span>
+                Code:
+                <t t-esc="line.coupon_id.code[-4:].rjust(14, '&#8902;')"/>
+            </span>
+            <t t-if="line.coupon_id.expiration_date">
+                <br/>
+                <span>
+                    Expired Date:
+                    <t t-esc="line.coupon_id.expiration_date"/>
+                </span>
+            </t>
+        </div>
+    </template>
+
+    <template id="sale_purchased_gift_card">
+        <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
+        <div class="card mt-3 " t-if="gift_cards and order.state in ('sale', 'done')">
+            <div class="card-body">
+                <span t-if="not hide_intro">You will find below your gift cards code. An email has been sent with it. You can use it starting right now.</span>
+                <table class="table text-center table-borderless">
+                    <thead>
+                        <tr>
+                            <th class="fw-normal">Gift Card Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="range(len(gift_cards))" t-as="gift_card_idx">
+                            <t t-set="gift_card" t-value="gift_cards[gift_card_idx]"/>
+                            <td class="o_purchased_gift_card">
+                                Gift #<t t-esc="gift_card_idx + 1"/>
+                                (<span t-esc="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
+                                <strong t-esc="gift_card.code"/>
+                                <button class="btn btn-sm btn-secondary copy-to-clipboard" t-att-data-clipboard-text="gift_card.code">
+                                    <span class="fa fa-clipboard"/> Copy
+                                </button>
+                            </td>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+
+    <template id="sale_order_portal_content_inherit"
+              name="Gift Card Products Portal"
+              inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//td[@id='product_name']/*[last()]" position="after">
+            <t t-if="line.coupon_id and line.coupon_id.program_id.program_type == 'gift_card'"
+               t-call="sale_loyalty.used_gift_card"/>
+        </xpath>
+        <xpath expr="//div[@id='total']" position="after">
+            <t t-call="sale_loyalty.sale_purchased_gift_card">
+                <t t-set="order" t-value="sale_order"/>
+                <t t-set="hide_intro" t-value="1"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

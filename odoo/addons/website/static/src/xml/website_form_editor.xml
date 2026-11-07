@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- End Message -->
+    <t t-name="website.s_website_form_end_message">
+        <div class="s_website_form_end_message d-none">
+            <div class="oe_structure">
+                <section class="s_text_block pt64 pb64 o_colored_level o_cc o_cc2" data-snippet="s_text_block">
+                    <div class="container">
+                        <h2 class="text-center">
+                            <span class="fa fa-check-circle"/>
+                                Thank You For Your Feedback
+                        </h2>
+                        <p class="text-center">
+                            Our team will message you back as soon as possible.<br/>
+                            In the meantime we invite you to visit our <a href="/">website</a>.<br/>
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.s_website_form_recaptcha_legal">
+        <div class="col-12 s_website_form_recaptcha" data-name="Recaptcha Legal">
+            <div t-attf-style="width: #{labelWidth or '200px'}" class="s_website_form_label"/>
+            <div class="col-sm">
+                <t t-call="google_recaptcha.recaptcha_legal_terms"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- Generic Field Layout -->
+    <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
+    <t t-name="website.form_field">
+        <div t-attf-class="s_website_form_field mb-3 #{field.formatInfo.col or 'col-12'} #{field.custom and 's_website_form_custom' or ''} #{(field.required and 's_website_form_required' or '') or (field.modelRequired and 's_website_form_model_required' or '')} #{field.hidden and 's_website_form_field_hidden' or ''} #{field.dnone and 's_website_form_dnone' or ''}"
+            t-att-data-type="field.type"
+            data-name="Field"
+            t-att-data-translated-name="defaultName">
+            <div t-if="field.formatInfo.labelPosition != 'none' and field.formatInfo.labelPosition != 'top'" class="row s_col_no_resize s_col_no_bgcolor">
+                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition == 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                     <t t-call="website.form_label_content"/>
+                </label>
+                <div class="col-sm">
+                    <t t-out="0"/>
+                    <t t-call="website.form_field_description"/>
+                </div>
+            </div>
+            <t t-else="">
+                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition == 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                     <t t-call="website.form_label_content"/>
+                </label>
+                <t t-out="0"/>
+                <t t-call="website.form_field_description"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="website.form_label_content">
+        <span class="s_website_form_label_content" t-esc="field.string"/>
+        <t t-if="field.required or field.modelRequired">
+            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-esc="' ' + field.formatInfo.mark"/>
+        </t>
+        <t t-else="">
+            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-esc="' ' + field.formatInfo.mark"/>
+        </t>
+    </t>
+
+    <t t-name="website.form_field_description">
+        <!-- The actual value for this case is handled in JS as it can be -->
+        <!-- edited with formatting by the user -->
+        <!--
+            TODO using "small" alongside with the "form-text" class is actually
+            a mistake in current Bootstrap version: it has no effect since the
+            "form-text" class already enforces the default "small" behavior of
+            Bootstrap. In master, remove "small" on all of these.
+
+            TODO changing "font style" (tag) should also be disabled on those
+            form descriptions as the behavior is kinda weird (but it mainly does
+            not make sense to try and change it over there anyway).
+        -->
+        <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+            <t t-esc="default_description"/>
+        </div>
+    </t>
+
+    <!-- Hidden Field -->
+    <t t-name="website.form_field_hidden">
+        <t t-call="website.form_field">
+            <input
+                type="hidden"
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                t-att-value="field.value"
+                t-att-id="field.id"
+            />
+        </t>
+    </t>
+
+    <!-- Char Field -->
+    <t t-name="website.form_field_char">
+        <t t-call="website.form_field">
+            <input
+                t-att-type="field.inputType || 'text'"
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att-value="field.value"
+                t-att-data-fill-with="field.fillWith"
+                t-att-placeholder="field.placeholder"
+                t-att-id="field.id"
+            />
+        </t>
+    </t>
+
+    <!-- Email Field -->
+    <t t-name="website.form_field_email">
+        <t t-call="website.form_field_char"/>
+    </t>
+
+    <!-- Telephone Field -->
+    <t t-name="website.form_field_tel">
+        <t t-call="website.form_field_char"/>
+    </t>
+
+    <!-- Url Field -->
+    <t t-name="website.form_field_url">
+        <t t-call="website.form_field_char"/>
+    </t>
+
+    <!-- Text Field -->
+    <t t-name="website.form_field_text">
+        <t t-call="website.form_field">
+            <textarea
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att-placeholder="field.placeholder"
+                t-att-id="field.id"
+                t-att-rows="field.rows || 3"
+                t-esc="field.value"
+            />
+        </t>
+    </t>
+
+    <!-- HTML Field -->
+    <t t-name="website.form_field_html">
+        <!--
+            Maybe use web_editor ? Not sure it actually makes
+            sense to have random people editing html in a form...
+        -->
+        <t t-call="website.form_field_text"/>
+    </t>
+
+    <!-- Integer Field -->
+    <t t-name="website.form_field_integer">
+        <t t-call="website.form_field">
+            <input
+                type="number"
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                step="1"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att-value="field.value"
+                t-att-placeholder="field.placeholder"
+                t-att-id="field.id"
+            />
+        </t>
+    </t>
+
+    <!-- Float Field -->
+    <t t-name="website.form_field_float">
+        <t t-call="website.form_field">
+            <input
+                type="number"
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                step="any"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att-value="field.value"
+                t-att-placeholder="field.placeholder"
+                t-att-id="field.id"
+            />
+        </t>
+    </t>
+
+    <!-- Date Field -->
+    <t t-name="website.form_field_date">
+        <t t-call="website.form_field">
+            <div class="s_website_form_date input-group date">
+                <input
+                        type="text"
+                        class="form-control datetimepicker-input s_website_form_input"
+                        t-att-name="field.name"
+                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-value="field.value"
+                        t-att-placeholder="field.placeholder"
+                        t-att-id="field.id"
+                />
+                <div class="input-group-text pe-none"><i class="fa fa-calendar"></i></div>
+            </div>
+        </t>
+    </t>
+
+    <!-- Datetime Field -->
+    <t t-name="website.form_field_datetime">
+        <t t-call="website.form_field">
+            <div class="s_website_form_datetime input-group date">
+                <input
+                        type="text"
+                        class="form-control datetimepicker-input s_website_form_input"
+                        t-att-name="field.name"
+                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-value="field.value"
+                        t-att-placeholder="field.placeholder"
+                        t-att-id="field.id"
+                />
+                <div class="input-group-text pe-none"><i class="fa fa-calendar"></i></div>
+            </div>
+        </t>
+    </t>
+
+    <!-- Boolean Field -->
+    <t t-name="website.form_field_boolean">
+        <t t-call="website.form_field">
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    value="Yes"
+                    class="s_website_form_input form-check-input"
+                    t-att-name="field.name"
+                    t-att="{checked: field.value and 'checked' or None}"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-id="field.id"
+                />
+            </div>
+        </t>
+    </t>
+
+    <!-- Selection Field -->
+    <t t-name="website.form_field_selection">
+        <t t-call="website.form_field">
+            <t t-if="!field.records">
+                <input
+                    class="s_website_form_input"
+                    t-att-name="field.name"
+                    t-att-value="undefined"
+                    t-att-required="field.required || field.modelRequired || None"
+                    placeholder="No matching record!"
+                    disabled=""
+                />
+            </t>
+            <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
+                <t t-foreach="field.records" t-as="record" t-key="record_index">
+                    <t t-call="website.form_radio"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <!-- Radio -->
+    <t t-name="website.form_radio">
+        <t t-set="recordId" t-value="field.id + record_index"/>
+        <div t-attf-class="radio col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+            <div class="form-check">
+                <input
+                    type="radio"
+                    class="s_website_form_input form-check-input"
+                    t-att-id="recordId"
+                    t-att-name="field.name"
+                    t-att="{checked: record.selected and 'checked' or None}"
+                    t-att-value="record.id"
+                    t-att-required="field.required || field.modelRequired || None"
+                />
+                <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
+                    <t t-esc="record.display_name"/>
+                </label>
+            </div>
+        </div>
+    </t>
+
+    <!-- Many2One Field -->
+    <t t-name="website.form_field_many2one">
+        <!-- Binary one2many -->
+        <t t-if="field.relation == 'ir.attachment'">
+            <t t-call="website.form_field_binary"/>
+        </t>
+        <!-- Generic one2many -->
+        <t t-if="field.relation != 'ir.attachment'">
+            <t t-call="website.form_field">
+                <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id" style="display: none">
+                    <t t-foreach="field.records" t-as="record" t-key="record_index">
+                        <option t-esc="record.display_name" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
+                    </t>
+                </select>
+                <div id="editable_select" class="form-control s_website_form_input">
+                    <t t-foreach="field.records" t-as="record" t-key="record_index">
+                        <t t-set="noValueLabel">no value</t>
+                        <div t-esc="record.display_name" t-attf-data-empty-value="&lt;#{noValueLabel}&gt;" t-att-id="record.id" t-attf-class="s_website_form_select_item #{record.selected and 'selected' or ''}"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <!-- One2Many Field -->
+    <t t-name="website.form_field_one2many">
+        <!-- Binary one2many -->
+        <t t-if="field.relation == 'ir.attachment'">
+            <t t-call="website.form_field_binary">
+                <t t-set="multiple" t-value="1"/>
+            </t>
+        </t>
+        <!-- Generic one2many -->
+        <t t-if="field.relation != 'ir.attachment'">
+            <t t-call="website.form_field">
+                <t t-if="!field.records || field.records.length == 0">
+                    <input
+                        class="form-control s_website_form_input"
+                        t-att-name="field.name"
+                        t-att-value="undefined"
+                        t-att-required="field.required || field.modelRequired || None"
+                        placeholder="No matching record!"
+                        disabled=""
+                    />
+                </t>
+                <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
+                    <t t-foreach="field.records" t-as="record" t-key="record_index">
+                        <t t-call="website.form_checkbox"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <!-- Checkbox -->
+    <t t-name="website.form_checkbox">
+        <t t-set="recordId" t-value="field.id + record_index"/>
+        <div t-attf-class="checkbox col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    class="s_website_form_input form-check-input"
+                    t-att-id="recordId"
+                    t-att-name="field.name"
+                    t-att="{checked: record.selected and 'checked' or None}"
+                    t-att-value="record.id"
+                    t-att-required="field.required || field.modelRequired || None"
+                />
+                <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
+                    <t t-esc="record.display_name"/>
+                </label>
+            </div>
+        </div>
+    </t>
+
+    <!-- Many2Many Field -->
+    <t t-name="website.form_field_many2many">
+        <t t-call="website.form_field_one2many"/>
+    </t>
+
+    <!-- Binary Field -->
+    <t t-name="website.form_field_binary">
+        <t t-call="website.form_field">
+            <input
+                type="file"
+                class="form-control s_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required || field.modelRequired || None"
+                t-att="field.maxFilesNumber > 1 and {'multiple': ''} or {}"
+                t-att-id="field.id"
+                t-att-data-max-files-number="field.maxFilesNumber or '1'"
+                t-att-data-max-file-size="field.maxFileSize or '1'"
+            />
+        </t>
+    </t>
+
+    <!-- Monetary Field -->
+    <t t-name="website.form_field_monetary">
+        <t t-call="website.form_field_float" />
+    </t>
+</templates>

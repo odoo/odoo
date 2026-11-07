@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_tag_category_view_form" model="ir.ui.view">
+        <field name="name">event.tag.category.view.form.inherit.website</field>
+        <field name="model">event.tag.category</field>
+        <field name="inherit_id" ref="event.event_tag_category_view_form"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="before">
+                <field name="is_published" string="Show on Website" widget="boolean_toggle"/>
+                <field name="website_id" groups="website.group_multi_website" string="Website" invisible="not is_published"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_tag_category_view_tree" model="ir.ui.view">
+        <field name="name">event.tag.category.view.tree.inherit.website</field>
+        <field name="model">event.tag.category</field>
+        <field name="inherit_id" ref="event.event_tag_category_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="is_published" string="Show on Website"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

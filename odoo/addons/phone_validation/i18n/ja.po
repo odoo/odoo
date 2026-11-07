@@ -1,0 +1,415 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* phone_validation
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
+msgid " Please correct the number and try again."
+msgstr "番号を修正して再試行して下さい。"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction
+msgid "Action Needed"
+msgstr "要アクション"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__active
+msgid "Active"
+msgstr "有効化"
+
+#. module: phone_validation
+#: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
+msgid "Add a phone number in the blacklist"
+msgstr "ブラックリストに電話番号を追加する"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_search
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+#, python-format
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr "本当にこの電話番号のブラックリストを解除しますか？"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_base
+msgid "Base"
+msgstr "ベース"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+msgid "Blacklist"
+msgstr "ブラックリスト"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
+msgid "Blacklist Date"
+msgstr "ブラックリスト日"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "ブラックリストされた電話は携帯"
+
+#. module: phone_validation
+#: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
+msgid "Blacklisted Phone Numbers"
+msgstr "ブラックリスト電話番号"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "ブラックリストされた電話は固定電話"
+
+#. module: phone_validation
+#: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
+msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
+msgstr "ブラックリストに登録された電話番号には、SMSメールが届かなくなります。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/res_users.py:0
+#, python-format
+msgid ""
+"Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
+"(#%(user_id)s)"
+msgstr ""
+"ポータルアカウント %(portal_user_name)s の削除、 %(user_name)s "
+"(#%(user_id)s)による、によってブロックされています。"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Confirm"
+msgstr "確認"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_uid
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_date
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr "サニタイズされた電話番号を保存するためのフィールド。検索や比較のスピードアップに役立ちます。"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_follower_ids
+msgid "Followers"
+msgstr "フォロワー"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "フォロワー (取引先)"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__id
+msgid "ID"
+msgstr "ID"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction
+#: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
+#: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr "サニタイズされた電話番号がブラックリストに登録されている場合、その連絡先は、どのリストからも、一括送信のSMSを受信できなくなります。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: not a valid country prefix."
+msgstr "不可能な番号 %s: 無効な国番号です。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: not enough digits."
+msgstr "不可能な番号 %s: 桁数が足りません。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: probably invalid number of digits."
+msgstr "不正な番号 %s: おそらく桁数が無効です。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: too many digits."
+msgstr "不可能な番号 %s: 桁数が多すぎます。"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"ブラックリストに登録された電話番号が携帯電話番号であるかどうかを示します。モデル内に携帯電話フィールドと電話番号フィールドの両方がある場合に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます。"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"ブラックリストに登録されたサニタイズされた電話番号が電話番号であるかどうかを示します。モデル内に携帯電話フィールドと電話フィールドの両方がある場合に、　　　どちらの番号がブラックリストに登録されているかを区別するのに役立ちます。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Invalid number %s: probably incorrect prefix."
+msgstr "無効な番号%s: おそらく局番が間違っています。"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid "Invalid primary phone field on model %s"
+msgstr "モデル%sの最初の電話フィールドが無効です"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
+msgid "Is Follower"
+msgstr "フォロー中　"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__write_uid
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__write_date
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error
+msgid "Message Delivery error"
+msgstr "メッセージ配信エラー"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_ids
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid "Missing definition of phone fields."
+msgstr "電話フィールドの定義がありません。"
+
+#. module: phone_validation
+#: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
+msgid "Number already exists"
+msgstr "番号はすでに存在します"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction_counter
+msgid "Number of Actions"
+msgstr "アクション数"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error_counter
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error_counter
+msgid "Number of errors"
+msgstr "エラー数"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction_counter
+#: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
+#: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "配信エラーが発生されたメッセージ数"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
+msgid "Number should be E164 formatted"
+msgstr "番号はE164フォーマットである必要があります"
+
+#. module: phone_validation
+#: model:ir.ui.menu,name:phone_validation.phone_menu_main
+msgid "Phone / SMS"
+msgstr "電話/ SMS"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_blacklist
+#: model:ir.ui.menu,name:phone_validation.phone_blacklist_menu
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
+msgid "Phone Blacklist"
+msgstr "電話ブラックリスト"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_mail_thread_phone
+msgid "Phone Blacklist Mixin"
+msgstr "電話ブラックリストMixin"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "ブラックリストに登録された電話番号"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__phone
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Phone Number"
+msgstr "電話番号"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "電話/携帯電話"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid ""
+"Please enter at least 3 characters when searching a Phone/Mobile number."
+msgstr "電話番号/携帯電話番号を検索する場合は、少なくとも3文字以上を入力して下さい。"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Reason"
+msgstr "理由"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+msgid "Remove phone from blacklist"
+msgstr "ブラックリストから電話番号を削除する"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
+msgid "Sanitized Number"
+msgstr "サニタイズされた数"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Unable to parse %(phone)s: %(error)s"
+msgstr "解析不可能%(phone)s : %(error)s"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+msgid "Unblacklist"
+msgstr "ブラックリスト解除"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
+#, python-format
+msgid "Unblock Reason: %(reason)s"
+msgstr "ブロック解除理由 : %(reason)s"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_res_users
+msgid "User"
+msgstr "ユーザ"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "phone_blacklist_removal"
+msgstr "phone_blacklist_removal"

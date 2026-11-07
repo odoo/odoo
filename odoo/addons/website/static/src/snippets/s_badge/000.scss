@@ -1,0 +1,10 @@
+
+.s_badge {
+    padding: $s-badge-padding;
+    margin: $s-badge-margin;
+    border-radius: if($s-badge-border-radius != null, $s-badge-border-radius, $badge-border-radius);
+    @include font-size($font-size-sm);
+    .fa {
+        margin: $s-badge-i-margin;
+    }
+}

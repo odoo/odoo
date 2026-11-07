@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- REPORTING/MEMBERSHIP BY YEAR  -->
+        <record model="ir.ui.view" id="view_report_membership_search">
+            <field name="name">report.membership.search</field>
+            <field name="model">report.membership</field>
+            <field name="arch" type="xml">
+                <search string="Membership">
+                    <filter string="Forecast" name="forecast" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
+                    <filter string="Revenue Done" name="Revenue" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
+                    <separator/>
+                    <filter name="filter_start_date" date="start_date"/>
+                    <field name="partner_id"/>
+                    <field name="membership_id"/>
+                    <field name="user_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" name="salesman"
+                            context="{'group_by':'user_id'}"/>
+                        <filter string="Associated Partner" name="associate_member_id"
+                            context="{'group_by':'associate_member_id'}"/>
+                        <filter string="Membership Product" name="product"
+                            context="{'group_by':'membership_id'}"/>
+                        <filter string="Current Membership State" name="membership_state"
+                            context="{'group_by':'membership_state'}"/>
+                        <filter string="Company" name="company"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Month" name="start_date"
+                            context="{'group_by':'start_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_report_membership_pivot">
+            <field name="name">report.membership.pivot</field>
+            <field name="model">report.membership</field>
+            <field name="arch" type="xml">
+                <pivot string="Membership" sample="1">
+                    <field name="membership_id" type="row"/>
+                    <field name="start_date" interval="month" type="col"/>
+                    <field name="quantity" type="measure"/>
+                    <field name="num_paid" type="measure"/>
+                    <field name="num_invoiced" type="measure"/>
+                    <field name="tot_earned" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_report_membership_graph1">
+            <field name="name">report.membership.graph1</field>
+            <field name="model">report.membership</field>
+            <field name="arch" type="xml">
+                <graph string="Membership" sample="1">
+                    <field name="membership_id"/>
+                    <field name="start_date" interval="month"/>
+                    <field name="quantity" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+    <record id="report_membership_view_tree" model="ir.ui.view">
+        <field name="name">report.membership.view.tree</field>
+        <field name="model">report.membership</field>
+        <field name="arch" type="xml">
+            <tree string="Membership">
+                <field name="partner_id"/>
+                <field name="membership_id" optional="hide"/>
+                <field name="start_date" optional="hide"/>
+                <field name="date_to" optional="hide"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="num_invoiced" optional="show" sum="Sum of # Invoiced"/>
+                <field name="num_paid" optional="show" sum="Sum of # Paid"/>
+                <field name="quantity" optional="show" sum="Sum of Quantity"/>
+                <field name="tot_earned" optional="show" sum="Sum of Earned Amount"/>
+                <field name="membership_state" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+        <record model="ir.actions.act_window" id="action_report_membership_tree">
+            <field name="name">Members Analysis</field>
+            <field name="res_model">report.membership</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="view_report_membership_search"/>
+            <field name="context">{"search_default_start_date":1,"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1,'group_by_no_leaf':1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Reporting" parent="menu_association"
+            sequence="99"
+            action="action_report_membership_tree"
+            id="menu_report_membership"
+            groups="base.group_partner_manager"/>
+
+</odoo>

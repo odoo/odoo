@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.View">
+      <WithSearch t-props="withSearchProps" t-slot-scope="search">
+        <t t-component="Controller"
+          t-on-click="handleActionLinks"
+          t-props="componentProps"
+          context="search.context"
+          domain="search.domain"
+          groupBy="search.groupBy"
+          orderBy="search.orderBy"
+          comparison="search.comparison"
+          display="search.display"/>
+      </WithSearch>
+  </t>
+
+  <t t-name="web.ReportViewMeasures">
+    <Dropdown togglerClass="'btn btn-primary'">
+            <t t-set-slot="toggler">
+                Measures <i class="fa fa-caret-down ms-1"/>
+            </t>
+            <t t-foreach="measures"
+               t-as="measure"
+               t-key="measure_value.name">
+                <div t-if="!measure_first and measure == '__count'" role="separator" class="dropdown-divider"/>
+                <DropdownItem class="{ o_menu_item: true, selected: activeMeasures.includes(measure) }"
+                  parentClosingMode="'none'"
+                  t-esc="measures[measure].string"
+                  onSelected="() => this.onMeasureSelected({ measure: measure_value.name })"
+                />
+            </t>
+        </Dropdown>
+  </t>
+</templates>

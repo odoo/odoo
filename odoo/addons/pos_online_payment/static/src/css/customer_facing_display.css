@@ -1,0 +1,54 @@
+.pos-customer_facing_display .online-payment {
+    height: 100%;
+    font-size: min(max(2vw, .9rem), 1.6rem);
+    overflow: hidden;
+    -webkit-display: flex;
+    -moz-display: flex;
+    -ms-display: flex;
+    -o-display: flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    -o-flex-direction: column;
+    flex-direction: column;
+}
+
+.pos-customer_facing_display .online-payment .instructions {
+    -webkit-box-flex: 1 0 75%;
+    -webkit-flex: 1 0 75%;
+    -moz-box-flex: 1 0 75%;
+    -ms-flex: 1 0 75%;
+    flex: 1 0 75%;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.pos-customer_facing_display .online-payment .instructions p {
+    padding-top: .3rem;
+    margin-bottom: 0;
+    font-size: min(max(2.9vw, 0.4rem), 1.6rem);
+}
+
+.pos-customer_facing_display .online-payment .instructions .qr-code {
+    height: max(min(min(75vh, 75vw), 60%), 5rem);
+    width: auto;
+    overflow: visible;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.pos-customer_facing_display .online-payment .instructions .spacer {
+    height: 10%;
+}
+
+.pos-customer_facing_display .online-payment .info {
+    padding: 0 2%;
+    font-size: min(max(3vw, 0.6rem), 1.6rem);
+    max-height: 25%;
+    height: unset;
+    justify-content: left;
+    text-align: left;
+}

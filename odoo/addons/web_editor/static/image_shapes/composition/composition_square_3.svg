@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="shape" width="800" height="600">
+  <style>
+    @keyframes rotate {
+      from {transform: rotate(0deg);}
+      to   {transform: rotate(-360deg);}
+    }
+    #triangles polygon {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+  </style>
+  <defs>
+      <clipPath id="clip-path" clipPathUnits="objectBoundingBox">
+          <use xlink:href="#filterPath" fill="none"/>
+      </clipPath>
+      <path id="filterPath" d="M0 .0975.95.0975.95.9525 0 .7667Z">
+          <animate dur="6s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+          values="
+          M0 .0975.95.0975.95.9525 0 .7667Z;
+          M0 .0975.95.0975.95.9325 0 .7867Z;
+          M0 .0975.95.0975.95.9525 0 .7667Z"
+          calcMode="spline"
+          keySplines=".56 .37 .43 .58; .56 .37 .43 .58"/>
+          <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="6s" values="0 -.02;0 0;0 -.02" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+      </path>
+      <g id="animation">
+          <animateTransform xlink:href="#shape" attributeName="transform" attributeType="XML" type="translate" dur="6s" values="0 0;0 8;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+          <animate xlink:href="#background" dur="12s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+          values="
+          M0,0H28.35V28.35Z;
+          M0 0H28.35V25.515Z;
+          M0,0H28.35V28.35Z"
+          calcMode="spline"
+          keySplines=".56 .37 .43 .58; .56 .37 .43 .58"/>
+      </g>
+  </defs>
+  <svg class="background" viewBox="0 0 28.35 28.35" preserveAspectRatio="none" width="90%" height="75%" x="10%">
+      <path id="background" d="M0,0H28.35V28.35Z" fill="#3AADAA"/>
+  </svg>
+  <svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
+      <use xlink:href="#filterPath" fill="darkgrey"/>
+  </svg>
+  <image xlink:href="" clip-path="url(#clip-path)"/>
+  <svg viewBox="0 0 22.02 18.6" width="15%" heigth="15%" x="5%" y="30%">
+      <g id="triangles">
+        <polygon points="1.93 0.96 2.73 0.96 2.33 1.65 1.93 2.34 1.53 1.65 1.13 0.96 1.93 0.96" fill="#383E45" style="animation: rotate 6s linear infinite"/>
+        <polygon points="11.01 0.96 11.81 0.96 11.41 1.65 11.01 2.34 10.61 1.65 10.21 0.96 11.01 0.96" fill="#383E45" style="animation: rotate 6s .5s linear infinite"/>
+        <polygon points="20.09 0.96 20.89 0.96 20.49 1.65 20.09 2.34 19.69 1.65 19.29 0.96 20.09 0.96" fill="#383E45" style="animation: rotate 6s 1s linear infinite"/>
+        <polygon points="1.93 8.61 2.73 8.61 2.33 9.3 1.93 9.99 1.53 9.3 1.13 8.61 1.93 8.61" fill="#383E45" style="animation: rotate 6s 1.5s linear infinite"/>
+        <polygon points="11.01 8.61 11.81 8.61 11.41 9.3 11.01 9.99 10.61 9.3 10.21 8.61 11.01 8.61" fill="#383E45" style="animation: rotate 6s 2s linear infinite"/>
+        <polygon points="20.09 8.61 20.89 8.61 20.49 9.3 20.09 9.99 19.69 9.3 19.29 8.61 20.09 8.61" fill="#383E45" style="animation: rotate 6s 2.5s linear infinite"/>
+        <polygon points="1.93 16.26 2.73 16.26 2.33 16.95 1.93 17.65 1.53 16.95 1.13 16.26 1.93 16.26" fill="#383E45" style="animation: rotate 6s 3s linear infinite"/>
+        <polygon points="11.01 16.26 11.81 16.26 11.41 16.95 11.01 17.65 10.61 16.95 10.21 16.26 11.01 16.26" fill="#383E45" style="animation: rotate 6s 3.5s linear infinite"/>
+        <polygon points="20.09 16.26 20.89 16.26 20.49 16.95 20.09 17.65 19.69 16.95 19.29 16.26 20.09 16.26" fill="#383E45" style="animation: rotate 6s 4s linear infinite"/>
+    </g>
+  </svg>      
+</svg>

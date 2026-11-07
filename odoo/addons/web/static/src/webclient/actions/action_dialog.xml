@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ActionDialog.header" t-inherit="web.Dialog.header" t-inherit-mode="primary">
+    <xpath expr="//h4[contains(concat(' ',normalize-space(@class),' '),' modal-title ')]" position="before">
+      <DebugMenu t-if="env.debug" />
+    </xpath>
+  </t>
+  <t t-name="web.ActionDialog" t-inherit="web.Dialog" t-inherit-mode="primary">
+    <xpath expr="//main[hasclass('modal-body')]" position="attributes">
+      <attribute name="t-att-class">
+        {"o_act_window": props.actionType === "ir.actions.act_window"}
+      </attribute>
+    </xpath>
+    <xpath expr="//t[@t-slot='default']" position="replace">
+      <t t-if="props.ActionComponent" t-component="props.ActionComponent" t-props="props.actionProps"/>
+    </xpath>
+    <xpath expr="//t[@t-slot='header']" position="replace">
+      <t t-call="web.ActionDialog.header">
+        <t t-set="fullscreen" t-value="props.isFullscreen"/>
+      </t>
+    </xpath>
+  </t>
+
+</templates>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CustomFavoriteItem">
+        <t t-set="saveCurrentSearchDescription">Save current search</t>
+        <AccordionItem class="'o_add_favorite text-truncate'" description="saveCurrentSearchDescription">
+            <div class="px-3 py-2">
+                <input type="text"
+                    class="o_input"
+                    t-ref="description"
+                    t-model.trim="state.description"
+                    t-on-keydown="onInputKeydown"
+                    />
+                <CheckBox value="state.isDefault" onChange.bind="onDefaultCheckboxChange">
+                    <span data-tooltip="Use this filter by default when opening this view">Default filter</span>
+                </CheckBox>
+                <CheckBox value="state.isShared" onChange.bind="onShareCheckboxChange">
+                    <span data-tooltip="Make this filter available to other users">Shared</span>
+                </CheckBox>
+            </div>
+            <div class="px-3 py-2">
+                <button class="o_save_favorite btn btn-primary w-100" t-on-click="saveFavorite">
+                    Save
+                </button>
+            </div>
+        </AccordionItem>
+    </t>
+
+</templates>

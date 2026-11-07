@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" width="100%" height="100%">	
+	<defs>
+        <svg id="sub-svg-1" viewBox="0 0 1400 500" preserveAspectRatio="xMidYMin slice" width="100%">
+            <polygon fill="#F6F6F6" points="0,0 0,95 1400,0"/>
+        </svg>
+        <svg id="sub-svg-2" viewBox="0 0 1400 500" preserveAspectRatio="xMidYMax slice" width="100%">
+            <polygon fill="#383E45" points="0,500 1400,500 0,456.9"/>
+        </svg>
+        <linearGradient id="gradient" gradientUnits="userSpaceOnUse" x1="0" y1="1400" x2="1400" y2="1400">
+            <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+            <stop offset="1" stop-color="#FFFFFF" stop-opacity=".25"/>
+        </linearGradient>
+    </defs>
+    <svg>
+        <rect x="0" y="0" width="100%" height="100%" fill="url(#gradient)"/>
+        <use xlink:href="#sub-svg-1"/>
+        <use xlink:href="#sub-svg-2"/>
+    </svg>
+</svg>

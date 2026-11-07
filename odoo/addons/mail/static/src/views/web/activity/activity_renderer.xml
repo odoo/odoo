@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="mail.ActivityViewHeader">
+    <thead>
+        <tr>
+            <th></th>
+            <th t-foreach="activeColumns" t-as="type" t-key="type.id"
+                class="o_activity_type_cell p-3" t-attf-class="{{ activeFilter.activityTypeId === type.id ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
+                t-attf-width="{{100/activeColumns.length}}%">
+                <div>
+                    <span t-esc="type.name"/>
+                    <span t-if="type.template_ids.length > 0" class="dropdown float-end">
+                        <i class="fa fa-ellipsis-v fa-fw" data-bs-toggle="dropdown"/>
+                        <div class="dropdown-menu">
+                            <t t-foreach="type.template_ids" t-as="template" t-key="template.id">
+                                <div data-tooltip="This action will send an email."
+                                     class="o_template_element o_send_mail_template cursor-pointer"
+                                     t-on-click="() => props.onSendMailTemplate(template.id, type.id)">
+                                    <i class="fa fa-envelope fa-fw"/> <t t-esc="template.name"/>
+                                </div>
+                            </t>
+                        </div>
+                    </span>
+                </div>
+                <div class="o_activity_counter d-flex align-items-center justify-content-between mb-3 h-0 mt24">
+                    <t t-set="group" t-value="getGroupInfo(type)"/>
+                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" aggregateOn="group.aggregateOn" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
+                </div>
+            </th>
+            <th class="align-middle" style="width: 32px; min-width: 32px">
+                <Dropdown
+                    class="'o_optional_columns_dropdown text-center border-top-0'"
+                    togglerClass="'btn p-0'"
+                    skipTogglerTabbing="true"
+                    position="'bottom-end'">
+                    <t t-set-slot="toggler">
+                        <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                    </t>
+
+                    <t t-foreach="props.activityTypes" t-as="type" t-key="type_index">
+                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleDisplayColumn(type.id)">
+                            <CheckBox
+                                onChange="() => this.toggleDisplayColumn(type.id)"
+                                value="storageActiveColumns[type.id]"
+                                name="type.name"
+                            >
+                                <t t-esc="type.name"/>
+                            </CheckBox>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </th>
+        </tr>
+    </thead>
+</t>
+
+<t t-name="mail.ActivityViewBody">
+    <tbody>
+        <t t-foreach="activityResIds" t-as="resId" t-key="resId">
+            <t t-call="mail.ActivityViewRow"/>
+        </t>
+    </tbody>
+</t>
+
+<t t-name="mail.ActivityViewRow">
+    <t t-set="record" t-value="getRecord(resId)"/>
+    <t t-if="record">
+        <tr class="o_data_row h-100" t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
+                <ActivityRecord archInfo="props.archInfo" record="record" openRecord="props.openRecord" />
+                <t t-foreach="activeColumns" t-as="type" t-key="type.id">
+                    <t t-call="mail.ActivityViewCell"/>
+                </t>
+            <td/>
+        </tr>
+    </t>
+</t>
+
+<t t-name="mail.ActivityViewCell">
+    <t t-set="activityGroup" t-value="props.groupedActivities[resId] and props.groupedActivities[resId][type.id] or {count: 0, ids: [], state: false}"/>
+    <t t-set="isCellHidden" t-value="!activeFilter.resIds.has(resId) and activeFilter.activityTypeId === type.id"/>
+    <td t-if="activityGroup.state and !isCellHidden"
+        t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}">
+        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type.id"
+                      attachmentsInfo="activityGroup.attachments_info"
+                      reportingDate="activityGroup.reporting_date"
+                      countByState="activityGroup.count_by_state"
+                      reloadFunc="props.onReloadData"
+                      resId="record.resId" resModel="record.resModel"
+                      userAssignedIds="activityGroup.user_assigned_ids"
+        />
+    </td>
+    <td t-else=""
+        class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
+        t-attf-class="{{ activeFilter.resIds.has(resId) ? 'o_activity_filter_' + activeFilter.progressValue.active : '' }}"
+        t-on-click.prevent.stop="() => props.onEmptyCell(resId, type.id)">
+        <i data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
+    </td>
+</t>
+
+<t t-name="mail.ActivityViewFooter">
+    <tfoot>
+        <tr class="o_data_row">
+            <td class="o_record_selector p-3 cursor-pointer" colspan="3" t-on-click.prevent.stop="props.scheduleActivity">
+                <span class="btn btn-link"><i class="fa fa-plus pe-2"/><span>Schedule activity</span></span>
+            </td>
+        </tr>
+    </tfoot>
+</t>
+
+<div t-name="mail.ActivityRenderer" class="o_activity_view h-100">
+    <t t-if="!props.activityTypes.length" t-call="web.NoContentHelper"/>
+    <table t-else="" class="table table-bordered mb-5 bg-view o_activity_view_table">
+        <t t-call="mail.ActivityViewHeader"/>
+        <t t-call="mail.ActivityViewBody"/>
+        <t t-call="mail.ActivityViewFooter"/>
+    </table>
+</div>
+
+</templates>

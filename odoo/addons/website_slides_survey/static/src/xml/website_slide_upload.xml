@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="website.slide.upload.modal.certification">
+        <div>
+            <form class="clearfix">
+                <div class="row">
+                    <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
+                        <div class="mb-3">
+                            <label for="certification_id" class="col-form-label">Certification</label>
+                            <input class="form-control" id="certification_id" required="required"/>
+                            <span class="o_error_no_certification text-danger d-none">Please select a certification.</span>
+                        </div>
+                        <t t-call="website.slide.upload.modal.common"/>
+                        <canvas id="data_canvas" class="d-none"></canvas>
+                    </div>
+ 
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6">
+                        <div class="img-thumbnail h-100">
+                            <div class="o_slide_tutorial p-3">
+                                <div class="h5">How to upload a certification on your course?</div>
+                                <div class="my-4">You can create your certification from here or use an existing one. Once your certification is created, you can still edit it in backend.</div>
+                            </div>
+                        </div>
+                    </div>        
+                </div>  
+            </form>
+        </div>
+    </t>
+</template>

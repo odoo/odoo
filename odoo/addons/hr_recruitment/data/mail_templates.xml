@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <template id="applicant_hired_template">
+Employee created: <a href="#" t-att-data-oe-id="applicant.emp_id.id" data-oe-model="hr.employee"><t t-esc="applicant.emp_id.name"/></a>
+    </template>
+
+    <template id="mail_notification_light_without_background" inherit_id="mail.mail_notification_light">
+        <xpath expr="//t//table[@role='presentation']" position="attributes">
+            <attribute name="style" add="background-color: white;" separator=" "/>
+        </xpath>
+    </template>
+
+</data></odoo>

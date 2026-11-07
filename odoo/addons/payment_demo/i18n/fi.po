@@ -1,0 +1,310 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_demo
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Successful payment\">\n"
+"                        Successful\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Payment processing\">\n"
+"                        Pending\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                        Canceled\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Processing error\">\n"
+"                        Error\n"
+"                    </option>\n"
+"                </select>"
+msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Onnistunut maksu\">\n"
+"                        Onnistunut\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Maksun käsittely\">\n"
+"                        Vireillä\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Asiakas on keskeyttänyt maksun\">\n"
+"                        Peruutettu\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Käsittelyvirhe\">\n"
+"                        Virhe\n"
+"                    </option>\n"
+"                </select>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>City</b></small>"
+msgstr "<small><b>Kaupunki</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Country</b></small>"
+msgstr "<small><b>Maa</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Name</b></small>"
+msgstr "<small><b>Nimi</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Street and Number</b></small>"
+msgstr "<small><b>Katu ja numero</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Zip Code</b></small>"
+msgstr "<small><b>Postinumero</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small>Email</small>"
+msgstr "<small>Sähköposti</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "<small>Payment Details (test data)</small>"
+msgstr "<small>Maksutiedot (testitiedot)</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "<small>Payment Status</small>"
+msgstr "<small>Maksun tila</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small>Street 2</small>"
+msgstr "<small>Katu 2</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Authorize"
+msgstr "Valtuuta"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__cancel
+msgid "Canceled"
+msgstr "Peruttu"
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
+msgid "Capture Amount Manually"
+msgstr "Kaappaa määrä manuaalisesti"
+
+#. module: payment_demo
+#: model:ir.model.fields,help:payment_demo.field_payment_transaction__capture_manually
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed.\n"
+"Use this if you want to charge your customers cards only when\n"
+"you are sure you can ship the goods to them."
+msgstr ""
+"Tallenna summa Odoosta, kun toimitus on valmis.\n"
+"Käytä tätä, jos haluat veloittaa asiakkaasi kortit vain silloin, kun\n"
+"olet varma, että voit toimittaa tavarat heille."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Close"
+msgstr "Sulje"
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__code
+msgid "Code"
+msgstr "Koodi"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Confirm"
+msgstr "Vahvista"
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__done
+msgid "Confirmed"
+msgstr "Vahvistettu"
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_provider__code__demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Demo Express Checkout"
+msgstr "Demo Express Checkout"
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_provider.py:0
+#, python-format
+msgid "Demo providers should never be enabled."
+msgstr "Demo-tarjoajia ei pitäisi koskaan ottaa käyttöön."
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
+msgid "Error"
+msgstr "Virhe"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "No delivery method is available."
+msgstr "Toimitustapaa ei ole saatavilla."
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Pay"
+msgstr "Maksa"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Pay with Demo"
+msgstr "Maksa Demolla"
+
+#. module: payment_demo
+#: model:ir.model,name:payment_demo.model_payment_provider
+msgid "Payment Provider"
+msgstr "Maksupalveluntarjoaja"
+
+#. module: payment_demo
+#: model:ir.model,name:payment_demo.model_payment_token
+msgid "Payment Token"
+msgstr "Maksutunniste"
+
+#. module: payment_demo
+#: model:ir.model,name:payment_demo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Maksutapahtuma"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr "Maksun käsittely epäonnistui"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid "Payments made with this payment method will be <b>successful</b>."
+msgstr "Tällä maksutavalla suoritetut maksut <b>onnistuvat</b>."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid ""
+"Payments made with this payment method will be automatically "
+"<b>canceled</b>."
+msgstr ""
+"Tällä maksutavalla suoritetut maksut <b>peruutetaan</b> automaattisesti."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid "Payments made with this payment method will remain <b>pending</b>."
+msgstr "Tällä maksutavalla suoritetut maksut pysyvät <b>vireillä</b>."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid ""
+"Payments made with this payment method will simulate a processing "
+"<b>error</b>."
+msgstr ""
+"Tällä maksutavalla suoritetut maksut simuloivat <b>käsittelyvirhettä</b>."
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
+msgid "Pending"
+msgstr "Odottaa"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Set to Error"
+msgstr "Asetetaan virheeseen"
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
+msgid "Simulated State"
+msgstr "Simuloitu tila"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Test Mode"
+msgstr "Testitila"
+
+#. module: payment_demo
+#: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
+msgid "The state in which transactions created from this token should be set."
+msgstr "Tila, johon tästä tunnuksesta luodut tapahtumat tulisi asettaa."
+
+#. module: payment_demo
+#: model:ir.model.fields,help:payment_demo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "Transaktio ei ole sidottu valtuutuskoodiin."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Unpublished"
+msgstr "Julkaisematon"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Validation Error"
+msgstr "Tarkistusvirhe"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "XXXX XXXX XXXX XXXX"
+msgstr "XXXX XXXX XXXX XXXX XXXX XXXX"
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_transaction.py:0
+#, python-format
+msgid "You selected the following demo payment status: %s"
+msgstr "Olet valinnut seuraavan demomaksutilanteen: %s"

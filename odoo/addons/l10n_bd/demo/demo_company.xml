@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_bd" model="res.partner">
+        <field name="name">BD Company</field>
+        <field name="vat"/>
+        <field name="street">38st Floor, Barguna, Barishal</field>
+        <field name="street2">Unit 07 - 10, 38/F Yat Chau International Plaza</field>
+        <field name="city">Barishal</field>
+        <field name="country_id" ref="base.bd"/>
+        <field name="zip"/>
+        <field name="phone">+8801153067158</field>
+        <field name="email">hih3l5nbdwl@temporary-mail.net</field>
+        <field name="website">www.bdexample.com</field>
+    </record>
+
+    <record id="demo_company_bd" model="res.company">
+        <field name="name">BD Company</field>
+        <field name="partner_id" ref="partner_demo_company_bd"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_bd')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_bd.demo_company_bd'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>bd</value>
+        <value model="res.company" eval="obj().env.ref('l10n_bd.demo_company_bd')"/>
+    </function>
+</odoo>

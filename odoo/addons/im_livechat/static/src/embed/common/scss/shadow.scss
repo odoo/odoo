@@ -1,0 +1,88 @@
+// Duplicate :root/body rules into :host ruleset in order to make them work
+// in the shadow DOM.
+
+$o-livechat-font-size: 14px !default;
+
+// Source: bootstrap/scss/_root.scss
+:host {
+    // Note: Custom variable values only support SassScript inside `#{}`.
+
+    // Colors
+    //
+    // Generate palettes for full colors, grays, and theme colors.
+
+    @each $color, $value in $colors {
+        --#{$variable-prefix}#{$color}: #{$value};
+    }
+
+    @each $color, $value in $grays {
+        --#{$variable-prefix}gray-#{$color}: #{$value};
+    }
+
+    @each $color, $value in $theme-colors {
+        --#{$variable-prefix}#{$color}: #{$value};
+    }
+
+    @each $color, $value in $theme-colors-rgb {
+        --#{$variable-prefix}#{$color}-rgb: #{$value};
+    }
+
+    --#{$variable-prefix}white-rgb: #{to-rgb($white)};
+    --#{$variable-prefix}black-rgb: #{to-rgb($black)};
+    --#{$variable-prefix}body-color-rgb: #{to-rgb($body-color)};
+    --#{$variable-prefix}body-bg-rgb: #{to-rgb($body-bg)};
+
+    // Fonts
+
+    // Note: Use `inspect` for lists so that quoted items keep the quotes.
+    // See https://github.com/sass/sass/issues/2383#issuecomment-336349172
+    --#{$variable-prefix}font-sans-serif: #{inspect($font-family-sans-serif)};
+    --#{$variable-prefix}font-monospace: #{inspect($font-family-monospace)};
+    --#{$variable-prefix}gradient: #{$gradient};
+
+    // Root and body
+    // stylelint-disable custom-property-empty-line-before
+    // scss-docs-start root-body-variables
+    @if $font-size-root != null {
+        --#{$variable-prefix}root-font-size: #{$font-size-root};
+    }
+    --#{$variable-prefix}body-font-family: #{$font-family-base};
+    --#{$variable-prefix}body-font-size: #{$font-size-base};
+    --#{$variable-prefix}body-font-weight: #{$font-weight-base};
+    --#{$variable-prefix}body-line-height: #{$line-height-base};
+    --#{$variable-prefix}body-color: #{$body-color};
+    @if $body-text-align != null {
+        --#{$variable-prefix}body-text-align: #{$body-text-align};
+    }
+    --#{$variable-prefix}body-bg: #{$body-bg};
+    // scss-docs-end root-body-variables
+    // stylelint-enable custom-property-empty-line-before
+}
+
+// Source: bootstrap/_reboot.scss
+:host {
+    margin: 0; // 1
+    font-family: var(--#{$variable-prefix}body-font-family);
+    @include font-size(var(--#{$variable-prefix}body-font-size));
+    font-weight: var(--#{$variable-prefix}body-font-weight);
+    line-height: var(--#{$variable-prefix}body-line-height);
+    color: var(--#{$variable-prefix}body-color);
+    text-align: var(--#{$variable-prefix}body-text-align);
+    background-color: var(--#{$variable-prefix}body-bg); // 2
+    -webkit-text-size-adjust: 100%; // 3
+    -webkit-tap-highlight-color: rgba($black, 0); // 4
+}
+
+// Source: webclient.scss
+:host {
+    --o-webclient-color-scheme: #{$o-webclient-color-scheme};
+    font-size: $o-livechat-font-size;
+}
+
+
+// Source: ui.scss
+:host {
+    & .o_hidden {
+        display: none!important;
+    }
+}

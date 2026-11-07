@@ -1,0 +1,274 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* microsoft_outlook
+# 
+# Translators:
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Martin Trigaux, 2024
+# Betty Keresztesi, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
+msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Connect your Outlook account"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+msgid ""
+"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "An error occurred when fetching the access token. %s"
+msgstr "A apărut o eroare la obținerea token-ului de acces. %s"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
+msgid "Authenticate with"
+msgstr "Autentificare cu"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+msgid "Authentication URI"
+msgstr "URI autentificare"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Connect your Outlook account with the OAuth Authentication process.  \n"
+"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid ""
+"Connect your personal Outlook account using OAuth. \n"
+"You will be redirected to the Outlook login page to accept the permissions."
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
+msgid "Go back to your mail server"
+msgstr "Întoarceți-vă la serverul dvs. de e-mail"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "ID"
+msgstr "ID"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "ID of your Outlook app"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_fetchmail_server
+msgid "Incoming Mail Server"
+msgstr "Server Primire E-mail-uri"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Incorrect Connection Security for Outlook mail server %r. Please set it to "
+"\"TLS (STARTTLS)\"."
+msgstr ""
+"Securitatea conexiunii incorectă pentru serverul de e-mail Outlook %r. Vă "
+"rugăm să o setați la \"TLS (STARTTLS)\"."
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
+msgid "Is Outlook Credential Configured"
+msgstr "Sunt configurate credențialele Outlook"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_ir_mail_server
+msgid "Mail Server"
+msgstr "Server Mail"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
+msgid "Microsoft Outlook Mixin"
+msgstr "Microsoft Outlook Mixin"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Only the administrator can link an Outlook mail server."
+msgstr "Numai administratorul poate conecta un server de e-mail Outlook."
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
+msgid "Outlook Access Token"
+msgstr "Token de acces Outlook"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
+msgid "Outlook Access Token Expiration Timestamp"
+msgstr "Timestamp expirare token de acces Outlook"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
+msgid "Outlook Client Id"
+msgstr "ID Client Outlook"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
+msgid "Outlook Client Secret"
+msgstr "Secret Client Outlook"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
+msgid "Outlook OAuth Authentication"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
+msgid "Outlook Refresh Token"
+msgstr "Token de reîmprospătare Outlook"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Please configure your Outlook credentials."
+msgstr "Vă rugăm să configurați credențialele dvs. Outlook."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Please connect with your Outlook account before using it."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Outlook/Office365 username "
+"(your email address). This should be the same account as the one used for "
+"the Outlook OAuthentication Token."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please leave the password field empty for Outlook mail server %r. The OAuth "
+"process does not require it"
+msgstr ""
+"Vă rugăm să lăsați câmpul parolă gol pentru serverul de e-mail Outlook %r. "
+"Procesul OAuth nu necesită acest lucru"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid "Read More"
+msgstr "Mai mult"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid "SSL is required for the server %r."
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Secret"
+msgstr "Secret"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Secret of your Outlook app"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
+msgid "Server Type"
+msgstr "Tip de server"
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"Setup your Outlook API credentials in the general settings to link a Outlook"
+" account."
+msgstr ""
+"Configurați credențialele API Outlook în setările generale pentru a conecta "
+"un cont Outlook."
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
+#: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
+#: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+msgid "The URL to generate the authorization code from Outlook"
+msgstr "URL-ul pentru a genera codul de autorizare din Outlook"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Unknown error."
+msgstr "Eroare necunoscută."

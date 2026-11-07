@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website.s_dynamic_snippet_template">
+        <section t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_empty pt32 pb32" t-att-data-snippet="snippet_name">
+            <div class="container o_not_editable">
+                <div class="css_non_editable_mode_hidden">
+                    <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
+                        Your Dynamic Snippet will be displayed here... This message is displayed because you did not provided both a filter and a template to use.<br/>
+                    </div>
+                </div>
+                <div class="dynamic_snippet_template"/>
+            </div>
+        </section>
+    </template>
+    <template id="s_dynamic_snippet" name="Dynamic Snippet">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet'"/>
+        </t>
+    </template>
+    <template id="website.s_dynamic_snippet_options_template">
+        <div t-attf-data-js="#{snippet_name}" t-attf-data-selector="#{snippet_selector}" data-no-preview="true">
+            <we-select string="Filter" data-name="filter_opt" data-attribute-name="filterId" data-no-preview="true">
+            </we-select>
+            <we-select string="Template" data-name="template_opt" data-attribute-name="templateKey" data-no-preview="true">
+            </we-select>
+            <we-select string="Fetched elements" data-name="number_of_records_opt" data-attribute-name="numberOfRecords" data-no-preview="true">
+                <we-button t-foreach="range(1, 17)" t-as="value" t-att-data-select-data-attribute="value" t-esc="value"/>
+            </we-select>
+            <t t-out="0"/>
+        </div>
+    </template>
+    <template id="s_dynamic_snippet_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.s_dynamic_snippet_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet'"/>
+            </t>
+        </xpath>
+    </template>
+
+<record id="website.s_dynamic_snippet_000_scss" model="ir.asset">
+    <field name="name">Dynamic snippet 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_dynamic_snippet/000.scss</field>
+</record>
+
+<record id="website.s_dynamic_snippet_000_js" model="ir.asset">
+    <field name="name">Dynamic snippet 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_dynamic_snippet/000.js</field>
+</record>
+
+<record id="website.s_dynamic_snippet_000_xml" model="ir.asset">
+    <field name="name">Dynamic snippet 000 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_dynamic_snippet/000.xml</field>
+</record>
+
+</odoo>

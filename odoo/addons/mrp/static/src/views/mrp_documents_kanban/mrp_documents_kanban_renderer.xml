@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mrp.MrpDocumentsKanbanRenderer" t-inherit-mode="primary" t-inherit="web.KanbanRenderer">
+        <!-- Before the first t-foreach -->
+        <xpath expr="//t[@t-key='groupOrRecord.key']" position="before">
+            <FileUploadProgressContainer fileUploads="fileUploadService.uploads" Component="constructor.components.FileUploadProgressKanbanRecord"/>
+        </xpath>
+    </t>
+</templates>

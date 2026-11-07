@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_check_challenge" model="ir.cron">
+            <field name="name">Gamification: Goal Challenge Check</field>
+            <field name="model_id" ref="model_gamification_challenge"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+
+        <record id="ir_cron_consolidate" model="ir.cron">
+            <field name="name">Gamification: Karma tracking consolidation</field>
+            <field name="model_id" ref="model_gamification_karma_tracking"/>
+            <field name="state">code</field>
+            <field name="code">model._consolidate_cron()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1, months=1)).strftime('%Y-%m-%d 04:00:00')" />
+        </record>
+    </data>
+</odoo>

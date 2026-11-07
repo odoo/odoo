@@ -1,0 +1,34 @@
+.partner-line.active {
+    background-color: $o-component-active-bg;
+}
+
+@include media-breakpoint-down(lg) {
+
+    .partner-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 12px 24px;
+        border-bottom: 1px solid $o-gray-300;
+
+        td {
+            border: 0;
+            flex-basis: 100%;
+            padding: 5px;
+            background-color: transparent;
+        }
+    }
+
+    .partner-line-balance{
+        order: 3;
+    }
+    .partner-line .pos-right-align{
+        text-align: left ;
+    }
+    .edit-partner-button-cell {
+        order: 4;
+    }
+    .partner-line-last-column-placeholder {
+        display: none;
+    }
+}

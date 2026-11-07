@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_card_view_tree_inherit_website_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.card.view.tree.inherit.website.sale.loyalty</field>
+        <field name="model">loyalty.card</field>
+        <field name="inherit_id" ref="loyalty.loyalty_card_view_tree"/>
+        <field name="arch" type="xml">
+            <button name="action_coupon_send" position="after">
+                <button name="action_coupon_share" string="Share" type="object" icon="fa-share-alt"/>
+            </button>
+        </field>
+    </record>
+</odoo>

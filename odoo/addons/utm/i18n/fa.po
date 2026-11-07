@@ -1,0 +1,750 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* utm
+# 
+# Translators:
+# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
+# Hamid Darabi, 2023
+# Zahed Alfak <tamass4116@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2023
+# Hanna Kheradroosta, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid "%(content)s (%(model_description)s created on %(create_date)s)"
+msgstr "%(content)s (%(model_description)s ایجاد شده در %(create_date)s)"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__active
+#: model:ir.model.fields,field_description:utm.field_utm_medium__active
+msgid "Active"
+msgstr "فعال"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
+msgid "Allows us to filter relevant Campaigns"
+msgstr "به ما اجازه می‌دهد تا کمپین‌های مرتبط را فیلتر کنیم"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Approval-based Flow"
+msgstr "جریان مبتنی بر تأیید"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Approved"
+msgstr "موافقت شد"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Archive"
+msgstr "بایگانی"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Archived"
+msgstr "بایگانی شده"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
+msgid "Assign tags to your campaigns to organize, filter and track them."
+msgstr ""
+"برچسب‌ها را به کمپین‌های خود اختصاص دهید تا آن‌ها را سازماندهی، فیلتر و "
+"پیگیری کنید."
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Audience-driven Flow"
+msgstr "جریان مبتنی بر مخاطب"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__is_auto_campaign
+msgid "Automatically Generated Campaign"
+msgstr "کمپین به‌صورت خودکار ایجاد شد"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
+msgid "Campaign"
+msgstr "کمپین"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__name
+msgid "Campaign Identifier"
+msgstr "شناسه کمپین"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__title
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
+msgid "Campaign Name"
+msgstr "نام کمپین"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_stage
+msgid "Campaign Stage"
+msgstr "مرحله کمپین"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.action_view_utm_tag
+#: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
+msgid "Campaign Tags"
+msgstr "برچسب‌های کمپین"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_campaign_action
+#: model:ir.ui.menu,name:utm.menu_utm_campaign_act
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Campaigns"
+msgstr "کمپین‌ها"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
+"کمپین‌ها برای متمرکز کردن تلاش‌های بازاریابی شما و پیگیری نتایج آن‌ها "
+"استفاده می‌شوند."
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Campaigns that are assigned to me"
+msgstr "کمپین‌هایی که به من اختصاص داده شده‌اند"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_christmas_special
+msgid "Christmas Special"
+msgstr "کریسمس ویژه"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Collect ideas, design creative content and publish it once reviewed."
+msgstr ""
+"ایده‌ها را جمع‌آوری کنید، محتوای خلاقانه طراحی کنید و پس از بررسی منتشر "
+"کنید."
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__color
+#: model:ir.model.fields,field_description:utm.field_utm_tag__color
+msgid "Color Index"
+msgstr "رنگ پس زمینه"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Copywriting"
+msgstr "کپی رایت"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid "Create a Medium"
+msgstr "ایجاد یک رسانه"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
+msgid "Create a Tag"
+msgstr "ایجاد یک برچسب"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
+msgid "Create a campaign"
+msgstr "ایجاد یک کمپین"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
+msgid "Create a stage for your campaigns"
+msgstr "برای کمپین‌های خود یک مرحله ایجاد کنید"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_medium__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_source__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_stage__create_uid
+#: model:ir.model.fields,field_description:utm.field_utm_tag__create_uid
+msgid "Created by"
+msgstr "ایجاد شده توسط"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_medium__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_source__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_stage__create_date
+#: model:ir.model.fields,field_description:utm.field_utm_tag__create_date
+msgid "Created on"
+msgstr "ایجادشده در"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Creative Flow"
+msgstr "جریان خلاقیت"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Delete"
+msgstr "حذف"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Deploy"
+msgstr "انتشار"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Deployed"
+msgstr "مستقر شد"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: model:utm.stage,name:utm.campaign_stage_2
+#, python-format
+msgid "Design"
+msgstr "طراحی"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_medium__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_source__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
+msgid "Display Name"
+msgstr "نام نمایش داده شده"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Done"
+msgstr "انجام شده"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "ویرایش"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr "کمپین ایمیل - محصولات"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
+msgid "Email Campaign - Services"
+msgstr "کمپین ایمیل - خدمات"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Event-driven Flow"
+msgstr "جریان مبتنی بر رویداد"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Gather Data"
+msgstr "گردآوری اطلاعات"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
+msgstr ""
+"جمع‌آوری داده‌ها، ساخت یک لیست از گیرندگان و نوشتن محتوا بر اساس هدف "
+"بازاریابی شما."
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Group By"
+msgstr "گروه‌بندی برمبنای"
+
+#. module: utm
+#: model:ir.model,name:utm.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسیریابی HTTP"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__id
+#: model:ir.model.fields,field_description:utm.field_utm_medium__id
+#: model:ir.model.fields,field_description:utm.field_utm_source__id
+#: model:ir.model.fields,field_description:utm.field_utm_stage__id
+#: model:ir.model.fields,field_description:utm.field_utm_tag__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Ideas"
+msgstr "‌ایده‌ها"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_medium__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_source__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_stage__write_uid
+#: model:ir.model.fields,field_description:utm.field_utm_tag__write_uid
+msgid "Last Updated by"
+msgstr "آخرین بروز رسانی توسط"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_medium__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_source__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_stage__write_date
+#: model:ir.model.fields,field_description:utm.field_utm_tag__write_date
+msgid "Last Updated on"
+msgstr "آخرین بروز رسانی در"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Later"
+msgstr "بعدا"
+
+#. module: utm
+#: model:ir.ui.menu,name:utm.menu_link_tracker_root
+msgid "Link Tracker"
+msgstr "پیگیری لینک"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "List-Building"
+msgstr "ساختن لیست"
+
+#. module: utm
+#: model:utm.tag,name:utm.utm_tag_1
+msgid "Marketing"
+msgstr "بازاریابی"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
+msgid "Medium"
+msgstr "متوسط"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_medium__name
+msgid "Medium Name"
+msgstr "نام رسانه"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.ui.menu,name:utm.menu_utm_medium
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "Mediums"
+msgstr "مدیاها"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "My Campaigns"
+msgstr "کمپین‌های من"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
+#: model:ir.model.fields,field_description:utm.field_utm_stage__name
+#: model:ir.model.fields,field_description:utm.field_utm_tag__name
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
+msgid "Name"
+msgstr "نام"
+
+#. module: utm
+#: model:utm.stage,name:utm.default_utm_stage
+msgid "New"
+msgstr "جدید"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid "No Sources yet!"
+msgstr "هنوز منبعی وجود ندارد!"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Pre-Launch"
+msgstr "پیش راه‌اندازی"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Prepare Campaigns and get them approved before making them go live."
+msgstr "کمپین‌ها را آماده کنید و قبل از فعال کردن آنها، تأییدیه بگیرید."
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
+msgstr ""
+"کمپین خود را آماده کنید، با بخشی از مخاطبانتان آن را امتحان کنید و سپس به "
+"طور کامل آن را پیاده‌سازی کنید."
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Report"
+msgstr "گزارش"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__user_id
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Responsible"
+msgstr "پاسخگو"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Restore"
+msgstr "بازگردانی"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Review"
+msgstr "بازبینی"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Running"
+msgstr "در حال اجرا"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_fall_drive
+msgid "Sale"
+msgstr "فروش"
+
+#. module: utm
+#: model:utm.stage,name:utm.campaign_stage_1
+msgid "Schedule"
+msgstr "زمان‌بندی"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
+msgid "Search UTM Medium"
+msgstr "جستجوی واسطه UTM"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Send"
+msgstr "ارسال"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: model:utm.stage,name:utm.campaign_stage_3
+#, python-format
+msgid "Sent"
+msgstr "ارسال"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
+msgid "Sequence"
+msgstr "دنباله"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Soft-Launch"
+msgstr "راه‌اندازی نرم"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Soft-Launch Flow"
+msgstr "جریان راه‌اندازی نرم"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
+#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__source_id
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+msgid "Source"
+msgstr "مبدا"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_source__name
+msgid "Source Name"
+msgstr "نام مبدا"
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.utm_source_action
+#: model:ir.ui.menu,name:utm.menu_utm_source
+msgid "Sources"
+msgstr "منابع"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__stage_id
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Stage"
+msgstr "مرحله"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_search
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_tree
+msgid "Stages"
+msgstr "مراحل"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
+msgstr ""
+"مراحل به شما اجازه می‌دهند روند کاری خود را سازماندهی کنید (مثلاً "
+"برنامه‌ریزی، طراحی، در حال پیشرفت، انجام شده، ...)."
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+"رنگ برچسب. نداشتن رنگ به معنای عدم نمایش در کانبان برای متمایز کردن "
+"برچسب‌های داخلی از برچسب‌های دسته‌بندی عمومی است."
+
+#. module: utm
+#: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "نام برچسب از قبل وجود دارد!"
+
+#. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Tags"
+msgstr "برچسب‌ها"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+#, python-format
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
+msgstr ""
+"مدیوم UTM '%s' نمی‌تواند حذف شود زیرا در برخی از جریان‌های عملکرد اصلی مانند"
+" استخدام و ارسال انبوه ایمیل‌ها استفاده می‌شود."
+
+#. module: utm
+#: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
+msgid "The name must be unique"
+msgstr "نام باید یکتا باشد"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Month"
+msgstr "این ماه"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Week"
+msgstr "این هفته"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"این یک نام است که کمک می کند تا مسیر شما را از تلاش کمپین‌های مختلف، به "
+"عنوان مثال: Fall_Drive، Christmas_Special"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "این روش تحویل است، مانند کارت پستال، ایمیل، یا آگهی بنر"
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_mixin__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr "این منبع لینک است، مانند موتور جستجو، دامنه دیگر، یا نام لیست ایمیل"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "To be Approved"
+msgstr "تایید شود"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
+msgstr ""
+"پیگیری رویدادهای ورودی (مثلاً کریسمس، جمعه سیاه، ...) و انتشار محتوای به "
+"موقع."
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_campaign
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+msgid "UTM Campaign"
+msgstr "کمپین UTM"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "UTM Campaigns"
+msgstr "کمپین‌های UTM"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_medium
+msgid "UTM Medium"
+msgstr "مدیوم UTM"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"Twitter\", ...)."
+msgstr ""
+"UTM Mediums وسیله‌ای را که برای جذب ترافیک استفاده شده است، ردیابی می‌کند "
+"(مثلاً \"وب‌سایت\"، \"توییتر\"، ...)."
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_mixin
+msgid "UTM Mixin"
+msgstr "یو تی ام میکسین"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_source
+msgid "UTM Source"
+msgstr "منبع UTM"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_source_mixin
+msgid "UTM Source Mixin"
+msgstr "میکسین منبع UTM"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr ""
+"منابع UTM ردیابی می‌کنند که ترافیک از کجا می‌آید (برای مثال: \"خبرنامه ماه "
+"مه\"، \"\", ...)."
+
+#. module: utm
+#: model:ir.actions.act_window,name:utm.action_view_utm_stage
+msgid "UTM Stages"
+msgstr "مراحل UTM"
+
+#. module: utm
+#: model:ir.model,name:utm.model_utm_tag
+msgid "UTM Tag"
+msgstr "برچسب UTM"
+
+#. module: utm
+#: model:ir.ui.menu,name:utm.marketing_utm
+msgid "UTMs"
+msgstr "UTMها"
+
+#. module: utm
+#. odoo-javascript
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "Use This For My Campaigns"
+msgstr "استفاده برای کمپین‌های من"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
+msgid "e.g. \"Brainstorming\""
+msgstr "مثال: \"طوفان فکری\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+msgid "e.g. \"Christmas Mailing\""
+msgstr "مثلاً \"ارسال کریسمس\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "e.g. \"Email\""
+msgstr "مثال: \"ایمیل\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
+msgid "e.g. Black Friday"
+msgstr "به عنوان مثال، جمعه سیاه"

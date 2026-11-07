@@ -1,0 +1,23 @@
+<odoo>
+  <template id="estate_property_website_template" name="Estate Properties Website">
+    <t t-call="website.layout">
+      <div class="container">
+        <h1>Available Properties</h1>
+        <div class="row">
+          <t t-foreach="properties" t-as="property">
+            <div class="col-md-4">
+              <div class="card my-3">
+                <div class="card-body">
+                  <h5 class="card-title"><t t-esc="property.name"/></h5>
+                  <p>Price: <t t-esc="property.expected_price"/> USD</p>
+                  <p>Bedrooms: <t t-esc="property.bedrooms"/></p>
+                  <p>State: <t t-esc="property.state"/></p>
+                </div>
+              </div>
+            </div>
+          </t>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

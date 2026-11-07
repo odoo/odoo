@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_stripe
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Complete the Stripe onboarding for company %s."
+msgstr "Completa l'integrazione Stripe per l'azienda %s."
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Do not have access to fetch token from Stripe"
+msgstr "Non si ha accesso al token di recupero di Stripe"
+
+#. module: pos_stripe
+#: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
+msgid ""
+"Don't forget to complete Stripe connect before using this payment method."
+msgstr ""
+"Non dimenticare di completare il collegamento con Stripe prima di utilizzare"
+" questo metodo di pagamento."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Failed to discover: %s"
+msgstr "Non è stato possibile scoprire: %s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
+msgstr ""
+"Non è stato possibile caricare la risorsa: net::ERR_INTERNET_DISCONNECTED."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "No available Stripe readers."
+msgstr "Non sono disponibili lettori Stripe."
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Payment canceled because not reader connected"
+msgstr "Il pagamento è stato annullato perché il lettore non è collegato"
+
+#. module: pos_stripe
+#: model:ir.model,name:pos_stripe.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metodi di pagamento punto vendita"
+
+#. module: pos_stripe
+#: model:ir.model,name:pos_stripe.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sessione punto vendita"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Reader disconnected"
+msgstr "Lettore scollegato"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Stripe Error"
+msgstr "Errore Stripe"
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "Stripe Serial Number"
+msgstr "Numero seriale Stripe"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Stripe payment provider for company %s is missing"
+msgstr "Il fornitore di pagamento Stripe manca per l'azienda %s"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+#, python-format
+msgid "Stripe readers %s not listed in your account"
+msgstr "Lettori Stripe %s non elencati nel tuo account"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used on payment method %s."
+msgstr "Il terminale %sè già utilizzato nel metodo di pagamento %s."
+
+#. module: pos_stripe
+#: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
+msgstr "[Numero di seri del terminale Stripe], ad esempio: WSC513105011295"

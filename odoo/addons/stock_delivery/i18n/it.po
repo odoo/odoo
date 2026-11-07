@@ -1,0 +1,668 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_delivery
+# 
+# Translators:
+# Marianna Ciofani, 2025
+# Wil Odoo, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/sale_order.py:0
+#, python-format
+msgid " (Estimated Cost: %s )"
+msgstr " (Costo stimato: %s )"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
+msgid "(computed:"
+msgstr "(calcolato:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight (estimated): </span>"
+msgstr "<span> - Peso (stimato): </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_stock_report_delivery_no_package_section_line
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
+msgid "<span> - Weight: </span>"
+msgstr "<span> - Peso: </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "<span>Shipping Weight: </span>"
+msgstr "<span>Peso spedizione: </span>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Carrier:</strong>"
+msgstr "<strong>Vettore:</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "<strong>HS Code</strong>"
+msgstr "<strong>Codice HS</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid "<strong>Shipping Weight: </strong>"
+msgstr "<strong>Peso Spedizione: </strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid ""
+"<strong>Shipping Weight:</strong>\n"
+"                    <br/>"
+msgstr ""
+"<strong>Peso Spedizione:</strong>\n"
+"                    <br/>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid ""
+"<strong>Total Weight:</strong>\n"
+"                <br/>"
+msgstr ""
+"<strong>Peso totale:</strong>\n"
+"                <br/>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
+msgid "<strong>Tracking Number:</strong>"
+msgstr "<strong>Codice tracciabilità:</strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
+msgid "<strong>Weight: </strong>"
+msgstr "<strong>Peso: </strong>"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid ""
+"<strong>Weight:</strong>\n"
+"                <br/>"
+msgstr ""
+"<strong>Peso:</strong>\n"
+"                <br/>"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
+msgid "Applicable on Shipping Methods"
+msgstr "Applicabile ai metodi di spedizione"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
+msgid "Bulk Weight"
+msgstr "Peso lordo"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid ""
+"Cancelling a delivery may not be undoable. Are you sure you want to "
+"continue?"
+msgstr "È possibile annullare una consegna. Sei sicuro di voler continuare?"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier"
+msgstr "Vettore"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
+msgstr "Codice Vettore"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
+msgid "Carrier name"
+msgstr "Nome Vettore"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
+msgid "Company"
+msgstr "Azienda"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Cost: %(price).2f %(currency)s"
+msgstr "Costo: %(price).2f %(currency)s"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
+msgid "Created on"
+msgstr "Data creazione"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "Procedura di selezione vettore di consegna"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr "Procedura di selezione imballaggio di consegna"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
+msgid "Delivery Package Type"
+msgstr "Tipo di pacchetto di consegna"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
+msgid "Destination"
+msgstr "Destinazione"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__destination_country_code
+msgid "Destination Country"
+msgstr "Paese di destinazione"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Discard"
+msgstr "Abbandona"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: stock_delivery
+#: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
+msgid "Display tracking links"
+msgstr "Elenco link tracciabilità"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
+msgid ""
+"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+msgstr ""
+"Costo stimato: al cliente verrà fatturato il costo stimato della spedizione.\n"
+"Costo reale: al cliente verrà fatturato il costo reale della spedizione, il costo della spedizione verrà aggiornato sull'ordine di acquisto in seguito alla consegna."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+"Si è verificata un'eccezione per quanto riguarda il corriere sul "
+"trasferimento"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Eccezione:"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
+#: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
+msgid "HS Code"
+msgstr "Codice SA"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_route
+msgid "Inventory Routes"
+msgstr "Percorsi di inventario"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
+msgid "Invoicing Policy"
+msgstr "Politica di fatturazione"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
+msgid "Is Return Picking"
+msgstr "È un prelievo di reso"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "Potrebbero essere necessarie azioni manuali."
+
+#. module: stock_delivery
+#: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
+msgid "No carrier integration"
+msgstr "Nessuna integrazione con il vettore"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "OK"
+msgstr "OK"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
+msgid "Origin of Goods"
+msgstr "Origine della merce"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Package"
+msgstr "Collo"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Package Details"
+msgstr "Dettagli collo"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+#, python-format
+msgid "Package too heavy!"
+msgstr "Collo troppo pesante!"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_quant_package
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
+msgid "Packages"
+msgstr "Colli"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
+msgid "Picking"
+msgstr "Prelievo"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Print Return Label"
+msgstr "Stampa etichetta di reso"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_product_template
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Movimenti prodotto (riga movimento di magazzino)"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
+msgid "Provider"
+msgstr "Fornitore"
+
+#. module: stock_delivery
+#: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
+msgid "Real cost"
+msgstr "Costo reale"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
+msgid "Return Label"
+msgstr "Etichetta di reso"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Prelievo di reso"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__route_ids
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_delivery_carrier_form_inherit_stock_delivery
+msgid "Routes"
+msgstr "Percorsi"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
+#: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
+msgid ""
+"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+msgstr ""
+"Le norme di origine determinano l'origine dei beni, cioè non il luogo da cui sono stati spediti, ma quello in cui sono stati prodotti o fabbricati.\n"
+"In quanto tale, l'\"origine\" è la \"nazionalità economica\" dei beni scambiati in commercio."
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
+msgid "Sale Price"
+msgstr "Prezzo di vendita"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Riga ordine di vendita"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+msgid "Save"
+msgstr "Salva"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Send to Shipper"
+msgstr "Inviare al mittente"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s"
+msgstr ""
+"Spedizione inviata al vettore %(carrier_name)s con numero di tracciabilità "
+"%(ref)s"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
+msgid "Shipping Cost"
+msgstr "Costo spedizione"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Shipping Information"
+msgstr "Informazioni di spedizione"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
+msgid "Shipping Methods"
+msgstr "Metodi di spedizione"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__shipping_weight
+msgid "Shipping Weight"
+msgstr "Peso spedizione"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "Shipping Weight:"
+msgstr "Peso spedizione:"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
+#: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
+msgid ""
+"Standardized code for international shipping and goods declaration. At the "
+"moment, only used for FedEx and USPS shipping providers."
+msgstr ""
+"Codice standardizzato per spedizioni internazionali e dichiarazione merci. "
+"Al momento è utilizzato solo per spedizioni dei corrieri FedEx e USPS."
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento di magazzino"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_package_type
+msgid "Stock package type"
+msgstr "Tipo di pacchetto stock"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
+msgid "Technical field indicating weight's number of decimal places"
+msgstr "Campo tecnico che indica il numero di decimali del peso"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
+msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
+msgstr ""
+"Campo tecnico che indica se l'unità di misura del carico è in kg o meno "
+"(cioè lb)"
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__destination_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Codice ISO a due caratteri della nazione. \n"
+"È possibile usare questo campo per una ricerca rapida."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"The package cannot be created because the total weight of the products in "
+"the picking is 0.0 %s"
+msgstr ""
+"Il pacco non può essere creato perché il peso totale dei prodotti nel "
+"prelievo è 0.0 %s"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
+#, python-format
+msgid "The shipping price will be set once the delivery is done."
+msgstr "Il prezzo di spedizione viene impostato al termine della consegna."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+#, python-format
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"this package type. Please choose another package type."
+msgstr ""
+"Il peso del collo è maggiore del massimo consentito per questo tipo di "
+"imballaggio. Selezionare un altro tipo di imballaggio."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "There is no matching delivery rule."
+msgstr "Regole di consegna non corrispondenti."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
+msgid "Total weight of all the products contained in the package."
+msgstr "Peso totale di tutti i prodotti contenuti nel collo."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
+msgid ""
+"Total weight of packages and products not in a package. Packages with no "
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
+msgstr ""
+"Peso totale dei colli e dei prodotti non contenuti in un collo. I colli "
+"senza peso di spedizione ricevono, come valore predefinito, il peso totale "
+"dei loro prodotti. È il peso utilizzato per calcolare il costo della "
+"spedizione."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
+msgid "Total weight of products which are not in a package."
+msgstr "Peso totale dei prodotti non presenti nel collo."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
+msgid "Total weight of the package."
+msgstr "Peso totale del collo."
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
+msgid "Total weight of the products in the picking."
+msgstr "Peso totale dei prodotti presenti nel prelievo."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "Trackers URL"
+msgstr "URL tracciabilità"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Tracking"
+msgstr "Tracciare"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "Riferimento tracciabilità"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_tracking_url
+msgid "Tracking URL"
+msgstr "URL tracciabilità"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Tracking links for shipment:"
+msgstr "Link monitoraggio spedizione:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
+msgid "Tracking:"
+msgstr "Tracking:"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_picking
+msgid "Transfer"
+msgstr "Trasferisci"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight"
+msgstr "Peso"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
+msgid "Weight for Shipping"
+msgstr "Peso per la spedizione"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
+msgid "Weight for shipping"
+msgstr "Peso per spedizione"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "Etichetta unità di misura del peso"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
+msgid "Weight:"
+msgstr "Peso:"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Non è possibile confezionare i prodotti nello stesso pacco se assegnati a "
+"corrieri diversi (ovvero verifica che tutti i trasferimenti abbiano un "
+"corriere assegnato e stiano utilizzando lo stesso)."
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
+msgid "You have multiple tracker links, they are available in the chatter."
+msgstr "Ci sono link di tracciatura multipli, sono disponibili nelle voci."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+"Impossibile tracciare l'ordine, nel metodo di consegna manca il collegamento"
+" al sito web del corriere."
+
+#. module: stock_delivery
+#: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
+msgid "Zip Prefix"
+msgstr "Codici postali"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDShipping Weight:"
+msgstr "^A0N,44,33^FDShipping Weight:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^A0N,44,33^FDWeight:"
+msgstr "^A0N,44,33^FDWeight:"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^FO310,200"
+msgstr "^FO310,200"
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+msgid "^FS"
+msgstr "^FS"

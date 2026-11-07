@@ -1,0 +1,189 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_adyen
+# 
+# Translators:
+# Wil Odoo, 2023
+# Marianna Ciofani, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_adyen
+#: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
+msgid "Add tip through payment terminal (Adyen)"
+msgstr "Aggiungi la mancia attraverso il terminale di pagamento (Adyen)"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid "Adyen API key"
+msgstr "Chiave API Adyen"
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid "Adyen Error"
+msgstr "Errore Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
+msgid "Adyen Latest Diagnosis"
+msgstr "Ultima diagnosi Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
+msgid "Adyen Latest Response"
+msgstr "Ultima risposta Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
+msgid "Adyen Terminal Identifier"
+msgstr "Identificatore terminale Adyen"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
+msgid "Adyen Test Mode"
+msgstr "Modalità test Adyen"
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid "An unexpected error occurred. Message from Adyen: %s"
+msgstr "Si è verificato un errore inaspettato. Messaggio da Adyen: %s"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
+msgid "Ask Customers For Tip"
+msgstr "Chiedere la mancia ai clienti"
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid "Authentication failed. Please check your Adyen credentials."
+msgstr "Autenticazione non riuscita. Controllare le credenziali Adyen."
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
+msgstr ""
+"L'annullamento del pagamento non è riuscito. Si prega di annullarlo "
+"manualmente sul terminale di pagamento."
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid "Cannot process transactions with negative amount."
+msgstr "Impossibile elaborare transazioni con importo negativo."
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"Impossibile connettersi al server Odoo, controlla la tua connessione "
+"internet e riprova."
+
+#. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Invalid Adyen request"
+msgstr "Richiesta Adyen non valida"
+
+#. module: pos_adyen
+#. odoo-javascript
+#: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
+#, python-format
+msgid "Message from Adyen: %s"
+msgstr "Messaggio da Adyen: %s"
+
+#. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_config.py:0
+#, python-format
+msgid ""
+"Please configure a tip product for POS %s to support tipping with Adyen."
+msgstr ""
+"Per gestire le mance in Adyen configurare un prodotto mancia per il POS %s."
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configurazione punto vendita"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metodi di pagamento punto vendita"
+
+#. module: pos_adyen
+#: model:ir.model,name:pos_adyen.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sessione punto vendita"
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
+msgid "Pos Adyen Ask Customer For Tip"
+msgstr "POS Adyen chiedi mancia al cliente"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
+msgid "Run transactions in the test environment."
+msgstr "Esegue le transazioni nell'ambiente di prova."
+
+#. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
+"Il terminale %s è già in uso nell'azienda %s nel metodo di pagamento %s."
+
+#. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used on payment method %s."
+msgstr "Il terminale %sè già utilizzato nel metodo di pagamento %s."
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
+msgid ""
+"Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
+msgstr ""
+"Utilizzata per connettersi ad Adyen: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
+msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
+msgstr "[Modello terminale]-[Numero di serie], ad esempio: P400Plus-123456789"

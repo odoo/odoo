@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- discuss.channel -->
+        <record id="mail.discuss_channel_view_kanban" model="ir.ui.view">
+            <field name="name">discuss.channel.kanban</field>
+            <field name="model">discuss.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="description"/>
+                    <field name="is_member"/>
+                    <field name="group_ids"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-description">
+                            <div class="oe_group_description" t-if="record.description.raw_value">
+                                <field name="description"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div class="o_discuss_channel_kanban oe_module_vignette oe_kanban_global_click">
+                                <div class="ribbon ribbon-top-right o_small" invisible="active">
+                                    <span class="text-bg-danger">Archived</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <img t-att-src="kanban_image('discuss.channel', 'avatar_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
+                                    <div class="oe_module_desc">
+                                        <h4 class="o_kanban_record_title">#<field name="name"/></h4>
+                                        <field name="channel_type" groups="base.group_no_one"/>
+                                        <p class="oe_module_name" t-att-class="!record.active.raw_value ? 'o_module_desc_short': ''">
+                                            <field name="description"/>
+                                        </p>
+                                        <button type="object" invisible="is_member or group_ids" class="btn btn-primary float-end" name="channel_join">Join</button>
+                                        <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary float-end" name="action_unfollow">Leave</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="mail.discuss_channel_view_form" model="ir.ui.view">
+            <field name="name">discuss.channel.form</field>
+            <field name="model">discuss.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Mail Channel Form">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <field name="avatar_128" invisible="1"/>
+                        <field name="is_editable" invisible="1"/>
+                        <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90], 'preview_image':'avatar_128'}" readonly="not is_editable"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name" string="Group Name"/>
+                            <h1>
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="0"/>
+                            </h1>
+                        </div>
+                        <group class="o_label_nowrap">
+                            <field name="active" invisible="1"/>
+                            <field name="channel_type" groups="base.group_no_one"/>
+                            <field name="description" placeholder="Topics discussed in this group..."/>
+                        </group>
+                        <group class="o_label_nowrap" groups="base.group_no_one">
+                            <field name="sfu_channel_uuid"/>
+                            <field name="sfu_server_url"/>
+                        </group>
+                        <notebook>
+                            <page string="Privacy" name="privacy">
+                                <group class="o_label_nowrap">
+                                    <field name="group_public_id"
+                                        invisible="channel_type != 'channel'"/>
+                                    <field name="group_ids" widget="many2many_tags"
+                                        invisible="channel_type != 'channel'"
+                                        string="Auto Subscribe Groups"/>
+                                </group>
+                            </page>
+                            <page string="Members" name="members">
+                                <field name="channel_type" invisible="1"/>
+                                <field name="channel_member_ids" mode="tree" context="{'active_test': False}" readonly="channel_type == 'chat'">
+                                    <tree string="Members" editable="bottom">
+                                        <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
+                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Integrations" invisible="1" name="discuss_channel_integrations"></page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail.discuss_channel_view_tree" model="ir.ui.view">
+            <field name="name">discuss.channel.tree</field>
+            <field name="model">discuss.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Groups">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail.discuss_channel_view_search" model="ir.ui.view">
+            <field name="name">discuss.channel.search</field>
+            <field name="model">discuss.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <search string="Search Groups">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail.discuss_channel_action_view" model="ir.actions.act_window">
+            <field name="name">Join a group</field>
+            <field name="res_model">discuss.channel</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="discuss_channel_view_search"/>
+        </record>
+
+    <record id="mail.action_discuss" model="ir.actions.client">
+        <field name="name">Discuss</field>
+        <field name="tag">mail.action_discuss</field>
+        <field name="params" eval="&quot;{ 'default_active_id': 'mail.box_inbox' }&quot;"/>
+    </record>
+
+    </data>
+</odoo>
