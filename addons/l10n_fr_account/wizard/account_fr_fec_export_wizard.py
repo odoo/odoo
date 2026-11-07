@@ -332,7 +332,12 @@ class L10n_FrFecExportWizard(models.TransientModel):
                             WHEN account_move_line.amount_currency IS NULL OR account_move_line.amount_currency = 0 THEN ''
                             ELSE replace(to_char(account_move_line.amount_currency, '000000000000000D99'), '.', ',')
                         END AS Montantdevise,
-                        CASE WHEN account_move_line.currency_id IS NULL THEN '' ELSE %(currency_alias)s.name END AS Idevise
+                        CASE 
+                        WHEN account_move_line.amount_currency IS NULL 
+                            OR account_move_line.amount_currency = 0 
+                            OR account_move_line.currency_id IS NULL THEN ''
+                            ELSE %(currency_alias)s.name 
+                        END AS Idevise
                     """,
                     currency_alias=SQL.identifier(query.left_join('account_move_line', 'currency_id', 'res_currency', 'id', 'currency_id')),
                     full_alias=SQL.identifier(query.left_join('account_move_line', 'full_reconcile_id', 'account_full_reconcile', 'id', 'full_reconcile_id')),
