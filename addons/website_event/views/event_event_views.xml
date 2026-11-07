@@ -37,19 +37,6 @@
             <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
                 <field name="is_published" widget="website_redirect_button"/>
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                <div name="event_menu_configuration" class="o_event_menu_configuration d-flex flex-column flex-md-row flex-wrap" groups="base.group_no_one">
-                    <span>
-                        <field name="website_menu" class="w-auto"/>
-                        <label for="website_menu" string="Website Submenu" />
-                    </span>
-                    <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
-                    <span name="community_menu" invisible="1">
-                        <field name="community_menu" class="w-auto"/>  <!-- The computation relies on `_origin` for an `onchange` context. Changed from a template that has no community menu to one that has a community menu. -->
-                        <label for="community_menu" string="Community" />
-                    </span>
-                </div>
-            </xpath>
             <field name="tag_ids" position="attributes">
                 <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>
                 <attribute name="invisible">not website_id</attribute>
@@ -58,10 +45,13 @@
             <field name="tag_ids" position="after">
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_quick_create': True}" invisible="website_id"></field>
             </field>
-            <xpath expr="//page[@name='event_notes']//group[./field[@name='ticket_instructions']]" position="before">
-                <group string="Event Subtitle">
-                    <field name="subtitle" nolabel="1" colspan="2" widget="text" options="{'line_breaks': False}"
-                        placeholder="Short description for website and calendars."/>
+            <xpath expr="//page[@name='misc']/group/group" position="inside">
+                <field name="subtitle" widget="text" options="{'line_breaks': False}"
+                    placeholder="Short description for website and calendars."/>
+            </xpath>
+            <xpath expr="//page[@name='misc']/group/group" position="before">
+                <group>
+                    <field name="website_menu"/>
                 </group>
             </xpath>
             
