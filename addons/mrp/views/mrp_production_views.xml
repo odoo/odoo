@@ -427,8 +427,8 @@
                                 <label for="uom_id" string="" class="oe_inline"/>
                                 <field name="uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
                                 <span name="to_produce" class='fw-bold text-nowrap'>To Produce</span>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="forecasted_issue"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not forecasted_issue" class="text-danger"/>
+                                <button type="object" name="action_production_forecast" title="Forecast" icon="area_chart" invisible="forecasted_issue"/>
+                                <button type="object" name="action_production_forecast" title="Forecast" icon="area_chart" invisible="not forecasted_issue" class="text-danger"/>
                             </div>
                             <label for="lot_producing_ids" invisible="state in ('draft', 'cancel') or not product_tracking or (state == 'done' and product_tracking == 'serial' and product_qty > 1)"/>
                             <div class="o_row" invisible="state in ('draft', 'cancel') or not product_tracking or (state == 'done' and product_tracking == 'serial' and product_qty > 1)">
