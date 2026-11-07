@@ -115,6 +115,9 @@ class SaleReport(models.Model):
     price_unit = fields.Monetary(string="Unit Price", aggregator="avg", readonly=True)
     discount = fields.Float(string="Discount %", readonly=True, aggregator="avg")
     discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
+    margin = fields.Monetary(string="Margin", readonly=True)
+    margin_percent = fields.Float(string="Margin (%)", readonly=True, aggregator=None)
+    purchase_price = fields.Monetary(string="Expected Cost", readonly=True)
 
     # aggregates or computed fields
     nbr = fields.Integer(string="# of Lines", readonly=True)
@@ -179,6 +182,16 @@ class SaleReport(models.Model):
             'volume': SQL("SUM(%s * %s * %s)", table.product_id.volume, table.product_uom_qty, uom_ratio),
             'discount': table.discount,
             'discount_amount': SQL("SUM(%s * %s * %s / 100.0 * %s)", table.price_unit, table.product_uom_qty, table.discount, rate),
+            'margin': SQL("SUM(%s * %s)", table.margin, rate),
+            'margin_percent': SQL("MAX(%s)", table.margin_percent),
+            'purchase_price': SQL(
+                "CASE WHEN COALESCE(%s, false) = false IS NOT NULL"
+                " THEN SUM((%s * %s) * %s) ELSE 0 END",
+                table.is_downpayment,
+                table.purchase_price,
+                table.product_uom_qty,
+                rate,
+            ),
             'currency_id': SQL("%s", self.env.company.currency_id.id),
             'order_reference': SQL("concat('sale.order', ',', %s)", table.order_id),
         }

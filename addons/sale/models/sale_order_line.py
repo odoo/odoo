@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.tools import float_compare, float_is_zero, float_round, format_date, groupby
 
 
 class SaleOrderLine(models.Model):
@@ -257,6 +257,36 @@ class SaleOrderLine(models.Model):
         compute="_compute_price_reduce_taxinc",
         store=True,
         precompute=True,
+    )
+
+    margin = fields.Float(
+        string="Margin",
+        min_display_digits="Product Price",
+        compute="_compute_margin",
+        precompute=True,
+        store=True,
+        readonly=False,
+        copy=False,
+        groups="base.group_user",
+    )
+    margin_percent = fields.Float(
+        string="Margin (%)",
+        compute="_compute_margin_percent",
+        precompute=True,
+        store=True,
+        readonly=False,
+        copy=False,
+        groups="base.group_user",
+    )
+    purchase_price = fields.Float(
+        string="Unit Cost",
+        min_display_digits="Product Price",
+        compute="_compute_purchase_price",
+        precompute=True,
+        store=True,
+        readonly=False,
+        copy=False,
+        groups="base.group_user",
     )
 
     customer_lead = fields.Integer(
@@ -1096,6 +1126,38 @@ class SaleOrderLine(models.Model):
                 line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
             )
 
+    @api.depends("product_id", "company_id", "currency_id", "product_uom_id")
+    def _compute_purchase_price(self):
+        for line in self:
+            if not line._is_product_line():
+                line.purchase_price = 0.0
+                continue
+            if line.product_id:
+                line = line.with_company(line.company_id)
+
+                # Convert the cost to the line UoM
+                product_cost = line.product_id.uom_id._compute_price(
+                    line.product_id.standard_price, line.product_uom_id
+                )
+
+                line.purchase_price = line._convert_to_sol_currency(
+                    product_cost, line.product_id.cost_currency_id
+                )
+
+    @api.depends("price_subtotal", "product_uom_qty", "purchase_price")
+    def _compute_margin(self):
+        for line in self:
+            total_cost = line.purchase_price * line._get_product_qty()
+            line.margin = line._get_subtotal() - total_cost
+
+    @api.depends("margin")
+    def _compute_margin_percent(self):
+        for line in self:
+            if line_subtotal := line._get_subtotal():
+                line.margin_percent = float_round(line.margin / line_subtotal, precision_digits=4)
+            else:
+                line.margin_percent = None
+
     @api.depends("product_id", "company_id")
     def _compute_customer_lead(self):
         for line in self:
@@ -1809,6 +1871,37 @@ class SaleOrderLine(models.Model):
         """
         self._inverse_label()
 
+    @api.onchange("margin")
+    def _onchange_margin(self):
+        if not (product_qty := self._get_product_qty()):
+            # Nothing to do, write method raises UserError if quantity is below delivered quantity.
+            return
+        computed_margin = self._get_subtotal() - self.purchase_price * product_qty
+        if not self.currency_id.compare_amounts(computed_margin, self.margin):
+            # Nothing to do, onchange was triggered because of the compute
+            return
+        discount = self._get_discount()
+        margin_per_qty = self.margin / product_qty
+        computed_price = (margin_per_qty + self.purchase_price) / discount
+        self._set_price_incl_taxes(computed_price)
+
+    @api.onchange("margin_percent")
+    def _onchange_margin_percent(self):
+        subtotal = self._get_subtotal()
+        if not subtotal or not self.currency_id.compare_amounts(
+            self.margin_percent, self.margin / subtotal
+        ):
+            # Nothing to do, onchange triggered because of the compute
+            return
+        if self.purchase_price != 0 and self.margin_percent == 1:
+            raise UserError(
+                self.env._("If the cost is not 0, it is not possible to set the margin to 100%")
+            )
+        if self.margin_percent != 1:
+            discount = self._get_discount()
+            computed_price = (self.purchase_price) / ((1 - self.margin_percent) * discount)
+            self._set_price_incl_taxes(computed_price)
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
@@ -2239,6 +2332,60 @@ class SaleOrderLine(models.Model):
     def _get_discounted_price(self):
         self.ensure_one()
         return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+
+    def _get_subtotal(self):
+        """Return subtotal of line, used for margin calculations.
+        When line is added to order from delivery, consider delivered quantity instead.
+
+        :rtype: float
+        :returns: Subtotal of the order line.
+        """
+        self.ensure_one()
+        if self.qty_delivered and not self.product_uom_qty:
+            return self.price_unit * self.qty_delivered
+        return self.price_subtotal
+
+    def _get_product_qty(self):
+        """Return the quantity used for margin calculations.
+        When line is added to order from delivery consider `qty_delivered` instead.
+
+        :rtype: int
+        :returns: Quantity to be considered on the current line.
+        """
+        self.ensure_one()
+        if self.qty_delivered and not self.product_uom_qty:
+            return self.qty_delivered
+        return self.product_uom_qty
+
+    def _get_discount(self):
+        """Return the discount that will be applied on the order line.
+
+        :rtype: float
+        :returns: Discount applied on the order line.
+        """
+        self.ensure_one()
+        return 1 - self.discount / 100
+
+    def _set_price_incl_taxes(self, price):
+        """Update the line price considering taxes that should be applied on.
+        When margin is changed, make sure that included taxes are taken into account when updating
+        the unit price.
+
+        :param float price: The price value to assign.
+        """
+        self.ensure_one()
+        base_line = self._prepare_base_line_for_taxes_computation(
+            quantity=1, discount=0, price_unit=price, special_mode="total_excluded"
+        )
+        company = self.company_id or self.env.company
+        self.env["account.tax"]._add_tax_details_in_base_line(base_line, company)
+        self.env["account.tax"]._round_base_lines_tax_details([base_line], company)
+        tax_details = base_line["tax_details"]
+        self.price_unit = tax_details["raw_total_excluded_currency"] + sum(
+            tax_data["raw_tax_amount_currency"]
+            for tax_data in tax_details["taxes_data"]
+            if tax_data["original_price_include"]
+        )
 
     def _is_product_line(self):
         """Return whether it is a product line.
