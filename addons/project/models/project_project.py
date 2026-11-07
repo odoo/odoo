@@ -77,6 +77,28 @@ class ProjectProject(models.Model):
             ], start=1)
         ]
 
+    @api.depends('partner_id.phone')
+    def _compute_partner_phone(self):
+        for project in self:
+            project.partner_phone = project.partner_id.phone
+
+    def _inverse_partner_phone(self):
+        # the form view sends the customer's phone back: only write it if it
+        # was actually modified, as the user may not be allowed to edit contacts
+        for project in self:
+            if project.partner_id and (project.partner_id.phone or False) != (project.partner_phone or False):
+                project.partner_id.phone = project.partner_phone
+
+    @api.depends('partner_id.email')
+    def _compute_partner_email(self):
+        for project in self:
+            project.partner_email = project.partner_id.email
+
+    def _inverse_partner_email(self):
+        for project in self:
+            if project.partner_id and (project.partner_id.email or False) != (project.partner_email or False):
+                project.partner_id.email = project.partner_email
+
     @api.model
     def _search_is_favorite(self, operator, value):
         if operator != 'in':
@@ -106,8 +128,8 @@ class ProjectProject(models.Model):
     active = fields.Boolean(default=True, copy=False, export_string_translation=False)
     sequence = fields.Integer(default=10, export_string_translation=False)
     partner_id = fields.Many2one('res.partner', string='Customer', bypass_search_access=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", index='btree_not_null')
-    partner_phone = fields.Char(related='partner_id.phone', readonly=False, export_string_translation=False)
-    partner_email = fields.Char(related='partner_id.email', readonly=False, export_string_translation=False)
+    partner_phone = fields.Char(compute='_compute_partner_phone', inverse='_inverse_partner_phone', compute_sudo=True, export_string_translation=False)
+    partner_email = fields.Char(compute='_compute_partner_email', inverse='_inverse_partner_email', compute_sudo=True, export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", compute_sql="_compute_sql_currency_id", compute_sudo=True, string="Currency", readonly=True, export_string_translation=False)
     analytic_account_balance = fields.Monetary(related="account_id.balance")
