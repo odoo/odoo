@@ -1,7 +1,9 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, edit, expect, press, queryFirst, queryOne, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     confirmAddSnippet,
+    createTestSnippets,
+    getSnippetStructure,
     setupHTMLBuilder,
     waitForSnippetDialog,
 } from "@html_builder/../tests/helpers";
@@ -40,4 +42,46 @@ test("Selecting a snippet while mobile preview is active drops it into the edita
     await confirmAddSnippet("s_test");
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent.querySelectorAll("[data-snippet='s_test']")).toHaveCount(1);
+});
+
+test.tags("desktop");
+test("Tabs navigation", async () => {
+    const snippets = [
+        { name: "Test", groupName: "a", innerHTML: "Yop" },
+        { name: "Test", groupName: "b", innerHTML: "Hello" },
+        { name: "Test", groupName: "c", innerHTML: "Nice" },
+    ];
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="C" data-oe-snippet-id="123" data-o-snippet-group="c"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: createTestSnippets({ snippets, withName: false }).map(
+                (snippetDesc) => getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    await openSnippetDialog();
+    await contains(".o_add_snippet_dialog_search").focus();
+    // Tab behavior should be initialized.
+    expect(".o_add_snippet_dialog .active[role=tab]:not([tabindex='-1'])").toHaveCount(1);
+    expect(".o_add_snippet_dialog [role=tab][tabindex='-1']").toHaveCount(2);
+    const activeBtnEl = queryOne(".o_add_snippet_dialog .active[role=tab][tabindex='0']");
+    await press("Tab");
+    expect(document.activeElement).toBe(activeBtnEl);
+    await press("ArrowDown");
+    expect(document.activeElement).toBe(
+        queryFirst(".o_add_snippet_dialog [role=tab][tabindex='-1']")
+    );
+    expect(queryOne(".o_add_snippet_dialog .active[tabindex='0']")).toBe(activeBtnEl);
+    await press("Alt+S"); // Focus the search input.
+    await edit("az"); // Make a dummy search to reinitialize the tabs.
+    await animationFrame();
+    expect(".o_add_snippet_dialog [role=tab]").toHaveCount(0);
+    await edit(""); // Delete the search
+    await animationFrame();
+    // Tab behavior should be back.
+    expect(".o_add_snippet_dialog [role=tab]:not([tabindex='-1'])").toHaveCount(1);
 });

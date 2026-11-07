@@ -1,5 +1,13 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillDestroy, useListener } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillDestroy,
+    shallowEqual,
+    signal,
+    useEffect,
+    useListener,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -464,4 +472,85 @@ export function useNavigation(containerRef, options = {}) {
     onWillDestroy(() => navigator._destroy());
 
     return navigator;
+}
+
+/**
+ * Handles the basic behavior of a tabs UI pattern: adds keydown listeners on
+ * tabs to handle arrow keypresses, and restricts focus on the current active
+ * tab only.
+ * @param {Object} params
+ * @param {import("@odoo/owl").Signal<HTMLElement>} params.ref the tablist ref
+ * @param {(HTMLElement) => boolean} params.isTabActive callback to determine
+ * the currently active tab.
+ * @param {(HTMLElement) => HTMLElement[]} [params.getTabEls] callback to
+ * query the tabs from the tablist parent.
+ * @param {boolean} [params.loop] if true, will loop from first to last tab and
+ * from last to first.
+ */
+export function useTabsKeyboardNavigation({
+    ref,
+    isTabActive,
+    getTabEls = (el) => el.querySelectorAll("[role=tab]:not(:disabled, [disabled], .disabled)"),
+}) {
+    const commonKeys = ["Home", "End"];
+    const navKeys = {
+        horizontal: ["ArrowLeft", "ArrowRight", ...commonKeys],
+        vertical: ["ArrowUp", "ArrowDown", ...commonKeys],
+    };
+    const tabEls = signal([], { equals: shallowEqual });
+
+    const onTabKeydown = (ev) => {
+        const orientation = ref().getAttribute("aria-orientation") || "horizontal";
+        if (!navKeys[orientation].includes(ev.key)) {
+            return;
+        }
+        ev.preventDefault();
+        const currentIdx = [...tabEls()].findIndex((tabEl) => tabEl === ev.currentTarget);
+        const tabsLength = tabEls().length;
+        let nextIdx;
+        switch (ev.key) {
+            case "ArrowLeft":
+            case "ArrowUp":
+                nextIdx = (currentIdx - 1 + tabsLength) % tabsLength;
+                break;
+            case "ArrowRight":
+            case "ArrowDown":
+                nextIdx = (currentIdx + 1) % tabsLength;
+                break;
+            case "Home":
+                nextIdx = 0;
+                break;
+            case "End":
+                nextIdx = tabsLength - 1;
+                break;
+        }
+        tabEls()[nextIdx].focus();
+    };
+    const updateTabEls = () => {
+        if (ref()) {
+            tabEls.set(getTabEls(ref()));
+        }
+    };
+
+    onMounted(() => {
+        updateTabEls();
+    });
+    onPatched(() => {
+        updateTabEls();
+    });
+    useEffect(() => {
+        updateTabEls();
+    });
+    useEffect(() => {
+        const tabs = tabEls();
+        for (const tabEl of tabs) {
+            tabEl.addEventListener("keydown", onTabKeydown);
+            tabEl.setAttribute("tabindex", isTabActive(tabEl) ? "0" : "-1");
+        }
+        return () => {
+            for (const tabEl of tabs) {
+                tabEl.removeEventListener("keydown", onTabKeydown);
+            }
+        };
+    });
 }
