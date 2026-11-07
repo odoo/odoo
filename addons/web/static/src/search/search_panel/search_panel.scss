@@ -60,6 +60,41 @@
         --list-group-item-padding-y: var(--SearchPanelHeader-padding-y, calc(var(--o-bs-spacer-2) - var(--SearchPanelHeader-margin-y)));
         --list-group-item-padding-x: 0;
 
+        /* The picked entry is marked by a `::before` layer rather than its own
+           background: a background cannot be moved, a layer can. The layer is
+           always there, narrowed and transparent, and picking the entry only
+           fades it in to full width, so the mark grows into place instead of
+           blinking on. */
+        &.list-group-item-action {
+            position: relative;
+            /* A layer sent behind the content would otherwise be sent behind the
+               backgrounds of everything the entry sits in, and disappear under
+               them: this keeps the whole stack inside the entry. */
+            isolation: isolate;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                border-radius: inherit;
+                background: var(--list-group-active-bg);
+                opacity: 0;
+                transform: scaleX(.32);
+                transition: opacity .2s linear, transform .2s linear;
+            }
+
+            &.active {
+                /* The entry hands its own background over to the layer. */
+                background-color: transparent;
+
+                &::before {
+                    opacity: 1;
+                    transform: scaleX(1);
+                }
+            }
+        }
+
         &:where(:not(.list-group-item-action, .o_search_panel_filter_value)) {
             /* This acts as a margin, we use padding to avoid space between
                pseudo elements used to display the tree. */
