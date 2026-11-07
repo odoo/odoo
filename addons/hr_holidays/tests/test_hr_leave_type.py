@@ -75,6 +75,18 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             employee._compute_leave_status()
             self.assertTrue(employee.is_absent)
 
+        report_calendar_leaves_employee = self.env['hr.leave.report.calendar'].with_user(self.user_employee).search([
+            ('id', 'in', (leave_0 | leave_1).ids),
+        ])
+        self.assertNotIn(leave_0.id, report_calendar_leaves_employee.ids, "Working time should not be displayed in time off overview for regular employees")
+        self.assertIn(leave_1.id, report_calendar_leaves_employee.ids, "Non working time should be displayed in time off overview for regular employees")
+
+        report_calendar_leaves_officer = self.env['hr.leave.report.calendar'].with_user(self.user_hruser).search([
+            ('id', 'in', (leave_0 | leave_1).ids),
+        ])
+        self.assertIn(leave_0.id, report_calendar_leaves_officer.ids, "Working time should be displayed in time off overview for time off officers")
+        self.assertIn(leave_1.id, report_calendar_leaves_officer.ids, "Non working time should be displayed in time off overview for time off officers")
+
     def test_type_creation_right(self):
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
         with self.assertRaises(AccessError):
