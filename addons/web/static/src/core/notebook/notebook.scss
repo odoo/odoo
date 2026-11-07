@@ -61,7 +61,11 @@
         }
 
         &:focus-visible, &.active:focus-visible {
-            box-shadow: inset 0 0 var(--o-bs-focus-ring-blur) $focus-ring-width $focus-ring-color;
+            /* Both bands of $focus-ring-box-shadow, drawn inset: the solid */
+            /* inner band is what reaches 3:1 against the tab background. */
+            box-shadow:
+                inset 0 0 var(--o-bs-focus-ring-blur) calc(var(--focus-ring-width) * .5) var(--o-component-active-border),
+                inset 0 0 var(--o-bs-focus-ring-blur) var(--focus-ring-width) var(--focus-ring-color);
         }
 
         &:hover {
