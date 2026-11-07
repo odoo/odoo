@@ -553,6 +553,7 @@ export function cloneContentEls(content, keepScripts = false) {
     if (!keepScripts) {
         copyFragment.querySelectorAll("script").forEach((scriptEl) => scriptEl.remove());
     }
+    copyFragment.querySelectorAll("o-comment").forEach((commentEl) => commentEl.remove());
     return copyFragment;
 }
 

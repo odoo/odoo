@@ -6,6 +6,7 @@ import {
     contains,
     defineActions,
     defineModels,
+    getService,
     models,
     onRpc,
     patchWithCleanup,
@@ -402,6 +403,36 @@ test("empty links with o_translate_inline are removed on save", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     await animationFrame();
     expect(":iframe a").toHaveCount(0);
+});
+
+test("Embed Code comments are kept in its template", async () => {
+    const resultSave = setupSaveAndReloadIframe();
+    await setupWebsiteBuilder(`
+        <section class="s_embed_code" data-snippet="s_embed_code" data-name="Embed Code">
+            <template class="s_embed_code_saved"><o-comment data-comment="saved"></o-comment><div>x</div></template>
+            <div class="s_embed_code_embedded container o_not_editable"><div>x</div></div>
+        </section>
+    `);
+    let codeInEditor;
+    patchWithCleanup(getService("dialog"), {
+        add(_, { value, confirm }, { onClose }) {
+            codeInEditor = value;
+            confirm("<!--saved--><div>x<!--new--></div>");
+            onClose();
+        },
+    });
+    await contains(":iframe .s_embed_code").click();
+    await contains("[data-action-id='editCode']").click();
+    expect(codeInEditor).toBe("<!--saved--><div>x</div>");
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    const savedEl = document.createElement("div");
+    savedEl.innerHTML = resultSave[0];
+    expect(savedEl.querySelector("template").innerHTML).toBe(
+        `<o-comment data-comment="saved"></o-comment>` +
+            `<div>x<o-comment data-comment="new"></o-comment></div>`
+    );
+    expect(savedEl.querySelector(".s_embed_code_embedded").innerHTML).toBe("<div>x</div>");
 });
 
 function setupSaveAndReloadIframe() {
