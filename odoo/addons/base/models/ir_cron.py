@@ -538,6 +538,17 @@ class IrCron(models.Model):
                         # commit some progress.
                         # (hopefully this failure is temporary)
                         reschedule_asap = True
+                if active:
+                    # check for asynchronous deactivation, see `action_archive`
+                    job_cr.execute("""
+                        SELECT
+                        FROM ir_cron_progress
+                        WHERE cron_id = %s
+                            AND create_date >= %s
+                            AND deactivate IS TRUE
+                        LIMIT 1
+                    """, (cron_id, now))
+                    active = not job_cr.rowcount
 
                 _logger.log(log_level,
                     "Job %r (%s) %s (done %s; remaining %s; duration %.2fs)",
@@ -659,6 +670,14 @@ class IrCron(models.Model):
                 "This cron task is currently being executed and may not be modified "
                 "Please try again in a few minutes"
             )) from None
+
+    def action_archive(self):
+        locked = self.try_lock_for_update(allow_referencing=True)
+        if delayed := self - locked:
+            # just create a progress to indicate deactivation
+            self.env['ir.cron.progress'].create([{'cron_id': cron.id, 'deactivate': True} for cron in delayed])
+            self._notify_admin(self.env._("Deactivating cron jobs asynchronously: %s", delayed.ids))
+        return super(IrCron, locked).action_archive()
 
     @api.model
     def toggle(self, model, domain):
@@ -848,6 +867,8 @@ class IrCronProgress(models.Model):
     deactivate = fields.Boolean()
     timed_out_counter = fields.Integer(default=0)
     duration = fields.Float(help="Duration of the job in seconds")
+
+    _deactivate_idx = models.Index("(cron_id, create_date) WHERE deactivate IS TRUE")
 
     @api.autovacuum
     def _gc_cron_progress(self):
