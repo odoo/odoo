@@ -6,6 +6,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
@@ -243,3 +244,70 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         })
         names = [line['product_data']['display_name'] for line in order._order_receipt_generate_line_data()]
         self.assertEqual(names, [f"{product.name} (40)", product.display_name])
+
+    def test_receipt_tax_group_labels(self):
+        fiscal_position = self.env['account.fiscal.position'].create({'name': 'Fiscal Position Test'})
+        tax_labelled = self.env['account.tax'].create({
+            'name': 'Labelled Tax 15%',
+            'amount': 15,
+            'tax_group_id': self.env['account.tax.group'].create({
+                'name': 'Tax Group 15%',
+                'pos_receipt_label': 'Label 15',
+            }).id,
+        })
+        self.env['account.tax'].create({
+            'name': 'Labelled Tax 5%',
+            'amount': 5,
+            'tax_group_id': self.env['account.tax.group'].create({
+                'name': 'Tax Group 5%',
+                'pos_receipt_label': 'Label 5',
+            }).id,
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_labelled.id)],
+        })
+        tax_unlabelled = self.env['account.tax'].create({
+            'name': 'Unlabelled Tax 10%',
+            'amount': 10,
+            'tax_group_id': self.env['account.tax.group'].create({'name': 'Tax Group 10%'}).id,
+        })
+        product_labelled = self.env['product.product'].create({
+            'name': 'Labelled Product',
+            'list_price': 100,
+            'taxes_id': [Command.set(tax_labelled.ids)],
+            'available_in_pos': True,
+        })
+        product_unlabelled = self.env['product.product'].create({
+            'name': 'Unlabelled Product',
+            'list_price': 100,
+            'taxes_id': [Command.set(tax_unlabelled.ids)],
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        def get_receipt(order_data):
+            order, _ = self.create_backend_pos_order({
+                'pos_config': self.main_pos_config,
+                'order_data': order_data,
+                'line_data': [
+                    {'product_id': product_labelled.id},
+                    {'product_id': product_unlabelled.id},
+                ],
+            })
+            data = order.order_receipt_generate_data()
+            html = self.env['ir.qweb']._render('point_of_sale.pos_order_receipt', data)
+            return data, html
+
+        data, html = get_receipt({})
+        self.assertIn('Label 15', html)
+        self.assertEqual([line['tax_group_labels'] for line in data['lines']], ['Label 15', ''])
+        self.assertEqual(
+            {tax['name']: tax['label'] for tax in data['extra_data']['prices']['taxes']},
+            {'Tax Group 10%': False, 'Tax Group 15%': 'Label 15'},
+        )
+        self.assertNotIn('()', html)
+
+        # The label of the tax mapped by the fiscal position is printed, not the original one
+        data, html = get_receipt({'fiscal_position_id': fiscal_position.id})
+        self.assertIn('Label 5', html)
+        self.assertEqual([line['tax_group_labels'] for line in data['lines']], ['Label 5', ''])
+        self.assertNotIn('Label 15', html)
