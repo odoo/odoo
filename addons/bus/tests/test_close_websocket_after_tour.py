@@ -27,6 +27,9 @@ class TestCloseWebsocketAfterTour(WebsocketCase):
             self.assertEqual(len(websocket_module._websocket_instances), 1)
             nonlocal websocket_created
             websocket_created = True
+            stopped = threading.Event()
+            stopped.set()
+            return stopped
 
         # Open a socket that won't be closed when calling browser.close()
         mocked_brower_class.return_value.navigate_to.side_effect = navigate_to_side_effect

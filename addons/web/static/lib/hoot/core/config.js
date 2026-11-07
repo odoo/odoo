@@ -250,6 +250,17 @@ export const CONFIG_SCHEMA = {
         parse: parseString(generateSeed()),
     },
     /**
+     * Identifier of a pool of jobs shared by several test runners (i.e. browser
+     * tabs of the same origin) running concurrently: each job of the pool is
+     * only run by the first runner claiming it.
+     * Note: only used in headless mode.
+     * @default "" jobs are not shared
+     */
+    shard: {
+        default: "",
+        parse: parseString(""),
+    },
+    /**
      * Determines how the failed tests must be unfolded in the UI:
      * - "first-fail": only the first failed test will be unfolded
      * - "failed": all failed tests will be unfolded
