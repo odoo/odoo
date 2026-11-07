@@ -547,7 +547,8 @@ class TestDiscussChannelAccess(MailCommon):
             self.assertEqual(len(channel), 1, "should find the channel")
             if operation == "read":
                 self.assertEqual(len(ChannelAsUser.search([("id", "=", channel.id)])), 1 if result else 0)
-                channel.fetch(["name"])
+                channel.invalidate_recordset()  # avoid values computed during setup
+                channel.fetch(["name", "message_count"])  # message_count: computed on messages
             elif operation == "write":
                 channel.write({"name": "new name"})
             elif operation == "unlink":
