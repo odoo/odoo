@@ -60,7 +60,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_shop_page_queries(self):
         res = defaultdict(int)
         res.update({
-            "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
             "ir_ui_view": 2,
@@ -73,10 +72,8 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
-            "res_company": 2,
+            "res_company": 1,
             "res_currency": 1,
-            "res_partner": 1,
-            "res_users": 1,
             "website_menu": 1,
             "website_page": 1,
         })
@@ -102,7 +99,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_product_page_queries(self):
         res = defaultdict(int)
         res.update({
-            "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
             "ir_attachment": 1,
@@ -188,9 +184,10 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 1
+        res["res_users"] += 1
         return res
 
     def test_shop_page_generation(self):
@@ -201,7 +198,7 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 2
         return res
@@ -330,6 +327,8 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_product"] += 1
+        res["res_users"] += 1
+        res["res_partner"] += 1
         if "website_sale_stock" in self.installed_modules:
             res["stock_warehouse"] += 2
             res["stock_move"] += 2
@@ -380,6 +379,49 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
         )
 
 
+# PREVENT SALE
+
+
+class TestWebsiteSalePerformancePreventZeroPriceSale(TestWebsiteSalePerformanceNoPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # The zero price check reuses the prices computed for the page: no extra query expected
+        cls.website.write({"prevent_sale": True, "prevent_sale_for": "zero_price"})
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
+class TestWebsiteSalePerformancePreventZeroPriceSaleWithPricelist(
+    TestWebsiteSalePerformancePreventZeroPriceSale, TestWebsiteSalePerformanceWithPricelist
+):
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
 # TODO test when heavy product is set as rental/recurring
 # TODO test with enable uoms (& multiple uoms on products)
-# TODO test with prevent zero price sale

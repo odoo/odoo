@@ -61,7 +61,9 @@ class ProductTemplate(models.Model):
         """
         start_sequence = 10000
         # Schema initialization may evaluate the default before adding the column.
-        if self.env.context.get('module') and not column_exists(self.env.cr, self._table, 'website_sequence'):
+        if self.env.context.get("module") and not column_exists(
+            self.env.cr, self._table, "website_sequence"
+        ):
             return start_sequence
         self.env.cr.execute(
             SQL("SELECT MAX(website_sequence) FROM %s", SQL.identifier(self._table))
@@ -787,7 +789,9 @@ class ProductTemplate(models.Model):
         for template in self:
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
 
-            product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
+            # Reset the prefetch so that the taxes of other companies are not computed (e.g. their
+            # `price_include`), which would read those companies.
+            product_taxes = template.sudo().taxes_id._filter_taxes_by_company().with_prefetch()
             taxes = fiscal_position_sudo.map_tax(product_taxes)
 
             base_price = None
@@ -1243,20 +1247,24 @@ class ProductTemplate(models.Model):
         if taxes is None:
             taxes = request.fiscal_position.map_tax(product_taxes)
 
+        # Prices are displayed tax included unless the website explicitly excludes them
+        show_tax = (website or self.env.website).tax_display or "tax_included"
+        if tax_display:
+            show_tax = "tax_excluded" if tax_display == "total_excluded" else "tax_included"
+
+        # Changes Fiscal Position when necessary
         price = product._get_tax_included_unit_price_from_price(
             price, product_taxes, product_taxes_after_fp=taxes
         )
-
-        # The list_price is always the price of one.
-        tax_details = taxes.compute_all(
-            price, currency, 1, product or self, self.env.user.partner_id
+        # Adapts the price to the needed tax mode
+        price = product._adapt_price_unit_to_document_tax_mode(
+            product_price_unit=price,
+            product_taxes=taxes,
+            product_uom=product.uom_id,
+            document_tax_mode=show_tax,
         )
-
-        if not tax_display:
-            show_tax = (website or self.env.website).tax_display
-            tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
-
-        return tax_details[tax_display]
+        # The displayed price must be rounded to the currency, e.g. 61.98 + 21% = 74.9958 -> 75.00
+        return (currency or self.env.company.currency_id).round(price)
 
     def create_product_variant(self, product_template_attribute_value_ids):
         """Create if necessary and possible and return the id of the product
@@ -1661,7 +1669,13 @@ class ProductTemplate(models.Model):
             return request.pricelist.with_context(self.env.context)
         return pricelist
 
-    def _website_show_quick_add(self, product=None):
+    def _website_show_quick_add(self, product=None, is_zero_price=None):
+        """Return whether the "Add to cart" button can be shown for the product.
+
+        :param product.product product: The variant to check instead of the template, if any.
+        :param bool is_zero_price: Whether the product price is zero.
+        :rtype: bool
+        """
         self.ensure_one()
         website = self.env.website
         product_or_template = product or self
@@ -1669,12 +1683,7 @@ class ProductTemplate(models.Model):
             product_or_template._is_purchasable()
             and product_or_template._is_published()
             and bool(product_or_template._get_available_uoms())
-            and (
-                not website.prevent_sale
-                or not website._prevent_product_sale(
-                    product_or_template, not product_or_template._get_contextual_price()
-                )
-            )
+            and not website._prevent_product_sale(product_or_template, is_zero_price)
             and not product_or_template._is_sold_out()
         )
 
