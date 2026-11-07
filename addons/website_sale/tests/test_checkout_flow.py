@@ -87,13 +87,17 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
 
         self.assertURLEqual(response.location, "/shop/cart")  # Redirected back to the cart
 
-    def test_impossible_to_checkout_with_public_partner(self):
+    def test_checkout_shows_address_form_inline_for_anonymous_cart(self):
         self.cart.partner_id = self.public_partner
+        self.authenticate(None, None)
+        self.update_session(**{CART_SESSION_CACHE_KEY: self.cart.id})
 
-        with self.mock_request(path="/shop/checkout", sale_order_id=self.cart.id):
-            response = self.CheckoutController.shop_checkout()
+        response = self.url_open("/shop/checkout")
 
-        self.assert_redirected_to(response, "/shop/address")  # Must create a partner first
+        # No redirect to `/shop/address`: the address form is rendered inline so that the
+        # customer can fill in their details and pick a delivery method on the same page.
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'name="address_form"', response.content)
 
     def test_cart_must_have_a_billing_address(self):
         (self.cart.partner_shipping_id, self.cart.partner_invoice_id) = self.env[

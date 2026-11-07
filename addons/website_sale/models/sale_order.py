@@ -506,8 +506,8 @@ class SaleOrder(models.Model):
 
             self.env.website.sudo().pricelist_id = self.pricelist_id
 
-        if self.carrier_id and "partner_shipping_id" in fnames and self._has_deliverable_products():
-            # Update the delivery method on shipping address change.
+        if "partner_shipping_id" in fnames and self._has_deliverable_products():
+            # Set or update the delivery method now that the shipping address is known.
             delivery_methods = self._get_delivery_methods()
             delivery_method = self._get_preferred_delivery_method(delivery_methods)
             self._set_delivery_method(delivery_method)
