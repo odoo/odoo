@@ -28,7 +28,7 @@ class TestEmailParsing(MailCommon):
 
     def test_message_parse_and_replace_bad_content_type(self):
         """Incoming emails with unsupported attachment Content-Types should not crash parsing."""
-        for content_type in ('binary/octet-stream', '*/*', 'bin/plain'):
+        for content_type in ('binary/octet-stream', '*/*', 'bin/plain', 'drawing/x-dwf'):
             with self.subTest(content_type=content_type):
                 received_mail = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=content_type)
                 self.assertIn(f"Content-Type: {content_type}", received_mail, f"{content_type} content-type not found")

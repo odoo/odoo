@@ -36,7 +36,7 @@ from requests import Session
 from ..web_push import push_to_end_point, DeviceUnreachableError, ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
 
 MAX_DIRECT_PUSH = 5
-BAD_CONTENT_TYPES = ('binary/octet-stream', '*/*', 'bin/plain')  # replaced by application/octet-stream
+BAD_CONTENT_TYPES = ('binary/octet-stream', '*/*', 'bin/plain', 'drawing/x-dwf')  # replaced by application/octet-stream
 
 _logger = logging.getLogger(__name__)
 
