@@ -64,11 +64,13 @@ class ProjectTemplateCreateWizard(models.TransientModel):
         """Create a project either from template or directly if no template is set."""
         self.ensure_one()
         so_name = self.env.context.get('default_name')
+        sale_order = self.env['sale.order'].browse(self.env.context.get("default_sale_order_id"))
         if self.template_id:
             self.name = "%s - %s" % (so_name, self.template_id.name)
+            if sale_order.project_account_id:
+                self = self.with_context(default_account_id=sale_order.project_account_id.id)  # noqa: PLW0642
             project = self._create_project_from_template()
         else:
-            sale_order = self.env['sale.order'].browse(self.env.context.get("default_sale_order_id"))
             so_line = sale_order.order_line[:1]
             product = so_line.product_id
             values = {
@@ -87,5 +89,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
                 values['name'] = "%s - %s" % (so_name, product.project_template_id.name or name)
             else:
                 values['name'] = so_name
+            if sale_order.project_account_id:
+                values['account_id'] = sale_order.project_account_id.id
             project = self.env['project.project'].create(values)
         return project.action_view_tasks()

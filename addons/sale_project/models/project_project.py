@@ -225,6 +225,8 @@ class ProjectProject(models.Model):
 
     @api.onchange('reinvoiced_sale_order_id')
     def _onchange_reinvoiced_sale_order_id(self):
+        if not self.account_id and self.reinvoiced_sale_order_id.project_account_id:
+            self.account_id = self.reinvoiced_sale_order_id.project_account_id
         if (
             not self.sale_line_id
             and (service_sols := self.reinvoiced_sale_order_id.order_line.filtered('is_service'))
