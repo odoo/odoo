@@ -97,6 +97,12 @@ ERROR_RETRY_JITTER = 10
 # How long (in seconds) the listener blocks waiting for a NOTIFY or a worker blocks
 # waiting for the queue.
 POLL_TIMEOUT = 50
+# How long (in seconds) a subscription change is applied again to the subscribes whose channels
+# may have been read before it.
+SUBSCRIPTION_CHANGE_WINDOW = 60
+# How long (in seconds) a missing subscription change id is read again, in case its transaction
+# commits later. Matches the garbage collection of `bus.subscription.change`.
+SUBSCRIPTION_CHANGE_GAP_TIMEOUT = 60 * 60
 
 
 class DispatchState(Enum):
@@ -160,8 +166,8 @@ class ChannelTopic:
         # When subscribing, put websockets in a waiting room until catch-up. Otherwise, we
         # could miss notifications (e.g. already ``IN_FLIGHT`` with a greater id).
         self._waiting_room: dict[Websocket, LastFetchedId] = {}
-        # Snapshot of the waiting room taken when the topic is claimed, for the worker
-        # that currently owns this topic.
+        # Snapshot of the waiting room taken when the topic is claimed: the websockets that the
+        # batch in flight catches up.
         self._waiting_room_snapshot: dict[Websocket, LastFetchedId] = {}
         # Frozen so `_dispatch/_kick_invalid_sessions` can iterate it while `unsubscribe`
         # removes a websocket concurrently.
@@ -271,6 +277,24 @@ class BusDispatcher(threading.Thread):
         self._pending_topics_by_db: defaultdict[str, set[ChannelTopic]] = defaultdict(set)
         self._topic_by_channel: dict[tuple, ChannelTopic] = {}
         self._topics_by_websocket: dict[Websocket, set[ChannelTopic]] = {}
+        # Number of topics per database: only the databases with topics read their
+        # subscription changes.
+        self._topic_count_by_db: defaultdict[str, int] = defaultdict(int)
+        # One worker at a time reads and applies the subscription changes of a database.
+        self._subscription_change_lock_by_dbname: WeakValueDictionary[str, threading.Lock] = (
+            WeakValueDictionary()
+        )
+        # When the listener last queued every database, for the changes whose NOTIFY was lost.
+        self._all_subscription_changes_queued_at = 0.0
+        # Databases whose new subscription changes a worker has to read.
+        self._subscription_change_dbnames: set[str] = set()
+        # Highest subscription change id read, per database.
+        self._subscription_change_max_id_by_db: dict[str, int] = {}
+        # Ids below the highest one that were not committed yet when read: id -> when noticed.
+        self._subscription_change_gaps_by_db: defaultdict[str, dict[int, float]] = defaultdict(dict)
+        # Subscription changes applied in the last `SUBSCRIPTION_CHANGE_WINDOW`, in the order
+        # they were applied: id -> (when applied, owners, gained, lost, last).
+        self._subscription_changes_by_db: defaultdict[str, dict[int, tuple]] = defaultdict(dict)
 
     # ------------------------------------------------------
     # LISTENER / WORKER ORCHESTRATION
@@ -313,7 +337,8 @@ class BusDispatcher(threading.Thread):
 
     def _listener_loop(self):
         """Listen for NOTIFY imbus and queue the channels for a worker to dispatch
-        notifications to the topic's subscribers."""
+        notifications to the topic's subscribers. Listen for NOTIFY imbus_subscription and
+        queue the database for a worker to apply its subscription changes."""
         db_system = config["db_system"]
         _logger.info("Bus._listener_loop listen imbus on db %s", db_system)
         with (
@@ -321,16 +346,34 @@ class BusDispatcher(threading.Thread):
             selectors.DefaultSelector() as sel,
         ):
             cr.execute("listen imbus")
+            cr.execute("listen imbus_subscription")
             cr.commit()
             conn = cr._cnx
             sel.register(conn, selectors.EVENT_READ)
+            self._queue_all_subscription_changes()
             while not stop_event.is_set():
-                if not sel.select(POLL_TIMEOUT):
+                ready = sel.select(POLL_TIMEOUT)
+                self._on_listener_wake(timed_out=not ready)
+                if not ready:
                     continue
                 conn.poll()
                 channels_by_dbname = defaultdict(list)
                 while conn.notifies:
-                    payload = conn.notifies.pop().payload
+                    notify = conn.notifies.pop()
+                    payload = notify.payload
+                    if notify.channel == "imbus_subscription":
+                        try:
+                            dbname = orjson.loads(payload)
+                        except ValueError:
+                            dbname = None
+                        if not isinstance(dbname, str):
+                            _logger.warning(
+                                "Bus: malformed imbus_subscription payload: %r",
+                                payload,
+                            )
+                        elif dbname in self._topic_count_by_db:
+                            self._queue_subscription_changes(dbname)
+                        continue
                     try:
                         for channel in orjson.loads(payload):
                             channel = tuplify(channel)
@@ -362,6 +405,8 @@ class BusDispatcher(threading.Thread):
                 dbname = self._pending_dbname_queue.get(timeout=POLL_TIMEOUT)
             except queue.Empty:
                 continue
+            if dbname in self._subscription_change_dbnames:
+                self._apply_subscription_changes(dbname)
             topics = self._claim(dbname)
             if not topics:
                 # Every channel for this db was unsubscribed by the time this worker
@@ -397,48 +442,182 @@ class BusDispatcher(threading.Thread):
         """Subscribe the websocket to ``channels``, replacing any existing subscription.
 
         ``last_fetched_id`` only sets the starting point for channels the websocket isn't
-        subscribed to yet.
+        subscribed to yet. The recent subscription changes of the owners in ``channels`` are
+        applied again, as ``channels`` may have been read before them.
         """
         if not channels:
             self.unsubscribe(websocket)
             return
         with self._lock_for_db(websocket._db):
+            last_by_channel = dict.fromkeys(channels, last_fetched_id)
+            last_by_changed_record = {}
+            oldest = time.monotonic() - SUBSCRIPTION_CHANGE_WINDOW
+            for applied, owners, gained, lost, last in self._subscription_changes_by_db.get(
+                websocket._db, {},
+            ).values():
+                if applied < oldest or owners.isdisjoint(last_by_channel):
+                    continue
+                last_by_changed_record.update(dict.fromkeys(lost))
+                last_by_changed_record.update(dict.fromkeys(gained, last))
+            lost = {record for record, last in last_by_changed_record.items() if last is None}
+            for channel in [channel for channel in last_by_channel if channel[:3] in lost]:
+                del last_by_channel[channel]
+            for record, last in last_by_changed_record.items():
+                if last is not None:
+                    last_by_channel.setdefault(record, last)
             current_topics = self._topics_by_websocket.get(websocket, set())
-            next_topics = set()
-            for channel in channels:
-                topic = self._topic_by_channel.get(channel)
-                if topic is None:
-                    topic = ChannelTopic(channel, last_fetched_id)
-                    self._topic_by_channel[channel] = topic
-                next_topics.add(topic)
-                if (
-                    websocket in topic._websockets
-                    or websocket in topic._waiting_room
-                    or websocket in topic._waiting_room_snapshot
-                ):
-                    continue
-                # Not yet a full subscriber nor in the waiting room: put in the waiting
-                # room for catch-up.
-                topic._waiting_room[websocket] = last_fetched_id
-                if topic._state is DispatchState.IDLE:
-                    self._queue_topic(topic)
-                elif topic._state is DispatchState.IN_FLIGHT:
-                    topic._state = DispatchState.DIRTY
-            for topic in current_topics:
-                if topic in next_topics:
-                    continue
-                topic._websockets = topic._websockets - {websocket}
-                topic._waiting_room.pop(websocket, None)
-                self._drop_topic_if_empty(topic)
+            next_topics = {
+                self._add_websocket(channel, last, websocket)
+                for channel, last in last_by_channel.items()
+            }
+            for topic in current_topics - next_topics:
+                self._remove_websocket(topic, websocket)
             self._topics_by_websocket[websocket] = next_topics
         self._ensure_started()
 
     def unsubscribe(self, websocket: Websocket):
         with self._lock_for_db(websocket._db):
             for topic in self._topics_by_websocket.pop(websocket, set()):
-                topic._websockets = topic._websockets - {websocket}
-                topic._waiting_room.pop(websocket, None)
-                self._drop_topic_if_empty(topic)
+                self._remove_websocket(topic, websocket)
+
+    def _add_websocket(self, channel: tuple, last_fetched_id: LastFetchedId, websocket: Websocket):
+        # Must be called with the dbname's lock held.
+        topic = self._topic_by_channel.get(channel)
+        if topic is None:
+            topic = ChannelTopic(channel, last_fetched_id)
+            self._topic_by_channel[channel] = topic
+            self._topic_count_by_db[topic._dbname] += 1
+            if self._topic_count_by_db[topic._dbname] == 1:
+                # The changes made while this process had no topic on the database.
+                self._queue_subscription_changes(topic._dbname)
+        if (
+            websocket in topic._websockets
+            or websocket in topic._waiting_room
+            or websocket in topic._waiting_room_snapshot
+        ):
+            return topic
+        # Not yet a full subscriber nor in the waiting room: put in the waiting room for
+        # catch-up.
+        topic._waiting_room[websocket] = last_fetched_id
+        if topic._state is DispatchState.IDLE:
+            self._queue_topic(topic)
+        elif topic._state is DispatchState.IN_FLIGHT:
+            topic._state = DispatchState.DIRTY
+        return topic
+
+    def _remove_websocket(self, topic: ChannelTopic, websocket: Websocket):
+        # Must be called with the dbname's lock held.
+        topic._websockets = topic._websockets - {websocket}
+        topic._waiting_room.pop(websocket, None)
+        self._drop_topic_if_empty(topic)
+
+    def _queue_subscription_changes(self, dbname: str):
+        self._subscription_change_dbnames.add(dbname)
+        self._pending_dbname_queue.put(dbname)
+
+    def _on_listener_wake(self, timed_out: bool):
+        if (
+            timed_out
+            or time.monotonic() - self._all_subscription_changes_queued_at >= POLL_TIMEOUT
+        ):
+            self._queue_all_subscription_changes()
+
+    def _queue_all_subscription_changes(self):
+        """Queue the databases with subscribers, for the changes whose NOTIFY was lost: sent
+        while the listener was down, or not sent at all."""
+        self._all_subscription_changes_queued_at = time.monotonic()
+        for dbname in list(self._topic_count_by_db):
+            self._queue_subscription_changes(dbname)
+
+    def _apply_subscription_changes(self, dbname: str):
+        """Read the subscription changes of ``dbname`` not read yet, and move the websockets of
+        their owners: out of the topics of the lost records (their sub-channels included), into
+        the topics of the gained ones from the ``last`` of the change. On the first read of a
+        database, only the changes of the last `SUBSCRIPTION_CHANGE_WINDOW` are applied."""
+        with self._lock_by_dbname_guard:
+            lock = self._subscription_change_lock_by_dbname.get(dbname)
+            if lock is None:
+                lock = threading.Lock()
+                self._subscription_change_lock_by_dbname[dbname] = lock
+        with lock:
+            self._subscription_change_dbnames.discard(dbname)
+            self._read_subscription_changes(dbname)
+
+    def _read_subscription_changes(self, dbname: str):
+        # Must be called with the subscription change lock of the database held.
+        with self._lock_for_db(dbname):
+            if dbname not in self._topic_count_by_db:
+                return
+            max_id = self._subscription_change_max_id_by_db.get(dbname)
+            gap_ids = list(self._subscription_change_gaps_by_db.get(dbname, ()))
+        try:
+            with acquire_cursor(dbname) as cr:
+                cr.execute(
+                    """SELECT id, create_date > now() AT TIME ZONE 'UTC' - %s * interval '1 second',
+                              payload
+                         FROM bus_subscription_change
+                        WHERE id > %s OR id = ANY(%s)
+                     ORDER BY id""",
+                    (SUBSCRIPTION_CHANGE_WINDOW, max_id or 0, gap_ids),
+                )
+                rows = cr.fetchall()
+                if max_id is None:
+                    cr.execute("""
+                        SELECT CASE WHEN is_called THEN last_value ELSE last_value - 1 END
+                          FROM bus_subscription_change_id_seq
+                    """)
+                    [sequence_id] = cr.fetchone()
+        except psycopg2.Error:
+            _logger.exception("Bus: failed to read the subscription changes of db %s.", dbname)
+            self._subscription_change_dbnames.add(dbname)
+            return
+        now = time.monotonic()
+        with self._lock_for_db(dbname):
+            if dbname not in self._topic_count_by_db:
+                return
+            changes = self._subscription_changes_by_db[dbname]
+            gaps = self._subscription_change_gaps_by_db[dbname]
+            for change_id, change in list(changes.items()):
+                if change[0] < now - SUBSCRIPTION_CHANGE_WINDOW:
+                    del changes[change_id]
+            for gap_id, noticed in list(gaps.items()):
+                if noticed < now - SUBSCRIPTION_CHANGE_GAP_TIMEOUT:
+                    del gaps[gap_id]
+            read_ids = {row[0] for row in rows}
+            first_read = max_id is None
+            if first_read:
+                max_id = rows[0][0] - 1 if rows else sequence_id
+            if rows and rows[-1][0] > max_id:
+                gaps.update(dict.fromkeys(set(range(max_id + 1, rows[-1][0])) - read_ids, now))
+            self._subscription_change_max_id_by_db[dbname] = max([max_id, *read_ids])
+            for change_id, recent, payload in rows:
+                gaps.pop(change_id, None)
+                if change_id in changes or (first_read and not recent):
+                    continue
+                try:
+                    owners = {(dbname, payload["owner_model"], id_) for id_ in payload["owner_ids"]}
+                    gained = {(dbname, model, id_) for model, id_ in payload["gained"]}
+                    lost = {(dbname, model, id_) for model, id_ in payload["lost"]}
+                    last = int(payload["last"])
+                except (KeyError, TypeError, ValueError):
+                    _logger.warning("Bus: malformed subscription change %s.", change_id)
+                    continue
+                changes[change_id] = (now, owners, gained, lost, last)
+                for owner in owners:
+                    if not (topic := self._topic_by_channel.get(owner)):
+                        continue
+                    for websocket in [
+                        *topic._websockets,
+                        *topic._waiting_room,
+                        *topic._waiting_room_snapshot,
+                    ]:
+                        if (topics := self._topics_by_websocket.get(websocket)) is None:
+                            continue
+                        for lost_topic in [t for t in topics if t._channel[:3] in lost]:
+                            topics.discard(lost_topic)
+                            self._remove_websocket(lost_topic, websocket)
+                        for channel in gained:
+                            topics.add(self._add_websocket(channel, last, websocket))
 
     def _lock_for_db(self, dbname: str):
         with self._lock_by_dbname_guard:
@@ -468,6 +647,12 @@ class BusDispatcher(threading.Thread):
         ):
             return False
         del self._topic_by_channel[topic._channel]
+        self._topic_count_by_db[topic._dbname] -= 1
+        if not self._topic_count_by_db[topic._dbname]:
+            del self._topic_count_by_db[topic._dbname]
+            self._subscription_change_max_id_by_db.pop(topic._dbname, None)
+            self._subscription_change_gaps_by_db.pop(topic._dbname, None)
+            self._subscription_changes_by_db.pop(topic._dbname, None)
         if topics := self._pending_topics_by_db.get(topic._dbname):
             topics.discard(topic)
             if not topics:
@@ -568,8 +753,9 @@ class BusDispatcher(threading.Thread):
             if websocket.state is ConnectionState.OPEN:
                 websocket.close(CloseCode.SESSION_EXPIRED)
             self.unsubscribe(websocket)
-            for topic in topics:
-                topic._waiting_room_snapshot.pop(websocket, None)
+            with self._lock_for_db(websocket._db):
+                for topic in topics:
+                    topic._waiting_room_snapshot.pop(websocket, None)
 
 
 # Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65

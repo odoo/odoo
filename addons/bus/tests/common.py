@@ -27,7 +27,7 @@ from odoo.tests.common import (
     _registry_test_lock,
 )
 
-from odoo.addons.bus.bus_dispatcher import BusDispatcher
+from odoo.addons.bus.bus_dispatcher import BusDispatcher, dispatch
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
@@ -185,7 +185,13 @@ class BusResult:
 class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        self.env.cr.precommit.data.pop("bus.subscription.change", None)
         self.env["bus.bus"].sudo().search([]).unlink()
+        self.env["bus.subscription.change"].sudo().search([]).unlink()
+        dispatch._subscription_change_dbnames.clear()
+        dispatch._subscription_change_max_id_by_db.clear()
+        dispatch._subscription_change_gaps_by_db.clear()
+        dispatch._subscription_changes_by_db.clear()
 
     @contextlib.contextmanager
     def assertBus(self, notifications, *, show_store_versioning=False):
@@ -288,6 +294,9 @@ class WebsocketCase(HttpCase, BusCase):
             raise unittest.SkipTest("websocket-client module is not installed")
         cls._BASE_WEBSOCKET_URL = f"ws://{HOST}:{cls.http_port()}/websocket"
         cls._WEBSOCKET_URL = f"{cls._BASE_WEBSOCKET_URL}?version={WebsocketConnectionHandler._VERSION}"
+        # Simulate a listener that never reads every database: these reads open cursors at any
+        # time of a test.
+        cls.startClassPatcher(patch.object(BusDispatcher, "_on_listener_wake"))
         websocket_allowed_patch = patch.object(WebsocketConnectionHandler, "websocket_allowed", return_value=True)
         cls.startClassPatcher(websocket_allowed_patch)
 
@@ -416,6 +425,33 @@ class WebsocketCase(HttpCase, BusCase):
     def trigger_notification_dispatching(self):
         self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
         self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
+
+    @contextlib.contextmanager
+    def _wait_for_subscription_changes(self):
+        applied = Event()
+        original_apply = BusDispatcher._apply_subscription_changes
+
+        def _apply_subscription_changes(dispatcher, dbname):
+            original_apply(dispatcher, dbname)
+            applied.set()
+
+        with patch.object(
+            BusDispatcher,
+            "_apply_subscription_changes",
+            _apply_subscription_changes,
+        ):
+            yield
+            self.assertTrue(self.wait_for_event(applied))
+
+    def _commit_and_wait_for_subscription_changes(self):
+        with self._wait_for_subscription_changes():
+            self.trigger_notification_dispatching()
+
+    def _recv_types_until(self, websocket, notification_type):
+        types = []
+        while notification_type not in types:
+            types += [notif["message"]["type"] for notif in json.loads(websocket.recv())]
+        return types
 
     def wait_for_event(self, event, timeout=5):
         """Wait for a server thread to set ``event``, giving it the registry lock back."""

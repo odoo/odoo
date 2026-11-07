@@ -68,6 +68,14 @@ def get_notify_payloads(channels):
                 get_notify_payloads(channels[pivot:]))
 
 
+def send_notify_payloads(name, payloads):
+    with odoo.sql_db.db_connect(config["db_system"]).cursor() as cr:
+        for payload in payloads:
+            cr.execute(
+                SQL("SELECT %s(%s, %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), name, payload),
+            )
+
+
 class BusBus(models.Model):
     _name = 'bus.bus'
 
@@ -159,15 +167,7 @@ class BusBus(models.Model):
                         "The imbus notification payload was too large, it's been split into %d payloads.",
                         len(payloads),
                     )
-                with odoo.sql_db.db_connect(config['db_system']).cursor() as cr:
-                    for payload in payloads:
-                        cr.execute(
-                            SQL(
-                                "SELECT %s('imbus', %s)",
-                                SQL.identifier(ODOO_NOTIFY_FUNCTION),
-                                payload,
-                            )
-                        )
+                send_notify_payloads("imbus", payloads)
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
