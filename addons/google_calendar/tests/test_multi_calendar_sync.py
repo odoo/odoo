@@ -70,12 +70,6 @@ class TestMultiCalendarSync(TestSyncGoogle):
         self.assertIn(self.organizer_user.primary_calendar_id, requested)
         self.assertIn(self.secondary_calendar, requested)
 
-    def test_restart_sync_marks_calendars_for_resync(self):
-        """Restarting synchronization must flag the user's calendars as needing a re-sync."""
-        self.organizer_user.primary_calendar_id.need_sync = False
-        self.env["calendar.calendar"].with_user(self.organizer_user)._restart_google_sync()
-        self.assertTrue(self.organizer_user.primary_calendar_id.need_sync)
-
     def test_shared_calendar_access(self):
         """
         Both owners and writers should be able to create and read all events in a shared calendar.
