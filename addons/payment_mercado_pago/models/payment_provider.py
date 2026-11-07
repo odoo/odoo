@@ -186,6 +186,19 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Mercado Pago.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        precision = super()._get_amount_precision(currency, **kwargs)
+        if self.code != "mercado_pago":
+            return precision
+
+        return const.CURRENCY_DECIMALS.get(currency.name, precision)
+
     @api.model
     def _find_available_providers(self, *args, is_validation=False, report=None, **kwargs):
         """Override of `payment` to filter out Mercado Pago providers for validation operations."""
