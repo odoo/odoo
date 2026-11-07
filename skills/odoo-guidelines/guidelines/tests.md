@@ -5,6 +5,13 @@
   company, mail side effects disabled), or
   `TransactionCaseWithUserDemo`/`HttpCaseWithUserDemo` when demo data is
   needed (it is not guaranteed present). Assert behavior, not implementation.
+- Reuse the records the common test class already builds, and build the
+  other records the tests of a class share once, in `setUpClass`: each test
+  runs in a savepoint rolled back after it, so a test that needs another
+  value writes it on one of those records instead of creating a new one. A
+  record only one test uses is created in that test. Keep `setUp` for what
+  must be new in each test: a per-test `patch`, or a record an HTTP request
+  creates.
 - Tests are tagged `standard` and `post_install` by default (fully-loaded
   registry); set exactly one of `at_install`/`post_install`; the check is
   only a log warning, and *both* tags makes the class run twice while
