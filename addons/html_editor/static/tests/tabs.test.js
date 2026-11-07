@@ -429,6 +429,14 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}gh]</blockquote>`,
         });
     });
+
+    test("should not insert a tab character in a non-editable element", async () => {
+        await testTabulation({
+            contentBefore: `<div contenteditable="false"><div>[]<textarea></textarea></div></div>`,
+            stepFunction: keydownTab,
+            contentAfter: `<div contenteditable="false"><div>[]<textarea></textarea></div></div>`,
+        });
+    });
 });
 
 describe("delete backward tabulation", () => {
