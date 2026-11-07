@@ -3592,12 +3592,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         10h of Work from 08:00 on a day scheduled 08:00-12:00 and 13:00-17:00 end at 18:00 the
         same day, and the 2 hours beyond the schedule become overtime.
         """
-        overtime_rule = self.env.ref('hr_work_entry.hr_time_rule_employee_schedule')
+        overtime_be_rule = self.env.ref('hr_work_entry.l10n_be_time_rule_employee_schedule')
         self.env['hr.time.rule'].search([]).active = False
-        overtime_rule.active = True
-        work = self.env.ref('hr_work_entry.generic_work_entry_type_attendance')
+        overtime_be_rule.active = True
+        work = self.env.ref('hr_work_entry.be_work_entry_type_attendance')
         work.write({'request_unit': 'hour', 'requires_allocation': False})
         employee = self._employee_on(self.company.resource_calendar_id)
+        self.company.country_id = self.env.ref('base.be')
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as form:
             form.work_entry_type_id = work
@@ -3612,6 +3613,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                          (self._utc(self._wall(self.monday, 8)), self._utc(self._wall(self.monday, 16)), 8),
                          "the 8 scheduled hours stay Work")
         self.assertEqual((overtime.work_entry_type_id, overtime.date_from, overtime.date_to),
-                         (overtime_rule.work_entry_type_id,
+                         (overtime_be_rule.work_entry_type_id,
                           self._utc(self._wall(self.monday, 16)), self._utc(self._wall(self.monday, 18))),
                          "the 2 hours beyond the schedule are overtime")

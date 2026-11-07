@@ -38,6 +38,7 @@ class TestResourceCommon(TransactionCase):
                     )
                     for att in attendances
                 ],
+                "days_per_week": len({dayofweek for (_, _, dayofweek) in attendances}),
             },
         )
 
@@ -87,7 +88,7 @@ class TestResourceCommon(TransactionCase):
 
         # UTC-8 winter, UTC-7 summer
         cls.calendar_john = cls._define_calendar(
-            "8+12 Hours",
+            "8h on Tuesday + 12h on Friday",
             [(8, 16, 1), (8, 13, 4), (16, 23, 4)],
         )
 
