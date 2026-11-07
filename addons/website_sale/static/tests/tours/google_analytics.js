@@ -172,7 +172,7 @@ registry.category("web_tour.tours").add("website_sale.google_analytics_remove_fr
     steps: () => [
         {
             content: "decrease cart line quantity",
-            trigger: 'button[name="minus_button"]',
+            trigger: 'button[name="remove_quantity"]',
             run: "click",
         },
         {
