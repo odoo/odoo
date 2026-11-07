@@ -50,3 +50,28 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     },
     ...clickOnSave(),
 ]);
+
+registerWebsitePreviewTour('snippet_newsletter_block_turnstile', {
+    url: '/',
+    edition: true,
+}, () => [
+    ...insertSnippet({
+        id: 's_newsletter_block',
+        name: 'Newsletter Block',
+        groupName: "Contact & Forms",
+    }),
+    {
+        content: 'Wait for the list id to be set.',
+        trigger: ':iframe .s_newsletter_block[data-list-id]:not([data-list-id="0"]) .s_newsletter_subscribe_form',
+    },
+    ...clickOnSave(),
+    {
+        content: 'Check that the captcha is added in the framed page',
+        trigger: ':iframe .s_newsletter_block:has(.js_subscribe + .s_turnstile)',
+    },
+    ...clickOnEditAndWaitEditMode(),
+    {
+        content: 'Check that the captcha and its spinner are removed in edit mode',
+        trigger: ':iframe .s_newsletter_block:not(:has(.s_turnstile)):not(:has(.turnstile-spinner)) .js_subscribe_btn:not(.disabled)',
+    },
+]);
