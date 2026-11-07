@@ -137,7 +137,7 @@
 </t>
 
 <t t-name="mail.ActivityList">
-    <div class="o-mail-ActivityList">
+    <div class="o-mail-ActivityList z-1">
         <div class="d-flex pt-2 px-2 cursor-pointer fw-bold" t-on-click="this.toggleActivities">
             <hr class="flex-grow-1 fs-3"/>
             <div class="d-flex align-items-center px-3">
@@ -150,6 +150,7 @@
         <t t-if="this.state.showActivities">
             <t t-foreach="this.activities" t-as="activity" t-key="activity.id">
                 <Activity activity="activity" onActivityChanged="this.onActivityChanged" reloadParentView="this.reloadParentView"/>
+                <span class="o-mail-Activity-separator d-block mx-2 my-3 border-bottom" t-if="!activity_last"/>
             </t>
         </t>
     </div>

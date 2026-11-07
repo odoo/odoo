@@ -19,9 +19,6 @@ patch(Activity.prototype, {
         }
         return formatList(this.meeting.partner_ids.map((p) => p.name));
     },
-    get dateFormat() {
-        return luxon.DateTime.DATE_FULL;
-    },
     get meeting() {
         return this.activity().calendar_event_id;
     },

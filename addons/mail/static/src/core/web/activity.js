@@ -11,7 +11,6 @@ import { CopyButton } from "@web/core/copy_button/copy_button";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { pick } from "@web/core/utils/objects";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { callPhoneNumber, getPhoneHref } from "@web/core/phone/phone_call";
 
@@ -54,12 +53,8 @@ export class Activity extends Component {
         const activity = this.activity();
         return JSON.stringify({
             activity: {
-                activity_type_id: pick(activity.activity_type_id || {}, "name"),
                 dateCreateFormatted: activity.dateCreateFormatted,
-                dateDeadlineFormatted: activity.dateDeadlineFormatted,
                 create_uid_name: activity.create_uid?.name,
-                user_id_name: activity.user_id?.name,
-                role_id_name: activity.role_id?.name,
             },
         });
     }
