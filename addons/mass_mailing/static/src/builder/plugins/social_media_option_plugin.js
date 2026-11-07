@@ -451,5 +451,5 @@ export class AddSocialMediaLinkAction extends BuilderAction {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(MassMailingSocialMediaOptionPlugin.id, MassMailingSocialMediaOptionPlugin);
