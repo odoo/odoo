@@ -249,12 +249,6 @@ class ResGroups(models.Model):
 
         internal_group_ids = self._get_internal_group_ids()
 
-        # invalidate caches before updating groups, since the recomputation of
-        # field 'share' depends on method has_group()
-        # DLE P139
-        if any(self._ids):
-            self.env['ir.access']._clear_caches()
-
         if 'user_ids' in vals:
             old_user_ids = {group.id: group.user_ids.ids for group in self.sudo()}
 
@@ -278,10 +272,15 @@ class ResGroups(models.Model):
                 old_group_ids[user_id] = (current_groups - changes['added']) | changes['removed']
             users._log_group_changes(vals, old_group_ids, self.ids)
 
-        # invalidate caches after the write (if not su) because we check access
-        # when writing
-        if any(self._ids) and not self.env.su:
-            self.env['ir.access']._clear_caches()
+        # Clear cached group memberships and permissions so later checks use the updated groups.
+        # Do this after `write`, since checking permission to write can fill these caches.
+        if any(self._ids):
+            # A user may no longer be allowed to read field values already in cache.
+            self.env.invalidate_all()
+            # Group changes can invalidate earlier decisions to allow or deny access to a record.
+            self.env.transaction.invalidate_access_cache()
+            # Cached group checks and access filters may now allow or deny the wrong records.
+            self.env.transaction.invalidate_ormcache()
 
         if self.env.context.get('apply_regular_group') is not REGULAR_VALUE:
             self._apply_group_regular()
