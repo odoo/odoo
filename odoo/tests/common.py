@@ -109,8 +109,8 @@ HOST = '127.0.0.1'
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = api.SUPERUSER_ID
 
-CHECK_BROWSER_SLEEP = 0.1 # seconds
-CHECK_BROWSER_ITERATIONS = 100
+CHECK_BROWSER_SLEEP = 0.01 # seconds
+CHECK_BROWSER_ITERATIONS = 1000
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
@@ -1658,6 +1658,9 @@ else:
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
+    # HTTP and compiled code cache shared by all the browsers of this process,
+    # so that each test does not download and compile the assets again.
+    _disk_cache_dir = None
 
     def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False):
         self.cleanup = ExitStack()
@@ -1901,6 +1904,12 @@ class ChromeBrowser:
         }
         if headless:
             switches.update(headless_switches)
+            if ChromeBrowser._disk_cache_dir is None:
+                ChromeBrowser._disk_cache_dir = tempfile.TemporaryDirectory(
+                    suffix='_chrome_odoo_cache',
+                    ignore_cleanup_errors=True,
+                )
+            switches['--disk-cache-dir'] = ChromeBrowser._disk_cache_dir.name
         if touch_enabled:
             # enable Chrome's Touch mode, useful to detect touch capabilities using
             # "'ontouchstart' in window"
