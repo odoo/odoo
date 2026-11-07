@@ -1424,25 +1424,33 @@
                 t-set="_button_classes"
                 t-value="_button_classes + ' btn-lg px-lg-0'"
             />
+            <t t-set="in_wish" t-value="product_variant and product_variant._is_in_wishlist()"/>
+            <t t-set="btnTitle">Add to wishlist</t>
+            <t t-set="btnTitleActive">Remove from wishlist</t>
             <button
                 t-if="product_variant"
-                t-att-class="_button_classes"
-                t-att-disabled="product_variant._is_in_wishlist()"
+                t-att-class="_button_classes + (' o_in_wishlist' if in_wish else '')"
                 t-att-data-product-id="product_variant.id"
                 t-att-data-product-template-id="product.id"
-                title="Add to wishlist"
+                t-att-title="in_wish and btnTitleActive or btnTitle"
             >
-                <i class="oi me-2 me-lg-0" data-icon="favorite" role="img" aria-label="Add to wishlist"/>
+                <i
+                    class="oi me-2 me-lg-0"
+                    data-icon="favorite"
+                    role="img"
+                    t-att-aria-label="in_wish and btnTitleActive or btnTitle"
+                />
                 <t
                     t-set="_span_classes"
-                    t-valuef="d-inline"
+                    t-valuef="o_label d-inline"
                 />
                 <t
                     t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
                     t-set="_span_classes"
                     t-value="_span_classes + ' d-lg-none'"
                 />
-                <span t-att-class="_span_classes">Add to wishlist</span>
+                <span t-att-class="_span_classes" t-if="not in_wish">Add to wishlist</span>
+                <span t-att-class="_span_classes" t-else="">In your wishlist</span>
             </button>
         </xpath>
     </template>
