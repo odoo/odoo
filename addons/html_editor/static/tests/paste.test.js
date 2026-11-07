@@ -3018,6 +3018,17 @@ describe("link", () => {
             });
         });
 
+        test("should paste and transform an URL around the strikethrough (collapsed)", async () => {
+            await testEditor({
+                contentBefore: "<p><s>ab[]cd</s></p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "http://www.xyz.com");
+                },
+                contentAfter:
+                    '<p><s>ab</s><a href="http://www.xyz.com"><s>http://www.xyz.com</s></a>[]<s>cd</s></p>',
+            });
+        });
+
         test("should paste and not transform an URL in a existing link (collapsed) (1)", async () => {
             await testEditor({
                 contentBefore: '<p>a<a href="http://existing.com">b[]c</a>d</p>',
@@ -3711,6 +3722,20 @@ describe("images", () => {
             await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p><a href="${imgUrl}">${imgUrl}</a>[]</p>`
+            );
+        });
+
+        test("should paste an image URL as a link around the strikethrough", async () => {
+            const { el, editor } = await setupEditor("<p><s>ab[]cd</s></p>");
+
+            pasteText(editor, imgUrl);
+            await animationFrame();
+            await expectElementCount(".o-we-powerbox", 1);
+            // Pick the second command (Paste as URL)
+            await press("ArrowDown");
+            await press("Enter");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                `<p><s>ab</s><a href="${imgUrl}"><s>${imgUrl}</s></a>[]<s>cd</s></p>`
             );
         });
 

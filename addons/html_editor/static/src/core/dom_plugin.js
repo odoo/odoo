@@ -35,6 +35,7 @@ import {
     descendants,
     firstLeaf,
     lastLeaf,
+    selectElements,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { childNodeIndex, nodeSize, rightPos } from "../utils/position";
@@ -96,6 +97,9 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
  * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
  *
+ * @typedef {CSSSelector[]} redundant_element_selectors
+ * Elements to unwrap on normalize when they are redundant.
+ *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
  * @typedef {string[]} system_style_properties
@@ -103,7 +107,15 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+        "format",
+    ];
     static shared = [
         "normalize",
         "insert",
@@ -125,6 +137,7 @@ export class DomPlugin extends Plugin {
         ],
         /** Handlers */
         on_editor_started_handlers: withSequence(0, this.normalize.bind(this)),
+        normalize_processors: this.unwrapRedundantElements.bind(this),
         clean_for_save_processors: (root) => {
             this.removeEmptyClassAndStyleAttributes(root);
             return root;
@@ -809,6 +822,35 @@ export class DomPlugin extends Plugin {
         }
         cursors.restore();
         this.dependencies.history.commit();
+    }
+
+    /**
+     * Unwraps the elements of `redundant_element_selectors` that are redundant.
+     *
+     * @param {HTMLElement} root
+     * @returns {HTMLElement} root
+     */
+    unwrapRedundantElements(root) {
+        const selector = this.getResource("redundant_element_selectors").join(", ");
+        if (!selector) {
+            return root;
+        }
+        // Check all elements first, then unwrap. Unwrapping changes the DOM,
+        // so checking after each unwrap would make the browser recompute the
+        // styles every time.
+        const redundantElements = [...selectElements(root, selector)].filter((el) =>
+            this.dependencies.format.isRedundantElement(el)
+        );
+        if (!redundantElements.length) {
+            return root;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const el of redundantElements) {
+            cursors.update(callbacksForCursorUpdate.unwrap(el));
+            unwrapContents(el);
+        }
+        cursors.restore();
+        return root;
     }
 
     removeEmptyClassAndStyleAttributes(root) {
