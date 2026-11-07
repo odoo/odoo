@@ -93,6 +93,39 @@ class PaymentTransaction(models.Model):
                 return prefix
         return super()._compute_reference_prefix(separator, **values)
 
+    def _get_line_items(self):
+        """ Override of `payment` to add the items of the linked invoices.
+
+        The items are returned as a dict mapping each invoice line to a dict with the following
+        keys:
+
+        - `name`: The name of the product.
+        - `description`: The label of the invoice line.
+        - `sku`: The internal reference of the product, if any.
+        - `barcode`: The barcode of the product, if any.
+        - `product_type`: The type of the product.
+        - `quantity`: The quantity of the invoice line.
+        - `total`: The total amount of the invoice line, taxes included.
+
+        :return: The details of the items.
+        :rtype: dict
+        """
+        line_items = super()._get_line_items()
+        for line in self.invoice_ids.invoice_line_ids:
+            if line.display_type != 'product':
+                continue
+            product = line.product_id.with_context(display_default_code=False)
+            line_items[line] = {
+                'name': product.display_name or line.name or line.move_id.name,
+                'description': line.name or '',
+                'sku': product.default_code,
+                'barcode': product.barcode,
+                'product_type': product.type,
+                'quantity': line.quantity,
+                'total': line.price_total,
+            }
+        return line_items
+
     # === LIFECYCLE METHODS - POST-PROCESSING === #
 
     def _post_process(self):

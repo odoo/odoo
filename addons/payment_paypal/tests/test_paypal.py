@@ -364,3 +364,34 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
                 "country_code": shipping_partner.country_code,
             },
         )
+
+    def test_items_payload_with_taxes_included_amounts(self):
+        """Test that items are sent with their taxes included unit amounts and the item total."""
+        tx = self._create_transaction(flow="direct", amount=23.0)
+        line_items = {"line": {"name": "Chair", "description": "", "quantity": 2, "total": 23.0}}
+        items = tx._paypal_prepare_items_payload(line_items)
+        amount = tx._paypal_prepare_amount_payload(items)
+        self.assertEqual((items[0]["quantity"], items[0]["unit_amount"]["value"]), ("2", "11.50"))
+        self.assertEqual(amount["breakdown"]["item_total"]["value"], "23.0")
+
+    def test_items_payload_falls_back_to_single_quantity(self):
+        """Test that an item with a fractional quantity is sent with a quantity of 1."""
+        tx = self._create_transaction(flow="direct", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
+        item = tx._paypal_prepare_items_payload(line_items)[0]
+        self.assertEqual((item["quantity"], item["unit_amount"]["value"]), ("1", "10.00"))
+
+    def test_no_items_with_negative_line(self):
+        """Test that no items are sent when a line item is negative."""
+        tx = self._create_transaction(flow="direct", amount=15.0)
+        line_items = {
+            "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+            "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
+        }
+        self.assertFalse(tx._paypal_prepare_items_payload(line_items))
+
+    def test_no_items_for_partial_payment(self):
+        """Test that no items are sent when they do not add up to the transaction amount."""
+        tx = self._create_transaction(flow="direct", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
+        self.assertFalse(tx._paypal_prepare_items_payload(line_items))

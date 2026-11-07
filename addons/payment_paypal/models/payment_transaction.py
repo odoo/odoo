@@ -4,7 +4,8 @@ from urllib.parse import urlencode
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import urls
+from odoo.tools import float_repr, urls
+from odoo.tools.barcode import check_barcode_encoding
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -214,13 +215,84 @@ class PaymentTransaction(models.Model):
         }
         if company_email := self.provider_id.company_id.email:
             payee_data["display_data"]["business_email"] = company_email
+        items = self._paypal_prepare_items_payload(self._get_line_items())
         return {
             "reference_id": self.reference,
             "description": f"{self.company_id.name}: {self.reference}",
-            "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
+            "amount": self._paypal_prepare_amount_payload(items),
+            "items": items,
             "payee": payee_data,
             **shipping_address_vals,
         }
+
+    def _paypal_prepare_amount_payload(self, items):
+        """Prepare the amount payload.
+
+        :param list items: The items payload
+        :return: The amount payload
+        :rtype: dict
+        """
+        amount_vals = {"currency_code": self.currency_id.name, "value": str(self.amount)}
+        if items:
+            # The item total is required when items are sent.
+            amount_vals["breakdown"] = {"item_total": dict(amount_vals)}
+        return amount_vals
+
+    def _paypal_prepare_items_payload(self, line_items):
+        """Prepare the items payload.
+
+        :param dict line_items: The line items of the transaction
+        :return: The items payload
+        :rtype: list
+        """
+        currency = self.currency_id
+        line_items = line_items.values()
+        # Negative amounts (e.g., discounts) are not supported.
+        if any(line_item["total"] < 0 for line_item in line_items) or currency.compare_amounts(
+            sum(line_item["total"] for line_item in line_items), self.amount
+        ):
+            return []
+
+        items = []
+        for line_item in line_items:
+            quantity = line_item["quantity"]
+            unit_amount = currency.round(line_item["total"] / quantity) if quantity else 0.0
+            if (
+                quantity < 1
+                or quantity != int(quantity)
+                or currency.compare_amounts(unit_amount * quantity, line_item["total"])
+            ):
+                # Only accepts whole quantities whose unit amounts add up to the total.
+                quantity, unit_amount = 1, line_item["total"]
+            item = {
+                "name": line_item["name"][:3000],
+                "description": line_item["description"][:4000],
+                "quantity": str(int(quantity)),
+                "unit_amount": {
+                    "currency_code": currency.name,
+                    "value": float_repr(unit_amount, currency.decimal_places),
+                },
+            }
+
+            if line_item.get("is_donation"):
+                item["category"] = "DONATION"
+            elif category := const.ITEM_CATEGORY_MAPPING.get(line_item.get("product_type")):
+                item["category"] = category
+            if line_item.get("sku"):
+                item["sku"] = line_item["sku"][:127]
+            # Only accepts UPC codes, not other barcode encodings.
+            if (barcode := line_item.get("barcode")) and check_barcode_encoding(barcode, "upca"):
+                item["upc"] = {"type": "UPC-A", "code": barcode}
+            if 0 < len(line_item.get("url", "")) <= 2048:
+                item["url"] = line_item["url"]
+            # Only accepts HTTPS image URLs ending with an image file extension.
+            image_url = line_item.get("image_url", "")
+            if image_url.startswith("https://") and len(image_url) <= 2048:
+                item["image_url"] = image_url
+
+            items.append(item)
+
+        return items
 
     def _paypal_prepare_payment_source_payload(self, invoice_address_vals, has_shipping):
         """Prepare the payment source of the create order request payload.
@@ -320,6 +392,7 @@ class PaymentTransaction(models.Model):
         """
         return_url, cancel_url = self._paypal_build_return_urls()
         locale = (self.partner_id.lang or self.env.user.lang or "en_US").replace("_", "-")
+        items = self._paypal_prepare_items_payload(self._get_line_items())
         return {
             "intent": "CAPTURE",
             "processing_instruction": "ORDER_COMPLETE_ON_PAYMENT_APPROVAL",
@@ -328,7 +401,8 @@ class PaymentTransaction(models.Model):
                     "reference_id": self.reference,
                     "custom_id": self.reference,
                     "description": f"{self.company_id.name}: {self.reference}",
-                    "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
+                    "amount": self._paypal_prepare_amount_payload(items),
+                    "items": items,
                 }
             ],
             "payment_source": {

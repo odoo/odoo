@@ -60,6 +60,10 @@ PAYMENT_STATUS_MAPPING = {
     "error": ("FAILED", "DECLINED"),
 }
 
+# Mapping of line item categories to PayPal item categories.
+# See https://developer.paypal.com/api/orders/v2/definitions/item_request
+ITEM_CATEGORY_MAPPING = {"consu": "PHYSICAL_GOODS", "service": "DIGITAL_GOODS"}
+
 # Events which are handled by the webhook.
 # See https://developer.paypal.com/api/rest/webhooks/event-names/
 CHECKOUT_WEBHOOK_EVENTS = [
