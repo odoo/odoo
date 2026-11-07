@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import { stepUtils } from "@web_tour/tour_utils";
 
 const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
@@ -242,5 +243,34 @@ registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_
         { trigger: ".o_kanban_record:contains('Test Task')", run: "click" },
         { trigger: ".o-mail-Composer-html", run: "editor @Alice" },
         { trigger: ".o-mail-Composer-suggestionPartner-name:text('Alice')" },
+    ],
+});
+
+registry.category("web_tour.tours").add("project_sharing_chatter_message_link", {
+    steps: () => [
+        {
+            trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        { trigger: ".o_project_sharing" },
+        { trigger: ".o_kanban_record:contains('Source Task')", run: "click" },
+        {
+            trigger: ".o-mail-Message a.o_message_redirect",
+            run() {
+                // the tour cannot drive a new tab: follow the link in this one
+                patch(window, {
+                    open(url) {
+                        return super.open(url, "_self");
+                    },
+                });
+                this.anchor.click();
+            },
+            expectUnloadPage: true,
+        },
+        {
+            trigger: ".o_project_sharing .o_field_widget[name=name] textarea:value('Target Task')",
+        },
+        { trigger: ".o-mail-Message:contains('Target message')" },
     ],
 });

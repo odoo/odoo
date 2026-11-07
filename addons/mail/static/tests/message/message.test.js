@@ -2921,6 +2921,24 @@ test("Clicking message link does not open a new tab", async () => {
     await waitFor(".o-mail-Message:has(:text('Message on other channel')):count(1)");
 });
 
+test("marked link to a record is restricted for a portal user", async () => {
+    const pyEnv = await startServer();
+    const lenaId = pyEnv["res.partner"].create({ name: "Lena" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["res.users"].write([serverState.userId], { share: true });
+    const url = `${getOrigin()}/odoo/res.partner/${lenaId}`;
+    pyEnv["mail.message"].create({
+        body: `<p><a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${lenaId}">${url}</a></p>`,
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(
+        `.o-mail-Message-body a.o_record_redirect_transformed[href='${url}']:text(Restricted):count(1)`
+    );
+});
+
 test("should delete link preview along with message", async () => {
     const pyEnv = await startServer();
     const linkPreviewId = pyEnv["mail.link.preview"].create({

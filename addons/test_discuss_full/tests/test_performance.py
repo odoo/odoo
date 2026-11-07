@@ -856,7 +856,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                         [
                             "mail.thread",
                             {
-                                "access_params": {},
                                 "request_list": [
                                     "activities",
                                     "attachments",
