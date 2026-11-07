@@ -147,6 +147,34 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         self.assertEqual(len(work_entries_vals), 1)
         self.assertEqual(work_entries_vals[0]['duration'], 8)
 
+    def test_working_time_leave_with_attendance_type(self):
+        """
+        A working-time time off with the time type of the attendances only replaces the attendances it covers.
+        """
+        attendances = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, day, hour),
+            'check_out': datetime(2021, 9, day, hour + 4),
+        } for day, hour in [(13, 8), (14, 13)]])
+        self.env['hr.leave'].with_context(
+            leave_fast_create=True,
+            leave_skip_date_from_to_computation=True,
+            leave_skip_state_check=True,
+        ).create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': attendances.work_entry_type_id.id,
+            'date_from': datetime(2021, 9, 14, 13),
+            'date_to': datetime(2021, 9, 14, 17),
+            'request_date_from': date(2021, 9, 14),
+            'request_date_to': date(2021, 9, 14),
+            'state': 'validate',
+        })
+        work_entries_vals = self.version.generate_work_entries(date(2021, 9, 13), date(2021, 9, 14))
+        monday_vals = [vals for vals in work_entries_vals if vals['date'] == date(2021, 9, 13)]
+        tuesday_vals = [vals for vals in work_entries_vals if vals['date'] == date(2021, 9, 14)]
+        self.assertEqual(sum(vals['duration'] for vals in monday_vals), 4, "Monday's attendance is outside the time off")
+        self.assertTrue(any(vals.get('leave_ids') for vals in tuesday_vals), "the time off wins over the attendance it covers")
+
     def test_gto_flexible_calendar(self):
         """
         Test when having a public time off and a flexible user has two
