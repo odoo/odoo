@@ -2983,6 +2983,49 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'location_id': warehouse.lot_stock_id.id, 'location_dest_id': warehouse.wh_output_stock_loc_id.id, 'product_uom_qty': 2},
         ])
 
+    def test_delivery_rules_without_warehouse_return_and_decrease_sol_qty(self):
+        """3-step delivery route whose rules have no warehouse, as when created from the
+        route form. 2 units are delivered and 1 is returned, then the SO line quantity
+        is set to 1: no new move is created.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_pack_ship'
+        warehouse.delivery_route_id.rule_ids.warehouse_id = False
+        stock_location = warehouse.lot_stock_id
+        pack_location = warehouse.wh_pack_stock_loc_id
+        out_location = warehouse.wh_output_stock_loc_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.quant']._update_available_quantity(self.new_product, stock_location, 2)
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        so.action_confirm()
+        pick = so.picking_ids
+        pick.button_validate()
+        pack = so.picking_ids - pick
+        pack.button_validate()
+        delivery = so.picking_ids - pick - pack
+        delivery.button_validate()
+
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=delivery.id, active_model='stock.picking'))
+        return_wiz = return_form.save()
+        return_wiz.product_return_moves.quantity = 1
+        res = return_wiz.action_create_returns()
+        self.env['stock.picking'].browse(res['res_id']).button_validate()
+
+        so.order_line.product_uom_qty = 1
+        self.assertRecordValues(so.order_line.move_ids.sorted('id'), [
+            {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'product_uom_qty': 2, 'state': 'done'},
+            {'location_id': pack_location.id, 'location_dest_id': out_location.id, 'product_uom_qty': 2, 'state': 'done'},
+            {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 2, 'state': 'done'},
+            {'location_id': customer_location.id, 'location_dest_id': stock_location.id, 'product_uom_qty': 1, 'state': 'done'},
+        ])
+
     def test_change_linked_sale_order_on_delivery(self):
         """Check that relinking a delivery to another sales order gives each order its own delivery."""
         warehouse = self.company_data['default_warehouse']
