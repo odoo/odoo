@@ -6,13 +6,20 @@ import {
 } from "./embedded_file_documents_selector";
 import { FilePlugin } from "@html_editor/main/media/file_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { FileSettings } from "@html_editor/others/embedded_components/core/file/file_settings";
 
 /**
  * This plugin is meant to replace the File plugin.
  */
 export class EmbeddedFilePlugin extends FilePlugin {
     static id = "embeddedFile";
-    static dependencies = [...super.dependencies, "embeddedComponents", "selection"];
+    static dependencies = [
+        ...super.dependencies,
+        "delete",
+        "embeddedComponents",
+        "overlay",
+        "selection",
+    ];
 
     // Extends the base class resources
     /** @type {import("plugins").EditorResources} */
@@ -20,6 +27,38 @@ export class EmbeddedFilePlugin extends FilePlugin {
         ...this.resources,
         on_will_mount_component_handlers: this.setupNewFile.bind(this),
     };
+
+    /** @override */
+    setup() {
+        super.setup();
+        // A single settings overlay is shared by all the file components.
+        this.fileSettingsOverlay = this.dependencies.overlay.createOverlay(FileSettings, {
+            positionOptions: {
+                position: "right-start",
+            },
+            className: "file-overlay",
+            closeOnPointerdown: false,
+        });
+        this.fileSettingsHost = null;
+    }
+
+    openFileSettings(host, props) {
+        if (this.fileSettingsHost !== host) {
+            this.fileSettingsOverlay.close();
+            this.fileSettingsHost = host;
+        }
+        this.fileSettingsOverlay.open({
+            target: host,
+            props: { ...props, closeOverlay: () => this.closeFileSettings(host) },
+        });
+    }
+
+    closeFileSettings(host) {
+        if (this.fileSettingsHost === host) {
+            this.fileSettingsOverlay.close();
+            this.fileSettingsHost = null;
+        }
+    }
 
     /** @override */
     renderDownloadBox(attachment) {
@@ -59,6 +98,25 @@ export class EmbeddedFilePlugin extends FilePlugin {
                         return;
                     }
                 },
+                remove: (host) => {
+                    const cursor = this.dependencies.selection.preserveSelection();
+                    const parent = host.parentElement;
+                    const index = [...parent.childNodes].indexOf(host);
+                    this.dependencies.delete.deleteRange({
+                        startContainer: parent,
+                        startOffset: index,
+                        endContainer: parent,
+                        endOffset: index + 1,
+                    });
+                    cursor.restore();
+                    // Not batchable: removing the file is a step on its own,
+                    // which must not be merged with the previous typing.
+                    this.dependencies.history.commit();
+                    this.dependencies.selection.focusEditable();
+                },
+                openFileSettings: this.openFileSettings.bind(this),
+                closeFileSettings: this.closeFileSettings.bind(this),
+                focusEditable: this.dependencies.selection.focusEditable,
             });
         }
     }
