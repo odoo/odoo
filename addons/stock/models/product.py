@@ -842,6 +842,9 @@ class ProductTemplate(models.Model):
         string="Tracking", required=True,
         compute='_compute_store_by', inverse='_set_store_by', search='_search_store_by',
         help="Ensure the traceability of a storable product in your warehouse.")
+    show_qty_in_form = fields.Boolean(
+        'Show Quantity on Hand', compute='_compute_show_qty',
+        )
     lot_sequence_id = fields.Many2one(
         'ir.sequence', 'Serial/Lot Numbers Sequence', default=lambda self: self.env.ref('stock.sequence_production_lots', raise_if_not_found=False),
         help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product', index='btree_not_null')
@@ -927,7 +930,7 @@ class ProductTemplate(models.Model):
     def _compute_has_available_route_ids(self):
         self.has_available_route_ids = self.env['stock.route'].search_count([('product_selectable', '=', True)])
 
-    @api.depends('product_variant_count', 'tracking')
+    @api.depends('product_variant_count', 'tracking', 'store_by')
     def _compute_show_qty_update_button(self):
         for product in self:
             product.show_qty_update_button = (
@@ -1045,6 +1048,11 @@ class ProductTemplate(models.Model):
     def _compute_store_by(self):
         for template in self:
             template.store_by = (template.tracking or 'quantity') if template.is_storable else 'untracked'
+
+    @api.depends('store_by')
+    def _compute_show_qty(self):
+        for template in self:
+            template.show_qty_in_form = template.store_by != 'untracked'
 
     def _set_store_by(self):
         for (store_by, product_type), templates in self.grouped(lambda t: (t.store_by, t.type)).items():
@@ -1198,6 +1206,7 @@ class ProductTemplate(models.Model):
         return (
             any(self.env.user.has_group(g) for g in advanced_option_groups)
             or bool(self.tracking)
+            or self.store_by in ['lot', 'serial']
         )
 
     # Be aware that the exact same function exists in product.product

@@ -175,8 +175,8 @@
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
                     <field name="store_by" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
-                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not product_variant_id" groups="stock.group_stock_user"/>
-                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not product_variant_id" groups="stock.group_stock_user">
+                    <label for="qty_available" class="oe_inline" invisible="not show_qty_in_form" groups="stock.group_stock_user"/>
+                    <div name="qty_available_with_stock" class="o_row" invisible="not show_qty_in_form" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
