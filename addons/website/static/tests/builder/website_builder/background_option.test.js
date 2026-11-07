@@ -15,6 +15,7 @@ import {
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { VIDEO_URLS } from "@html_editor/../tests/_helpers/video";
 import {
     addPlugin,
     defineWebsiteModels,
@@ -739,7 +740,7 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
     if ("hideControls" in platformClass.optionsConfig) {
         test(`background video applies hideControls & hideFullscreen options to video selector ${platform}`, async () => {
             await setupWebsiteBuilderWithSnippet("s_cover");
-            const videoUrl = platformClass.exampleUrls.base;
+            const videoUrl = VIDEO_URLS[platform].base;
 
             mockFetch(() => '{"data": "mockFetch api result data"}');
 
@@ -773,7 +774,7 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
     if ("loop" in platformClass.optionsConfig) {
         test(`background video applies the loop option to video selector ${platform}`, async () => {
             await setupWebsiteBuilderWithSnippet("s_cover");
-            const videoUrl = platformClass.exampleUrls.base;
+            const videoUrl = VIDEO_URLS[platform].base;
 
             mockFetch(() => '{"data": "mockFetch api result data"}');
 

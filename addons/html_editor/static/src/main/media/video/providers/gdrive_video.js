@@ -17,18 +17,4 @@ export class GDriveVideo extends AbstractThirdPartyVideo {
     static getEmbedUrl(videoId, options = {}) {
         return `https://drive.google.com/file/d/${videoId}/preview`;
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://drive.google.com/file/d/1A2B3C4D5E6F7G8H9I0J/view?usp=sharing",
-        embed: "drive.google.com/file/d/1A2B3C4D5E6F7G8H9I0J/preview",
-    };
 }

@@ -56,26 +56,4 @@ export class Youtube extends AbstractThirdPartyVideo {
             showRelatedVideos: false, // Always disable related videos.
         };
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://www.youtube.com/watch?v=jar2eqeMNjc",
-        short: "https://www.youtube.com/shorts/qAgW3oG7Zmc",
-        live: "https://www.youtube.com/live/fmVNEoxr7iU?feature=shared",
-        mobile: "https://m.youtube.com/watch?v=xCvFZrrQq7k",
-        minified: "youtu.be/xCvFZrrQq7k",
-        noCookie: "https://www.youtube-nocookie.com/watch?v=xCvFZrrQq7k",
-        embed: "https://www.youtube.com/embed/xCvFZrrQq7k",
-        params: "https://www.youtube.com/watch?v=xCvFZrrQq7k&t=62&autoplay=1&loop=1&controls=0&fs=0",
-        embedParams:
-            "https://www.youtube.com/embed/xCvFZrrQq7k?start=62&autoplay=1&loop=1&controls=0&fs=0",
-    };
 }

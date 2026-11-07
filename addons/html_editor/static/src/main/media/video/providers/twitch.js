@@ -43,24 +43,4 @@ export class Twitch extends AbstractThirdPartyVideo {
     static getCustomUrlOptions(url) {
         return { isClip: url.hostname.includes("clip") };
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://www.twitch.tv/videos/1064007405",
-        clip: "https://www.twitch.tv/monstercat/clip/UnrulyShySalamanderPogChamp?filter=clips&range=7d&sort=time",
-        embed: "https://player.twitch.tv/?video=1064007405&parent=example.com",
-        embedClip:
-            "https://clips.twitch.tv/embed?clip=UnrulyShySalamanderPogChamp&parent=example.com",
-        params: "twitch.tv/videos/1064007405?time=62&autoplay=true&muted=true",
-        embedParams:
-            "https://player.twitch.tv/?video=1064007405&parent=example.com&time=62&autoplay=true&muted=true",
-    };
 }

@@ -200,6 +200,11 @@
         </t>
     </xpath>
 
+    <xpath expr="//t[@t-call-assets='web.assets_frontend_minimal']" position="after">
+        <t t-if="env.user._is_internal()" t-call-assets="website.assets_frontend_internal_user" t-css="false" defer_load="True"/>
+        <t t-if="edit_translations" t-call-assets="website.assets_edit_translations" t-css="false" defer_load="True"/>
+    </xpath>
+
     <xpath expr="//t[@t-set='body_classname']" position="after">
         <t t-set="default_lang_code" t-value="website.default_lang_id.code"/>
         <t t-set="mainobject_url" t-value="main_object.with_context(lang=default_lang_code).website_url if main_object and 'website_url' in main_object else ''"/>
