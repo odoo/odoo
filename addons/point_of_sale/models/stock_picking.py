@@ -149,8 +149,11 @@ class StockPicking(models.Model):
         for _product, olines in lines_by_product_and_attrs:
             order_lines = self.env['pos.order.line'].concat(*olines)
             move_vals.append(self._prepare_stock_move_vals(order_lines[0], order_lines))
-        moves = self.env['stock.move'].create(move_vals)
-        confirmed_moves = moves._action_confirm()
+        # The POS user is not required to have Inventory rights: confirming the
+        # moves can explode kits and merge moves, touching fields of models only
+        # Inventory/Purchase users can access.
+        moves = self.env['stock.move'].sudo().create(move_vals)
+        confirmed_moves = moves._action_confirm().with_env(self.env)
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
         confirmed_moves.picked = True
         self._link_owner_on_return_picking(lines)
