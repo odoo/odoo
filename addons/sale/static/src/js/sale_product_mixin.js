@@ -69,6 +69,10 @@ export const saleProductMixin = () => ({
         );
     },
 
+    get isComboItem() {
+        return this.props.record.data.combo_item_id;
+    },
+
     get isLocked() {
         return this.props.record.model.root.data?.locked;
     },
@@ -76,6 +80,7 @@ export const saleProductMixin = () => ({
     get hasConfigurationButton() {
         return (
             !this.isLocked
+            && !this.isComboItem
             && (
                 this.isConfigurableTemplate
                 || this.isCombo

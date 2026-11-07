@@ -6,6 +6,7 @@ import {
     contains,
     defineModels,
     fields,
+    models,
     mountView,
 } from '@web/../tests/web_test_helpers';
 import { defineComboModels } from '@product/../tests/product_combo_test_helpers';
@@ -35,8 +36,12 @@ class SaleOrder extends saleModels.SaleOrder {
     ]
 }
 
+class ProductTemplateAttributeValue extends models.ServerModel {
+    _name = "product.template.attribute.value";
+}
+
 defineComboModels();
-defineModels({ SaleOrderLine, SaleOrder });
+defineModels({ SaleOrderLine, SaleOrder, ProductTemplateAttributeValue });
 defineMailModels();
 
 test("test combo move up/down", async () => {
@@ -249,3 +254,32 @@ test("Test combo columns", async () => {
         message: 'Non-combo line should have all columns'
     });
 })
+
+test("configuration button is hidden on combo item lines", async () => {
+    SaleOrderLine._fields.is_configurable_product = fields.Boolean({ default: true });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="order_line" widget="sol_o2m">
+                    <list editable="bottom">
+                        <field name="name" widget="sol_label_text"/>
+                        <field name="product_id" column_invisible="1"/>
+                        <field name="combo_item_id" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    // Combo item lines are configured through their combo line.
+    expect(queryAllTexts(".o_data_row:has(.o_configuration_button)")).toEqual([
+        "Non Combo Line1",
+        "Non Combo Line2",
+        "Test Combo1",
+        "Test Combo2",
+        "Non Combo Line3",
+    ]);
+});
