@@ -191,3 +191,8 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleCommon):
         self.assertNotEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
         with self.assertRaises(UserError):
             invoice.l10n_vn_edi_fetch_invoice_files()
+
+    def test_load_pos_data_after_walk_in_customer_deleted(self):
+        self.walk_in_customer.unlink()
+        data = self.session.load_data([])
+        self.assertFalse(data["pos.session"]["data"][0]["_default_customer_id"])
