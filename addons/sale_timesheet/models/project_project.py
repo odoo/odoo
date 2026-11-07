@@ -123,7 +123,7 @@ class ProjectProject(models.Model):
     def _compute_warning_employee_rate(self):
         self.warning_employee_rate = False
 
-    @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
+    @api.depends('sale_line_id')
     def _compute_partner_id(self):
         billable_projects = self.filtered('allow_billable')
         for project in billable_projects:
@@ -175,13 +175,27 @@ class ProjectProject(models.Model):
         return res
 
     def _update_timesheets_sale_line_id(self):
-        for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
-            timesheet_ids = project.mapped('timesheet_ids').filtered(lambda t: not t.is_so_line_edited and t._is_updatable_timesheet())
-            if not timesheet_ids:
+        projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets)
+        if not projects:
+            return
+        timesheets_per_project = self.env['account.analytic.line']._read_group(
+            [
+                ('project_id', 'in', projects.ids),
+                '|', ('task_id', '=', False), ('task_id.sale_line_id', '!=', False),
+                ('is_so_line_edited', '=', False),
+            ],
+            ['project_id'],
+            ['id:recordset'],
+        )
+        for project, timesheets in timesheets_per_project:
+            timesheets_per_employee = timesheets.filtered(lambda t: t._is_updatable_timesheet()).grouped('employee_id')
+            if not timesheets_per_employee:
                 continue
-            for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
-                sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
-                timesheet_ids.filtered(lambda t: t.employee_id == employee_id and t.so_line != sale_line_id).sudo().so_line = sale_line_id
+            for mapping in project.sale_line_employee_ids:
+                timesheets_to_update = timesheets_per_employee.get(
+                    mapping.employee_id, self.env['account.analytic.line']
+                ).filtered(lambda t: t.so_line != mapping.sale_line_id)
+                timesheets_to_update.sudo().so_line = mapping.sale_line_id
 
     def action_view_timesheet(self):
         self.ensure_one()
