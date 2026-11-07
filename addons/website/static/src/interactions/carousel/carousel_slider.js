@@ -59,6 +59,7 @@ export class CarouselSlider extends Interaction {
 
     setup() {
         this.maxHeight = undefined;
+        this.isMaxHeightOutdated = false;
         this.carouselInnerEl = this.el.querySelector(".carousel-inner");
         if (this.carouselInnerEl) {
             this.carouselItemEls = [...this.carouselInnerEl.querySelectorAll(".carousel-item")];
@@ -107,6 +108,13 @@ export class CarouselSlider extends Interaction {
     }
 
     computeMaxHeight() {
+        // Measuring the items toggles their "active" class, which cancels the
+        // running slide transitions: wait for the "slid" event instead.
+        if (this.el.querySelector(".carousel-item-next, .carousel-item-prev")) {
+            this.isMaxHeightOutdated = true;
+            return;
+        }
+        this.isMaxHeightOutdated = false;
         this.maxHeight = undefined;
         // "updateContent()" is necessary to reset the min-height before the
         // following check.
@@ -175,6 +183,9 @@ export class CarouselSlider extends Interaction {
     onSlidCarousel(ev) {
         if (this.options.scrollMode === "single") {
             this.onSlidSingleScroll(ev);
+        }
+        if (this.isMaxHeightOutdated) {
+            this.computeMaxHeight();
         }
         this.loadItemsToAppear(); // Preload future items after a slide
     }
