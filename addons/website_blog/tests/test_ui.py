@@ -80,20 +80,31 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/3.webp')
 
     def test_avatar_comment(self):
-        mail_message = self.env['mail.message'].create({
-            'author_id': self.user_public.partner_id.id,
+        author_partner = self.user_public.partner_id
+        self.env['mail.message'].create({
+            'author_id': author_partner.id,
+            'body': 'test',
             'model': self.test_blog_post._name,
             'res_id': self.test_blog_post.id,
             'subtype_id': self.ref('mail.mt_comment'),
         })
-        portal_message = mail_message.portal_message_format()
+        route_params = {
+            "share_only": True,
+            "thread_id": self.test_blog_post.id,
+            "thread_model": self.test_blog_post._name,
+        }
+        res = self.make_jsonrpc_request(
+            route="/mail/store",
+            params={"fetch_params": [["/mail/thread/messages", route_params]]},
+        )
+        author_data = {p["id"]: p for p in res["res.partner"]}[author_partner.id]
         response = self.url_open(
-            f"/web/image/res.partner/{self.user_public.partner_id.id}/avatar_128?access_token={portal_message[0]['author_id']['avatar_128_access_token']}",
+            f"/web/image/res.partner/{author_partner.id}/avatar_128?access_token={author_data['avatar_128_access_token']}",
         )
         # Ensure that the avatar is visible
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), fr'{self.user_public.partner_id.name}.svg')
+        self.assertRegex(response.headers.get("Content-Disposition", ""), rf"{author_partner.name}.svg")
 
     def test_sidebar_with_date_and_tag(self):
         Blog = self.env['blog.blog']

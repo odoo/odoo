@@ -74,6 +74,11 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 partner_ids=[self.user_employee.partner_id.id],
                 rating_value="4",
             )
+        # threadless message: model is False, so rating stats computation must skip it.
+        self.env["mail.thread"].message_notify(
+            body="<p>Threadless notification</p>",
+            partner_ids=self.user_employee.partner_id.ids,
+        )
         self.authenticate(self.user_employee.login, self.user_employee.password)
         with self.assertQueryCount(35):
             self.make_jsonrpc_request(

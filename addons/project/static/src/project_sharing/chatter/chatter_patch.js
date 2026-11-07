@@ -6,12 +6,12 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Chatter.prototype, {
     setup() {
-        super.setup(...arguments);
         this.projectSharingProps = useProps({
             displayFollowButton: t.boolean(),
             isFollower: t.boolean(),
             projectSharingId: t.number().optional(),
         });
+        super.setup(...arguments);
         Object.assign(this.state, {
             isFollower: this.projectSharingProps.isFollower,
         });
@@ -19,6 +19,14 @@ patch(Chatter.prototype, {
         providePlugins([ProjectSharingPlugin]);
         this.projectSharingPlugin = usePlugin(ProjectSharingPlugin);
         this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);
+    },
+
+    get extraMessageFetchRouteParams() {
+        const params = super.extraMessageFetchRouteParams;
+        if (this.projectSharingProps.projectSharingId) {
+            params.share_only = true;
+        }
+        return params;
     },
 
     async toggleIsFollower() {

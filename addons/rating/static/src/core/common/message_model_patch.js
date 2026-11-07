@@ -6,11 +6,11 @@ import { patch } from "@web/core/utils/patch";
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
-        this.rating_id = fields.One("rating.rating");
+        this.rating_id = fields.One("rating.rating", { inverse: "message_id" });
     },
 
     computeIsEmpty() {
-        return super.computeIsEmpty() && !this.rating_id && !this.rating_value;
+        return super.computeIsEmpty() && !this.rating_id;
     },
 
     get removeParams() {
