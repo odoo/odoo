@@ -31,6 +31,7 @@ touching instead of loading whole files.
 | [Methods and extension points](guidelines/orm.md#methods-and-extension-points) | adding a model method, or one another module will override |
 | [Transactions and exceptions](guidelines/orm.md#transactions-and-exceptions) | cursors, commits, savepoints, `try`/`except` |
 | [Fields](guidelines/fields.md#fields) | declaring or modifying field definitions |
+| [Save a written non-stored computed field through its inverse or create and write](guidelines/fields.md#save-a-written-non-stored-computed-field-through-its-inverse-or-create-and-write) | declaring a non-stored computed field with `readonly=False`, or writing a computed field |
 | [Controllers](guidelines/controllers.md#controllers) | touching `controllers/` or `@route` |
 | [Views, actions and data records](guidelines/xml.md#views-actions-and-data-records) | touching `views/`, `data/`, or any XML records |
 | [Anchor view inheritance on names, never on position](guidelines/xml.md#anchor-view-inheritance-on-names-never-on-position) | extending or overriding an existing view |
