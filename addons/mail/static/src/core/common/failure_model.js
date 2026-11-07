@@ -17,7 +17,7 @@ export class Failure extends Record {
                     this.delete();
                 }
             },
-            { immediate: true }
+            { immediate: true, initialRun: false }
         );
     }
 

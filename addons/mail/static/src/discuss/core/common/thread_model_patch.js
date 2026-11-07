@@ -24,17 +24,8 @@ const threadPatch = {
             },
             { immediate: true, initialRun: false }
         );
-        this.channel = fields.One("discuss.channel", {
-            inverse: "thread",
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.model === "discuss.channel" ? this.id : undefined;
-            },
-        });
+        this.channel = fields.One("discuss.channel", { inverse: "thread" });
         this.firstUnreadMessage = fields.One("mail.message", {
-            compute() {
-                return this.channel?.firstUnreadMessage;
-            },
             inverse: "threadAsFirstUnread",
         });
         // Send the mark as read and the mark as unread one at a time: the server
@@ -46,6 +37,16 @@ const threadPatch = {
         /** @type {Promise|undefined} like prefetching, but also resolves after PREFETCH_MAX_WAIT */
         this.prefetchingOrTimeout = undefined;
         this.scrollUnread = true;
+        this.onChange(
+            () => [this.model === "discuss.channel" ? this.id : undefined],
+            (channel) => (this.channel = channel),
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.channel?.firstUnreadMessage],
+            (firstUnreadMessage) => (this.firstUnreadMessage = firstUnreadMessage),
+            { immediate: true }
+        );
     },
     /** @override */
     async checkReadAccess() {
