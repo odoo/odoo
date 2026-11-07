@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_repr, float_round, float_compare
+from odoo.tools import OrderedSet, float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 from datetime import datetime
@@ -483,11 +483,10 @@ will update the cost of every lot/serial number in stock."),
 
         new_svl_vals_real_time = []
         new_svl_vals_manual = []
-        real_time_svls_to_vacuum = ValuationLayer
+        real_time_svls_to_vacuum = OrderedSet()
 
         for product in self.with_company(company.id):
             all_candidates = all_candidates_by_product[product.id]
-            current_real_time_svls = ValuationLayer
             for svl_to_vacuum in svls_to_vacuum_by_product[product.id]:
                 # We don't use search to avoid executing _flush_search and to decrease interaction with DB
                 candidates = all_candidates.filtered(
@@ -542,8 +541,7 @@ will update the cost of every lot/serial number in stock."),
                 new_svl_vals.append(product._prepare_fifo_vacuum_valuation_layer_values(svl_to_vacuum, corrected_value))
                 lot_to_update.append(svl_to_vacuum.lot_id)
                 if product.valuation == 'real_time':
-                    current_real_time_svls |= svl_to_vacuum
-            real_time_svls_to_vacuum |= current_real_time_svls
+                    real_time_svls_to_vacuum.add(svl_to_vacuum.id)
         ValuationLayer.create(new_svl_vals_manual)
         vacuum_svls = ValuationLayer.create(new_svl_vals_real_time)
 
@@ -565,7 +563,13 @@ will update the cost of every lot/serial number in stock."),
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
         vacuum_svls._validate_accounting_entries()
-        self._create_fifo_vacuum_anglo_saxon_expense_entries(zip(vacuum_svls, real_time_svls_to_vacuum))
+        original_svls = ValuationLayer.browse(real_time_svls_to_vacuum)
+        products = self
+        if len(vacuum_svls) > 1000:
+            products = products.with_context(prefetch_fields=False)
+            vacuum_svls = vacuum_svls.with_context(prefetch_fields=False)
+            original_svls = original_svls.with_context(prefetch_fields=False)
+        products._create_fifo_vacuum_anglo_saxon_expense_entries(zip(vacuum_svls, original_svls))
 
     @api.model
     def _create_fifo_vacuum_anglo_saxon_expense_entries(self, vacuum_pairs):
