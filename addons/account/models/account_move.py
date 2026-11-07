@@ -3930,8 +3930,8 @@ class AccountMove(models.Model):
         """Raise a AccessError if the current user cannot modify a record with the given review_state.
 
         - 'supervised': requires account.group_account_manager
-        - 'reviewed', 'no_review' or falsy: requires account.group_account_user or account.group_account_manager
-        - 'todo', 'anomaly': no restriction
+        - 'reviewed': requires account.group_account_user or account.group_account_manager
+        - 'no_review', 'todo', 'anomaly' or falsy: no restriction
         """
         # Since self might be empty, we fallback on the company
         if self.env.su or not all(self.mapped('set_to_review_documents')) or not self.env.company.set_to_review_documents:
@@ -3941,8 +3941,6 @@ class AccountMove(models.Model):
             raise AccessError(self.env._("This entry has already been supervised. You need the accounting manager role to change it."))
         if (review_state == 'reviewed') and not is_user_able_to_review:
             raise AccessError(self.env._("This entry has been reviewed by accountants, only them can edit it now."))
-        if (review_state == 'no_review' or not review_state) and not is_user_able_to_review:
-            raise AccessError(self.env._("You don't have the access rights to perform this action."))
 
     def _check_user_access(self, vals_list):
         for vals in vals_list:
