@@ -1941,6 +1941,244 @@
         <field name="count_as">absence</field>
     </record>
 
+<!-- DE : Germany -->
+    <record id="de_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work</field>
+        <field name="color">10</field>
+        <field name="display_code">A</field>
+        <field name="code">002.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime Hours</field>
+        <field name="color">2</field>
+        <field name="display_code">OT</field>
+        <field name="code">040.00</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out Of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">000.00</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="de_work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+        <field name="display_code">GTO</field>
+        <field name="code">LEAVE100</field>
+        <field name="color">8</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Compensatory Time Off</field>
+        <field name="display_code">CTO</field>
+        <field name="code">LEAVE105</field>
+        <field name="color">4</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Work from home</field>
+        <field name="display_code">HW</field>
+        <field name="code">002.08</field>
+        <field name="color">10</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Leave without pay</field>
+        <field name="color">1</field>
+        <field name="display_code">UN</field>
+        <field name="code">158.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="de_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Time Off (Continued Pay)</field>
+        <field name="display_code">STO</field>
+        <field name="code">013.00</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Annual Leave</field>
+        <field name="display_code">PTO</field>
+        <field name="code">016.00</field>
+        <field name="color">8</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="de_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public holiday</field>
+        <field name="code">006.00</field>
+        <field name="display_code">PH</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <!-- After 6 weeks of continued pay, the health insurer pays the sick pay (Krankengeld) -->
+    <record id="l10n_de_work_entry_type_sick_pay" model="hr.work.entry.type">
+        <field name="name">Sick Time Off (Sick Pay from the Insurer)</field>
+        <field name="display_code">SP</field>
+        <field name="code">DE_SICK_PAY</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- The health insurer pays the maternity pay, the employer only a top-up -->
+    <record id="l10n_de_work_entry_type_maternity" model="hr.work.entry.type">
+        <field name="name">Maternity Protection Period</field>
+        <field name="display_code">MP</field>
+        <field name="code">DE_MATERNITY</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_de_work_entry_type_parental_leave" model="hr.work.entry.type">
+        <field name="name">Parental Leave</field>
+        <field name="display_code">PL</field>
+        <field name="code">DE_PARENTAL</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- No continued pay during the first 4 weeks of employment. The health insurer pays the sick pay -->
+    <record id="l10n_de_work_entry_type_sick_probation_period" model="hr.work.entry.type">
+        <field name="name">Sick Time Off (First 4 Weeks of Employment)</field>
+        <field name="display_code">SWP</field>
+        <field name="code">DE_SICK_PROB</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- Continued pay, then injury benefit from the accident insurer -->
+    <record id="l10n_de_work_entry_type_work_accident" model="hr.work.entry.type">
+        <field name="name">Work Accident</field>
+        <field name="display_code">WA</field>
+        <field name="code">DE_WAS</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <record id="l10n_de_work_entry_type_rehabilitation" model="hr.work.entry.type">
+        <field name="name">Rehabilitation or Preventive Cure</field>
+        <field name="display_code">RPC</field>
+        <field name="code">DE_REHAB</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <!-- Short absence to care for a sick child, paid by the employer -->
+    <record id="l10n_de_work_entry_type_child_sick_paid" model="hr.work.entry.type">
+        <field name="name">Child Sick (Paid)</field>
+        <field name="display_code">CSP</field>
+        <field name="code">DE_CSP</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <!-- The health insurer pays the child sick pay -->
+    <record id="l10n_de_work_entry_type_child_sick_unpaid" model="hr.work.entry.type">
+        <field name="name">Child Sick (Pay from the Insurer)</field>
+        <field name="display_code">CSU</field>
+        <field name="code">DE_CSU</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- The employer maintains the average pay -->
+    <record id="l10n_de_work_entry_type_employment_ban" model="hr.work.entry.type">
+        <field name="name">Employment Ban during Pregnancy</field>
+        <field name="display_code">EB</field>
+        <field name="code">DE_EB</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+    </record>
+
+    <!-- The employer pays the compensation under the infection protection act and claims it back from the Land -->
+    <record id="l10n_de_work_entry_type_quarantine" model="hr.work.entry.type">
+        <field name="name">Quarantine (Infection Protection Act)</field>
+        <field name="display_code">QIP</field>
+        <field name="code">DE_QIP</field>
+        <field name="color">9</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- Short absence to organise the care of a relative (up to 10 days) -->
+    <record id="l10n_de_work_entry_type_short_care_leave" model="hr.work.entry.type">
+        <field name="name">Short Care Leave</field>
+        <field name="display_code">SCL</field>
+        <field name="code">DE_SCL</field>
+        <field name="color">1</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- Full-time care leave, up to 6 months -->
+    <record id="l10n_de_work_entry_type_care_leave" model="hr.work.entry.type">
+        <field name="name">Care Leave</field>
+        <field name="display_code">CL</field>
+        <field name="code">DE_CL</field>
+        <field name="color">1</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_de_work_entry_type_lawful_strike" model="hr.work.entry.type">
+        <field name="name">Lawful Strike</field>
+        <field name="display_code">LS</field>
+        <field name="code">DE_LS</field>
+        <field name="color">1</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <!-- The employer pays the short-time allowance on behalf of the employment agency -->
+    <record id="l10n_de_work_entry_type_short_time_work" model="hr.work.entry.type">
+        <field name="name">Short-Time Work</field>
+        <field name="display_code">STW</field>
+        <field name="code">DE_STW</field>
+        <field name="color">1</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
 <!-- EG: Egypt -->
     <record id="eg_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Work</field>
