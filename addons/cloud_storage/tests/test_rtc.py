@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import UTC
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests.common import HttpCase
@@ -20,6 +21,8 @@ class TestCloudStorageRtc(MailCommon, HttpCase):
                 "channel_type": "group",
             },
         )
+        cls.channel._add_members(users=cls.user_employee, post_joined_message=False)
+        cls.member = cls.channel.with_user(cls.user_employee).self_member_id
         call_start = fields.Datetime.now()
         cls.call_history = cls.env["discuss.call.history"].create(
             {
@@ -80,6 +83,46 @@ class TestCloudStorageRtc(MailCommon, HttpCase):
                 **params,
             },
         )
+
+    def test_recording_requires_cloud_storage_configuration(self):
+        self.patch(
+            self.env.registry["discuss.channel"],
+            "_has_transcription_feature",
+            lambda channel: False,
+        )
+        disabled = dict.fromkeys(
+            ("audioRecording", "transcription", "videoRecording"),
+            False,
+        )
+        with patch.object(
+            self.env.registry["res.config.settings"],
+            "_get_cloud_storage_configuration",
+            return_value={},
+        ):
+            self.assertFalse(self.channel._has_recording_feature())
+            self.assertIsNone(self.channel._get_recording_address())
+            self.assertEqual(
+                self.member._get_recording_permissions(self.user_employee),
+                disabled,
+            )
+        with patch.object(
+            self.env.registry["res.config.settings"],
+            "_get_cloud_storage_configuration",
+            return_value={"bucket_name": "recordings"},
+        ):
+            self.assertTrue(self.channel._has_recording_feature())
+            self.assertEqual(
+                self.channel._get_recording_address(),
+                f"{self.channel.get_base_url()}/mail/rtc/recording/{self.call_history.id}",
+            )
+            self.assertEqual(
+                self.member._get_recording_permissions(self.user_employee),
+                {**disabled, "audioRecording": True, "videoRecording": True},
+            )
+            self.assertEqual(
+                self.member._get_recording_permissions(self.user_employee, False),
+                disabled,
+            )
 
     def test_recording_is_published_after_upload(self):
         with self.mock_mail_gateway():
