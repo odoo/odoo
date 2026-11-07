@@ -500,6 +500,7 @@ class HolidaysType(models.Model):
                         'icon': leave_type.sudo().icon_id.url,
                         'allows_negative': leave_type.allows_negative,
                         'max_allowed_negative': leave_type.max_allowed_negative,
+                        'employee_requests': leave_type.employee_requests == 'yes',
                     },
                     leave_type.requires_allocation,
                     leave_type.id)

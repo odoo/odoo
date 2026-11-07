@@ -43,3 +43,30 @@ class TestHrHolidaysTour(HttpCase):
         })
 
         self.start_tour('/odoo', 'hr_holidays_tour', login="admin")
+
+    def test_time_off_card_new_request(self):
+        """
+        Ensures that the `new request` link from the Time Off cards in the dashboard
+        only appears when the related time off allows allocation requests from employees
+        """
+        admin_employee = self.env.ref('base.user_admin').employee_id
+        leave_types = self.env['hr.leave.type'].create([
+            {
+                'name': 'Allocation Requests Allowed',
+                'requires_allocation': 'yes',
+                'employee_requests': 'yes',
+            }, {
+                'name': 'Allocation Requests Forbidden',
+                'requires_allocation': 'yes',
+                'employee_requests': 'no',
+            },
+        ])
+        self.env['hr.leave.allocation'].create([{
+            'name': f'Allocation {leave_type.name}',
+            'employee_id': admin_employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 1,
+            'state': 'confirm',
+        } for leave_type in leave_types]).action_validate()
+
+        self.start_tour('/odoo', 'time_off_card_new_request', login="admin")

@@ -22,6 +22,7 @@ export class TimeOffCardPopover extends Component {
         "allows_negative",
         "max_allowed_negative",
         "onClickNewAllocationRequest?",
+        "employee_requests",
         "errorLeaves",
         "accrualExcess",
     ];
@@ -93,6 +94,7 @@ export class TimeOffCard extends Component {
             allows_negative: data.allows_negative,
             max_allowed_negative: data.max_allowed_negative,
             onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
+            employee_requests: data.employee_requests,
             errorLeaves: this.errorLeaves,
             accrualExcess: this.getAccrualExcess(data),
         });
