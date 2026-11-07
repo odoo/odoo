@@ -1,5 +1,7 @@
+import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { FontFamilyPicker } from "../fontfamily_picker";
@@ -14,6 +16,13 @@ export const OPTION_POSITIONS = {
     LINK: 60,
     SEPARATORS: 70,
 };
+
+class DesignButtonOption extends BaseOptionComponent {
+    setup() {
+        super.setup();
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
+    }
+}
 
 export class DesignTabPlugin extends Plugin {
     static id = "mass_mailing.DesignTab";
@@ -49,6 +58,7 @@ export class DesignTabPlugin extends Plugin {
                 this.getDesignOptionBlock("design-button", {
                     template: "mass_mailing.DesignButtonOption",
                     title: _t("Button"),
+                    OptionClass: DesignButtonOption,
                 })
             ),
             withSequence(
@@ -68,8 +78,8 @@ export class DesignTabPlugin extends Plugin {
         ],
     };
 
-    getDesignOptionBlock(id, options) {
-        const Option = class extends BaseOptionComponent {
+    getDesignOptionBlock(id, { OptionClass = BaseOptionComponent, ...options }) {
+        const Option = class extends OptionClass {
             static selector = "*";
         };
         Object.assign(Option, options);

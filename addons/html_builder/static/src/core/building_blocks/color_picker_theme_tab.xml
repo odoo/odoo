@@ -25,7 +25,7 @@
                         </span>
                     </div>
                 </button>
-                <button t-on-click="() => { this.props.close?.(); this.props.editColorCombination(number); }"
+                <button t-on-click="() => { this.props.close?.(); this.highlightThemeRow.openThemeOption({ presetId: number }); }"
                     class="o_colorpicker_ignore oi oi-filled btn o_hb_theme_tab_link ms-2 px-1"
                     data-icon="edit"
                     title="Edit in Theme Tab"/>

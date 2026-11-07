@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { useProps, t } from "@odoo/owl";
+import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
+import { t, usePlugin, useProps } from "@odoo/owl";
 
 export class ShadowOption extends BaseOptionComponent {
     static template = "html_builder.ShadowOption";
@@ -9,7 +10,14 @@ export class ShadowOption extends BaseOptionComponent {
         setShadowStyleAction: t.string().optional("setShadowStyle"),
     });
 
-    getOnClick(shadowClass) {
-        return () => this.env.editThemeOption(shadowClass, "theme-shadow");
+    setup() {
+        super.setup();
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
+    }
+
+    getEditAction(shadowClass) {
+        return {
+            onClick: () => this.highlightThemeRow.openThemeOption({ targetRowId: shadowClass }),
+        };
     }
 }
