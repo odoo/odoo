@@ -8,6 +8,26 @@ from odoo import Command
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseAlternativeStock(TestPurchaseAlternativeCommon):
 
+    def test_forecast_quantity_with_alternative_rfqs(self):
+        product = self.product_09
+        original = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 5,
+            })],
+        })
+        wizard = Form.from_action(self.env, original.action_create_alternative())
+        wizard.partner_ids = self.res_partner_1
+        wizard.save().action_create_alternative()
+        self.assertEqual(len(original.alternative_po_ids), 2)
+
+        warehouse = original.picking_type_id.warehouse_id
+        report = self.env['stock.forecasted_product_product']._get_report_header(
+            False, product.ids, warehouse.lot_stock_id.ids,
+        )
+        self.assertEqual(report['product'][product.id]['draft_purchase_qty']['in'], 5)
+
     def test_04_purchase_alternative_stock(self):
         """Check that alt PO correctly copies the original PO values"""
         # create original PO
