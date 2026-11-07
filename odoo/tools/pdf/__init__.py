@@ -603,7 +603,12 @@ class OdooPdfFileWriter(PdfFileWriter):
             # First browse through all the pages of the pdf file, to get a reference to all the fonts used in the PDF.
             for page in pages:
                 for font in page.getObject()['/Resources']['/Font'].values():
-                    for descendant in font.getObject()['/DescendantFonts']:
+                    font = font.getObject()
+                    # Only composite (Type0) fonts have descendant fonts with a /W widths array to rewrite. Simple
+                    # fonts (e.g. Type1, TrueType) store their widths in /Widths, or not at all for the standard 14.
+                    if '/DescendantFonts' not in font:
+                        continue
+                    for descendant in font['/DescendantFonts']:
                         fonts[descendant.idnum] = descendant.getObject()
 
             # Then for each font, rewrite the width array with the information taken directly from the font file.
