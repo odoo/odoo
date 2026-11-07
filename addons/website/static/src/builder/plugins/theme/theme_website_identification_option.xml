@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.ThemeWebsiteIdentificationOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Name" tooltip.translate="Your website's name, displayed in the browser tab next to the page title.">
+            <BuilderTextInput 
+                action="'setWebsiteName'" 
+                ariaLabel.translate="Website Name"/>
+        </BuilderRow>
+
+        <BuilderRow level="1" label.translate="Favicon" tooltip.translate="Small icon displayed in the browser tab next to the page title">
+            <!-- Read faviconUrl directly as a property getter -->
+            <div t-if="this.faviconUrl" class="d-flex align-items-center gap-2 w-100">
+                <div class="o_preview_alpha_background border rounded d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden"
+                    style="width: 28px; height: 28px;">
+                    <img t-att-src="this.faviconUrl"
+                        class="w-100 h-100 object-fit-contain"
+                        alt=""
+                        aria-hidden="true"/>
+                </div>
+                <BuilderButton
+                    action="'replaceFavicon'"
+                    type="'success'"
+                    className="'flex-grow-1 text-truncate'"
+                    label.translate="Replace"
+                    ariaLabel.translate="Replace Favicon"/>
+                <BuilderButton
+                    action="'removeFavicon'"
+                    className="'btn-danger-color-hover flex-shrink-0'"
+                    icon="'delete'"
+                    title.translate="Remove Favicon"/>
+            </div>
+
+            <!-- Fallback when faviconUrl evaluates to null/falsy -->
+            <BuilderButton t-else=""
+                action="'replaceFavicon'"
+                type="'secondary'"
+                className="'w-100 text-truncate'"
+                title.translate="Upload a favicon"
+                label.translate="None"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Logo">
+            <BuilderButton
+                action="'replaceLogo'"
+                type="'success'"
+                className="'flex-grow-1 text-truncate'"
+                label.translate="Replace Logo"/>
+        </BuilderRow>
+        <t t-foreach="this.logoConfig" t-as="btn_id" t-key="btn_id">
+            <BuilderRow t-if="this.isVisible(btn_id)" level="1" label="this.logoConfig[btn_id].label">
+                
+                <BuilderButton
+                    action="'replaceLogo'"
+                    actionParam="btn_id"
+                    type="'success'"
+                    className="'flex-grow-1 text-truncate'"
+                    label.translate="Replace Logo"/>
+                    
+                <BuilderButton
+                    t-if="this.hasChange(btn_id)"
+                    action="'restoreLogo'"
+                    actionParam="btn_id"
+                    className="'btn-danger-color-hover flex-shrink-0'"
+                    icon="'delete'"
+                    title.translate="Restore Logo"/>
+                    
+            </BuilderRow>
+        </t>
+    </BuilderContext>
+</t>
+</templates>
