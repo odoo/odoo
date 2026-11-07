@@ -822,3 +822,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_cta_mockups_shape_color_option(self):
         self.start_tour('/', 'cta_mockups_shape_color_option', login='admin')
+
+    def test_edit_contact_field(self):
+        self.start_tour(self.env['website'].get_client_action_url('/my/home'), 'edit_contact_field', login='admin')
