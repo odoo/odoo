@@ -1,9 +1,11 @@
 .s_accordion {
     .accordion {
-        --#{$prefix}accordion-btn-focus-box-shadow: inset 0 0 var(--o-bs-focus-ring-blur) var(--focus-ring-width) var(--focus-ring-color);
+        --o-focus-ring: var(--o-focus-ring-inset);
     }
 
     .accordion-button {
+        --o-focus-ring: inherit;
+
         &:not(:focus-visible) {
             box-shadow: none;
         }

@@ -35,16 +35,15 @@
 
     &:has(input:focus-visible)::before {
         position: absolute;
-        top: 50%;
-        inset-inline-start: 50%;
-
+        inset: 0;
         content:" ";
-        width: 140%;
-        height: 140%;
+        width: 100%;
+        height: 100%;
         border-radius: 100%;
-        z-index: -1;
-        background-color: var(--focus-ring-color);
-        transform: translate(-50%, -50%);
+        box-shadow: var(--o-focus-ring-inset);
+        /* Hide the rounded border rendering bug on all browsers. */
+        outline: 3px solid var(--o-focus-ring-inner-color, var(--o-color-4));
+        outline-offset: -1px;
     }
 
     &.custom_value {
@@ -53,6 +52,10 @@
 
     &.transparent {
         background-image: url(/web/static/img/transparent.png);
+    }
+
+    @media screen and (forced-colors: active) {
+        forced-color-adjust: none;
     }
 }
 
@@ -71,7 +74,10 @@
     }
 
     &:where(:has(input:focus-visible)) {
-        box-shadow: var(--o-bs-focus-ring-box-shadow);
+        box-shadow: var(--o-focus-ring-inset);
+        /* Hide the rounded border rendering bug on all browsers. */
+        outline: 3px solid var(--o-focus-ring-inner-color, var(--o-color-4));
+        outline-offset: -1px;
     }
 
     &.custom_value {
@@ -100,8 +106,10 @@
         outline-color: var(--primary);
     }
 
-    &:where(:has(input:focus-visible)) {
-        box-shadow: var(--o-bs-focus-ring-box-shadow);
+    &:has(input:focus-visible) {
+        box-shadow: var(--o-focus-ring-inset);
+        outline: var(--o-focus-ring-outline);
+        outline-offset: -2px;
     }
 }
 
@@ -204,7 +212,10 @@ select.form-select.css_attribute_select {
         border: var(--o-bs-border-width) solid var(--o-border-color);
 
         &:has(input:focus-visible) {
-            box-shadow: $btn-focus-box-shadow;
+            box-shadow: var(--o-focus-ring-inset);
+            /* Hide the rounded border rendering bug on all browsers. */
+            outline: 3px solid var(--o-focus-ring-inner-color, var(--o-color-4));
+            outline-offset: -1px;
         }
     }
 

@@ -14,6 +14,10 @@
 
         .o_hb_color_palette_card {
             height: 40px;
+
+            @media screen and (forced-colors: active) {
+                forced-color-adjust: none;
+            }
         }
 
         &:is(:hover, :focus-visible, .active) .o_hb_color_palette_card {
@@ -44,6 +48,10 @@
 
     &:focus-visible::after {
         outline: 1px solid var(--o-hb-btn-active-color, var(--o-we-color-accent));;
+    }
+
+    @media screen and (forced-colors: active) {
+        forced-color-adjust: none;
     }
 }
 

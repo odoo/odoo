@@ -634,7 +634,7 @@
     <div class="o_wslides_promoted_slide">
         <div t-if="not search and not search_slide_category and slide_promoted" class="container py-1 mb-2">
             <div class="card flex-column flex-lg-row">
-                <a t-if="not invite_preview and (slide_promoted.is_preview or channel.is_member or is_slides_publisher)" t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
+                <a t-if="not invite_preview and (slide_promoted.is_preview or channel.is_member or is_slides_publisher)" t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded" tabindex="-1" aria-hidden="true">
                     <div t-field="slide_promoted.image_1920" t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
                 </a>
                 <div t-else="" class="w-100 w-lg-50 flex-shrink-0 rounded">
@@ -837,7 +837,7 @@
         <t t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" t-call="website_slides.course_card_information"/>
         <t t-set="can_access" t-value="not invite_preview and (slide.is_preview or channel.is_member or channel.can_publish)"/>
         <t t-if="not slide.is_published and channel.can_publish" t-call="website.unpublished_badge"/>
-        <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name" style="height:150px">
+        <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name" style="height:150px" tabindex="-1" aria-hidden="true">
             <div t-field="slide.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100"/>
         </a>
         <div t-else="" class="o_wslides_background_image" style="height:150px">

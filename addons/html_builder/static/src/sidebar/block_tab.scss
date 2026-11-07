@@ -37,6 +37,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             .o_snippets_container:not(#snippet_custom_content) & {
                 margin-block: var(--o-hb-spacer-2);
             }
+
+            @media screen and (forced-colors: active) and (prefers-color-scheme: light) {
+                filter: invert(1);
+            }
         }
     }
 
@@ -102,6 +106,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             .o_snippet_thumbnail_area {
                 position: absolute;
                 inset: 0;
+                z-index: 1;
                 background: transparent;
                 border: none;
                 cursor: inherit;
@@ -129,6 +134,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 .o_snippet_thumbnail_img {
                     opacity: var(--o-opacity-disabled);
                     filter: saturate(0);
+
+                    @media screen and (forced-colors: active) and (prefers-color-scheme: light) {
+                        filter: saturate(0) invert(1);
+                    }
                 }
             }
         }
