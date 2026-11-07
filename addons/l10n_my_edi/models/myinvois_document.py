@@ -17,6 +17,7 @@ from odoo.tools import SQL, config, date_utils, split_every
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account.models.sequence_mixin import SEQ_PLACEHOLDER
 
 # Holds the maximum amount of records that can be sent in a single submission.
 SUBMISSION_MAX_SIZE = 100
@@ -303,7 +304,7 @@ class MyInvoisDocument(models.Model):
                 anti_regex = None
 
             if anti_regex:
-                condition = SQL("%s AND sequence_prefix !~ %s", condition, anti_regex)
+                condition = SQL("%s AND split_part(sequence_format, %s, 1) !~ %s", condition, SEQ_PLACEHOLDER, anti_regex)
 
         if self.journal_id.refund_sequence:
             if self.move_type in ("out_refund", "in_refund"):
@@ -901,7 +902,7 @@ class MyInvoisDocument(models.Model):
         :return: A dict of invoices per journal, for each journal having a list of recordset each representing a single line in the xml.
         """
         lines_per_journal_prefix = {}
-        for (journal, prefix), moves in invoices.grouped(lambda m: (m.journal_id, m.sequence_prefix)).items():
+        for (journal, sequence_format), moves in invoices.grouped(lambda m: (m.journal_id, m.sequence_format)).items():
             journal_prefix_lines = []
             continuous_invoice_ids = set()
             # Split whenever the immediate predecessor is not part of the selected invoices.
@@ -916,7 +917,7 @@ class MyInvoisDocument(models.Model):
                     continuous_invoice_ids.add(move.id)
             if continuous_invoice_ids:
                 journal_prefix_lines.append(self.env["account.move"].browse(continuous_invoice_ids))
-            lines_per_journal_prefix[journal, prefix] = journal_prefix_lines
+            lines_per_journal_prefix[journal, sequence_format] = journal_prefix_lines
 
         return lines_per_journal_prefix
 

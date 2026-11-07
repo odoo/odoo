@@ -2,10 +2,11 @@ from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.models import Query
 from odoo.tools.misc import format_date
 from odoo.tools import frozendict, date_utils, SQL
-from odoo.tools.sql import index_exists
+from odoo.tools.sql import escape_like_value, index_exists
 
 import logging
 import re
@@ -13,6 +14,8 @@ from collections import defaultdict
 from psycopg2 import errors as pgerrors
 
 _logger = logging.getLogger(__name__)
+
+SEQ_PLACEHOLDER = '<seq>'
 
 
 class SequenceMixin(models.AbstractModel):
@@ -45,8 +48,9 @@ class SequenceMixin(models.AbstractModel):
     _sequence_yearly_regex = fr'^{prefix}(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{{2}}))(?P<prefix2>\D+?){seq}{suffix}$'
     _sequence_fixed_regex = fr'^{prefix}(?P<seq>\d{{0,9}}){suffix}$'
 
-    sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
+    sequence_format = fields.Char(compute='_compute_split_sequence', store=True)
     sequence_number = fields.Integer(compute='_compute_split_sequence', store=True)
+    sequence_prefix = fields.Char(compute='_compute_sequence_prefix', search='_search_sequence_prefix')
 
     def init(self):
         # Add an index to optimise the query searching for the highest sequence number
@@ -54,8 +58,8 @@ class SequenceMixin(models.AbstractModel):
             index_name = self._table + '_sequence_index'
             if not index_exists(self.env.cr, index_name):
                 self.env.cr.execute(SQL("""
-                    CREATE INDEX %(index_name)s ON %(table)s (%(sequence_index)s, sequence_prefix desc, sequence_number desc, %(field)s);
-                    CREATE INDEX %(index2_name)s ON %(table)s (%(sequence_index)s, id desc, sequence_prefix);
+                    CREATE INDEX %(index_name)s ON %(table)s (%(sequence_index)s, sequence_format desc, sequence_number desc, %(field)s);
+                    CREATE INDEX %(index2_name)s ON %(table)s (%(sequence_index)s, id desc, sequence_format);
                     """,
                     sequence_index=SQL.identifier(self._sequence_index),
                     index_name=SQL.identifier(index_name),
@@ -187,8 +191,21 @@ class SequenceMixin(models.AbstractModel):
             # make the seq the only matching group
             regex = self._make_regex_non_capturing(record._sequence_fixed_regex.replace(r"?P<seq>", ""))
             matching = re.match(regex, sequence)
-            record.sequence_prefix = sequence[:matching.start(1)]
+            record.sequence_format = f"{sequence[:matching.start(1)]}{SEQ_PLACEHOLDER}{sequence[matching.end(1):]}"
             record.sequence_number = int(matching.group(1) or 0)
+
+    @api.depends('sequence_format')
+    def _compute_sequence_prefix(self):
+        for record in self:
+            record.sequence_prefix = (record.sequence_format or '').partition(SEQ_PLACEHOLDER)[0]
+
+    def _search_sequence_prefix(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return Domain.OR(
+            Domain('sequence_format', '=like', escape_like_value(prefix or '') + SEQ_PLACEHOLDER + '%')
+            for prefix in value
+        )
 
     @api.model
     def _deduce_sequence_number_reset(self, name):
@@ -269,7 +286,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
+    def _get_last_sequence(self, relaxed=False, with_format=None):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -285,7 +302,7 @@ class SequenceMixin(models.AbstractModel):
         :param relaxed: this should be set to True when a previous request didn't find
             something without. This allows to find a pattern from a previous period, and
             try to adapt it for the new period.
-        :param with_prefix: The sequence prefix to restrict the search on, if any.
+        :param with_format: The sequence format to restrict the search on, if any.
 
         :return: the string of the previous sequence or None if there wasn't any.
         """
@@ -298,13 +315,13 @@ class SequenceMixin(models.AbstractModel):
         if self._origin.id:
             query.add_where(SQL("id != %s", self._origin.id))
 
-        # add prefix restriction with the same query
-        if with_prefix is not None:
-            query.add_where(SQL("%s = %s", query.table.sequence_prefix, with_prefix))
+        # add format restriction with the same query
+        if with_format is not None:
+            query.add_where(SQL("%s = %s", query.table.sequence_format, with_format))
         else:
             query.order = SQL("id DESC")
             query.limit = 1
-            query.add_where(SQL("%s = %s", query.table.sequence_prefix, query.subselect(query.table.sequence_prefix)))
+            query.add_where(SQL("%s = %s", query.table.sequence_format, query.subselect(query.table.sequence_format)))
         query.order = SQL("%s DESC", query.table.sequence_number)
         query.limit = 1
 
@@ -479,7 +496,7 @@ class SequenceMixin(models.AbstractModel):
 
         :return: True if it is the last element of the chain.
         """
-        last_sequence = self._get_last_sequence(with_prefix=self.sequence_prefix)
+        last_sequence = self._get_last_sequence(with_format=self.sequence_format)
         if not last_sequence:
             return True
         seq_format, seq_format_values = self._get_sequence_format_param(last_sequence)

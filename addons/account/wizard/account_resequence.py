@@ -144,7 +144,7 @@ class AccountResequenceWizard(models.TransientModel):
                 }) for i in range(len(period_recs))]
 
                 # For all the moves of this period, assign the name by increasing initial name
-                for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_prefix, m.sequence_number)), new_name_list):
+                for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_format, m.sequence_number)), new_name_list):
                     new_values[move.id]['new_by_name'] = new_name
                 # For all the moves of this period, assign the name by increasing date
                 for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name or "", m.id)), new_name_list):
