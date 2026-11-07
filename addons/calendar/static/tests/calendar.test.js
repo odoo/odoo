@@ -1,6 +1,14 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { contains, makeMockServer, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    makeMockServer,
+    MockServer,
+    mountView,
+    onRpc,
+    toggleActionMenu,
+    toggleMenuItem,
+} from "@web/../tests/web_test_helpers";
 import { getOrigin } from "@web/core/utils/urls";
 
 defineCalendarModels();
@@ -76,4 +84,36 @@ test("Many2ManyAttendee: remove own attendee", async () => {
     await contains(".o_field_widget[name='partner_ids'] .o_delete", { visible: false }).click();
     await contains(".o_form_button_save").click();
     expect(".o_field_widget[name='partner_ids'] .o_tag").toHaveCount(1);
+});
+
+test("calendar form: delete a non recurring event with one attendee", async () => {
+    const eventId = MockServer.env["calendar.event"].create({
+        name: "event 2",
+        attendees_count: 1,
+    });
+    onRpc("calendar.event", "get_discuss_videocall_location", () => "");
+    onRpc("calendar.event", "action_archive", ({ args }) => {
+        expect.step(`action_archive ${args[0]}`);
+    });
+    onRpc("calendar.event", "action_mass_archive", () => {
+        expect.step("action_mass_archive");
+    });
+    await mountView({
+        type: "form",
+        resModel: "calendar.event",
+        resId: eventId,
+        arch: /*xml*/ `
+            <form js_class="calendar_form">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="partner_ids"/>
+                <field name="attendees_count"/>
+                <field name="recurrency"/>
+            </form>
+        `,
+        actionMenus: {},
+    });
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    expect.verifySteps([`action_archive ${eventId}`]);
 });
