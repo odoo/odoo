@@ -141,13 +141,19 @@ patch(PosStore.prototype, {
         const packLotLinesToEdit = line.pack_lot_ids.map((p) => ({
             id: p.id,
             text: p.lot_name,
+            expiration_date: p.expiration_date || false,
         }));
         const alreadyRefundedLots = line.refunded_orderline_id.refund_orderline_ids
             .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
             .flatMap((item) => item.pack_lot_ids)
             .map((p) => p.lot_name);
         const options = line.refunded_orderline_id.pack_lot_ids
-            .map((p) => ({ id: p.id, name: p.lot_name, product_qty: line.qty }))
+            .map((p) => ({
+                id: p.id,
+                name: p.lot_name,
+                product_qty: line.qty,
+                expiration_date: p.expiration_date || false,
+            }))
             .filter((lot) => !alreadyRefundedLots.includes(lot.name));
         const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
             title: _t("Lot/Serial number(s) required for"),
@@ -166,7 +172,10 @@ patch(PosStore.prototype, {
                 if (item.id) {
                     modifiedPackLotLines[item.id] = item.text;
                 } else {
-                    newPackLotLines.push({ lot_name: item.text });
+                    newPackLotLines.push({
+                        lot_name: item.text,
+                        expiration_date: item.expiration_date || false,
+                    });
                 }
             }
             return { modifiedPackLotLines, newPackLotLines };
@@ -262,18 +271,35 @@ patch(PosStore.prototype, {
                     );
                 }
                 // If there's only one existing lot/serial number, automatically assign it to the order line
-                return { newPackLotLines: [{ lot_name: existingLots[0].name }] };
+                return {
+                    newPackLotLines: [
+                        {
+                            lot_name: existingLots[0].name,
+                            expiration_date: existingLots[0].expiration_date,
+                        },
+                    ],
+                };
             } else if (removalStrategy && existingLots.length > 1) {
                 // Auto-select the appropriate lot for new order lines based on the product's
                 // FIFO, LIFO removal strategy.
                 switch (removalStrategy) {
                     case "fifo":
                         return {
-                            newPackLotLines: [{ lot_name: existingLots[0].name }],
+                            newPackLotLines: [
+                                {
+                                    lot_name: existingLots[0].name,
+                                    expiration_date: existingLots[0].expiration_date,
+                                },
+                            ],
                         };
                     case "lifo":
                         return {
-                            newPackLotLines: [{ lot_name: existingLots.at(-1).name }],
+                            newPackLotLines: [
+                                {
+                                    lot_name: existingLots.at(-1).name,
+                                    expiration_date: existingLots.at(-1).expiration_date,
+                                },
+                            ],
                         };
                 }
             }
@@ -301,7 +327,7 @@ patch(PosStore.prototype, {
             );
             const newPackLotLines = payload
                 .filter((item) => !item.id)
-                .map((item) => ({ lot_name: item.text }));
+                .map((item) => ({ lot_name: item.text, expiration_date: item.expiration_date }));
 
             return { modifiedPackLotLines, newPackLotLines };
         }
