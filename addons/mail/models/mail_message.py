@@ -1017,9 +1017,14 @@ class MailMessage(models.Model):
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
+            attachment_domain = Domain("name", "ilike", search_term)
+            if thread:
+                attachment_domain &= (
+                    Domain("res_model", "=", thread._name) & Domain("res_id", "=", thread.id)
+                ) | Domain("res_model", "=", "mail.message")
             message_domain = Domain.OR([
-                # sudo: access to attachment is allowed if you have access to the parent model
-                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+                # any!: access to attachment is allowed if you have access to the parent model
+                Domain("attachment_ids", "any!", attachment_domain),
                 # sudo: res.partner - allow searching by author name
                 [("author_id", "in", self.env["res.partner"].sudo()._search([("name", "ilike", search_term)]))],
                 # sudo: mail.guest - allow searching by guest name
@@ -1029,8 +1034,14 @@ class MailMessage(models.Model):
                 [("subtype_id.description", "ilike", search_term)],
             ])
             domain &= message_domain
+<<<<<<< 3a00e0b2160c3572853fa3f8b289ce7f1d7bb159
         if search_term or is_filtered:
             res["count"] = self.search_count(domain)
+||||||| 90a21f65a594d4c160a7374a78a48d865130c5e7
+        if search_term or is_notification is not None:
+            res["count"] = self.search_count(domain)
+=======
+>>>>>>> 6f51525c256de26e2fe80d5389c99797ff5a95f1
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
             messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')

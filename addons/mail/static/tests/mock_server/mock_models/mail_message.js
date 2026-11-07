@@ -651,9 +651,16 @@ export class MailMessage extends models.ServerModel {
             ]);
             domain = Domain.and([domain, message_domain]).toList();
         }
+<<<<<<< 3a00e0b2160c3572853fa3f8b289ce7f1d7bb159
         if (search_term || isFiltered) {
             res.count = this.search_count(domain);
         }
+||||||| 90a21f65a594d4c160a7374a78a48d865130c5e7
+        if (search_term || is_notification !== undefined) {
+            res.count = this.search_count(domain);
+        }
+=======
+>>>>>>> 6f51525c256de26e2fe80d5389c99797ff5a95f1
         if (around !== undefined) {
             const messagesBefore = this._filter(domain.concat([["id", "<=", around]])).sort(
                 (m1, m2) => m2.id - m1.id

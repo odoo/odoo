@@ -829,8 +829,16 @@ export class Store extends BaseStore {
      * @param {number} before
      * @param {string|undefined} search_filter
      */
+<<<<<<< 3a00e0b2160c3572853fa3f8b289ce7f1d7bb159
     async searchMessagesInThread(searchTerm, thread, before, search_filter) {
         const { count, messages } = await this.fetchStoreData(
+||||||| 90a21f65a594d4c160a7374a78a48d865130c5e7
+    async searchMessagesInThread(searchTerm, thread, before, is_notification) {
+        const { count, messages } = await this.fetchStoreData(
+=======
+    async searchMessagesInThread(searchTerm, thread, before, is_notification) {
+        const { messages } = await this.fetchStoreData(
+>>>>>>> 6f51525c256de26e2fe80d5389c99797ff5a95f1
             thread.getFetchRoute(),
             {
                 ...thread.getFetchParams(),
@@ -838,14 +846,15 @@ export class Store extends BaseStore {
                     search_filter,
                     search_term: searchTerm,
                     before,
+                    // one extra message to know whether there are more results
+                    limit: this.FETCH_LIMIT + 1,
                 },
             },
             { requestData: true }
         );
         return {
-            count,
-            loadMore: messages.length === this.FETCH_LIMIT,
-            messages,
+            loadMore: messages.length > this.FETCH_LIMIT,
+            messages: messages.slice(0, this.FETCH_LIMIT),
         };
     }
 }
