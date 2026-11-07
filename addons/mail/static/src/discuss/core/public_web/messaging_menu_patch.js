@@ -45,7 +45,7 @@ const messagingMenuPatch = {
                 this.channelSearch.searchTerm = this.state().searchTerm;
             }
         });
-        // Bound once so `onClickChannel` is a stable (useProps.static) handler.
+        // Bound once so `onClickChannel` is a stable (static prop) handler.
         this.onClickChannel = this.onClickChannel.bind(this);
     },
     get isEmpty() {
@@ -66,7 +66,7 @@ const messagingMenuPatch = {
             }
         }
         channel.open({ focus: true, fromMessagingMenu: true, bypassCompact: true });
-        this.close?.();
+        this.props.close?.();
     },
 };
 patch(MessagingMenu.prototype, messagingMenuPatch);

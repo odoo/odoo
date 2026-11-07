@@ -1,7 +1,15 @@
 import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, signal, t, useOnChange, usePlugin } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    signal,
+    t,
+    useOnChange,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
@@ -19,8 +27,8 @@ class AbstractAttachmentView extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = usePropsPlus({
-            thread: propStatic(t.signal(t.instanceOf(this.store["mail.thread"]))),
+        this.props = useProps({
+            thread: t.signal(t.instanceOf(this.store["mail.thread"])),
         });
         this.uiService = usePlugin(UIPlugin);
         this.isMobileOS = isMobileOS();
