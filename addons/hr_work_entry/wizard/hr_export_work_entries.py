@@ -70,10 +70,11 @@ class HrExportWorkEntries(models.TransientModel):
         days_in_period = (self.period_stop - self.period_start).days + 1
         for employee_line in self.eligible_employee_line_ids:
             we_by_day_and_code = employee_line._get_work_entries_by_day_and_code()
+            employee = employee_line.employee_id
             for date in (self.period_start + timedelta(days=offset) for offset in range(days_in_period)):
                 if we_by_code := we_by_day_and_code.get(date):
                     for work_entry_collection in we_by_code.values():
-                        file += self._generate_line(employee_line.employee_id, date, company, work_entry_collection)
+                        file += self._generate_line(employee, date, employee.company_id, work_entry_collection)
         return file.encode()
 
     def _generate_export_filename(self):
