@@ -182,6 +182,11 @@
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
             'website_sale/static/src/js/variant_mixin.js',
+            'website_sale/static/src/js/cart_service.js',
+            'website_sale/static/src/js/notification/notification_service.js',
+            'website_sale/static/src/js/notification/cart_notification/cart_notification.js',
+            'website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.js',
+            'website_sale/static/src/js/notification/warning_notification/warning_notification.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             # TODO Find out why these do not work:
