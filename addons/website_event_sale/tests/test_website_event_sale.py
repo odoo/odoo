@@ -206,3 +206,66 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
             last_so.partner_id.is_public,
             "The cart must remain anonymous so that signup can assign its own partner to it.",
         )
+
+    def test_website_event_ticket_limit_cart(self):
+        """ Test that the ticket limit per order includes tickets already in the cart,
+        without counting the cart tickets as new attendees. """
+        self.authenticate(None, None)
+
+        self.ticket.write({'limit_max_per_order': 1})
+
+        event_questions = self.event.question_ids
+        name_question = event_questions.filtered(lambda q: q.question_type == 'name')
+        email_question = event_questions.filtered(lambda q: q.question_type == 'email')
+        phone_question = event_questions.filtered(lambda q: q.question_type == 'phone')
+
+        def add_ticket_to_cart(name):
+            self.url_open(f'/event/{self.event.id}/registration/confirm', data={
+                f'1-name-{name_question.id}': name,
+                f'1-email-{email_question.id}': f'{name.lower()}@test.lan',
+                f'1-phone-{phone_question.id}': '8989898989',
+                '1-event_ticket_id': self.ticket.id,
+                'csrf_token': http.Request.csrf_token(self),
+            })
+
+        # Add 1 ticket to the cart
+        add_ticket_to_cart('Bob')
+        cart = self.env['sale.order'].search(
+            [('order_line.event_ticket_id', '=', self.ticket.id)], order='id desc', limit=1,
+        )
+        self.assertEqual(sum(cart.order_line.mapped('product_uom_qty')), 1)
+
+        event_page = self.url_open(f'/event/{self.event.id}/register').text
+        self.assertIn('Order limit reached', event_page)
+        # Even if a user tries to bypass the form and register manually, 1 more ticket is refused
+        response_html = self.make_jsonrpc_request(f'/event/{self.event.id}/registration/new', {
+            f'nb_register-{self.ticket.id}': '1',
+        })
+        self.assertIn(
+            'You cannot order more than available seats',
+            response_html,
+            "The registration modal should be blocked because the cart already contains the max limit.",
+        )
+
+        # Raising the limit allows 1 more ticket, asking the details of the new attendee only
+        self.ticket.write({'limit_max_per_order': 2})
+        event_page = self.url_open(f'/event/{self.event.id}/register').text
+        self.assertNotIn('Order limit reached', event_page)
+        response_html = self.make_jsonrpc_request(f'/event/{self.event.id}/registration/new', {
+            f'nb_register-{self.ticket.id}': '1',
+        })
+        self.assertNotIn('You cannot order more than available seats', response_html)
+        self.assertIn('name="1-event_ticket_id"', response_html)
+        self.assertNotIn(
+            'name="2-event_ticket_id"', response_html,
+            "Tickets already in the cart should not be asked again as new attendees.",
+        )
+
+        add_ticket_to_cart('Alice')
+        self.env.invalidate_all()
+        self.assertEqual(
+            sum(cart.order_line.mapped('product_uom_qty')), 2,
+            "The cart should only contain the ticket already in it and the new one.",
+        )
+        event_page = self.url_open(f'/event/{self.event.id}/register').text
+        self.assertIn('Order limit reached', event_page)

@@ -40,6 +40,33 @@
         </t>
         <span t-else="" class="badge text-bg-success p-2 px-3">Free</span>
     </xpath>
+    <!-- Order limit reached (multi tickets, multi slots): the ticket is still on sale but the cart already holds the maximum allowed per order -->
+    <xpath expr="//div[contains(@t-if, 'or seats_available_slot_ticket')]" position="before">
+        <t t-set="order_limit_reached" t-value="ticket.sale_available and not max_input_value and ticket._is_order_limit_reached(event_slot or False)"/>
+    </xpath>
+    <xpath expr="//div[contains(@t-if, 'or seats_available_slot_ticket')]" position="attributes">
+        <attribute name="t-if">not order_limit_reached and ((not ticket.is_expired and ticket.sale_available and max_input_value) or seats_available_slot_ticket)</attribute>
+    </xpath>
+    <!-- Order limit reached (multi tickets, no slots)-->
+    <xpath expr="//span[contains(@t-if, 'not max_input_value')]" position="before">
+        <span t-if="order_limit_reached">Order limit reached</span>
+    </xpath>
+    <xpath expr="//span[contains(@t-if, 'not max_input_value')]" position="attributes">
+        <attribute name="t-if">not order_limit_reached and ((not ticket.sale_available and not ticket.is_expired and ticket.is_launched) or not max_input_value)</attribute>
+    </xpath>
+    <!-- Order limit reached (single ticket): replace the quantity picker by the message -->
+    <xpath expr="//div[hasclass('o_wevent_registration_single_select')]/div[hasclass('input-group')]" position="before">
+        <t t-set="order_limit_reached" t-value="tickets.sale_available and not max_input_value and tickets._is_order_limit_reached(event_slot or False)"/>
+        <span t-if="order_limit_reached" class="text-danger">
+            <i class="fa fa-ban me-2"/>Order limit reached
+        </span>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wevent_registration_single_select')]/div[hasclass('input-group')]" position="attributes">
+        <attribute name="t-if">not order_limit_reached</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wevent_registration_single_select')]/div[hasclass('input-group')]/following-sibling::div[1]" position="attributes">
+        <attribute name="t-if">not order_limit_reached</attribute>
+    </xpath>
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
         <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce')"/>
         <t t-else="" t-set="all_prices" t-value="event.event_ticket_ids.mapped('price_reduce_taxinc')"/>
