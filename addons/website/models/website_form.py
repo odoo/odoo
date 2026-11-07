@@ -55,7 +55,7 @@ class IrModel(models.Model):
         model = self.env[model_name]
         fields_get = model.fields_get(attributes=[
             'required', 'domain', 'readonly', 'type', 'relation', 'manual',
-            'definition_record', 'definition_record_field', 'string', 'selection',
+            'definition_record', 'definition_record_field', 'string', 'selection', 'currency_field',
         ])
 
         field_details_translated = {}
@@ -72,6 +72,17 @@ class IrModel(models.Model):
         for field in [f for f in fields_get if f in default_values]:
             fields_get[field]['required'] = False
 
+        dummy_record = model.sudo().new({})
+
+        def set_currency_info(field_description):
+            currency_field_name = field_description.get('currency_field')
+            currency_field = fields_get.get(currency_field_name)
+            readonly = not currency_field or currency_field.get('readonly')
+            field_description['currency_field_readonly'] = readonly
+            if readonly:
+                currency = currency_field_name in model._fields and dummy_record[currency_field_name]
+                field_description['default_currency_id'] = (currency or self.env.company.currency_id).id
+
         # Remove readonly, JSON, and magic fields
         # Remove string domains which are supposed to be evaluated
         # (e.g. "[('product_id', '=', product_id)]")
@@ -83,6 +94,8 @@ class IrModel(models.Model):
                     fields_get[field]['selection'] = field_translations.get('selection')
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
+            if not fields_get[field].get('readonly') and fields_get[field].get('type') == 'monetary':
+                set_currency_info(fields_get[field])
             if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or \
                     fields_get[field]['type'] in ('many2one_reference', 'json', 'reference'):
                 del fields_get[field]
@@ -136,6 +149,9 @@ class IrModel(models.Model):
                                 property_definition['domain'] = list(Domain(property_definition['domain']))
                             except ValueError:
                                 continue
+                        if not property_definition.get('readonly') and property_definition.get('type') == 'monetary':
+                            set_currency_info(property_definition)
+
                         fields_get[property_definition.get('name')] = property_definition
 
         return fields_get

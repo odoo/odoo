@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { computed, t, useProps } from "@odoo/owl";
+import { currencies } from "@web/core/currency";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { useAsyncComputed } from "@web/core/utils/hooks";
@@ -56,6 +57,7 @@ export class FormFieldOption extends BaseOptionComponent {
             { name: _t("Date & Time"), value: "datetime" },
             { name: _t("File Upload"), value: "binary" },
         ];
+        this.currencies = currencies;
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
@@ -315,6 +317,16 @@ export class FormFieldOption extends BaseOptionComponent {
     get isMultipleInputs() {
         const el = this.env.getEditingElement();
         return !!getMultipleInputs(el);
+    }
+    get isMonetaryField() {
+        const el = this.env.getEditingElement();
+        const fieldEl = el.closest(".s_website_form_field");
+        return fieldEl?.dataset.type === "monetary";
+    }
+    get hasReadonlyCurrencyField() {
+        const fieldEl = this.env.getEditingElement();
+        const field = this.fieldOptionData().fields?.[getFieldName(fieldEl)];
+        return field?.currency_field_readonly;
     }
     get isMaxFilesVisible() {
         // Do not display the option if only one file is supposed to be
