@@ -510,6 +510,10 @@ export class PosOrderline extends PosOrderlineAccounting {
                     : _t(" (after discount)"),
         };
     }
+
+    isGlobalDiscountApplicable() {
+        return true;
+    }
 }
 
 registry.category("pos_available_models").add(PosOrderline.pythonModel, PosOrderline);

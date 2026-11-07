@@ -2,7 +2,7 @@ import { test, describe, expect } from "@odoo/hoot";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { serverState, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { SplitBillScreen } from "@pos_restaurant/app/screens/split_bill_screen/split_bill_screen";
+import { SplitBillScreen } from "@point_of_sale/app/screens/split_bill_screen/split_bill_screen";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();

@@ -10,7 +10,8 @@ patch(OrderPaymentValidation.prototype, {
         if (
             isOrderValid &&
             this.order.shipping_date &&
-            !(partner.name && partner.street && partner.city && partner.country_id)
+            !this.order.pickup_later &&
+            !(partner?.name && partner.street && partner.city && partner.country_id)
         ) {
             this.pos.dialog.add(AlertDialog, {
                 title: _t("Incorrect address for shipping"),

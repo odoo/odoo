@@ -300,7 +300,7 @@ export default class OrderPaymentValidation {
         if (this.shouldAskForPartner()) {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
-                body: _t("Select a customer with a valid address."),
+                body: _t("Select a customer."),
                 confirmLabel: _t("Customer"),
             });
             if (confirmed) {

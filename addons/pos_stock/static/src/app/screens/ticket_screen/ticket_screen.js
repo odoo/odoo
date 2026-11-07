@@ -1,7 +1,15 @@
 import { patch } from "@web/core/utils/patch";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+const { DateTime } = luxon;
 
 patch(TicketScreen.prototype, {
+    getOrderSortPriority(order) {
+        return Number(
+            this.isOrderDoneOrPaid(order) &&
+                order.pickup_later &&
+                order.shipping_date?.toISODate() <= DateTime.now().toISODate()
+        );
+    },
     getRefundLinesDetails(refundDetail, destinationOrder) {
         const refundLine = refundDetail.line;
         const alreadyRefundedLots = refundLine.refund_orderline_ids
