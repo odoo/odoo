@@ -305,10 +305,13 @@ class PurchaseOrderLine(models.Model):
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
         date_planned = self.date_planned or self.order_id.date_planned
+        date_deadline = date_planned
+        if picking.picking_type_code == 'incoming' and self.date_promised:
+            date_deadline = self.date_promised
         return {
             'product_id': self.product_id.id,
             'date': date_planned,
-            'date_deadline': date_planned,
+            'date_deadline': date_deadline,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': location_dest.id,
             'location_final_id': location_final.id,
