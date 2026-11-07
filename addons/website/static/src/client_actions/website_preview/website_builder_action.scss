@@ -46,8 +46,29 @@
     .o_website_discard_save_buttons {
         max-width: calc(var(--o-we-sidebar-width) / 2);
 
-        button {
+        > button,
+        .o_website_save_group {
             min-width: 40%;
+        }
+
+        .o_website_save_group > :first-child {
+            flex-grow: 1;
+        }
+
+        .o_website_draft_toggle {
+            flex: 0 0 auto;
+            border-left: 1px solid rgba(0, 0, 0, 0.25);
+        }
+
+        // the draft toggle needs more room than half of the sidebar
+        &.o_website_draft_actions {
+            max-width: none;
+            flex-shrink: 0;
+
+            > button,
+            .o_website_save_group {
+                min-width: 0;
+            }
         }
     }
 

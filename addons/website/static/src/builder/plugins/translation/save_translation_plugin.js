@@ -59,6 +59,7 @@ export class SaveTranslationPlugin extends Plugin {
                         record_id: [Number(oeId)],
                         field_name: oeField,
                         translations: { [lang]: Object.assign({}, ...contents) },
+                        draft: this.services.website.isDraftPreview,
                     });
                 }
             )

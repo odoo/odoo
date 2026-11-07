@@ -13,7 +13,7 @@ from odoo.http import Response
 from odoo.tools.sql import SQL, escape_like_value
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools import text_from_html, url_without_lang
 from odoo.tools.translate import adapt_translated_field_value
 
 
@@ -56,6 +56,8 @@ class WebsitePage(models.Model):
         related='view_id.write_date')
 
     website_indexed = fields.Boolean('Is Indexed', default=True)
+    # unpublished until the draft is published, deleted with the draft
+    created_in_draft = fields.Boolean(copy=False)
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_in_menu = fields.Boolean(compute='_compute_website_menu')
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
@@ -590,3 +592,37 @@ class WebsitePage(models.Model):
                 'view_id': page.view_id.id,
                 'group_ids': page.group_ids.ids,
             }
+
+    @api.model
+    def publish_draft(self, page_url, website_id):
+        """ Publish the page's views, the shared views (header, footer, ...),
+        and the website's draft assets."""
+        self._apply_draft(page_url, website_id, publish=True)
+
+    @api.model
+    def delete_draft(self, page_url, website_id):
+        """ Delete the same drafts as `publish_draft`."""
+        self._apply_draft(page_url, website_id, publish=False)
+
+    def _apply_draft(self, page_url, website_id, publish):
+        if not (page_url and website_id):
+            return
+        page_url = url_without_lang(self.env, page_url)
+        pages = self.search([('url', '=', page_url), ('website_id', '=', website_id)])
+        View = self.env['ir.ui.view'].with_context(active_test=False)
+        shared_views = View.search(Domain(View._draft_views_domain(website_id)) & Domain('page_ids', '=', False))
+        # the menu is shared by all pages, like the header
+        if publish:
+            pages = pages.filtered('can_publish')
+            (pages.view_id | shared_views).publish_draft()
+            pages.filtered('created_in_draft').publish_created_in_draft()
+            self.env['website.assets'].publish_draft(website_id)
+            self.env['website'].browse(website_id)._publish_menu_draft()
+        else:
+            (pages.view_id | shared_views).delete_draft()
+            pages.filtered('created_in_draft').unlink()
+            self.env['website.assets'].delete_draft(website_id)
+            self.env['website'].browse(website_id).sudo().menu_draft = False
+
+    def publish_created_in_draft(self):
+        self.write({'is_published': True, 'created_in_draft': False})
