@@ -12,6 +12,7 @@ from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
 )
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 @tagged("post_install", "-at_install")
@@ -527,3 +528,75 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         }}).json().get('result', [])
 
         self.assertTrue(len(result))
+
+    def test_shop_attribute_filter_grouping(self):
+        """Selecting a parent value should include all its children."""
+
+        black = self.color_attribute.value_ids.filtered(
+            lambda value: value.name == "Black"
+        )
+        grey = self.color_attribute.value_ids.filtered(
+            lambda value: value.name == "Grey"
+        )
+        white = self.color_attribute.value_ids.filtered(
+            lambda value: value.name == "White"
+        )
+        red = self.color_attribute.value_ids.filtered(
+            lambda value: value.name == "Red"
+        )
+
+        grey.parent_id = black
+        white.parent_id = black
+
+        with self.mock_request():
+            result = WebsiteSale()._get_attribute_value_dict({
+                str(self.color_attribute.id): (
+                    f"black-{black.id},red-{red.id}"
+                ),
+            })
+
+        self.assertSetEqual(
+            set(result[self.color_attribute.id]),
+            {black.id, grey.id, white.id, red.id},
+            "Selecting a parent should include its children along with standalone values.",
+        )
+
+    def test_shop_attribute_value_grouping_tour(self):
+        values = {
+            value.name: value
+            for value in self.color_attribute.value_ids
+        }
+
+        black = values["Black"]
+        grey = values["Grey"]
+        white = values["White"]
+        red = values["Red"]
+
+        grey.parent_id = black
+        white.parent_id = black
+
+        self.env["product.attribute"].search([]).write({
+            "visibility": "hidden",
+        })
+        self.color_attribute.visibility = "visible"
+
+        for name, value in (
+            ("Grouped Black Product", black),
+            ("Grouped Grey Product", grey),
+            ("Grouped White Product", white),
+            ("Standalone Red Product", red),
+        ):
+            self.env["product.template"].create({
+                "name": name,
+                "list_price": 100,
+                "website_published": True,
+                "company_id": False,
+                "attribute_line_ids": [
+                    Command.create({
+                        "attribute_id": self.color_attribute.id,
+                        "value_ids": [Command.set([value.id])],
+                    }),
+                ],
+            })
+
+        self.start_tour("/shop", "shop_attribute_value_grouping")
