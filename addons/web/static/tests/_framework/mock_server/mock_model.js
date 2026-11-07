@@ -3031,6 +3031,61 @@ export class Model extends Array {
     }
 
     /**
+     * @param {MaybeIterable<number>} idOrIds
+     * @param {Partial<ModelRecord>} values
+     * @param {Record<string, any>} specification
+     * @param {string[]} onchangeFields
+     * @param {Record<string, any>} onchangeSpec
+     * @param {string[]} changedFields
+     * @param {MaybeIterable<number>} [nextId]
+     */
+    web_save_offline(
+        idOrIds,
+        values,
+        specification,
+        onchangeFields,
+        onchangeSpec,
+        changedFields,
+        nextId
+    ) {
+        const kwargs = getKwArgs(
+            arguments,
+            "ids",
+            "vals",
+            "specification",
+            "onchange_fields",
+            "onchange_spec",
+            "changed_fields",
+            "next_id"
+        );
+        ({ ids: idOrIds, vals: values, specification, next_id: nextId } = kwargs);
+        const ids = ensureArray(idOrIds);
+        if (kwargs.onchange_fields?.length) {
+            const { value } = this.onchange(
+                ids,
+                { ...values },
+                kwargs.onchange_fields,
+                kwargs.onchange_spec
+            );
+            for (const [fieldName, fieldValue] of Object.entries(value)) {
+                if (!kwargs.changed_fields?.includes(fieldName)) {
+                    values[fieldName] =
+                        this._fields[fieldName].type === "many2one" && fieldValue
+                            ? fieldValue.id
+                            : fieldValue;
+                }
+            }
+        }
+        return this.web_save(
+            ids,
+            values,
+            specification,
+            nextId,
+            makeKwArgs({ context: kwargs.context })
+        );
+    }
+
+    /**
      * @param {number[]} ids - List of record IDs to update
      * @param {Partial<ModelRecord>[]} values - List of value dicts (same length/order as `ids`)
      * @param {Record<string, any>} specification - Fields to return after save
