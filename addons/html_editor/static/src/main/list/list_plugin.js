@@ -44,7 +44,6 @@ import { TEXT_CLASSES_REGEX, getColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { composeToolbarButton } from "../toolbar/toolbar";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { isColorGradient } from "@web/core/utils/colors";
@@ -264,7 +263,8 @@ export class ListPlugin extends Plugin {
         this.listSelectorButtons = this.getListSelectorButtons();
         this.canToggleListMemoized = weakMemoize(
             (selection) =>
-                isHtmlContentSupported(selection) && this.getBlocksToToggleList().length > 0
+                this.dependencies.dom.supportsHtmlContent(selection) &&
+                this.getBlocksToToggleList().length > 0
         );
     }
 

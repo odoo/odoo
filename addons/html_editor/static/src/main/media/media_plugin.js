@@ -12,7 +12,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { TABS } from "./media_dialog/media_dialog_utils";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -51,10 +50,6 @@ export function extractUnmappedAttachmentsIds(content) {
  *  }[]} media_dialog_extra_tabs
  */
 
-function isMediaSupported(selection) {
-    return isHtmlContentSupported(selection) && !closestElement(selection.anchorNode, "label");
-}
-
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
@@ -71,7 +66,6 @@ export class MediaPlugin extends Plugin {
                 description: _t("Replace media"),
                 icon: "image",
                 run: this.replaceImage.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "insertMedia",
@@ -84,7 +78,9 @@ export class MediaPlugin extends Plugin {
                     this.openMediaDialog({
                         activeTab: this.getActiveDialogTab(context.searchTerm),
                     }),
-                isAvailable: isMediaSupported,
+                isAvailable: (selection) =>
+                    this.dependencies.dom.supportsHtmlContent(selection) &&
+                    !closestElement(selection.anchorNode, "label"),
             },
         ],
         toolbar_groups: withSequence(31, { id: "image_replace", namespaces: ["image"] }),

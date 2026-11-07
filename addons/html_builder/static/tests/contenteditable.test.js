@@ -6,7 +6,7 @@ import {
     addBuilderAction,
 } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
-import { expect, test, describe } from "@odoo/hoot";
+import { expect, test, describe, queryAll } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -54,6 +54,33 @@ test("Media should not be replaceable if not inside a savable zone", async () =>
     expect("span:contains('Double-click to edit')").toHaveCount(0);
     await contains(":iframe #wrapwrap .target").dblclick();
     expect(".modal-content:contains(Select a media)").toHaveCount(0);
+});
+
+test("non-html fields (except translations) should be limited to plain text", async () => {
+    const { getEditor } = await setupHTMLBuilder("", {
+        headerContent: `
+        <div class="test-no-html-allowed">
+            <p data-oe-model="foo" data-oe-type="text">abcd</p>
+            <p data-oe-model="blog.post" data-oe-type="char">abcd</p>
+            <p data-oe-model="website.logo" data-oe-type="image">abcd</p>
+        </div>
+        <div class="test-html-allowed">
+            <p data-oe-model="blog.post" data-oe-type="html">abcd</p>
+
+            <!-- arch and translation's branding has no data-oe-type -->
+            <p data-oe-model="ir.ui.view" data-oe-field="arch">abcd</p>
+            <p data-oe-model="ir.ui.view" data-oe-field="arch_db" data-oe-translation-source-sha="0ea54">abcd</p>
+            <p data-oe-model="blog.post" data-oe-translation-source-sha="0ea54">abcd</p>
+        </div>
+        `,
+    });
+
+    for (const p of queryAll(":iframe .test-no-html-allowed p")) {
+        expect(getEditor().shared.properties.get(p, "plaintext")).toBe(true);
+    }
+    for (const p of queryAll(":iframe .test-html-allowed p")) {
+        expect(getEditor().shared.properties.get(p, "plaintext")).not.toBe(true);
+    }
 });
 
 test("clone of editable media inside not editable area should be editable", async () => {

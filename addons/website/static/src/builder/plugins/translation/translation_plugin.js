@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
-import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
@@ -119,7 +118,7 @@ export class TranslationPlugin extends Plugin {
         }),
         properties: {
             predicate: (node) => closestElement(node, ".o_translation_select"),
-            toolbar: DISABLED_NAMESPACE,
+            plaintext: true,
         },
     };
 
@@ -299,22 +298,14 @@ export class TranslationPlugin extends Plugin {
      */
     handleSelectTranslation(containerEl) {
         const selectEls = containerEl.querySelectorAll(
-            "select:has(> option[data-oe-translation-span-wrapper])"
+            "select:has(> option > [data-oe-translation-source-sha])"
         );
         for (const selectEl of selectEls) {
             const selectTranslationEl = document.createElement("div");
             selectTranslationEl.className = "o_translation_select form-control";
             for (const optionEl of selectEl.options) {
-                if (!optionEl.dataset.oeTranslationSpanWrapper) {
-                    continue;
-                }
                 const optionTranslationEl = document.createElement("div");
-                const translationSpanEl = this.parseTranslationEl(
-                    optionEl.dataset.oeTranslationSpanWrapper
-                );
-                translationSpanEl.classList.add("o_savable");
-                translationSpanEl.setAttribute("contenteditable", "true");
-                optionTranslationEl.appendChild(translationSpanEl);
+                optionTranslationEl.replaceChildren(...optionEl.childNodes);
                 selectTranslationEl.appendChild(optionTranslationEl);
             }
             selectEl.before(selectTranslationEl);

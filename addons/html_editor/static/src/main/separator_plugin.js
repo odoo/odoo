@@ -3,7 +3,6 @@ import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement, firstLeaf, lastLeaf, selectElements } from "../utils/dom_traversal";
 import { isEmptyBlock, paragraphRelatedElementsSelector } from "../utils/dom_info";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { removeClass, splitTextNode } from "@html_editor/utils/dom";
 import { DIRECTIONS, nodeSize, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -28,7 +27,7 @@ export class SeparatorPlugin extends Plugin {
                 description: _t("Insert a horizontal rule separator"),
                 icon: "remove",
                 run: this.insertSeparator.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         powerbox_items: withSequence(1, {

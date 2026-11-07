@@ -39,7 +39,6 @@ import {
 } from "@html_editor/utils/table";
 import { isBrowserFirefox, isMacOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
 import { rgbaToHex } from "@web/core/utils/colors";
 import { _t } from "@web/core/l10n/translation";
@@ -114,7 +113,7 @@ export class TablePlugin extends Plugin {
                 run: (params) => {
                     this.insertTable(params);
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
             {
                 id: "mergeTableCells",
