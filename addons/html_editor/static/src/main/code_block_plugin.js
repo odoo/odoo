@@ -1,11 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { newlinesToLineBreaks, unwrapContents } from "@html_editor/utils/dom";
 import { isEmptyBlock, isZWS } from "@html_editor/utils/dom_info";
 import {
     childNodes,
     closestElement,
     createDOMPathGenerator,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -53,7 +54,25 @@ export class CodeBlockPlugin extends Plugin {
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
+        // After the language of the code is read by the syntax highlighting
+        // plugin.
+        html_compatibility_processors: withSequence(20, this.adaptStandardCodeBlocks.bind(this)),
     };
+
+    /**
+     * Standard code blocks become the editor's ones, whose lines are separated
+     * by line breaks.
+     *
+     * @param {HTMLElement} root
+     */
+    adaptStandardCodeBlocks(root) {
+        for (const code of selectElements(root, "pre > code:only-child")) {
+            const pre = code.parentElement;
+            pre.textContent = code.textContent.replace(/\n$/, "");
+            newlinesToLineBreaks(pre);
+        }
+        return root;
+    }
 
     blockFormatIsAvailable(selection) {
         return isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock();

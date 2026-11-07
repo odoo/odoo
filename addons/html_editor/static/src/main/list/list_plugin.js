@@ -195,6 +195,7 @@ export class ListPlugin extends Plugin {
         /** Processors */
         normalize_processors: this.normalize.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+        html_compatibility_processors: this.adaptStandardLists.bind(this),
         fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
 
@@ -1085,6 +1086,34 @@ export class ListPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    /**
+     * Adapt standard HTML lists into the editor's list format:
+     * - Convert list items starting with a checkbox into checklist items.
+     * - Fill empty list items with a line break.
+     *
+     * @param {HTMLElement} root
+     */
+    adaptStandardLists(root) {
+        for (const checkbox of selectElements(
+            root,
+            "li > input[type='checkbox']:first-child, li > p:first-child > input[type='checkbox']:first-child"
+        )) {
+            const li = closestElement(checkbox, "li");
+            if (li.parentElement.nodeName === "UL") {
+                li.parentElement.classList.add("o_checklist");
+                li.classList.toggle("o_checked", checkbox.hasAttribute("checked"));
+            }
+            if (checkbox.nextSibling?.nodeType === Node.TEXT_NODE) {
+                checkbox.nextSibling.textContent = checkbox.nextSibling.textContent.trimStart();
+            }
+            checkbox.remove();
+        }
+        for (const li of selectElements(root, "li:empty")) {
+            fillEmpty(li);
+        }
+        return root;
     }
 
     /**

@@ -14,7 +14,7 @@ import {
 } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock } from "../utils/dom_info";
-import { childNodes, descendants } from "./dom_traversal";
+import { childNodes, descendants, lastLeaf } from "./dom_traversal";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "./position";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
@@ -104,6 +104,37 @@ export function fillEmpty(el) {
         // If a ZWS was inserted, there is no need for a <br>.
         return fillShrunkPhrasingParent(el);
     }
+}
+
+/**
+ * Replace newlines in the given `element` with the appropriate number of line
+ * breaks to preserve the visual aspect of these line breaks.
+ *
+ * @param {Element} element
+ * @param {Document} [doc = element.ownerDocument || document]
+ */
+export function newlinesToLineBreaks(element, doc = element.ownerDocument || document) {
+    // 1. Replace \n with <br>.
+    for (const node of descendants(element).filter((node) => node.nodeType === Node.TEXT_NODE)) {
+        let newline = node.textContent.indexOf("\n");
+        while (newline !== -1) {
+            node.before(doc.createTextNode(node.textContent.slice(0, newline)));
+            node.before(doc.createElement("BR"));
+            node.textContent = node.textContent.slice(newline + 1);
+            newline = node.textContent.indexOf("\n");
+        }
+        if (!node.textContent) {
+            node.remove(); // Prevent empty trailing text node that would become the last leaf.
+        }
+    }
+    // 2. Handle trailing BRs. Eg, <span>ab\n</span> -> <span>ab</span><br><br>
+    const trailingBr = lastLeaf(element);
+    if (trailingBr?.nodeName === "BR") {
+        element.append(trailingBr); // <span>ab<br></span> -> <span>ab</span><br>
+        trailingBr.after(doc.createElement("BR")); // <br></pre> -> <br><br></pre>
+    }
+    // 3. Fill empty.
+    fillEmpty(element);
 }
 
 /**

@@ -1,39 +1,7 @@
 /* global Prism */
-import { fillEmpty } from "@html_editor/utils/dom";
-import { descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { newlinesToLineBreaks } from "@html_editor/utils/dom";
 
 export const DEFAULT_LANGUAGE_ID = "plaintext";
-
-/**
- * Replace newlines in the given `element` with the appropriate number of line
- * breaks to preserve the visual aspect of these line breaks.
- *
- * @param {Element} element
- * @param {Document} [doc = element.ownerDocument || document]
- */
-export const newlinesToLineBreaks = (element, doc = element.ownerDocument || document) => {
-    // 1. Replace \n with <br>.
-    for (const node of descendants(element).filter((node) => node.nodeType === Node.TEXT_NODE)) {
-        let newline = node.textContent.indexOf("\n");
-        while (newline !== -1) {
-            node.before(doc.createTextNode(node.textContent.slice(0, newline)));
-            node.before(doc.createElement("BR"));
-            node.textContent = node.textContent.slice(newline + 1);
-            newline = node.textContent.indexOf("\n");
-        }
-        if (!node.textContent) {
-            node.remove(); // Prevent empty trailing text node that would become the last leaf.
-        }
-    }
-    // 2. Handle trailing BRs. Eg, <span>ab\n</span> -> <span>ab</span><br><br>
-    const trailingBr = lastLeaf(element);
-    if (trailingBr?.nodeName === "BR") {
-        element.append(trailingBr); // <span>ab<br></span> -> <span>ab</span><br>
-        trailingBr.after(doc.createElement("BR")); // <br></pre> -> <br><br></pre>
-    }
-    // 3. Fill empty.
-    fillEmpty(element);
-};
 
 /**
  * Return the given `<pre>` element's inner text, cleaned of any zero-width
@@ -55,7 +23,9 @@ export const getPreValue = (pre) => {
         .replace(
             /&(amp|lt|gt|#x27|quot|#x60|nbsp);/g,
             (_, entity) =>
-                ({ amp: "&", lt: "<", gt: ">", "#x27": "'", quot: '"', "#x60": "`", nbsp: " " }[entity])
+                ({ amp: "&", lt: "<", gt: ">", "#x27": "'", quot: '"', "#x60": "`", nbsp: " " }[
+                    entity
+                ])
         );
     if (hasTrailingBr && text.endsWith("\n")) {
         text = text.slice(0, -1);

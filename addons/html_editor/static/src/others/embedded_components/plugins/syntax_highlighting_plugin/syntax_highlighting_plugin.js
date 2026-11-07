@@ -4,13 +4,13 @@ import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import {
     DEFAULT_LANGUAGE_ID,
     getPreValue,
-    newlinesToLineBreaks,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
-import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
+import { newlinesToLineBreaks, removeInvisibleWhitespace } from "@html_editor/utils/dom";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { LANGUAGES } from "@html_editor/others/embedded_components/backend/syntax_highlighting/code_toolbar";
 
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
@@ -66,6 +66,8 @@ export class SyntaxHighlightingPlugin extends Plugin {
         /** Processors */
         clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),
         normalize_processors: (root) => this.addCodeBlocks(root, true),
+        // Before the standard code blocks are adapted (see code block plugin).
+        html_compatibility_processors: withSequence(5, this.adaptStandardCodeLanguages.bind(this)),
         clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),
 
         /** Predicates */
@@ -84,6 +86,24 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 this.navigateAroundCodeBlock(ev);
             }
         });
+    }
+
+    /**
+     * Keep the language of standard code blocks if it is supported.
+     *
+     * @param {HTMLElement} root
+     */
+    adaptStandardCodeLanguages(root) {
+        for (const code of selectElements(root, "pre > code[class*='language-']")) {
+            const language = [...code.classList]
+                .find((className) => className.startsWith("language-"))
+                ?.slice("language-".length)
+                .toLowerCase();
+            if (Object.hasOwn(LANGUAGES, language)) {
+                code.parentElement.dataset.languageId = language;
+            }
+        }
+        return root;
     }
 
     navigateAroundCodeBlock(ev) {

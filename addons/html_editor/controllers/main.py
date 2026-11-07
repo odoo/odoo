@@ -19,7 +19,7 @@ from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from ..tools import search_icons
+from ..tools import markdown_to_html, search_icons
 from .svg_utils import get_shape_svg, make_shaped_image, update_svg_colors
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
@@ -29,6 +29,7 @@ DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
+MARKDOWN_MAX_SIZE = 20_000
 
 # Regex definitions to apply speed modification in SVG files
 # Note : These regex patterns are duplicated on the server side for
@@ -740,6 +741,18 @@ class HTML_Editor(Controller):
             else:
                 channel = base_channel
             request.env['bus.bus']._sendone(channel, 'editor_collaboration', data)
+
+    @route('/html_editor/markdown_to_html', type='jsonrpc', auth='user', methods=['POST'])
+    def convert_markdown(self, text):
+        """ Convert pasted Markdown into HTML.
+
+        :return: the HTML, or False if the conversion is not possible
+        """
+        # Should portal user be able to convert Markdown? DoS?
+        # Maybe allow but with strict size limit?
+        if not request.env.user._is_internal() or len(text) > MARKDOWN_MAX_SIZE:
+            return False
+        return markdown_to_html(text)
 
     @route('/html_editor/link_preview_external', type="jsonrpc", auth="public", methods=['POST'])
     def link_preview_metadata(self, preview_url):

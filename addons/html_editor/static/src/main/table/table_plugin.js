@@ -201,6 +201,12 @@ export class TablePlugin extends Plugin {
             return root;
         },
         html_compatibility_processors: this.adaptTables.bind(this),
+        fragment_to_insert_processors: (fragment) => {
+            for (const table of fragment.querySelectorAll("table")) {
+                table.classList.add("table", "table-bordered", "o_table");
+            }
+            return fragment;
+        },
         normalize_processors: this.normalizeTable.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         paste_odoo_editor_html_processors: (fragment) => {

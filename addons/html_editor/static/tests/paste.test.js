@@ -3981,7 +3981,7 @@ describe("Odoo editor own html", () => {
                     `<p>a</p><div class="o_table_wrapper"><table><tbody><tr><td><p>b</p></td></tr></tbody></table></div><p>c</p>`
                 );
             },
-            contentAfterEdit: `<p>a</p><table><tbody><tr><td><p>b</p></td></tr></tbody></table><p>c[]</p>`,
+            contentAfterEdit: `<p>a</p><table class="table table-bordered o_table"><tbody><tr><td><p>b</p></td></tr></tbody></table><p>c[]</p>`,
             config: {
                 allowScrollableTables: false,
             },
