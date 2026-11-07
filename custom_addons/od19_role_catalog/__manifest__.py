@@ -1,7 +1,7 @@
 {
     "name": "OD19 Role Catalog (Business Roles)",
     "author": "OD19",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "category": "Administration",
     "summary": "Business role definitions (~44 res.users.role) grouped under the OD19 Roles privilege",
     "description": """
