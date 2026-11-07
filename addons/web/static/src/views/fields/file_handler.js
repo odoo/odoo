@@ -39,19 +39,23 @@ export class FileUploader extends Component {
             return;
         }
         const { target } = ev;
-        for (const file of files) {
-            if (this.props.checkSize && !checkFileSize(file.size, this.notification)) {
-                return null;
-            }
-            this.state.isUploading = true;
-            const data = await getDataURLFromFile(file);
-            if (!file.size) {
-                console.warn(`Error while uploading file : ${file.name}`);
-                this.notification.add(_t("There was a problem while uploading your file."), {
-                    type: "danger",
-                });
-            }
-            try {
+        if (
+            this.props.checkSize &&
+            files.some((file) => !checkFileSize(file.size, this.notification))
+        ) {
+            target.value = null;
+            return null;
+        }
+        this.state.isUploading = true;
+        try {
+            for (const file of files) {
+                const data = await getDataURLFromFile(file);
+                if (!file.size) {
+                    console.warn(`Error while uploading file : ${file.name}`);
+                    this.notification.add(_t("There was a problem while uploading your file."), {
+                        type: "danger",
+                    });
+                }
                 await this.props.onUploaded({
                     name: file.name,
                     size: file.size,
@@ -59,13 +63,13 @@ export class FileUploader extends Component {
                     data: data.split(",")[1],
                     objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
                 });
-            } finally {
-                this.state.isUploading = false;
             }
-        }
-        target.value = null;
-        if (this.props.multiUpload && this.props.onUploadComplete) {
-            this.props.onUploadComplete({});
+            if (this.props.multiUpload && this.props.onUploadComplete) {
+                await this.props.onUploadComplete({});
+            }
+        } finally {
+            this.state.isUploading = false;
+            target.value = null;
         }
     }
 

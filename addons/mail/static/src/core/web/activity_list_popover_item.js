@@ -1,11 +1,10 @@
-import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { propComputed } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, computed, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -33,18 +32,9 @@ export class ActivityListPopoverItem extends Component {
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "right" });
+        this.pendingUploads = [];
         // bound once so `close` can be passed as a stable (useProps.static) handler
         this.closeMarkDoneView = () => this.hasMarkDoneView.set(false);
-        if (this.activity().activity_category === "upload_file") {
-            this.attachmentUploader = useAttachmentUploader(
-                computed(() =>
-                    this.store["mail.thread"].insert({
-                        model: this.activity().res_model,
-                        id: this.activity().res_id,
-                    })
-                )
-            );
-        }
     }
 
     get delayLabel() {
@@ -168,12 +158,16 @@ export class ActivityListPopoverItem extends Component {
         );
     }
 
-    async onFileUploaded(data) {
-        const activity = this.activity();
-        const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
-            activity,
-        });
-        await activity.markAsDone([attachmentId]);
+    onFileUploaded(data) {
+        this.pendingUploads.push(data);
+    }
+
+    async onFilesUploadComplete() {
+        if (!this.pendingUploads.length) {
+            return false;
+        }
+        const isDone = await this.activity().uploadAndMarkAsDone(this.pendingUploads.splice(0));
         this.onActivityChanged?.();
+        return isDone;
     }
 }
