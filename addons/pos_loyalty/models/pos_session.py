@@ -17,5 +17,6 @@ class PosSession(models.Model):
         if 'loyalty.program' in models_to_filter:
             loyalty_programs = self.env['loyalty.program'].search([('id', 'in', models_to_filter['loyalty.program'])])
             valid_programs = self.config_id._get_program_ids()
-            res['loyalty.program'] = (loyalty_programs - valid_programs).ids
+            # keep the archived and deleted programs found by super()
+            res['loyalty.program'] = list(set(res.get('loyalty.program', [])) | set((loyalty_programs - valid_programs).ids))
         return res
