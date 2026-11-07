@@ -8,7 +8,7 @@ import { browser } from "@web/core/browser/browser";
 import { isVisible } from "@web/core/utils/ui";
 
 export const ACTIVE_ELEMENT_CLASS = "focus";
-const throttledFocus = throttleForAnimation((el) => el?.focus());
+const throttledFocus = throttleForAnimation((el, options) => el?.focus(options));
 
 class NavigationItem {
     /**@type {number} */
@@ -52,7 +52,7 @@ class NavigationItem {
             this.el.ariaSelected = false;
         }
 
-        const onFocus = () => this.setActive(false);
+        const onFocus = () => this.setActive(false, this._options.shouldScrollOnUpdate);
         const onMouseMove = () => this._onMouseMove();
 
         this.target.addEventListener("focus", onFocus);
@@ -70,15 +70,17 @@ class NavigationItem {
         this.target.click();
     }
 
-    setActive(focus = true) {
-        scrollTo(this.target);
+    setActive(focus = true, shouldScroll = true) {
+        if (shouldScroll) {
+            scrollTo(this.target);
+        }
         this._navigator._setActiveItem(this.index);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
         this.target.ariaSelected = true;
 
         if (focus && !this._options.virtualFocus) {
             throttledFocus.cancel();
-            throttledFocus(this.target);
+            throttledFocus(this.target, { preventScroll: !shouldScroll });
         }
     }
 
@@ -132,6 +134,7 @@ export class Navigator {
                 shouldFocusChildInput: true,
                 shouldFocusFirstItem: false,
                 shouldRegisterHotkeys: true,
+                shouldScrollOnUpdate: true,
                 virtualFocus: false,
                 hotkeys: {
                     ...(!options.virtualFocus
@@ -249,7 +252,12 @@ export class Navigator {
                 (item) => item.el === document.activeElement
             );
             if (activeItemIndex > -1) {
-                this._updateActiveItemIndex(activeItemIndex);
+                if (this._options.shouldScrollOnUpdate) {
+                    this._updateActiveItemIndex(activeItemIndex);
+                } else {
+                    // Preserve the active item without scrolling or refocusing it.
+                    this.activeItemIndex = activeItemIndex;
+                }
             } else if (this.activeItemIndex >= 0) {
                 const closest = Math.min(this.activeItemIndex, elements.length - 1);
                 this._updateActiveItemIndex(closest);
@@ -345,7 +353,7 @@ export class Navigator {
     _updateActiveItemIndex(index) {
         if (this.items[index]) {
             const shouldFocus = !this.items.some((item) => item.target === document.activeElement);
-            this.items[index].setActive(shouldFocus);
+            this.items[index].setActive(shouldFocus, this._options.shouldScrollOnUpdate);
         } else {
             this.activeItemIndex = -1;
             this.activeItem = null;
@@ -382,6 +390,8 @@ export class Navigator {
  * inside of the items are focused instead of the items themselves.
  * @property {Boolean} [shouldRegisterHotkeys=true] - If true, registers all hotkeys directly when
  * the hook is called.
+ * @property {Boolean} [shouldScrollOnUpdate=true] - If false, preserves scroll position when items
+ * change, including when focus transfers from a removed item.
  */
 
 /**

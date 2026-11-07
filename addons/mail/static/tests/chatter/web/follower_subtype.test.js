@@ -130,6 +130,7 @@ test("follower subtype apply", async () => {
     );
     await contains(".modal-footer button:text('Update'):count(1)").click();
     await waitFor(".o_notification:text('Notification preferences updated.'):count(1)");
+    await waitFor(".o-mail-Followers-dropdown:count(1)");
 });
 
 test("unselecting all follower subtypes removes the follower", async () => {
@@ -183,6 +184,7 @@ test("internal subtypes are only listed for internal followers", async () => {
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await contains(".o-mail-Follower:has(:text('Employee'))").hover();
     await contains(
         ".o-mail-Follower:has(:text('Employee')) [title='Edit Notification Preferences']:count(1)"
     ).click();
@@ -191,7 +193,8 @@ test("internal subtypes are only listed for internal followers", async () => {
     await waitFor(".o-mail-FollowerSubtypeDialog-subtype:eq(1) label:text('Notes'):count(1)");
     await waitFor(".o-mail-FollowerSubtypeDialog-subtype:eq(2) label:text('Activities'):count(1)");
     await contains(".o-mail-FollowerSubtypeDialog button:text('Discard'):count(1)").click();
-    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await waitFor(".o-mail-Followers-dropdown:count(1)");
+    await contains(".o-mail-Follower:has(:text('Customer'))").hover();
     await contains(
         ".o-mail-Follower:has(:text('Customer')) [title='Edit Notification Preferences']:count(1)"
     ).click();
