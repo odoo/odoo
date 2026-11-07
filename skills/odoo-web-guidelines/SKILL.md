@@ -24,6 +24,7 @@ touching instead of loading whole files.
 | [Organize files by feature](guidelines/javascript.md#organize-files-by-feature-not-by-type) | creating a file, or deciding where new code lives |
 | [Avoid getters](guidelines/javascript.md#avoid-getters) | adding a computed value to a class or a component |
 | [Avoid patching JavaScript code](guidelines/javascript.md#avoid-patching-javascript-code) | extending or overriding behaviour that already exists |
+| [Use the Owl 3 hooks](guidelines/javascript.md#use-the-owl-3-hooks-not-the-owl-2-compatibility-ones) | adding or converting an Owl hook: an effect, a sub-env, a forced render |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
 
