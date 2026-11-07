@@ -22,13 +22,12 @@ class QuotationDocument(models.Model):
     )
     document_type = fields.Selection(
         string="Document Type",
-        selection=[("header", "Header"), ("footer", "Footer")],
+        selection=[("header", "Before quote"), ("footer", "After quote")],
         required=True,
         default="header",
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the header or footer without removing it.",
-        default=True,
+        help="If unchecked, it will allow you to hide the page without removing it.", default=True
     )
     sequence = fields.Integer(default=10)
     quotation_template_ids = fields.Many2many(
@@ -53,7 +52,7 @@ class QuotationDocument(models.Model):
     )
 
     def _access_domain(self, operation):
-        if not self.env['ir.attachment'].has_access(operation):
+        if not self.env["ir.attachment"].has_access(operation):
             return Domain.FALSE
         return super()._access_domain(operation)
 
