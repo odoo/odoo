@@ -3,13 +3,16 @@
         min-height: calc(var(--o-bs-font-size-lg) * 2);
         border: 0;
         border-radius: 0;
-        box-shadow: $modal-content-box-shadow-sm-up;
 
         .container, .container-fluid, .o_container_small {
             // Force padding when dropped inside another container (e.g. inside
             // a blog post page)
             padding-right: calc(var(--o-bs-grid-gutter-width) * .5);
             padding-left: calc(var(--o-bs-grid-gutter-width) * .5);
+        }
+
+        &.rounded {
+            overflow: hidden;
         }
     }
 
@@ -19,6 +22,7 @@
         position: absolute;
         top: 0;
         inset-inline-end: 0;
+        pointer-events: auto;
         width: calc(var(--o-bs-font-size-lg) * 2);
         height: calc(var(--o-bs-font-size-lg) * 2);
         line-height: calc(var(--o-bs-font-size-lg) * 2);
@@ -29,6 +33,12 @@
         text-align: center;
     }
 
+    :has(> .modal-content.rounded) > .s_popup_close {
+        top: var(--o-bs-spacer-2);
+        inset-inline-end: var(--o-bs-spacer-2);
+        border-radius: 50%;
+    }
+
     .o_cookies_bar_close {
         background-color: transparent !important;
     }
@@ -37,11 +47,6 @@
     .s_popup_size_full {
         padding: 0 !important;
         max-width: 100%;
-
-        > .modal-content {
-            box-shadow: none;
-            border-radius: 0;
-        }
     }
 
     // Position option
@@ -79,6 +84,8 @@
                 overflow-y: auto;
                 overflow-x: hidden;
             }
+
         }
+
     }
 }
