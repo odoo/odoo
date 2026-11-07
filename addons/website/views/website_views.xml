@@ -333,7 +333,7 @@
                           (0, 0, {'view_mode': 'kanban', 'view_id': ref('website.theme_view_kanban')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('website.theme_view_form_preview')})]"/>
             <field name="search_view_id" ref="theme_view_search"/>
-            <field name="domain" model="ir.module.module" eval="obj().get_themes_domain()"/>
+            <field name="domain" model="theme.utils" eval="obj().get_themes_domain()"/>
         </record>
 
         <!-- ====== Menu Items =================================================
