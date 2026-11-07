@@ -358,6 +358,41 @@ class TestMassMailing(TestMassMailCommon):
         self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5, opened=1, replied=1)
 
     @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_w_large_attachments(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        recipients = self._create_mailing_test_records(model='mailing.test.blacklist', count=4)
+        attachment = self.env['ir.attachment'].create({
+            'name': 'large.pdf',
+            'raw': b'0' * 50 * 1024,
+        })
+        mailing.write({
+            'attachment_ids': [(4, attachment.id)],
+            'keep_archives': False,
+            'mailing_domain': [('id', 'in', recipients.ids)],
+        })
+        self.assertEqual((attachment.res_model, attachment.res_id), (mailing._name, mailing.id))
+
+        for max_email_size, expected_links, res_ids in ((1, False, recipients[:2].ids), (0.05, True, recipients[2:].ids)):
+            self.env['ir.config_parameter'].sudo().set_param('base.default_max_email_size', max_email_size)
+            with self.subTest(max_email_size=max_email_size), self.mock_mail_gateway(mail_unlink_sent=True):
+                mailing.action_send_mail(res_ids=res_ids)
+
+                self.assertEqual(len(self._mails), 2)
+                download_link = self.env['link.tracker'].search([
+                    ('mass_mailing_id', '=', mailing.id),
+                    ('url', 'like', f'/web/content/{attachment.id}?download=1&access_token={attachment.sudo().access_token}'),
+                ])
+                self.assertEqual(len(download_link), int(expected_links))
+                for mail in self._mails:
+                    if expected_links:
+                        self.assertFalse(mail['attachments'])
+                        self.assertIn(download_link.short_url, mail['body'])
+                    else:
+                        self.assertEqual([a[0] for a in mail['attachments']], ['large.pdf'])
+                        self.assertNotIn('large.pdf', mail['body'])
+
+    @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailing_trace_utm(self):
         """ Test mailing UTMs are caught on reply"""
