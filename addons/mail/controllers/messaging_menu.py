@@ -107,9 +107,6 @@ class MessagingMenuController(WebclientController):
         )
         if messages:
             request.update_context(add_inbox_fields=True)
-        store.resolve_data_request(
-            lambda res: res.attr("is_fully_loaded", len(messages) < limit),
-        )
 
     def _get_menu_load_more_domain(self, tab_id, filter_ids, exclude_ids):
         """`tab_id`'s (and `filter_ids`'s) domain, excluding `exclude_ids`."""
