@@ -9,6 +9,7 @@ by choosing product variants quantity through a Grid Entry.
     'category': 'Supply Chain/Purchase',
     'depends': ['purchase', 'product_matrix'],
     'data': [
+        'data/res_groups.xml',
         'views/purchase_views.xml',
         'report/purchase_quotation_templates.xml',
         'report/purchase_order_templates.xml',

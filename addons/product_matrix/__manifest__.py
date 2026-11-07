@@ -8,7 +8,7 @@ Please refer to Sale Matrix or Purchase Matrix for the use of this module.
     "category": "Sales/Sales",
     "depends": ["account"],
     # Account dependency for section_and_note widget.
-    "data": ["data/res_groups.xml", "views/matrix_templates.xml"],
+    "data": ["views/matrix_templates.xml"],
     "demo": ["data/product_matrix_demo.xml"],
     "assets": {
         "web.assets_backend": [
