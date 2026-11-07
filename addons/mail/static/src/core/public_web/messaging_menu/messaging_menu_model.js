@@ -35,7 +35,6 @@ export class MessagingMenu extends Record {
                 ],
             };
         },
-        eager: true,
     });
     globalCounter = this.computed(() => this._computeGlobalCounter());
     initializeCountersFetcher = this.computed(() =>
@@ -91,7 +90,6 @@ export class MessagingMenu extends Record {
                 ],
             };
         },
-        eager: true,
     });
     sortedVisibleTabs = this.computedShallowEqual(() =>
         [...this.visibleTabs].sort(

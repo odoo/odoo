@@ -62,7 +62,6 @@ const messagingMenuModelPatch = {
                     recordType: "discuss.channel",
                 };
             },
-            eager: true,
         });
     },
 };
