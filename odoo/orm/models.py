@@ -285,6 +285,23 @@ class MetaModel(type):
         if not attrs.get('_register', True):
             return
 
+        if not attrs.get('_init_descendants', True) and (
+            tuple(self._inherit) != (self._name,)
+            or self._field_definitions
+            or self._table_object_definitions
+            or {
+                '_auto', '_abstract', '_transient', '_table', '_inherits',
+                '_log_access', '_parent_store', '_parent_name', '_table_query',
+                '_description', '_order', '_fold_name', '_custom',
+                '_auto_init', 'init',
+            }.intersection(attrs)
+        ):
+            raise TypeError(
+                f"{self.__module__}.{name}: _init_descendants=False is only allowed "
+                "on in-place extensions without fields, table objects, structural "
+                "attributes, or database initialization hooks",
+            )
+
         # Remember which models to instantiate for this module.
         if self._module:
             self._module_to_models__[self._module].append(self)
@@ -429,6 +446,21 @@ class BaseModel(metaclass=MetaModel):
     _explanation: str | None = None     #: the model's verbose explanation (what purpuse does it serve)
     _module: str | None = None          #: the model's module (in the Odoo sense)
     _custom: bool = False               #: should be True for custom models only
+
+    _init_descendants: bool = True
+    """Whether this extension requires database initialization of its descendants.
+
+    Set to ``False`` only for in-place extensions that do not affect descendants'
+    schema, reflected metadata, or database initialization hooks, including
+    methods called by those hooks. Fields and table objects are not allowed.
+    On upgrade, earlier versions must not leave descendant database changes to
+    reconcile, such as fields removed from the extension.
+
+    This option applies to each definition separately and is not inherited.
+    The directly extended model is still initialized. Python setup of all
+    affected models is unchanged, and other extensions may still require their
+    database initialization.
+    """
 
     _inherit: str | list[str] | tuple[str, ...] = ()
     """Python-inherited models:

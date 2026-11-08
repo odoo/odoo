@@ -8,6 +8,7 @@ from odoo.exceptions import UserError
 
 class Base(models.AbstractModel):
     _inherit = 'base'
+    _init_descendants = False
 
     def _valid_field_parameter(self, field, name):
         return name == 'sparse' or super()._valid_field_parameter(field, name)

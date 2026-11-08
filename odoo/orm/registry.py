@@ -469,6 +469,25 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         return model_names
 
+    def _get_models_to_init(self, module: module_graph.ModuleNode, model_names: Iterable[str]) -> OrderedSet[str]:
+        """Return the models requiring database initialization for ``module``.
+
+        Always include directly modified models. For each definition with
+        ``_init_descendants=True``, also include its descendants, even if another
+        definition sets ``_init_descendants=False``.
+        """
+        from . import models  # noqa: PLC0415
+
+        # Each extension must opt out explicitly; do not inherit the flag.
+        expand = (
+            model_def._name
+            for model_def in models.MetaModel._module_to_models__.get(module.name, ())
+            if vars(model_def).get('_init_descendants', True)
+        )
+        result = OrderedSet(model_names)
+        result.update(self.descendants(expand, '_inherit', '_inherits'))
+        return result
+
     @locked
     def _setup_models__(self, cr: BaseCursor, model_names: Iterable[str] | None = None) -> None:  # noqa: PLW3201
         """ Perform the setup of models.

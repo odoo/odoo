@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class Base(models.AbstractModel):
     _inherit = 'base'
+    _init_descendants = False
     _mail_defaults_to_email = False
 
     # ------------------------------------------------------------
