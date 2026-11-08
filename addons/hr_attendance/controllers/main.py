@@ -13,7 +13,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.session import logout, touch
 from odoo.http.stream import content_disposition
-from odoo.tools import SQL, float_round, py_to_js_locale
+from odoo.tools import SQL, float_round, py_to_js_locale, str2bool
 from odoo.tools.image import image_data_uri
 
 IMAGE_HEADER_PATTERN = re.compile(r"^data:(image/(?:jpeg|webp));base64$")
@@ -302,6 +302,7 @@ class HrAttendance(http.Controller):
         Logs out the current user unless in trial mode; a user without password (trial
         database) gets the ``settings`` kiosk mode.
         """
+        from_trial_mode = str2bool(from_trial_mode, default=False)
         company = self._get_company(token)
         if not company:
             return request.not_found()
