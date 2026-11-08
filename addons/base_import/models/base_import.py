@@ -82,6 +82,7 @@ class ImportValidationError(Exception):
 
 class Base(models.AbstractModel):
     _inherit = 'base'
+    _init_descendants = False
 
     @api.model
     def get_import_templates(self):
