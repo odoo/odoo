@@ -582,7 +582,10 @@ class TestEdiXmls(TestEsEdiCommon):
         })
 
     def test_070_out_invoice_s_iva_e_s_iva0_g_e(self):
-        """ Export of service (no sujeto por reglas de localization) and export of goods (exempt)"""
+        """ Export of service (no sujeto por reglas de localization) and export of goods (exempt).
+        The AEAT rejects the key 02 alone with a not subject operation (1252) and the key 01 alone
+        with the exemption cause E2 (1301): the key 01 is sent with 02 as additional key.
+        """
         invoice = self._create_invoice_es(
             partner_id=self.partner_a.id,
             invoice_line_ids=[
@@ -605,7 +608,8 @@ class TestEdiXmls(TestEsEdiCommon):
             'PeriodoLiquidacion': {'Ejercicio': '2019', 'Periodo': '01'},
             'FacturaExpedida': {
                 'TipoFactura': 'F1',
-                'ClaveRegimenEspecialOTrascendencia': '02',
+                'ClaveRegimenEspecialOTrascendencia': '01',
+                'ClaveRegimenEspecialOTrascendenciaAdicional1': '02',
                 'DescripcionOperacion': 'manual',
                 'TipoDesglose': {
                     'DesgloseTipoOperacion': {
@@ -629,6 +633,48 @@ class TestEdiXmls(TestEsEdiCommon):
                     },
                 },
                 'ImporteTotal': 300.0,
+                'Contraparte': {
+                    'IDOtro': {'ID': 'BE0477472701', 'IDType': '02'},
+                    'NombreRazon': 'partner_a',
+                },
+            },
+        })
+
+    def test_075_out_invoice_s_iva_e(self):
+        """ Export of service only (no sujeto por reglas de localization): the key 02 (export) does not apply"""
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva_e').ids)]},
+            ],
+        )
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice,
+        ):
+            json_file = self._send_sii_and_get_json(invoice)
+        self.assertEqual(json_file, {
+            'IDFactura': {
+                'IDEmisorFactura': {'NIF': '59962470K'},
+                'NumSerieFacturaEmisor': 'INV/2019/00001',
+                'FechaExpedicionFacturaEmisor': '01-01-2019',
+            },
+            'PeriodoLiquidacion': {'Ejercicio': '2019', 'Periodo': '01'},
+            'FacturaExpedida': {
+                'TipoFactura': 'F1',
+                'ClaveRegimenEspecialOTrascendencia': '01',
+                'DescripcionOperacion': 'manual',
+                'TipoDesglose': {
+                    'DesgloseTipoOperacion': {
+                        'PrestacionServicios': {
+                            'NoSujeta': {
+                                'ImporteTAIReglasLocalizacion': 100.0,
+                            },
+                        },
+                    },
+                },
+                'ImporteTotal': 100.0,
                 'Contraparte': {
                     'IDOtro': {'ID': 'BE0477472701', 'IDType': '02'},
                     'NombreRazon': 'partner_a',
