@@ -32,7 +32,7 @@ class kioskAttendanceApp extends Component {
         fromTrialMode: t.boolean(),
         deviceTrackingEnabled: t.boolean(),
         captureCheckInImage: t.boolean(),
-        lang: { type: String },
+        lang: t.string(),
     });
     static components = {
         KioskBarcodeScanner,
