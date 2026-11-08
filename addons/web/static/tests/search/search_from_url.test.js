@@ -490,3 +490,31 @@ test("hotkey sharing keeps a relative date filter relative in the URL", async ()
         `["&", ("date_order", ">=", "today =week_start"), ("date_order", "<", "today =week_start +1w")]`
     );
 });
+
+test("URL with filter keeps the saved favorites available", async () => {
+    redirect("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    await mountWithSearch(SearchBar, {
+        resModel: "mock.purchase.order",
+        searchMenuTypes: ["filter", "favorite"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
+        irFilters: [
+            {
+                context: "{}",
+                domain: "[('state', '=', 'draft')]",
+                id: 7,
+                is_default: true,
+                name: "My favorite",
+                sort: "[]",
+                user_ids: [2],
+            },
+        ],
+    });
+    // the shared filter is applied instead of the default favorite...
+    expect(queryAllTexts(".o_searchview_facet")).toEqual(["Shared"]);
+    // ...but the favorite can still be selected
+    await toggleSearchBarMenu();
+    expect(queryAllTexts(".o_favorite_menu .o_menu_item")).toEqual(["My favorite", "Save search"]);
+    await toggleMenuItem("My favorite");
+    expect(queryAllTexts(".o_searchview_facet")).toEqual(["My favorite"]);
+});
