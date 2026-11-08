@@ -4073,6 +4073,43 @@ test("scroll position is restored when coming back to pivot view", async () => {
     expect(".o_content").toHaveProperty("scrollTop", 200);
 });
 
+test.tags("desktop");
+test("restored scroll position is not reapplied when the pivot is updated", async () => {
+    Partner._views = {
+        pivot: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 20; i++) {
+        Partner._records.push({ id: 100 + i, foo: 100 + i });
+    }
+
+    await resize({ width: 800, height: 300 });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "pivot"],
+            [false, "list"],
+        ],
+    });
+    queryOne(".o_content").scrollTop = 200;
+    await getService("action").switchView("list");
+    await getService("action").switchView("pivot");
+    await animationFrame();
+    expect(".o_content").toHaveProperty("scrollTop", 200);
+
+    // the user scrolls back to the top, then sorts the rows by clicking on the measure
+    queryOne(".o_content").scrollTop = 0;
+    await contains("th.o_pivot_measure_row").click();
+    expect(".o_content").toHaveProperty("scrollTop", 0);
+});
+
 test.tags("mobile");
 test("scroll position is restored when coming back to pivot view (mobile)", async () => {
     Partner._views = {

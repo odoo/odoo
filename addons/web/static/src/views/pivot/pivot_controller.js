@@ -37,10 +37,14 @@ export class PivotController extends Component {
             },
             getContext: () => this.getContext(),
         });
+        // restore the scroll position once, when the data are first displayed
+        let wasReady = false;
         const restoreScroll = () => {
-            if (this.model.isReady()) {
+            const isReady = this.model.isReady();
+            if (isReady && !wasReady) {
                 setScrollFromState();
             }
+            wasReady = isReady;
         };
         onMounted(restoreScroll);
         onPatched(restoreScroll);
