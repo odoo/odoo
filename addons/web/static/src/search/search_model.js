@@ -378,6 +378,8 @@ export class SearchModel extends EventBus {
             this._createGroupOfDynamicFilters(dynamicFilters);
         }
 
+        const defaultFavoriteId = this._createGroupOfFavorites(this.irFilters || []);
+
         // Activate filters if necessary (from url or saved filters)
         const { domain: urlDomain, groupBy: urlGroupBy, orderBy: urlOrderBy } = router.current;
         let useUrl = urlDomain || urlGroupBy || urlOrderBy;
@@ -385,7 +387,6 @@ export class SearchModel extends EventBus {
             useUrl = this._tryApplySharedFilters(urlDomain, urlGroupBy, urlOrderBy); // Returns False if no filters could be activated
         }
         if (!useUrl) {
-            const defaultFavoriteId = this._createGroupOfFavorites(this.irFilters || []);
             const activateFavorite = "activateFavorite" in config ? config.activateFavorite : true;
             this._activateDefaultSearchItems(activateFavorite ? defaultFavoriteId : null);
         }
