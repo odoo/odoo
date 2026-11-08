@@ -291,8 +291,13 @@ class IrHttp(models.AbstractModel):
 
         # redirect to the right url
         if page_info and page_info['url'] != req_page:
-            logger.info("Page %r not found, redirecting to existing page %r", req_page, page_info['url'])
-            return request.redirect(page_info['url'])
+            # the url is the page's url in the request language, so keep the
+            # lang in it, or the next request falls back to the default lang
+            url = page_info['url']
+            if request.lang != request.env['ir.http']._get_default_lang():
+                url = '/' + request.lang.url_code + (url if url != '/' else '')
+            logger.info("Page %r not found, redirecting to existing page %r", req_page, url)
+            return request.redirect(url)
 
         # redirect without trailing /
         if not page_info and req_page != "/" and req_page.endswith("/"):
