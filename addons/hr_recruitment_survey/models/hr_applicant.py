@@ -15,7 +15,7 @@ class HrApplicant(models.Model):
 
     def _expire_survey_user_inputs(self):
         self.env['survey.user_input'].search([
-            Domain('partner_id', 'in', self.partner_id.ids),
+            Domain('applicant_id', 'in', self.ids),
             Domain('state', 'in', ['new', 'in_progress']),
         ]).sudo().write({'deadline': datetime.now()})
 
