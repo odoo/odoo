@@ -34,7 +34,7 @@
 
         &.o_calendar_color_#{$i - 1} {
             --o-calendar-popover-color: #{$color};
-            --o-calendar-popover-color--subtle: #{$color-subtle};
+            --o-calendar-popover-color--subtle: #{to-rgb($color-subtle)};
 
             color: color-contrast($color-subtle);
         }
