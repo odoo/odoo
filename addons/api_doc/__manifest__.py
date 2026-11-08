@@ -21,6 +21,7 @@ the methods over HTTP, with examples in various programming languages.
             ('include', 'web.icons_fonts'),
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/pre_variables.scss',
+            'api_doc/static/src/bootstrap_overridden.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
