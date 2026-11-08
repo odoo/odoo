@@ -59,6 +59,36 @@ class TestStockValuation(TestStockValuationCommon):
         with self.assertRaises(UserError):
             self._close()
 
+    def test_avco_consumable_out_move_keeps_its_sign_through_a_replay(self):
+        """ A non-storable product has no product.value row - _change_standard_price
+        does not write one for consumables - so the valuation replay uses the out
+        move's value (which is negative) with an unsigned quantity. A consumable
+        has no incoming valuation history, so its seed always comes from an out
+        move.
+
+        We cannot test using product_avco as it is storable, and cannot change
+        it to non-storable as it will already have a product.value row written.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Consumable Avco',
+            'is_storable': False,
+            'categ_id': self.category_avco.id,
+            'uom_id': self.uom.id,
+            'standard_price': 7.0,
+        })
+        self.assertFalse(self.env['product.value'].sudo().search([('product_id', '=', product.id)]))
+
+        out_move = self._make_out_move(product, 10)
+        self.assertEqual(out_move.value, -70.0)
+
+        # a receipt after the delivery leaves the in move's remaining quantity
+        # out of step with its valued quantity, which sends the valuation into
+        # its correction replay
+        self._make_in_move(product, 10, 7.0)
+        out_move.invalidate_recordset(['value'])
+
+        self.assertEqual(out_move.value, -70.0)
+
     def test_fifo_perpetual_1(self):
         product = self.product_fifo
 

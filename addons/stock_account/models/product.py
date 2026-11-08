@@ -457,7 +457,7 @@ class ProductProduct(models.Model):
             moves_batch.move_line_ids.fetch(move_line_fields)
             for move in moves_batch:
                 quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty(signed=True) if move._get_valued_qty() else 0)
                 value = value_by_product_id.get(move.product_id.id, 0.0)
                 if move.product_id != product:
                     product = move.product_id
