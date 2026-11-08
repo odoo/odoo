@@ -104,6 +104,37 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertRecordValues(picking.move_ids, [{'quantity': 10, 'value': -1000}])
         self.assertRecordValues(order_line, [{'qty_delivered': 10, 'purchase_price': 100, 'margin': 500}])
 
+    def test_margin_costs_the_quantity_that_stayed_delivered(self):
+        """ A delivery taken back and sent out again is one delivered quantity,
+        not two. qty_delivered nets the return, so the rate it is multiplied by
+        has to net it as well, or the line is costed at the average of every unit
+        that ever left rather than of the ones the customer kept.
+        """
+        sale_order = self._create_sale_order()
+        product = self._create_product()
+
+        self._make_in_move(product, 10, 1000)
+        self._make_in_move(product, 10, 2)
+
+        line = self._create_sale_order_line(sale_order, product, 10, 5000)
+        sale_order.action_confirm()
+
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity': 10, 'picked': True})
+        picking.button_validate()
+        self.assertEqual(line.qty_delivered, 10)
+        self.assertEqual(line.purchase_price, 1000)
+
+        # take the ten back, then send ten out again: the second delivery draws
+        # on the cheap receipt, and stock values it at 2.00 a unit
+        return_moves = self._make_return(picking.move_ids, 10)
+        redelivery = self._make_return(return_moves, 10)
+        line.invalidate_recordset()
+
+        self.assertEqual(redelivery.value, -20)
+        self.assertEqual(line.qty_delivered, 10)
+        self.assertEqual(line.purchase_price, 2)
+
     def test_sale_stock_margin_1(self):
         sale_order = self._create_sale_order()
         product = self._create_product()
