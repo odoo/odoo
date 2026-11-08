@@ -63,9 +63,7 @@ class RecruitmentSurveyCommon(HttpCase):
     def _send_new_survey_and_get_url(self) -> str:
         send_survey_action = self.test_applicant.action_send_survey()
         context = send_survey_action['context']
-        wizard = self.env['survey.invite'].with_context(context).create({
-            'survey_id': self.certification_survey.id,
-        })
+        wizard = self.env[send_survey_action['res_model']].with_context(context).create({})
         wizard.action_invite()
 
         user_input = self.env['survey.user_input'].search(
