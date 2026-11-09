@@ -5606,6 +5606,35 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.move_finished_ids.move_line_ids.lot_id, new_sn)
 
+    def test_nested_kit_component_consumed_in_parent_operation(self):
+        """ Check that the components of a kit, including the ones of a kit
+        nested in it, are consumed in the operation of the kit line. """
+        product, kit, sub_kit, component, component_2 = self.env['product.product'].create([
+            {'name': name, 'is_storable': True}
+            for name in ('Product', 'Kit', 'Sub-kit', 'Component', 'Component 2')
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'operation_ids': [
+                Command.create({'name': 'Operation 1', 'workcenter_id': self.workcenter_1.id}),
+                Command.create({'name': 'Operation 2', 'workcenter_id': self.workcenter_1.id}),
+            ],
+        })
+        bom.bom_line_ids = [Command.create({'product_id': kit.id, 'operation_id': bom.operation_ids[0].id})]
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': parent.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': child.id}) for child in children],
+        } for parent, children in [(kit, sub_kit | component_2), (sub_kit, component)]])
+
+        mo = self.env['mrp.production'].create({'bom_id': bom.id})
+        mo.action_confirm()
+
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': component.id, 'operation_id': bom.operation_ids[0].id, 'workorder_id': mo.workorder_ids[0].id},
+            {'product_id': component_2.id, 'operation_id': bom.operation_ids[0].id, 'workorder_id': mo.workorder_ids[0].id},
+        ])
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (

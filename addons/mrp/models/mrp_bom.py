@@ -822,10 +822,17 @@ class MrpBomLine(models.Model):
         return "uom_id"
 
     def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
-        return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': self}
+        return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': self, 'operation': self._get_exploded_operation(boms_done)}
 
     def _prepare_line_done_values(self, quantity, product, original_quantity, parent_line, boms_done):
-        return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': parent_line}
+        return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': parent_line, 'operation': self._get_exploded_operation(boms_done)}
+
+    def _get_exploded_operation(self, boms_done):
+        if not self:
+            return self.env['mrp.routing.workcenter']
+        self.ensure_one()
+        # propagate the operation of a kit line to its components, sub-kits included
+        return self.operation_id or next((vals['operation'] for bom, vals in reversed(boms_done) if bom == self.bom_id), self.env['mrp.routing.workcenter'])
 
 
 class MrpBomByproduct(models.Model):

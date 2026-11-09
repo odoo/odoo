@@ -1463,12 +1463,11 @@ class MrpProduction(models.Model):
                 if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
                         bom_line.product_id.type != 'consu':
                     continue
-                operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
                 moves.append(production._get_move_raw_values(
                     bom_line.product_id,
                     line_data['qty'],
                     bom_line.uom_id,
-                    operation,
+                    line_data['operation'].id,
                     bom_line
                 ))
         return moves
