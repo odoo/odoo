@@ -2487,6 +2487,57 @@ test("thread name stays inside a narrow header", async () => {
     expect(queryRect(".o-mail-DiscussContent-threadNameBox").right).toBeLessThan(headerBoxRight);
 });
 
+test("long thread name is not truncated when it fits next to a short description", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Customer Support and Service Operations for the Benelux and the Nordic Regions 2026",
+        description: "Quarterly",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    // the sidebar is 30vw of the real window: same header width in any window of at least 900px
+    await patchUiSize({ width: 1216 + queryRect(".o-mail-DiscussApp-sidebar").width });
+    await animationFrame();
+    const name = queryOne(".o-mail-DiscussContent-threadName");
+    const description = queryOne(".o-mail-DiscussContent-threadDescription");
+    expect(name.scrollWidth).toBe(name.clientWidth);
+    expect(description.scrollWidth).toBe(description.clientWidth);
+});
+
+test("description box stays inside a narrow header next to a long thread name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Customer Support and Service Operations for the Benelux and the Nordic Regions 2026",
+        description: "Desc",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    // the sidebar is 30vw of the real window: same header width in any window of at least 900px
+    await patchUiSize({ width: 500 + queryRect(".o-mail-DiscussApp-sidebar").width });
+    await animationFrame();
+    const actionsLeft = queryRect(".o-mail-DiscussContent-header .o-mail-ActionList").left;
+    expect(queryRect(".o-mail-DiscussContent-threadDescriptionBox").right).toBeLessThan(
+        actionsLeft
+    );
+});
+
+test("description placeholder stays visible next to a long thread name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Customer Support and Service Operations for the Benelux and the Nordic Regions 2026",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    // the sidebar is 30vw of the real window: same header width in any window of at least 900px
+    await patchUiSize({ width: 900 + queryRect(".o-mail-DiscussApp-sidebar").width });
+    await animationFrame();
+    await contains(".o-mail-DiscussContent-threadDescription[placeholder='Add a description']");
+    expect(queryRect(".o-mail-DiscussContent-threadDescriptionBox").width).toBeGreaterThan(60);
+});
+
 test("parent channel chevron does not cover the sub-channel name in a narrow header", async () => {
     const pyEnv = await startServer();
     const parentId = pyEnv["discuss.channel"].create({ name: "General" });
