@@ -60,10 +60,12 @@ class DriverController(http.Controller):
                 return event
 
         # Wait for new event
-        if req['event'].wait(50):
-            req['event'].clear()
-            req['result']['session_id'] = req['session_id']
-            return req['result']
+        if req["event"].wait(50) and req["result"]:
+            req["event"].clear()
+            req["result"]["session_id"] = req["session_id"]
+            return req["result"]
+
+        return None
 
     @route.iot_route(['/iot_drivers/download_logs', '/hw_drivers/download_logs'], type='http', cors='*', csrf=False)
     def download_logs(self):
