@@ -1,4 +1,10 @@
+<<<<<<< e37ee361ce744ea134e69c9a3a2e0fff5d8519c4
 import { Component, onWillStart, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
+||||||| d0afbdc12cfad3f5e1b6d65ea46d8d9b66240886
+import { Component, onWillStart, props, t, useListener, xml } from "@odoo/owl";
+=======
+import { Component, onWillStart, onWillUnmount, props, t, useListener, xml } from "@odoo/owl";
+>>>>>>> f1dca642406c406e9501b70dac10c9be60c044e2
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -43,6 +49,7 @@ export class CallSettings extends Component {
                 return;
             }
         });
+        onWillUnmount(() => (this.store.settings.isRegisteringKey = false));
         this.isMobileOS = isMobileOS;
     }
 
