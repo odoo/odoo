@@ -77,6 +77,18 @@ class TestUBLDE(TestUBLCommon):
     # Test export - import
     ####################################################
 
+    def test_compute_peppol_eas_endpoint(self):
+        partner = self.env['res.partner'].create({
+            'name': 'German partner with a VAT number',
+            'country_id': self.env.ref('base.de').id,
+            'vat': 'DE123456788',
+        })
+
+        self.assertRecordValues(partner, [{
+            'routing_scheme': '9930',
+            'routing_endpoint': 'DE123456788',
+        }])
+
     def test_export_import_invoice(self):
         invoice = self._generate_move(
             self.partner_1,
