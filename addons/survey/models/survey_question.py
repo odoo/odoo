@@ -616,7 +616,7 @@ class SurveyQuestion(models.Model):
         if time_limit is not None:
             write_vals['time_limit'] = time_limit
         non_time_customized_questions, customized_questions = self.partitioned(lambda s: not s.is_time_customized)
-        non_time_customized_questions.write(write_vals)
+        non_time_customized_questions.update(write_vals)
 
         # Reset `is_time_customized` as necessary
         back_to_default_questions = customized_questions.filtered(
