@@ -6,6 +6,7 @@ from urllib.parse import quote as url_quote
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 
@@ -42,6 +43,62 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
                 'email': tx.partner_email,
                 'phone': {'number': tx.partner_phone},
                 'address': {'street_name': tx.partner_address, 'zip_code': tx.partner_zip},
+            },
+        })
+
+    def test_no_item_missing_from_tokenizing_request_payload(self):
+        tx = self._create_transaction(flow='direct', tokenize=True)
+        request_payload = tx._mercado_pago_prepare_payment_request_payload()
+        webhook_url = self._build_url('/payment/mercado_pago/webhook')
+        first_name, last_name = payment_utils.split_partner_name(tx.partner_name)
+        self.assertDictEqual(request_payload, {
+            'external_reference': tx.reference,
+            'notification_url': f'{webhook_url}/{url_quote(tx.reference)}',
+            'statement_descriptor': tx.company_id.name,
+            'additional_info': {
+                'items': [{
+                    'title': tx.reference,
+                    'quantity': 1,
+                    'unit_price': tx._mercado_pago_convert_amount(),
+                }],
+            },
+            'payer': {
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': tx.partner_email,
+            },
+            'point_of_interaction': {
+                'type': 'CREDENTIAL_ON_FILE',
+                'sub_type': 'unscheduled',
+                'transaction_data': {
+                    'first_transaction': True,
+                    'storage': 'store',
+                    'transaction_initiator': 'customer',
+                },
+            },
+        })
+
+    def test_token_payment_references_first_payment(self):
+        token = self._create_token()
+        tx = self._create_transaction(
+            flow='token', reference='renewal', operation='offline', token_id=token.id,
+        )
+        self.assertIsNone(tx._mercado_pago_prepare_cof_payload())
+
+        self._create_transaction(
+            flow='direct', token_id=token.id, provider_reference=self.MP_PAYMENT_ID,
+        )
+        self._create_transaction(
+            flow='token', reference='later', token_id=token.id, provider_reference='999',
+        )
+        self.assertDictEqual(tx._mercado_pago_prepare_cof_payload(), {
+            'type': 'CREDENTIAL_ON_FILE',
+            'sub_type': 'unscheduled',
+            'transaction_data': {
+                'first_transaction': False,
+                'storage': 'stored',
+                'transaction_initiator': 'merchant',
+                'reference': {'id': self.MP_PAYMENT_ID},
             },
         })
 
