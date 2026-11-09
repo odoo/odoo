@@ -27,7 +27,5 @@ test("viva app payment blocked by a payment in progress on another order", async
 
     await comp.addNewPaymentLine(viva);
     expect(order.payment_ids).toHaveLength(0);
-    expect(dialogs.map((d) => d.body)).toEqual([
-        "There is already an electronic payment in progress.",
-    ]);
+    expect(dialogs.map((d) => d.body)).toEqual(["This payment method is currently in use."]);
 });
