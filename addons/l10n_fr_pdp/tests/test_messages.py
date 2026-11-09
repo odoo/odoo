@@ -584,7 +584,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             'payment_ref': 'test',
             'journal_id': self.company_data['default_journal_bank'].id,
             'partner_id': move.partner_id.id,
-            'amount': amount or payment.amount,
+            'amount': -move.direction_sign * (amount or payment.amount),
         })
 
         _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line._seek_for_lines()
@@ -705,6 +705,56 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 }})
         self.assertFalse(move.pdp_lifecycle_residual)
 
+    def test_paid_lifecycle_fully_paid_credit_note(self):
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        self._pay(invoice)
+
+        self.env['account.move.reversal'].with_company(self.company).create(
+            {
+                'move_ids': [Command.set((invoice.id,))],
+                'date': self.fakenow.date(),
+                'journal_id': invoice.journal_id.id,
+            },
+        ).reverse_moves()
+        move = invoice.reversal_move_ids
+        move.action_post()
+
+        send_wizard = self.create_send_and_print(move, default=True)
+        send_wizard.action_send_and_print()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertEqual(move.peppol_move_state, 'done')
+        move.pdp_ppf_move_state = 'sent'
+
+        self.assertFalse(move.pdp_lifecycle_residual)
+        self._pay(move)
+        self.assertEqual(move.payment_state, 'paid')
+        self.assertEqual(move.pdp_lifecycle_residual, 1685.0)
+        self.assertEqual(move.pdp_lifecycle_residual, move.amount_total)
+
+        wizard = self.env['pdp.response.wizard'].create({
+            'status': 'PD',
+            'move_ids': move.ids,
+        })
+        with self._set_context({'send_response_params': {}}) as env_with_context:
+            wizard.button_send()
+            self.assertEqual(env_with_context.context['send_response_params'], {
+                'lifecycle': True,
+                'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
+                'status': 'paid',
+                'additional_info': {
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-1085.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                    }
+                }})
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1685.0)
+        self.assertFalse(move.pdp_lifecycle_residual)
+
     def test_paid_lifecycle_partially_paid(self):
         move = self._create_french_invoice()
         move.action_post()
@@ -753,9 +803,102 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         }])
         self.assertFalse(move.pdp_lifecycle_residual)
         self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1000)
+        self.assertEqual(move._pdp_get_paid_lifecycle_amounts(), {
+            20.0: 600,
+            8.5: 400,
+        })
+
+        self._pay(move, 200)
+        self.assertEqual(move.payment_state, 'partial')
+        self.assertEqual(move.pdp_lifecycle_residual, 200)
+
+        wizard = self.env['pdp.response.wizard'].create({
+            'status': 'PD',
+            'move_ids': move.ids,
+        })
+        with self._set_context({'send_response_params': {}}) as env_with_context:
+            wizard.button_send()
+            self.assertEqual(env_with_context.context['send_response_params'], {
+                'lifecycle': True,
+                'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
+                'status': 'paid',
+                'additional_info': {
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '200.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                }
+            }})
+        paid_response_2 = move.peppol_response_ids - paid_response
+        self.assertRecordValues(paid_response_2, [{
+            'peppol_state': 'processing',
+            'pdp_flow_number': '2',
+            'response_code': 'PD',
+            'pdp_ppf_state': False,
+            'pdp_payment_info': [
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '200.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+            ],
+            'move_id': move.id,
+        }])
+        self.assertFalse(move.pdp_lifecycle_residual)
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1200)
+        self.assertEqual(move._pdp_get_paid_lifecycle_amounts(), {
+            20.0: 600,
+            8.5: 600,
+        })
+
         move._get_reconciled_amls().remove_move_reconcile()
-        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1000)
-        self.assertEqual(move.pdp_lifecycle_residual, -1000)
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1200)
+        self.assertEqual(move.pdp_lifecycle_residual, -1200)
+
+        wizard = self.env['pdp.response.wizard'].create({
+            'status': 'PD',
+            'move_ids': move.ids,
+        })
+        with self._set_context({'send_response_params': {}}) as env_with_context:
+            wizard.button_send()
+            self.assertEqual(env_with_context.context['send_response_params'], {
+                'lifecycle': True,
+                'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
+                'status': 'paid',
+                'additional_info': {
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                    }
+                }})
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 0)
+        self.assertFalse(move.pdp_lifecycle_residual)
+
+    def test_paid_lifecycle_partially_paid_credit_note(self):
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        self._pay(invoice)
+
+        self.env['account.move.reversal'].with_company(self.company).create(
+            {
+                'move_ids': [Command.set((invoice.id,))],
+                'date': self.fakenow.date(),
+                'journal_id': invoice.journal_id.id,
+            },
+        ).reverse_moves()
+        move = invoice.reversal_move_ids
+        move.action_post()
+
+        send_wizard = self.create_send_and_print(move, default=True)
+        send_wizard.action_send_and_print()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertEqual(move.peppol_move_state, 'done')
+        move.pdp_ppf_move_state = 'sent'
+
+        self.assertFalse(move.pdp_lifecycle_residual)
+        self._pay(move, 1000)
+        self.assertEqual(move.payment_state, 'partial')
+        self.assertEqual(move.pdp_lifecycle_residual, 1000)
 
         wizard = self.env['pdp.response.wizard'].create({
             'status': 'PD',
@@ -772,6 +915,88 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                         'payments': [
                             {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
                             {'amount_changed': False, 'type_code': 'MEN', 'amount': '-400.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                    }
+                }})
+        paid_response = move.peppol_response_ids
+        self.assertRecordValues(paid_response, [{
+            'peppol_state': 'processing',
+            'pdp_flow_number': '2',
+            'response_code': 'PD',
+            'pdp_ppf_state': False,
+            'pdp_payment_info': [
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '-400.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+            ],
+            'move_id': move.id,
+        }])
+        self.assertFalse(move.pdp_lifecycle_residual)
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1000)
+        self.assertEqual(move._pdp_get_paid_lifecycle_amounts(), {
+            20.0: -600,
+            8.5: -400,
+        })
+
+        self._pay(move, 200)
+        self.assertEqual(move.payment_state, 'partial')
+        self.assertEqual(move.pdp_lifecycle_residual, 200)
+
+        wizard = self.env['pdp.response.wizard'].create({
+            'status': 'PD',
+            'move_ids': move.ids,
+        })
+        with self._set_context({'send_response_params': {}}) as env_with_context:
+            wizard.button_send()
+            self.assertEqual(env_with_context.context['send_response_params'], {
+                'lifecycle': True,
+                'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
+                'status': 'paid',
+                'additional_info': {
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-200.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                }
+            }})
+        paid_response_2 = move.peppol_response_ids - paid_response
+        self.assertRecordValues(paid_response_2, [{
+            'peppol_state': 'processing',
+            'pdp_flow_number': '2',
+            'response_code': 'PD',
+            'pdp_ppf_state': False,
+            'pdp_payment_info': [
+                {'amount_changed': False, 'type_code': 'MEN', 'amount': '-200.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+            ],
+            'move_id': move.id,
+        }])
+        self.assertFalse(move.pdp_lifecycle_residual)
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1200)
+        self.assertEqual(move._pdp_get_paid_lifecycle_amounts(), {
+            20.0: -600,
+            8.5: -600,
+        })
+
+        move._get_reconciled_amls().remove_move_reconcile()
+        self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 1200)
+        self.assertEqual(move.pdp_lifecycle_residual, -1200)
+
+        wizard = self.env['pdp.response.wizard'].create({
+            'status': 'PD',
+            'move_ids': move.ids,
+        })
+        with self._set_context({'send_response_params': {}}) as env_with_context:
+            wizard.button_send()
+            self.assertEqual(env_with_context.context['send_response_params'], {
+                'lifecycle': True,
+                'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
+                'status': 'paid',
+                'additional_info': {
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '8.50'},
                         ],
                         'issue_datetime': '2024-12-05 00:00:00',
                     }
