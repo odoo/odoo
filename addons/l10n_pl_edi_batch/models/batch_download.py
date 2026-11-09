@@ -263,26 +263,23 @@ class BatchDownload(models.Model):
     @api.model
     def _cron_request_historic(self):
         """ Request the past invoices """
-        first_day = ksef_midnight(KSEF_FIRST_DAY)
-
         pending_companies_ids = self.sudo().search([
             ('kind', '=', 'historic'),
             ('state', 'in', ('requested', 'downloading', 'downloaded')),
         ]).mapped("company_id.id")
 
         def request_historic(company):
-            date_to = company.l10n_pl_edi_batch_historic_date
-            day_to = fields.Datetime.context_timestamp(self.with_context(tz='Europe/Warsaw'), date_to).date()
-            date_from = max(ksef_midnight(day_to - timedelta(days=KSEF_WINDOW)), first_day)
-            self._create_batch_download(company, date_from, date_to)
-            company.l10n_pl_edi_batch_historic_date = date_from
+            day_to = company.l10n_pl_edi_batch_historic_date
+            day_from = max(day_to - timedelta(days=KSEF_WINDOW), KSEF_FIRST_DAY)
+            self._create_batch_download(company, ksef_midnight(day_from), ksef_midnight(day_to))
+            company.l10n_pl_edi_batch_historic_date = day_from
 
         self._run_for_all_companies(
             request_historic,
             'l10n_pl_edi_batch.ir_cron_request_historic',
             company_domain=[
                 ('id', 'not in', pending_companies_ids),
-                ('l10n_pl_edi_batch_historic_date', '>', first_day),
+                ('l10n_pl_edi_batch_historic_date', '>', KSEF_FIRST_DAY),
             ])
 
     @api.model
