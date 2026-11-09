@@ -61,6 +61,7 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
  *  groups?: Record<string, unknown>;
  *  currentGroups?: Record<string, unknown>; // FIXME: could be cleaned: Object
  *  openGroupsByDefault?: boolean;
+ *  openDefaultGroupByDefault?: boolean;
  *  sendOpeningInfo?: boolean;
  *  noCache?: boolean;
  * }} RelationalModelConfig
@@ -1004,6 +1005,7 @@ export class RelationalModel extends Model {
             order: orderByToString(config.orderBy),
             auto_unfold: config.openGroupsByDefault,
             opening_info: currentGroupInfos,
+            unfold_default_group: config.openDefaultGroupByDefault || false,
             unfold_read_specification: unfoldReadSpecification,
             unfold_read_default_limit: this.initialLimit,
             groupby_read_specification: groupByReadSpecification,
