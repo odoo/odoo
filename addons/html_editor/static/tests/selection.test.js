@@ -179,32 +179,36 @@ test("setEditableSelection should not crash if getSelection returns null", async
     expect(selection.endOffset).toBe(2);
 });
 
-test("getSelectionData should use the range of the document selection to set offsets (specifically for safari)", async () => {
-    const { editor } = await setupEditor("[]");
+test("getSelectionData should use the range of the document selection to set nodes and offsets (specifically for safari)", async () => {
+    const { editor, el } = await setupEditor("<p>[abc</p><p>]def</p>");
+    const [abc, def] = [el.firstChild.firstChild, el.lastChild.firstChild];
     let selection = editor.shared.selection.getEditableSelection();
     expect(selection.startOffset).toBe(0);
     expect(selection.endOffset).toBe(0);
 
-    // Simulate the broken behavior of Safari where getSelection returns a selection
-    // with offsets outside of the actual node length, and the range is correct.
-    patchWithCleanup(document, {
-        getSelection: () => ({
-            ...selection,
-            anchorOffset: 1,
-            focusOffset: 1,
-            rangeCount: 1,
-            getRangeAt: () => ({
-                commonAncestorContainer: selection.anchorNode,
-                startContainer: selection.anchorNode,
-                endContainer: selection.focusNode,
-                startOffset: 0,
-                endOffset: 0,
-            }),
-        }),
+    // Simulate the broken behavior of Safari where the selection has wrong offsets
+    // and, since Safari 27, a stale focusNode, while its range is correct.
+    patchWithCleanup(Selection.prototype, {
+        get focusNode() {
+            return el;
+        },
+        get anchorOffset() {
+            return 1;
+        },
+        get focusOffset() {
+            return 1;
+        },
     });
 
     selection = editor.shared.selection.getEditableSelection();
     expect(selection.anchorOffset).toBe(0);
+    expect(selection.anchorNode).toBe(abc); // startContainer
+    expect(selection.focusNode).toBe(def); // endContainer
+
+    setSelection({ anchorNode: def, anchorOffset: 0, focusNode: abc, focusOffset: 0 });
+    selection = editor.shared.selection.getEditableSelection();
+    expect(selection.anchorNode).toBe(def); // endContainer
+    expect(selection.focusNode).toBe(abc); // startContainer
 });
 
 test("active selection shouldn't change when document selection is inconsistent with its range", async () => {
