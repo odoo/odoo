@@ -35,10 +35,6 @@ else:
     # 2. Create/update a metadata file in the current directory (e.g., files named like region_SN for the Senegal patch).
     # 3. Load the metadata file. Please add a reference to the upstream from which the update was taken.
 
-    if parse_version('7.6.1') <= parse_version(phonenumbers.__version__) < parse_version('8.12.32'):
-        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.32/python/phonenumbers/data/region_CI.py
-        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CI', _local_load_region)
-
     if parse_version(phonenumbers.__version__) < parse_version('8.12.39'):
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.36/python/phonenumbers/data/region_CO.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CO', _local_load_region)
@@ -108,3 +104,25 @@ else:
                     )
                 )
     phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('MX', _hook_load_region_mx)
+
+    # MONKEY PATCHING phonemetadata to fix Ivorian phonenumbers following 2021 changes
+    # Old 8 digits mobile numbers are still in use (e.g. as WhatsApp ids) and should be prefixed by their
+    # operator code, given by their second digit: 01 (Moov) for 0-3, 05 (MTN) for 4-6 and 07 (Orange) for 7-9.
+    def _hook_load_region_ci(code):
+        if parse_version('7.6.1') <= parse_version(phonenumbers.__version__) < parse_version('8.12.32'):
+            # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.32/python/phonenumbers/data/region_CI.py
+            _local_load_region(code)
+        else:
+            phonenumbers.data._load_region(code)
+        region_metadata = phonenumbers.PhoneMetadata._region_metadata
+        if 'CI' in region_metadata:
+            # CI has no intl_number_format, number_format is used for international formatting as well
+            for leading_digits, operator_code in (('[04-9][0-3]', '01'), ('[04-9][4-6]', '05'), ('[04-9][7-9]', '07')):
+                region_metadata['CI'].number_format.append(
+                    phonenumbers.phonemetadata.NumberFormat(
+                        pattern='(\\d{2})(\\d{2})(\\d{2})(\\d{2})',
+                        format=f'{operator_code} \\1 \\2 \\3 \\4',
+                        leading_digits_pattern=[leading_digits],
+                    )
+                )
+    phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('CI', _hook_load_region_ci)
