@@ -1599,6 +1599,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.batch_group_by_destination and line.move_id.partner_id.country_id != wave.picking_ids.partner_id.country_id) \
                         or (picking_type.batch_group_by_src_loc and line.location_id != wave.picking_ids.location_id) \
                         or (picking_type.batch_group_by_dest_loc and line.location_dest_id != wave.picking_ids.location_dest_id) \
+                        or (picking_type.batch_group_by_prev_batch and line.move_id._get_prev_batch() != wave.prev_batch_id) \
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
                         or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
@@ -1674,6 +1675,9 @@ class StockMoveLine(models.Model):
                         if line.location_id._child_of(location):
                             lines_nearest_parent_locations[line] = location.id
                             break
+            if picking_type.batch_group_by_prev_batch:
+                batch_line = {line.id: line.move_id._get_prev_batch() for line in lines}
+                batch_potential_line = {line.id: line.move_id._get_prev_batch() for line in potential_lines}
 
             line_to_lines = defaultdict(set)
             matched_lines = set()
@@ -1689,6 +1693,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.batch_group_by_destination and line.move_id.partner_id.country_id != potential_line.move_id.partner_id.country_id) \
                     or (picking_type.batch_group_by_src_loc and line.location_id != potential_line.location_id) \
                     or (picking_type.batch_group_by_dest_loc and line.location_dest_id != potential_line.location_dest_id) \
+                    or (picking_type.batch_group_by_prev_batch and batch_line[line.id] != batch_potential_line[potential_line.id]) \
                     or (picking_type.wave_group_by_product and line.product_id != potential_line.product_id) \
                     or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
@@ -1717,6 +1722,7 @@ class StockMoveLine(models.Model):
                         'is_wave': True,
                         'picking_type_id': picking_type.id,
                         'description': line._get_auto_wave_description(nearest_parent_locations[line]),
+                        'prev_batch_id': line.move_id._get_prev_batch().id,
                     })
                     wave_move_ids = set()
                     wave_picking_ids = set()
@@ -1747,6 +1753,7 @@ class StockMoveLine(models.Model):
                 'is_wave': True,
                 'picking_type_id': picking_type.id,
                 'description': remaining_line._get_auto_wave_description(nearest_parent_locations[remaining_line]),
+                'prev_batch_id': remaining_line.move_id._get_prev_batch().id,
             } for remaining_line in remaining_lines])
             for (line, wave) in zip(remaining_lines, remaining_waves):
                 line._add_to_wave(wave)
