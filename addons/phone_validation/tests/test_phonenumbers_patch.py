@@ -93,13 +93,48 @@ class TestPhonenumbersPatch(BaseCase):
         self.assertEqual(formatted, '+55 11 2345-6789')
 
     def test_region_CI_monkey_patch(self):
-        """Makes sure that patch for Ivory Coast phone numbers work"""
+        """ Test Ivory Coast phone numbers patch for 10 digits numbers, and for
+        operator code added to old 8 digits mobile numbers (01 Moov, 05 MTN, 07 Orange).
+        It should not be added for old fixed lines numbers nor for current numbers"""
+        if not phonenumbers:
+            self.skipTest('Cannot test without phonenumbers module installed.')
+
         parse_test_lines_CI = (
             self.PhoneInputOutputLine("+2250506007995"),
             self.PhoneInputOutputLine("0506007995", region='CI', gt_national_number=506007995, gt_country_code=225, gt_italian_leading_zero=True),
             self.PhoneInputOutputLine("+225 05 20 963 777", gt_national_number=520963777, gt_country_code=225, gt_italian_leading_zero=True),
         )
         self._assert_parsing_phonenumbers(parse_test_lines_CI)
+
+        # Old Moov mobile number (second digit 0-3) => 01 should be added
+        parsed = phonenumbers.parse('73 12 34 56', region="CI")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+225 01 73 12 34 56')
+
+        # Old MTN mobile number (second digit 4-6) => 05 should be added
+        parsed = phonenumbers.parse('05 12 34 56', region="CI")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+225 05 05 12 34 56')
+
+        # Old Orange mobile number (second digit 7-9) => 07 should be added
+        parsed = phonenumbers.parse('08 77 08 23', region="CI")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+225 07 08 77 08 23')
+
+        # Old mobile number in international format, as sent by WhatsApp => 07 should be added
+        parsed = phonenumbers.parse('+22508770823')
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+225 07 08 77 08 23')
+
+        # Old fixed line => operator code should not be added
+        parsed = phonenumbers.parse('20 12 34 56', region="CI")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+225 20123456')
+
+        # Current number => operator code should not be added
+        parsed = phonenumbers.parse('07 08 77 08 23', region="CI")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+225 07 08 77 0823')
 
     def test_region_CO_monkey_patch(self):
         """Makes sure that patch for Colombian phone numbers work"""
