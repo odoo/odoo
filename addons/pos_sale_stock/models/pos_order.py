@@ -12,7 +12,9 @@ class PosOrder(models.Model):
         pos_orders = self.browse([o['id'] for o in data["pos.order"]])
         for pos_order in pos_orders:
             # Confirm the unconfirmed sale orders that are linked to the sale order lines.
-            so_lines = pos_order.lines.mapped('sale_order_line_id')
+            so_lines = pos_order.lines.sale_order_line_id.filtered(
+                lambda line: line._is_delivered_by_pos()
+            )
 
             # update the demand qty in the stock moves related to the sale order line
             # flush the qty_delivered to make sure the updated qty_delivered is used when
