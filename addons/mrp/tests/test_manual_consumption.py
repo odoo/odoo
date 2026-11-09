@@ -305,3 +305,82 @@ class TestManualConsumption(TestMrpCommon):
         self.assertEqual(mo.reservation_state, "assigned")
         mo.move_raw_ids.filtered(lambda m: m.product_id == components[0]).picked = True
         self.assertEqual(mo.reservation_state, "assigned")
+
+    def _create_partial_production_mo(self):
+        finished, component = self.env['product.product'].create([
+            {'name': 'Finished Product', 'is_storable': True},
+            {'name': 'Component', 'is_storable': True},
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 1,
+                'manual_consumption': True,
+            })],
+        })
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Assemble',
+            'bom_id': bom.id,
+            'workcenter_id': self.workcenter_1.id,
+        })
+        bom.bom_line_ids.operation_id = operation
+
+        mo = self.env['mrp.production'].create({
+            'product_id': finished.id,
+            'bom_id': bom.id,
+            'product_qty': 2,
+        })
+        mo.action_confirm()
+        return mo, component
+
+    def test_partial_production_without_stock(self):
+        mo, component = self._create_partial_production_mo()
+
+        with Form(mo) as form:
+            form.qty_producing = 1
+
+        move = mo.move_raw_ids.filtered(lambda m: m.product_id == component)
+        self.assertTrue(move.workorder_id)
+        self.assertFalse(move.picked)
+
+        mo.pre_button_mark_done()
+        self.assertFalse(move.picked)
+
+        action = mo.button_mark_done()
+        backorder = Form(
+            self.env['mrp.production.backorder'].with_context(**action['context'])
+        )
+        backorder.save().action_backorder()
+
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(move.quantity, 1)
+
+    def test_partial_production_with_reserved_stock(self):
+        mo, component = self._create_partial_production_mo()
+        self.env['stock.quant']._update_available_quantity(
+            component, self.stock_location, 2
+        )
+        mo.action_assign()
+
+        with Form(mo) as form:
+            form.qty_producing = 1
+
+        move = mo.move_raw_ids.filtered(lambda m: m.product_id == component)
+        self.assertTrue(move.workorder_id)
+        self.assertFalse(move.picked)
+
+        mo.pre_button_mark_done()
+        self.assertFalse(move.picked)
+
+        action = mo.button_mark_done()
+        backorder = Form(
+            self.env['mrp.production.backorder'].with_context(**action['context'])
+        )
+        backorder.save().action_backorder()
+
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(move.quantity, 1)

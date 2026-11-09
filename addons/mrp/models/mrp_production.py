@@ -2247,7 +2247,7 @@ class MrpProduction(models.Model):
         for production in self:
             if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 production.move_raw_ids.filtered(
-                    lambda move: move.manual_consumption and not move.picked
+                    lambda move: move.manual_consumption and not move.picked and not move.workorder_id
                 ).picked = True
                 continue
             if production._auto_production_checks():
