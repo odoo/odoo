@@ -51,7 +51,7 @@ MAX_CRON_THREADS="${MAX_CRON_THREADS:-1}"
 # Export variables for child python processes
 export DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DB_SSLMODE
 
-# Check if target database has core tables initialized (e.g. ir_act_window)
+# Check if target database has core tables initialized and fix missing constraints
 AUTO_INIT=""
 if [ -n "$DB_HOST" ] && [ -n "$DB_USER" ]; then
     AUTO_INIT=$(python3 -c "
@@ -68,8 +68,43 @@ try:
         connect_timeout=10,
     )
     with conn.cursor() as cur:
+        # Check core table existence
         cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_act_window';\")
         has_act_window = bool(cur.fetchone())
+
+        # Ensure website_visitor unique constraint exists for ON CONFLICT (access_token)
+        cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='website_visitor';\")
+        if cur.fetchone():
+            cur.execute(\"SELECT 1 FROM pg_constraint WHERE conname = 'website_visitor_access_token_unique';\")
+            if not cur.fetchone():
+                cur.execute(\"\"\"
+                    DELETE FROM website_visitor_website_track
+                    WHERE visitor_id IN (
+                        SELECT id FROM website_visitor
+                        WHERE id NOT IN (
+                            SELECT MAX(id) FROM website_visitor GROUP BY access_token
+                        )
+                    );
+                    DELETE FROM website_visitor
+                    WHERE id NOT IN (
+                        SELECT MAX(id) FROM website_visitor GROUP BY access_token
+                    );
+                    CREATE UNIQUE INDEX IF NOT EXISTS website_visitor_access_token_unique
+                    ON website_visitor (access_token);
+                \"\"\")
+                cur.execute(\"\"\"
+                    DO \$\$
+                    BEGIN
+                        IF NOT EXISTS (
+                            SELECT 1 FROM pg_constraint WHERE conname = 'website_visitor_access_token_unique'
+                        ) THEN
+                            ALTER TABLE website_visitor
+                            ADD CONSTRAINT website_visitor_access_token_unique
+                            UNIQUE USING INDEX website_visitor_access_token_unique;
+                        END IF;
+                    END \$\$;
+                \"\"\")
+                conn.commit()
     conn.close()
 
     if not has_act_window:
