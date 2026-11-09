@@ -259,12 +259,12 @@ class PaymentTransaction(models.Model):
         for line in self.sale_order_ids.order_line:
             if line.display_type or line.is_downpayment or line.product_type == "combo":
                 continue
+            product = line.product_id.with_context(display_default_code=False)
             line_items[line] = {
-                "name": line.product_id.with_context(display_default_code=False).display_name,
-                "description": line.name,
-                "sku": line.product_id.default_code,
-                "barcode": line.product_id.barcode,
-                "product_type": line.product_type,
+                "name": product.display_name or line.name or "",
+                "description": line.name or "",
+                "sku": product.default_code,
+                "barcode": product.barcode,
                 "quantity": line.product_uom_qty,
                 "total": line.price_total,
             }

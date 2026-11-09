@@ -215,43 +215,30 @@ class PaymentTransaction(models.Model):
         }
         if company_email := self.provider_id.company_id.email:
             payee_data["display_data"]["business_email"] = company_email
-        items = self._paypal_prepare_items_payload(self._get_line_items())
         return {
             "reference_id": self.reference,
             "description": f"{self.company_id.name}: {self.reference}",
-            "amount": self._paypal_prepare_amount_payload(items),
-            "items": items,
+            **self._paypal_prepare_items_payload(),
             "payee": payee_data,
             **shipping_address_vals,
         }
 
-    def _paypal_prepare_amount_payload(self, items):
-        """Prepare the amount payload.
+    def _paypal_prepare_items_payload(self):
+        """Prepare the amount and items payload.
 
-        :param list items: The items payload
-        :return: The amount payload
+        :return: The amount and items payload
         :rtype: dict
         """
-        amount_vals = {"currency_code": self.currency_id.name, "value": str(self.amount)}
-        if items:
-            # The item total is required when items are sent.
-            amount_vals["breakdown"] = {"item_total": dict(amount_vals)}
-        return amount_vals
-
-    def _paypal_prepare_items_payload(self, line_items):
-        """Prepare the items payload.
-
-        :param dict line_items: The line items of the transaction
-        :return: The items payload
-        :rtype: list
-        """
         currency = self.currency_id
-        line_items = line_items.values()
-        # Negative amounts (e.g., discounts) are not supported.
-        if any(line_item["total"] < 0 for line_item in line_items) or currency.compare_amounts(
+        amount_vals = {"currency_code": currency.name, "value": str(self.amount)}
+        line_items = self._get_line_items().values()
+        # Negative amounts (e.g., discounts) and nameless items are not supported.
+        if any(
+            line_item["total"] < 0 or not line_item["name"] for line_item in line_items
+        ) or currency.compare_amounts(
             sum(line_item["total"] for line_item in line_items), self.amount
         ):
-            return []
+            return {"amount": amount_vals, "items": []}
 
         items = []
         for line_item in line_items:
@@ -262,7 +249,7 @@ class PaymentTransaction(models.Model):
                 or quantity != int(quantity)
                 or currency.compare_amounts(unit_amount * quantity, line_item["total"])
             ):
-                # Only accepts whole quantities whose unit amounts add up to the total.
+                # Send the line as a single unit priced at its total.
                 quantity, unit_amount = 1, line_item["total"]
             item = {
                 "name": line_item["name"][:3000],
@@ -274,10 +261,6 @@ class PaymentTransaction(models.Model):
                 },
             }
 
-            if line_item.get("is_donation"):
-                item["category"] = "DONATION"
-            elif category := const.ITEM_CATEGORY_MAPPING.get(line_item.get("product_type")):
-                item["category"] = category
             if line_item.get("sku"):
                 item["sku"] = line_item["sku"][:127]
             # Only accepts UPC codes, not other barcode encodings.
@@ -292,7 +275,10 @@ class PaymentTransaction(models.Model):
 
             items.append(item)
 
-        return items
+        if items:
+            # The item total is required when items are sent.
+            amount_vals["breakdown"] = {"item_total": dict(amount_vals)}
+        return {"amount": amount_vals, "items": items}
 
     def _paypal_prepare_payment_source_payload(self, invoice_address_vals, has_shipping):
         """Prepare the payment source of the create order request payload.
@@ -392,7 +378,6 @@ class PaymentTransaction(models.Model):
         """
         return_url, cancel_url = self._paypal_build_return_urls()
         locale = (self.partner_id.lang or self.env.user.lang or "en_US").replace("_", "-")
-        items = self._paypal_prepare_items_payload(self._get_line_items())
         return {
             "intent": "CAPTURE",
             "processing_instruction": "ORDER_COMPLETE_ON_PAYMENT_APPROVAL",
@@ -401,8 +386,7 @@ class PaymentTransaction(models.Model):
                     "reference_id": self.reference,
                     "custom_id": self.reference,
                     "description": f"{self.company_id.name}: {self.reference}",
-                    "amount": self._paypal_prepare_amount_payload(items),
-                    "items": items,
+                    **self._paypal_prepare_items_payload(),
                 }
             ],
             "payment_source": {

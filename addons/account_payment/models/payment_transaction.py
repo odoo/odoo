@@ -103,7 +103,6 @@ class PaymentTransaction(models.Model):
         - `description`: The label of the invoice line.
         - `sku`: The internal reference of the product, if any.
         - `barcode`: The barcode of the product, if any.
-        - `product_type`: The type of the product.
         - `quantity`: The quantity of the invoice line.
         - `total`: The total amount of the invoice line, taxes included.
 
@@ -116,11 +115,10 @@ class PaymentTransaction(models.Model):
                 continue
             product = line.product_id.with_context(display_default_code=False)
             line_items[line] = {
-                'name': product.display_name or line.name or line.move_id.name,
+                'name': product.display_name or line.name or '',
                 'description': line.name or '',
                 'sku': product.default_code,
                 'barcode': product.barcode,
-                'product_type': product.type,
                 'quantity': line.quantity,
                 'total': line.price_total,
             }

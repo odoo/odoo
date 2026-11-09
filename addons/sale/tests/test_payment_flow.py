@@ -798,8 +798,9 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         )
 
     def test_get_line_items(self):
-        """Test that only the product lines are returned as line items, with their taxes included
-        total and without the internal reference in their name."""
+        """Test that only the accountable lines are returned as line items, with their taxes
+        included total, without the internal reference in their name, and named after their
+        description when they have no product."""
         product = self.env["product.product"].create({
             "name": "Desk",
             "default_code": "DESK",
@@ -811,14 +812,18 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
                 Command.create({"display_type": "line_section", "name": "Section"}),
                 Command.create({"display_type": "line_note", "name": "Note"}),
                 Command.create({"product_id": product.id, "product_uom_qty": 2.0}),
+                Command.create({"name": "Assembly", "price_unit": 20.0}),
             ]
         )
         tx = self._create_transaction(flow="redirect", sale_order_ids=[order.id])
-        product_line = order.order_line.filtered(lambda line: not line.display_type)
+        product_line, productless_line = order.order_line.filtered(
+            lambda line: not line.display_type
+        )
 
         line_items = tx._get_line_items()
 
-        self.assertEqual(list(line_items), [product_line])
+        self.assertEqual(list(line_items), [product_line, productless_line])
         self.assertEqual(line_items[product_line]["name"], "Desk")
         self.assertEqual(line_items[product_line]["quantity"], 2.0)
         self.assertEqual(line_items[product_line]["total"], 230.0)
+        self.assertEqual(line_items[productless_line]["name"], "Assembly")
