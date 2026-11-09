@@ -45,4 +45,26 @@ describe("data_service", () => {
         expect.verifySteps(["addChannel", "addChannel"]);
         expect(addedListeners).toBe(0);
     });
+
+    test("loadInitialData sends the cached product templates", async () => {
+        const store = await setupPosEnv();
+        const data = store.data;
+        patchWithCleanup(data, {
+            async getCachedServerDataFromIndexedDB() {
+                return { "product.template": [{ id: 5 }, { id: 7 }] };
+            },
+        });
+        patchWithCleanup(data.orm, {
+            async call(model, method, args, kwargs) {
+                if (method === "load_data") {
+                    expect(kwargs.context.pos_local_product_tmpl_ids).toEqual([5, 7]);
+                    expect.step("load_data");
+                    return {};
+                }
+                return super.call(...arguments);
+            },
+        });
+        await data.loadInitialData();
+        expect.verifySteps(["load_data"]);
+    });
 });
