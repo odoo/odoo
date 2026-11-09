@@ -2140,6 +2140,27 @@ test("only notified of a call disconnection when the server ends the session", a
     await expect.waitForSteps(["notifyServerDisconnect"]);
 });
 
+test("mute and deafen hotkeys are ignored when not in a call", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alfred" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallParticipantCard[aria-label='Alfred']");
+    await contains(".o-mail-Composer-input:focus");
+    queryFirst(".o-mail-Composer-input").blur();
+    await press(["shift", "d"]);
+    await press(["shift", "m"]);
+    await click(".o-discuss-Call:not(.o-selfInCall) button[title='Join Call']");
+    await contains(".o-discuss-Call.o-selfInCall");
+});
+
 test("should not show context menu on participant card when not in a call", async () => {
     mockGetMedia();
     const pyEnv = await startServer();

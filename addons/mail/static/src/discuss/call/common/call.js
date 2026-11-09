@@ -160,9 +160,15 @@ export class Call extends Component {
             this.syncFocusedSession();
             this.requestLayout();
         });
-        useHotkey("shift+d", () => this.rtc.toggleDeafen());
-        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
-        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
+        useHotkey("shift+d", () => this.rtc.toggleDeafen(), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
         useSubEnv({
             inDiscussCallView: {
                 dragInsetBy: (surfaceKey, dX, dY) => this.dragInsetBy(surfaceKey, dX, dY),
