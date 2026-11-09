@@ -2190,7 +2190,10 @@ class CalendarEvent(models.Model):
                         seconds. Or a custom time pattern compatible with `babel` lib
             :return: a tuple with (formatted_datetime.date, formatted_datetime.time)
         """
-        return format_date(self.env, datetime, date_format=date_format), format_time(self.env, datetime, time_format=time_format)
+        return (
+            format_date(self.env, datetime, date_format=date_format),
+            format_time(self.env, datetime, tz=self.env.context.get('tz'), time_format=time_format),
+        )
 
     # ------------------------------------------------------------
     # DISCUSS
