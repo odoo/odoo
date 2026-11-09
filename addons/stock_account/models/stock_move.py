@@ -387,7 +387,7 @@ class StockMove(models.Model):
             # Apply restrictions on the stock move to be able to make
             # consistent accounting entries.
             if move._is_in() and move._is_out():
-                raise UserError(_("The move lines are not in a consistent state: some are entering and other are leaving the company."))
+                raise UserError(_("The move lines are not in a consistent state: some are entering and others are leaving the company."))
             company_src = move.mapped('move_line_ids.location_id.company_id')
             company_dst = move.mapped('move_line_ids.location_dest_id.company_id')
             try:
@@ -396,9 +396,9 @@ class StockMove(models.Model):
                 if company_dst:
                     company_dst.ensure_one()
             except ValueError:
-                raise UserError(_("The move lines are not in a consistent states: they do not share the same origin or destination company."))
+                raise UserError(_("The move lines are not in a consistent state: they do not share the same origin or destination company."))
             if company_src and company_dst and company_src.id != company_dst.id:
-                raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
+                raise UserError(_("The move lines are not in a consistent state: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
 
     def product_price_update_before_done(self, forced_qty=None):
         tmpl_dict = defaultdict(lambda: 0.0)

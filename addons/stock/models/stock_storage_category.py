@@ -16,7 +16,7 @@ class StorageCategory(models.Model):
     package_capacity_ids = fields.One2many('stock.storage.category.capacity', compute="_compute_storage_capacity_ids", inverse="_set_storage_capacity_ids")
     allow_new_product = fields.Selection([
         ('empty', 'If the location is empty'),
-        ('same', 'If all products are same'),
+        ('same', 'If all products are the same'),
         ('mixed', 'Allow mixed products')], default='mixed', required=True)
     location_ids = fields.One2many('stock.location', 'storage_category_id')
     company_id = fields.Many2one('res.company', 'Company')

@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
         ' or in stock after production) after which the goods may become dangerous'
         ' and must not be consumed. It will be computed on the lot/serial number.')
     use_time = fields.Integer(string='Best Before Date',
-        help='Number of days before the Expiration Date after which the goods starts'
+        help='Number of days before the Expiration Date after which the goods start'
         ' deteriorating, without being dangerous yet. It will be computed on the lot/serial number.')
     removal_time = fields.Integer(string='Removal Date',
         help='Number of days before the Expiration Date after which the goods'

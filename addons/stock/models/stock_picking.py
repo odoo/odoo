@@ -62,7 +62,7 @@ class PickingType(models.Model):
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=False,
-        help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
+        help="If this checkbox is ticked, the picking lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
     reservation_method = fields.Selection(
         [('at_confirm', 'At Confirmation'), ('manual', 'Manually'), ('by_date', 'Before scheduled date')],
         'Reservation Method', required=True, default='at_confirm',
@@ -563,10 +563,10 @@ class Picking(models.Model):
     move_type = fields.Selection([
         ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
         compute='_compute_move_type', store=True, required=True, readonly=False, precompute=True,
-        help="It specifies goods to be deliver partially or all at once")
+        help="It specifies goods to be delivered partially or all at once")
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('waiting', 'Waiting Another Operation'),
+        ('waiting', 'Awaiting Another Operation'),
         ('confirmed', 'Waiting'),
         ('assigned', 'Ready'),
         ('done', 'Done'),
@@ -574,9 +574,9 @@ class Picking(models.Model):
     ], string='Status', compute='_compute_state',
         copy=False, index=True, readonly=True, store=True, tracking=True,
         help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
-             " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+             " * Awaiting Another Operation: This transfer is waiting for another operation before being ready.\n"
              " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
-             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all products have been reserved.\n"
              " * Done: The transfer has been processed.\n"
              " * Cancelled: The transfer has been cancelled.")
     group_id = fields.Many2one(
@@ -802,7 +802,7 @@ class Picking(models.Model):
         - Waiting: if the picking is not ready to be sent so if
           - (a) no quantity could be reserved at all or if
           - (b) some quantities could be reserved and the shipping policy is "deliver all at once"
-        - Waiting another move: if the picking is waiting for another move
+        - Awaiting another operation: if the picking is waiting for another operation
         - Ready: if the picking is ready to be sent so if:
           - (a) all quantities are reserved or if
           - (b) some quantities could be reserved and the shipping policy is "as soon as possible"
@@ -1544,7 +1544,7 @@ class Picking(models.Model):
         :rtype: str
         """
         return _(
-            'You cannot validate a transfer if no quantities are reserved, or if only non-reserved moves are picked.'
+            'You cannot validate a transfer if no quantities are reserved, or if only non-reserved moves are picked. '
             'To force the transfer, encode quantities.'
         )
 

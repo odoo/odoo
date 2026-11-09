@@ -136,7 +136,7 @@ class SaleOrder(models.Model):
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
                 message = _("""The delivery address has been changed on the Sales Order<br/>
                         From <strong>"%(old_address)s"</strong> to <strong>"%(new_address)s"</strong>,
-                        You should probably update the partner on this document.""",
+                        you should probably update the partner on this document.""",
                             old_address=record.partner_shipping_id.display_name, new_address=new_partner.display_name)
                 picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
 

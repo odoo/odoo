@@ -176,7 +176,7 @@ class MrpUnbuild(models.Model):
             raise UserError(_('You should provide a lot number for the final product.'))
 
         if self.mo_id and self.mo_id.state != 'done':
-            raise UserError(_('You cannot unbuild a undone manufacturing order.'))
+            raise UserError(_('You cannot unbuild an undone manufacturing order.'))
 
         consume_moves = self._generate_consume_moves()
         consume_moves._action_confirm()
