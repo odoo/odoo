@@ -179,17 +179,19 @@ test("setEditableSelection should not crash if getSelection returns null", async
     expect(selection.endOffset).toBe(2);
 });
 
-test("getSelectionData should use the range of the document selection to set offsets (specifically for safari)", async () => {
-    const { editor } = await setupEditor("[]");
+test("getSelectionData should use the range of the document selection to set nodes and offsets (specifically for safari)", async () => {
+    const { editor } = await setupEditor("<p>[]</p><p>abc</p>");
     let selection = editor.shared.selection.getEditableSelection();
     expect(selection.startOffset).toBe(0);
     expect(selection.endOffset).toBe(0);
 
     // Simulate the broken behavior of Safari where getSelection returns a selection
-    // with offsets outside of the actual node length, and the range is correct.
+    // with offsets outside of the actual node length and a focusNode that doesn't
+    // match the range (Safari 27+), while the range is correct.
     patchWithCleanup(document, {
         getSelection: () => ({
             ...selection,
+            focusNode: editor.editable.lastChild,
             anchorOffset: 1,
             focusOffset: 1,
             rangeCount: 1,
@@ -205,6 +207,7 @@ test("getSelectionData should use the range of the document selection to set off
 
     selection = editor.shared.selection.getEditableSelection();
     expect(selection.anchorOffset).toBe(0);
+    expect(selection.focusNode).toBe(selection.anchorNode);
 });
 
 test("active selection shouldn't change when document selection is inconsistent with its range", async () => {
