@@ -581,7 +581,7 @@ class HrEmployee(models.Model):
         domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
-            ('company_id', '=', self.company_id.id or self.env.company.id),
+            ('company_id', 'in', self.company_id.ids or self.env.company.ids),
             '|',
             ('resource_calendar_id', '=', False),
             ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
