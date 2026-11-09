@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from odoo import Command, fields
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import freeze_time, tagged
 from odoo.tools import file_open
@@ -29,13 +29,13 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         cls.company = cls.company_data['company']
         cls.Batch = cls.env['l10n_pl_edi_batch.download']
         cls.Part = cls.env['l10n_pl_edi_batch.part']
-        cls.crons = ['request_historic', 'check_status', 'download', 'import']
         cls.encryption_data = {'raw_symmetric_key': 'S0VZ', 'encrypted_symmetric_key': 'RU5D', 'raw_iv': 'SVY='}
 
         # Disable KSeF on real companies, just enable it on tests.
         # Tests do rollback after they finish, and this will be re-enabled
         cls.env['res.company'].search([]).l10n_pl_edi_access_token = False
-        cls.company.write({'l10n_pl_edi_batch_enabled': True, 'l10n_pl_edi_access_token': 'token'})
+        cls.company.l10n_pl_edi_access_token = 'token'
+        cls.simple_accountman.email = 'accountman@example.com'
 
         cls.env['ir.config_parameter'].set_param('l10n_pl_edi_ksef.mode', 'test')
         cls.server_url = KsefApiServiceBatch(cls.company).api_url
@@ -542,17 +542,6 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         download_triggers = self.env['ir.cron.trigger'].search([('cron_id', '=', download_cron.id)])
         self.assertIn(now + timedelta(seconds=30), download_triggers.mapped('call_at'))
 
-    def test_cron_today_disabled(self):
-        self.company.l10n_pl_edi_batch_enabled = False
-        AccountMove = type(self.env['account.move'])
-        with (
-            self._mock_batch_requests(),
-            patch.object(AccountMove, '_l10n_pl_edi_download_bills_from_ksef', return_value=False) as single_download,
-        ):
-            self.env['account.move']._cron_l10n_pl_edi_download_bills()
-        single_download.assert_called()
-        self.assertFalse(self._company_batches(self.company))
-
     # Test the historic cron ---------------------------------------------------
 
     def test_cron_historic_windows(self):
@@ -569,7 +558,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'kind': 'historic',
             'state': 'requested',
         }])
-        self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, ksef_midnight(yesterday - timedelta(days=7)))
+        self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, yesterday - timedelta(days=7))
 
         # In progress: nothing new
         with freeze_time(now), self._mock_batch_requests():
@@ -588,7 +577,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
 
         # The last window stops at the day KSeF 2.0 went live, then there's nothing left to request
         second_batch.content = {'status': {'code': 200}}
-        self.company.l10n_pl_edi_batch_historic_date = ksef_midnight(date(2026, 2, 3))
+        self.company.l10n_pl_edi_batch_historic_date = date(2026, 2, 3)
         with freeze_time(now), self._mock_batch_requests():
             self.Batch._cron_request_historic()
         last_batch = self._company_batches(self.company) - first_batch - second_batch
@@ -596,7 +585,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'date_from': ksef_midnight(date(2026, 1, 31)),
             'date_to': ksef_midnight(date(2026, 2, 3)),
         }])
-        self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, ksef_midnight(date(2026, 1, 31)))
+        self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, date(2026, 1, 31))
 
         last_batch.content = {'status': {'code': 200}}
         with freeze_time(now), self._mock_batch_requests():
@@ -617,21 +606,15 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         self.assertFalse(self._company_batches(self.company))
         self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, historic_date)
 
-        # Disabled: nothing requested
-        self.company.l10n_pl_edi_batch_enabled = False
-        with freeze_time(now), self._mock_batch_requests():
-            self.Batch._cron_request_historic()
-        self.assertFalse(self._company_batches(self.company))
-
     def test_cron_historic_walks_past_fetched_bills(self):
         now = fields.Datetime.now().replace(microsecond=0)
         self._create_single_download_bill('20260205', 'fetched')
-        self.company.l10n_pl_edi_batch_historic_date = ksef_midnight(date(2026, 2, 10))
+        self.company.l10n_pl_edi_batch_historic_date = date(2026, 2, 10)
 
         # Bills fetched by the single-invoice download don't stop the walk: it goes down to the first KSeF day
         self.assertEqual(self._run_historic_cron(now).date_from, ksef_midnight(date(2026, 2, 3)))
         self.assertEqual(self._run_historic_cron(now).date_from, ksef_midnight(date(2026, 1, 31)))
-        self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, ksef_midnight(date(2026, 1, 31)))
+        self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, date(2026, 1, 31))
         self.assertFalse(self._run_historic_cron(now))
 
     # Test the status cron -----------------------------------------------------
@@ -894,63 +877,35 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
 
     # Test the UI --------------------------------------------------------------
 
-    def test_list_buttons_trigger_the_crons(self):
+    def test_first_token_sets_historic_date(self):
         now = fields.Datetime.now().replace(microsecond=0)
-        # An invoicing user, without access to the crons, can use the buttons
-        user = self.env['res.users'].create({
-            'name': 'KSeF user',
-            'login': 'ksef_user',
-            'groups_id': [Command.set([self.env.ref('account.group_account_invoice').id])],
-            'company_id': self.company.id,
-            'company_ids': [Command.set([self.company.id])],
-        })
-        for name in ('check_status', 'download', 'import'):
-            with freeze_time(now):
-                getattr(self.Batch.with_user(user), f'action_trigger_{name}')()
-            self.assertIn(now, self._search_triggers_by_cron(name), name)
+        company = self.setup_other_company()['company']
 
-    def test_setting_enables_batches(self):
-        now = fields.Datetime.now().replace(microsecond=0)
-        self.company.l10n_pl_edi_batch_historic_date = ksef_midnight(date(2026, 2, 10))
-        crons = self.env['ir.cron'].browse([
-            self.env.ref(xmlid).id
-            for xmlid in [f'l10n_pl_edi_batch.ir_cron_{x}' for x in self.crons]
-        ])
-
-        # Enabled on a company: the batch crons run, and its historic walk starts again from yesterday
+        # First token: the history starts from yesterday
         with freeze_time(now):
-            settings = self.env['res.config.settings'].with_company(self.company).create({'l10n_pl_edi_batch_enabled': True})
-            settings.execute()
-        self.assertTrue(self.company.l10n_pl_edi_batch_enabled)
-        self.assertEqual(crons.mapped('active'), [True] * 4)
-        self.assertEqual(
-            self.company.l10n_pl_edi_batch_historic_date,
-            ksef_midnight(now.date() - timedelta(days=1)),
-        )
+            company.l10n_pl_edi_access_token = 'first token'
+        self.assertEqual(company.l10n_pl_edi_batch_historic_date, now.date() - timedelta(days=1))
 
-        # Disabled on the last company: the batch crons stop
-        settings = self.env['res.config.settings'].with_company(self.company).create({'l10n_pl_edi_batch_enabled': False})
-        settings.execute()
-        self.assertFalse(self.company.l10n_pl_edi_batch_enabled)
-        self.assertEqual(crons.mapped('active'), [False] * 4)
+        # Refreshed token: the history goes on from where it is
+        company.l10n_pl_edi_batch_historic_date = date(2026, 2, 10)
+        company.l10n_pl_edi_access_token = 'refreshed token'
+        self.assertEqual(company.l10n_pl_edi_batch_historic_date, date(2026, 2, 10))
 
     def test_import_from_ksef_fills_half_fetched_bills(self):
         half_fetched_bills = self._create_single_download_bill('20260501', 'fetch_ready')
         half_fetched_bills |= self._create_single_download_bill('20260502', 'fetch_failed')
         AccountMove = type(self.env['account.move'])
 
-        # Only the half-fetched bills are downloaded, by KSeF number: no metadata query for new bills
+        # An accountant requests today's batch, and the half-fetched bills are downloaded by KSeF number: no metadata
+        # query for new bills
         with (
+            self._mock_batch_requests(),
             patch.object(KsefApiService, 'get_invoice_by_ksef_number', return_value={'xml_content': self.xml_content}) as get_invoice,
             patch.object(AccountMove, '_fetch_bills_metadata') as fetch_metadata,
         ):
-            self.env['account.move'].with_company(self.company).action_l10n_pl_edi_import_from_ksef()
+            self.env['account.move'].with_user(self.simple_accountman).with_company(self.company).action_l10n_pl_edi_import_from_ksef()
         fetch_metadata.assert_not_called()
         self.assertEqual(get_invoice.call_count, 2)
         self.assertEqual(half_fetched_bills.mapped('l10n_pl_edi_status'), ['fetched', 'fetched'])
 
-        # Disabled: the single-invoice download, as before
-        self.company.l10n_pl_edi_batch_enabled = False
-        with patch.object(AccountMove, '_l10n_pl_edi_download_bills_from_ksef') as single_download:
-            self.env['account.move'].with_company(self.company).action_l10n_pl_edi_import_from_ksef()
-        single_download.assert_called_once()
+        self.assertRecordValues(self._company_batches(self.company), [{'kind': 'today', 'state': 'requested'}])
