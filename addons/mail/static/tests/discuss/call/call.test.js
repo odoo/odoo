@@ -2517,6 +2517,34 @@ test("Escape closes meeting UI layers sequentially", async () => {
     await waitFor(".o-discuss-Call:count(1)");
 });
 
+test("call of another channel starts with its cards while being in a call", async () => {
+    const pyEnv = await startServer();
+    const [generalId, salesId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales" },
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: salesId,
+            partner_id: pyEnv["res.partner"].create({ name: "Mario" }),
+        }),
+        channel_id: salesId,
+        is_screen_sharing_on: true,
+    });
+    await start();
+    await openDiscuss(generalId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call.o-selfInCall:count(1)");
+    await contains(".o-mail-NotificationItem:has(:text('Sales')):count(1)").click();
+    await waitFor(
+        ".o-discuss-Call:not(.o-selfInCall) .o-discuss-CallParticipantCard[aria-label='Mario']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call:not(.o-selfInCall) .o-discuss-Call-mainCards:first-child:count(1)"
+    );
+    await waitForNone(".o-discuss-CallPresentationBar");
+});
+
 test("Access to Pinned Messages from Meeting Chat", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
