@@ -694,9 +694,12 @@ export class Rtc extends Record {
     async leaveCall(channel = this.localChannel) {
         this.store.fullscreenChannel = null;
         this.hasPendingRequest = true;
-        await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
-        this.endCall(channel);
-        this.hasPendingRequest = false;
+        try {
+            await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
+        } finally {
+            this.endCall(channel);
+            this.hasPendingRequest = false;
+        }
     }
 
     /**
@@ -1516,18 +1519,22 @@ export class Rtc extends Record {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
         }
-        this.pttExtService.subscribe();
         this.hasPendingRequest = true;
-        const data = await rpc(
-            "/mail/rtc/channel/join_call",
-            {
-                camera,
-                channel_id: channel.id,
-                check_rtc_session_ids: channel.rtc_session_ids.map((session) => session.id),
-            },
-            { silent: true }
-        );
-        this.hasPendingRequest = false;
+        let data;
+        try {
+            data = await rpc(
+                "/mail/rtc/channel/join_call",
+                {
+                    camera,
+                    channel_id: channel.id,
+                    check_rtc_session_ids: channel.rtc_session_ids.map((session) => session.id),
+                },
+                { silent: true }
+            );
+        } finally {
+            this.hasPendingRequest = false;
+        }
+        this.pttExtService.subscribe();
         // Initializing a new session implies closing the current session.
         this.clear();
         this.localChannel = channel;
