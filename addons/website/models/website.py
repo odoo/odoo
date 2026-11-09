@@ -124,6 +124,22 @@ class Website(models.CachedModel):
         """
         return [('state', '=', 'installed'), ('dependencies_id.name', '=like', 'website%')]
 
+    def get_module_toggle_info(self, path):
+        """Systray helper (RPC): the disable-eligible module serving ``path`` and
+        whether it is currently enabled on ``self``. Returns False when the route
+        has no such module (so the systray toggle is hidden). Reading the result
+        requires the ``disabled_module_ids`` group (website designer).
+        """
+        self.ensure_one()
+        module = self.env['ir.http']._get_module_for_url(path)
+        if not module:
+            return False
+        return {
+            'id': module.id,
+            'name': module.shortdesc,
+            'enabled': module not in self.disabled_module_ids,
+        }
+
     def _active_languages(self):
         return self.env['res.lang'].search([]).ids
 

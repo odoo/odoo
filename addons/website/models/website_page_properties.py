@@ -17,11 +17,11 @@ class WebsitePagePropertiesBase(models.TransientModel):
     is_published = fields.Boolean(compute='_compute_is_published', inverse='_inverse_is_published')
     published_date = fields.Datetime(compute='_compute_published_date', inverse='_inverse_published_date', readonly=False)
     publish_on = fields.Datetime(compute='_compute_publish_on', inverse='_inverse_publish_on', readonly=False)
-    module_id = fields.Many2one('ir.module.module', compute='_compute_module_id')
+    module_id = fields.Many2one('ir.module.module', compute='_compute_module')
     module_display_name = fields.Char(related='module_id.display_name')
     is_module_enabled = fields.Boolean(
         string="Feature enabled",
-        compute='_compute_is_module_enabled', inverse='_inverse_is_module_enabled',
+        compute='_compute_module', inverse='_inverse_is_module_enabled',
         help="Turn off to disable this feature on the current website. The module "
              "stays installed and its data is preserved, available again if re-enabled.",
     )
@@ -83,15 +83,12 @@ class WebsitePagePropertiesBase(models.TransientModel):
                 if record.publish_on:
                     target.is_published = False
 
-    @api.depends('url')
-    def _compute_module_id(self):
+    @api.depends('url', 'website_id.disabled_module_ids')
+    def _compute_module(self):
         for record in self:
-            record.module_id = self.env['ir.http']._get_module_for_url(record.url)
-
-    @api.depends('module_id', 'website_id.disabled_module_ids')
-    def _compute_is_module_enabled(self):
-        for record in self:
-            record.is_module_enabled = bool(record.module_id) and record.module_id not in record.website_id.disabled_module_ids
+            info = record.url and record.website_id and record.website_id.get_module_toggle_info(record.url)
+            record.module_id = info and info['id']
+            record.is_module_enabled = bool(info) and info['enabled']
 
     def _inverse_is_module_enabled(self):
         for record in self:
