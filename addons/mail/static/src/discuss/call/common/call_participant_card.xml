@@ -8,7 +8,7 @@
                 'o-isTalking': !this.props.minimized and this.isTalking,
                 'o-isInvitation opacity-50': !this.rtcSession,
                 'o-inset': this.props.inset,
-                'pe-none': this.rtc.screenTrack and !this.rtc.screenTrack.enabled,
+                'pe-none': this.showsStreamPaused(),
                 'p-1 rounded-1': !this.isActiveRtcSession,
             }"
             t-att-aria-label="this.name"
@@ -23,14 +23,14 @@
             t-att-style="this.cardBgStyle"
         >
             <!-- card -->
-            <t t-if="!this.props.isSidebarItem and this.props.cardData.type === 'screen' and this.rtc.screenTrack and !this.rtc.screenTrack.enabled">
+            <t t-if="this.showsStreamPaused()">
                 <div class="d-flex flex-column align-items-center">
                     <h1 class="o-text-white">You are Presenting</h1>
                     <div class="o-text-white fs-5 text-center d-flex flex-column">
                         <span>To avoid an infinity mirror, don't share your entire screen or browser window.<br/>Share just a tab or a different window instead.</span>
                     </div>
                     <div class="d-flex mt-4 gap-3">
-                        <button class="btn btn-primary rounded-pill px-5 pe-auto" t-on-click.stop="() => (this.rtc.screenTrack.enabled = true)" aria-label="Show My Screen Anyway">Show My Screen Anyway</button>
+                        <button class="btn btn-primary rounded-pill px-5 pe-auto" t-on-click.stop="() => this.rtc.setScreenTrackPaused(false)" aria-label="Show My Screen Anyway">Show My Screen Anyway</button>
                         <button class="btn btn-secondary rounded-pill px-5 pe-auto" t-on-click.stop="() => this.rtc.toggleVideo('screen', false)" aria-label="Stop Presenting">Stop Presenting</button>
                     </div>
                 </div>
