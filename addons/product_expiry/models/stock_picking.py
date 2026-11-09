@@ -18,11 +18,11 @@ class StockPicking(models.Model):
         return res
 
     def _check_expired_lots(self):
-        expired_pickings = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).picking_id
+        expired_pickings = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert and ml.product_id.product_tmpl_id.use_expiration_date).picking_id
         return expired_pickings
 
     def _action_generate_expired_wizard(self):
-        expired_lot_ids = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).lot_id.ids
+        expired_lot_ids = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert and ml.product_id.product_tmpl_id.use_expiration_date).lot_id.ids
         view_id = self.env.ref('product_expiry.confirm_expiry_view').id
         context = dict(self.env.context)
 
