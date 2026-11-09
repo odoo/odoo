@@ -961,20 +961,31 @@ class HrAttendance(models.Model):
             if not summary:
                 continue
             parts = self.browse([part['attendance_id'] for part in summary['parts']])
-            title = self.env._(
-                "%(summary)s by the time rules (%(rules)s)",
-                summary=summary['title'],
-                rules=', '.join(parts.time_rule_id.mapped('name')),
-            )
+            rule_names = ', '.join(parts.time_rule_id.mapped('name'))
             if len(parts) == 1:
-                body = Markup("<p>%s.</p>") % title
+                part_lines = Markup('')
             else:
-                lines = Markup().join(
+                part_lines = Markup("<ul>%s</ul>") % Markup().join(
                     Markup("<li>%s</li>") % self.browse(part['attendance_id'])._get_html_link(title=part['label'])
                     for part in summary['parts']
                 )
-                body = Markup("<p>%s:</p><ul>%s</ul>") % (title, lines)
-            source._message_log(body=body)
+            # archived source: "was archived and split ..."
+            source_title = self.env._(
+                "%(summary)s and archived by the time rules (%(rules)s)",
+                summary=summary['title'],
+                rules=rule_names,
+            )
+            source._message_log(body=Markup("<p>%s.</p>%s") % (source_title, part_lines))
+            # visible parts: "split from [source] ..."
+            source_link = source._get_html_link()
+            parts_title = self.env._(
+                "Split from %(origin)s by the time rules (%(rules)s)",
+                origin=source_link,
+                rules=rule_names,
+            )
+            parts_body = Markup("<p>%s.</p>%s") % (parts_title, part_lines)
+            for part in parts:
+                part._message_log(body=parts_body)
 
     def _get_time_rule_split_summary(self):
         """Return what the time rules made, or will make, of the attendance.
@@ -1000,14 +1011,18 @@ class HrAttendance(models.Model):
         source = (self.source_attendance_id or self).sudo()
         if source.state == 'refused':
             return False
-        outputs = source.overtime_attendance_ids.filtered(
+        # archive+create: source is archived, remainders and rule outputs are new children
+        children = self.env['hr.attendance'].sudo().search([
+            ('source_attendance_id', '=', source.id),
+        ])
+        visible_parts = children.filtered(
             lambda att: att.time_rule_id.threshold_operator != 'less_than'
         )
-        if outputs or source.time_rule_id:
+        if visible_parts:
             pending = False
             split = [
                 (part.work_entry_type_id, part.worked_hours, part.id)
-                for part in (source | outputs).sorted('check_in')
+                for part in visible_parts.sorted('check_in')
             ]
         else:
             pending = True

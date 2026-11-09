@@ -16,7 +16,6 @@ Convert employee's extra hours to leave allocations.
         'views/hr_leave_views.xml',
         'views/hr_attendance_overtime_views.xml',
         'views/hr_attendance_views.xml',
-        'views/hr_time_rule_regenerate_wizard_views.xml',
         'views/hr_time_rule_regenerate_wizard_ext_views.xml',
     ],
     'demo': [

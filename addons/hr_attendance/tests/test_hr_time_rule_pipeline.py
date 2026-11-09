@@ -643,7 +643,11 @@ class TestAttendanceSplitPreview(TransactionCase):
                     'check_out': check_out,
                     'break_duration': break_duration,
                 })
-                result = (source | source.overtime_attendance_ids).sorted('check_in')
+                # archive+create: source is archived, all visible parts are children
+                children = self.env['hr.attendance'].search([
+                    ('source_attendance_id', '=', source.id),
+                ], order='check_in')
+                result = children or source
                 self.assertEqual(
                     self._as_tuples(preview),
                     [(att.work_entry_type_id, round(att.worked_hours, 4)) for att in result],
@@ -657,15 +661,22 @@ class TestAttendanceSplitPreview(TransactionCase):
             'check_in': datetime(2026, 6, 8, 7, 0),
             'check_out': datetime(2026, 6, 8, 20, 0),
         })
-        overtime = source.overtime_attendance_ids
-        self.assertTrue(overtime)
+        # archive+create: source is archived, remainder + overtime output are new records
+        children = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', source.id),
+        ], order='check_in')
+        self.assertEqual(len(children), 2)
+        remainder, overtime = children
+        self.assertFalse(remainder.time_rule_id)
+        self.assertTrue(overtime.time_rule_id)
         self.assertFalse(source._get_time_rule_split_preview())
+        self.assertFalse(remainder._get_time_rule_split_preview())
         self.assertFalse(overtime._get_time_rule_split_preview())
-        summary = source._get_time_rule_split_summary()
+        summary = remainder._get_time_rule_split_summary()
         self.assertFalse(summary['pending'])
-        self.assertEqual([part['attendance_id'] for part in summary['parts']], [source.id, overtime.id])
+        self.assertEqual([part['attendance_id'] for part in summary['parts']], [remainder.id, overtime.id])
         self.assertEqual(overtime._get_time_rule_split_summary(), summary)
-        self.assertIn('was split into 2 attendances', source.time_rule_split_preview)
+        self.assertIn('was split into 2 attendances', remainder.time_rule_split_preview)
 
     def test_form_banner_wording(self):
         with Form(self.env['hr.attendance']) as form:
@@ -703,24 +714,41 @@ class TestAttendanceSplitPreview(TransactionCase):
 
     def test_chatter_logs_split(self):
         source = self._create(datetime(2026, 6, 8, 7, 0), datetime(2026, 6, 8, 20, 0))
-        overtime = source.overtime_attendance_ids
-        self.assertEqual(len(overtime), 1)
-        message = self._split_messages(source)
-        self.assertEqual(len(message), 1)
-        self.assertIn('into 2 attendances', message.body)
-        self.assertIn(self.rule.name, message.body)
-        self.assertIn(f'{self.att_type.name}: 08:00', message.body)
-        self.assertIn(f'{self.ot_type.name}: 05:00', message.body)
-        self.assertIn(f'data-oe-model="hr.attendance" data-oe-id="{overtime.id}"', message.body,
-                      "the overtime record must be linked")
+        children = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', source.id),
+        ], order='check_in')
+        self.assertEqual(len(children), 2)
+        remainder, overtime = children
+        # archived source gets "was archived and split" message
+        src_msg = self._split_messages(source)
+        self.assertEqual(len(src_msg), 1)
+        self.assertIn('and archived', src_msg.body)
+        self.assertIn('into 2 attendances', src_msg.body)
+        self.assertIn(self.rule.name, src_msg.body)
+        # each visible part gets "split from [source]" message with part list
+        for part in (remainder, overtime):
+            msg = self._split_messages(part)
+            self.assertEqual(len(msg), 1)
+            self.assertIn('Split from', msg.body)
+            self.assertIn(self.rule.name, msg.body)
+            self.assertIn(f'{self.att_type.name}: 08:00', msg.body)
+            self.assertIn(f'{self.ot_type.name}: 05:00', msg.body)
+            self.assertIn(f'data-oe-model="hr.attendance" data-oe-id="{overtime.id}"', msg.body,
+                          "the overtime record must be linked")
 
     def test_chatter_logs_full_reclassification(self):
-        # Saturday: the source itself becomes overtime, no new record
+        # Saturday: source is archived, a single overtime output is created
         source = self._create(datetime(2026, 6, 13, 9, 0), datetime(2026, 6, 13, 12, 0))
-        self.assertEqual(source.work_entry_type_id, self.ot_type)
-        message = self._split_messages(source)
-        self.assertEqual(len(message), 1)
-        self.assertIn(f'was entirely replaced with {self.ot_type.name}', message.body)
+        output = source.overtime_attendance_ids
+        self.assertEqual(len(output), 1)
+        self.assertEqual(output.work_entry_type_id, self.ot_type)
+        src_msg = self._split_messages(source)
+        self.assertEqual(len(src_msg), 1)
+        self.assertIn(f'entirely replaced with {self.ot_type.name}', src_msg.body)
+        self.assertIn('and archived', src_msg.body)
+        out_msg = self._split_messages(output)
+        self.assertEqual(len(out_msg), 1)
+        self.assertIn('Split from', out_msg.body)
 
     def test_chatter_nothing_logged_without_split(self):
         source = self._create(datetime(2026, 6, 8, 8, 0), datetime(2026, 6, 8, 16, 0))
@@ -732,15 +760,23 @@ class TestAttendanceSplitPreview(TransactionCase):
         self.assertEqual(source.state, 'draft')
         self.assertFalse(self._split_messages(source), "a draft attendance is not split yet")
         source.action_validate()
-        self.assertTrue(source.overtime_attendance_ids)
+        children = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', source.id),
+        ], order='check_in')
+        self.assertTrue(children)
+        remainder = children[0]
         self.assertEqual(len(self._split_messages(source)), 1)
+        self.assertEqual(len(self._split_messages(remainder)), 1)
 
     def test_chatter_not_duplicated_on_rerun(self):
         source = self._create(datetime(2026, 6, 8, 7, 0), datetime(2026, 6, 8, 20, 0))
-        self.assertEqual(len(self._split_messages(source)), 1)
-        # writing a trigger field re-runs the rules, which leave the split as it is
+        remainder = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', source.id),
+        ], order='check_in', limit=1)
+        self.assertEqual(len(self._split_messages(remainder)), 1)
+        # archive+create: source is archived, writing to it does not re-trigger rules
         source.write({'break_duration': 0.0})
-        self.assertEqual(len(self._split_messages(source)), 1)
+        self.assertEqual(len(self._split_messages(remainder)), 1)
 
 
 @tagged('post_install', '-at_install', 'time_rule_pipeline')
