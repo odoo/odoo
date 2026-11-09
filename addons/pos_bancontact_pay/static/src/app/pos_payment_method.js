@@ -41,4 +41,13 @@ patch(PosPaymentMethod.prototype, {
         // Unknown usage
         return super._checkOrder(...arguments);
     },
+
+    getPaymentInterfaceStates(args = {}) {
+        // For Bancontact Pay, we want to block payments across *all* orders
+        // if the sticker is in use.
+        if (this.payment_provider === "bancontact_pay") {
+            return super.getPaymentInterfaceStates({ ...args, order: undefined });
+        }
+        return super.getPaymentInterfaceStates(args);
+    },
 });
