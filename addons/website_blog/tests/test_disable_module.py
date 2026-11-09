@@ -10,14 +10,12 @@ class TestDisableModule(HttpCase):
     touching the module's data."""
 
     def test_blog_disabled_per_website(self):
+        # The default website is resolved over the default test host; a second,
+        # domain-based website proves the configuration is isolated per website.
         default_website = self.env.ref('base.default_website')
         default_website.domain = False
-        other_website = self.env['website'].create({
-            'name': 'Other Website',
-            'domain': 'website-other.test',
-        })
-
-        blog = self.env['blog.blog'].create({'name': 'Test Blog'})
+        self.env['website'].create({'name': 'Other Website', 'domain': 'website-other.test'})
+        self.env['blog.blog'].create({'name': 'Test Blog'})
 
         headers_other = {'Host': 'website-other.test'}
 
