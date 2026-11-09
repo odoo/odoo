@@ -1044,7 +1044,10 @@ class StockPicking(models.Model):
                 picking.move_ids.write({'restrict_partner_id': picking.owner_id.id})
                 picking.move_line_ids.write({'owner_id': picking.owner_id.id})
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
-        self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
+        # Reuse the done date of the moves: a later now() would shift them when
+        # date_done is propagated to them
+        done_dates = self.move_ids.filtered(lambda m: m.state == 'done').mapped('date')
+        self.write({'date_done': max(done_dates, default=None) or fields.Datetime.now(), 'priority': '0'})
 
         # notify followers when no backorder was created but quantities are incomplete
         if self.env.context.get('cancel_backorder'):
