@@ -5,11 +5,17 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//setting[@id='group_lot_on_delivery_slip']" position="after">
-                <setting help="Expiration dates will appear on the delivery slip" invisible="not group_lot_on_delivery_slip or not module_product_expiry" id="group_expiry_date_on_delivery_slip">
-                    <field name="group_expiry_date_on_delivery_slip"/>
-                </setting>
-            </xpath>
+            <setting id='group_lot_on_delivery_slip'>
+                <div class="row mt-2" invisible="not group_lot_on_delivery_slip or not module_product_expiry">
+                    <field name="group_expiry_date_on_delivery_slip" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                    <div class="col ps-0">
+                        <label for="group_expiry_date_on_delivery_slip"/>
+                        <div class="text-muted">
+                            Expiration dates will appear on the delivery slip
+                        </div>
+                    </div>
+                </div>
+            </setting>
         </field>
     </record>
 </odoo>
