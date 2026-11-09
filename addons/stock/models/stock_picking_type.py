@@ -234,6 +234,9 @@ class StockPickingType(models.Model):
         help="Automatically group batches by their source location.")
     batch_group_by_dest_loc = fields.Boolean('Group by Destination Location',
         help="Automatically group batches by their destination location.")
+    batch_group_propagate = fields.Boolean('Group with Previous Operation Batch',
+        help='Moves which were batched together in previous operation (ex: Pack) will be batched the same way in this operation (ex: Delivery Order)',
+    )
     wave_group_by_product = fields.Boolean('Product',
         help="Split transfers by product then group transfers that have the same product.")
     wave_group_by_category = fields.Boolean('Product Category',
@@ -698,7 +701,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def _get_batch_group_by_keys(self):
-        return ['batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc', 'batch_group_by_partner']
+        return ['batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc', 'batch_group_by_partner', 'batch_group_propagate']
 
     @api.model
     def _get_wave_group_by_keys(self):

@@ -1564,6 +1564,8 @@ class StockMoveLine(models.Model):
                     domains.append(Domain('picking_ids.location_id', 'in', lines.location_id.ids))
                 if picking_type.batch_group_by_dest_loc:
                     domains.append(Domain('picking_ids.location_dest_id', 'in', lines.location_dest_id.ids))
+                if picking_type.batch_group_propagate:
+                    domains.append(Domain('picking_ids.move_ids.move_orig_ids.picking_id.batch_id', 'in', lines.move_id._get_previous_batch().id))
                 if batches_to_validate_ids:
                     domains.append(Domain('id', 'not in', batches_to_validate_ids))
                 domains = lines._get_potential_existing_waves_extra_domain(domains, picking_type)
@@ -1599,6 +1601,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.batch_group_by_destination and line.move_id.partner_id.country_id != wave.picking_ids.partner_id.country_id) \
                         or (picking_type.batch_group_by_src_loc and line.location_id != wave.picking_ids.location_id) \
                         or (picking_type.batch_group_by_dest_loc and line.location_dest_id != wave.picking_ids.location_dest_id) \
+                        or (picking_type.batch_group_propagate and line.move_id._get_previous_batch() != wave.move_ids._get_previous_batch()) \
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
                         or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
@@ -1658,6 +1661,8 @@ class StockMoveLine(models.Model):
                 domains.append(Domain('location_id', 'in', lines.location_id.ids))
             if picking_type.batch_group_by_dest_loc:
                 domains.append(Domain('location_dest_id', 'in', lines.location_dest_id.ids))
+            if picking_type.batch_group_propagate:
+                domains.append(Domain('move_id.move_orig_ids.picking_id.batch_id', 'in', [line.move_id._get_previous_batch().id for line in lines]))
             if picking_type.wave_group_by_product:
                 domains.append(Domain('product_id', 'in', lines.product_id.ids))
             if picking_type.wave_group_by_category:
@@ -1689,6 +1694,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.batch_group_by_destination and line.move_id.partner_id.country_id != potential_line.move_id.partner_id.country_id) \
                     or (picking_type.batch_group_by_src_loc and line.location_id != potential_line.location_id) \
                     or (picking_type.batch_group_by_dest_loc and line.location_dest_id != potential_line.location_dest_id) \
+                    or (picking_type.batch_group_propagate and line.move_id._get_previous_batch() != potential_line.move_id._get_previous_batch()) \
                     or (picking_type.wave_group_by_product and line.product_id != potential_line.product_id) \
                     or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \

@@ -201,6 +201,7 @@ class TestAutoWaving(TransactionCase):
             'batch_group_by_destination': False,
             'batch_group_by_src_loc': False,
             'batch_group_by_dest_loc': False,
+            'batch_group_propagate': False,
             'wave_group_by_product': False,
             'wave_group_by_category': False,
         })
@@ -243,6 +244,7 @@ class TestAutoWaving(TransactionCase):
             'batch_group_by_destination': False,
             'batch_group_by_src_loc': False,
             'batch_group_by_dest_loc': False,
+            'batch_group_propagate': False,
             'wave_group_by_product': False,
             'wave_group_by_category': False,
         })
@@ -274,6 +276,7 @@ class TestAutoWaving(TransactionCase):
             'batch_group_by_partner': False,
             'batch_group_by_src_loc': False,
             'batch_group_by_dest_loc': False,
+            'batch_group_propagate': False,
             'wave_group_by_category': False,
             'wave_group_by_location': False,
         })
@@ -368,6 +371,7 @@ class TestAutoWaving(TransactionCase):
             'batch_group_by_partner': False,
             'batch_group_by_src_loc': False,
             'batch_group_by_dest_loc': False,
+            'batch_group_propagate': False,
             'wave_group_by_category': False,
             'wave_group_by_location': False,
             'wave_group_by_product': True,
@@ -394,6 +398,7 @@ class TestAutoWaving(TransactionCase):
             'batch_group_by_partner': False,
             'batch_group_by_src_loc': False,
             'batch_group_by_dest_loc': False,
+            'batch_group_propagate': False,
             'wave_group_by_category': False,
             'wave_group_by_location': False,
             'wave_group_by_product': True,
