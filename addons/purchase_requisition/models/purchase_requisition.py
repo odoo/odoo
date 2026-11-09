@@ -211,7 +211,10 @@ class PurchaseRequisitionLine(models.Model):
             seller = line.product_id._select_seller(
                 partner_id=line.requisition_id.vendor_id, quantity=line.product_qty,
                 date=line.requisition_id.date_start, uom_id=line.product_uom_id)
-            line.price_unit = seller.price if seller else line.product_id.standard_price
+            if seller:
+                line.price_unit = seller.product_uom_id._compute_price(seller.price, line.product_uom_id)
+            else:
+                line.price_unit = line.product_id.standard_price
 
     @api.model_create_multi
     def create(self, vals_list):
