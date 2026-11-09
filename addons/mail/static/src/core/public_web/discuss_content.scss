@@ -54,10 +54,35 @@
     container-type: inline-size;
 }
 
-.o-mail-DiscussContent-threadNameBox:not(:only-child) {
+.o-mail-DiscussContent-threadNameBox:not(:first-child) {
+    flex-shrink: 0;
     max-width: #{"min(75cqi, 100%)"} !important;
 }
 
 .o-mail-DiscussContent-threadDescriptionBox {
     flex-shrink: 10000;
+}
+
+// The box shrinks down to the start of its value, 4rem at most, when the header has room.
+.o-mail-DiscussContent-threadNameBox:first-child + .o-mail-DiscussContent-threadDescriptionBox {
+    @container (min-width: 16rem) {
+        min-width: min-content !important;
+
+        &::before {
+            content: attr(data-value);
+            display: block;
+            height: 0;
+            max-width: 4rem;
+            overflow: hidden;
+            visibility: hidden;
+            white-space: pre;
+        }
+
+        &::after {
+            display: block;
+            height: 1lh;
+            overflow-wrap: anywhere;
+            white-space: break-spaces;
+        }
+    }
 }
