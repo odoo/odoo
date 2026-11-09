@@ -16,6 +16,8 @@ This module extend the employee form with a organizational chart.
     'depends': ['hr'],
     'auto_install': True,
     'data': [
+        'security/hr_org_chart_security.xml',
+        'security/ir.model.access.csv',
         'views/hr_views.xml'
     ],
     'assets': {
