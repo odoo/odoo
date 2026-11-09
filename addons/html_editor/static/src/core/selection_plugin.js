@@ -440,7 +440,9 @@ export class SelectionPlugin extends Plugin {
             }
             // For Safari, in edge cases in collaboration, the selection can be
             // wrong (e.g. offsets are out of range) while the range is correct.
-            // We use range's offsets instead of selection's.
+            // We use range's containers and offsets instead of selection's.
+            anchorNode = direction ? range.startContainer : range.endContainer;
+            focusNode = direction ? range.endContainer : range.startContainer;
             anchorOffset = direction ? range.startOffset : range.endOffset;
             focusOffset = direction ? range.endOffset : range.startOffset;
 
