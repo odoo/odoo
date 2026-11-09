@@ -16,6 +16,13 @@ class BillToPO(models.TransientModel):
         if not lines_to_add:
             raise UserError(_("There are no products to add to the Purchase Order. Are these Down Payments?"))
         line_vals = lines_to_add._prepare_line_values_for_purchase()
+        # Express the billed prices in the currency of the purchase order
+        currency = self.purchase_order_id.currency_id or lines_to_add.currency_id[:1]
+        company = self.purchase_order_id.company_id or lines_to_add.company_id[:1]
+        date = self.purchase_order_id.date_order or fields.Date.today()
+        for aml, vals in zip(lines_to_add, line_vals):
+            if aml.currency_id != currency:
+                vals['price_unit'] = aml.currency_id._convert(vals['price_unit'], currency, company, date)
         if self.purchase_order_id:
             new_po_lines = self.env['purchase.order.line'].create([{
                 **val,
@@ -25,6 +32,7 @@ class BillToPO(models.TransientModel):
         else:
             self.purchase_order_id = self.env['purchase.order'].create({
                 'partner_id': lines_to_add.partner_id.id,
+                'currency_id': currency.id,
                 'order_line': [Command.create(val) for val in line_vals],
             })
             new_po_lines = self.purchase_order_id.order_line
