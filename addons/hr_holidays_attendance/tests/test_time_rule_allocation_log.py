@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -355,67 +354,18 @@ class TestTimeRuleAllocationLog(TransactionCase):
         )
         on_call_rule.unlink()
 
-    # reversal blocked when it would go negative
-    def test_reversal_blocked_when_would_go_negative(self):
-        """reversal that would push virtual remaining below the floor raises validationerror."""
+    def test_second_attendance_same_day_keeps_previous_credit(self):
+        """a second attendance on the same day must add to the existing credit, not replace it."""
         self._make_rule()
-        # most recent saturday: no schedule -> all 8h are excess -> engine credits 1.0d (8h)
-        today = datetime.now().date()
-        last_sat = today - timedelta(days=(today.weekday() + 2) % 7)
-        att = self._make_att(datetime.combine(last_sat, datetime.min.time().replace(hour=8)),
-                             datetime.combine(last_sat, datetime.min.time().replace(hour=16)))
+        # saturday: no schedule, all time worked is excess
+        self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
+        self.assertAlmostEqual(self._alloc().number_of_days, 0.5, places=5,
+                               msg="4h excess / 8h = 0.5d")
+        self._make_att(datetime(2022, 12, 10, 13), datetime(2022, 12, 10, 15))
         alloc = self._alloc()
-        self.assertAlmostEqual(alloc.number_of_days, 1.0, places=5)
-
-        # allocation date_from defaults to today
-        alloc.date_from = '2020-01-01'
-        last_friday = last_sat - timedelta(days=1)
-        self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
-            'employee_id': self.emp.id,
-            'work_entry_type_id': self.comp_type.id,
-            'request_date_from': last_friday,
-            'request_date_to': last_friday,
-            'state': 'validate',
-        })
-
-        # unlink att -> tries to reverse 1.0d; virtual_remaining = 0 - 1.0 = -1.0 < 0 -> blocked
-        with self.assertRaises(ValidationError):
-            att.unlink()
-
         alloc.invalidate_recordset()
-        self.assertAlmostEqual(alloc.number_of_days, 1.0, places=5,
-                               msg="allocation unchanged after blocked reversal")
-        self.assertTrue(self._logs(), "log entry must still exist after blocked reversal")
-
-    def test_reversal_blocked_when_would_go_negative_hours(self):
-        """the balance of an hourly type is compared in hours with the reversed credit."""
-        self.comp_type.write({'request_unit': 'hour', 'unit_of_measure': 'hour'})
-        self._make_rule()
-        # most recent saturday: no schedule -> all 8h are excess -> engine credits 1.0d (8h)
-        today = datetime.now().date()
-        last_sat = today - timedelta(days=(today.weekday() + 2) % 7)
-        att = self._make_att(datetime.combine(last_sat, datetime.min.time().replace(hour=8)),
-                             datetime.combine(last_sat, datetime.min.time().replace(hour=16)))
-        alloc = self._alloc()
-        self.assertAlmostEqual(alloc.number_of_days, 1.0, places=5)
-        alloc.date_from = '2020-01-01'
-        last_friday = last_sat - timedelta(days=1)
-        # 4h taken, 4h left
-        self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
-            'employee_id': self.emp.id,
-            'work_entry_type_id': self.comp_type.id,
-            'request_date_from': last_friday,
-            'request_date_to': last_friday,
-            'request_hour_from': 8,
-            'request_hour_to': 12,
-            'state': 'validate',
-        })
-        alloc.invalidate_recordset()
-        self.assertAlmostEqual(alloc.virtual_remaining_leaves, 4.0, places=5)
-
-        # unlink att -> tries to reverse 1.0d (8h) with 4h left -> blocked
-        with self.assertRaises(ValidationError):
-            att.unlink()
+        self.assertAlmostEqual(alloc.number_of_days, 0.75, places=5,
+                               msg="(4h + 2h) excess / 8h = 0.75d, not 0.25d")
 
     def _make_deficit_rule(self, undertime_type, **kw):
         defaults = {

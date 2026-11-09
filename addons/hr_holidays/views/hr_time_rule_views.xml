@@ -52,6 +52,10 @@
                         placeholder="Choose a Time Off Type"
                         help="Must require allocation and be selectable in time off requests."/>
                 </div>
+                <div class="text-muted small" colspan="2"
+                    invisible="threshold_operator != 'less_than' or not leave_compensation_rate or not allocation_type_id">
+                    The allocation balance can go negative when the deficit exceeds the available balance.
+                </div>
             </xpath>
         </field>
     </record>
