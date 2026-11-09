@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormSignalView">
+        <div t-att-class="this.props.className">
+            <Layout display="this.props.display">
+                <div class="p-3">
+                    <h1>Hello world</h1>
+                    <p><t t-out="this.props.resModel"/>, record <t t-out="this.props.resId or 'new'"/></p>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+</templates>
