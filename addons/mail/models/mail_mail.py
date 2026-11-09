@@ -167,7 +167,9 @@ class MailMail(models.Model):
         mail_msg_cascade_ids = [mail.mail_message_id.id for mail in self if not mail.is_notification]
         res = super(MailMail, self).unlink()
         if mail_msg_cascade_ids:
-            self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
+            # standalone messages only support their mail, whose deletion was just
+            # granted: do not depend on message access, based on related document
+            self.env['mail.message'].browse(mail_msg_cascade_ids).sudo().unlink()
         return res
 
     def action_retry(self):
