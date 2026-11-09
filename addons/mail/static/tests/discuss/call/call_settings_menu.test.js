@@ -142,6 +142,26 @@ test("activate push to talk", async () => {
     await contains(".o-discuss-CallSettings-voiceActiveDuration:text('560ms')");
 });
 
+test("closing call settings stops registering the push-to-talk key", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await click("label[aria-label='Enable Push-to-talk']");
+    await click("button[aria-label='Register new shortcut']");
+    await contains("span:text('Press any key to register it as your shortcut.')");
+    await click("[title='Close panel']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains(
+        ".o-discuss-CallSettings span:text('Click the button below to register a new shortcut.')"
+    );
+});
+
 test("activate blur", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
