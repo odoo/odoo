@@ -165,3 +165,36 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.env.user.group_ids -= self.env.ref('account.group_validate_bank_account')
         with self.assertRaisesRegex(UserError, "You do not have the rights to trust"), self.cr.savepoint():
             account.write({'allow_out_payment': True})
+
+    def test_total_invoiced_includes_child_contacts(self):
+        parent = self.env['res.partner'].create({
+            'name': 'Parent customer',
+            'is_company': True,
+        })
+        child = self.env['res.partner'].create({
+            'name': 'Child contact',
+            'parent_id': parent.id,
+        })
+        grandchild = self.env['res.partner'].create({
+            'name': 'Grandchild contact',
+            'parent_id': child.id,
+        })
+        unrelated = self.env['res.partner'].create({'name': 'Unrelated customer'})
+        foreign_currency = self.setup_other_currency('EUR')
+
+        self.init_invoice('out_invoice', parent, amounts=[100], post=True)
+        self.init_invoice('out_invoice', child, amounts=[200], post=True)
+        foreign_invoice = self.init_invoice('out_invoice', child, amounts=[100], currency=foreign_currency, post=True)
+        self.init_invoice('out_invoice', grandchild, amounts=[300], post=True)
+        self.init_invoice('out_invoice', unrelated, amounts=[400], post=True)
+
+        # EUR 100 converts to 50 in company currency (USD).
+        self.assertEqual(foreign_invoice.amount_total_signed, 50)
+        # Parent Total = Parent + child + grandchild
+        #              = 100 + (200 + 50) + 300 = 650
+        self.assertEqual(parent.total_invoiced, 650)
+        # Child Total = child + grandchild
+        #             = (200 + 50) + 300 = 550
+        self.assertEqual(child.total_invoiced, 550)
+        self.assertEqual(grandchild.total_invoiced, 300)
+        self.assertEqual(unrelated.total_invoiced, 400)
