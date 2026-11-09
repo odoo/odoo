@@ -2893,3 +2893,49 @@ test("meeting ready banner is hidden in chat but shown in channel", async () => 
     expect(meeting.showInviteBanner).toBe(true);
     await waitFor(".o-mail-MeetingReadyBanner button:text('Add Others'):count(1)");
 });
+
+test("remote audio monitors are closed when replaced or when the remote leaves", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Join Call']:count(1)").click();
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)");
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob']:count(1)");
+    const getAudioTrack = async () =>
+        (await navigator.mediaDevices.getUserMedia({ audio: true })).getAudioTracks()[0];
+    const [firstTrack, secondTrack, thirdTrack] = await Promise.all([
+        getAudioTrack(),
+        getAudioTrack(),
+        getAudioTrack(),
+    ]);
+    const audioContexts = [];
+    patch(window, {
+        AudioContext: class extends window.AudioContext {
+            constructor() {
+                super(...arguments);
+                audioContexts.push(this);
+            }
+        },
+    });
+    const rtc = getService("discuss.rtc");
+    const bobSession = getService("mail.store")["discuss.channel.rtc.session"].get(bobSessionId);
+    const firstUpdate = rtc.updateStream(bobSession, firstTrack);
+    const replacedMonitor = audioContexts.at(-1);
+    const secondUpdate = rtc.updateStream(bobSession, secondTrack);
+    const currentMonitor = audioContexts.at(-1);
+    await Promise.all([firstUpdate, secondUpdate]);
+    await waitUntil(() => replacedMonitor.state === "closed");
+    expect(currentMonitor.state).toBe("running");
+    rtc.updateStream(bobSession, thirdTrack);
+    const lateMonitor = audioContexts.at(-1);
+    rtc.disconnect(bobSession);
+    await waitUntil(() => currentMonitor.state === "closed" && lateMonitor.state === "closed");
+});
