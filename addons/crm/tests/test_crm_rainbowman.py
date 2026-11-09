@@ -473,3 +473,42 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
                 'Yay, your first win from Xitter Post!',
                 'Benoit can still receive the message as neither he nor his team have a recorded win for this source',
             )
+
+    @users('user_sales_manager')
+    def test_leads_rainbowman_first_to_last_stage_detour(self):
+        """ The 'straight to the win' message must not be given to a lead that
+        went through other stages before being won: every stage where the lead
+        stayed at least one minute counts as a step. """
+        day1_9am = datetime(2025, 3, 3, 9, 0)
+        day2_10am = datetime(2025, 3, 4, 10, 0)
+        day2_10_30am = datetime(2025, 3, 4, 10, 30)
+
+        with self.mock_datetime_and_now(day1_9am):
+            lead_prime, lead_detour = self.env['crm.lead'].create([{
+                'name': name,
+                'type': 'opportunity',
+                'team_id': self.sales_team_1.id,
+                'stage_id': self.stage_team1_1.id,
+                'user_id': self.user_sales_manager.id,
+            } for name in ('prime', 'detour')])
+            # prime the user (first deal closed, fastest close)
+            self._set_won_get_rainbowman_message(lead_prime, self.user_sales_manager)
+            self.env.flush_all()
+
+        with self.mock_datetime_and_now(day2_10am):
+            # 25 hours in the first stage, then moved to the next one
+            lead_detour.stage_id = self.stage_team1_2
+            self.env.flush_all()
+
+        with self.mock_datetime_and_now(day2_10_30am):
+            # 30 minutes in the second stage, then won
+            msg = self._set_won_get_rainbowman_message(lead_detour, self.user_sales_manager)
+            self.assertEqual(
+                {k: v for k, v in lead_detour.duration_tracking.items() if k.isdigit()},
+                {str(self.stage_team1_1.id): 25 * 60, str(self.stage_team1_2.id): 30},
+            )
+            self.assertNotEqual(
+                msg,
+                'No detours, no delays - from New straight to the win! 🚀',
+                'Lead spent 30 minutes in another stage before being won',
+            )
