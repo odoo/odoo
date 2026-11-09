@@ -1319,6 +1319,16 @@ class SaleOrder(models.Model):
             )
             return False
 
+        # Products may have become unsellable since they were added to the cart,
+        # the cart page removes their lines.
+        if any(line._is_invalid_line() for line in self.order_line):
+            self._add_warning_alert(
+                self.env._(
+                    "Some products are no longer available and have been removed from your cart."
+                )
+            )
+            return False
+
         if not self._has_deliverable_products():
             # Empty cart => block the customer
             return any(line for line in self.order_line if not line.is_delivery)
