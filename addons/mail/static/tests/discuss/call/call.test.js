@@ -3099,3 +3099,44 @@ test("remote audio monitors are closed when replaced or when the remote leaves",
     rtc.disconnect(bobSession);
     await waitUntil(() => currentMonitor.state === "closed" && lateMonitor.state === "closed");
 });
+
+test("camera turns on without blur when the blur model fails", async () => {
+    patch(navigator.mediaDevices, {
+        getUserMedia(constraints) {
+            if (!constraints.video) {
+                return super.getUserMedia(constraints);
+            }
+            const canvas = document.createElement("canvas");
+            const stream = canvas.captureStream();
+            canvas.getContext("2d").fillRect(0, 0, 1, 1);
+            return stream;
+        },
+    });
+    patch(HTMLVideoElement.prototype, {
+        requestVideoFrameCallback(callback) {
+            Promise.resolve().then(callback);
+        },
+    });
+    patch(window.SelfieSegmentation.prototype, {
+        close() {
+            expect.step("blur model closed");
+            return super.close();
+        },
+        async send() {
+            throw new Error("Blur model unavailable");
+        },
+    });
+    patch(console, {
+        warn: (error) => expect.step(`warn: ${error.message}`),
+    });
+    localStorage.setItem("mail_user_setting_use_blur", "true");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("button[title='Turn camera on']");
+    await waitFor(".o_notification:has(:text('Background blur could not be loaded'))");
+    await waitFor("button[title='Turn camera off']");
+    await expect.waitForSteps(["warn: Blur model unavailable", "blur model closed"]);
+});
