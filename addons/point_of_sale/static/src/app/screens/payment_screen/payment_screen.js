@@ -145,7 +145,9 @@ export class PaymentScreen extends Component {
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
     async addNewPaymentLine(paymentMethod) {
-        const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates();
+        const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates({
+            order: this.currentOrder,
+        });
         if (!canSend) {
             this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
             return;
@@ -345,6 +347,7 @@ export class PaymentScreen extends Component {
     async sendPaymentRequest(line) {
         const paymentMethod = line.payment_method_id;
         const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates({
+            order: line.pos_order_id,
             paymentline: line,
         });
 
