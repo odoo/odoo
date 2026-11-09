@@ -24,9 +24,16 @@ export class DynamicModelFieldSelectorChar extends CharField {
      * Update record
      *
      * @param {string} value
+     * @param {Object} [fieldInfo]
      * @private
      */
-    async _onRecordUpdate(value) {
+    async _onRecordUpdate(value, fieldInfo) {
+        if (value && !fieldInfo?.fieldDef) {
+            // if the path doesn't match any field discard it
+            // and re-render the selector with the current value
+            this.render();
+            return;
+        }
         await this.props.record.update({ [this.props.name]: value });
     }
 
