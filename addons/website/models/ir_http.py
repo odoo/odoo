@@ -233,6 +233,8 @@ class IrHttp(models.AbstractModel):
         if (
             request.is_frontend
             and rule.endpoint.routing.get('website')
+            and rule.endpoint.routing.get('type') == 'http'
+            and not rule.endpoint.routing.get('always_on')
             and website_id
             and not request.env.user.has_group('website.group_website_designer')
         ):

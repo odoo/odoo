@@ -1075,6 +1075,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         "/shop/checkout",
         type="http",
+        always_on=True,
         methods=["GET"],
         auth="public",
         website=True,
@@ -1145,7 +1146,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
 
     @route(
-        "/shop/address", type="http", methods=["GET"], auth="public", website=True, sitemap=False
+        "/shop/address", type="http", methods=["GET"], auth="public", website=True, sitemap=False,
+        always_on=True,
     )
     def shop_address(
         self, partner_id=None, address_type="billing", use_delivery_as_billing=None, **query_params
@@ -1244,6 +1246,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         "/shop/address/submit",
         type="http",
+        always_on=True,
         methods=["POST"],
         auth="public",
         website=True,
@@ -1591,6 +1594,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         ["/shop/extra_info"],
         type="http",
+        always_on=True,
         auth="public",
         website=True,
         sitemap=False,
@@ -1653,6 +1657,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         "/shop/payment",
         type="http",
+        always_on=True,
         auth="public",
         website=True,
         sitemap=False,
@@ -1679,7 +1684,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "website_sale.payment", self._get_shop_payment_values(order_sudo, **post)
         )
 
-    @route("/shop/payment/validate", type="http", auth="public", website=True, sitemap=False)
+    @route("/shop/payment/validate", type="http", auth="public", website=True, sitemap=False, always_on=True)
     def shop_payment_validate(self, sale_order_id=None, **_post):
         """Server calls this method when receiving an update for a transaction. State at this point:
         - UDPATE ME.
@@ -1727,6 +1732,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         ["/shop/confirmation"],
         type="http",
+        always_on=True,
         auth="public",
         website=True,
         sitemap=False,
@@ -1776,7 +1782,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return rendering_values
 
-    @route("/shop/unarchive_user_addresses", type="http", auth="user", sitemap=False)
+    @route("/shop/unarchive_user_addresses", type="http", auth="user", sitemap=False, always_on=True)
     def shop_unarchive_user_addresses(self):
         self.env["res.partner"].sudo().search([
             ("active", "=", False),

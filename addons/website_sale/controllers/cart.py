@@ -15,7 +15,7 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class Cart(PaymentPortal):
-    @route(route="/shop/cart", type="http", auth="public", website=True, sitemap=False)
+    @route(route="/shop/cart", type="http", auth="public", website=True, sitemap=False, always_on=True)
     def cart(self, id=None, access_token=None, **post):
         """Display the cart page.
 
