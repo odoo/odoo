@@ -6,6 +6,11 @@ export class CTABadgeOptionPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         so_content_addition_selectors: [".s_cta_badge"],
+        is_node_splittable_predicates: (node) => {
+            if (node.classList?.contains("s_cta_badge")) {
+                return false;
+            }
+        },
     };
 }
 registry.category("builder-plugins").add(CTABadgeOptionPlugin.id, CTABadgeOptionPlugin);
