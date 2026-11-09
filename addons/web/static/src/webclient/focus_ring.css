@@ -49,7 +49,8 @@ input:is([type="checkbox"], [type="radio"]) {
 /* On a colored fill, a band of the background color separates the ring from */
 /* the fill, which it would not stand out on. */
 :is(.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark),
-:is(.btn-outline-primary, .btn-outline-success, .btn-outline-danger, .btn-outline-warning, .btn-outline-info, .btn-outline-dark) {
+:is(.btn-outline-primary, .btn-outline-success, .btn-outline-danger, .btn-outline-warning, .btn-outline-info, .btn-outline-dark),
+:is(.btn-group, .btn-group-vertical) > :is(.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark) ~ .btn.dropdown-toggle-split {
     --btn-focus-box-shadow: inset 0 0 0 calc(1.5 * var(--o-focus-ring-width)) var(--o-view-background-color);
 }
 

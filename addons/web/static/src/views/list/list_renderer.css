@@ -259,13 +259,15 @@
             border-style: none;
             display: table-cell;
             cursor: pointer;
+            /* Without padding, the focus ring goes outside, where it does */
+            /* not cover the icon (webclient/focus_ring.css). */
+            --o-focus-ring-offset: 0px;
         }
 
         .o_keyboard_navigation {
             th:focus-within, td:focus-within {
                 --table-accent-bg: none;
                 background-color: var(--o-form-lightsecondary);
-                outline: none;
             }
         }
 
@@ -525,13 +527,15 @@
             button:focus,
             button:active {
                 color: var(--link-hover-color);
-                outline: none;
             }
 
             button {
                 font-weight: 400;
                 padding: 0;
                 vertical-align: baseline;
+                /* Without padding, the focus ring goes outside, where it does */
+                /* not cover the text (webclient/focus_ring.css). */
+                --o-focus-ring-offset: 0px;
             }
         }
     }

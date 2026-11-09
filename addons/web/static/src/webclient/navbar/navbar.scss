@@ -3,6 +3,10 @@
 /* ============================================================================ */
 .o_main_navbar {
     @include print-variable(o-navbar-height, $o-navbar-height);
+    /* The Community navbar is the color of the focus ring: the ring takes the */
+    /* color of its entries instead. */
+    --o-focus-ring-color: var(--o-navbar-focus-ring-color);
+    --o-focus-ring: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
 
     display: flex;
     height: var(--o-navbar-height);

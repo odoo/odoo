@@ -37,6 +37,9 @@
 
     button.btn-link:first-child {
        padding: 0;
+       /* Without padding, the focus ring goes outside, where it does not */
+       /* cover the text (webclient/focus_ring.css). */
+       --o-focus-ring-offset: 0px;
     }
 
     a.oe-link {
