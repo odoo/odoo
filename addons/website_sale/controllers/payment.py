@@ -51,9 +51,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(self.env._("The order has been cancelled."))
 
-        # Ensure the cart is still valid before proceeding any further.
+        # Ensure the cart is still valid before proceeding any further. The order is checked as the
+        # request user, not SUPERUSER, which is always allowed to buy
         if redirect := self.env["website.checkout.step"].validate_checkout_progress(
-            "/shop/payment/transaction", order_sudo
+            "/shop/payment/transaction", order_sudo.with_user(self.env.user).sudo()
         ):
             return {
                 "state": "error",

@@ -300,3 +300,36 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
         )
         with self.mock_request(sale_order_id=self.cart.id) as request:
             self.assertEqual(request.cart, self.cart)
+
+    def test_impossible_to_checkout_if_a_product_was_unpublished(self):
+        self.product.website_published = False
+
+        with self.mock_request(path="/shop/checkout", sale_order_id=self.cart.id):
+            response = self.CheckoutController.shop_checkout()
+
+        self.assert_redirected_to(response, "/shop/cart")
+
+    def test_impossible_to_pay_if_a_product_was_unpublished(self):
+        self.cart._set_delivery_method(self.free_delivery)
+        self.product.website_published = False
+
+        self.authenticate(None, None)
+        response = self.make_jsonrpc_request(
+            f"/shop/payment/transaction/{self.cart.id}",
+            params={
+                "provider_id": self.provider.id,
+                "payment_method_id": self.payment_method.id,
+                "token_id": None,
+                "flow": "direct",
+                "tokenization_requested": False,
+                "landing_route": "/shop/payment/validate",
+                "access_token": self.cart._portal_ensure_token(),
+            },
+        )
+
+        self.assertEqual(response["state"], "error")
+        self.assertEqual(response["redirect"], "/shop/cart")
+
+        with self.mock_request(path="/shop/cart", sale_order_id=self.cart.id):
+            self.CartController.cart()
+        self.assertNotIn(self.product, self.cart.order_line.product_id)

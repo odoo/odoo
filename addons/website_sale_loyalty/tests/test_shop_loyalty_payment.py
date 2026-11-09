@@ -30,6 +30,7 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
         if not cls.website:
             cls.website = cls.env.ref("base.default_website")
             cls.website.company_id = cls.env.company
+        cls.service_product.website_published = True
 
     @mute_logger("odoo.http")
     def test_expired_reward_validation(self):
