@@ -81,7 +81,7 @@ class SaleOrderLine(models.Model):
         vals = {"points_cost": 0, "price_unit": 0, "technical_price_unit": 0}
         if complete:
             vals.update({"coupon_id": False, "reward_id": False})
-        self.write(vals)
+        self.update(vals)
         return self
 
     @api.model_create_multi
