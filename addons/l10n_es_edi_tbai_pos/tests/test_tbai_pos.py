@@ -136,6 +136,27 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         self.assertEqual(pos_refund.state, 'invoiced')
         self.assertFalse(pos_refund.l10n_es_tbai_state)
 
+    def test_tbai_refund_invoiced_pos_order_r5_is_simplified(self):
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        # Create and pay a pos order, invoiced to a real (non-simplified) partner
+        pos_order = self.create_pos_order(current_session, 500.0)
+        pos_order.partner_id = self.partner_es
+        pos_order.to_invoice = True
+        self.pay_pos_order(pos_order)
+
+        # Create the refund, manually picking reason R5
+        refund_action = pos_order.refund()
+        pos_refund = self.PosOrder.browse(refund_action['res_id'])
+        pos_refund.to_invoice = True
+        pos_refund.l10n_es_tbai_refund_reason = 'R5'
+        self.pay_pos_order(pos_refund)
+
+        self.assertEqual(pos_refund.state, 'invoiced')
+        self.assertEqual(pos_refund.account_move.l10n_es_tbai_refund_reason, 'R5')
+        self.assertTrue(pos_refund.account_move.l10n_es_is_simplified)
+
     def test_tbai_pos_order_with_failed_chain_head(self):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id

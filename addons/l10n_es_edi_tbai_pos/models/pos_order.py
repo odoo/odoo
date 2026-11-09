@@ -103,6 +103,8 @@ class PosOrder(models.Model):
 
         if self.l10n_es_tbai_is_required:
             vals['l10n_es_tbai_refund_reason'] = self.l10n_es_tbai_refund_reason
+            if self.l10n_es_tbai_refund_reason == 'R5':
+                vals['l10n_es_is_simplified'] = True
 
         return vals
 

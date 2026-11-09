@@ -11,7 +11,6 @@ class PosSession(models.Model):
         data['data'][0]['_tbai_refund_reasons'] = [
             {'value': refund_reason.value, 'name': refund_reason.name}
             for refund_reason in tbai_refund_reason_field.selection_ids
-            if refund_reason.value != 'R5'  # R5 is for simplified invoice
         ]
 
         return data
