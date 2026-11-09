@@ -522,7 +522,7 @@ class CustomerPortal(Controller):
         # Parse form data into address values, and extract incompatible data as extra form data.
         address_values, extra_form_data = self._parse_form_data(form_data)
 
-        if verify_address_values:
+        if partner_sudo or not partner_sudo.env.context.get('partial_address_before_checkout'):
             # Validate the address values and highlights the problems in the form, if any.
             invalid_fields, missing_fields, error_messages = self._validate_address_values(
                 address_values,
