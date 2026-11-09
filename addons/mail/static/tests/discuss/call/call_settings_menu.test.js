@@ -154,6 +154,27 @@ test("activate push to talk", async () => {
     await waitFor(".o-discuss-CallSettings-voiceActiveDuration:text('560ms'):count(1)");
 });
 
+test("closing call settings stops registering the push-to-talk key", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    // dropdown requires an extra delay before click (because handler is registered in useEffect)
+    await waitFor("[title='Open Actions Menu']:count(1)");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
+    await contains("label[aria-label='Enable Push-to-talk']:count(1)").click();
+    await contains("button[aria-label='Register new shortcut']:count(1)").click();
+    await waitFor("span:text('Press any key to register it as your shortcut.'):count(1)");
+    await contains("[title='Close panel']:count(1)").click();
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
+    await waitFor(
+        ".o-discuss-CallSettings span:text('Click the button below to register a new shortcut.'):count(1)"
+    );
+});
+
 test("activate blur", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
