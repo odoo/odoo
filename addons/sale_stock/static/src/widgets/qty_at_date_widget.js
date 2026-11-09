@@ -77,12 +77,12 @@ export class QtyAtDateWidget extends Component {
     async calcDataForDisplay() {
         const { data } = this.props.record;
         let lineUom;
-        if (data.product_uom_id?.[0]) {
-            lineUom = (await this.orm.read("uom.uom", [data.product_uom_id[0]], ["factor", "rounding"]))[0];
+        if (data.product_uom_id?.id) {
+            lineUom = (await this.orm.read("uom.uom", [data.product_uom_id.id], ["factor", "rounding"]))[0];
         }
         let lineProduct;
-        if (data.product_id?.[0]) {
-            lineProduct = await this.orm.searchRead("product.product", [["id", "=", data.product_id[0]]], ["uom_id"]);
+        if (data.product_id?.id) {
+            lineProduct = await this.orm.searchRead("product.product", [["id", "=", data.product_id.id]], ["uom_id"]);
         }
         let productUom;
         if (lineProduct?.[0]?.uom_id?.[0]) {
