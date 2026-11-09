@@ -1,22 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from stdnum.se import orgnr as stdnum_se_orgnr
 
 from odoo import api, fields, models
-import re
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    # Deprecated: use partner_id.additional_identifiers['SE_EN'] instead.
+    # Kept in stable for compatibility, to be removed in master.
     org_number = fields.Char(compute='_compute_org_number')
 
-    @api.depends('vat')
+    @api.depends('partner_id.additional_identifiers')
     def _compute_org_number(self):
         for company in self:
-            if company.account_fiscal_country_id.code == "SE" and company.vat:
-                org_number = re.sub(r'\D', '', company.vat)[:-2]
-                org_number = org_number[:6] + '-' + org_number[6:]
-
-                company.org_number = org_number
-            else:
-                company.org_number = ''
+            org_number = company.partner_id._get_additional_identifier('SE_EN')
+            company.org_number = stdnum_se_orgnr.format(org_number) if org_number else ''
