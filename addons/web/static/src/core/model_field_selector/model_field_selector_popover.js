@@ -53,12 +53,15 @@ class Page {
     }
 
     get title() {
-        const prefix = this.previousPage?.previousPage ? "... > " : "";
         const title = this.previousPage?.selectedField?.string || "";
-        if (prefix.length || title.length) {
-            return `${prefix}${title}`;
+        if (title.length) {
+            return title;
         }
         return _t("Select a field");
+    }
+
+    get previousPageName() {
+        return "Back to " + (this.previousPage?.previousPage?.selectedField?.string || _t("Fields"));
     }
 
     focus(direction) {
@@ -159,7 +162,7 @@ export class ModelFieldSelectorPopover extends Component {
             const page = this.state.page;
             void page?.focusedFieldName;
             const focusedElement = root.querySelector(
-                ".o_model_field_selector_popover_item.active"
+                ".o_model_field_selector_popover_item.focus"
             );
             if (focusedElement) {
                 // current page can be empty (e.g. after a search)
@@ -169,7 +172,7 @@ export class ModelFieldSelectorPopover extends Component {
                 focusedPage = page;
                 if (this.props.showSearchInput) {
                     const searchInput = root.querySelector(
-                        ".o_model_field_selector_popover_search .o_input"
+                        ".o_model_field_selector_popover_search .form-control"
                     );
                     searchInput.focus();
                 }

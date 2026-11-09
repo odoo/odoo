@@ -109,19 +109,6 @@ test("dynamic placeholder close with escape", async () => {
     expect(".o_model_field_selector_popover").toHaveCount(0);
 });
 
-test("dynamic placeholder close when clicking on the cross", async () => {
-    await mountView({ type: "form", resModel: "partner", resId: 1 });
-
-    await contains(".o_field_char input").edit("#", { confirm: false });
-    expect(".o_model_field_selector_popover").toHaveCount(1);
-    await contains(".o_model_field_selector_popover_close").click();
-    expect(".o_model_field_selector_popover").toHaveCount(0);
-    await contains(".o_field_char input").edit("#", { confirm: false });
-    await contains(".o_model_field_selector_popover_item_relation").click();
-    await contains(".o_model_field_selector_popover_close").click();
-    expect(".o_model_field_selector_popover").toHaveCount(0);
-});
-
 test("dynamic placeholder properties", async () => {
     await mountView({ type: "form", resModel: "partner", resId: 1 });
 

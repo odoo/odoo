@@ -111,8 +111,8 @@ test("creating a domain from scratch", async () => {
     // fields. "Bar" should be among them. "Bar" result li will display the
     // name of the field and some debug info.
     expect(
-        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:first"
-    ).toHaveText("Bar\nbar (boolean)", {
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name span:first"
+    ).toHaveText("Bar", {
         message: "field selector popover should contain the 'Bar' field",
     });
 
@@ -672,8 +672,9 @@ test("debug input in model field selector popover", async () => {
     await mountWithCleanup(Parent);
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_debug").edit("a", { confirm: "tab" });
-    await contains(".o_model_field_selector_popover_close").click();
-    expect.verifySteps([`[("a", "=", 1)]`]);
+    await press("escape");
+    await expect.waitForSteps([`[("a", "=", 1)]`]);
+    await animationFrame();
     expect(getCurrentPath()).toBe("a");
     expect(".o_model_field_selector_warning").toHaveCount(1);
     expect(getOperatorOptions()).toHaveLength(1);
@@ -1053,7 +1054,7 @@ test("support properties", async () => {
     expect(getCurrentPath()).toBe("Properties");
     expectedDomain = `[("properties.xpad_prop_1", "=", False)]`;
     await contains(".o_model_field_selector_popover_item[data-name='xpad_prop_1'] button").click();
-    expect(getCurrentPath()).toBe("Properties > M2O");
+    expect(getCurrentPath()).toBe("... > M2O");
     expect(getOperatorOptions()).toEqual([
         label("=", "many2one"),
         label("!=", "many2one"),
@@ -1126,7 +1127,7 @@ test("support properties", async () => {
         const { string } = MockServer.env["product"][0].definitions.find(
             (def) => def.name === name
         );
-        expect(getCurrentPath()).toBe(`Properties > ${string}`);
+        expect(getCurrentPath()).toBe(`... > ${string}`);
         expect(getOperatorOptions()).toEqual(options);
     }
 });
@@ -2095,7 +2096,7 @@ test(`any/not any operator in editable mode`, async () => {
     expect(".o_tree_editor").toHaveCount(3);
     expect(".o_tree_editor_row").toHaveCount(10);
     expect(getCurrentPath(1)).toBe("Product Team");
-    expect(getCurrentPath(3)).toBe("Product Team > Team Name");
+    expect(getCurrentPath(3)).toBe("... > Team Name");
     expect(getCurrentValue(1)).toBe("Leicester Liverpool");
     expect(getCurrentOperator(1)).toBe("matches");
     expect(getCurrentOperator(3)).toBe(label("not in"));
