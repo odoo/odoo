@@ -146,6 +146,9 @@ class StockMove(models.Model):
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
+    is_allocated = fields.Boolean(
+        'Allocated', copy=False,
+        help="Technical field: its origin moves were given by the allocation report, not by a route.")
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time', compute="_compute_delay_alert_date", store=True)
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', compute='_compute_picking_type_id', store=True, readonly=False, check_company=True, index='btree_not_null')
     is_inventory = fields.Boolean('Inventory')
@@ -1358,7 +1361,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         fields = [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'forecasted_location_id',
             'uom_id', 'restrict_partner_id', 'origin_returned_move_id',
-            'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
+            'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids', 'is_allocated',
         ]
         if self.env['ir.config_parameter'].sudo().get_bool('stock.merge_only_same_date'):
             fields.append('date')
@@ -1863,6 +1866,9 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         # Call `_action_assign` on confirmed moves eligible for auto-assignment at confirmation.
         moves._filtered_for_assign()._action_assign()
+        # Allocate incoming quantities to waiting needs if the operation type is set to do it automatically.
+        if not self.env.context.get('skip_auto_allocation'):
+            moves._auto_allocate()
         if new_push_moves:
             neg_push_moves = new_push_moves.filtered(lambda sm: sm.uom_id.compare(sm.product_uom_qty, 0) < 0)
             (new_push_moves - neg_push_moves).sudo()._action_confirm()
@@ -2291,6 +2297,13 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         moves_to_cancel.state = 'cancel'
 
+        # Unlink moves linked to cancelled moves without cancelling them to allow them to
+        # get allocated again.
+        allocated_moves = moves_to_cancel.move_dest_ids.filtered(
+            lambda m: m.is_allocated and m.state not in ('done', 'cancel')
+        )
+        allocated_moves._break_allocation_link(moves_to_cancel)
+
         for move in moves_to_cancel:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
             if move.propagate_cancel:
@@ -2423,7 +2436,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move_dests_per_company[move_dest.company_id.id] |= move_dest
 
         for company_id, move_dests in move_dests_per_company.items():
+            # Reserve the incoming quantities for the most urgent moves first.
+            move_dests = move_dests.sorted(lambda m: (-int(m.priority), m.date, m.id))
             move_dests.sudo().with_company(company_id)._action_assign()
+
+        # Moves allocated to these receipts only keep what was received.
+        moves_todo._unallocate_not_received()
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
@@ -2458,7 +2476,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
         # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
         # ones as it could messed up the result_package_id of the moves being currently validated
-        backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False, create_proc=False)
+        backorder_moves.with_context(
+            bypass_entire_pack=True, skip_auto_allocation=True,
+        )._action_confirm(merge=False, create_proc=False)
         return backorder_moves
 
     @api.ondelete(at_uninstall=False)
@@ -2481,6 +2501,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'procure_method': self.procure_method,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
             'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
+            'is_allocated': self.is_allocated,
             'origin_returned_move_id': self.origin_returned_move_id.id,
             'price_unit': self.price_unit,
             'date_deadline': self.date_deadline,
@@ -2566,6 +2587,59 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _get_lang(self):
         """Determine language to use for translated description"""
         return self.picking_id.partner_id.lang or self.partner_id.lang or self.env.user.lang
+
+    def _auto_allocate(self):
+        receipts_domain = Domain([
+            ('state', 'not in', ('draft', 'done', 'cancel')),
+            ('picking_type_id.code', '=', 'incoming'),
+            ('picking_type_id.auto_show_allocation_report', '=', True),
+            ('picking_type_id.allocation_mode', '=', 'automatic'),
+        ])
+        pickings = self.picking_id.filtered_domain(receipts_domain)
+        needs = self.filtered(lambda m:
+            m.state in ('confirmed', 'partially_available')
+            and not m.move_orig_ids
+            and m._should_assign_at_confirm()
+        )
+        if needs:
+            pickings |= self.env['stock.picking'].search(receipts_domain & Domain([
+                ('company_id', 'in', needs.company_id.ids),
+                ('move_ids.product_id', 'in', needs.product_id.ids),
+            ]), order='scheduled_date, id')
+        if pickings:
+            self.env['stock.allocation.report'].sudo()._auto_allocate(pickings)
+
+    def _unallocate_not_received(self):
+        out_moves = (self | self.picking_id.move_ids).move_dest_ids.filtered(lambda m: m.is_allocated and m.state not in ('done', 'cancel'))
+        backorder_moves = out_moves.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.picking_id in self.picking_id)
+
+        # Unallocate backorder moves and reset their destination's location to the picking's
+        backorder_moves.write({'move_dest_ids': [Command.unlink(m.id) for m in out_moves]})
+        for picking, moves in backorder_moves.grouped('picking_id').items():
+            moves.move_line_ids.location_dest_id = picking.location_dest_id
+
+        # Unallocate what the needs didn't receive.
+        for out_move in out_moves:
+            unreceived_qty = out_move.product_qty - out_move.quantity_product_uom
+            if out_move.product_id.uom_id.compare(unreceived_qty, 0) <= 0:
+                continue
+            if out_move.product_id.uom_id.compare(unreceived_qty, out_move.product_qty) < 0:
+                # Partially received: split the part which wasn't received to unallocate it.
+                out_move = self.env['stock.move'].create(out_move._split(unreceived_qty))
+                out_move.state = 'confirmed'
+            out_move._break_allocation_link(out_move.move_orig_ids)
+
+    def _break_allocation_link(self, in_moves):
+        self.write({'move_orig_ids': [Command.unlink(m.id) for m in in_moves]})
+        # Only set to procure_method make_to_stock if there arent any other links from other pickings
+        for move in self.filtered(lambda m: not m.move_orig_ids):
+            move.write({
+                'procure_method': 'make_to_stock',
+                'is_allocated': False,
+                # Reset source location to picking's.
+                'location_id': (move.picking_id.location_id or move.location_id).id,
+            })
+        self._recompute_state()
 
     def _get_source_document(self):
         """ Return the move's document, used by `stock.forecasted_product_productt`

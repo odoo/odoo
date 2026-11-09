@@ -14,7 +14,7 @@ export class AllocationReport extends Component {
     static components = {
         CheckBox,
         ProductLine,
-    }
+    };
     props = useProps(standardActionServiceProps);
 
     canPrintLabels = computed(() => {
@@ -24,16 +24,19 @@ export class AllocationReport extends Component {
             }
         }
         return false;
-    })
+    });
 
     canAssignAll = computed(() => {
         if (!this.hasContent) {
             return false;
         }
-        return this.productLines.some((line) =>
-            line.freeQty() > 0 && line.needs && line.needs.some((need) => need.quantityToAllocate())
+        return this.productLines.some(
+            (line) =>
+                line.freeQty() > 0 &&
+                line.needs &&
+                line.needs.some((need) => need.quantityToAllocate())
         );
-    })
+    });
 
     setup() {
         this.actionPlugin = usePlugin(ActionPlugin);
@@ -62,6 +65,7 @@ export class AllocationReport extends Component {
             const productLine = {
                 freeQty: signal(data.free_qty),
                 id: data.id,
+                incomingQty: data.incoming_qty,
                 name: data.display_name,
                 uom: data.uom,
                 needsByOperations,
@@ -89,7 +93,7 @@ export class AllocationReport extends Component {
                 };
             } else {
                 const moveIndex = needsByOperations[key].moves.findIndex(
-                    move => move.id === outMove.id
+                    (move) => move.id === outMove.id
                 );
                 if (moveIndex === -1) {
                     needsByOperations[key].moves.push(outMove);
@@ -106,10 +110,10 @@ export class AllocationReport extends Component {
         const key = this._getOperationKey(updatedOutMoves[0]);
         const needMoves = productLine.needsByOperations[key].moves;
         // Iterate on known moves in order to update them.
-        for (let i = (needMoves.length - 1); i >= 0; i--) {
+        for (let i = needMoves.length - 1; i >= 0; i--) {
             const needMove = needMoves[i];
             let updated = false;
-            for (let j = (updatedOutMoves.length - 1); j >= 0; j--) {
+            for (let j = updatedOutMoves.length - 1; j >= 0; j--) {
                 const move = updatedOutMoves[j];
                 if (needMove.id === move.id) {
                     // Update hte component's move values and remove if from `updatedOutMoves`.
@@ -145,11 +149,12 @@ export class AllocationReport extends Component {
 
     async _updateMoveReservation(toReserve, productLine, outLine) {
         // const outIds = outLine.moves().map(move => move.id);
-        const outIds = outLine.moves.map(move => move.id);
+        const outIds = outLine.moves.map((move) => move.id);
         if (toReserve) {
             // Do the allocation.
-            const notAssignedMoves = outLine.moves
-                .filter(move => !move.is_reserved && !move.move_orig_ids.length);
+            const notAssignedMoves = outLine.moves.filter(
+                (move) => !move.is_reserved && !move.move_orig_ids.length
+            );
             const outDemandQty = notAssignedMoves.reduce(
                 (qty, move) => (qty += move.quantity - move.reserved_quantity),
                 0
@@ -161,20 +166,23 @@ export class AllocationReport extends Component {
             const updatedData = await this.ormPlugin.call(
                 "stock.allocation.report",
                 "action_assign",
-                [productLine.sourceIds, outIds, quantityToReserve],
+                [productLine.sourceIds, outIds, quantityToReserve]
             );
             productLine.sourceIds = updatedData.in_moves;
             this.synchroniseUpdatedMoves(productLine, updatedData.out_moves);
             productLine.freeQty.set(productLine.freeQty() - quantityToReserve);
         } else {
             // Free allocated quantity.
-            const quantityToFree = outLine.quantityToAllocate() || outLine.moves.reduce(
-                (qtySum, move) => qtySum + (move.is_reserved ? move.quantity : 0), 0
-            );
+            const quantityToFree =
+                outLine.quantityToAllocate() ||
+                outLine.moves.reduce(
+                    (qtySum, move) => qtySum + (move.is_reserved ? move.quantity : 0),
+                    0
+                );
             const updatedData = await this.ormPlugin.call(
                 "stock.allocation.report",
                 "action_unassign",
-                [productLine.sourceIds, outIds, quantityToFree],
+                [productLine.sourceIds, outIds, quantityToFree]
             );
             productLine.sourceIds = updatedData.in_moves;
             this.synchroniseUpdatedMoves(productLine, updatedData.out_moves);
@@ -189,6 +197,24 @@ export class AllocationReport extends Component {
      */
     shareQuantity(productLine) {
         let freeQuantity = productLine.freeQty();
+        const coveredQtyByMoveId = {};
+        if (productLine.incomingQty !== null) {
+            let incomingQty = productLine.incomingQty;
+            const linkedMoves = productLine.needs
+                .flatMap((need) => need.moves)
+                .filter((move) => move.is_reserved)
+                .sort(
+                    (a, b) => b.priority - a.priority || a.date.localeCompare(b.date) || a.id - b.id
+                );
+            for (const move of linkedMoves) {
+                const coveredQty = Math.min(
+                    Math.max(move.quantity - move.reserved_quantity, 0),
+                    incomingQty
+                );
+                coveredQtyByMoveId[move.id] = coveredQty;
+                incomingQty -= coveredQty;
+            }
+        }
         for (const outLine of productLine.needs) {
             outLine.quantityToAllocate = outLine.quantityToAllocate || signal(0);
             outLine.isReserved = outLine.isReserved || signal(false);
@@ -201,11 +227,17 @@ export class AllocationReport extends Component {
                 const hasOriginMoves = Boolean(outMove.move_orig_ids.length);
                 isReserved = isReserved || outMove.is_reserved || hasOriginMoves;
                 if (!outMove.is_reserved && freeQuantity > 0) {
-                    const qtyForThisNeed = Math.min(freeQuantity, outMove.quantity - outMove.reserved_quantity);
+                    const qtyForThisNeed = Math.min(
+                        freeQuantity,
+                        outMove.quantity - outMove.reserved_quantity
+                    );
                     quantityToAllocate += qtyForThisNeed;
                     freeQuantity -= qtyForThisNeed;
                 } else if (outMove.is_reserved) {
-                    allocatedQuantity += outMove.quantity;
+                    // Only the allocated moves can lose part of their quantity at validation.
+                    allocatedQuantity += outMove.is_allocated
+                        ? coveredQtyByMoveId[outMove.id] ?? outMove.quantity
+                        : outMove.quantity;
                 }
             }
             outLine.quantityToAllocate.set(quantityToAllocate);
@@ -228,9 +260,7 @@ export class AllocationReport extends Component {
 
     async getReportData() {
         const context = { ...this.context };
-        const args = [
-            { context, report_type: "html" },
-        ];
+        const args = [{ context, report_type: "html" }];
         if (!context.active_ids) {
             if (context.active_id) {
                 context.active_ids = [context.active_id];
@@ -249,12 +279,7 @@ export class AllocationReport extends Component {
                 context.active_model = idAndModel[1];
             }
         }
-        return this.ormPlugin.call(
-            "stock.allocation.report",
-            "get_report_data",
-            args,
-            { context },
-        );
+        return this.ormPlugin.call("stock.allocation.report", "get_report_data", args, { context });
     }
 
     _findIndexAndModelFromURL(url) {
@@ -300,9 +325,11 @@ export class AllocationReport extends Component {
         const context = { active_ids: docids };
         if (!this.reportAction) {
             // Fetch report data only once and only if needed.
-            this.reportAction = (await this.ormPlugin.searchRead("ir.actions.report", [
-                ["report_name", "=", "stock.report_reception_report_label"],
-            ]))[0];
+            this.reportAction = (
+                await this.ormPlugin.searchRead("ir.actions.report", [
+                    ["report_name", "=", "stock.report_reception_report_label"],
+                ])
+            )[0];
         }
         return this.actionPlugin.doAction({ ...this.reportAction, context, data });
     }
@@ -327,7 +354,7 @@ export class AllocationReport extends Component {
             const updatedData = await this.ormPlugin.call(
                 "stock.allocation.report",
                 "action_assign_all",
-                [allocationsData],
+                [allocationsData]
             );
             for (const [productId, data] of Object.entries(updatedData)) {
                 const productLine = this.productLines.find((line) => line.id === Number(productId));
@@ -336,7 +363,8 @@ export class AllocationReport extends Component {
                 for (const updatedOutMoves of data.out_moves) {
                     this.synchroniseUpdatedMoves(productLine, updatedOutMoves);
                     const outMovesAllocatedQty = updatedOutMoves.reduce(
-                        (sum, move) => move.is_reserved ? sum + move.quantity : sum, 0
+                        (sum, move) => (move.is_reserved ? sum + move.quantity : sum),
+                        0
                     );
                     allocatedQuantity += outMovesAllocatedQty;
                 }
@@ -359,13 +387,10 @@ export class AllocationReport extends Component {
         const docids = [];
         const movesQty = [];
         for (const productLine of this.productLines) {
-            const needMoves = productLine.needs.reduce(
-                (list, need) => {
-                    list.push(...need.moves);
-                    return list;
-                },
-                []
-            );
+            const needMoves = productLine.needs.reduce((list, need) => {
+                list.push(...need.moves);
+                return list;
+            }, []);
             for (const move of needMoves) {
                 if (move.state === "waiting" || move.is_reserved) {
                     docids.push(move.id);

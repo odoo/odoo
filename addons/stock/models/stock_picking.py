@@ -1125,6 +1125,8 @@ class StockPicking(models.Model):
         # if incoming/internal moves make other confirmed/partially_available moves available, assign them
         done_incoming_moves = self.filtered(lambda p: p.picking_type_id.code in ('incoming', 'internal')).move_ids.filtered(lambda m: m.state == 'done')
         done_incoming_moves._trigger_assign()
+        # Now that the received quantities are reserved, the backorders can be allocated.
+        self.backorder_ids.filtered(lambda p: p.state not in ('done', 'cancel')).move_ids._auto_allocate()
 
         self._intercompany_unpack()
         self._send_confirmation_email()
