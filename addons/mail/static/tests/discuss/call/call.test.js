@@ -2037,6 +2037,50 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
     await waitFor(".o-discuss-CallParticipantCard button[aria-label='Stop Presenting']:count(1)");
 });
 
+test("stream paused on infinite mirror effect leaves other cards clickable and resumes at once", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Share Screen']");
+    await waitFor("video[type='screen']:count(1)");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await waitFor("button:contains('Show My Screen Anyway'):count(1)");
+    await waitFor(".o-discuss-CallParticipantCard:not(.pe-none) img[alt='Avatar']:count(1)");
+    await click("button:contains('Show My Screen Anyway')");
+    await animationFrame();
+    expect(".o-discuss-Call-mainCards video[type='screen']").toHaveCount(1);
+});
+
+test("pausing the user's own screen keeps other participants' screens visible", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const channelMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
+    });
+    const env = await start();
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const bobRemote = network.makeMockRemote(channelMemberId);
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await bobRemote.updateConnectionState("connected");
+    await bobRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video:count(1)");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click("[title='Share Screen']");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await waitFor(".o-discuss-Call.o-fullSize:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard.o-discuss-Call-mainCardStyle[aria-label='Bob']:not(.pe-none) video[type='screen']:count(1)"
+    );
+});
+
 test("single 'join' (without camera) button when last call was audio-only", async () => {
     const pyEnv = await startServer();
     const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
