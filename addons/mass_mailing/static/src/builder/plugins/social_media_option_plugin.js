@@ -145,6 +145,17 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
             return this.handleNoSocialLinks(snippetEl, companyId);
         }
 
+        // snippet was rendered with company links from when the snippets were loaded and may be out of date
+        for (const linkEl of snippetEl.querySelectorAll("[data-platform*='social_']")) {
+            const platform = linkEl.dataset.platform.replace("customLink-", "");
+            if (medias[platform]) {
+                linkEl.dataset.platform = platform;
+                linkEl.setAttribute("href", medias[platform]);
+            } else {
+                linkEl.dataset.platform = `customLink-${platform}`;
+            }
+        }
+
         let currentIndex = snippetEl.querySelectorAll("[data-platform]").length;
 
         for (const [platform, href] of Object.entries(medias)) {
