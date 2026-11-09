@@ -546,7 +546,7 @@ export class PosOrder extends Base {
                         return {
                             combo_item_id: cLine.combo_item_id,
                             configuration: {
-                                attribute_value_ids: cLine.attribute_value_ids,
+                                attribute_value_ids: cLine.attribute_value_ids.map((value) => value.id),
                             },
                         };
                     } else {

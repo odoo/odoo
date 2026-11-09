@@ -1616,6 +1616,19 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         setup_product_combo_items(self)
+        color = self.env['product.attribute'].create({
+            'name': 'Color', 'create_variant': 'no_variant',
+            'value_ids': [Command.create({'name': 'Red'}), Command.create({'name': 'Blue'})],
+        })
+        product = self.desk_accessories_combo.combo_item_ids.filtered(
+            lambda item: item.product_id.name == 'Combo Product 2'
+        ).product_id
+        product.product_tmpl_id.attribute_line_ids = [Command.create({
+            'attribute_id': color.id, 'value_ids': [Command.set(color.value_ids.ids)],
+        })]
+        product.product_tmpl_id.attribute_line_ids.product_template_value_ids.filtered(
+            lambda value: value.name == 'Blue'
+        ).price_extra = 11
         self.office_combo.write({'list_price': 50, 'taxes_id': [(6, 0, [tax_1.id])]})
         for combo in self.office_combo.combo_ids:  # Set the tax to all the products of the combo
             for item in combo.combo_item_ids:
@@ -1629,6 +1642,11 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
+        exempt_position = self.env['account.fiscal.position'].create({
+            'name': 'Tax Exempt',
+            'tax_ids': [Command.create({'tax_src_id': tax_1.id})],
+        })
+
         pricelist = self.env['product.pricelist'].create({'name': 'Combo Discount'})
         self.env['product.pricelist.item'].create({
             'pricelist_id': pricelist.id, 'applied_on': '3_global',
@@ -1637,7 +1655,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'use_pricelist': True, 'available_pricelist_ids': [(4, pricelist.id)],
             'tax_regime_selection': True,
-            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id, exempt_position.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangeFP', login="pos_user")
