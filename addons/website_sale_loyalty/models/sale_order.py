@@ -249,12 +249,21 @@ class SaleOrder(models.Model):
         for so in so_to_reset:
             so._update_programs_and_rewards()
 
+    def _get_loyalty_payment_transactions(self):
+        """Return the confirmed transactions paid with a gift card or an eWallet."""
+        self.ensure_one()
+        return self.sudo().transaction_ids.filtered(
+            lambda tx: tx.loyalty_card_id and tx.state in ("authorized", "done")
+        )
+
     def _get_claimable_and_showable_rewards(self):
         self.ensure_one()
         res = self._get_claimable_rewards()
         loyality_cards = self.env["loyalty.card"].search([
             ("partner_id", "=", self.partner_id.id),
             ("program_id", "any", self._get_program_domain()),
+            # Gift cards and eWallets are used as payment methods, not as rewards.
+            ("program_id.program_type", "not in", ("gift_card", "ewallet")),
             "|",
             ("program_id.trigger", "=", "with_code"),
             "&",

@@ -4,7 +4,7 @@
     "name": "Coupons & Loyalty",
     "summary": "Use discounts, gift cards, eWallets and loyalty programs in your sales channels",
     "category": "Sales",
-    "depends": ["product", "portal", "account"],
+    "depends": ["product", "portal", "account", "account_payment"],
     "data": [
         "report/loyalty_report_templates.xml",
         "report/loyalty_report.xml",
@@ -20,6 +20,10 @@
         "views/loyalty_rule_views.xml",
         "views/portal_templates.xml",
         "views/res_partner_views.xml",
+        "views/account_payment_views.xml",
+        "views/payment_form_templates.xml",
+        "views/payment_provider_views.xml",
+        "data/payment_provider_data.xml",
         'security/ir.access.csv',
     ],
     "demo": ["data/loyalty_demo.xml"],
@@ -38,6 +42,8 @@
             "loyalty/static/src/interactions/*",
         ],
     },
+    "post_init_hook": "post_init_hook",
+    "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

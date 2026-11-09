@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_gift_card" model="payment.provider">
+        <field name="name">Gift Card</field>
+        <field name="code">gift_card</field>
+        <field name="module_id" ref="base.module_loyalty"/>
+        <field name="image_128" type="bytes" file="loyalty/static/img/gift_card.png"/>
+        <field name="is_live">True</field>
+        <field name="is_published">False</field>
+        <field name="sequence">1</field>
+        <field name="inline_form_view_id" ref="loyalty.payment_gift_card_inline_form"/>
+    </record>
+
+    <record id="payment_provider_ewallet" model="payment.provider">
+        <field name="name">eWallet</field>
+        <field name="code">ewallet</field>
+        <field name="module_id" ref="base.module_loyalty"/>
+        <field name="image_128" type="bytes" file="payment/static/img/wallet.png"/>
+        <field name="is_live">True</field>
+        <field name="is_published">False</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="payment_method_gift_card" model="payment.method">
+        <field name="name">Gift Card</field>
+        <field name="code">gift_card</field>
+        <field name="provider_id" ref="loyalty.payment_provider_gift_card"/>
+        <field name="sequence">1</field>
+        <field name="image" type="bytes" file="loyalty/static/img/gift_card.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+    </record>
+
+    <record id="payment_method_ewallet" model="payment.method">
+        <field name="name">eWallet</field>
+        <field name="code">ewallet</field>
+        <field name="provider_id" ref="loyalty.payment_provider_ewallet"/>
+        <field name="sequence">2</field>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+    </record>
+
+</odoo>

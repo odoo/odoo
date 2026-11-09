@@ -381,6 +381,7 @@ class SaleOrder(models.Model):
 
     # Payment fields
     transaction_count = fields.Integer(compute="_compute_transaction_count")
+    payment_count = fields.Integer(compute="_compute_payment_count")
     transaction_ids = fields.Many2many(
         comodel_name="payment.transaction",
         relation="sale_order_transaction_rel",
@@ -809,6 +810,27 @@ class SaleOrder(models.Model):
             return
         for order in self:
             order.transaction_count = len(order.transaction_ids)
+
+    @api.depends("transaction_ids.payment_id", "invoice_ids.matched_payment_ids")
+    def _compute_payment_count(self):
+        if not self.env.user.has_group("account.group_account_invoice"):
+            self.payment_count = 0
+            return
+        for order in self:
+            order.payment_count = len(order._get_payments())
+
+    def _get_payments(self):
+        """Return the payments of the order: those made online and those matched with its invoices.
+
+        :return: The payments of the order.
+        :rtype: account.payment
+        """
+        self.ensure_one()
+        return (
+            self.transaction_ids.payment_id
+            | self.invoice_ids.matched_payment_ids
+            | self.invoice_ids._get_reconciled_payments()
+        ).filtered(lambda payment: payment.state != "canceled")
 
     def _search_invoice_ids(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
@@ -1928,6 +1950,17 @@ class SaleOrder(models.Model):
                 .get("invoice_payment_term_id"),
             })
         action["context"] = context
+        return action
+
+    def action_view_payments(self):
+        self.ensure_one()
+        payments = self._get_payments()
+        action = self.env["ir.actions.act_window"]._for_xml_id("account.action_account_payments")
+        if len(payments) == 1:
+            action.update({"view_mode": "form", "res_id": payments.id, "views": []})
+        else:
+            action["domain"] = [("id", "in", payments.ids)]
+        action["context"] = {"create": False}
         return action
 
     def action_view_payment_transaction(self):

@@ -155,6 +155,16 @@ class AccountPayment(models.Model):
             'target': 'new',
         }
 
+    def action_view_payment_transaction(self):
+        self.ensure_one()
+        return {
+            'name': _("Payment Transaction"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'payment.transaction',
+            'view_mode': 'form',
+            'res_id': self.payment_transaction_id.id,
+        }
+
     def action_view_refunds(self):
         self.ensure_one()
         action = {

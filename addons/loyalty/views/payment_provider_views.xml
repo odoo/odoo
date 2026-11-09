@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Loyalty Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <!-- Load after account_payment to hide the fields it adds. -->
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <field name="is_live" position="attributes">
+                <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
+            </field>
+            <!-- Loyalty providers only display their configuration tab. -->
+            <page name="payment_methods" position="attributes">
+                <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
+            </page>
+            <page name="restrictions" position="attributes">
+                <attribute name="invisible">code in ('gift_card', 'ewallet')</attribute>
+            </page>
+            <page name="messages" position="attributes">
+                <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
+            </page>
+            <group name="provider_credentials" position="attributes">
+                <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
+            </group>
+            <group name="provider_options" position="attributes">
+                <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="payment_provider_kanban" model="ir.ui.view">
+        <field name="name">payment.provider.kanban.loyalty</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_kanban"/>
+        <field name="arch" type="xml">
+            <div name="live_mode_badges" position="attributes">
+                <attribute name="invisible" add="code in ('gift_card', 'ewallet')" separator="or"/>
+            </div>
+        </field>
+    </record>
+
+</odoo>

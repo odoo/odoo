@@ -34,13 +34,28 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
     @mute_logger("odoo.http")
     def test_expired_reward_validation(self):
         """Ensure payments don't process if any applied reward is no longer valid."""
-        program = self.program_gift_card
+        program = self.env["loyalty.program"].create({
+            "name": "$10 coupon",
+            "program_type": "coupons",
+            "trigger": "with_code",
+            "applies_on": "current",
+            "rule_ids": [Command.create({"minimum_amount": 0})],
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_order",
+                    "discount": 10,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
+            ],
+        })
 
         program.date_to = date.today() + timedelta(days=1)  # set program to expire after tomorrow
 
         self.env["loyalty.generate.wizard"].with_context(active_id=program.id).create({
             "coupon_qty": 1,
-            "points_granted": 100,
+            "points_granted": 1,
         }).generate_coupons()
 
         order = self._create_so(
