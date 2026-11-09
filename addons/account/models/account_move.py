@@ -5554,11 +5554,17 @@ class AccountMove(models.Model):
                 skip_invoice_sync=move.move_type == 'entry',
             ).copy(default_values)
 
+        reversed_storno = {
+            reverse_line: not line.is_storno
+            for move, reverse_move in zip(self, reverse_moves)
+            if move.move_type == 'entry' and move.company_id.account_storno
+            for line, reverse_line in zip(move.line_ids, reverse_move.line_ids, strict=True)
+        }
         reverse_moves.with_context(skip_invoice_sync=cancel).write({'line_ids': [
             Command.update(line.id, {
                 'balance': -line.balance,
                 'amount_currency': -line.amount_currency,
-                **({'is_storno': not line.is_storno} if line.company_id.account_storno else {}),
+                **({'is_storno': reversed_storno[line]} if line in reversed_storno else {}),
             })
             for line in reverse_moves.line_ids
             if line.move_id.move_type == 'entry' or line.display_type == 'cogs'
