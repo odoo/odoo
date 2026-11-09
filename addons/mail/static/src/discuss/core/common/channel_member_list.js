@@ -2,13 +2,13 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 
-import { Component, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, providePlugins, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
-import { useSearch } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 const SEARCH_RESULT_LIMIT = 100;
@@ -61,12 +61,13 @@ export class ChannelMemberList extends Component {
         });
         this.dialogService = useService("dialog");
         this.openChannelInvitationDialog = openChannelInvitationDialog;
-        this.search = useSearch({
+        providePlugins([SearchStatePlugin], {
             fetch: async (term) => {
                 await this.props.channel.searchChannelMembers(term);
                 return this.hasFilteredMembers(this.computeCategories(term));
             },
         });
+        this.search = usePlugin(SearchStatePlugin);
         this.categories = computedShallowEqual(
             () => this.computeCategories(this.search.searchTerm),
             { nested: true }

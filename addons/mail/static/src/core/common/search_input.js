@@ -1,4 +1,4 @@
-import { SearchState } from "@mail/utils/common/hooks";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
 import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
 
@@ -6,15 +6,17 @@ import { autofocusParamsType, useAutofocus } from "@web/core/utils/hooks";
 
 let nextId = 0;
 
+/** @typedef {import("@mail/utils/common/search_state_plugin").SearchStatePlugin} SearchStatePlugin */
+
 /**
  * Standard search input UI for Discuss: icon prefix that swaps to a spinner
- * while {@link useSearch} is loading, with an optional trailing slot for
+ * while {@link SearchStatePlugin} is loading, with an optional trailing slot for
  * action buttons (e.g. Invite, Create).
  *
- * The `search` state must be owned by the parent — call `useSearch(...)` in
- * the parent's setup and pass the result here. SearchInput intentionally does
- * not own the hook so parents can read `searchTerm`/`results`/`loading` from
- * their own JS (filters, getters, callbacks) without a forwarding indirection.
+ * In the parent's setup, provide the search plugin with `providePlugins`,
+ * retrieve its instance with `usePlugin`, and pass it as the `search` prop.
+ * This lets the parent read `searchTerm`/`results`/`loading` in its filters,
+ * getters, and callbacks.
  *
  */
 export class SearchInput extends Component {
@@ -32,7 +34,7 @@ export class SearchInput extends Component {
             onClear: t.function([t.instanceOf(MouseEvent)]).optional(),
             onKeydown: t.function([t.instanceOf(KeyboardEvent)]).optional(),
             placeholder: t.string().optional(),
-            search: t.instanceOf(SearchState),
+            search: t.instanceOf(SearchStatePlugin),
         });
         /** Input element, either owned by the parent (`inputRef` prop) or local. */
         this.inputRef = useProps.static(

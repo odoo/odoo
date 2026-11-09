@@ -29,7 +29,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -113,7 +113,7 @@ export class Message extends Component {
             isFirstMessage: t.boolean().optional(),
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
-            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messageSearch: t.instanceOf(MessageSearchPlugin).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
             previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),

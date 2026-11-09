@@ -1,6 +1,15 @@
 import { SearchInput } from "@mail/core/common/search_input";
-import { propStatic, usePropsPlus, useSearch } from "@mail/utils/common/hooks";
-import { Component, computed, signal, types, useEffect } from "@odoo/owl";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
+import {
+    Component,
+    computed,
+    providePlugins,
+    signal,
+    types,
+    useEffect,
+    usePlugin,
+} from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useService } from "@web/core/utils/hooks";
 
@@ -19,11 +28,12 @@ export class DiscussSearch extends Component {
                 types.signal(types.instanceOf(this.store.MessagingMenuUIState))
             ),
         });
-        this.search = useSearch({
+        providePlugins([SearchStatePlugin], {
             searchTerm: computed(() => this.props.messagingMenuUiState().searchTerm, {
                 set: (searchTerm) => (this.props.messagingMenuUiState().searchTerm = searchTerm),
             }),
         });
+        this.search = usePlugin(SearchStatePlugin);
         useEffect(() => {
             if (this.props.autofocus()) {
                 this.searchInput()?.focus();

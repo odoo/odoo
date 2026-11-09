@@ -1,5 +1,5 @@
 import { Message } from "@mail/core/common/message";
-import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { useMaybePlugin, useVisible } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -24,7 +24,7 @@ export class MessageCardList extends Component {
         this.props = useProps({
             emptyText: t.string().optional(),
             loadMore: t.boolean().optional(),
-            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messageSearch: t.instanceOf(MessageSearchPlugin).optional(),
             messages: t.array(t.instanceOf(this.store["mail.message"])),
             mode: t.string(),
             onClickJump: t.function([]).optional(),

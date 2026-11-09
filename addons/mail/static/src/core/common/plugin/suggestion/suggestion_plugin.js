@@ -3,9 +3,9 @@ import { getDeepestPosition, isContentEditable, isTextNode } from "@html_editor/
 import { rightPos } from "@html_editor/utils/position";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { useSearch } from "@mail/utils/common/hooks";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
-import { markRaw, proxy, untrack, useOnChange } from "@odoo/owl";
+import { markRaw, providePlugins, proxy, untrack, useOnChange, usePlugin } from "@odoo/owl";
 
 import { normalize } from "@web/core/l10n/utils";
 
@@ -76,7 +76,7 @@ export class MailSuggestionPlugin extends Plugin {
     listProps;
     /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
     overlay;
-    /** @type {import("@mail/utils/common/hooks").SearchState} */
+    /** @type {import("@mail/utils/common/search_state_plugin").SearchStatePlugin} */
     search;
 
     setup() {
@@ -103,12 +103,13 @@ export class MailSuggestionPlugin extends Plugin {
             },
             { rootId: this.editable.getRootNode()?.host?.id }
         );
-        this.search = useSearch({
+        providePlugins([SearchStatePlugin], {
             fetch: this.fetchSuggestions.bind(this),
             filter: this.update.bind(this),
             deps: () => [this.detection.source, this.detection.position],
             isActive: () => !!this.detection.source,
         });
+        this.search = usePlugin(SearchStatePlugin);
         useOnChange(
             () => [this.search.results, this.search.loading, this.search.searchTerm],
             (results, loading, searchTerm) => {
