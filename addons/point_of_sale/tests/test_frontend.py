@@ -733,6 +733,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         order_tips.sort()
         self.assertEqual(order_tips, [0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.8, 1.0, 1.5, 2.0, 10.0])
 
+        session = self.main_pos_config.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+
     def test_ticket_screen_search_suggestions(self):
         """The search field suggestions must stay above the order list, on mobile too."""
         self.main_pos_config.with_user(self.pos_user).open_ui()

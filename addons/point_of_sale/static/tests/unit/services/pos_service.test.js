@@ -8,7 +8,7 @@ import {
 } from "@point_of_sale/app/models/utils/order_change";
 import { downloadFile } from "@web/core/network/download";
 import { prepareRoundingVals } from "../accounting/utils";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { patch } from "@web/core/utils/patch";
@@ -27,6 +27,90 @@ describe("pos_store.js", () => {
         expect(order.is_tipped).toBe(true);
         expect(order.tip_amount).toBe(50);
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
+    });
+
+    const getPaidOrder = async (store, paymentType) => {
+        const order = await getFilledOrder(store);
+        const method = store.models["pos.payment.method"].find((pm) => pm.type === paymentType);
+        order.addPaymentline(method);
+        const payment = order.payment_ids.at(-1);
+        await store.syncAllOrders();
+        return { order, payment, paidAmount: payment.amount };
+    };
+
+    test("settleTip adjusts payment with tax included tip amount", async () => {
+        const store = await setupPosEnv();
+        store.config.tip_product_id.product_tmpl_id.taxes_id = [store.models["account.tax"].get(1)];
+        const { order, payment, paidAmount } = await getPaidOrder(store, "bank");
+
+        await store.settleTip(order, 10);
+
+        expect(order.tip_amount).toBe(11.5);
+        expect(payment.amount).toBe(paidAmount + 11.5);
+    });
+
+    test("settleTip with zero tip leaves payment and lines untouched", async () => {
+        const store = await setupPosEnv();
+        const { order, payment, paidAmount } = await getPaidOrder(store, "bank");
+
+        await store.settleTip(order, 0);
+
+        expect(order.is_tipped).toBe(true);
+        expect(order.tip_amount).toBe(0);
+        expect(order.lines.length).toBe(2);
+        expect(payment.amount).toBe(paidAmount);
+    });
+
+    test("settleTip drops the tip when no payment can be adjusted", async () => {
+        const store = await setupPosEnv();
+        const { order, payment, paidAmount } = await getPaidOrder(store, "cash");
+
+        await store.settleTip(order, 10);
+
+        expect(order.tip_amount).toBe(0);
+        expect(order.lines.length).toBe(2);
+        expect(payment.amount).toBe(paidAmount);
+    });
+
+    test("settleTip keeps the selected order", async () => {
+        const store = await setupPosEnv();
+        const { order, payment, paidAmount } = await getPaidOrder(store, "bank");
+        const otherOrder = store.addNewOrder();
+
+        await store.settleTip(order, 10);
+
+        expect(store.getOrder()).toBe(otherOrder);
+        expect(otherOrder.lines.length).toBe(0);
+        expect(payment.amount).toBe(paidAmount + 10);
+    });
+
+    test("settleTip retries a failed save without adjusting the payment again", async () => {
+        const store = await setupPosEnv();
+        const { order, payment, paidAmount } = await getPaidOrder(store, "bank");
+        let adjustCalls = 0;
+        payment.payment_method_id.payment_interface = {
+            canBeAdjusted: () => true,
+            sendPaymentAdjust: () => ++adjustCalls,
+        };
+        let failSave = true;
+        let saveCalls = 0;
+        onRpc("pos.order", "add_tip", () => {
+            saveCalls++;
+            if (failSave) {
+                throw new Error("save failed");
+            }
+        });
+
+        await expect(store.settleTip(order, 10)).rejects.toThrow("save failed");
+        expect(payment.amount).toBe(paidAmount + 10);
+
+        failSave = false;
+        await store.settleTip(order, 10);
+
+        expect(adjustCalls).toBe(1);
+        expect(saveCalls).toBe(2);
+        expect(order.tip_amount).toBe(10);
+        expect(payment.amount).toBe(paidAmount + 10);
     });
 
     test("a popstate after clickSaveOrder does not reopen the saved order", async () => {

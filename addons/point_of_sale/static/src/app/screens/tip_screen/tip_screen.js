@@ -97,9 +97,8 @@ export class TipScreen extends Component {
         }
         const amount = this.pos.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
-        const serverId = order.isSynced && order.id;
 
-        if (!serverId) {
+        if (!order.isSynced) {
             this.dialog.add(AlertDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
@@ -109,11 +108,6 @@ export class TipScreen extends Component {
             return;
         }
 
-        if (!amount) {
-            await this.pos.data.write("pos.order", [serverId], { is_tipped: true, tip_amount: 0 });
-            this.goNextScreen();
-            return;
-        }
         const maxTipPercentage = Math.max(...this.tipPercentages);
         const maxTipAmount = (maxTipPercentage / 100) * this.totalAmount;
         if (amount > maxTipAmount) {
@@ -130,22 +124,9 @@ export class TipScreen extends Component {
             }
         }
 
-        order.state = "draft";
-        await this.pos.setTip(amount);
-        order.state = "paid";
-        await this.adjustableTipLine.adjustAmount(amount);
-
-        const serializedTipLine = order.getSelectedOrderline().serializeForORM();
-        order.getSelectedOrderline().delete();
-        delete serializedTipLine["record_dependencies"];
-        delete serializedTipLine["relations_uuid_mapping"];
-        const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
-        await this.pos.data.write("pos.order", [serverId], {
-            is_tipped: true,
-            tip_amount: serverTipLine[0].priceIncl,
-        });
-
-        this.goNextScreen();
+        if (await this.pos.settleTip(order, amount)) {
+            this.goNextScreen();
+        }
     }
     goNextScreen() {
         this.pos.navigate("FeedbackScreen", {
