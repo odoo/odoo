@@ -1013,6 +1013,41 @@ test("Cross tab calls: the host tab keeps its call when another tab closes the c
     await contains("[title='Disconnect']");
 });
 
+test("can start the call again after failing to join it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    let isJoinFailing = true;
+    onRpc("/mail/rtc/channel/join_call", () => {
+        if (isJoinFailing) {
+            isJoinFailing = false;
+            throw new Error("join_call failed");
+        }
+    });
+    await start();
+    await openDiscuss(channelId);
+    expect.errors(1);
+    await click("[title='Start Call']");
+    await expect.waitForErrors(["RPC_ERROR: join_call failed"]);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+});
+
+test("disconnecting ends the call even when leaving it fails", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    onRpc("/mail/rtc/channel/leave_call", () => {
+        throw new Error("leave_call failed");
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    expect.errors(1);
+    await click(".o-discuss-CallActionList [title='Disconnect']");
+    await expect.waitForErrors(["RPC_ERROR: leave_call failed"]);
+    await contains("[title='Join the Call']");
+});
+
 test("automatically cancel incoming call after some time", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
