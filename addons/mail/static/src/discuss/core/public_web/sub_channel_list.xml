@@ -14,14 +14,14 @@
                 <div t-if="this.subChannels.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
                     <p class="my-1 text-center fst-italic text-500">
                         <t t-if="this.offlineService.offline and !this.props.channel.loadSubChannelsDone">Go online to load threads.</t>
-                        <t t-elif="this.search.searching">No threads found.</t>
+                        <t t-elif="this.search.searching()">No threads found.</t>
                         <t t-else="">This conversation has no threads yet.</t>
                     </p>
                 </div>
                 <div class="d-flex flex-column flex-grow-1 gap-2">
-                    <SubChannelPreview t-foreach="this.subChannels" t-as="channel" t-key="channel.localId" channel="channel" searchTerm="this.search.searchTerm" onClick="this.onClickSubChannel"/>
+                    <SubChannelPreview t-foreach="this.subChannels" t-as="channel" t-key="channel.localId" channel="channel" searchTerm="this.search.searchTerm()" onClick="this.onClickSubChannel"/>
                     <!-- keyed on the channel, so that the threads of another opened channel load -->
-                    <span t-if="!this.search.searchTerm" class="pt-1" t-key="this.props.channel.localId" t-ref="this.loadMoreRef"/>
+                    <span t-if="!this.search.searchTerm()" class="pt-1" t-key="this.props.channel.localId" t-ref="this.loadMoreRef"/>
                 </div>
             </div>
         </ActionPanel>
