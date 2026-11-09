@@ -1,4 +1,13 @@
-import { Component, onWillStart, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onWillUnmount,
+    t,
+    useListener,
+    usePlugin,
+    useProps,
+    xml,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -43,6 +52,7 @@ export class CallSettings extends Component {
                 return;
             }
         });
+        onWillUnmount(() => (this.store.settings.isRegisteringKey = false));
         this.isMobileOS = isMobileOS;
     }
 
