@@ -10,6 +10,7 @@ import {
     getCurrentFieldInputEl,
     getModelName,
 } from "./utils";
+import { session } from "@web/session";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 
@@ -329,6 +330,9 @@ export class FormFieldOption extends BaseOptionComponent {
                 containerEl?.dataset.type === "record") &&
             ["contains", "!contains"].includes(el.dataset.visibilityComparator)
         );
+    }
+    get maxFileSizeLimit(){
+        return Math.floor(session.max_file_upload_size / (1024 * 1024)) || undefined;
     }
     /**
      * Dynamic key to force BuilderList to re-render when field type changes.
