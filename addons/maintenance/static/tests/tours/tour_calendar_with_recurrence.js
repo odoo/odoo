@@ -85,3 +85,36 @@ registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", 
         },
     ],
 });
+
+registry.category("web_tour.tours").add("test_single_click_on_maintenance_from_calendar", {
+    steps: () => [
+        {
+            content: "Open the popover of the first request",
+            trigger: "a[data-event-id='1']",
+            run: "click",
+        },
+        {
+            content: "Check that the popover is opened",
+            trigger: ".o_popover_header:contains('Clean air filter')",
+        },
+        {
+            content: "Close the popover",
+            trigger: ".o_card_popover_close",
+            run: "click",
+        },
+        {
+            content: "Open the popover of the second request",
+            trigger: "a[data-event-id='2']",
+            run: "click",
+        },
+        {
+            content: "Check that the popover is opened",
+            trigger: ".o_popover_header:contains('Clean air filter')",
+        },
+        {
+            content: "Close the popover",
+            trigger: ".o_card_popover_close",
+            run: "click",
+        },
+    ],
+});
