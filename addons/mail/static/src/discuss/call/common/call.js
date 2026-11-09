@@ -74,9 +74,15 @@ export class Call extends Component {
             this.resizeObserver.disconnect();
             browser.clearTimeout(this.overlayTimeout);
         });
-        useHotkey("shift+d", () => this.rtc.toggleDeafen());
-        useHotkey("shift+m", () => this.rtc.toggleMicrophone());
-        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
+        useHotkey("shift+d", () => this.rtc.toggleDeafen(), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+m", () => this.rtc.toggleMicrophone(), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
         useInDiscussCallView();
     }
 
