@@ -4,6 +4,8 @@
 
 API: QFPay OpenAPI version `v1`
 
+API reference: [QFPay API Reference](https://sdk.qfapi.com/integration/api-reference/request-format)
+
 Integration
 guide: [QFPay Payment Element](https://sdk.qfapi.com/integration/online-shop/checkout-integration/payment-element)
 
@@ -35,9 +37,9 @@ The provider requires an `App Code` and an `App Key`.
     - UnionPay
     - FPS
     - PayMe
-    - Card payments (Visa, Mastercard, JCB, UnionPay)
-    - Multi-currency support for `HKD`, `CNY`, `USD`, `AED`, `EUR`, `IDR`, `JPY`, `MMK`, `MYR`, `SGD`, `THB`, `CAD`, and
-      `AUD`
+    - Card payments (Visa, Mastercard)
+- Multi-currency support for `HKD`, `CNY`, `USD`, `AED`, `EUR`, `IDR`, `JPY`, `MMK`, `MYR`, `SGD`,
+  `THB`, `CAD`, and `AUD`
 
 ## Not implemented features
 
@@ -59,6 +61,9 @@ Note that QFPay provides three environments: `sandbox`, `live testing`, and `pro
 
 Odoo's `test` mode in configured to use the `sandbox` environment, which is used for development and testing with simulated transactions.
 However, the `sandbox` environment only supports Card payments ([Test cards](https://sdk.qfapi.com/integration/online-shop/integration-by-payment-type/visa-master-online-payment#test-cards)).
+
+The payment page must be served over HTTPS: the QFPay wallet iframe refuses to be embedded in
+non-HTTPS pages.
 
 For more information, see
 the [QFPay Payment Element](https://sdk.qfapi.com/integration/online-shop/checkout-integration/payment-element).

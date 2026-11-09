@@ -14,12 +14,9 @@ patch(PaymentForm.prototype, {
      * @private
      * @param {number} providerId - The id of the selected payment option's provider.
      * @param {string} providerCode - The code of the selected payment option's provider.
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
-     * @param {string} flow - The online payment flow of the selected payment option.
      * @return {void}
      */
-    _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
+    _prepareInlineForm(providerId, providerCode) {
         if (providerCode !== "qfpay") {
             return super._prepareInlineForm(...arguments);
         }

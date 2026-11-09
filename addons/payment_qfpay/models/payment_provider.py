@@ -34,14 +34,11 @@ class PaymentProvider(models.Model):
     @api.constrains("available_currency_ids")
     def _check_currency_is_supported(self):
         for provider in self.filtered(lambda p: p.code == "qfpay"):
-            if provider.available_currency_ids.filtered(
+            if not provider.available_currency_ids or provider.available_currency_ids.filtered(
                 lambda c: c.name not in const.SUPPORTED_CURRENCIES
             ):
                 raise ValidationError(
-                    self.env._(
-                        "QFPay only supports the following currencies: %s",
-                        ", ".join(const.SUPPORTED_CURRENCIES),
-                    )
+                    self.env._("Only currencies supported by QFPay can be selected.")
                 )
 
     # === CRUD METHODS === #
@@ -55,46 +52,25 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
-    def _qfpay_get_env_config(self):
-        """Return the environment config dict for the current provider state.
+    def _qfpay_calculate_signature(self, payload, is_webhook=False):
+        """Generate the QFPay signature of an API request or of a webhook notification.
 
-        :return: The environment config dict containing the API URL, SDK URL, SDK
-                 environment, and SDK region.
-        :rtype: dict
-        """
-        if self.is_live:
-            return {
-                "api_url": "https://openapi-hk.qfapi.com",
-                "sdk_url": "https://cdn-hk.qfapi.com/qfpay_element/qfpay.js",
-                "sdk_env": "prod",
-                "sdk_region": "hk",
-            }
-        return {
-            "api_url": "https://openapi-int.qfapi.com",
-            "sdk_url": "https://cdn-int.qfapi.com/qfpay_element/qfpay.js",
-            "sdk_env": "qa",
-            "sdk_region": "qa",
-        }
+        API requests are signed from their parameters, sorted by key, with empty values filtered
+        out and joined in query format. Webhook notifications are signed from their raw body.
 
-    def _qfpay_calculate_signature(self, data=None, signing_string=None):
-        """Generate the QFPay signature from payload data or a prebuilt input.
-
-        If `signing_string` is provided, it is signed directly.
-        Otherwise, the signing string is built from `data` by filtering empty values,
-        sorting by key and joining in query format.
-
-        :param dict data: Optional mapping used to build the signing string.
-        :param bytes signing_string: Optional raw signing input before app key.
+        :param dict|bytes payload: The request parameters, or the raw body of the notification if
+               `is_webhook` is set.
+        :param bool is_webhook: Whether the signature is computed for a webhook notification.
         :return: The calculated signature.
         :rtype: str
         """
-        if signing_string is None:
-            data = data or {}
-            items = sorted([(k, str(v)) for k, v in data.items()])
+        if is_webhook:
+            signing_string = payload
+        else:
+            items = sorted((k, str(v)) for k, v in (payload or {}).items() if v not in (None, ""))
             signing_string = "&".join(f"{k}={v}" for k, v in items).encode("utf-8")
 
-        payload = signing_string + (self.qfpay_app_key or "").encode("utf-8")
-        return hashlib.md5(payload).hexdigest().upper()
+        return hashlib.md5(signing_string + self.qfpay_app_key.encode("utf-8")).hexdigest().upper()
 
     # === REQUEST HELPERS === #
 
@@ -103,7 +79,11 @@ class PaymentProvider(models.Model):
         if self.code != "qfpay":
             return super()._build_request_url(endpoint, **kwargs)
 
-        return urljoin(self._qfpay_get_env_config()["api_url"], endpoint)
+        if self.is_live:
+            api_url = "https://openapi-hk.qfapi.com"
+        else:
+            api_url = "https://openapi-int.qfapi.com"
+        return urljoin(api_url, endpoint)
 
     def _build_request_headers(self, method, endpoint, payload, **kwargs):
         """Override of `payment` to add QFPay authentication headers.
@@ -129,3 +109,18 @@ class PaymentProvider(models.Model):
 
         response_data = response.json()
         return response_data.get("respmsg") or response_data.get("resperr")
+
+    def _parse_response_content(self, response, **kwargs):
+        """Override of `payment` to raise on QFPay error response codes."""
+        if self.code != "qfpay":
+            return super()._parse_response_content(response, **kwargs)
+
+        response_content = response.json()
+        if response_content.get("respcd") != "0000":
+            raise ValidationError(
+                self.env._(
+                    "The payment provider rejected the request.\n%s",
+                    response_content.get("respmsg") or response_content.get("resperr"),
+                )
+            )
+        return response_content

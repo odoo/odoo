@@ -24,7 +24,7 @@ SUPPORTED_CURRENCIES = (
 )
 
 # The codes of the default primary payment methods to activate
-DEFAULT_PAYMENT_METHOD_CODES = {
+DEFAULT_PAYMENT_METHOD_CODES = frozenset({
     "alipay",
     "alipay_hk",
     "wechat_pay",
@@ -32,7 +32,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     "fps",
     "payme",
     "card",
-}
+})
 
 # Mapping of payment method codes to QFPay codes (for creating the payment intent).
 PAYMENT_METHODS_MAPPING = frozendict({
@@ -46,7 +46,7 @@ PAYMENT_METHODS_MAPPING = frozendict({
 })
 
 # Mapping of payment method codes to UI picker type codes for the QFPay Element SDK.
-PAYMENT_PICKER_TYPES = frozendict({
+PAYMENT_METHODS_SDK_MAPPING = frozendict({
     "alipay": "Alipay",
     "alipay_hk": "AlipayHK",
     "card": "VisaMasterCardPayment",
@@ -56,9 +56,25 @@ PAYMENT_PICKER_TYPES = frozendict({
     "wechat_pay": "WeChat",
 })
 
+# The QFPay Element SDK configuration, by environment.
+SDK_CONFIG = frozendict({
+    "live": frozendict({
+        "sdk_url": "https://cdn-hk.qfapi.com/qfpay_element/qfpay.js",
+        "sdk_env": "prod",
+        "sdk_region": "hk",
+    }),
+    "test": frozendict({
+        "sdk_url": "https://cdn-int.qfapi.com/qfpay_element/qfpay.js",
+        "sdk_env": "qa",
+        "sdk_region": "qa",
+    }),
+})
+
 # Mapping of transaction states to QFPay's payment statuses.
+# See https://sdk.qfapi.com/integration/api-reference/status-codes
 PAYMENT_STATUS_MAPPING = frozendict({
     "done": ("0000",),
     "pending": ("1143", "1145", "1298"),
     "cancel": ("1142", "1181", "1263", "1264"),
+    "error": ("1147", "1201", "1202", "1203", "1204", "1205", "1212", "1294", "1297", "2005"),
 })

@@ -3,6 +3,8 @@
 import json
 import pprint
 
+from werkzeug.exceptions import BadRequest
+
 from odoo import http
 from odoo.http import request
 
@@ -17,9 +19,9 @@ class QFPayController(http.Controller):
     @http.route(const.PAYMENT_RETURN_ROUTE, type="http", auth="public", methods=["GET"])
     def qfpay_return_from_checkout(self, **data):
         """Reconcile transaction status via enquiry and redirect to payment status page."""
-        _logger.info("QFPay: Handling redirection with data:\n%s", pprint.pformat(data))
+        _logger.info("Handling redirection from QFPay with data:\n%s", pprint.pformat(data))
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("qfpay", data)
-        if tx_sudo and tx_sudo.state not in ("done", "cancel", "error"):
+        if tx_sudo and tx_sudo.state not in ("done", "cancel"):
             payment_data = tx_sudo._qfpay_query_transaction_data()
             if payment_data:
                 tx_sudo._record(payment_data)
@@ -33,12 +35,20 @@ class QFPayController(http.Controller):
         :rtype: str
         """
         raw_body = request.httprequest.get_data()
-        data = json.loads(raw_body.decode("utf-8"))
-        _logger.info("QFPay: Notification received with data:\n%s", pprint.pformat(data))
+        try:
+            data = json.loads(raw_body.decode("utf-8"))
+        except ValueError:  # Reject stray non-JSON requests instead of crashing with a 500.
+            _logger.warning("Received invalid notification data from QFPay:\n%s", raw_body[:200])
+            raise BadRequest from None
+
+        _logger.info("Notification received from QFPay with data:\n%s", pprint.pformat(data))
+        if data.get("notify_type") != "payment":  # Refund notifications are not supported
+            return "SUCCESS"
+
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("qfpay", data)
         if tx_sudo:
             expected_signature = tx_sudo.provider_id._qfpay_calculate_signature(
-                signing_string=raw_body
+                raw_body, is_webhook=True
             )
             received_signature = request.httprequest.headers.get("X-QF-SIGN")
             payment_utils.verify_signature(received_signature, expected_signature)

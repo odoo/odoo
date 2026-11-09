@@ -1,7 +1,7 @@
 /* global QFpay */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, signal } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
@@ -9,22 +9,21 @@ import { loadJS } from "@web/core/assets";
 export class QFPayWalletDialog extends Component {
     static components = { Dialog };
     static template = "payment_qfpay.qfpayWalletDialog";
-    static props = {
-        close: Function,
-        sdkUrl: String,
-        sdkEnv: String,
-        sdkRegion: String,
-        pickerPaymentType: String,
-        paymentIntent: String,
-        outTradeNo: String,
-        txamt: String,
-        txcurrcd: String,
-        returnUrl: String,
-        onPaymentComplete: Function,
-        onPaymentError: Function,
-    };
 
-    walletRef = signal.ref();
+    props = useProps({
+        close: t.function(),
+        sdkUrl: t.string(),
+        sdkEnv: t.string(),
+        sdkRegion: t.string(),
+        pickerPaymentType: t.string(),
+        paymentIntent: t.string(),
+        outTradeNo: t.string(),
+        txamt: t.string(),
+        txcurrcd: t.string(),
+        returnUrl: t.string(),
+        onPaymentComplete: t.function(),
+        onPaymentError: t.function(),
+    });
 
     setup() {
         onWillStart(() => loadJS(this.props.sdkUrl));

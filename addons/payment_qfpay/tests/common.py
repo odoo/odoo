@@ -16,18 +16,16 @@ class QFPayCommon(PaymentCommon):
         cls.provider = cls.qfpay
         cls.currency = cls._enable_currency("HKD")
 
-        cls.mock_intent_response = {
-            "respcd": "0000",
-            "payment_intent": "mock-payment-intent-token",
-        }
+        cls.mock_intent_response = {"respcd": "0000", "payment_intent": "mock-payment-intent-token"}
         cls.webhook_data = {
             "out_trade_no": cls.reference,
             "txamt": str(int(cls.amount * 100)),
             "txcurrcd": cls.currency.name,
             "respcd": "0000",
             "respmsg": "Success",
+            "notify_type": "payment",
         }
         cls.webhook_raw_body = json.dumps(cls.webhook_data).encode("utf-8")
         cls.webhook_signature = cls.provider._qfpay_calculate_signature(
-            signing_string=cls.webhook_raw_body
+            cls.webhook_raw_body, is_webhook=True
         )

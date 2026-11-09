@@ -4,7 +4,7 @@
     "name": "Payment Provider: QFPay",
     "category": "Accounting/Payment Providers",
     "sequence": 350,
-    "summary": "A payment provider covering the Hong Kong Market.",
+    "summary": "A payment provider covering the Hong Kong market.",
     "description": " ",  # Non-empty string to avoid loading the README file.
     "depends": ["payment"],
     "data": [
@@ -18,7 +18,7 @@
         "web.assets_frontend": [
             "payment_qfpay/static/src/qfpay_wallet_dialog/**/*",
             "payment_qfpay/static/src/interactions/payment_form.js",
-        ],
+        ]
     },
     "author": "Odoo S.A.",
     "license": "LGPL-3",

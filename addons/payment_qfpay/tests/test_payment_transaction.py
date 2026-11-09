@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
@@ -37,7 +38,7 @@ class TestPaymentTransaction(QFPayCommon):
         )
 
     def test_get_specific_processing_values_returns_expected_values(self):
-        """Test that processing values include SDK config, payment intent, amount, and the return URL."""
+        """Test that processing values include SDK config, payment intent, amount and return URL."""
         payment_transaction_model = self.env.registry["payment.transaction"]
         with patch.object(
             payment_transaction_model,
@@ -53,14 +54,11 @@ class TestPaymentTransaction(QFPayCommon):
             f"{const.PAYMENT_RETURN_ROUTE}?{urlencode({'out_trade_no': tx.reference})}",
         )
         expected_txamt = str(payment_utils.to_minor_currency_units(tx.amount, tx.currency_id))
-        env_config = tx.provider_id._qfpay_get_env_config()
         self.assertDictEqual(
             values,
             {
-                "sdk_url": env_config["sdk_url"],
-                "sdk_env": env_config["sdk_env"],
-                "sdk_region": env_config["sdk_region"],
-                "picker_payment_type": const.PAYMENT_PICKER_TYPES.get(
+                **const.SDK_CONFIG["test"],
+                "picker_payment_type": const.PAYMENT_METHODS_SDK_MAPPING.get(
                     tx.payment_method_id.code, ""
                 ),
                 "payment_intent": "mock-payment-intent-token",
@@ -71,18 +69,17 @@ class TestPaymentTransaction(QFPayCommon):
             },
         )
 
-    def test_get_specific_processing_values_raises_on_api_error(self):
-        """Test that failed payment-intent creation raises ValidationError."""
+    def test_failed_payment_intent_creation_sets_transaction_in_error(self):
+        """Test that a rejected payment-intent creation sets the transaction state to error."""
         payment_transaction_model = self.env.registry["payment.transaction"]
         with patch.object(
             payment_transaction_model,
             "_send_api_request",
-            autospec=True,
-            return_value={"respcd": "1001", "respmsg": "Invalid app code"},
+            side_effect=ValidationError("Invalid app code"),
         ):
             tx = self._create_transaction("direct")
-            with self.assertRaises(ValidationError):
-                tx._get_specific_processing_values({})
+            tx._get_processing_values()
+        self.assertEqual(tx.state, "error")
 
     def test_qfpay_query_transaction_data_returns_matching_record(self):
         """Test that transaction query returns the record matching the transaction reference."""
@@ -100,12 +97,15 @@ class TestPaymentTransaction(QFPayCommon):
 
         self.assertEqual(payment_data["out_trade_no"], tx.reference)
 
+    @mute_logger("odoo.addons.payment_qfpay.models.payment_transaction")
     def test_qfpay_query_transaction_data_returns_none_on_error(self):
         """Test that transaction query returns None when QFPay responds with an error."""
         tx = self._create_transaction("direct")
         payment_transaction_model = self.env.registry["payment.transaction"]
         with patch.object(
-            payment_transaction_model, "_send_api_request", return_value={"respcd": "1001"}
+            payment_transaction_model,
+            "_send_api_request",
+            side_effect=ValidationError("Invalid app code"),
         ):
             payment_data = tx._qfpay_query_transaction_data()
         self.assertIsNone(payment_data)
@@ -134,6 +134,7 @@ class TestPaymentTransaction(QFPayCommon):
         })
         self.assertEqual(tx.state, "cancel")
 
+    @mute_logger("odoo.addons.payment_qfpay.models.payment_transaction")
     def test_apply_updates_sets_error_on_unknown_status(self):
         """Test that unknown response codes set the transaction state to error."""
         tx = self._create_transaction("direct")
