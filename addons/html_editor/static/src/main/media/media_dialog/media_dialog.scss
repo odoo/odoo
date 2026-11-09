@@ -39,8 +39,9 @@
         }
     }
 
-    .o_we_attachment_selected {
-        @include o-we-active-wrapper($top: 5px, $left: 5px);
+    .o_we_attachment_selected:not(.oi)::before {
+        top: 5px;
+        inset-inline-start: 5px;
     }
 
     .o_we_load_more {

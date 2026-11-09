@@ -40,8 +40,9 @@
         }
 
         .o_theme_preview {
-            &.o_theme_installed .o_theme_preview_top {
-                @include o-we-active-wrapper($top: 7px, $right: 7px);
+            &.o_theme_installed .o_theme_preview_top::before {
+                top: 7px;
+                inset-inline-end: 7px;
             }
         }
 

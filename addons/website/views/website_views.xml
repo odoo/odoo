@@ -257,7 +257,7 @@
                             <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
                             <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
 
-                            <div class="o_theme_preview_top position-relative border rounded-3 transition-base">
+                            <div class="o_theme_preview_top position-relative border rounded-3 transition-base" t-att-class="{'o_we_active_wrapper': record.is_installed_on_current_website.raw_value}">
                                 <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')} rounded-3" t-attf-style="background-image: url(#{image_url});"/>
                                 <div t-if="record.is_installed_on_current_website.raw_value or !record.url.value" class="o_button_area position-absolute top-50 start-50 translate-middle d-flex align-items-center justify-content-center w-100 h-100 bg-dark bg-opacity-50 rounded opacity-0 opacity-100-hover transition-fade">
                                     <div class="d-flex flex-column gap-2 w-50">
