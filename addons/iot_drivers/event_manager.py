@@ -39,6 +39,9 @@ class EventManager:
         }
         self._delete_expired_sessions()
 
+        previous = self.sessions.get(session_id)
+        if previous:
+            previous["event"].set()
         self.sessions[session_id] = session
         return session
 
