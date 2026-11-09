@@ -53,7 +53,7 @@
         <field name="name">sale.report.view.list</field>
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
-            <list string="Sales Analysis" action="action_open_order" type="object">
+            <list string="Sales Analysis" js_class="sale_report_list" action="action_open_order" type="object">
                 <field name="date"/>
                 <field name="order_reference" optional="show"/>
                 <field name="product_id" string="Product" optional="show"/>

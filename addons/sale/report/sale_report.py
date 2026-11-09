@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.tools import clean_context
+from odoo.tools.sql import SQL
 
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
 
@@ -106,6 +107,7 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN AVG(l.price_unit
                 / {self._case_value_or_one('s.currency_rate')}
                 * {self._case_value_or_one('account_currency_table.rate')}
+                * u2.factor / u.factor
                 ) ELSE 0
             END AS price_unit,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
@@ -237,6 +239,16 @@ class SaleReport(models.Model):
             GROUP BY {self._group_by_sale()}
             {")" if with_ else ""}
         """
+
+    def _read_group_select(self, aggregate_spec, query):
+        """ Weight the average unit price by the ordered quantity. """
+        if aggregate_spec != 'price_unit:avg':
+            return super()._read_group_select(aggregate_spec, query)
+        return SQL(
+            'SUM(%(f_price)s * %(f_qty)s) / NULLIF(SUM(%(f_qty)s), 0.0)',
+            f_price=self._field_to_sql(self._table, 'price_unit', query),
+            f_qty=self._field_to_sql(self._table, 'product_uom_qty', query),
+        )
 
     @property
     def _table_query(self):
