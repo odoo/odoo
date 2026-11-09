@@ -248,7 +248,7 @@ class SaleOrder(models.Model):
         precompute=True,
         readonly=False,
         check_company=True,
-        domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]",
+        domain=[('payment_type', '=', 'inbound')],
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
