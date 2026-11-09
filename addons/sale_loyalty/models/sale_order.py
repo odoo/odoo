@@ -343,21 +343,17 @@ class SaleOrder(models.Model):
         taxes = self.fiscal_position_id.map_tax(
             product.taxes_id._filter_taxes_by_company(self.company_id)
         )
-        points = self._get_real_points_for_coupon(coupon)
-        claimable_count = (
-            float_round(
-                points / reward.required_points, precision_rounding=1, rounding_method="DOWN"
-            )
-            if not reward.clear_wallet
-            else 1
+        cost = (
+            self._get_real_points_for_coupon(coupon)
+            if reward.clear_wallet
+            else reward.required_points
         )
-        cost = points if reward.clear_wallet else claimable_count * reward.required_points
         return [
             {
                 "name": reward.description,
                 "product_id": product.id,
                 "discount": 100,
-                "product_uom_qty": reward.reward_product_qty * claimable_count,
+                "product_uom_qty": reward.reward_product_qty,
                 "reward_id": reward.id,
                 "coupon_id": coupon.id,
                 "points_cost": cost,
