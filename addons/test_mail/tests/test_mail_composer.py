@@ -1590,6 +1590,26 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_mail_composer_log_note_template_recipients(self):
+        """ Test a note written in the composer with a template stays internal,
+        while an automated note using the same template reaches its recipients. """
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record, default_subtype_xmlid='mail.mt_note')
+        ))
+        composer_form.template_id = self.template
+        _mail, message = composer_form.save()._action_send_mail()
+        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertFalse(message.partner_ids)
+
+        message = self.test_record.with_env(self.env).message_post_with_source(
+            self.template,
+            message_type='auto_comment',
+            subtype_xmlid='mail.mt_note',
+        )
+        self.assertEqual(message.partner_ids, self.partner_1)
+
+    @users('employee')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_recipients(self):
         """ Test partner_ids given to composer are given to the final message. """
         composer = self.env['mail.compose.message'].with_context(
