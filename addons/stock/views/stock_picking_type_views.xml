@@ -97,7 +97,11 @@
                                         <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
                                         <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
                                     </div>
-                                    <field name="auto_show_allocation_report" invisible="code not in ['incoming', 'internal']"/>
+                                    <label for="auto_show_allocation_report" name="auto_show_allocation_report_label" invisible="code not in ['incoming', 'internal']"/>
+                                    <div class="o_row" name="auto_show_allocation_report_div" invisible="code not in ['incoming', 'internal']">
+                                        <field name="auto_show_allocation_report"/>
+                                        <field name="allocation_mode" invisible="code != 'incoming' or not auto_show_allocation_report"/>
+                                    </div>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>

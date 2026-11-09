@@ -1856,6 +1856,9 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         # Call `_action_assign` on confirmed moves eligible for auto-assignment at confirmation.
         moves._filtered_for_assign()._action_assign()
+        # Allocate incoming quantities to waiting needs if the operation type is set to do it automatically.
+        if not self.env.context.get('skip_auto_allocation'):
+            moves._auto_allocate()
         if new_push_moves:
             neg_push_moves = new_push_moves.filtered(lambda sm: sm.uom_id.compare(sm.product_uom_qty, 0) < 0)
             (new_push_moves - neg_push_moves).sudo()._action_confirm()
@@ -2559,6 +2562,16 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _get_lang(self):
         """Determine language to use for translated description"""
         return self.picking_id.partner_id.lang or self.partner_id.lang or self.env.user.lang
+
+    def _auto_allocate(self):
+        pickings = self.picking_id.filtered(lambda p:
+            p.state not in ('draft', 'done', 'cancel')
+            and p.picking_type_id.code == 'incoming'
+            and p.picking_type_id.auto_show_allocation_report
+            and p.picking_type_id.allocation_mode == 'automatic'
+        )
+        if pickings:
+            self.env['stock.allocation.report'].sudo()._auto_allocate(pickings)
 
     def _get_source_document(self):
         """ Return the move's document, used by `stock.forecasted_product_productt`
