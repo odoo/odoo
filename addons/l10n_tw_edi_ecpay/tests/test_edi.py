@@ -71,7 +71,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         self.assertEqual(json_data.get("CustomerEmail"), "partner_a@tsointsoin")
         self.assertEqual(json_data.get("CustomerPhone"), "0123456789")
         self.assertEqual(json_data.get("SalesAmount"), 1050.0)
-        self.assertEqual(json_data.get("CustomerAddr"), "street七美, 中正區 TPC, Taiwan")
+        self.assertEqual(json_data.get("CustomerAddr"), "street七美, 中正區 台北市, Taiwan")
 
         self.basic_invoice.write({'ref': 'Test Reference'})
         json_data_with_ref = self.basic_invoice._l10n_tw_edi_generate_invoice_json()
