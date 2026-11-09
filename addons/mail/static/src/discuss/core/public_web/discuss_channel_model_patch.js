@@ -16,6 +16,7 @@ const discussChannelPatch = {
             },
             { immediate: true }
         );
+        this.discussAppAsSideChannel = fields.One("DiscussApp", { inverse: "sideChannel" });
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
         this.messagingMenuTabs = fields.Many("MessagingMenuTab", {
@@ -89,7 +90,7 @@ const discussChannelPatch = {
             name,
         });
         this.store.insert(store_data);
-        this.store["discuss.channel"].get(sub_channel).open({ focus: true });
+        this.store["discuss.channel"].get(sub_channel).open({ focus: true, asSideChannel: true });
     },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel_type);
@@ -192,15 +193,24 @@ const discussChannelPatch = {
         }
     },
     /** @override */
-    _openChannel() {
+    _openChannel({ asSideChannel } = {}) {
         if (this.store.discuss.isActive && !this.store.ui.isSmall()) {
-            this.setAsDiscussThread();
+            // sub-channels opened from within their displayed parent go in split view
+            if (asSideChannel && this.parent_channel_id?.thread?.eq(this.store.discuss.thread)) {
+                this.store.discuss.sideChannel = this;
+            } else {
+                this.setAsDiscussThread();
+            }
             return true;
         }
-        return super._openChannel();
+        return super._openChannel(...arguments);
     },
     get shouldSubscribeToBusChannel() {
-        return super.shouldSubscribeToBusChannel || this.isLocallyPinned;
+        return (
+            super.shouldSubscribeToBusChannel ||
+            this.isLocallyPinned ||
+            Boolean(this.discussAppAsSideChannel)
+        );
     },
     /** @override */
     async _unpinExecute() {

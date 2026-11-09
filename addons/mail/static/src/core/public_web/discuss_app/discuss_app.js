@@ -1,6 +1,6 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
+import { propStatic, useEscapeFocus, usePropsPlus } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -64,15 +64,15 @@ export class Discuss extends Component {
         this.effect = usePlugin(EffectPlugin);
         this.ui = usePlugin(UIPlugin);
         useAncestors({ inDiscussApp: true });
+        useEscapeFocus(this.root, () => {
+            if (this.thread?.composer && !this.thread.composer.isFocused) {
+                this.thread.composer.autofocus++;
+            }
+        });
         useListener(
             window,
             "keydown",
             (ev) => {
-                if (getActiveHotkey(ev) === "escape" && !this.thread?.composer?.isFocused) {
-                    if (this.thread?.composer) {
-                        this.thread.composer.autofocus++;
-                    }
-                }
                 if (getActiveHotkey(ev) === "control+k") {
                     this.store.env.services.command.openMainPalette({ searchValue: "@" });
                     ev.preventDefault();
