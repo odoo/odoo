@@ -86,6 +86,29 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                     mail_message_values={"body": expected_notification_content},
                 )
 
+    def test_sms_composer_default_res_id_vs_active_id(self):
+        """ Composer opened from a button of another document (e.g. "Send SMS"
+        on a website visitor targeting its contact): the web client adds the
+        active_* keys of the clicked document to the action context. Explicit
+        default_res_model / default_res_id must win over them. """
+        test_partner = self.env['res.partner'].create({
+            'name': 'Visitor Contact',
+            'phone': '+32456001122',
+        })
+        other_record = self.user_employee  # any record of another model
+        composer = self.env['sms.composer'].with_context(
+            active_model=other_record._name,
+            active_id=other_record.id,
+            active_ids=other_record.ids,
+            default_res_model='res.partner',
+            default_res_id=test_partner.id,
+            default_composition_mode='comment',
+            default_number_field_name='phone',
+        ).create({'body': 'Hello from the website'})
+        self.assertEqual(composer.res_model, 'res.partner')
+        self.assertEqual(composer.res_id, test_partner.id)
+        self.assertEqual(composer.recipient_single_number_itf, '+32456001122')
+
     def test_sms_composer_action_create_template(self):
         """ Test to save new SMS template """
         composer = self.env['sms.composer'].with_context(
