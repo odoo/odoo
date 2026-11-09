@@ -56,4 +56,12 @@ test("getPaymentInterfaceStates", async () => {
     createPaymentLine(store, order3, card);
     const result3 = card.getPaymentInterfaceStates();
     expect(result3).toEqual({ status: false, message: "Test Message" });
+
+    // Ignores other orders if order is supplied
+    card._checkOrder = ({ order }) =>
+        order === order2
+            ? { status: true, message: "" }
+            : { status: false, message: "Test Message" };
+    const result4 = card.getPaymentInterfaceStates({ order: order2 });
+    expect(result4).toEqual({ status: true, message: "" });
 });
