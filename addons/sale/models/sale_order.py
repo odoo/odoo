@@ -1734,7 +1734,7 @@ class SaleOrder(models.Model):
             cron._trigger()
         else:  # Async emails are disabled, either by the user or we are in the cron job.
             # Send the email synchronously.
-            self.with_context(force_send=True).message_post_with_source(
+            self.with_context(mail_notify_force_send=True).message_post_with_source(
                 mail_template,
                 email_layout_xmlid="mail.mail_notification_light",
                 subtype_xmlid="mail.mt_comment",
