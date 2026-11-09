@@ -1,6 +1,7 @@
 import { closeStream } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 
 const FPS = 30; // Frames per second for the blurred background stream
 
@@ -85,7 +86,8 @@ export class BlurManager {
         this.video.removeEventListener("loadeddata", this._onVideoPlay);
         this.video.srcObject = null;
         this.isVideoDataLoaded = false;
-        this.selfieSegmentation.reset();
+        this.selfieSegmentation?.close();
+        this.selfieSegmentation = null;
         closeStream(this.canvasStream);
         this.canvasStream = null;
         this._terminateWorker();
@@ -103,7 +105,7 @@ export class BlurManager {
     async _handleWorkerMessage(e) {
         if (e.data.command === "tick") {
             await this._onFrame();
-            this.worker.postMessage({ command: "tock" });
+            this.worker?.postMessage({ command: "tock" });
         }
     }
 
@@ -148,7 +150,13 @@ export class BlurManager {
         if (!this.isVideoDataLoaded) {
             return;
         }
-        await this.selfieSegmentation.send({ image: this.video });
+        try {
+            await this.selfieSegmentation.send({ image: this.video });
+        } catch (error) {
+            console.warn(error);
+            this.rejectStreamPromise(new Error(_t("Background blur could not be loaded")));
+            this.close();
+        }
     }
 
     /**
