@@ -1,4 +1,6 @@
 declare module "models" {
+    import { FollowerListView as FollowerListViewClass } from "@mail/core/web/follower_list_view_model";
+
     export interface Activity {
         dateCreateFormatted: Readonly<string>;
         dateDeadlineFormatted: Readonly<string>;
@@ -9,11 +11,16 @@ declare module "models" {
         markAsDoneAndScheduleNext: () => Promise<import("@web/webclient/actions/action_plugin").ActionDescription>;
         remove: (param0: { broadcast: boolean }) => void;
     }
+    export interface FollowerListView extends FollowerListViewClass {}
     export interface Message {
         canForward: Readonly<boolean>;
         canReplyAll: Readonly<boolean>;
     }
+    export interface Models {
+        FollowerListView: FollowerListView;
+    }
     export interface Store {
+        FollowerListView: StaticMailRecord<FollowerListView, typeof FollowerListViewClass>;
         _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
         activities_to_assign_count: undefined;
         activity_counter_bus_id: number;
@@ -31,9 +38,6 @@ declare module "models" {
     }
     export interface Thread {
         follow: () => Promise<void>;
-        loadMoreFollowers: () => Promise<void>;
-        loadMoreRecipients: () => Promise<void>;
         openRecordActionRequest: Readonly<object>;
-        recipientsFullyLoaded: Readonly<boolean>;
     }
 }

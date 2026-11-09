@@ -51,6 +51,7 @@ export class Follower extends Record {
             partner_ids: [this.partner_id.id],
         });
         this.store.insert(data);
+        this.delete();
     }
 
     removeRecipient() {
