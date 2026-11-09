@@ -207,7 +207,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             'seller_ids': [Command.create({
                 'partner_id': self.res_partner_1.id,
                 'price': 120.0,
-                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'uom_id': self.env.ref('uom.product_uom_dozen').id,
             })],
         })
         purchase_template = self.env['purchase.requisition'].create({
@@ -217,7 +217,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
         line = purchase_template.line_ids
         line.product_qty = 24.0
-        self.assertEqual(line.product_uom_id, self.product_uom_id)
+        self.assertEqual(line.uom_id, self.product_uom_id)
         self.assertEqual(line.price_unit, 10.0, "120 per dozen is 10 per unit")
 
         purchase_template.action_confirm()

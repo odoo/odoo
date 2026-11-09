@@ -212,7 +212,7 @@ class PurchaseRequisitionLine(models.Model):
                 partner_id=line.requisition_id.vendor_id, quantity=line.product_qty,
                 date=line.requisition_id.date_start, uom_id=line.uom_id)
             if seller:
-                line.price_unit = seller.product_uom_id._compute_price(seller.price, line.product_uom_id)
+                line.price_unit = seller.uom_id._compute_price(seller.price, line.uom_id)
             else:
                 line.price_unit = line.product_id.standard_price
 
