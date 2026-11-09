@@ -79,7 +79,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _l10n_ar_set_amount_from_withholdings(self):
         self.ensure_one()
         lines = self.withholding_line_ids
-        with self.env.protecting([lines._fields['base_amount']], lines):
+        with self.env.protecting([lines._fields[fname] for fname in ('base_amount', 'amount')], lines):
             self.amount = sum(lines.mapped('amount'))
 
     def _l10n_ar_set_amount_and_recompute_withholdings(self, amount):

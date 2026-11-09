@@ -1170,6 +1170,7 @@ class TestArWithholdingArRi(TestArCommon):
             with pay_form.withholding_line_ids.edit(0) as wth_line:
                 wth_line.amount = 25.0
             self.assertEqual(pay_form.amount, 25.0, "The payment is worth what the certificate withheld")
+            self.assertEqual(pay_form.withholding_line_ids.edit(0).amount, 25.0, "The typed withholding is kept")
 
             # Adjusting the base afterwards levies the rate again, the typed withholding being void.
             with pay_form.withholding_line_ids.edit(0) as wth_line:
