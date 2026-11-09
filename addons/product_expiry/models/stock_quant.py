@@ -20,6 +20,15 @@ class StockQuant(models.Model):
                 barcode = '15' + self.lot_id.use_date.strftime('%y%m%d') + barcode
         return barcode
 
+    def _set_view_context(self):
+        self = super()._set_view_context()
+        # Hide the expiration columns when no product uses expiration dates.
+        if 'hide_removal_date' not in self.env.context and not self.env['product.template'].search_count(
+            [('use_expiration_date', '=', True)], limit=1
+        ):
+            self = self.with_context(hide_removal_date=True)
+        return self
+
     @api.model
     def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == 'fefo':

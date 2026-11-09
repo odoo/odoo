@@ -17,6 +17,11 @@ class StockPicking(models.Model):
                 return pickings_to_warn_expired._action_generate_expired_wizard()
         return res
 
+    def action_detailed_operations(self):
+        action = super().action_detailed_operations()
+        action['context']['show_expiration_date'] = any(self.move_ids.product_id.mapped('use_expiration_date'))
+        return action
+
     def _check_expired_lots(self):
         expired_pickings = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).picking_id
         return expired_pickings

@@ -45,10 +45,11 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
                 <field name="product_qty" column_invisible="True"/>
-                <field name="alert_date" optional="hide" widget='remaining_days' invisible="product_qty &lt;= 0"/>
-                <field name="use_date" optional="hide"/>
-                <field name="removal_date" optional="hide"/>
-                <field name="expiration_date" optional="hide"/>
+                <field name="use_expiration_date" column_invisible="True"/>
+                <field name="alert_date" optional="hide" widget='remaining_days' invisible="product_qty &lt;= 0 or not use_expiration_date"/>
+                <field name="use_date" optional="hide" invisible="not use_expiration_date"/>
+                <field name="removal_date" optional="hide" invisible="not use_expiration_date"/>
+                <field name="expiration_date" optional="hide" invisible="not use_expiration_date"/>
             </xpath>
         </field>
     </record>
@@ -61,16 +62,17 @@
             <xpath expr="//templates" position="before">
                 <field name="product_qty"/>
                 <field name="product_expiry_alert"/>
+                <field name="use_expiration_date"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <div>
                     <span title="Alert" class="fa fa-exclamation-triangle text-danger me-2"
                           invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
-                    <field name="alert_date" widget='remaining_days' class="d-inline-block"/>
+                    <field name="alert_date" widget='remaining_days' class="d-inline-block" invisible="not use_expiration_date"/>
                 </div>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
-                <div invisible="not expiration_date">
+                <div invisible="not expiration_date or not use_expiration_date">
                     <div>
                         <label for="expiration_date">Expiration: </label>
                         <field class="ms-2" name="expiration_date"/>
