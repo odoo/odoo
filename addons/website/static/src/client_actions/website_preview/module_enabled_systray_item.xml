@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ModuleEnabledSystrayItem">
+    <div t-if="this.state.moduleId" class="o_menu_systray_item d-flex ms-auto" t-on-click.prevent="this.toggle" t-att-data-processing="this.state.processing and 1">
+        <a href="#" class="o_nav_entry d-flex align-items-center mx-1" data-hotkey="m">
+            <span class="d-none d-md-block mx-0 pe-1" t-out="this.label"/>
+            <CheckBox value="this.state.enabled" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
+        </a>
+    </div>
+</t>
+
+</templates>

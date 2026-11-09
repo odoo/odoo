@@ -15,7 +15,7 @@ class TestDisableModule(HttpCase):
         default_website = self.env.ref('base.default_website')
         default_website.domain = False
         self.env['website'].create({'name': 'Other Website', 'domain': 'website-other.test'})
-        self.env['blog.blog'].create({'name': 'Test Blog'})
+        blog = self.env['blog.blog'].create({'name': 'Test Blog'})
 
         headers_other = {'Host': 'website-other.test'}
 
