@@ -500,26 +500,19 @@ registry.category("web_tour.tours").add("edit_menus", {
             },
         },
         {
-            content: "Wait for drop",
+            content: "Check if 'new_nested_menu' is nested under 'new_menu'",
             trigger:
                 '.oe_menu_editor li:contains("new_menu") > ul > li:contains("new_nested_menu")',
         },
         {
-            content: "Drag 'Modnar !!' below 'new_menu'",
+            content: "Nest 'Modnar !!' under 'new_menu', above 'new_nested_menu'",
             trigger:
                 '.oe_menu_editor li:contains("Home") > ul > li:contains("Modnar !!") .oi-draggable',
             async run({ drag_and_drop }) {
-                await drag_and_drop('.oe_menu_editor li:contains("new_menu") .oi-draggable', {
-                    position: "bottom",
-                });
-            },
-        },
-        {
-            content: "Nest 'Modnar !!' under 'new_menu'",
-            trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
-            async run({ drag_and_drop }) {
+                // Avoid a horizontal move: it would only change the nesting level,
+                // and the nesting below 'new_menu' could be missed before the drop.
                 await drag_and_drop(
-                    ".oe_menu_editor li:contains('new_menu') > ul > li:contains('new_nested_menu')",
+                    '.oe_menu_editor li:contains("new_menu") > ul > li:contains("new_nested_menu") .oi-draggable',
                     {
                         position: "top",
                     }
