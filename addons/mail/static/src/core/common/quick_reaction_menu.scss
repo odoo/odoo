@@ -41,12 +41,16 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 
 .o-mail-QuickReactionMenu-emoji,
 .o-mail-QuickReactionMenu-emojiPicker {
+    /* The highlighted emoji, the one Enter picks, follows the arrow keys and */
+    /* the mouse: it has the ring, not the emoji that keeps the focus. */
     &.focus {
         background-color: color-mix(in srgb, var(--o-action) 10%, transparent);
-        outline: 1px solid color-mix(in srgb, var(--o-action) 50%, transparent);
+        outline: var(--o-focus-ring, 1px solid color-mix(in srgb, var(--o-action) 50%, transparent));
+        outline-offset: var(--o-focus-ring-offset, 0);
     }
 
     &:focus-visible:not(.focus) {
+        outline: none;
         box-shadow: none;
     }
 }

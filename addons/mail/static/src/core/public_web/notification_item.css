@@ -5,6 +5,11 @@
     outline-offset: -1px;
     --border-opacity: 0;
 
+    &:focus-visible {
+        outline: var(--o-focus-ring, 2px solid var(--o-component-active-border));
+        outline-offset: var(--o-focus-ring-offset, -2px);
+    }
+
     &:not(.o-interest) {
         opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
     }

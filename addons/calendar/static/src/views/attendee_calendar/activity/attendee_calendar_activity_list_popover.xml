@@ -12,9 +12,7 @@
     </t>
 
     <t t-name="calendar.AttendeeCalendarActivityListPopover.popover">
-        <!-- tabindex="0" needed to prevent having a weird auto-focus style
-            on the first button/link of the popover while still auto-focusing the popover. -->
-        <div tabindex="0" class="d-flex flex-column h-100">
+        <div class="d-flex flex-column h-100">
             <div class="overflow-y-auto d-flex flex-column flex-grow-1">
                 <AttendeeCalendarActivityListPopoverItem
                     t-foreach="this.activities" t-as="activity" t-key="activity.id"
