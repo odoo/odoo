@@ -52,7 +52,7 @@ patch(SaleOrderLineProductField.prototype, {
                 onClose: async (closeInfo) => {
                     if (!closeInfo || closeInfo.special) {
                         // wizard popup closed or 'Cancel' button triggered
-                        if (!this.props.record.data.event_ticket_id) {
+                        if (!this.props.record.data.event_booth_pending_ids?.currentIds.length) {
                             // remove product if event configuration was cancelled.
                             this.props.record.update({
                                 [this.props.name]: undefined,
