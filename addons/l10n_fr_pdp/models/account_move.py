@@ -211,14 +211,22 @@ class AccountMove(models.Model):
 
     def _pdp_get_paid_lifecycle_total_amount(self):
         self.ensure_one()
+        collected_amounts = self._pdp_get_paid_lifecycle_amounts()
+        return -self.direction_sign * sum(amount for _percent, amount in collected_amounts.items())
+
+    def _pdp_get_paid_lifecycle_amounts(self):
+        self.ensure_one()
         paid_responses = self.peppol_response_ids.filtered(
             lambda r: r.response_code == 'PD' and r.pdp_flow_number == '2' and r.pdp_ppf_state != 'error'
         )
-        payment_infos = [
-            payment_info for response in paid_responses for payment_info in (response.pdp_payment_info or [])
-            if payment_info.get('type_code') in PAID_CODES and payment_info.get('currency', '').upper() == 'EUR'
-        ]
-        return sum(float(info.get('amount', '0')) for info in payment_infos)
+        collected_amounts = {}
+        for response in paid_responses:
+            for payment_info in (response.pdp_payment_info or []):
+                percent_string = payment_info.get('tax_percent')
+                if percent_string and payment_info.get('type_code') in PAID_CODES and payment_info.get('currency', '').upper() == 'EUR':
+                    percent = float(percent_string)
+                    collected_amounts[percent] = float(collected_amounts.get(percent, 0)) + float(payment_info.get('amount', 0))
+        return collected_amounts
 
     def _pdp_get_response_status(self):
         """Return the PDP response status of the message"""
