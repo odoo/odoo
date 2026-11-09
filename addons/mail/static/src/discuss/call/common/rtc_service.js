@@ -2810,12 +2810,15 @@ export class Rtc extends Record {
             session.isTalking = false;
             this.remoteAudioMonitors.get(session.id)?.();
             try {
-                this.remoteAudioMonitors.set(
-                    session.id,
-                    await monitorAudio(track, {
-                        onTic: (volume) => this.updateTalkingVolume(session, volume),
-                    })
-                );
+                const disconnectMonitor = await monitorAudio(track, {
+                    onTic: (volume) => this.updateTalkingVolume(session, volume),
+                });
+                if (session.audioStream === stream) {
+                    this.remoteAudioMonitors.set(session.id, disconnectMonitor);
+                } else {
+                    // the stream was replaced or removed while the monitor was being set up
+                    disconnectMonitor();
+                }
             } catch {
                 // ignore monitor setup failures.
             }
