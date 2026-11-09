@@ -189,7 +189,10 @@ export class GeneratePrinterData {
                 ...line.raw,
                 product_data: productData,
                 product_uom_name: line.product_id.uom_id?.name || "",
-                unit_price: line.currencyDisplayPriceUnit,
+                unit_price:
+                    line.combo_line_ids.length && line.qty
+                        ? formatCurrency(line.displayPrice / line.qty, line.currency.id)
+                        : line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
                 is_service_fee_line: line.isServiceFeeLine(),
