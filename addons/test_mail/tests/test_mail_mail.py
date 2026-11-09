@@ -452,6 +452,19 @@ class TestMailMail(MailCommon):
             for mail, expected_state in zip(mails, expected_states):
                 self.assertEqual(mail.state, expected_state)
 
+    @users('admin')
+    def test_mail_mail_send_access(self):
+        """ Admin can send emails without access to their document, as the queue
+        does: they should not be flagged as failed once sent. """
+        mails = self._create_mails_restricted('outgoing').sudo(False).with_company(self.company_admin)
+        self.assertFalse(mails.mail_message_id.has_access('write'))
+
+        with self.mock_mail_gateway():
+            mails.send()
+        self.assertEqual(len(self._mails), 2)
+        self.assertEqual(mails.mapped('state'), ['sent', 'sent'])
+        self.assertFalse(any(mails.mapped('failure_reason')))
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_mail_send_configuration(self):
         """ Test configuration and control of email queue """
