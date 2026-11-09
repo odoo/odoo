@@ -183,6 +183,7 @@ export class ImagePlugin extends Plugin {
     }
 
     destroy() {
+        this.fileViewer.close();
         super.destroy();
     }
 
