@@ -970,12 +970,10 @@ class SaleOrder(models.Model):
             if pe.coupon_id in coupon_points:
                 pe.points = coupon_points.pop(pe.coupon_id)
         if coupon_points:
-            self.sudo().write({
-                "coupon_point_ids": [
-                    Command.create({"coupon_id": coupon.id, "points": points})
-                    for coupon, points in coupon_points.items()
-                ]
-            })
+            self.sudo().coupon_point_ids = [
+                Command.create({"coupon_id": coupon.id, "points": points})
+                for coupon, points in coupon_points.items()
+            ]
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()
@@ -1004,7 +1002,7 @@ class SaleOrder(models.Model):
             command_list.extend(Command.create(vals) for vals in reward_vals[len(old_lines) :])
         elif len(reward_vals) < len(old_lines) and delete:
             command_list.extend(Command.delete(line.id) for line in old_lines[len(reward_vals) :])
-        self.write({"order_line": command_list})
+        self.order_line = command_list
         return self.env["sale.order.line"] if delete else old_lines[len(reward_vals) :]
 
     def _best_global_discount_already_applied(self, current_reward, new_reward, discountable=None):
@@ -1422,7 +1420,7 @@ class SaleOrder(models.Model):
 
         order_line_update = [Command.delete(line.id) for line in lines_to_unlink]
         if order_line_update:
-            self.write({"order_line": order_line_update})
+            self.order_line = order_line_update
         if coupons_to_unlink:
             coupons_to_unlink.sudo().unlink()
         if point_entries_to_unlink:
