@@ -16,6 +16,7 @@ class CTABadgeOptionPlugin extends Plugin {
     resources = {
         builder_options: [CTABadgeOption],
         so_content_addition_selector: [".s_cta_badge"],
+        unsplittable_node_predicates: (node) => node.classList?.contains("s_cta_badge"),
     };
 }
 registry.category("builder-plugins").add(CTABadgeOptionPlugin.id, CTABadgeOptionPlugin);
