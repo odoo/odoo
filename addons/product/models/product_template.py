@@ -932,13 +932,12 @@ class ProductTemplate(models.Model):
         e.g: Black excludes XL and L
         -> XL excludes Black
         -> L excludes Black"""
-        result = dict(exclusions)
+        result = {key: list(value) for key, value in exclusions.items()}
         for key, value in exclusions.items():
             for exclusion in value:
-                if exclusion in result and key not in result[exclusion]:
-                    result[exclusion].append(key)
-                else:
-                    result[exclusion] = [key]
+                inverse = result.setdefault(exclusion, [])
+                if key not in inverse:
+                    inverse.append(key)
 
         return result
 

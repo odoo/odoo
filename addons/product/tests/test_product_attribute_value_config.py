@@ -693,6 +693,31 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         # higher value. Before the fix it would take hours.
         self.assertLess(elapsed, 0.5)
 
+    def test_complete_inverse_exclusions(self):
+        """Every exclusion holds in both directions, whatever the order of the keys."""
+        exclusions = {
+            1: [6, 8],      # 50 kW excludes 84 kWh and Extension
+            2: [4],         # 100 kW excludes 28 kWh
+            3: [4, 5, 6],   # 150 kW excludes 28, 50.4 and 84 kWh
+            4: [],
+            5: [8],         # 50.4 kWh excludes Extension
+            6: [],
+            7: [],
+            8: [],
+        }
+        result = self.env['product.template']._complete_inverse_exclusions(exclusions)
+        self.assertEqual({key: sorted(value) for key, value in result.items()}, {
+            1: [6, 8],
+            2: [4],
+            3: [4, 5, 6],
+            4: [2, 3],
+            5: [3, 8],
+            6: [1, 3],
+            7: [],
+            8: [1, 5],
+        })
+        self.assertEqual(exclusions[5], [8], "The given exclusions must not be modified")
+
     @mute_logger('odoo.models.unlink')
     def test_clear_caches(self):
         """The goal of this test is to make sure the cache is invalidated when
