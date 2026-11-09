@@ -43,8 +43,9 @@ fi
 DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-postgres}"
 DB_SSLMODE="${DB_SSLMODE:-require}"
-# Default connection pool bounds to prevent exhausting database poolers
-DB_MAXCONN="${DB_MAXCONN:-16}"
+# Default connection pool bounds to prevent exhausting database poolers (Supabase session pooler max is 15)
+# Set to 5 so during Render zero-downtime rolling deploys (2 containers temporarily running), total connections stay well under 15
+DB_MAXCONN="${DB_MAXCONN:-5}"
 MAX_CRON_THREADS="${MAX_CRON_THREADS:-1}"
 
 # Export variables for child python processes
