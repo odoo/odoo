@@ -184,7 +184,7 @@ class SaleOrder(models.Model):
         comodel_name="account.payment.method.line", string="Payment Method",
         compute="_compute_preferred_payment_method_line_id",
         store=True, precompute=True, readonly=False, check_company=True,
-        domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]")
+        domain=[('payment_type', '=', 'inbound')])
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string="Pricelist",
