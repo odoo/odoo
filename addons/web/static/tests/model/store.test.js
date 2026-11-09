@@ -7,13 +7,17 @@ import { fields } from "@web/model/store/fields";
 import { Model } from "@web/model/store/model";
 import { RecordStore } from "@web/model/store/store";
 
+/** @import { Many2many, Many2one, One2many } from "@web/model/store/fields" */
+
 describe.current.tags("headless");
 
 class Partner extends Model {
     static _name = "res.partner";
 
     name = fields.Char();
+    /** @type {One2many<Order>} */
     order_ids = fields.One2many("sale.order", { inverse: "partner_id" });
+    /** @type {Many2many<Tag>} */
     tag_ids = fields.Many2many("res.partner.tag", { inverse: "partner_ids" });
 
     get label() {
@@ -25,6 +29,7 @@ class Tag extends Model {
     static _name = "res.partner.tag";
 
     name = fields.Char();
+    /** @type {Many2many<Partner>} */
     partner_ids = fields.Many2many("res.partner");
 }
 
@@ -33,8 +38,11 @@ class Order extends Model {
     static _tracked = true;
 
     name = fields.Char();
+    /** @type {Many2one<Partner>} */
     partner_id = fields.Many2one("res.partner");
+    /** @type {One2many<Line>} */
     line_ids = fields.One2many("sale.order.line", { inverse: "order_id" });
+    /** @type {Many2many<Tag>} */
     tag_ids = fields.Many2many("res.partner.tag");
 
     get total() {
@@ -46,6 +54,7 @@ class Line extends Model {
     static _name = "sale.order.line";
     static _tracked = true;
 
+    /** @type {Many2one<Order>} */
     order_id = fields.Many2one("sale.order");
     product = fields.Char();
     qty = fields.Integer({ default: 1 });

@@ -39,6 +39,11 @@ import {
  * @typedef {RecordStore | Draft} Owner
  */
 
+/**
+ * @template M
+ * @typedef {import("./fields").RecordValues<M>} RecordValues
+ */
+
 //-----------------------------------------------------------------------------
 // Reactivity
 //-----------------------------------------------------------------------------
@@ -503,8 +508,10 @@ export class RecordStore {
     }
 
     /**
+     * @template {Model} [M=Model]
      * @param {string} modelName
-     * @param {Record<string, any>} [values]
+     * @param {NoInfer<RecordValues<M>>} [values]
+     * @returns {M}
      */
     create(modelName, values = {}) {
         const model = this.model(modelName);
@@ -515,7 +522,7 @@ export class RecordStore {
         const rec = this._newRecord(model, id, model.tracked ? NEW : 0);
         initRecord(rec, model, values);
         rec.setup();
-        return rec;
+        return /** @type {M} */ (rec);
     }
 
     /**
@@ -550,38 +557,41 @@ export class RecordStore {
     }
 
     /**
+     * @template {Model} [M=Model]
      * @param {string} modelName
      * @param {number | string} id
      * @param {boolean} [stub] create an empty record if the id is unknown
-     * @returns {Model | null}
+     * @returns {M | null}
      */
     get(modelName, id, stub = false) {
         const model = this.model(modelName);
         const rec = model.records.get(id);
         if (rec) {
-            return rec[FLAGS] & DELETED ? null : rec;
+            return rec[FLAGS] & DELETED ? null : /** @type {M} */ (rec);
         }
         if (!stub) {
             return null;
         }
         const newStub = this._newRecord(model, id, STUB);
         newStub.setup();
-        return newStub;
+        return /** @type {M} */ (newStub);
     }
 
     /**
      * Lookup through a unique index declared with `static _indexes`.
      *
+     * @template {Model} [M=Model]
      * @param {string} modelName
      * @param {string} fieldName
      * @param {any} value
+     * @returns {M | null}
      */
     getBy(modelName, fieldName, value) {
         const index = this.model(modelName).indexes.get(fieldName);
         if (!index) {
             throw new Error(`Field "${modelName}.${fieldName}" is not indexed`);
         }
-        return index.get(value) || null;
+        return /** @type {M} */ (index.get(value)) || null;
     }
 
     /**
@@ -633,7 +643,9 @@ export class RecordStore {
     }
 
     /**
-     * @param {Model} rec
+     * @template {Model} M
+     * @param {M} rec
+     * @returns {M}
      */
     own(rec) {
         if (rec[OWNER] !== this) {
@@ -648,13 +660,15 @@ export class RecordStore {
      * Live records of a model: loaded or created, not deleted. Reactive to
      * creations and deletions, not to field changes.
      *
+     * @template {Model} [M=Model]
      * @param {string} modelName
+     * @returns {M[]}
      */
     records(modelName) {
         const model = this.model(modelName);
         model.membership();
         model.list ||= [...model.records.values()].filter((r) => !(r[FLAGS] & (STUB | DELETED)));
-        return model.list;
+        return /** @type {M[]} */ (model.list);
     }
 
     /**
@@ -675,8 +689,9 @@ export class RecordStore {
     }
 
     /**
-     * @param {Model} rec
-     * @param {Record<string, any>} values
+     * @template {Model} M
+     * @param {M} rec
+     * @param {RecordValues<M>} values
      */
     update(rec, values) {
         updateRecord(this.own(rec), values);
@@ -1054,8 +1069,10 @@ export class Draft {
     }
 
     /**
+     * @template {Model} [M=Model]
      * @param {string} modelName
-     * @param {Record<string, any>} [values]
+     * @param {NoInfer<RecordValues<M>>} [values]
+     * @returns {M}
      */
     create(modelName, values = {}) {
         const model = this.store.model(modelName);
@@ -1072,7 +1089,7 @@ export class Draft {
         this.created.set(id, rec);
         initRecord(rec, model, values);
         signal.trigger(this.membership);
-        return rec;
+        return /** @type {M} */ (rec);
     }
 
     /**
@@ -1107,16 +1124,18 @@ export class Draft {
     }
 
     /**
+     * @template {Model} [M=Model]
      * @param {string} modelName
      * @param {number | string} id
      * @param {boolean} [stub]
-     * @returns {Model | null}
+     * @returns {M | null}
      */
     get(modelName, id, stub = false) {
         const created = this.created.get(id);
         if (created && created[MODEL].name === modelName) {
-            return created;
+            return /** @type {M} */ (created);
         }
+        /** @type {M | null} */
         const rec = this.parent.get(modelName, id, stub);
         return rec && this.own(rec);
     }
@@ -1138,7 +1157,9 @@ export class Draft {
     /**
      * Returns the fork of a record of this draft's parent (or of an ancestor).
      *
-     * @param {Model} rec
+     * @template {Model} M
+     * @param {M} rec
+     * @returns {M}
      */
     own(rec) {
         if (rec[OWNER] === this) {
@@ -1160,16 +1181,21 @@ export class Draft {
             fork[PARENT] = rec;
             this.forks.set(rec, fork);
         }
-        return fork;
+        return /** @type {M} */ (fork);
     }
 
     /**
+     * @template {Model} [M=Model]
      * @param {string} modelName
+     * @returns {M[]}
      */
     records(modelName) {
         this.membership();
+        /** @type {M[]} */
         const result = [];
-        for (const rec of this.parent.records(modelName)) {
+        /** @type {M[]} */
+        const parentRecords = this.parent.records(modelName);
+        for (const rec of parentRecords) {
             const fork = this.own(rec);
             if (!(fork[FLAGS] & DELETED)) {
                 result.push(fork);
@@ -1177,15 +1203,16 @@ export class Draft {
         }
         for (const rec of this.created.values()) {
             if (rec[MODEL].name === modelName && !(rec[FLAGS] & DELETED)) {
-                result.push(rec);
+                result.push(/** @type {M} */ (rec));
             }
         }
         return result;
     }
 
     /**
-     * @param {Model} rec
-     * @param {Record<string, any>} values
+     * @template {Model} M
+     * @param {M} rec
+     * @param {RecordValues<M>} values
      */
     update(rec, values) {
         updateRecord(this.own(rec), values);
