@@ -1,11 +1,4 @@
 .o_status_bubble {
-    @for $size from 2 through length($o-colors) {
-        /* Note: the first color is supposed to be invisible so it's ignored */
-        &.o_color_bubble_#{$size - 1} {
-            background-color: nth($o-colors, $size);
-        }
-    }
-
     &.o_color_bubble_20 {
         background-color: var(--o-success);
     }
