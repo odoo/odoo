@@ -3,7 +3,6 @@ import {
     contains,
     defineMailModels,
     insertText,
-    mockGetMedia,
     openDiscuss,
     patchUiSize,
     SIZES,
@@ -11,7 +10,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { test } from "@odoo/hoot";
+import { mockPermission, test } from "@odoo/hoot";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
@@ -58,7 +57,7 @@ test("no default rtc after joining a group conversation", async () => {
 
 test.tags("mobile");
 test.skip("show Push-to-Talk button on mobile", async () => {
-    mockGetMedia();
+    mockPermission("microphone", "granted");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockService("discuss.ptt_extension", {

@@ -1,16 +1,13 @@
-import { expect, test } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
 import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { Deferred, expect, mockPermission, test, waitFor } from "@odoo/hoot";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineMailModels, mockGetMedia } from "@mail/../tests/mail_test_helpers";
 
 defineMailModels();
 
 test.tags("desktop");
 test("KioskBarcodeScanner can be opened and closed", async () => {
-
-    mockGetMedia();
+    mockPermission("camera", "granted");
     const isBarcodeScannerOpened = new Deferred();
     patchWithCleanup(KioskBarcodeScanner.prototype, {
         setup() {
