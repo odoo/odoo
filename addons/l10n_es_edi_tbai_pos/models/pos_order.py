@@ -100,6 +100,7 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         vals = super()._prepare_invoice_vals()
+<<<<<<< 503998e479441946907f005e8a51ccdf72d959e6
         mapped_tbai_req = self.mapped('l10n_es_tbai_is_required')
         if len(set(mapped_tbai_req)) > 1:
             raise UserError(self.env._("You cannot mix orders that require TicketBAI with those that don't."))
@@ -108,6 +109,17 @@ class PosOrder(models.Model):
             if len(refund_reasons) > 1:
                 raise UserError(self.env._("You cannot consolidate orders with different TicketBAI refund reasons."))
             vals['l10n_es_tbai_refund_reason'] = refund_reasons.pop()
+||||||| cc35e1354742e0fcf619c6e6b7f95e2b7458999d
+
+        if self.l10n_es_tbai_is_required:
+            vals['l10n_es_tbai_refund_reason'] = self.l10n_es_tbai_refund_reason
+=======
+
+        if self.l10n_es_tbai_is_required:
+            vals['l10n_es_tbai_refund_reason'] = self.l10n_es_tbai_refund_reason
+            if self.l10n_es_tbai_refund_reason == 'R5':
+                vals['l10n_es_is_simplified'] = True
+>>>>>>> c33bed191d4855a714ecd06dc658c5a4a885606c
 
         return vals
 
