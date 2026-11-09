@@ -148,7 +148,9 @@ export class Thread extends Component {
                     this.smoothScrollingPromise,
                 ]);
                 if (this.loadOlderState.isVisible && this.shouldTriggerLoadOnVisible) {
-                    this.props.thread.fetchMoreMessages();
+                    this.props.thread.fetchMoreMessages({
+                        routeParams: this.messageFetchRouteParams,
+                    });
                 }
             },
             { ready: false }
@@ -161,7 +163,10 @@ export class Thread extends Component {
                     this.smoothScrollingPromise,
                 ]);
                 if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
-                    this.props.thread.fetchMoreMessages({ epoch: "newer" });
+                    this.props.thread.fetchMoreMessages({
+                        epoch: "newer",
+                        routeParams: this.messageFetchRouteParams,
+                    });
                 }
             },
             { ready: false }
@@ -537,8 +542,12 @@ export class Thread extends Component {
         thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef().scrollTop;
     }
 
+    get messageFetchRouteParams() {
+        return this.env.messageFetchRouteParams;
+    }
+
     fetchInitialMessages() {
-        this.props.thread.fetchInitialMessages();
+        this.props.thread.fetchInitialMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get viewportEl() {
@@ -566,7 +575,7 @@ export class Thread extends Component {
         if (this.messageHighlight?.highlightedMessageId()) {
             return;
         }
-        this.props.thread.fetchMoreMessages();
+        this.props.thread.fetchMoreMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get shouldTriggerLoadOnVisible() {
@@ -634,7 +643,7 @@ export class Thread extends Component {
         this.state.isJumpingToPresent = true;
         this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
-            await this.props.thread.loadAround();
+            await this.props.thread.loadAround({ routeParams: this.messageFetchRouteParams });
             this.props.thread.loadNewer = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";

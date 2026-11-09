@@ -4,6 +4,8 @@ import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { useOnChange } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { formatDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
@@ -39,7 +41,7 @@ patch(Message.prototype, {
     },
 
     get ratingValue() {
-        return this.message.rating_value || this.message.rating_id?.rating;
+        return this.message.rating_id?.rating;
     },
 
     get richBodyAttClass() {
@@ -87,7 +89,9 @@ patch(Message.prototype, {
             this.props.message.composer = {
                 message: this.props.message,
                 composerHtml:
-                    this.publisherCommentDraft ?? this.props.message.rating_id.publisher_comment,
+                    (this.publisherCommentDraft ??
+                        this.props.message.rating_id.publisher_comment) ||
+                    "",
                 portalComment: true,
             };
         } else {
@@ -111,6 +115,12 @@ patch(Message.prototype, {
             rating_id: this.message.rating_id.id,
             publisher_comment: "",
         });
-        this.message.rating_id = data;
+        this.store.insert(data);
+    },
+
+    get publisherDatetimeText() {
+        return _t("Published on %(date)s", {
+            date: formatDateTime(this.message.rating_id.publisher_datetime),
+        });
     },
 });

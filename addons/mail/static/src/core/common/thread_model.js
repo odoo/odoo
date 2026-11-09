@@ -23,7 +23,7 @@ import { user } from "@web/core/user";
  */
 
 /**
- * @typedef {Object} MessageRouteParams Specific overrides for the RPC route metadata.
+ * @typedef {Object} MessageRouteParams Specific overrides for the RPC route metadata usually provided by the caller component.
  */
 
 export class Thread extends Record {
@@ -478,8 +478,9 @@ export class Thread extends Record {
     /**
      * @param {Object} [options]
      * @param {"older"|"newer"} [options.epoch="older"]
+     * @param {MessageRouteParams} [options.routeParams]
      */
-    async fetchMoreMessages({ epoch = "older" } = {}) {
+    async fetchMoreMessages({ epoch = "older", routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (epoch === "older" && !this.loadOlder) ||
@@ -493,6 +494,7 @@ export class Thread extends Record {
         try {
             fetched = await this.fetchMessages({
                 fetchParams: { after, before, limit: this.moreFetchLimit },
+                routeParams,
             });
         } catch {
             return;
@@ -641,10 +643,6 @@ export class Thread extends Record {
         if (this.channel) {
             return "/discuss/channel/messages";
         }
-        return this.fetchRouteChatter;
-    }
-
-    get fetchRouteChatter() {
         return "/mail/thread/messages";
     }
 
