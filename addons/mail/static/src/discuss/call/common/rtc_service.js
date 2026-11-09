@@ -721,12 +721,12 @@ export class Rtc extends Record {
      * @param {import("models").DiscussChannel} [channel]
      */
     endCall(channel = this.localChannel) {
-        this._endHost();
         if (channel.self_member_id) {
             channel.self_member_id.rtc_inviting_session_id = undefined;
         }
         channel.activeRtcSession = undefined;
         if (channel.eq(this.localChannel)) {
+            this._endHost();
             this.logs.end = new Date().toISOString();
             this.dumpLogs();
             this.pttExtService.unsubscribe();
@@ -1128,7 +1128,7 @@ export class Rtc extends Record {
                 this.crossTabInitDeferred.resolve();
                 return;
             case CROSS_TAB_HOST_MESSAGE.CLOSE: {
-                if (this._remotelyHostedSessionId !== hostedSessionId) {
+                if (this.isHost || this._remotelyHostedSessionId !== hostedSessionId) {
                     return;
                 }
                 this.clear();
