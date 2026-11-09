@@ -314,7 +314,7 @@ class IrModuleModule(models.Model):
 
     @api.model
     def _import_zipfile(self, module_file, force=False, with_demo=False):
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_("Only administrators can install data modules."))
         if not module_file:
             raise Exception(_("No file sent."))
@@ -517,7 +517,7 @@ class IrModuleModule(models.Model):
             return []
 
     def button_immediate_install_app(self):
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessDenied()
         module_name = self.env.context.get('module_name')
         import requests  # noqa: PLC0415

@@ -163,7 +163,7 @@ class ResUsers(models.Model):
         """ Generate a new valid link to reset the password. """
         self.ensure_one()
 
-        if not self.env.is_admin:
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_("Only administrators can generate reset password link."))
         if self.id == self.env.user.id:
             raise UserError(_("You cannot perform this action on your own user."))

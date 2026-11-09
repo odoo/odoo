@@ -405,7 +405,7 @@ class StockQuant(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_wrong_permission(self):
-        if not self.env.is_superuser():
+        if not self.env.su:
             if not self.env.user.has_group('stock.group_stock_manager'):
                 raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
             self = self.with_context(inventory_mode=True)

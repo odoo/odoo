@@ -29,7 +29,7 @@ class IrAutovacuum(models.AbstractModel):
         Perform a complete database cleanup by safely calling every
         ``@api.autovacuum`` decorated method.
         """
-        if not self.env.is_admin() or not self.env.context.get('cron_id'):
+        if not (self.env.su or self.env.user._is_admin()) or not self.env.context.get('cron_id'):
             raise AccessDenied()
 
         all_methods = [

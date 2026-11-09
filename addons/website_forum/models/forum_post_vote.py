@@ -53,7 +53,7 @@ class ForumPostVote(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # can't modify owner of a vote
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             for vals in vals_list:
                 vals.pop('user_id', None)
                 vals.pop('recipient_id', None)
@@ -71,7 +71,7 @@ class ForumPostVote(models.Model):
 
     def write(self, vals):
         # can't modify owner of a vote
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             vals.pop('user_id', None)
             vals.pop('recipient_id', None)
 
@@ -93,7 +93,7 @@ class ForumPostVote(models.Model):
         post = self.post_id
         if vals.get('post_id'):
             post = self.env['forum.post'].browse(vals.get('post_id'))
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             # own post check
             if self.env.uid == post.create_uid.id:
                 raise UserError(_('It is not allowed to vote for its own post.'))

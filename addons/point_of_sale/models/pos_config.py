@@ -677,7 +677,7 @@ class PosConfig(models.Model):
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
     def _check_header_footer(self, values):
-        if not self.env.is_admin() and {'use_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
+        if not (self.env.su or self.env.user._is_admin()) and {'use_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
 
     def _check_company_has_fiscal_country(self):
@@ -928,7 +928,7 @@ class PosConfig(models.Model):
         return (self.order_line_seq_id | self.device_seq_id).unlink
 
     def _check_pos_manager_access(self):
-        if not (self.env.is_admin() or self.env.user.has_group('point_of_sale.group_pos_manager')):
+        if not (self.env.su or self.env.user._is_admin() or self.env.user.has_group('point_of_sale.group_pos_manager')):
             raise AccessError(_("Only Point of Sale managers can modify a Point of Sale configuration."))
 
     # TODO-JCB: Maybe we can move this logic in `_reset_default_on_vals`

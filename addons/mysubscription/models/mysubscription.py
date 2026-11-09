@@ -9,7 +9,7 @@ class MySubscription(models.AbstractModel):
 
     @api.model
     def get_dashboard_data(self):
-        is_system = self.env.is_system()
+        is_system = self.env.su or self.env.user._is_system()
         icp_sudo = self.env['ir.config_parameter'].sudo()
 
         enterprise_code = icp_sudo.get_str('database.enterprise_code')
@@ -33,7 +33,7 @@ class MySubscription(models.AbstractModel):
 
     @api.model
     def get_iap_data(self):
-        is_system = self.env.is_system()
+        is_system = self.env.su or self.env.user._is_system()
         if not is_system or 'iap.account' not in self.env:
             return []
 

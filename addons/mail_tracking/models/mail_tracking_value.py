@@ -36,7 +36,7 @@ class MailTrackingValue(models.Model):
 
         def has_field_access(tracking):
             if not tracking.field_id:
-                return env.is_system()
+                return env.su or env.user._is_system()
             model = env[tracking.field_id.model]
             model_field = model._fields.get(tracking.field_id.name)
             return model.has_field_access(model_field, 'read') if model_field else False

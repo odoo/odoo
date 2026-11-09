@@ -1395,7 +1395,7 @@ class MailThread(models.AbstractModel):
             # email gateway become a follower of all inbound messages
             ModelCtx = Model
             if alias:
-                if self.env.is_system():
+                if self.env.su or self.env.user._is_system():
                     ModelCtx = Model.with_user(related_user)
                 ModelCtx = ModelCtx.sudo()
             if thread_id and hasattr(ModelCtx, 'message_update'):

@@ -360,7 +360,7 @@ class ResConfigSettings(models.TransientModel):
             transaction, otherwise there's a big risk of registry <-> database desynchronisation.
         """
         self.ensure_one()
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)

@@ -99,7 +99,7 @@ class MailComposerMixin(models.AbstractModel):
 
     @api.depends_context('uid')
     def _compute_is_mail_template_editor(self):
-        is_mail_template_editor = self.env.is_admin() or self.env.user.has_group('mail.group_mail_template_editor')
+        is_mail_template_editor = self.env.su or self.env.user._is_admin() or self.env.user.has_group('mail.group_mail_template_editor')
         for record in self:
             record.is_mail_template_editor = is_mail_template_editor
 

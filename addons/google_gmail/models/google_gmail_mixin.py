@@ -75,7 +75,7 @@ class GoogleGmailMixin(models.AbstractModel):
         """
         self.ensure_one()
 
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_('Only the administrator can link a Gmail mail server.'))
 
         email_normalized = tools.email_normalize(self[self._email_field])

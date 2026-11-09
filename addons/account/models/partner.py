@@ -308,7 +308,7 @@ class AccountFiscalPosition(models.Model):
         }
 
     def action_create_foreign_taxes(self):
-        if not (self.env.is_admin() or self.env.user.has_group('account.group_account_manager')):
+        if not (self.env.su or self.env.user._is_admin() or self.env.user.has_group('account.group_account_manager')):
             raise AccessError(_("Only Accounting managers can create foreign taxes."))
         self.ensure_one()
         template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)

@@ -1524,7 +1524,7 @@ class CrmLead(models.Model):
         if len(self.ids) <= 1:
             raise UserError(_('Select at least two Leads/Opportunities from the list to merge them.'))
 
-        if max_length and len(self.ids) > max_length and not self.env.is_superuser():
+        if max_length and len(self.ids) > max_length and not self.env.su:
             raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of %(max_length)s.", max_length=max_length))
 
         opportunities = self._sort_by_confidence_level(reverse=True)

@@ -112,7 +112,7 @@ class IrAttachment(models.Model):
     @api.model
     def force_storage(self):
         """Force all attachments to be stored in the currently configured storage"""
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_('Only administrators can execute this action.'))
 
         # Migrate only binary attachments and bypass the res_field automatic
@@ -627,7 +627,7 @@ class IrAttachment(models.Model):
     _res_idx = models.Index("(res_model, res_id)")
 
     def _check_serving_attachments(self):
-        if self.env.is_admin():
+        if self.env.su or self.env.user._is_admin():
             return
         for attachment in self:
             # restrict writing on attachments that could be served by the
@@ -681,7 +681,7 @@ class IrAttachment(models.Model):
         self.fetch(SECURITY_FIELDS)  # fetch only these fields
         user_model = self.sudo(False)
         forbidden_ids = set()
-        is_system = user_model.env.is_system()
+        is_system = user_model.env.user._is_system()
         for attachment in self:
             att_id = attachment.id
             res_model, res_id = attachment.res_model, attachment.res_id
@@ -725,7 +725,7 @@ class IrAttachment(models.Model):
         # - res_id == False needs to be system user or creator
         res_ids = condition_values(self, 'res_id', domain)
         if not res_ids or False in res_ids:
-            if self.env.is_system():
+            if self.env.user._is_system():
                 sec_domain |= Domain('res_id', '=', False)
             else:
                 sec_domain |= Domain('res_id', '=', False) & Domain('create_uid', '=', self.env.uid)
@@ -736,7 +736,7 @@ class IrAttachment(models.Model):
         res_model_names = condition_values(self, 'res_model', domain)
         if 0 < len(res_model_names or ()) <= MAX_COMODELS_FOR_DOMAIN:
             env = self.with_context(active_test=False).env
-            check_res_fields = not self.env.is_system() and tuple(condition_values(self, 'res_field', domain) or ()) != (False,)
+            check_res_fields = not self.env.user._is_system() and tuple(condition_values(self, 'res_field', domain) or ()) != (False,)
             inverse_field = self.env.context.get('search_from_field')
             if not self._fields['res_id'] in self.env.registry.field_inverses.get(inverse_field, ()):
                 inverse_field = None
@@ -835,7 +835,7 @@ class IrAttachment(models.Model):
         # keep every attachment. The check in Python drops the rest.
         def to_sql(cond):
             if cond.field_expr in ('res_access_read', 'res_access_write'):
-                if cond.operator == 'in' and set(cond.value) == {True} and not self.env.is_system():
+                if cond.operator == 'in' and set(cond.value) == {True} and not self.env.user._is_system():
                     # a linked record, or no record and created by the user
                     return Domain('res_id', '!=', False) | Domain('create_uid', '=', self.env.uid)
                 return Domain.TRUE

@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 from odoo.exceptions import AccessError, UserError
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
+from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
@@ -168,15 +169,18 @@ class Environment(Mapping[str, "BaseModel"]):
             return self[res_model].browse(res_id)
         return None
 
+    @deprecated("Since 21.0, use env.su")
     def is_superuser(self) -> bool:
         """ Return whether the environment is in superuser mode. """
         return self.su
 
+    @deprecated("Since 21.0, use env.su or env.user._is_admin()")
     def is_admin(self) -> bool:
         """ Return whether the current user has group "Access Rights", or is in
             superuser mode. """
         return self.su or self.user._is_admin()
 
+    @deprecated("Since 21.0, use env.su or env.user._is_system()")
     def is_system(self) -> bool:
         """ Return whether the current user has group "Settings", or is in
             superuser mode. """

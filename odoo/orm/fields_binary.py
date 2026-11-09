@@ -77,7 +77,7 @@ class Binary(Field[BinaryValue, BinaryValue]):
         if validate and value[:1] == b'<':
             # Full mimetype detection
             if (data.mimetype.startswith('image/svg') and
-                    not record.env.is_system()):
+                    not (record.env.su or record.env.user._is_system())):
                 raise UserError(record.env._("Only admins can upload SVG files."))
         return psycopg2.Binary(value)
 

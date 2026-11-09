@@ -1241,7 +1241,7 @@ class HrLeaveAllocation(models.Model):
         :rtype: bool
         :raise UserError: when not possible and ``raise_if_not_possible``
         """
-        if self.env.is_superuser():
+        if self.env.su:
             return True
         current_employee = self.env.user.employee_id
         is_administrator = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')

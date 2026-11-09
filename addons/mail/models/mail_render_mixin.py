@@ -292,7 +292,7 @@ class MailRenderMixin(models.AbstractModel):
         return (
             not self._unrestricted_rendering
             and self.env.context.get("bypass_restricted_rendering") is not BYPASS_RESTRICTED_RENDERING
-            and not self.env.is_admin()
+            and not (self.env.su or self.env.user._is_admin())
             and not self.env.user.has_group('mail.group_mail_template_editor')
         )
 

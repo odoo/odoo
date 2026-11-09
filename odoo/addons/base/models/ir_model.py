@@ -2264,7 +2264,7 @@ class IrModelRelation(models.Model):
         """
         Delete PostgreSQL many2many relations tracked by this model.
         """
-        if not self.env.is_system():
+        if not (self.env.su or self.env.user._is_system()):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
         ids_set = set(self.ids)
@@ -2579,7 +2579,7 @@ class IrModelData(models.Model):
         """
         from odoo.orm.model_classes import add_field  # noqa: PLC0415
 
-        if not self.env.is_system():
+        if not (self.env.su or self.env.user._is_system()):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
         # enable model/field deletion
