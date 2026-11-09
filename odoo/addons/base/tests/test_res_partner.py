@@ -1181,6 +1181,27 @@ class TestPartnerAddressCompany(TransactionCase):
         self.env["res.country"].invalidate_model()
         self.assertEqual(before, partner._display_address().strip())
 
+    def test_display_address_country_format(self):
+        """ The default format puts the postcode before the locality, countries that do it
+        differently have a format of their own. """
+        Partner = self.env["res.partner"]
+        for country_xmlid, state_xmlid, zip_code, city, expected in [
+            ("base.cz", False, "102 00", "Praha", "Street 1\n102 00 Praha\nCzech Republic"),
+            ("base.it", "base.state_it_rn", "47921", "Rimini", "Street 1\n47921 Rimini RN\nItaly"),
+            ("base.us", "base.state_us_5", "94134", "San Francisco", "Street 1\nSan Francisco CA 94134\nUnited States"),
+            ("base.za", False, "7975", "Fish Hoek", "Street 1\nFish Hoek\n7975\nSouth Africa"),
+            (False, False, "1000", "Town", "Street 1\n1000 Town"),
+        ]:
+            with self.subTest(country=country_xmlid):
+                partner = Partner.new({
+                    "street": "Street 1",
+                    "zip": zip_code,
+                    "city": city,
+                    "state_id": state_xmlid and self.env.ref(state_xmlid).id,
+                    "country_id": country_xmlid and self.env.ref(country_xmlid).id,
+                })
+                self.assertEqual(partner._display_address(), expected)
+
     def test_display_name(self):
         """ Check display_name on partner, especially with different context
         Check display_name correctly return name with context. """

@@ -1301,7 +1301,9 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_default_address_format(self):
-        return "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+        # The postcode before the locality is what most postal services ask for (UPU addressing
+        # guides); countries that do it differently define their own format in res_country_data.xml.
+        return "%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s"
 
     def _get_address_format(self):
         return self.country_id.address_format or self._get_default_address_format()
