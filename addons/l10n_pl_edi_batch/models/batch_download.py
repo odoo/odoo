@@ -224,7 +224,6 @@ class BatchDownload(models.Model):
         done = remaining = 0
         CompanySudo = self.env['res.company'].sudo()
         companies = CompanySudo.search([
-            ('l10n_pl_edi_batch_enabled', '=', True),
             ('l10n_pl_edi_access_token', '!=', False),
             *(company_domain or []),
         ])
