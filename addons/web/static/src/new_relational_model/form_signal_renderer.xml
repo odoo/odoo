@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormSignalRenderer">
+        <div class="o_form_renderer o_form_signal_renderer" t-att-class="this.props.readonly ? 'o_form_readonly' : 'o_form_editable'">
+            <div t-if="this.props.archInfo.header.length" class="o_form_statusbar d-flex justify-content-end gap-3 pb-2">
+                <t t-foreach="this.props.archInfo.header" t-as="child" t-key="child_index">
+                    <t t-call="web.FormSignalRenderer.Node" node="child"/>
+                </t>
+            </div>
+            <t t-foreach="this.props.archInfo.body" t-as="child" t-key="child_index">
+                <t t-call="web.FormSignalRenderer.Node" node="child"/>
+            </t>
+        </div>
+    </t>
+
+    <!-- one node of the arch tree, see FormSignalArchParser -->
+    <t t-name="web.FormSignalRenderer.Node">
+        <t t-if="this.isVisible(node)">
+            <t t-if="node.type === 'field'">
+                <FormSignalField record="this.props.record" name="node.name" field="this.props.fields[node.name]" readonly="this.isReadonly(node)"/>
+            </t>
+            <t t-elif="node.type === 'group'" t-call="web.FormSignalRenderer.Group"/>
+            <t t-elif="node.type === 'notebook'" t-call="web.FormSignalRenderer.Notebook"/>
+            <t t-elif="node.type === 'sheet'">
+                <div class="o_form_sheet_bg">
+                    <div class="o_form_sheet position-relative">
+                        <t t-call="web.FormSignalRenderer.Children" nodes="node.children"/>
+                    </div>
+                </div>
+            </t>
+            <div t-elif="node.type === 'separator'" class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small" t-out="node.string"/>
+            <label t-elif="node.type === 'label'" class="o_form_label" t-out="this.getLabel(node, node.for)"/>
+            <t t-elif="node.type === 'text'" t-out="node.value"/>
+            <t t-elif="node.type === 'element'" t-tag="node.tag" t-att-class="node.className">
+                <t t-call="web.FormSignalRenderer.Children" nodes="node.children"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web.FormSignalRenderer.Children">
+        <t t-foreach="nodes" t-as="child" t-key="child_index">
+            <t t-call="web.FormSignalRenderer.Node" node="child"/>
+        </t>
+    </t>
+
+    <!-- outer group: its groups side by side; inner group: a grid of labels and values -->
+    <t t-name="web.FormSignalRenderer.Group">
+        <div t-if="this.isOuterGroup(node)" class="o_group row align-items-start">
+            <div t-if="node.string" class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small" t-out="node.string"/>
+            <t t-foreach="node.children" t-as="child" t-key="child_index">
+                <t t-if="this.isVisible(child)">
+                    <div t-if="child.type === 'group'" class="col-lg-6">
+                        <t t-call="web.FormSignalRenderer.Group" node="child"/>
+                    </div>
+                    <t t-else="" t-call="web.FormSignalRenderer.Node" node="child"/>
+                </t>
+            </t>
+        </div>
+        <div t-else="" class="o_inner_group grid">
+            <div t-if="node.string" class="g-col-sm-2">
+                <div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small" t-out="node.string"/>
+            </div>
+            <t t-foreach="node.children" t-as="child" t-key="child_index">
+                <t t-if="this.isVisible(child)">
+                    <t t-if="child.type === 'field' and !child.nolabel">
+                        <div class="o_cell o_wrap_label text-break text-900">
+                            <label class="o_form_label" t-out="this.getLabel(child, child.name)"/>
+                        </div>
+                        <div class="o_cell o_wrap_input text-break">
+                            <t t-call="web.FormSignalRenderer.Node" node="child"/>
+                        </div>
+                    </t>
+                    <div t-elif="child.type === 'label'" class="o_cell o_wrap_label text-break text-900">
+                        <t t-call="web.FormSignalRenderer.Node" node="child"/>
+                    </div>
+                    <div t-else="" class="o_cell" t-att-class="{ o_wrap_input: this.isAfterLabel(node.children, child_index) }">
+                        <t t-call="web.FormSignalRenderer.Node" node="child"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.FormSignalRenderer.Notebook">
+        <t t-set="activePage" t-value="this.getActivePage(node)"/>
+        <div t-if="activePage" class="o_notebook d-flex w-100 flex-column">
+            <div class="o_notebook_headers">
+                <ul class="nav nav-tabs flex-row flex-nowrap">
+                    <t t-foreach="node.pages" t-as="page" t-key="page_index">
+                        <li t-if="this.isVisible(page)" class="nav-item flex-nowrap">
+                            <a class="nav-link" href="#" role="tab" t-att-class="{ active: page === activePage }" t-on-click.prevent="() => this.selectPage(node, page)" t-out="page.string"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="o_notebook_content tab-content">
+                <div class="tab-pane active">
+                    <t t-call="web.FormSignalRenderer.Children" nodes="activePage.children"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
