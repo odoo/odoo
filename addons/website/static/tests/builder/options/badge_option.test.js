@@ -15,3 +15,12 @@ test("adjacent s_badge elements should not be merged", async () => {
     editor.shared.history.addStep();
     expect(editor.editable.querySelectorAll(".s_badge")).toHaveLength(2);
 });
+
+test("adjacent s_cta_badge elements should not be merged", async () => {
+    const { getEditor } = await setupWebsiteBuilder(
+        `<p><span class="s_cta_badge d-inline-block border rounded">Badge 1</span><span class="s_cta_badge d-inline-block border rounded">Badge 2</span></p>`
+    );
+    const editor = getEditor();
+    editor.shared.history.addStep();
+    expect(editor.editable.querySelectorAll(".s_cta_badge")).toHaveLength(2);
+});
