@@ -123,7 +123,28 @@ class PosOrder(models.Model):
             if 'access_token' in order:
                 del order['access_token']
 
+            client_amount_total = order.get('amount_total')
             pos_order.write(order)
+            # The client computes the order amounts from its own copy of the order, which may
+            # be outdated when the order is edited from another device. Only the lines stored
+            # in database are authoritative, so recompute the amounts from them and refuse to
+            # register a payment based on a total that no longer matches those lines.
+            pos_order.with_context(backend_recomputation=True)._compute_prices()
+            if paid and client_amount_total is not None and float_compare(
+                client_amount_total,
+                pos_order.amount_total,
+                precision_rounding=pos_order.currency_id.rounding,
+            ) != 0:
+                raise UserError(_(
+                    "The order %(order)s has been modified on another device: its total is now"
+                    " %(server_total)s instead of %(device_total)s. Please reload your data and"
+                    " register the payment again.",
+                    order=pos_order.pos_reference or pos_order.name,
+                    server_total=formatLang(
+                        self.env, pos_order.amount_total, currency_obj=pos_order.currency_id),
+                    device_total=formatLang(
+                        self.env, client_amount_total, currency_obj=pos_order.currency_id),
+                ))
 
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
         self = self.with_company(pos_order.company_id)
