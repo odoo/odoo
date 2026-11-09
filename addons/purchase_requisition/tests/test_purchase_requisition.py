@@ -219,6 +219,36 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(line.supplier_info_ids.uom_id, self.product_13.uom_id)
         self.assertFalse(self.product_09.seller_ids)
 
+    def test_purchase_template_vendor_pricelist_uom(self):
+        """ The unit price of a purchase template line coming from a vendor
+        pricelist expressed in the purchase unit of the product must be
+        converted to the line unit. """
+        product = self.env['product.product'].create({
+            'name': 'Pedal Bin by the dozen',
+            'standard_price': 10.0,
+            'type': 'consu',
+            'uom_id': self.product_uom_id.id,
+            'seller_ids': [Command.create({
+                'partner_id': self.res_partner_1.id,
+                'price': 120.0,
+                'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            })],
+        })
+        purchase_template = self.env['purchase.requisition'].create({
+            'requisition_type': 'purchase_template',
+            'vendor_id': self.res_partner_1.id,
+            'line_ids': [Command.create({'product_id': product.id})],
+        })
+        line = purchase_template.line_ids
+        line.product_qty = 24.0
+        self.assertEqual(line.uom_id, self.product_uom_id)
+        self.assertEqual(line.price_unit, 10.0, "120 per dozen is 10 per unit")
+
+        purchase_template.action_confirm()
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=purchase_template.id))
+        po = po_form.save()
+        self.assertEqual(po.order_line.price_subtotal, 240.0)
+
     def test_purchase_requisition_with_same_product(self):
         """
         Create two requisitions with the same product, but only one of them has a PO linked.
