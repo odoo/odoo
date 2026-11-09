@@ -1,5 +1,9 @@
 import { Domain } from "@web/core/domain";
-import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
+import {
+    ChartDataSource,
+    chartTypeToDataSourceMode,
+    getCalendarGroupBys,
+} from "../data_source/chart_data_source";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { deepEqual } from "@web/core/utils/objects";
 
@@ -227,6 +231,7 @@ export class OdooChartCoreViewPlugin extends OdooEvaluationPlugin {
             ) ||
             currentDataSource.metaData.cumulated !== newDataSource.cumulative ||
             currentDataSource.cumulatedStart !== newDataSource.cumulatedStart ||
+            !deepEqual(getCalendarGroupBys(currentDefinition), getCalendarGroupBys(definition)) ||
             dataSourceInstance.getInitialDomainString() !==
                 new Domain(newDataSource.searchParams.domain).toString()
         );
