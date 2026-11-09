@@ -110,7 +110,7 @@ class PdpResponseWizard(models.TransientModel):
         for wizard in self:
             move = wizard.move_ids[:1]
             wizard.fully_paid = bool(move) and self._is_fully_paid(move) and not move._pdp_get_paid_lifecycle_total_amount()
-            wizard.paid_amount = move.pdp_lifecycle_residual
+            wizard.paid_amount = -move.direction_sign * move.pdp_lifecycle_residual
 
     @api.depends('status')
     def _compute_show_reason_code(self):
@@ -225,20 +225,31 @@ class PdpResponseWizard(models.TransientModel):
         if not forced_amount and self._is_fully_paid(move) and not move._pdp_get_paid_lifecycle_total_amount():
             return self._get_payments_data_fully_paid(move)
 
-        collected_amount = forced_amount or move.pdp_lifecycle_residual
+        collected_amount = forced_amount or -move.direction_sign * move.pdp_lifecycle_residual
         collected_sign = -1 if collected_amount < 0 else 1
 
         base_lines = self._get_base_lines(move)
         tax_details = self._get_tax_details(base_lines)
 
         to_pay = {
-            key['amount']: move.direction_sign * (tax_details['base_amount'] + tax_details['tax_amount'])
+            key['amount']: -move.direction_sign * (tax_details['base_amount'] + tax_details['tax_amount'])
             for key, tax_details in tax_details.items()
         }
+        already_collected_amounts = move._pdp_get_paid_lifecycle_amounts()
         collected_amounts = {}
         collected_amount_residual = abs(collected_amount)
         for tax_percent, amount in to_pay.items():
-            available = min(collected_amount_residual, abs(amount))
+            if collected_sign == -move.direction_sign:
+                # We reduce the amount to be paid (e.g. we reconcile the invoice with the payment bank transaction).
+                # So we can only collect the amount to be paid (minus the already collected amount).
+                left_to_collect = max(abs(amount - already_collected_amounts.get(tax_percent, 0)), 0)
+            else:
+                # We increase the amount to be paid (e.g. we unreconcile a payment bank transaction from the invoice).
+                # So we can only (de)collect the amount that was paid already.
+                left_to_collect = max(abs(already_collected_amounts.get(tax_percent, 0)), 0)
+            available = min(collected_amount_residual, left_to_collect)
+            if move.currency_id.is_zero(available):
+                continue
             collected_amounts[tax_percent] = collected_sign * available
             collected_amount_residual -= abs(available)
             if move.currency_id.is_zero(collected_amount_residual):
