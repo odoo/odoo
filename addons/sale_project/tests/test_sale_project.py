@@ -2271,3 +2271,48 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order.milestone_count, 1,
             "There should be a milestone linked to the sale order line."
         )
+
+    def test_project_from_so_action_reuses_analytic_account(self):
+        view_id = self.env.ref('sale_project.sale_project_view_form_simplified_template').id
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': self.project_global.id,
+            'order_line': [Command.create({'product_id': self.product_consumable.id, 'product_uom_qty': 1})],
+        })
+
+        action_1 = sale_order.action_create_project()
+        with Form(self.env[action_1['res_model']].with_context(action_1['context']), view=view_id) as wizard:
+            project_action = wizard.save().action_create_project_from_so()
+
+        project_1 = self.env['project.project'].browse(project_action['context']['default_project_id'])
+        self.assertEqual(
+            project_1.account_id,
+            sale_order.project_account_id,
+            "The analytic account should be reused from the existing project linked to the sale order."
+        )
+
+        self.project_template.write({'is_template': True, 'company_id': self.env.company.id})
+        action_2 = sale_order.action_create_project()
+        with Form(self.env[action_2['res_model']].with_context(action_2['context']), view=view_id) as wizard:
+            wizard.template_id = self.project_template
+            project_action = wizard.save().action_create_project_from_so()
+
+        project_2 = self.env['project.project'].browse(project_action['context']['default_project_id'])
+        self.assertEqual(
+            project_2.account_id,
+            sale_order.project_account_id,
+            "The analytic account should be reused from the existing project linked to the sale order, even when using a template."
+        )
+
+        with Form(self.env['project.project']) as project:
+            project.name = 'New Project'
+            project.allow_billable = True
+            project.partner_id = sale_order.partner_id
+            project.reinvoiced_sale_order_id = sale_order
+
+            self.assertEqual(
+                project.account_id,
+                sale_order.project_account_id,
+                "The project should reuse the selected sale order's analytic account.",
+            )
