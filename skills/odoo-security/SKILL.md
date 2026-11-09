@@ -43,6 +43,7 @@ The audit is complete when every pattern has been swept and every hit judged.
 | `==` comparing a secret/token | [Timing attacks](#timing-attacks) |
 | `def f(..., x=[])` / `x={}` | [Mutable default arguments](#mutable-default-arguments) |
 | methods returning rich objects | [Don't return complex objects](#dont-return-complex-objects-from-model-methods) |
+| a check on `vals` in `def create(` before `super().create(` | [Access control](#access-control) |
 
 ## Access control
 
@@ -61,6 +62,27 @@ the attacker's reading:
   only, never read). Cover **all** CRUD operations that need restricting.
 - Multi-company models need a company restriction row; sensitive models need
   domain restrictions, not just group permissions.
+- A `create` override that validates `vals` before `super().create()`, for
+  instance to restrict some fields or values to a group, can be bypassed when
+  it reads only `vals`. The ORM adds values after that code, in
+  `_prepare_create_values`, called by `BaseModel.create`:
+  - the `default_<field>` keys of the context: a caller who is refused
+    `book_id` in `vals` passes `default_book_id` in the context instead;
+  - the `ir.default` records: an internal user can add their own;
+  - what an override of `default_get` adds, and the precomputed fields.
+- To prevent this, move the check to an override of `_prepare_create_values`
+  and check what its `super()` returns: the check still runs before the
+  record is created. Those values already hold the context defaults and the
+  `ir.default` ones, so there is no need to handle them by hand.
+- A raise after `super().create()` is too late: the record is created
+  already, so if the caller catches the `AccessError`, the creation is not
+  reverted.
+- In `_prepare_create_values`, the values also hold the `default=` of the
+  field. A check that only tests that a value is there, as
+  `if vals.get('book_id'):`, then also refuses a create where the caller gave
+  no `book_id` and the field has a default. Check which book the value is
+  (may the user set that one?), not whether the key is there.
+- `write` has no such gap: it adds no default.
 
 ## Field-level access
 
