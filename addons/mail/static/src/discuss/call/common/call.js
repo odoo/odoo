@@ -90,9 +90,15 @@ export class Call extends Component {
                 this.channel?.rtc_session_ids.some((s) => s.is_screen_sharing_on),
             ]
         );
-        useHotkey("shift+d", () => this.rtc.toggleDeafen());
-        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
-        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
+        useHotkey("shift+d", () => this.rtc.toggleDeafen(), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
         useSubEnv({ inDiscussCallView: true });
     }
 
