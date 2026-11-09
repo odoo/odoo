@@ -12,14 +12,6 @@ class CalendarRecurrence(models.Model):
     # Don't sync by default. Sync only when the recurrence is applied
     need_sync_m = fields.Boolean(default=False)
 
-    def _compute_rrule(self):
-        # Note: 'need_sync_m' is set to False to avoid syncing the updated recurrence with
-        # Outlook, as this update may already come from Outlook. If not, this modification will
-        # be already synced through the calendar.event.write()
-        for recurrence in self:
-            if recurrence.rrule != recurrence._rrule_serialize():
-                recurrence.write({'rrule': recurrence._rrule_serialize()})
-
     def _inverse_rrule(self):
         # Note: 'need_sync_m' is set to False to avoid syncing the updated recurrence with
         # Outlook, as this update mainly comes from Outlook (the 'rrule' field is not directly
