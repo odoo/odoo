@@ -15,7 +15,7 @@
             <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="this.onMouseleaveMain">
                 <PttAdBanner t-if="!this.props.compact"/>
                 <BlurPerformanceWarning t-if="this.store.settings.blurPerformanceWarning"/>
-                <CallPresentationBar t-if="this.rtc.selfSession and this.isAnyonePresenting" />
+                <CallPresentationBar t-if="this.isActiveCall and this.isAnyonePresenting" />
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                     t-att-class="{'mt-1': this.minimized}"
