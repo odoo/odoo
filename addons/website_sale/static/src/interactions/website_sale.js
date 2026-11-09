@@ -387,6 +387,8 @@ export class WebsiteSale extends Interaction {
         const filters = form.querySelectorAll('input:checked, select');
         const attributeValues = new Map();
         const tags = new Set();
+        const url = new URL(form.action);
+        const searchParams = url.searchParams;
         for (const filter of filters) {
             if (filter.value) {
                 if (filter.name === 'attribute_value') {
@@ -397,11 +399,11 @@ export class WebsiteSale extends Interaction {
                     attributeValues.set(attributeId, valueIds);
                 } else if (filter.name === 'tags') {
                     tags.add(filter.value);
+                } else {
+                    this._processCustomFilter(filter, searchParams);
                 }
             }
         }
-        const url = new URL(form.action);
-        const searchParams = url.searchParams;
         // Aggregate all attribute values belonging to the same attribute into a single
         // `attribute_values` search param.
         for (const entry of attributeValues.entries()) {
@@ -413,6 +415,16 @@ export class WebsiteSale extends Interaction {
         }
         redirect(`${url.pathname}?${searchParams.toString()}`);
     }
+
+    /**
+     * Hook to handle filter inputs not natively supported by the shop.
+     *
+     * Meant to be overridden by other modules.
+     *
+     * @param {HTMLElement} filter - The checked input or select element.
+     * @param {URLSearchParams} searchParams - Params used to build the redirect URL.
+     */
+    _processCustomFilter(filter, searchParams) {}
 
     /**
      * @param {Event} ev
