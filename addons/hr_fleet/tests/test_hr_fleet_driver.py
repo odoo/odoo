@@ -3,7 +3,7 @@
 from datetime import timedelta, date
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, common
+from odoo.tests import common, freeze_time
 
 
 class TestHrFleetDriver(common.TransactionCase):
@@ -235,3 +235,23 @@ class TestHrFleetDriver(common.TransactionCase):
 
         assignation_log = self.env['fleet.vehicle.assignation.log'].search([('vehicle_id', '=', car.id)])
         self.assertEqual(assignation_log.driver_employee_id, self.test_employee)
+
+    @freeze_time('2026-01-15 03:00:00')  # 2026-01-14 22:00 in New York
+    def test_change_driver_in_user_timezone(self):
+        """Changing the driver must close the previous assignation on the same (user-local) day
+        the new one starts, without raising an overlap error for users west of UTC."""
+        self.env.user.tz = 'America/New_York'
+        driver_a, driver_b = self.env['res.partner'].create([{'name': 'Driver A'}, {'name': 'Driver B'}])
+        vehicle = self.env['fleet.vehicle'].create({
+            'model_id': self.model.id,
+            'driver_id': driver_a.id,
+        })
+        log_a = vehicle.log_drivers
+        self.assertEqual(log_a.date_start, date(2026, 1, 14))
+
+        vehicle.driver_id = driver_b
+
+        log_b = vehicle.log_drivers - log_a
+        self.assertEqual(vehicle.driver_id, driver_b)
+        self.assertEqual(log_b.date_start, date(2026, 1, 14))
+        self.assertEqual(log_a.date_end, date(2026, 1, 14))
