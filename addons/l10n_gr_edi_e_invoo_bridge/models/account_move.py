@@ -87,6 +87,7 @@ class AccountMove(models.Model):
             'invoice_amount_total': request_values['invoice_amount_total'],
             'invoice_datetime': request_values['invoice_datetime'],
             'move_id': request_values['invoice_id'],
+            'invoice_business_data': request_values['invoice_business_data'],
         }
         if invoice_currency := request_values.get('invoice_currency'):
             form_values['invoice_currency'] = invoice_currency
