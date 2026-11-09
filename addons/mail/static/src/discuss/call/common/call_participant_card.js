@@ -177,6 +177,17 @@ export class CallParticipantCard extends Component {
         return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession);
     }
 
+    /** The user's own screen, paused against the infinite mirror effect. */
+    showsStreamPaused() {
+        return (
+            !this.props.isSidebarItem &&
+            this.props.cardData.type === "screen" &&
+            this.rtcSession?.eq(this.rtc.selfSession) &&
+            this.rtc.state.screenTrack &&
+            this.rtc.state.isScreenTrackPaused
+        );
+    }
+
     async onClick(ev) {
         if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
             return;

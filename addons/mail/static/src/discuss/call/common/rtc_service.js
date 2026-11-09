@@ -403,6 +403,8 @@ export class Rtc extends Record {
             fallbackMode: false,
             isPipMode: false,
             isFullscreen: false,
+            /** Mirrors `screenTrack.enabled`, which a template cannot observe. */
+            isScreenTrackPaused: false,
         });
         this.blurManager = undefined;
     }
@@ -552,8 +554,14 @@ export class Rtc extends Record {
         this.setPttReleaseTimeout();
     }
 
+    /** @param {boolean} paused */
+    setScreenTrackPaused(paused) {
+        this.state.screenTrack.enabled = !paused;
+        this.state.isScreenTrackPaused = paused;
+    }
+
     showMirroringWarning() {
-        this.state.screenTrack.enabled = false;
+        this.setScreenTrackPaused(true);
         const trackEndedFn = () => this.removeMirroringWarning?.();
         this.removeMirroringWarning = this.overlay.add(
             CallInfiniteMirroringWarning,
@@ -2053,6 +2061,7 @@ export class Rtc extends Record {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
                     screenTrack: outputTrack,
+                    isScreenTrackPaused: false,
                     screenAudioTrack: screenAudioTrack,
                     sendScreen: Boolean(outputTrack),
                     isScreenSourceExternal: Boolean(sourceStream) && env?.pipWindow,
@@ -2408,7 +2417,7 @@ export const rtcService = {
             } else if (!rtc.state.isFullscreen) {
                 rtc.removeMirroringWarning?.();
                 if (wasFullscreen && rtc.state.screenTrack) {
-                    rtc.state.screenTrack.enabled = true;
+                    rtc.setScreenTrackPaused(false);
                 }
             }
         });
