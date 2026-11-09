@@ -13,6 +13,9 @@ from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 _logger = logging.getLogger(__name__)
 
+# Put in `peppol_supported_documents` when the partner can't receive non regulated messages.
+REGULATED_ONLY_PLACEHOLDER = 'l10n_fr_pdp_regulated_only'
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -73,6 +76,19 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
     # OVERRIDE AND HELPERS
     # -------------------------------------------------------------------------
+
+    def _l10n_fr_pdp_cannot_receive_unregulated(self, company):
+        """ Whether sending to this partner through the Approved Platform would fail because the
+        company sends non regulated messages and the partner can only receive regulated ones.
+        """
+        self.ensure_one()
+        return (
+            company._get_peppol_proxy_type() == 'pdp'
+            and self._get_pdp_receiver_identification_info()[0] == 'pdp'
+            and self.with_company(company).peppol_verification_state == 'valid'
+            and REGULATED_ONLY_PLACEHOLDER in (self.peppol_supported_documents or [])
+            and company._l10n_fr_pdp_sends_unregulated()
+        )
 
     def _l10n_fr_pdp_is_b2c(self):
         self.ensure_one()
@@ -293,16 +309,23 @@ class ResPartner(models.Model):
         for partner in self:
             edi_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}".lower()
             annuaire_info = self._pdp_annuaire_lookup_participant(edi_identification) or {}
-            if not annuaire_info.get('b2g'):
-                continue
-
-            # This is a bit of a hack to avoid having to add a field to signify the partner is behind Chorus Pro.
-            # The users that are associated with Chorus Pro (9999) on the annuaire are not on Peppol.
-            # They just communicate with Chorus Pro which communicates with the other platforms (not via Peppol).
-            # So the `peppol_supported_documents` would be empty for them otherwise.
-            # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
-            # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
-            partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+            if annuaire_info.get('b2g'):
+                # This is a bit of a hack to avoid having to add a field to signify the partner is behind Chorus Pro.
+                # The users that are associated with Chorus Pro (9999) on the annuaire are not on Peppol.
+                # They just communicate with Chorus Pro which communicates with the other platforms (not via Peppol).
+                # So the `peppol_supported_documents` would be empty for them otherwise.
+                # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
+                # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
+                partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+            if annuaire_info.get('in_annuaire'):
+                # Non regulated messages don't go through the annuaire but through Peppol: the proxy
+                # tells whether the partner publishes that process. An older proxy doesn't, in which
+                # case nothing is blocked. Same kind of placeholder as for Chorus Pro, to avoid a field.
+                supported_documents = [doc for doc in partner.peppol_supported_documents or [] if doc != REGULATED_ONLY_PLACEHOLDER]
+                if not annuaire_info.get('accepts_unregulated', True):
+                    supported_documents.append(REGULATED_ONLY_PLACEHOLDER)
+                if supported_documents != (partner.peppol_supported_documents or []):
+                    partner.peppol_supported_documents = supported_documents
 
     @api.model
     @handle_demo
