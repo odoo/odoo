@@ -4,8 +4,10 @@ import re
 from collections import OrderedDict
 
 from odoo import models
+from odoo.tools import SQL
 from odoo.http import request
 from odoo.addons.website.tools import add_form_signature
+from odoo.exceptions import AccessError
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 re_translate_span = re.compile(r'<span.+?data-oe-translation-source-sha.+?>(.+?)</span>')
@@ -135,3 +137,15 @@ class IrQweb(models.AbstractModel):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m[1], url_adapter(m[2])), atts['style'])
         return atts
+
+    def _can_user_modify(self, record):
+        try:
+            self.env.website._check_user_can_modify(record)
+        except AccessError:
+            return False
+        return True
+
+    def _pregenerate_view_caches(self):
+        super(IrQweb, self.with_context(website_id=None))._pregenerate_view_caches()
+        for website in self.env['website'].get_all():
+            super(IrQweb, self.with_context(website_id=website.id))._pregenerate_view_caches()
