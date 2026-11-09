@@ -46,10 +46,16 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     );
     grid-auto-rows: 1fr;
     gap: $o-account-dashboard-kpi-card-gap;
-    width: 100%;
+    /* Room for the focus ring of the cards, which the scrolling would cut: */
+    /* on the sides and below without moving them, above where the view */
+    /* starts. */
+    width: calc(100% + 2 * var(--o-focus-ring-width));
     min-width: 0;
+    margin: 0 calc(-1 * var(--o-focus-ring-width)) calc(-1 * var(--o-focus-ring-width));
+    padding: var(--o-focus-ring-width);
     overflow: scroll hidden;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--o-focus-ring-width);
     -webkit-overflow-scrolling: touch;
 
     -ms-overflow-style: none;

@@ -49,6 +49,12 @@
             }
         }
     }
+
+    /* After the colors, so that a selected card shows the focus ring too. */
+    &.active:focus-visible {
+        outline: var(--o-focus-ring);
+        outline-offset: var(--o-focus-ring-offset);
+    }
 }
 
 .o_date_filter_wrapper {
