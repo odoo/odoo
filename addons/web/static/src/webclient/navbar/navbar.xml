@@ -108,7 +108,7 @@
           </div>
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <div t-if="!this.state.isAllAppsMenuOpened and this.currentApp" class="d-flex align-items-center m-3 mb-0">
-                  <img style="height: 2em;" t-if="this.currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{this.currentApp.webIconData}}"/>
+                  <img style="height: 2em;" t-if="this.currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{this.currentApp.webIconData}}" alt=""/>
                   <i t-elif="this.currentApp.webIcon" class="oi oi-2x me-2" t-att-data-icon="this.currentApp.webIconClass"  t-att-style="'color:' + this.currentApp.webIconColor"></i>
                   <span class="fs-4 fw-bolder"><t t-out="this.currentApp.name"/></span>
                 </div>
@@ -123,7 +123,7 @@
                       <t t-foreach="apps" t-as="app" t-key="app_index">
                         <li t-att-data-menu-xmlid="app.xmlid" class="o_app fw-bolder py-2" t-att-class="{'bg-primary-subtle': this.menuService.getCurrentApp() === app, 'o_disabled_offline': !this._isAvailable(app)}" t-on-click="() => {this.onNavBarDropdownItemSelection(app); this._closeAppMenuSidebar();}">
                           <div class="d-flex align-items-center">
-                            <img style="height: 3em;" t-if="app.webIconData" class="o_app_icon me-2" t-attf-src="{{app.webIconData}}"/>
+                            <img style="height: 3em;" t-if="app.webIconData" class="o_app_icon me-2" t-attf-src="{{app.webIconData}}" alt=""/>
                             <i t-elif="app.webIcon" class="oi oi-3x me-2" t-att-data-icon="app.webIcon.split(',')[0]" t-att-style="'color:' + app.webIcon.split(',')[1]"></i>
                             <t t-out="app.name"/>
                           </div>

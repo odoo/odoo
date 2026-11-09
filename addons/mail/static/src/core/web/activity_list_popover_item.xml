@@ -34,7 +34,7 @@
                 </button>
             </div>
             <div class="o-mail-ActivityListPopoverItem-user d-flex align-items-center flex-wrap mx-3">
-                <img class="me-2 rounded object-fit-cover" t-if="this.activity().user_id?.partner_id" t-att-src="this.activity().user_id.partner_id.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;"/>
+                <img class="me-2 rounded object-fit-cover" t-if="this.activity().user_id?.partner_id" t-att-src="this.activity().user_id.partner_id.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;" alt=""/>
                 <div t-elif="this.activity().role_id" class="me-2 rounded bg-200 text-600 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 1.5rem; height: 1.5rem;">
                     <i class="oi oi-filled" data-icon="group" role="img" title="Role" aria-label="Role" style="font-size: 12px;"/>
                 </div>

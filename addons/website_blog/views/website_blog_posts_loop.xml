@@ -62,7 +62,7 @@ according to the enabled options.
                     <t t-set="blog_post" t-value="posts[0]"/>
                     <article t-attf-class="o_wblog_post o_wblog_split_grid_sticky o_sticky_reactive position-static position-xl-sticky sticky-xl-top" name="blog_post">
                         <t t-if="opt_posts_loop_show_cover">
-                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="stretched-link"/>
+                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="stretched-link" aria-hidden="true" tabindex="-1"/>
                             <t t-call="website.record_cover"
                                 _record="blog_post"
                                 additionnal_classes.f="o_wblog_post_cover justify-content-end p-5 text-white overflow-hidden">
@@ -325,7 +325,7 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Cover  ====================== -->
 <template id="post_cover_image">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}">
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}" aria-hidden="true" tabindex="-1">
         <t t-call="website.record_cover"
             _record="blog_post"
             display_opt_name.translate="Blog Post Cover"
@@ -334,6 +334,8 @@ according to the enabled options.
             <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="o_wblog_unpublished mt-2 me-2 #{_badge_classes}"/>
         </t>
     </a>
+    <!-- The badge above is hidden with the link: screen readers get this copy. -->
+    <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="visually-hidden #{_badge_classes}"/>
 </template>
 
 <!-- ======   Sub-Template: Posts list : Posts Teaser  ============= -->
