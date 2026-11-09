@@ -117,6 +117,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.overlayRef = signal.ref();
         this.localOverlayContainerKey = uniqueId("website");
         this.websitePreviewRef = signal.ref();
+        this.iframeContainerRef = signal.ref();
 
         onWillStart(async () => {
             const updateWebsiteId = (websiteId) => {
@@ -732,6 +733,7 @@ export class WebsiteBuilderClientAction extends Component {
 
     toggleIsMobile(isMobile) {
         this.websitePreviewRef()?.classList.toggle("o_is_mobile", isMobile);
+        this.iframeContainerRef()?.classList.toggle("o_mobile_phone", isMobile);
         this.websiteContent()?.contentDocument.documentElement.classList.toggle(
             "o_is_mobile",
             isMobile

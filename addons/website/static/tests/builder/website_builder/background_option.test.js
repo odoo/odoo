@@ -150,7 +150,7 @@ test("Background position overlay layout", async () => {
     const section = queryOne(":iframe .container section");
 
     const testLayout = async (mobile) => {
-        // In mobile preview, the iframe is scaled by the o-mobile-phone SCSS mixin.
+        // In mobile preview, the iframe is scaled by the o_mobile_phone class.
         // This mixin creates multiple similar CSS rules with different scales
         // that activate depending on the screen size.
         // The following scale of 0.87 is just one of them. It is here to have

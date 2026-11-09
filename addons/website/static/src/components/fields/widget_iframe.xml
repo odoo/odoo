@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.iframeWidget">
-    <div t-if="this.props.record.data[this.props.name]" t-attf-class="{{ this.state.isMobile ? 'is_mobile' : 'h-100' }}">
+    <div t-if="this.props.record.data[this.props.name]" t-attf-class="{{ this.state.isMobile ? 'o_mobile_phone is_mobile' : 'h-100' }}">
         <iframe
             frameBorder="0"
             class="d-block"

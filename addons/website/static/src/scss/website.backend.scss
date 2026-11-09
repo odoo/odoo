@@ -86,42 +86,62 @@
     display: contents;
 }
 
-@mixin o-mobile-phone {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    height: 92%;
-    width: auto;
-    /* Width and height of phone.svg. Needed for the builder to recompute values */
-    /* when switching to mobile preview, otherwise the width is 0 for a moment. */
-    aspect-ratio: 368 / 763;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
-                16px 12px 32px rgba(0, 0, 0, 0.15),
-                64px 0 64px rgba(0, 0, 0, 0.15);
-    border-radius: 3.5vh;
-    background-color: white;
+/* Phone frame of the mobile previews */
+.o_mobile_phone {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) { /* media-breakpoint-up(md) */
+        --o-mobile-phone-scale: calc(0.0016 * var(--o-mobile-phone-max-height) - 0.37);
 
-    iframe {
-        height: 87%;
-        top: 8%;
-    }
+        position: absolute;
+        inset-inline-start: 50%;
+        top: 50%;
+        height: 92%;
+        width: auto;
+        /* Width and height of phone.svg. Needed for the builder to recompute values */
+        /* when switching to mobile preview, otherwise the width is 0 for a moment. */
+        aspect-ratio: 368 / 763;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+                    16px 12px 32px rgba(0, 0, 0, 0.15),
+                    64px 0 64px rgba(0, 0, 0, 0.15);
+        border-radius: 3.5vh;
+        background-color: white;
 
-    /* Loop through max-heights from 800px to 600px in steps of 25px, */
-    /* calculating scale and height for each value. */
-    @for $max-height from 800 through 600 {
-        @if $max-height % 25 == 0 {
-            $scale: 0.0016 * $max-height - 0.37;
-            $adjusted-radius: 3.5vh / $scale;
-            @media (max-height: #{$max-height}px) {
-                height: (90 / $scale) * 1%;
-                transform: translate(-50%, -50%) scale($scale);
-                border-radius: $adjusted-radius;
-                /* Add min-height for 600px only. */
-                @if $max-height == 600 {
-                    min-height: 740px;
-                }
-            }
+        iframe {
+            height: 87%;
+            top: 8%;
+        }
+
+        /* Scale it down for max-heights from 800px to 600px, in steps of 25px. */
+        @media (max-height: 800px) {
+            --o-mobile-phone-max-height: 800;
+            height: calc(90% / var(--o-mobile-phone-scale));
+            transform: translate(-50%, -50%) scale(var(--o-mobile-phone-scale));
+            border-radius: calc(3.5vh / var(--o-mobile-phone-scale));
+        }
+        @media (max-height: 775px) {
+            --o-mobile-phone-max-height: 775;
+        }
+        @media (max-height: 750px) {
+            --o-mobile-phone-max-height: 750;
+        }
+        @media (max-height: 725px) {
+            --o-mobile-phone-max-height: 725;
+        }
+        @media (max-height: 700px) {
+            --o-mobile-phone-max-height: 700;
+        }
+        @media (max-height: 675px) {
+            --o-mobile-phone-max-height: 675;
+        }
+        @media (max-height: 650px) {
+            --o-mobile-phone-max-height: 650;
+        }
+        @media (max-height: 625px) {
+            --o-mobile-phone-max-height: 625;
+        }
+        @media (max-height: 600px) {
+            --o-mobile-phone-max-height: 600;
+            min-height: 740px;
         }
     }
 }
@@ -139,8 +159,6 @@
 
         div.is_mobile {
             @media screen and (min-width: 768px), print and (min-width: 188mm) {
-                @include o-mobile-phone;
-
                 iframe {
                     position: absolute;
                 }
