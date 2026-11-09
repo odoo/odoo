@@ -9,7 +9,9 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 class L10nARCustomerPortal(CustomerPortal):
 
     def _is_argentine_company(self):
-        return request.env.company.country_code == 'AR'
+        # consistent with the portal templates, which use the company of the website
+        company = request.website.company_id if getattr(request, 'website', False) else request.env.company
+        return company.country_code == 'AR'
 
     def _get_optional_fields(self):
         # EXTEND 'portal'
