@@ -458,7 +458,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             :param extra_checks: pass False to bypass extra sanity check (e.g. email address)
         """
         # super-admin can be used to bypass extra checks
-        if self.env.is_admin():
+        if self.env.su or self.env.user._is_admin():
             extra_checks = False
 
         Partner = self.env['res.partner']

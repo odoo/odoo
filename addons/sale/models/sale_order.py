@@ -1568,7 +1568,7 @@ class SaleOrder(models.Model):
         if (
             self.env.context.get("check_document_layout")
             and not self.env.context.get("discard_logo_check")
-            and self.env.is_admin()
+            and (self.env.su or self.env.user._is_admin())
             and not self.env.company.external_report_layout_id
         ):
             layout_action = self.env["ir.actions.report"]._action_configure_external_report_layout(

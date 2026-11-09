@@ -23,7 +23,7 @@ class ForumPostMessage(models.Model):
 
         records = super().create(vals_list)
 
-        if not self.env.is_admin() and (message := next((record for record in records if not record.post_id.can_comment), None)):
+        if not (self.env.su or self.env.user._is_admin()) and (message := next((record for record in records if not record.post_id.can_comment), None)):
             raise AccessError(_('%i karma required to comment.', message.post_id.karma_comment))
 
         return records
@@ -32,7 +32,7 @@ class ForumPostMessage(models.Model):
         if 'post_id' in vals:
             raise AccessError(_('Cannot change the post of a comment.'))
 
-        if not self.env.is_admin() and (message := next((record for record in self if not record.post_id.can_edit), None)):
+        if not (self.env.su or self.env.user._is_admin()) and (message := next((record for record in self if not record.post_id.can_edit), None)):
             raise AccessError(_('%i karma required to edit a comment.', message.post_id.karma_edit))
 
         if vals.get('body'):
@@ -42,7 +42,7 @@ class ForumPostMessage(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_enough_karma(self):
-        if not self.env.is_admin() and (message := next((record for record in self if not record.post_id.can_edit), None)):
+        if not (self.env.su or self.env.user._is_admin()) and (message := next((record for record in self if not record.post_id.can_edit), None)):
             raise AccessError(_('%i karma required to delete a comment.', message.post_id.karma_edit))
 
     def _convert_to_answer(self):

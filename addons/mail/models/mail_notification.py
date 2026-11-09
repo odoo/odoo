@@ -83,7 +83,7 @@ class MailNotification(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if ('mail_message_id' in vals or 'res_partner_id' in vals) and not self.env.is_admin():
+        if ('mail_message_id' in vals or 'res_partner_id' in vals) and not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_("Can not update the message or recipient of a notification."))
         if vals.get('is_read'):
             vals['read_date'] = fields.Datetime.now()

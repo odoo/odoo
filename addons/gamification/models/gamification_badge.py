@@ -183,7 +183,7 @@ class GamificationBadge(models.Model):
 
         :return: integer representing the permission.
         """
-        if self.env.is_admin():
+        if self.env.su or self.env.user._is_admin():
             return self.CAN_GRANT
 
         if self.rule_auth == 'nobody':

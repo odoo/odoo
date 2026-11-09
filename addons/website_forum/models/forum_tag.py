@@ -79,7 +79,7 @@ class ForumTag(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             forum = self.env['forum.forum'].browse(vals.get('forum_id'))
-            if self.env.user.karma < forum.karma_tag_create and not self.env.is_admin():
+            if self.env.user.karma < forum.karma_tag_create and not (self.env.su or self.env.user._is_admin()):
                 raise AccessError(_('%d karma required to create a new Tag.', forum.karma_tag_create))
         return super(ForumTag, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
 

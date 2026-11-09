@@ -263,7 +263,7 @@ class CrmTeam(models.Model):
           about data see :meth:`CrmTeam._allocate_leads` and
           :meth:`CrmTeam._assign_and_convert_leads`;
         """
-        if not (self.env.user.has_group('sales_team.group_sale_manager') or self.env.is_system()):
+        if not (self.env.user.has_group('sales_team.group_sale_manager') or self.env.su or self.env.user._is_system()):
             raise exceptions.UserError(_('Lead/Opportunities automatic assignment is limited to managers or administrators'))
 
         _logger.info(

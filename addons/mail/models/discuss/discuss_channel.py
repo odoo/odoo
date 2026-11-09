@@ -643,7 +643,7 @@ class DiscussChannel(models.Model):
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
         if (
             "is_readonly" in vals
-            and not self.env.is_admin()
+            and not (self.env.su or self.env.user._is_admin())
             and (
                 failing_channels := self.filtered(
                     lambda channel: (
@@ -672,7 +672,7 @@ class DiscussChannel(models.Model):
             )
         if (
             {"name", "description", "image_128"} & set(vals)
-            and not self.env.is_admin()
+            and not (self.env.su or self.env.user._is_admin())
             and (
                 failing_channels := self.filtered(
                     lambda channel: (

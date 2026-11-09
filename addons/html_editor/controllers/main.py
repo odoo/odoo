@@ -120,7 +120,7 @@ def attachment_create(IrAttachment, name='', data=False, url=False, res_id=False
     # Despite the user having no right to create an attachment, he can still
     # create an image attachment through some flows
     if (
-        not IrAttachment.env.is_admin()
+        not (IrAttachment.env.su or IrAttachment.env.user._is_admin())
         and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
     ):
         attachment = IrAttachment.sudo().create(attachment_data)

@@ -879,7 +879,7 @@ class MailMessage(models.Model):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
-        if record_changed and not self.env.is_system():
+        if record_changed and not (self.env.su or self.env.user._is_system()):
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
@@ -913,7 +913,7 @@ class MailMessage(models.Model):
         )
 
     def export_data(self, fields_to_export):
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             raise AccessError(_("Only administrators are allowed to export mail message"))
 
         return super().export_data(fields_to_export)

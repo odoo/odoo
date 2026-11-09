@@ -82,7 +82,7 @@ class AccountMove(models.Model):
             "The currently selected GSP (Tera Soft) will be deprecated soon.\n"
             "To ensure uninterrupted e-Invoice and E-way operations, please switch to BVM GSP as per the"
         )
-        if not self.env.is_admin():
+        if not (self.env.su or self.env.user._is_admin()):
             edi_error_message += _(
                 "\n\nYou must contact your system administrator to update the GSP."
             )

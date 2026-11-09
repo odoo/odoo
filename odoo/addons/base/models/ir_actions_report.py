@@ -888,7 +888,7 @@ class IrActionsReport(models.Model):
         }
 
         discard_logo_check = self.env.context.get('discard_logo_check')
-        if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
+        if (self.env.su or self.env.user._is_admin()) and not self.env.company.external_report_layout_id and config and not discard_logo_check:
             return self._action_configure_external_report_layout(report_action)
 
         return report_action

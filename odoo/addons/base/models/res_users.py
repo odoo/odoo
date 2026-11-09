@@ -1656,7 +1656,7 @@ class ResUsersApikeys(models.Model):
         but won't check the identity (mainly used to remove trusted devices)"""
         if not self:
             return {'type': 'ir.actions.act_window_close'}
-        if self.env.is_system() or self.mapped('user_id') == self.env.user:
+        if self.env.su or self.env.user._is_system() or self.mapped('user_id') == self.env.user:
             ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
                self.mapped('scope'), self.env.user.login, self.env.uid, ip)
@@ -1672,7 +1672,7 @@ class ResUsersApikeys(models.Model):
         # To be in a sudoed environment or to be an administrator
         # to create a persistent key (no expiration date) or
         # to exceed the maximum duration determined by the user's privileges.
-        if self.env.is_system():
+        if self.env.su or self.env.user._is_system():
             return
         if not date:
             raise ValidationError(_("The API key must have an expiration date"))
@@ -1734,7 +1734,7 @@ class ResUsersApikeys(models.Model):
         # this exception should be removed, as disabling the feature should be global.
         ICP = self.env['ir.config_parameter'].sudo()
         programmatic_api_keys_enabled = str2bool(ICP.get_bool('base.enable_programmatic_api_keys'), False)
-        if not (self.env.is_system() or programmatic_api_keys_enabled):
+        if not (self.env.su or self.env.user._is_system() or programmatic_api_keys_enabled):
             raise UserError(_("Programmatic API keys are not enabled"))
 
     @api.model
@@ -1869,7 +1869,7 @@ class ResUsersApikeysDescription(models.TransientModel):
             ('365', '1 Year'),
         ]
         persistent_duration = ('0', 'Never')  # Magic value to detect an infinite duration
-        if self.env.is_system():
+        if self.env.su or self.env.user._is_system():
             return durations + [persistent_duration]
         max_duration = max(group.api_key_duration for group in self.env.user.all_group_ids) or 1.0
         return list(filter(

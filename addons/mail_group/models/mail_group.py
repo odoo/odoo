@@ -372,7 +372,7 @@ class MailGroup(models.Model):
         """ Send guidelines to given members. """
         self.ensure_one()
 
-        if not self.env.is_admin() and not self.is_moderator:
+        if not (self.env.su or self.env.user._is_admin()) and not self.is_moderator:
             raise UserError(_('Only an administrator or a moderator can send guidelines to group members.'))
 
         if not self.moderation_guidelines_msg:

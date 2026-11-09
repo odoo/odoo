@@ -174,7 +174,7 @@ class MailScheduledMessage(models.Model):
 
     def post_message(self):
         self.ensure_one()
-        if self.env.is_admin() or self.create_uid.id == self.env.uid:
+        if self.env.su or self.env.user._is_admin() or self.create_uid.id == self.env.uid:
             self._post_message()
         else:
             raise UserError(_("You are not allowed to send this scheduled message"))

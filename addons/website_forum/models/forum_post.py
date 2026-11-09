@@ -297,7 +297,7 @@ class ForumPost(models.Model):
     @api.depends_context('uid')
     def _compute_post_karma_rights(self):
         user = self.env.user
-        is_admin = self.env.is_admin()
+        is_admin = self.env.su or self.env.user._is_admin()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in zip(self, self.sudo()):
@@ -333,7 +333,7 @@ class ForumPost(models.Model):
             return NotImplemented
 
         # Won't impact sitemap, search() in converter is forced as public user
-        if self.env.is_admin():
+        if self.env.su or self.env.user._is_admin():
             return Domain.TRUE
 
         sql = SQL("""

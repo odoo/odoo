@@ -434,7 +434,7 @@
 
     <template id="payment.no_pms_available_warning">
         <div class="alert alert-warning">
-            <div t-if="env.is_system()">
+            <div t-if="env.su or env.user._is_system()">
                 <p t-if="providers_sudo">
                     None is configured for:
                     <t t-out="env.company.country_id.name"/>,
