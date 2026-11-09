@@ -91,7 +91,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_mx_account_account(self):
         return {
             'cuenta115_01': {
-                'account_stock_expense_id': 'cuenta505_01',
                 'account_stock_variation_id': 'cuenta501_02',
             },
             'cuenta153_01_01': {'asset_depreciation_account_id': 'cuenta171_02_01', 'asset_expense_account_id': 'cuenta613_02_01'},
