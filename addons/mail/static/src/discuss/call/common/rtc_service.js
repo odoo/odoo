@@ -2517,6 +2517,10 @@ export class Rtc extends Record {
                     this.screenTrack = undefined;
                     closeStream(this.sourceScreenStream);
                     this.sourceScreenStream = null;
+                    if (this.screenAudioTrack) {
+                        this.screenAudioTrack = undefined;
+                        this.updateAudioTrack();
+                    }
                     break;
                 }
             }
@@ -2656,6 +2660,8 @@ export class Rtc extends Record {
             this.audioTrack = destination.stream.getAudioTracks()[0];
         } else {
             this.audioTrack = micAudioTrack ?? screenAudioTrack;
+            this.audioContext?.close();
+            this.audioContext = undefined;
         }
         await this.network?.updateUpload("audio", this.audioTrack);
     }
@@ -2670,7 +2676,9 @@ export class Rtc extends Record {
         this.micAudioTrack?.stop();
         this.micAudioTrack = undefined;
         this.isMicAudioTrackMuted = false;
-        this.audioTrack?.stop();
+        if (this.audioTrack !== this.screenAudioTrack) {
+            this.audioTrack?.stop();
+        }
         this.audioTrack = undefined;
         if (!this.localChannel) {
             return;
@@ -2690,6 +2698,7 @@ export class Rtc extends Record {
                 }
             } catch {
                 this.showMediaUnavailableWarning({ microphone: true }, options);
+                this.updateAudioTrack();
                 return;
             }
             if (!this.localSession) {
@@ -2707,6 +2716,8 @@ export class Rtc extends Record {
             this.micAudioTrack = micAudioTrack;
             this.setupMicAudioTrackListeners();
             this.linkVoiceActivationDebounce();
+            this.updateAudioTrack();
+        } else {
             this.updateAudioTrack();
         }
     }
