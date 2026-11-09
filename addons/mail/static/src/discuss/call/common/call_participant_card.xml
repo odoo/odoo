@@ -7,7 +7,7 @@
                 'o-isTalking': !props.minimized and isTalking,
                 'o-isInvitation opacity-50': !rtcSession,
                 'o-inset': props.inset,
-                'pe-none': rtc.screenTrack and !rtc.screenTrack.enabled,
+                'pe-none': showsStreamPaused(),
                 'o-small': props.inset and (ui.isSmall or props.minimized),
                 'o-active': isActiveRtcSession and !props.inset and props.compact,
                 'p-1 rounded-1': !isActiveRtcSession,
@@ -21,6 +21,7 @@
             t-ref="root"
         >
             <!-- card -->
+<<<<<<< e747532ea8f271f6cfda0870b76193252cf2ed00
             <t t-if="!props.isSidebarItem and props.cardData.type === 'screen' and rtc.screenTrack and !rtc.screenTrack.enabled">
                 <div class="d-flex flex-column align-items-center">
                     <h1 class="o-text-white">You are Presenting</h1>
@@ -31,6 +32,19 @@
                         <button class="btn btn-primary rounded-pill px-5 pe-auto" t-on-click.stop="() => (rtc.screenTrack.enabled = true)" aria-label="Show My Screen Anyway">Show My Screen Anyway</button>
                         <button class="btn btn-secondary rounded-pill px-5 pe-auto" t-on-click.stop="() => rtc.toggleVideo('screen', false)" aria-label="Stop Presenting">Stop Presenting</button>
                     </div>
+||||||| fdb1df4cb299cd42db7a619318b7d79eae0788fa
+            <t t-if="!props.isSidebarItem and props.cardData.type === 'screen' and rtc.screenTrack and !rtc.screenTrack.enabled">
+                <div class="o-text-white display-5 gap-3">
+                    <button class="pe-auto bg-transparent o-text-white border-0 opacity-25 opacity-75-hover" t-ref="resumeStream" t-on-click.stop="() => (this.rtc.screenTrack.enabled = true)">
+                        <i class="fa fa-fw" t-att-class="{ 'fa-play-circle-o': resumeStreamHover.isHover, 'fa-pause-circle-o': !resumeStreamHover.isHover }"/> <span><t t-if="resumeStreamHover.isHover">Resume stream</t><t t-else="">Stream paused</t></span>
+                    </button>
+=======
+            <t t-if="showsStreamPaused()">
+                <div class="o-text-white display-5 gap-3">
+                    <button class="pe-auto bg-transparent o-text-white border-0 opacity-25 opacity-75-hover" t-ref="resumeStream" t-on-click.stop="() => this.rtc.setScreenTrackPaused(false)">
+                        <i class="fa fa-fw" t-att-class="{ 'fa-play-circle-o': resumeStreamHover.isHover, 'fa-pause-circle-o': !resumeStreamHover.isHover }"/> <span><t t-if="resumeStreamHover.isHover">Resume stream</t><t t-else="">Stream paused</t></span>
+                    </button>
+>>>>>>> 6bc8de0410608ee2f0044fd957956362754d0972
                 </div>
             </t>
             <CallParticipantVideo t-elif="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
