@@ -12,7 +12,7 @@
     <t t-name="calendar.AttendeeTag" t-inherit="web.AvatarTag" t-inherit-mode="primary">
         <xpath expr="//img[hasclass('o_avatar')]" position="replace">
             <div class="o_attendee_tags_list">
-                <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
+                <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick" t-att-alt="this.props.text ? '' : this.props.tooltip or ''" t-att-aria-hidden="this.props.text ? 'true' : false"/>
                 <div t-if="this.statusIcon" class="attendee_tag_status oi rounded-circle" t-att-data-icon="this.statusIcon" t-attf-class="o_attendee_status_{{this.props.status}}"/>
             </div>
         </xpath>

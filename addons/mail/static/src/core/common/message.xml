@@ -20,7 +20,7 @@
                 <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="this.getSidebarAttClass()">
                     <t t-if="!this.props.squashed">
                         <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="this.getAvatarContainerAttClass()">
-                            <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="this.message.authorAvatarUrl" t-att-class="this.authorAvatarAttClass"/>
+                            <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="this.message.authorAvatarUrl" t-att-class="this.authorAvatarAttClass" alt=""/>
                         </div>
                         <t t-if="this.message.is_bookmarked" t-call="mail.Message.sidebarBookmark"/>
                     </t>
