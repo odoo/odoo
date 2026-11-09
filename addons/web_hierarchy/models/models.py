@@ -1,41 +1,84 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, models
+from odoo.fields import Domain
 
 
 class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def hierarchy_read(self, domain, specification, parent_field, child_field=None, order=None):
-        if parent_field not in specification:
-            specification[parent_field] = {"fields": {"display_name": {}}}
-        records = self.search(domain, order=order)
-        fetch_child_ids_for_all_records = False
-        if not records:
-            return []
-        elif len(records) == 1:
-            domain = [(parent_field, '=', records.id), ('id', '!=', records.id)]
-            if records[parent_field]:
-                records += records[parent_field]
-                domain = [('id', 'not in', records.ids), (parent_field, 'in', records.ids)]
-            records += self.search(domain, order=order)
-        else:
-            fetch_child_ids_for_all_records = True
-        children_ids_per_record_id = {}
-        if not child_field:
-            children_ids_per_record_id = {
-                record.id: child_ids
-                for record, child_ids in self._read_group(
-                    [(parent_field, 'in', records.ids if fetch_child_ids_for_all_records else (records - records[parent_field]).ids)],
-                    (parent_field,),
-                    ('id:array_agg',),
-                    order=order
-                )
-            }
-        result = records.web_read(specification)
-        if children_ids_per_record_id:
-            for record_data in result:
-                if record_data['id'] in children_ids_per_record_id:
-                    record_data['__child_ids__'] = children_ids_per_record_id[record_data['id']]
-        return result
+    def hierarchy_read(
+        self,
+        domain,
+        specification,
+        parent_field_name,
+        roots_only=False,
+        offset=0,
+        limit=None,
+        order=None,
+        count_limit=None,
+    ):
+        """ Load the data displayed by the hierarchy view.
+
+        Like :meth:`web_search_read`, return a page of records with the total
+        length, plus the parent node to display above them.
+
+        When ``roots_only`` is set, only the roots (records without parent)
+        matching ``domain`` are considered. If there is a single root and it
+        has children matching ``domain``, it is unfolded: the records are its
+        children matching ``domain``, and the root is the parent node.
+        Otherwise, the records are the roots. Whether there is a single root
+        does not depend on the page.
+
+        When ``roots_only`` is not set, the records are the ones matching
+        ``domain``.
+
+        If the root is not unfolded and all the records of the page have the
+        same parent, that parent is returned as the parent node, provided the
+        current user can read it. This typically happens when ``domain``
+        restricts the records to the children of a given parent.
+
+        The page (``offset``, ``limit``, ``order``, ``count_limit``) applies
+        to the records only. The parent node is neither part of the page nor
+        counted in the length.
+
+        :param domain: the search domain
+        :param dict specification: the ``web_read`` specification of the
+            records and of the parent node
+        :param str parent_field_name: name of the many2one field to the parent
+        :param bool roots_only: whether to only consider the roots, typically
+            when the search of the view is the default one or empty
+        :param int offset: number of records to skip
+        :param int limit: maximum number of records to return
+        :param str order: sort order of the records
+        :param int count_limit: maximum number of records to count
+        :return: a dict with the keys:
+
+            - ``parent``: the values of the parent node, or ``False``
+            - ``records``: the values of the records of the page
+            - ``length``: the number of records matching the domain actually
+              searched (the roots, the children of the unfolded root, or
+              ``domain``)
+        :rtype: dict
+        """
+        domain = Domain(domain)
+        parent = self.browse()
+
+        if roots_only:
+            roots_domain = domain & Domain(parent_field_name, '=', False)
+            roots = self.search(roots_domain, limit=2, order='id')
+            root_children_domain = domain & Domain(parent_field_name, '=', roots.id) if len(roots) == 1 else None
+            if root_children_domain is not None and self.search_count(root_children_domain, limit=1):
+                parent, domain = roots, root_children_domain
+            else:
+                domain = roots_domain
+
+        records = self.search_fetch(domain, list(specification), offset=offset, limit=limit, order=order)
+
+        if not parent and len({record[parent_field_name].id for record in records}) == 1:
+            parent = records[0][parent_field_name]._filtered_access('read')
+
+        values = (parent + records).web_read(specification)
+        return {
+            'parent': values[0] if parent else False,
+            **self._format_web_search_read_results(domain, values[1:] if parent else values, offset, limit, count_limit),
+        }
