@@ -329,13 +329,33 @@ class IrHttp(models.AbstractModel):
         req_page = request.httprequest.path
         req_page_noslug = ir_http._UNSLUG_RE.sub(r'\2', req_page)
         req_page_with_qs = request.httprequest.environ['REQUEST_URI']
+        lang_prefix = f'/{request.lang.url_code}'
+        req_page_lang = lang_prefix + req_page
+        url_froms = [
+            req_page_with_qs, req_page_noslug,
+            # trailing / could have been removed by server_page
+            req_page.rstrip('/'), req_page + '/',
+            req_page_lang, req_page_lang + '/',
+        ]
+        if query_string := request.httprequest.query_string.decode():
+            # REQUEST_URI keeps the lang prefix after a reroute (/es/test?a=1)
+            # but not after a default lang redirect (/en/test?a=1 -> /test?a=1),
+            # so add both
+            url_froms += [f'{req_page}?{query_string}', f'{req_page_lang}?{query_string}']
         domain = (
             Domain('redirect_type', 'in', ('301', '302'))
-            # trailing / could have been removed by server_page
-            & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/', req_page_noslug])
+            & Domain('url_from', 'in', url_froms)
             & request.env.website.website_domain()
         )
-        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        redirects = request.env['website.rewrite'].sudo().search(domain)
+
+        def specificity(rewrite):
+            # Most specific first: lang + qs, lang, generic + qs, generic
+            is_lang = rewrite.url_from.startswith(lang_prefix + '/')
+            has_qs = '?' in rewrite.url_from
+            return is_lang, has_qs, rewrite.url_from
+
+        return redirects.sorted(specificity, reverse=True)[:1]
 
     @classmethod
     def _serve_fallback(cls):
