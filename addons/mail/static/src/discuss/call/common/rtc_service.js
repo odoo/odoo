@@ -882,10 +882,23 @@ export class Rtc extends Record {
     async leaveCall(channel = this.localChannel) {
         this.store.fullscreenChannel = null;
         this.hasPendingRequest = true;
+<<<<<<< f6c6f3d4e7ea94da2f6daef07678c8adf51d2ff5
         // Must precede the RPC: otherwise, the echoed session removal would read as a server-initiated disconnect.
         this.endCall(channel);
         await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
         this.hasPendingRequest = false;
+||||||| d9916fd62e629d980f0a57853b2f16af852eeec4
+        await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
+        this.endCall(channel);
+        this.hasPendingRequest = false;
+=======
+        try {
+            await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
+        } finally {
+            this.endCall(channel);
+            this.hasPendingRequest = false;
+        }
+>>>>>>> 816dd3e36461df23e2675191d2f1e30becfbc1f8
     }
 
     /**
@@ -2003,18 +2016,22 @@ export class Rtc extends Record {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
         }
-        this.pttExtService.subscribe();
         this.hasPendingRequest = true;
-        const data = await rpc(
-            "/mail/rtc/channel/join_call",
-            {
-                camera,
-                channel_id: channel.id,
-                check_rtc_session_ids: channel.rtc_session_ids.map((session) => session.id),
-            },
-            { silent: true }
-        );
-        this.hasPendingRequest = false;
+        let data;
+        try {
+            data = await rpc(
+                "/mail/rtc/channel/join_call",
+                {
+                    camera,
+                    channel_id: channel.id,
+                    check_rtc_session_ids: channel.rtc_session_ids.map((session) => session.id),
+                },
+                { silent: true }
+            );
+        } finally {
+            this.hasPendingRequest = false;
+        }
+        this.pttExtService.subscribe();
         // Initializing a new session implies closing the current session.
         this.clear();
         this.localChannel = channel;
