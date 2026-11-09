@@ -35,10 +35,11 @@ export class AccountMoveSendAttachmentsSelector extends Component {
             );
 
             const existingIds = new Set(this.attachments.map((a) => a.id));
+            const existingNames = new Set(this.attachments.map((a) => a.name));
             this.props.record.update({
                 [this.props.name]: this.attachments.concat(
                     moveAttachments
-                        .filter((a) => !existingIds.has(a.id))
+                        .filter((a) => !existingIds.has(a.id) && !existingNames.has(a.name))
                         .map((attachment) => ({
                             id: attachment.id,
                             name: attachment.name,
