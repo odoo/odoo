@@ -1,5 +1,8 @@
 .o_dashboard_card {
     min-width: 7rem;
+    /* A colored fill without a button variant: the band of the background */
+    /* color that separates the focus ring from it is set here (focus_ring.css). */
+    --btn-focus-box-shadow: inset 0 0 0 calc(1.5 * var(--o-focus-ring-width)) var(--o-view-background-color);
 
     $dashboard-colors: (
         purple: (
@@ -48,6 +51,12 @@
                 }
             }
         }
+    }
+
+    /* After the colors, so that a selected card shows the focus ring too. */
+    &.active:focus-visible {
+        outline: var(--o-focus-ring);
+        outline-offset: var(--o-focus-ring-offset);
     }
 }
 

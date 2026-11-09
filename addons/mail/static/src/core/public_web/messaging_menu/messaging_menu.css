@@ -103,7 +103,8 @@
     }
 
     &:focus-visible {
-        outline: var(--border-width) solid var(--o-enterprise-action-color) !important;
+        outline: var(--o-focus-ring, var(--border-width) solid var(--o-enterprise-action-color)) !important;
+        outline-offset: var(--o-focus-ring-offset, -2px);
     }
 
     .o-mail-MessagingMenu-tabIcon {
