@@ -82,6 +82,24 @@ test("activate push to talk", async () => {
     await contains("label", { text: "Voice detection sensitivity", count: 0 });
 });
 
+test("closing call settings stops registering the push-to-talk key", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click("button", { text: "Push to Talk" });
+    await click("i[aria-label='Register new key']");
+    await contains("i[aria-label='Cancel']");
+    await click("[title='Close panel']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item", { text: "Call Settings" });
+    await contains(".o-discuss-CallSettings i[aria-label='Register new key']");
+});
+
 test("activate blur", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
