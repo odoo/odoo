@@ -44,7 +44,7 @@ function shortCutsItem() {
         id: "shortcuts",
         hide: ui.isSmall,
         description: markup`
-            <div class="d-flex align-items-center justify-content-between p-0 w-100">
+            <div class="d-flex align-items-center justify-content-between gap-2 p-0 w-100">
                 <span>${label}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`,
