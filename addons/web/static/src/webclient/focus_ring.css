@@ -50,7 +50,8 @@ input:is([type="checkbox"], [type="radio"]) {
     --o-focus-ring-btn-offset: var(--o-focus-ring-inside);
 
     & :is(.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark):focus-visible,
-    & :is(.btn-outline-primary, .btn-outline-success, .btn-outline-danger, .btn-outline-warning, .btn-outline-info, .btn-outline-dark):focus-visible {
+    & :is(.btn-outline-primary, .btn-outline-success, .btn-outline-danger, .btn-outline-warning, .btn-outline-info, .btn-outline-dark):focus-visible,
+    & > :is(.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark) ~ .btn.dropdown-toggle-split:focus-visible {
         box-shadow: inset 0 0 0 calc(1.5 * var(--o-focus-ring-width)) var(--o-view-background-color);
     }
 }

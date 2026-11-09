@@ -67,6 +67,13 @@
     z-index: 1;
 }
 
+/* The color stripe is painted over the card's ring: keep it inside the ring. */
+.o_kanban_record.o_kanban_record_colored:focus-visible::after {
+    top: calc(var(--o-focus-ring-width) - var(--o-bs-border-width));
+    bottom: calc(var(--o-focus-ring-width) - var(--o-bs-border-width));
+    left: calc(var(--o-focus-ring-width) - var(--o-bs-border-width));
+}
+
 /* In selection mode, the focused card shows the ring even after a click. */
 .o_kanban_selection_active .o_kanban_record:focus {
     outline: var(--o-focus-ring);

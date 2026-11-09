@@ -7,6 +7,9 @@
 .o_embedded_actions {
     max-height: 500px;
     transition: opacity 0.5s, max-height 0.5s ease;
+    /* Room for the focus ring of the buttons, which the hidden overflow would cut. */
+    padding-block: var(--o-focus-ring-width);
+    margin-block: calc(-1 * var(--o-focus-ring-width));
 
     &.o-fade-leave, &.o-fade-enter {
         opacity: 0;

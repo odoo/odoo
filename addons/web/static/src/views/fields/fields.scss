@@ -191,10 +191,6 @@
         @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             display: inline-block;
         }
-        .o_radio_input {
-            outline: none;
-        }
-
         .o_radio_item {
             flex: 0 0 auto;
         }
@@ -356,6 +352,12 @@
         height: 30px;
         margin: 0 5px 0 0;
         display: inline-block;
+
+        /* The color input is transparent: its swatch shows the ring. */
+        &:has(> input:focus-visible) {
+            outline: var(--o-focus-ring);
+            outline-offset: var(--o-focus-ring-outside);
+        }
     }
 
 }

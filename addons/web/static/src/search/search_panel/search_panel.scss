@@ -53,6 +53,8 @@
 
     width: var(--SearchPanel-width, var(--o-search-panel-width));
     font-size: var(--SearchPanel-fontSize, var(--o-search-panel-font-size));
+    /* Room for the focus ring of the buttons, which the scrolling would cut on the right. */
+    padding-right: var(--o-focus-ring-width);
 
     .list-group-item {
         --list-group-bg: transparent;
@@ -147,12 +149,6 @@
     }
 }
 
-.o_search_panel_category_value_header, .o_search_panel_filter_value {
-    &:focus-visible {
-        box-shadow: var(--SearchPanelHeader-focus, var(--o-bs-focus-ring-box-shadow));
-        outline: none;
-    }
-}
 
 .o_search_panel_category_value {
     .o_toggle_fold {
