@@ -526,6 +526,22 @@ test("Edit embedded file name using input", async () => {
     expect(".o_file_name").toHaveText("test.txt");
 });
 
+test("should keep the embedded file box width when editing its name", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>", {
+        config: configWithEmbeddedFile,
+    });
+    const mockedUpload = patchUpload(editor);
+    execCommand(editor, "uploadFile");
+    await mockedUpload;
+    await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
+    const host = queryOne('[data-embedded="file"]');
+    const width = host.getBoundingClientRect().width;
+    await click(".o_file_name_container");
+    await animationFrame();
+    expect(".o_file_name_container + input").toBeFocused();
+    expect(host.getBoundingClientRect().width).toBe(width);
+});
+
 test("should show the updated file name in the link preview", async () => {
     const { editor } = await setupEditor("<p>[]<br></p>");
     patchUpload(editor);
