@@ -49,6 +49,11 @@
                 </div>
                 <!-- is_homepage toggle auto-save is enabled to update the current homepage for assigning parent_id -->
                 <field name="is_homepage" string="Is Homepage" widget="boolean_toggle"/>
+                <label for="is_module_enabled" string="Module Enabled" invisible="not module_id"/>
+                <div class="o_row" invisible="not module_id">
+                    <field name="is_module_enabled" widget="boolean_toggle"/>
+                    <field name="module_display_name" readonly="1" nolabel="1"/>
+                </div>
                 <field invisible="not can_publish" string="Published" name="is_published" widget="boolean_toggle" readonly="publish_on"/>
                 <label invisible="not can_publish or is_published" for="publish_on" string="Publish on"/>
                 <div invisible="not can_publish or is_published" class="o_row">
