@@ -203,7 +203,8 @@ export class AllocationReport extends Component {
                     quantityToAllocate += qtyForThisNeed;
                     freeQuantity -= qtyForThisNeed;
                 } else if (outMove.is_reserved) {
-                    allocatedQuantity += outMove.quantity;
+                    // Before validation, only count what the incoming quantities will cover.
+                    allocatedQuantity += outMove.covered_quantity ?? outMove.quantity;
                 }
             }
             outLine.quantityToAllocate.set(quantityToAllocate);
