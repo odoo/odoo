@@ -66,7 +66,6 @@ class ResourceCalendarLeaves(models.Model):
         previous_durations = leaves.mapped('number_of_days')
         previous_states = leaves.mapped('state')
         self.env.add_to_compute(self.env['hr.leave']._fields['number_of_days'], leaves)
-        self.env.add_to_compute(self.env['hr.leave']._fields['duration_display'], leaves)
         leaves.sudo().write({
             'state': 'confirm',
         })
@@ -92,6 +91,8 @@ class ResourceCalendarLeaves(models.Model):
             if message:
                 leave._notify_change(message)
         leaves_to_recreate.sudo()._create_resource_leave()
+        # `duration_display` is not stored: drop its cache since it depends on the durations that were just recomputed.
+        leaves.invalidate_recordset(['duration_display'])
 
     def _convert_timezone(self, utc_naive_datetime, tz_from, tz_to):
         """
