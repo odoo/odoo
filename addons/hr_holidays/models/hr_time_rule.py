@@ -8,6 +8,28 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
+class HrTimeRuleSourceMixin(models.AbstractModel):
+    _inherit = 'hr.time.rule.source.mixin'
+
+    def _on_sources_collected(self, sources):
+        """Reverse prior allocation credits before the batch is re-evaluated.
+
+        - child outputs and sources are reversed so the pipeline can recompute from scratch.
+        - in-place outputs (time_rule_id set, no source pointer) keep their credit
+          because the evaluation will not reclassify them.
+
+        :param sources: records of the source model
+        """
+        reversed_ids = self.env.context.get('time_rule_reversed_ids')
+        sf = sources._time_rule_source_field
+        to_reverse = set(sources.filtered(lambda s: not s.time_rule_id or s[sf]).ids)
+        if reversed_ids is not None:
+            to_reverse -= reversed_ids
+            reversed_ids |= to_reverse
+        if to_reverse:
+            self.env['hr.time.rule']._reverse_allocation_credits(self._name, list(to_reverse))
+
+
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 

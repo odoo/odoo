@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime, time, UTC
 
 from odoo import api, fields, models
@@ -260,13 +261,17 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
             'error': error_msg,
         }
 
+    def _allowed_source_model_names(self):
+        return {M._name for M in self._get_source_models()}
+
     def _group_originals(self, output_lines):
         """Groups output lines by their original source.
         Returns an ordered list of (model, original_record, representative_line) tuples.
         """
+        allowed = self._allowed_source_model_names()
         seen = {}
         for line in output_lines:
-            if not line.source_original_id:
+            if not line.source_original_id or line.source_model not in allowed:
                 continue
             key = (line.source_model, line.source_original_id)
             seen.setdefault(key, line)
@@ -328,7 +333,8 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
         return self._reopen()
 
     def _apply_rerun(self):
-        selected = self.line_ids.filtered('selected')
+        allowed = self._allowed_source_model_names()
+        selected = self.line_ids.filtered(lambda l: l.selected and l.source_model in allowed)
         error_vals = []
         for line in selected:
             src = self.env[line.source_model].with_context(active_test=False).sudo().browse(line.source_id)
@@ -339,14 +345,17 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
                 error_vals.append(self._line_to_error_vals(line, e.args[0] if e.args else str(e)))
         return error_vals
 
-    def _collect_new_outputs(self, processed_source_ids):
-        """Find outputs/remainders created for the given source IDs across all source models."""
+    def _collect_new_outputs(self, processed_ids_by_model):
+        """Find outputs/remainders created for the given source IDs, keyed by model name."""
         new_output_vals = []
         for Model in self._get_source_models():
+            ids = processed_ids_by_model.get(Model._name)
+            if not ids:
+                continue
             source_field = Model._time_rule_source_field
             extra = Model._time_rule_wizard_extra_domain()
             for out in Model.search(
-                [(source_field, 'in', list(processed_source_ids))] + extra
+                [(source_field, 'in', list(ids))] + extra
             ):
                 vals = self._source_to_line_vals(Model._name, out, bool(out.time_rule_id), out[source_field].id or 0)
                 vals['is_new_output'] = True
@@ -358,9 +367,10 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
         self.ensure_one()
         self.error_line_ids.unlink()
 
-        all_lines = self.line_ids.filtered(lambda l: l.selected and not l.is_output)
+        allowed = self._allowed_source_model_names()
+        all_lines = self.line_ids.filtered(lambda l: l.selected and not l.is_output and l.source_model in allowed)
         error_vals = []
-        processed_source_ids = set()
+        processed_ids_by_model = defaultdict(set)
         survivor_line_vals = []
 
         for line in all_lines:
@@ -371,7 +381,7 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
             except ValidationError as e:
                 error_vals.append(self._line_to_error_vals(line, e.args[0] if e.args else str(e)))
             else:
-                processed_source_ids.add(line.source_id)
+                processed_ids_by_model[line.source_model].add(line.source_id)
                 vals = self._source_to_line_vals(line.source_model, src, False, 0)
                 vals['is_restored'] = True
                 survivor_line_vals.append(vals)
@@ -384,7 +394,7 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
         if survivor_line_vals:
             self.env['hr.time.rule.regenerate.wizard.line'].create(survivor_line_vals)
 
-        new_output_vals = self._collect_new_outputs(processed_source_ids)
+        new_output_vals = self._collect_new_outputs(processed_ids_by_model)
         if new_output_vals:
             self.env['hr.time.rule.regenerate.wizard.line'].create(new_output_vals)
 
@@ -395,7 +405,9 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
         self.ensure_one()
         self.error_line_ids.unlink()
 
-        processed_source_ids = {l.source_id for l in self.line_ids.filtered('selected')}
+        processed_ids_by_model = defaultdict(set)
+        for l in self.line_ids.filtered('selected'):
+            processed_ids_by_model[l.source_model].add(l.source_id)
 
         error_vals = self._apply_rerun()
         if error_vals:
@@ -403,7 +415,7 @@ class HrTimeRuleRegenerateWizard(models.TransientModel):
             self.step = 'rerun'
             return self._reopen()
 
-        new_output_vals = self._collect_new_outputs(processed_source_ids)
+        new_output_vals = self._collect_new_outputs(processed_ids_by_model)
         if new_output_vals:
             self.env['hr.time.rule.regenerate.wizard.line'].create(new_output_vals)
 
@@ -445,9 +457,9 @@ class HrTimeRuleRegenerateWizardLine(models.TransientModel):
         for line in self:
             line.date_range = _fmt_range(line, line.date_from, line.date_to)
 
-    source_model = fields.Char(required=True)
-    source_id = fields.Integer(required=True)
-    source_original_id = fields.Integer()
+    source_model = fields.Char(required=True, readonly=True)
+    source_id = fields.Integer(required=True, readonly=True)
+    source_original_id = fields.Integer(readonly=True)
     employee_id = fields.Many2one('hr.employee', readonly=True)
     date = fields.Date(readonly=True)
     date_from = fields.Datetime(string='Start', readonly=True)

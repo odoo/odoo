@@ -1871,6 +1871,9 @@ class HrLeave(models.Model):
     def action_reprocess_time_rules(self):
         return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)
 
+    def _on_time_rule_undo_restored(self):
+        self.filtered(lambda l: l.state == 'validate')._create_resource_leave()
+
     def _get_write_source_extra_source_fields(self):
         """Run the time rules again when the type or the state of a request changes.
 

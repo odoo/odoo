@@ -128,7 +128,13 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             all_outputs |= children
             frontier = children - all_outputs  # avoid infinite loops on unexpected cycles
         all_outputs.with_context(skip_time_rules=True).unlink()
-        self.with_context(active_test=False).filtered(lambda r: not r.active).write({'active': True})
+        to_restore = self.with_context(active_test=False).filtered(lambda r: not r.active)
+        if to_restore:
+            to_restore.write({'active': True})
+            to_restore._on_time_rule_undo_restored()
+
+    def _on_time_rule_undo_restored(self):
+        """Hook called after archived sources are reactivated by _undo_time_rules."""
 
     def _get_orphaned_sources_on_unlink(self):
         """returns archived source records that have no other outputs than self"""
@@ -237,14 +243,12 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         """
         raise NotImplementedError
 
-    def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False, root_only=True):
+    def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False):
         domain = [
             (self._time_rule_span_end_field, '>=', start_dt.replace(tzinfo=None)),
             (self._time_rule_span_end_field, '!=', False),
         ]
         domain.extend(self._get_source_extra_fields_domain())
-        if root_only:
-            domain.append(('time_rule_id', '=', False))
         if check_end:
             domain.append(
                 (self._time_rule_span_end_field, '<=', end_dt.replace(tzinfo=None)))
@@ -271,25 +275,6 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                 for src, iv in by_src.items():
                     merged[emp][src] |= iv
         return merged
-
-    def _pre_undo_rule_outputs(self, rules, start_dt, end_dt, employees):
-        if not self._time_rule_source_field:
-            return
-        for tz, tz_employees in employees.grouped(lambda e: e.sudo()._get_tz()).items():
-            tzinfo = ZoneInfo(tz)
-            start_utc = start_dt.replace(tzinfo=tzinfo).astimezone(UTC).replace(tzinfo=None)
-            end_utc = end_dt.replace(tzinfo=tzinfo).astimezone(UTC).replace(tzinfo=None)
-            domain = [
-                (self._time_rule_source_field, '!=', False),
-                ('time_rule_id', 'in', rules.ids),
-                (self._time_rule_span_start_field, '<=', end_utc),
-                (self._time_rule_span_end_field, '>=', start_utc),
-                ('employee_id', 'in', tz_employees.ids),
-            ]
-            outputs = self.with_context(active_test=False).sudo().search(domain)
-            if outputs:
-                sources = outputs.mapped(self._time_rule_source_field)
-                sources.with_context(active_test=False)._undo_time_rules()
 
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
         """Evaluate ``rules`` on the sources of each employee's date range; nothing is written.
@@ -319,8 +304,6 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             end_dt = datetime.combine(date_to + timedelta(days=1), time.min)
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
 
-            self._pre_undo_rule_outputs(rules, start_dt, end_dt, employee_rs)
-
             sources = self.sudo().browse()
             for tz, tz_employees in employee_rs.grouped(lambda e: e.sudo()._get_tz()).items():
                 tzinfo = ZoneInfo(tz)
@@ -328,22 +311,12 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                     start_dt.replace(tzinfo=tzinfo).astimezone(UTC),
                     end_dt.replace(tzinfo=tzinfo).astimezone(UTC),
                     tz_employees,
-                    root_only=False,
                 )
             if not sources:
                 continue
 
-            # _pre_undo may un-archive a source that falls outside [start_dt, end_dt];
-            # extend the eval window so all its days are re-evaluated
-            start_field = sources._time_rule_span_start_field
-            end_field = sources._time_rule_span_end_field
-            earliest = min((r[start_field] for r in sources if r[start_field]), default=None)
-            latest = max((r[end_field] for r in sources if r[end_field]), default=None)
-            eval_start = min(start_dt, datetime.combine(earliest.date(), time.min)) if earliest else start_dt
-            eval_end = max(end_dt, datetime.combine(latest.date(), time.max)) if latest else end_dt
-
             self._on_sources_collected(sources)
-            excess, deficit, active_iv = rules._evaluate_rules(sources, eval_start, eval_end)
+            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
 
             for emp, by_src in excess.items():
                 for src, items in by_src.items():
@@ -517,16 +490,15 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         else:
             latest_week_start = today - timedelta(days=today.weekday())
 
-        def to_date(dt):
-            return dt.date() if hasattr(dt, 'date') else dt
-        past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
-        today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
-        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
-        self._process_time_rules_for(past_day, rule_period='day', rule_operator='exceed')
+        past_day = [(e, df, dt) for e, df, dt in affected if _to_local_date(e, dt) < today]
+        today_list = [(e, df, dt) for e, df, dt in affected if _to_local_date(e, dt) >= today]
+        past_week = [(e, df, dt) for e, df, dt in affected if _to_local_date(e, dt) < latest_week_start]
+        ctx = self.with_context(time_rule_reversed_ids=set())
+        ctx._process_time_rules_for(past_day, rule_period='day', rule_operator='exceed')
         if include_deficit:
-            self._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
-        self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
-        self._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
+            ctx._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
+        ctx._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
+        ctx._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
 
     def write(self, vals):
         assert 'employee_id' in self._fields

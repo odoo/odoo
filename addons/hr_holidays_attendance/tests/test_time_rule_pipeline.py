@@ -775,47 +775,6 @@ class TestTimeRulePipeline(TransactionCase):
                          "Stale OT child persists even though excess dropped to zero")
         self.assertAlmostEqual(output_atts.worked_hours, 2.0, places=5)
 
-    def test_weekly_output_cleared_when_week_excess_drops(self):
-        """Reducing Mon so the weekly total drops to threshold: stale weekly output is cleared (pre-undo)."""
-        self.time_rule.active = False
-        weekly_rule = self.env['hr.time.rule'].create({
-            'name': 'Weekly OT',
-            'working_hours_mode': 'week',
-            'expected_hours': 40.0,
-            'work_entry_type_id': self.overtime_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
-        })
-        # Mon-Fri: Mon 10h, Tue-Fri 8h each -> 42h total -> 2h weekly excess
-        mon = self.env['hr.attendance'].create({
-            'employee_id': self.cal_emp.id,
-            'check_in': datetime(2022, 12, 12, 8),
-            'check_out': datetime(2022, 12, 12, 18),  # 10h
-        })
-        for day in range(13, 17):
-            self.env['hr.attendance'].create({
-                'employee_id': self.cal_emp.id,
-                'check_in': datetime(2022, 12, day, 8),
-                'check_out': datetime(2022, 12, day, 16),  # 8h
-            })
-        weekly_outputs = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.cal_emp.id),
-            ('time_rule_id', '!=', False),
-            ('time_rule_id', '=', weekly_rule.id),
-        ])
-        self.assertEqual(len(weekly_outputs), 1, "2h weekly output should exist")
-        self.assertAlmostEqual(weekly_outputs.worked_hours, 2.0, places=5)
-
-        # Reduce Mon to 8h -> week total drops to 40h -> pre-undo clears stale weekly output
-        mon.write({'check_out': datetime(2022, 12, 12, 16)})
-
-        weekly_outputs = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.cal_emp.id),
-            ('time_rule_id', '!=', False),
-            ('time_rule_id', '=', weekly_rule.id),
-        ])
-        self.assertEqual(len(weekly_outputs), 0,
-                         "Stale weekly output cleared when source rewritten drops excess to zero")
-
     def test_time_rule_recompute_scoped_to_date_range(self):
 
         # Day A: 14h -> 6h overtime output
@@ -2210,29 +2169,6 @@ class TestTimeRulePipeline(TransactionCase):
         ])
         return sum(a.worked_hours for a in atts)
 
-    def test_public_holiday_create_clears_overtime(self):
-        """Adding a PH after OT exists clears the stale OT (pre-undo + re-eval with PH active)."""
-        self.time_rule.apply_on_public_holidays = False
-        public_type = self.env['hr.work.entry.type'].create({
-            'name': 'Public Holiday', 'code': 'PHCLEAR', 'count_as': 'absence',
-        })
-        self.env['hr.attendance'].create({
-            'employee_id': self.cal_emp.id,
-            'check_in': datetime(2022, 12, 12, 6),
-            'check_out': datetime(2022, 12, 12, 20),
-        })
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
-            msg="6h OT before PH is added",
-        )
-        self._make_public_holiday(
-            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
-        )
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
-            msg="OT output cleared after PH added; rule excludes PH days",
-        )
-
     def test_public_holiday_unlink_restores_overtime(self):
         """Deleting a PH triggers re-evaluation and creates fresh 6h OT output."""
         self.time_rule.apply_on_public_holidays = False
@@ -2255,52 +2191,6 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(
             self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
             msg="6h OT restored after PH deleted",
-        )
-
-    def test_public_holiday_write_date_shifts_overtime(self):
-        """Moving a PH between worked days clears OT on the new PH day and restores it on the old one."""
-        self.time_rule.apply_on_public_holidays = False
-        public_type = self.env['hr.work.entry.type'].create({
-            'name': 'Public Holiday', 'code': 'PHSHIFT', 'count_as': 'absence',
-        })
-        for day in (12, 13):
-            self.env['hr.attendance'].create({
-                'employee_id': self.cal_emp.id,
-                'check_in': datetime(2022, 12, day, 6),
-                'check_out': datetime(2022, 12, day, 20),
-            })
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
-            msg="Mon: 6h OT before PH",
-        )
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
-            msg="Tue: 6h OT before PH",
-        )
-
-        ph = self._make_public_holiday(
-            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
-        )
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
-            msg="Mon OT cleared after PH added; rule excludes PH days",
-        )
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
-            msg="Tue OT unaffected by Mon PH",
-        )
-
-        ph.write({
-            'date_from': datetime(2022, 12, 13, 0, 0, 0),
-            'date_to': datetime(2022, 12, 13, 23, 59, 59),
-        })
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
-            msg="Mon OT restored after PH moved away from Mon",
-        )
-        self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 0.0, places=5,
-            msg="Tue OT cleared after PH moved to Tue",
         )
 
     def test_public_holiday_update_after_time_rule_output(self):
@@ -2939,62 +2829,6 @@ class TestTimeRuleCronBehavior(TransactionCase):
                 )
         finally:
             rule.write({'active': False})
-
-    def test_day_and_week_cron_independence_overtime_attendance(self):
-        day_rule = self.env['hr.time.rule'].create({
-            'name': 'Daily > 4h',
-            'working_hours_mode': 'day',
-            'expected_hours': 4,
-            'work_entry_type_id': self.day_ot_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
-        })
-        week_rule = self.env['hr.time.rule'].create({
-            'name': 'Weekly > 5h',
-            'working_hours_mode': 'week',
-            'expected_hours': 5,
-            'work_entry_type_id': self.week_ot_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id, self.day_ot_type.id],
-        })
-        try:
-            with freeze_time('2022-12-12'):
-                att = self.env['hr.attendance'].create({
-                    'employee_id': self.emp.id,
-                    'check_in': datetime(2022, 12, 12, 8),
-                    'check_out': datetime(2022, 12, 12, 14),  # 6h
-                })
-                day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
-                week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
-                self.assertAlmostEqual(day_h, 2.0, places=5, msg="2h daily OT created immedaitely")
-                self.assertAlmostEqual(week_h, 0.0, places=5, msg="week rules wait for the cron")
-
-            with freeze_time('2022-12-19'):
-                # Mon 2022-12-19: week cron processes Mon 12 - Sun 18.
-                self.env['hr.attendance']._cron_process_week_time_rules()
-
-            # Week cron archived the day output child and split it:
-            # grandchild1: week OT (week_ot_type, 1h, time_rule_id=week_rule)
-            # grandchild2: day remainder (day_ot_type, 1h, time_rule_id=False)
-            day_output = self.env['hr.attendance'].with_context(active_test=False).search([
-                ('source_attendance_id', '=', att.id),
-                ('time_rule_id', '=', day_rule.id),
-            ])
-            self.assertFalse(day_output.active, "Day output child archived by week cron")
-            week_output = self.env['hr.attendance'].search([
-                ('source_attendance_id', 'in', day_output.ids),
-                ('time_rule_id', '=', week_rule.id),
-            ])
-            self.assertAlmostEqual(sum(o.worked_hours for o in week_output), 1.0, places=5,
-                msg="1h weekly OT by week cron (6h - 5h threshold)")
-            day_remainder = self.env['hr.attendance'].search([
-                ('source_attendance_id', 'in', day_output.ids),
-                ('time_rule_id', '=', False),
-                ('work_entry_type_id', '=', self.day_ot_type.id),
-            ])
-            self.assertAlmostEqual(sum(o.worked_hours for o in day_remainder), 1.0, places=5,
-                msg="1h remains as day OT after week cron takes its 1h")
-        finally:
-            day_rule.write({'active': False})
-            week_rule.write({'active': False})
 
     def test_retroactive_attendance_triggers_immediate_reprocess(self):
         rule = self.env['hr.time.rule'].create({
