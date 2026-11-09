@@ -544,6 +544,11 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
         self.assertRecordValues(statement_line, [{'is_reconciled': True, 'amount_residual': 0.0}])
 
+    def test_statement_keeps_journal_after_removing_last_transaction(self):
+        self.statement.action_draft()
+        self.statement.line_ids.unlink()
+        self.assertEqual(self.statement.journal_id, self.bank_journal_1)
+
     def test_statement_valid_complete_1(self):
         self.env.user.company_id = self.company_data_2['company']
 
