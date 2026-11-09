@@ -102,7 +102,7 @@
             <field name="model">res.partner</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <form string="Partners">
+                <form string="Partners" js_class="form_signal">
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
                     Potential duplicates:
                     <field name="same_vat_partner_id" context="{'show_address': False, 'show_identifier': False}"/>
