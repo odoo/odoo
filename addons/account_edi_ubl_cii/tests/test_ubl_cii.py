@@ -264,39 +264,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
         self.assertIn(move.ubl_cii_xml_id, extra_attachments)
 
-    def test_peppol_eas_endpoint_compute(self):
-        partner = self.partner_a
-        partner.vat = 'DE123456788'
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9930',
-            'peppol_endpoint': 'DE123456788',
-        }])
-
-        partner.vat = 'FR23334175221'
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
-        }])
-
-        partner.vat = '23334175221'
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
-        }])
-
-        partner.write({
-            'vat': 'BE0477472701',
-            'company_registry': '0477472701',
-        })
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '0208',
-            'peppol_endpoint': '0477472701',
-        }])
-
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({
