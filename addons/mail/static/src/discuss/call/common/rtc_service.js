@@ -892,10 +892,11 @@ export class Rtc extends Record {
             this.showMediaPermissionDialog("microphone");
             return;
         }
+        if (!this.state.micAudioTrack) {
+            await this.resetMicAudioTrack({ force: true });
+        }
         if (this.state.micAudioTrack) {
             await this.setMute(false);
-        } else {
-            await this.resetMicAudioTrack({ force: true });
         }
         this.soundEffectsService.play("mic-on");
     }
@@ -2080,6 +2081,7 @@ export class Rtc extends Record {
     }
 
     async resetMicAudioTrack({ force = false }) {
+        const wasMuted = Boolean(this.localSession?.is_muted);
         this.state.micAudioTrack?.stop();
         this.state.micAudioTrack = undefined;
         this.state.audioTrack?.stop();
@@ -2098,7 +2100,7 @@ export class Rtc extends Record {
                 });
                 micAudioTrack = audioStream.getAudioTracks()[0];
                 if (this.localSession) {
-                    this.setMute(false);
+                    this.setMute(wasMuted);
                 }
             } catch {
                 this.showMediaUnavailableWarning({ microphone: true });
