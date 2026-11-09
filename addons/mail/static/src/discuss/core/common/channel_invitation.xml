@@ -69,7 +69,7 @@
                 <hr t-if="this.store.self_user and this.props.channel?.invitationLink" class="invisible my-2"/>
                 <t t-if="this.props.channel?.invitationLink">
                     <div class="input-group position-relative d-flex align-items-center justify-content-center">
-                        <input class="form-control rounded-pill px-3 py-2 smaller" type="text" t-att-value="this.props.channel.invitationLink" readonly="" disabled="" t-on-focus="this.onFocusInvitationLinkInput"/>
+                        <input class="form-control rounded-pill ps-3 pe-5 py-2 smaller text-truncate" type="text" t-att-value="this.props.channel.invitationLink" readonly="" disabled="" t-on-focus="this.onFocusInvitationLinkInput"/>
                         <button class="o-discuss-ChannelInvitation-copyInvitationLinkButton btn btn-primary o_btn_circle position-absolute" title="Copy Invitation Link" t-on-click="() => this.props.channel.copyInvitationLink()">
                             <i class="oi" data-icon="content_copy"/>
                         </button>
