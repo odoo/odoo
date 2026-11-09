@@ -72,27 +72,9 @@
     transition: margin-right ease 400ms;
     background-color: var(--websitePreview-bg-color, #efefef);
 
-    .o_iframe_container {
-        position: relative;
-        height: 100%;
-        width: 100%;
-
-        iframe {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-
-            &.o_ignore_in_tour {
-                pointer-events: none;
-            }
-        }
-    }
-
     &.o_is_mobile {
         .o_iframe_container {
             @media screen and (min-width: 768px), print and (min-width: 188mm) {
-                @include o-mobile-phone;
-
                 .o_mobile_preview_layout {
                     height: 100%;
 
@@ -102,6 +84,23 @@
                     }
                 }
             }
+        }
+    }
+}
+
+/* Without specificity, which leaves the phone frame of the mobile preview its own sizes */
+:where(.o_website_preview .o_iframe_container) {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    iframe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        &.o_ignore_in_tour {
+            pointer-events: none;
         }
     }
 }
