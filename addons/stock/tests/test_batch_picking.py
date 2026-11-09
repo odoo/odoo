@@ -1277,6 +1277,34 @@ class TestBatchPicking02(TestStockBatchCommon):
         self.assertTrue(batch.name.startswith('BATCH/test/2026/'))
         self.assertIn(self.picking_type_internal.sequence_code, batch.name)
 
+    def test_auto_batch_confirmed_by_portal_user(self):
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.write({'auto_batch': True, 'batch_group_by_partner': True})
+        partner = self.env['res.partner'].create({'name': 'Portal Customer'})
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal Customer',
+            'login': 'portal_customer_batch',
+            'partner_id': partner.id,
+            'group_ids': [Command.set(self.env.ref('base.group_portal').ids)],
+        })
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
+        pickings = self.env['stock.picking'].with_user(portal_user).sudo().create([{
+            'partner_id': partner.id,
+            'picking_type_id': picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        } for _ in range(2)])
+        pickings.action_confirm()
+        self.assertEqual(len(pickings.batch_id), 1)
+        self.assertEqual(pickings.batch_id.picking_ids, pickings)
+
 
 @tagged('post_install', '-at_install')
 class TestBatchPickingSynchronization(HttpCase):
