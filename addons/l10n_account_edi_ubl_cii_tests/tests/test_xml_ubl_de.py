@@ -79,6 +79,18 @@ class TestUBLDE(TestUBLCommon):
     # Test export - import
     ####################################################
 
+    def test_compute_peppol_eas_endpoint(self):
+        partner = self.env['res.partner'].create({
+            'name': 'German partner with a VAT number',
+            'country_id': self.env.ref('base.de').id,
+            'vat': 'DE123456788',
+        })
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9930',
+            'peppol_endpoint': 'DE123456788',
+        }])
+
     def test_export_import_invoice(self):
         company = self.company_data['company']
         if "predict_bill_product" in company._fields:
