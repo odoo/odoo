@@ -131,15 +131,21 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("4.55")),
 
-            // Test than changing the fp, doesn't change the price of the combo
             ProductScreen.clickFiscalPosition("test fp"),
             inLeftSide([
-                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "16.67"),
-                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "25.00"),
-                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "8.33"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "15.91"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "23.86"),
+                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "7.95"),
             ]),
-            ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("2.38")),
+            ProductScreen.totalAmountIs("47.72"),
+            inLeftSide(Order.hasTax("2.28")),
+            inLeftSide([
+                ...ProductScreen.clickLine("Combo Product 2"),
+                Numpad.click("2"),
+            ]),
+            ProductScreen.totalAmountIs("95.44"),
+            ProductScreen.clickPriceList("Combo Discount"),
+            ProductScreen.totalAmountIs("85.92"),
             ProductScreen.isShown(),
         ].flat(),
 });

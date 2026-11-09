@@ -3,6 +3,10 @@ import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline.prototype, {
+    isFiscalPositionPriceAdaptable() {
+        return super.isFiscalPositionPriceAdaptable() &&
+            !this.sale_order_origin_id && !this.sale_order_line_id;
+    },
     setup(_defaultObj) {
         super.setup(...arguments);
         // It is possible that this orderline is initialized using server data,

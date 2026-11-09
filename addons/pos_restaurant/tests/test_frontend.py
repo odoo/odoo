@@ -214,6 +214,26 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
 class TestFrontend(TestFrontendCommon):
 
+    def test_restaurant_fiscal_position_keeps_price(self):
+        tax = self.env['account.tax'].create({
+            'name': 'Included 15%', 'amount': 15, 'amount_type': 'percent',
+            'type_tax_use': 'sale', 'price_include_override': 'tax_included',
+        })
+        position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax', 'tax_ids': [(0, 0, {
+                'tax_src_id': tax.id, 'tax_dest_id': False,
+            })],
+        })
+        self.env['product.product'].create({
+            'name': 'Restaurant Tax Product', 'list_price': 115, 'available_in_pos': True,
+            'taxes_id': [(6, 0, tax.ids)],
+        })
+        self.pos_config.write({
+            'tax_regime_selection': True, 'fiscal_position_ids': [(6, 0, position.ids)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RestaurantFiscalPositionPrice')
+
     def test_01_pos_restaurant(self):
         self.pos_user.write({
             'groups_id': [

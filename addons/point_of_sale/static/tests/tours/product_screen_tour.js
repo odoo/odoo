@@ -14,6 +14,7 @@ import {
     selectButton,
     scan_barcode,
     negateStep,
+    refresh,
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
@@ -250,12 +251,87 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
+            ProductScreen.totalAmountIs("86.96"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "2.0", "173.92"),
+            Numpad.click("Qty"),
+            Numpad.click("1"),
+            ProductScreen.totalAmountIs("86.96"),
+            ProductScreen.clickFiscalPosition("Original Tax"),
             ProductScreen.totalAmountIs("100.00"),
+            Numpad.click("Price"),
+            ...["1", "1", "5"].map(Numpad.click),
+            ProductScreen.totalAmountIs("115.00"),
+            Numpad.click("%"),
+            ...["1", "0"].map(Numpad.click),
+            ProductScreen.totalAmountIs("103.50"),
+            ProductScreen.clickFiscalPosition("No Tax"),
+            ProductScreen.totalAmountIs("90.00"),
+            Numpad.click("Price"),
+            ...["1", "0", "0"].map(Numpad.click),
+            ProductScreen.totalAmountIs("90.00"),
+            ProductScreen.clickFiscalPosition("Original Tax"),
+            ProductScreen.totalAmountIs("103.50"),
+            ProductScreen.clickFiscalPosition("Original Tax"),
+            ProductScreen.totalAmountIs("103.50"),
+            ProductScreen.clickFiscalPosition("No Tax"),
+            ProductScreen.totalAmountIs("90.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Order.doesNotHaveLine({ discount: "" }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FiscalPositionZeroRates", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Six Percent Product"),
+            ProductScreen.totalAmountIs("106.00"),
+            ProductScreen.clickFiscalPosition("Zero Excluded"),
+            ProductScreen.totalAmountIs("100.00"),
+            Numpad.click("Price"),
+            ...["1", "0", "0"].map(Numpad.click),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickFiscalPosition("Original Tax"),
+            ProductScreen.totalAmountIs("106.00"),
+            ProductScreen.clickFiscalPosition("Zero Included"),
+            ProductScreen.totalAmountIs("100.00"),
+            refresh(),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickFiscalPosition("Original Tax"),
+            ProductScreen.totalAmountIs("106.00"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Zero Rate Customer"),
+            ProductScreen.totalAmountIs("100.00"),
+            {
+                trigger: "body",
+                run() {
+                    if (posmodel.get_order().pricelist_id.name !== "Customer Discount") {
+                        throw new Error("Customer pricelist was not selected");
+                    }
+                },
+            },
+            inLeftSide([
+                ...ProductScreen.clickLine("Six Percent Product"),
+                Numpad.click("Qty"),
+                Numpad.click("2"),
+            ]),
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.clickDisplayedProduct("Six Percent Product"),
+            inLeftSide(ProductScreen.selectedOrderlineHasDirect("Six Percent Product", "1.0", "80.00")),
+            ProductScreen.totalAmountIs("280.00"),
+            ProductScreen.clickDisplayedProduct("Six Percent Lot Product"),
+            ProductScreen.enterLotNumber("LOT-1"),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Six Percent Lot Product", "1.0", "80.00"),
+                Numpad.click("Qty"),
+                Numpad.click("2"),
+                ...ProductScreen.selectedOrderlineHasDirect("Six Percent Lot Product", "2.0", "160.00"),
+            ]),
+            ProductScreen.totalAmountIs("440.00"),
         ].flat(),
 });
 
@@ -267,10 +343,10 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
             ProductScreen.clickDisplayedProduct("Test Product 1"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("Incl. to Incl."),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("91.67"),
             // changed fiscal position to Incl. to Excl.
             ProductScreen.clickFiscalPosition("Incl. to Excl."),
-            ProductScreen.totalAmountIs("110.00"),
+            ProductScreen.totalAmountIs("91.67"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
