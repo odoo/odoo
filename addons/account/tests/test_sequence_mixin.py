@@ -91,12 +91,12 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.test_move.action_post()
         self.assertMoveName(self.test_move, 'MyMISC/2020/0000001')
 
-    def test_sequence_change_date_with_quick_edit_mode(self):
+    def test_sequence_change_date_with_accounting_date_editable(self):
         """
-        Test the sequence update behavior when changing the date of a move in quick edit mode.
+        Test the sequence update behavior when changing the accounting date of a move.
         The sequence should only be recalculated if a value (year or month) utilized in the sequence is modified.
         """
-        self.env.company.quick_edit_mode_enabled = True
+        self.env.company.accounting_date_editable = True
         self.env.company.fiscalyear_last_day = 30
         self.env.company.fiscalyear_last_month = '12'
 

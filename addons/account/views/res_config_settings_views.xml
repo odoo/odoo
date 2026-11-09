@@ -407,9 +407,8 @@
                             </setting>
                         </block>
                         <block title="Accounting Firms mode">
-                            <setting  id="quick_edit_mode_enabled" company_dependent="1" help="Add a 'Total (tax incl.)' field that speeds up encoding and improves accuracy by automatically creating lines with the correct account and tax.">
-                                <field name="quick_edit_mode_enabled"/>
-                                <field name="quick_edit_mode" required="quick_edit_mode_enabled" invisible="not quick_edit_mode_enabled"/>
+                            <setting  id="accounting_date_editable" company_dependent="1" help="Display and allow editing accounting date on invoices">
+                                <field name="accounting_date_editable"/>
                             </setting>
                             <setting  id="document_sequence_editable" company_dependent="1" help="The document sequence can be edited on all documents.">
                                 <field name="document_sequence_editable"/>
