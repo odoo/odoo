@@ -2240,7 +2240,12 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             field = self._fields.get(term)
-            __, __, granularity = parse_read_group_spec(term)
+            fname, seq_fnames, granularity = parse_read_group_spec(term)
+            property_selection = None
+            if seq_fnames and not granularity and self._fields[fname].type == 'properties':
+                definition = self.get_property_definition(f"{fname}.{seq_fnames}")
+                if definition.get('type') == 'selection':
+                    property_selection = [option[0] for option in definition.get('selection') or ()]
             if (
                 traverse_many2one and field and field.type == 'many2one'
                 and self.env[field.comodel_name]._order != 'id'
@@ -2252,8 +2257,8 @@ class BaseModel(metaclass=MetaModel):
                         query._order_groupby.insert(0, groupby_terms[term])
                         groupby_terms[term] = SQL(", ").join(query._order_groupby)
                         query._order_groupby.clear()
-            elif field and field.type == 'selection':
-                sql_keys = list(field.get_values(self.env))
+            elif (field and field.type == 'selection') or property_selection is not None:
+                sql_keys = list(field.get_values(self.env)) if field else property_selection
                 sql_expr = SQL("array_position(%s::text[], %s::text)", sql_keys, groupby_terms[term])
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
             elif granularity == 'day_of_week':

@@ -352,7 +352,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum', 'myinteger': 1337}
 
         # group by the char property
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -380,7 +380,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._check_domains_count(result)
 
         # group by the integer property
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -399,7 +399,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # falsy properties
         self.message_3.attributes = {'mychar': False, 'myinteger': False}
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -419,7 +419,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             """,
             [self.message_2.id],
         )
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -465,6 +465,30 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self._check_domains_count(result)
 
+    def test_properties_field_read_group_selection_order(self):
+        """ The order of a selection property follows its options, like a selection field. """
+        Model = self.env['test_orm.message']
+        for state in ('done', 'progress', 'draft'):
+            Model.create({
+                'discussion': self.discussion_2.id,
+                'author': self.user.id,
+                'attributes': {'state': state},
+            })
+        domain = [('discussion', '=', self.discussion_2.id)]
+
+        for order, expected in (
+            (None, ['draft', 'progress', 'done']),
+            ('attributes.state DESC', ['done', 'progress', 'draft']),
+        ):
+            with self.subTest(order=order):
+                result = Model.formatted_read_group(
+                    domain=domain + [('attributes.state', '!=', False)],
+                    aggregates=['__count'],
+                    groupby=['attributes.state'],
+                    order=order,
+                )
+                self.assertEqual([group['attributes.state'] for group in result], expected)
+
     def test_properties_field_web_read_group(self):
         self.messages.discussion = self.discussion_1
         # search on text properties
@@ -478,7 +502,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum'}
 
         Model = self.env['test_orm.message']
-        with self.assertQueryCount(9):  # 3 for formatted_read_group + 1 query by group opened + 1 query by get_property_definition
+        with self.assertQueryCount(10):  # 3 for formatted_read_group + 1 query by group opened + 2 queries by get_property_definition (groupby and order)
             result = Model.web_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -867,7 +891,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         (partners[4] | partners[7] | partners[9]).unlink()
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -894,7 +918,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # now message 1 and 2 will also be in the falsy group
         partners[:8].unlink()
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -968,7 +992,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
 
         self.env.invalidate_all()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             result = Model.formatted_read_group(
                 domain=[],
                 groupby=['attributes.mypartner'],
@@ -1067,7 +1091,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [self.message_3.id],
         )
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 groupby=['attributes.myselection'],
@@ -1142,7 +1166,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -1184,7 +1208,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
