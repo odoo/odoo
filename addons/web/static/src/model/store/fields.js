@@ -6,6 +6,13 @@
  * `name = fields.Char()` is typed as `FieldSignal<string | false>`, while the
  * store reads the descriptor once at setup time (records never run class field
  * initializers).
+ *
+ * Relational fields read as `Model` unless their class field is annotated
+ * with the comodel class, as in `@type {Many2one<Partner>}` on
+ * `partner_id = fields.Many2one("res.partner")`. Import the class with a
+ * JSDoc `@import`: it is type-only (erased), so models can reference each
+ * other without creating import cycles. Nothing checks that the class matches
+ * the model name.
  */
 
 export const FIELD = Symbol("field");
@@ -14,8 +21,49 @@ export const FIELD = Symbol("field");
  * What a record exposes for each field: call it to read (tracked), `set` to
  * write (a local write).
  *
- * @template T
- * @typedef {{ (): T; set(value: any): void }} FieldSignal
+ * @template T read value
+ * @template [W=T] accepted value on write
+ * @typedef {{ (): T; set(value: W): void }} FieldSignal
+ */
+
+/**
+ * What a relational field accepts for one record: a record, an id, or values
+ * (values with an `id` point to an existing record).
+ *
+ * @template M
+ * @typedef {M | number | string | RecordValues<M>} RecordInput
+ */
+
+/**
+ * Values of a record, as given to `create`, `update` and relational writes:
+ * field names to what their `set` accepts. Any object for `Model` itself (a
+ * record of unknown class).
+ *
+ * `setup?: never` keeps records out: without it, a record of another model
+ * would match as soon as it shares a field name (at least `id`).
+ *
+ * @template M
+ * @typedef {import("./model").Model extends M
+ *  ? Record<string, any>
+ *  : { id?: number | string; setup?: never } & {
+ *      [K in keyof M as M[K] extends FieldSignal<any, any> ? K : never]?:
+ *          M[K] extends FieldSignal<any, infer W> ? W : never;
+ *  }} RecordValues
+ */
+
+/**
+ * @template M
+ * @typedef {FieldSignal<M | null, RecordInput<M> | false | null>} Many2one
+ */
+
+/**
+ * @template M
+ * @typedef {FieldSignal<M[], RecordInput<M>[]>} One2many
+ */
+
+/**
+ * @template M
+ * @typedef {FieldSignal<M[], RecordInput<M>[]>} Many2many
  */
 
 /**
@@ -67,6 +115,7 @@ export function isX2Many(field) {
 /**
  * @param {StoreFieldType} type
  * @param {object} [options]
+ * @returns {any} each factory types it as the signal records expose
  */
 function declare(type, options = {}) {
     return { [FIELD]: true, type, ...options };
@@ -161,21 +210,27 @@ export const fields = {
      */
     Json: (options) => declare("json", options),
     /**
+     * @template {import("./model").Model} [M=import("./model").Model] comodel
+     *  class, from the field annotation
      * @param {string} relation
      * @param {RelationalFieldOptions} [options]
-     * @returns {FieldSignal<import("./model").Model | null>}
+     * @returns {Many2one<M>}
      */
     Many2one: (relation, options) => declare("many2one", { relation, ...options }),
     /**
+     * @template {import("./model").Model} [M=import("./model").Model] comodel
+     *  class, from the field annotation
      * @param {string} relation
      * @param {RelationalFieldOptions} [options]
-     * @returns {FieldSignal<import("./model").Model[]>}
+     * @returns {One2many<M>}
      */
     One2many: (relation, options) => declare("one2many", { relation, ...options }),
     /**
+     * @template {import("./model").Model} [M=import("./model").Model] comodel
+     *  class, from the field annotation
      * @param {string} relation
      * @param {RelationalFieldOptions} [options]
-     * @returns {FieldSignal<import("./model").Model[]>}
+     * @returns {Many2many<M>}
      */
     Many2many: (relation, options) => declare("many2many", { relation, ...options }),
 };
