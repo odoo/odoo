@@ -20,10 +20,12 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
+import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
     CROSS_TAB_INIT_TIMEOUT,
+    Rtc,
 } from "@mail/discuss/call/common/rtc_service";
 
 import {
@@ -50,6 +52,7 @@ import {
     asyncStep,
     Command,
     mockService,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -1485,6 +1488,203 @@ test("losing the microphone keeps sharing the screen audio", async () => {
     await contains("video");
     rtc.state.micAudioTrack.dispatchEvent(new Event("ended"));
     await waitUntil(() => rtc.state.audioTrack === screenAudioTracks[0]);
+});
+
+test("turning the camera on twice while it starts keeps only the latest camera stream", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains("[title='Unmute']");
+    await click("[title='Turn camera on']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    requests.video[0].resolve();
+    requests.video[1].resolve();
+    await contains("[title='Stop camera']");
+    expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
+    expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
+});
+
+test("a camera request failing after the latest one keeps the camera on", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains("[title='Unmute']");
+    await click("[title='Turn camera on']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    requests.video[1].resolve();
+    await contains("[title='Stop camera']");
+    requests.video[0].reject(new Error("camera unavailable"));
+    await animationFrame();
+    await contains("[title='Stop camera']");
+    expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
+});
+
+test("turning the camera on twice while its background blur starts keeps the blur enabled", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    const blurredStreams = [];
+    patchWithCleanup(Rtc.prototype, {
+        async applyBlurEffect() {
+            const stream = Promise.withResolvers();
+            blurredStreams.push(stream);
+            return { close: () => stream.reject(new Error("blur closed")), stream: stream.promise };
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.setUseBlur(true);
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains("[title='Unmute']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 1);
+    requests.video[0].resolve();
+    await waitUntil(() => blurredStreams.length === 1);
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    requests.video[1].resolve();
+    await waitUntil(() => blurredStreams.length === 2);
+    blurredStreams[1].resolve(requests.video[1].stream);
+    await contains("[title='Stop camera']");
+    expect(store.settings.useBlur).toBe(true);
+    expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
+    expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
+});
+
+test("a camera request outdated while its background blur starts closes its blur", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    const blurManagers = [];
+    patchWithCleanup(Rtc.prototype, {
+        async applyBlurEffect() {
+            const stream = Promise.withResolvers();
+            const blurManager = {
+                closed: false,
+                close: () => {
+                    blurManager.closed = true;
+                    stream.reject(new Error("blur closed"));
+                },
+                resolve: stream.resolve,
+                stream: stream.promise,
+            };
+            blurManagers.push(blurManager);
+            return blurManager;
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    env.services["mail.store"].settings.setUseBlur(true);
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains("[title='Unmute']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 1);
+    requests.video[0].resolve();
+    await waitUntil(() => blurManagers.length === 1);
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    blurManagers[0].resolve(requests.video[0].stream);
+    requests.video[1].reject(new Error("camera unavailable"));
+    await waitUntil(() => blurManagers[0].closed);
+    expect(rtc.blurManager).toBe(undefined);
+    expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
+});
+
+test("unmuting while the microphone starts keeps only the latest microphone stream", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Unmute']");
+    await waitUntil(() => requests.audio.length === 2);
+    requests.audio[0].resolve();
+    requests.audio[1].resolve();
+    await contains("[title='Mute']");
+    expect(requests.audio[0].stream.getAudioTracks()[0].readyState).toBe("ended");
+    expect(requests.audio[1].stream.getAudioTracks()[0].readyState).toBe("live");
+});
+
+test("turning the call preview camera on twice while it starts keeps only the latest stream", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    await startServer();
+    await start();
+    await mountWithCleanup(CallPreview);
+    await click("[title='Turn camera on']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    requests.video[0].resolve();
+    requests.video[1].resolve();
+    await contains("[title='Stop camera']");
+    expect(requests.video[0].stream.getVideoTracks()[0].readyState).toBe("ended");
+    expect(requests.video[1].stream.getVideoTracks()[0].readyState).toBe("live");
+});
+
+test("unmuting the call preview twice while it starts keeps only the latest stream", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    await startServer();
+    await start();
+    await mountWithCleanup(CallPreview);
+    await click("[title='Unmute']");
+    await click("[title='Unmute']");
+    await waitUntil(() => requests.audio.length === 2);
+    requests.audio[0].resolve();
+    requests.audio[1].resolve();
+    await contains("[title='Mute']");
+    expect(requests.audio[0].stream.getAudioTracks()[0].readyState).toBe("ended");
+    expect(requests.audio[1].stream.getAudioTracks()[0].readyState).toBe("live");
+});
+
+test("stopping the call preview camera while it switches device keeps it off", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    await startServer();
+    const env = await start();
+    await mountWithCleanup(CallPreview);
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 1);
+    requests.video[0].resolve();
+    await contains("[title='Stop camera']");
+    env.services["mail.store"].settings.setCameraInputDevice("other-camera");
+    await waitUntil(() => requests.video.length === 2);
+    await click("[title='Stop camera']");
+    requests.video[1].resolve();
+    await waitUntil(() => requests.video[1].stream.getVideoTracks()[0].readyState === "ended");
+    await contains("[title='Turn camera on']");
+});
+
+test("stopping the call preview camera while its background blur starts keeps the blur enabled", async () => {
+    const requests = mockGetMedia({ holdUserMedia: true });
+    const blurredStreams = [];
+    patchWithCleanup(Rtc.prototype, {
+        async applyBlurEffect() {
+            const stream = Promise.withResolvers();
+            blurredStreams.push(stream);
+            return { close: () => stream.reject(new Error("blur closed")), stream: stream.promise };
+        },
+    });
+    await startServer();
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.setUseBlur(true);
+    await mountWithCleanup(CallPreview);
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 1);
+    requests.video[0].resolve();
+    await waitUntil(() => blurredStreams.length === 1);
+    await click("[title='Stop camera']");
+    await contains("[title='Turn camera on']");
+    expect(store.settings.useBlur).toBe(true);
 });
 
 test("Show connecting state on cards", async () => {
