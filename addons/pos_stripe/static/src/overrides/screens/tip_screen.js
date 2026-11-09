@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(TipScreen.prototype, {
     async validateTip() {
-        const line = this.adjustableTipLine;
+        const line = this.currentOrder.adjustableTipLine;
         // Stripe captures through the tip adjustment, which the core skips for a zero tip
         if (
             !this.pos.parseValidFloat(this.state.inputTipAmount) &&

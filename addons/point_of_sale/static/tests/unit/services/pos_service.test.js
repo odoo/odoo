@@ -28,6 +28,49 @@ describe("pos_store.js", () => {
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
     });
 
+    const getPaidOrder = async (store, paymentType) => {
+        const order = await getFilledOrder(store);
+        const method = store.models["pos.payment.method"].find((pm) => pm.type === paymentType);
+        order.addPaymentline(method);
+        const payment = order.payment_ids.at(-1);
+        await store.syncAllOrders();
+        return { order, payment, paidAmount: payment.amount };
+    };
+
+    test("settleTip adjusts payment with tax included tip amount", async () => {
+        const store = await setupPosEnv();
+        store.config.tip_product_id.product_tmpl_id.taxes_id = [store.models["account.tax"].get(1)];
+        const { order, payment, paidAmount } = await getPaidOrder(store, "bank");
+
+        await store.settleTip(order, 10);
+
+        expect(order.tip_amount).toBe(11.5);
+        expect(payment.amount).toBe(paidAmount + 11.5);
+    });
+
+    test("settleTip with zero tip leaves payment and lines untouched", async () => {
+        const store = await setupPosEnv();
+        const { order, payment, paidAmount } = await getPaidOrder(store, "bank");
+
+        await store.settleTip(order, 0);
+
+        expect(order.is_tipped).toBe(true);
+        expect(order.tip_amount).toBe(0);
+        expect(order.lines.length).toBe(2);
+        expect(payment.amount).toBe(paidAmount);
+    });
+
+    test("settleTip drops the tip when no payment can be adjusted", async () => {
+        const store = await setupPosEnv();
+        const { order, payment, paidAmount } = await getPaidOrder(store, "cash");
+
+        await store.settleTip(order, 10);
+
+        expect(order.tip_amount).toBe(0);
+        expect(order.lines.length).toBe(2);
+        expect(payment.amount).toBe(paidAmount);
+    });
+
     test("a popstate after clickSaveOrder does not reopen the saved order", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);

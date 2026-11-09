@@ -166,6 +166,11 @@ test("canBeAdjusted", async () => {
     card.payment_interface = { canBeAdjusted: () => true };
     expect(paymentline.canBeAdjusted()).toBe(true);
 
+    // order to invoice
+    order.setToInvoice(true);
+    expect(paymentline.canBeAdjusted()).toBe(false);
+    order.setToInvoice(false);
+
     // payment interface that does not support adjustments
     card.payment_interface = { canBeAdjusted: () => false };
     expect(paymentline.canBeAdjusted()).toBe(false);
@@ -180,7 +185,7 @@ test("adjustAmount", async () => {
     // no payment interface
     card.payment_interface = null;
     paymentline.adjustAmount(20);
-    expect(paymentline.getAmount()).toBe(10);
+    expect(paymentline.getAmount()).toBe(30);
 
     // payment interface that supports adjustments
     card.payment_interface = {
@@ -190,7 +195,7 @@ test("adjustAmount", async () => {
         },
     };
     paymentline.adjustAmount(20);
-    expect(paymentline.getAmount()).toBe(35); // 10 + 20 + 5
+    expect(paymentline.getAmount()).toBe(55); // 30 + 20 + 5
 });
 
 test("setAmount: config currency differs from company currency", async () => {

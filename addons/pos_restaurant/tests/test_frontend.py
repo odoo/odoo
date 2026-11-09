@@ -297,6 +297,10 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue("20%" in html)
         self.assertTrue("25%" in html)
 
+        session = self.pos_config.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour2')
