@@ -158,7 +158,7 @@
                 <t t-foreach="this.payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
                     <div t-if="this.showPaymentMethod(paymentMethod)" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
                         role="button"
-                        t-att-class="{'opacity-50': !paymentMethod.getPaymentInterfaceStates().status, 'd-flex justify-content-between align-items-center': true}"
+                        t-att-class="{'opacity-50': !paymentMethod.getPaymentInterfaceStates({ order: this.currentOrder }).status, 'd-flex justify-content-between align-items-center': true}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="this.paymentMethodImage(paymentMethod)" />
