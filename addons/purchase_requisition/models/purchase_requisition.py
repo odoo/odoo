@@ -262,7 +262,16 @@ class PurchaseRequisitionLine(models.Model):
             seller_info = line.product_id._select_seller(
                 partner_id=line.requisition_id.vendor_id, quantity=line.product_qty,
                 date=line.requisition_id.date_start, uom_id=line.uom_id)
+<<<<<<< 4cf3c24cd9de1519fe47e30d1e03b11f2d13f9a2
             line.price_unit = seller_info['price'] if seller_info else line.product_id.standard_price
+||||||| 520a344a8d4c59bd0510d99e61f374f69edf98f5
+            line.price_unit = seller.price if seller else line.product_id.standard_price
+=======
+            if seller:
+                line.price_unit = seller.uom_id._compute_price(seller.price, line.uom_id)
+            else:
+                line.price_unit = line.product_id.standard_price
+>>>>>>> a64dc4097bf491f3ed14c894ecbfc0364fdb0022
 
     @api.model_create_multi
     def create(self, vals_list):
