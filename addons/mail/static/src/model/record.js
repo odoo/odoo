@@ -510,6 +510,7 @@ export class Record {
                             }
                         }
                         untrack(() => {
+<<<<<<< 396a3df5be5b508a3abf21cf374c591e0511ca3c
                             try {
                                 cleanup?.();
                                 const result = boundCallback(...values);
@@ -525,6 +526,26 @@ export class Record {
                             // Read again, as owl stops notifying through a computed
                             // left stale by a write of the callback.
                             void deps();
+||||||| 6211e5f4ddecb74c211cca59c8bc8323da5f96b7
+                            cleanup?.();
+                            const result = boundCallback(...values);
+                            cleanup = typeof result === "function" ? result : undefined;
+=======
+                            cleanup?.();
+                            try {
+                                const result = boundCallback(...values);
+                                cleanup = typeof result === "function" ? result : undefined;
+                            } finally {
+                                // Read again, as a stale computed no longer notifies.
+                                if (!record._.scope.isDestroyed()) {
+                                    try {
+                                        void deps();
+                                    } catch {
+                                        // rethrow at the next read
+                                    }
+                                }
+                            }
+>>>>>>> 3955c9f720174ef091028c9004f4f45a59107795
                         });
                     })
                 );
