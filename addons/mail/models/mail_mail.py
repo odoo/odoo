@@ -349,12 +349,15 @@ class MailMail(models.Model):
         )
 
     def _filter_mail_mail_servers(self, mail_servers):
+        # message creators only drive server choice: do not depend on message
+        # access, based on related document, as mail.mail access is enough
+        creators = self.mail_message_id.sudo().create_uid
         if (
-            len(self.mail_message_id.create_uid) > 1 or  # multiple create_uids -> subset that's allowed for all
+            len(creators) > 1 or  # multiple create_uids -> subset that's allowed for all
             self.env['ir.config_parameter'].sudo().get_param('mail.disable_personal_mail_servers', False)
         ):
             return mail_servers.filtered(lambda server: not server.owner_user_id)
-        return mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], self.mail_message_id.create_uid])
+        return mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], creators])
 
     def _prepare_outgoing_body(self):
         """Return a specific ir_email body. The main purpose of this method
@@ -894,7 +897,11 @@ class MailMail(models.Model):
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
                     message_id = res
-                    mail.write({'state': 'sent', 'message_id': res, 'failure_type': False, 'failure_reason': False})
+                    mail.write({'state': 'sent', 'failure_type': False, 'failure_reason': False})
+                    if res != mail.message_id:
+                        # Message-Id is stored on mail.message, whose write access is based
+                        # on related document: do not depend on it, mail is already sent
+                        mail.mail_message_id.sudo().message_id = res
                     if not modules.module.current_test:
                         _logger.info(
                             "Mail (mail.mail) with ID %r and Message-Id %r from %r to (redacted) %s successfully sent",
