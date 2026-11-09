@@ -11,6 +11,9 @@ class AccountMove(models.Model):
         self.env['l10n_pl_edi_batch.download']._cron_request_today()
 
     def action_l10n_pl_edi_import_from_ksef(self):
+        # Request yesterday and today's bills: the batch crons then import them
+        self.env['l10n_pl_edi_batch.download'].sudo()._request_today(self.env.company)
+
         # Only do half-fetched invoices
         half_fetched_bills = self.search([
             ('l10n_pl_edi_number', '!=', False),

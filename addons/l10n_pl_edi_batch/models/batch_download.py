@@ -252,13 +252,12 @@ class BatchDownload(models.Model):
     @api.model
     def _cron_request_today(self):
         """ Request yesterday and today's invoices """
-        now = fields.Datetime.now()
+        self._run_for_all_companies(self._request_today, 'l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+
+    @api.model
+    def _request_today(self, company):
         yesterday = ksef_midnight(fields.Date.today() - timedelta(days=1))
-
-        def request_today(company):
-            self._create_batch_download(company, date_from=yesterday, date_to=now)
-
-        self._run_for_all_companies(request_today, 'l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+        self._create_batch_download(company, date_from=yesterday, date_to=fields.Datetime.now())
 
     @api.model
     def _cron_request_historic(self):
