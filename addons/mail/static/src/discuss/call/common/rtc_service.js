@@ -409,6 +409,8 @@ export class Rtc extends Record {
     audioContext;
     /** id of the latest camera request, older ones are discarded */
     cameraRequestId = 0;
+    /** @type {boolean|undefined} mute state to restore once the pending microphone request settles */
+    micMuteToRestore;
     /** id of the latest microphone request, older ones are discarded */
     micRequestId = 0;
     // cross tab sync
@@ -972,12 +974,13 @@ export class Rtc extends Record {
             this.showMediaPermissionDialog("microphone");
             return;
         }
-        if (this.micAudioTrack) {
-            await this.setMute(false);
-        } else {
+        if (!this.micAudioTrack) {
             await this.resetMicAudioTrack({ force: true });
         }
-        this.soundEffectsService.play("mic-on");
+        if (this.micAudioTrack) {
+            await this.setMute(false);
+            this.soundEffectsService.play("mic-on");
+        }
     }
 
     //----------------------------------------------------------------------
@@ -1773,6 +1776,8 @@ export class Rtc extends Record {
         this.audioContext?.close();
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
+        this.micRequestId++;
+        this.micMuteToRestore = undefined;
         this.closeCallPermissionDialog?.();
         this.updateAndBroadcastDebounce?.cancel();
         this.disconnectAudioMonitor?.();
@@ -2212,6 +2217,8 @@ export class Rtc extends Record {
 
     async resetMicAudioTrack({ force = false }) {
         const micRequestId = ++this.micRequestId;
+        const wasMuted = this.micMuteToRestore ?? Boolean(this.localSession?.is_muted);
+        this.micMuteToRestore = undefined;
         this.micAudioTrack?.stop();
         this.micAudioTrack = undefined;
         if (this.audioTrack !== this.screenAudioTrack) {
@@ -2225,6 +2232,7 @@ export class Rtc extends Record {
             this.setMute(true);
         }
         if (force) {
+            this.micMuteToRestore = wasMuted;
             let micAudioTrack;
             try {
                 const audioStream = await browser.navigator.mediaDevices.getUserMedia({
@@ -2235,13 +2243,15 @@ export class Rtc extends Record {
                     micAudioTrack.stop();
                     return;
                 }
+                this.micMuteToRestore = undefined;
                 if (this.localSession) {
-                    this.setMute(false);
+                    this.setMute(wasMuted);
                 }
             } catch {
                 if (micRequestId !== this.micRequestId) {
                     return;
                 }
+                this.micMuteToRestore = undefined;
                 this.showMediaUnavailableWarning({ microphone: true });
                 this.updateAudioTrack();
                 return;
