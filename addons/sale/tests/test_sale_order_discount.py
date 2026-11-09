@@ -2,7 +2,7 @@
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 from odoo.addons.sale.tests.common import SaleCommon
 
@@ -213,3 +213,32 @@ class TestSaleOrderDiscount(SaleCommon):
         # Double the discount by changing the quantity instead of the value
         discount_line.product_uom_qty = 2
         self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.8)
+
+    def test_sol_manual_discount_is_conditionally_changed_on_qty_change(self):
+        """ This tests if a manually inputted discount is respected when the product quantity is changed on an order line.
+            Also checks that a newly applied price rule overwrites the discount
+        """
+        sol = self.sale_order.order_line[0]
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': self.sale_order.pricelist_id.id,
+            'compute_price': 'percentage',
+            'percent_price': 10,
+            'product_id': sol.product_id.id,
+            'min_quantity': 3,
+        })
+        sol.write({
+            "product_uom_qty": 0,
+            "discount": 5.0
+        })
+
+        # new price rule has priority over manual discount
+        with Form(self.sale_order) as order_form:
+            with order_form.order_line.edit(0) as line:
+                line.product_uom_qty = 6
+                self.assertEqual(line.discount, 10.0)
+        # same price rule as last saved line, so manual discount should stay
+        sol.discount = 6.0
+        with Form(self.sale_order) as order_form:
+            with order_form.order_line.edit(0) as line:
+                line.product_uom_qty = 7
+                self.assertEqual(line.discount, 6.0)

@@ -762,6 +762,40 @@ class SaleOrderLine(models.Model):
         )
         return (combo_prices[self.combo_item_id.combo_id] + extra_price)
 
+    def _get_pricelist_discount(self):
+        if not self.pricelist_item_id._show_discount():
+            # No pricelist rule was found for the product
+            # therefore, the pricelist didn't apply any discount/change
+            # to the existing sales price.
+            return 0.0
+
+        line = self.with_company(self.company_id)
+        pricelist_price = line._get_pricelist_price()
+        base_price = line._get_pricelist_price_before_discount()
+
+        if base_price != 0:  # Avoid division by zero
+            discount = (base_price - pricelist_price) / base_price * 100
+            if (discount > 0 and base_price > 0) or (discount < 0 and base_price < 0):
+                # only show negative discounts if price is negative
+                # otherwise it's a surcharge which shouldn't be shown to the customer
+                return discount
+        return 0.0
+
+    def _discount_should_be_changed(self):
+        self.ensure_one()
+        # Saved records have no previous state to compare against (_origin is the record itself),
+        # so they always recompute. Manual discounts on direct writes are handled in write()
+        if not isinstance(self.id, models.NewId) or not self._origin:
+            return True
+        origin = self._origin
+
+        if origin.product_id != self.product_id or origin.product_uom != self.product_uom:
+            return True
+
+        # If the original discount was not saved 
+        precision = self.env['decimal.precision'].precision_get('Discount')
+        return float_compare(origin.discount, origin._get_pricelist_discount(), precision_digits=precision) == 0
+
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
         discount_enabled = self.env['product.pricelist.item']._is_discount_feature_enabled()
@@ -776,24 +810,10 @@ class SaleOrderLine(models.Model):
                 line.discount = line._get_linked_line().discount
                 continue
 
-            line.discount = 0.0
-
-            if not line.pricelist_item_id._show_discount():
-                # No pricelist rule was found for the product
-                # therefore, the pricelist didn't apply any discount/change
-                # to the existing sales price.
+            if not line._discount_should_be_changed():
                 continue
 
-            line = line.with_company(line.company_id)
-            pricelist_price = line._get_pricelist_price()
-            base_price = line._get_pricelist_price_before_discount()
-
-            if base_price != 0:  # Avoid division by zero
-                discount = (base_price - pricelist_price) / base_price * 100
-                if (discount > 0 and base_price > 0) or (discount < 0 and base_price < 0):
-                    # only show negative discounts if price is negative
-                    # otherwise it's a surcharge which shouldn't be shown to the customer
-                    line.discount = discount
+            line.discount = line._get_pricelist_discount()
 
     def _prepare_base_line_for_taxes_computation(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
@@ -1340,7 +1360,24 @@ class SaleOrderLine(models.Model):
                       '\n'.join(fields.mapped('field_description')))
                 )
 
+        # Saved records always recompute their discount (see _discount_should_be_changed),
+        # so manual discounts are detected here, before the write, while the previous
+        # state is still available, and restored after it
+        manual_discounts = {}
+        if 'product_uom_qty' in values and not {'discount', 'product_id', 'product_uom'} & values.keys():
+            precision = self.env['decimal.precision'].precision_get('Discount')
+            manual_discounts = {
+                line: line.discount
+                for line in self
+                if not line.display_type
+                and not line.combo_item_id
+                and float_compare(line.discount, line._get_pricelist_discount(), precision_digits=precision) != 0
+            }
+
         result = super().write(values)
+
+        for line, discount in manual_discounts.items():
+            line.discount = discount
 
         # Don't recompute the package_id if we are setting the quantity of the items and the quantity of packages
         if 'product_uom_qty' in values and 'product_packaging_qty' in values and 'product_packaging_id' not in values:
