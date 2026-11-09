@@ -33,7 +33,7 @@
             <field name="path">org-chart-public</field>
             <field name="view_mode">hierarchy,kanban,list,form,graph,pivot</field>
             <field name="mobile_view_mode">hierarchy</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('parent_id', '=', context.get('org_chart_id'))] if context.get('org_chart_id') else []</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="help" type="html">
@@ -114,7 +114,7 @@
                                                     <a name="%(hr.action_hr_employee_public_org_chart)d"
                                                         type="action"
                                                         role="button"
-                                                        context="{'hierarchy_res_id': id}">
+                                                        context="{'org_chart_id': id}">
                                                         <i class="oi me-1 mt-1" data-icon="account_tree"/>
                                                         <span class="fw-bolder">Zoom</span>
                                                     </a>
@@ -278,20 +278,20 @@
             <field name="name">hr.employee.public.hierarchy.view</field>
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
-                <hierarchy child_field="child_ids" js_class="hr_employee_hierarchy" avatar_field="image_128" label="people" draggable="0">
+                <hierarchy child_field="child_ids">
                     <field name="name" />
                     <field name="job_id" />
                     <field name="department_color" />
                     <field name="hr_icon_display" />
                     <field name="department_id" />
                     <templates>
-                        <t t-name="hierarchy-box">
-                            <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center pb-4 o_hierarchy_node_color_{{ record.department_color.raw_value }}"
-                                t-att-title="record.department_id.value"
-                            >
-                                <field name="image_1024" preview_image="image_128" options="{'zoom': true, 'zoom_delay': 1000}" widget="background_image" />
+                        <t t-name="card" class="p-0">
+                            <div t-attf-class="d-flex justify-content-center bg-opacity-25 {{record.department_color.raw_value ? `o_colorlist_item_color_${record.department_color.raw_value}` : 'bg-200'}}" style="height: 30px;">
+                                <div class="mt-1 rounded-circle overflow-hidden position-relative z-1" style="width:48px; height:48px;">
+                                    <field name="image_1024" preview_image="image_128" options="{'zoom': true, 'zoom_delay': 1000}" widget="background_image" />
+                                </div>
                             </div>
-                            <div class="d-flex flex-column text-center">
+                            <div class="d-flex flex-column text-center mt-3 p-2">
                                 <div class="d-flex">
                                     <field class="fw-bold w-100" name="name" />
                                     <field name="hr_icon_display" class="flex-shrink-0" widget="hr_presence_status" />
