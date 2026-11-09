@@ -168,9 +168,37 @@ export class Call extends Component {
             this.syncFocusedSession();
             this.requestLayout();
         });
+<<<<<<< 9fadb3fa6b95e0ebe7f0e3f9a8d200c01f8eeeb3
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
         useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
+||||||| a4bbe04b454a87b93fe3e6539ae5be69a185d181
+        useHotkey("shift+d", () => this.rtc.toggleDeafen());
+        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
+        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
+        useSubEnv({
+            inDiscussCallView: {
+                dragInsetBy: (surfaceKey, dX, dY) => this.dragInsetBy(surfaceKey, dX, dY),
+                dropInset: (surfaceKey) => this.dropInset(surfaceKey),
+            },
+        });
+=======
+        useHotkey("shift+d", () => this.rtc.toggleDeafen(), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand), {
+            isAvailable: () => Boolean(this.rtc.selfSession),
+        });
+        useSubEnv({
+            inDiscussCallView: {
+                dragInsetBy: (surfaceKey, dX, dY) => this.dragInsetBy(surfaceKey, dX, dY),
+                dropInset: (surfaceKey) => this.dropInset(surfaceKey),
+            },
+        });
+>>>>>>> 60eb0eef7d556f0cd23500f23007ad2e5e67a440
     }
 
     get isAnyonePresenting() {
