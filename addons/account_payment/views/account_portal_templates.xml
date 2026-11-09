@@ -281,10 +281,17 @@
             <t t-set="payment_status" t-value="invoice._get_payment_status()"/>
             <div
                 name="invoice_paid_badge"
-                t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
+                t-if="invoice.currency_id.is_zero(invoice.amount_residual)
+                      and payment_status != 'reversed'"
                 class="rounded text-bg-success fw-normal badge"
             >
                 <i class="oi oi-fw" data-icon="check_circle"/> Paid
+            </div>
+            <div
+                t-elif="payment_status == 'reversed'"
+                class="rounded text-bg-success fw-normal badge"
+            >
+                <i class="oi oi-fw" data-icon="check_circle"/> Reversed
             </div>
             <div
                 t-elif="payment_status == 'in_payment'"
@@ -312,14 +319,14 @@
             <!-- Direct feedback on the payment the visitor has just made, if any. Don't ask to
                  finalize a pending payment once the invoice is paid in another way. -->
             <div
-                t-if="feedback_tx_sudo
+                t-if="last_attempt_tx_sudo
                     and not (
-                        feedback_tx_sudo.state == 'pending'
+                        last_attempt_tx_sudo.state == 'pending'
                         and invoice._get_payment_status() == 'paid'
                     )"
                  class="o_account_payment_tx_status"
                  t-att-data-invoice-id="invoice.id">
-                <t t-call="payment.state_header" tx="feedback_tx_sudo"/>
+                <t t-call="payment.state_header" tx="last_attempt_tx_sudo"/>
             </div>
             <div t-if="invoice._has_to_be_paid()" id="portal_pay" t-att-data-payment="payment">
                 <t t-call="account_payment.portal_invoice_payment"/>

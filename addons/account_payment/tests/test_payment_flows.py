@@ -11,6 +11,7 @@ from odoo.tools import mute_logger
 from odoo.addons.account_payment.controllers.payment import PaymentPortal
 from odoo.addons.account_payment.controllers.portal import PortalAccount
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.portal.controllers.portal import CustomerPortal
 
@@ -208,7 +209,10 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         def mock_get_page_view_values(self, document, access_token, values, *args, **kwargs):
             return values
 
-        with patch.object(PortalAccount, '_get_page_view_values', mock_get_page_view_values):
+        with (
+            MockRequest(self.env),
+            patch.object(PortalAccount, '_get_page_view_values', mock_get_page_view_values),
+        ):
             values = PortalAccount()._invoice_get_page_view_values(
                 invoice, invoice.access_token, amount=26.0, payment=True,
             )

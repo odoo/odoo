@@ -38,9 +38,9 @@ class PaymentStatus(http.Controller):
         :return: The rendered status page
         :rtype: str
         """
-        monitored_tx = self._get_monitored_transaction(self.env)
-        values = self._get_payment_status_values(monitored_tx)
-        template = self.get_payment_status_template_xmlid(monitored_tx)
+        monitored_tx_sudo = self._get_monitored_transaction(self.env)
+        values = self._get_payment_status_values(monitored_tx_sudo)
+        template = self.get_payment_status_template_xmlid(monitored_tx_sudo)
         return request.render(template, values)
 
     def _get_payment_status_values(self, tx):
@@ -96,11 +96,9 @@ class PaymentStatus(http.Controller):
         call this method rather than looking up their own transactions, which cannot tell apart
         the payment that was just made from the ones made before.
 
-        Outside of a request there is no session, hence no payment to give feedback on.
-
         :param api.Environment env: The environment to browse the transaction with.
         :return: the user's last transaction
         :rtype: payment.transaction
         """
-        tx_id = request.session.get(cls.MONITORED_TX_ID_KEY) if request else None
+        tx_id = request.session.get(cls.MONITORED_TX_ID_KEY)
         return env["payment.transaction"].sudo().browse(tx_id).exists()

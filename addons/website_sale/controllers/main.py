@@ -1794,15 +1794,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect(SHOP_PATH)
 
-        # The payment the customer is returning from, as opposed to any older one of this order.
-        tx_sudo = PaymentStatus._get_monitored_transaction(self.env).filtered(
+        # The payment the visitor has just made, if any.
+        feedback_tx_sudo = PaymentStatus._get_monitored_transaction(self.env).filtered(
             lambda tx: order_sudo in tx.sale_order_ids
         )
         # The session can lose the monitored transaction, so decide from the order's payments
         if order_sudo.amount_total and not order_sudo._is_payment_started():
             return request.redirect(SHOP_PATH)
 
-        if not order_sudo.amount_total and not tx_sudo and order_sudo.state == "draft":
+        if not order_sudo.amount_total and not feedback_tx_sudo and order_sudo.state == "draft":
             # Customer didn't go through /shop/payment/transaction since there is nothing to pay,
             # confirm the order if it is valid.
             if redirect := self.env["website.checkout.step"].validate_checkout_progress(
@@ -1818,7 +1818,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # clean context and session, then redirect to the confirmation page
         self.env.website.sale_reset()
-        if tx_sudo and tx_sudo.state == "draft":
+        if feedback_tx_sudo and feedback_tx_sudo.state == "draft":
             return request.redirect(SHOP_PATH)
 
         return request.redirect("/shop/confirmation")

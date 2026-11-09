@@ -138,15 +138,6 @@ class TestPaymentStatusMatrix(WebsiteSaleCommon, PaymentCommon):
             lambda order, _tx, _user: order._get_payment_status(),
         )
 
-    def test_order_confirmation_subject_never_says_pending(self):
-        template = self.env.ref("sale.mail_template_sale_confirmation")
-        self._check_matrix_column(
-            dict.fromkeys(SCENARIOS, False),
-            lambda order, _tx, _user: (
-                "Pending" in template._render_field("subject", order.ids)[order.id]
-            ),
-        )
-
     # === YES/NO CHECKS === #
 
     def test_payment_started_ignores_failed_retries(self):

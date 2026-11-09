@@ -101,8 +101,8 @@ class AccountMove(models.Model):
         if status not in ('not_paid', 'partial'):
             return status  # The accounting entries already answer the question.
 
-        # Consider every transaction rather than the last one: with several transactions, the last
-        # one alone can't tell whether an earlier payment is still securing part of the amount.
+        # With several transactions, the last one alone can't tell whether an earlier payment is
+        # still securing part of the amount.
         transactions = self.with_context(active_test=False).sudo().transaction_ids
         if any(tx.state == 'authorized' for tx in transactions):
             return 'authorized'

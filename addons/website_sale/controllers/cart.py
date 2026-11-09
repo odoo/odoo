@@ -371,7 +371,7 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         if order_sudo := request.cart:
-            order_sudo._check_not_partially_paid()  # Prevent modifying the cart if partially paid
+            order_sudo._check_not_partially_paid()
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         # This method must be only called from the cart page BUT in some advanced logic

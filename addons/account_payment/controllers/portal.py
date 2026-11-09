@@ -17,8 +17,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
 
         values = super()._invoice_get_page_view_values(invoice, access_token, amount=amount, **kwargs)
 
-        # The payment the visitor has just made, if any, to give them direct feedback on it.
-        values['feedback_tx_sudo'] = PaymentStatus._get_monitored_transaction(invoice.env).filtered(
+        values['last_attempt_tx_sudo'] = PaymentStatus._get_monitored_transaction(invoice.env).filtered(
             lambda tx: invoice in tx.invoice_ids
         )
 

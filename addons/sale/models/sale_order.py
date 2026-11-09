@@ -2766,8 +2766,7 @@ class SaleOrder(models.Model):
         """Return whether the customer has started paying this order.
 
         A payment is considered started as soon as one transaction has been submitted and hasn't
-        failed, whatever transactions were made before or after it. Unlike the last transaction's
-        state, a failed retry doesn't hide the payment that went through before it.
+        failed, whatever transactions were made before or after it.
 
         :return: Whether the customer has started paying this order.
         :rtype: bool
@@ -2780,18 +2779,14 @@ class SaleOrder(models.Model):
     def _get_payment_status(self):
         """Return the payment status of the order, considering all of its transactions.
 
-        This answers only "how much of this order's amount is secured, and in what condition". It
-        carries nothing about the order's own lifecycle: callers keep checking `state` themselves.
+        This answers only "how much of this order's amount is secured, and in what condition".
 
-        Unlike the last transaction's state, this considers every transaction and their amounts, so
-        a failed retry can't hide a payment that went through before it. Settled amounts are
-        resolved first (`paid` then `partial`), then the amounts still in flight (`authorized` then
-        `pending`).
+        This considers every transaction and their amounts, so a failed retry can't hide a payment
+        that went through before it. Settled amounts are resolved first (`paid` then `partial`),
+        then the amounts still in flight (`authorized` then `pending`).
 
         The vocabulary matches `account.move._get_payment_status()` so that both documents can be
         displayed the same way.
-
-        Note: self.ensure_one()
 
         :return: The payment status of the order, one of `not_paid`, `pending`, `authorized`,
                  `partial` or `paid`.
