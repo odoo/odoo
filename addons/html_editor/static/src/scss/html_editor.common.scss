@@ -252,6 +252,21 @@ img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
 img.ms-auto, img.mx-auto {
     display: block;
 }
+figure.float-start {
+    // A table keeps the caption as wide as the image.
+    display: table;
+
+    > img {
+        // The figure already has the image width.
+        width: 100% !important;
+    }
+    > figcaption {
+        display: table-caption;
+        caption-side: bottom;
+        // The caption text never makes the figure wider than the image.
+        contain: inline-size;
+    }
+}
 
 .fa-6x {
     font-size: 6em;
