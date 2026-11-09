@@ -2,8 +2,17 @@ import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { SearchInput } from "@mail/core/common/search_input";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
-import { useSearch, useVisible } from "@mail/utils/common/hooks";
-import { Component, signal, types, useOnChange, useProps } from "@odoo/owl";
+import { useVisible } from "@mail/utils/common/hooks";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
+import {
+    Component,
+    providePlugins,
+    signal,
+    types,
+    useOnChange,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -22,12 +31,13 @@ export class SubChannelList extends Component {
             channel: types.instanceOf(this.store["discuss.channel"]),
             close: types.function([types.instanceOf(MouseEvent)]).optional(),
         });
-        this.search = useSearch({
-            initialResults: this.props.channel.sortedSubChannels,
+        providePlugins([SearchStatePlugin], {
+            initialResults: () => this.props.channel.sortedSubChannels,
             fetch: (term) => this.props.channel.loadMoreSubChannels({ searchTerm: term }),
             filter: (term) =>
                 fuzzyLookup(term, this.props.channel.sortedSubChannels, ({ name }) => name),
         });
+        this.search = usePlugin(SearchStatePlugin);
         useOnChange(
             () => [this.props.channel],
             () => this.search.reset(),
@@ -36,7 +46,7 @@ export class SubChannelList extends Component {
         this.loadMoreState = useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.channel.loadMoreSubChannels({
-                    searchTerm: this.search.searchTerm || undefined,
+                    searchTerm: this.search.searchTerm() || undefined,
                 });
             }
         });
@@ -44,13 +54,15 @@ export class SubChannelList extends Component {
 
     /**
      * Sub channels to display. In browse mode the full list is read straight
-     * from the record: the hook's `results` only settles back to it one render
-     * after `searchTerm` is cleared (its reset runs in a layout effect), and
+     * from the record: the search's `results` only settles back to it one render
+     * after `searchTerm` is cleared (its reset waits for the next animation frame), and
      * that lag would briefly expose the load-more sentinel next to the short
      * filtered list, triggering a spurious extra page load.
      */
     get subChannels() {
-        return this.search.searchTerm ? this.search.results : this.props.channel.sortedSubChannels;
+        return this.search.searchTerm()
+            ? this.search.results()
+            : this.props.channel.sortedSubChannels;
     }
 
     /**
@@ -62,7 +74,7 @@ export class SubChannelList extends Component {
     }
 
     async onClickCreate() {
-        await this.props.channel.createSubChannel({ name: this.search.searchTerm });
+        await this.props.channel.createSubChannel({ name: this.search.searchTerm() });
         this.search.run({ skipFetch: true });
         this.props.close?.();
     }
