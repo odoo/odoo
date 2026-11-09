@@ -354,6 +354,19 @@ class TestTimeRuleAllocationLog(TransactionCase):
         )
         on_call_rule.unlink()
 
+    def test_second_attendance_same_day_keeps_previous_credit(self):
+        """a second attendance on the same day must add to the existing credit, not replace it."""
+        self._make_rule()
+        # saturday: no schedule, all time worked is excess
+        self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
+        self.assertAlmostEqual(self._alloc().number_of_days, 0.5, places=5,
+                               msg="4h excess / 8h = 0.5d")
+        self._make_att(datetime(2022, 12, 10, 13), datetime(2022, 12, 10, 15))
+        alloc = self._alloc()
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.75, places=5,
+                               msg="(4h + 2h) excess / 8h = 0.75d, not 0.25d")
+
     def _make_deficit_rule(self, undertime_type, **kw):
         defaults = {
             'name': 'Undertime Rule',
