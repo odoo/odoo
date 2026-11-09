@@ -63,7 +63,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             }
 
         currency = order_sudo.currency_id
-        remaining_amount = currency.round(max(0, order_sudo.amount_total - order_sudo.amount_paid))
+        remaining_amount = currency.round(
+            max(0, order_sudo._get_amount_to_pay() - order_sudo.amount_paid)
+        )
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({

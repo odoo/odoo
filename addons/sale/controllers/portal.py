@@ -220,7 +220,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if order_sudo._has_to_be_paid() or (payment_amount and not order_sudo.is_expired):
             if payment_amount and (
                 order_sudo.currency_id.compare_amounts(prepayment_amount, payment_amount)
-                or order_sudo.currency_id.compare_amounts(order_sudo.amount_total, payment_amount)
+                or order_sudo.currency_id.compare_amounts(order_sudo._get_amount_to_pay(), payment_amount)
             ):
                 # If requested amount is different from total/down payment %, force the payment of
                 # the requested amount, without displaying the choice of down payment/full amount.
@@ -269,7 +269,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             is_down_payment = (
                 order_sudo.prepayment_percent < 1.0
                 if payment_amount is None
-                else payment_amount < order_sudo.amount_total
+                else payment_amount < order_sudo._get_amount_to_pay()
             )
         return is_down_payment
 
@@ -297,7 +297,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         currency = order_sudo.currency_id
 
         if is_down_payment:
-            if payment_amount and payment_amount < order_sudo.amount_total:
+            if payment_amount and payment_amount < order_sudo._get_amount_to_pay():
                 amount = payment_amount
             else:
                 amount = order_sudo._get_prepayment_required_amount()
@@ -306,7 +306,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         elif order_sudo.state == "sale":
             amount = order_sudo.amount_total
         else:
-            amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
+            amount = currency.round(order_sudo._get_amount_to_pay() - order_sudo.amount_paid)
 
         # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(

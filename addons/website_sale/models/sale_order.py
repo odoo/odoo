@@ -290,6 +290,19 @@ class SaleOrder(models.Model):
     def _get_amount_total_excluding_delivery(self):
         return sum(self._get_non_delivery_lines().mapped("price_total"))
 
+    def _get_amount_to_pay_excluding_delivery(self):
+        """Return the amount to pay without the delivery, which express checkout adds by itself.
+
+        The delivery is always charged in full: the part of the order total that is not paid
+        upfront (see `_get_amount_to_pay`) only comes from the other lines.
+
+        :rtype: float
+        """
+        self.ensure_one()
+        return self._get_amount_total_excluding_delivery() - (
+            self.amount_total - self._get_amount_to_pay()
+        )
+
     def _get_order_tracking_info(self):
         """Return base GA4 tracking payload for cart, payment, and purchase events.
 
