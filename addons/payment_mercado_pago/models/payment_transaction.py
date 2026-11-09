@@ -113,7 +113,33 @@ class PaymentTransaction(models.Model):
                 'email': self.partner_email,
             },
         })
+        if self.tokenize:
+            payload['point_of_interaction'] = self._mercado_pago_prepare_cof_payload(is_first=True)
         return payload
+
+    def _mercado_pago_prepare_cof_payload(self, is_first=False):
+        """Return the Credential on File data, or None when the token's first payment is unknown.
+
+        :param bool is_first: Whether this payment saves the card.
+        :return: The `point_of_interaction` payload.
+        :rtype: dict | None
+        """
+        # See https://www.mercadopago.com.mx/developers/en/docs/automatic-payments/recurring-charges
+        transaction_data = {
+            'first_transaction': is_first,
+            'storage': 'store' if is_first else 'stored',
+            'transaction_initiator': 'merchant' if self.operation == 'offline' else 'customer',
+        }
+        if not is_first:
+            first_tx = (self.token_id.transaction_ids - self).filtered('provider_reference')
+            if not first_tx:
+                return None
+            transaction_data['reference'] = {'id': first_tx.sorted('id')[0].provider_reference}
+        return {
+            'type': 'CREDENTIAL_ON_FILE',
+            'sub_type': 'unscheduled',
+            'transaction_data': transaction_data,
+        }
 
     def _mercado_pago_prepare_base_request_payload(self):
         """ Create the base payload for requests based on the transaction values.
@@ -164,6 +190,8 @@ class PaymentTransaction(models.Model):
                 'id': self.token_id.mercado_pago_customer_id,
             },
         })
+        if cof_payload := self._mercado_pago_prepare_cof_payload():
+            data['point_of_interaction'] = cof_payload
         response_content = self._send_api_request(
             'POST',
             endpoint='/v1/payments',
