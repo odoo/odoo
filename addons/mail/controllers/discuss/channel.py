@@ -287,8 +287,11 @@ class ChannelController(http.Controller):
         )
         return {"store_data": store, "count": len(attachments)}
 
-    @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
+    @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
+        # threads are created by internal users only, see 'canCreateSubChannels'
+        if not request.env.user._is_internal():
+            raise NotFound()
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
