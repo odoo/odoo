@@ -214,6 +214,80 @@ class TestVNEDI(AccountTestInvoicingCommon):
         )
 
     @freeze_time('2024-01-01')
+    def test_json_data_studio_fields(self):
+        """ The SInvoice fields added with Studio are sent in their block, overriding the defaults. """
+        studio_fields = {
+            'res.partner': [
+                'x_studio_sinvoice_buyer_id_no',
+                'x_studio_sinvoice_buyer_nationality_code',
+                'x_studio_sinvoice_buyer_nationality_name',
+                'x_studio_sinvoice_buyer_foreign_organization_id',
+                'x_studio_sinvoice_buyer_budget_code',
+            ],
+            'account.move': ['x_studio_sinvoice_payment_method', 'x_studio_sinvoice_payment_method_name'],
+            'account.move.line': ['x_studio_sinvoice_batch_no', 'x_studio_sinvoice_exp_date'],
+        }
+        self.env['ir.model.fields'].create([
+            {
+                'name': name,
+                'model': model,
+                'model_id': self.env['ir.model']._get_id(model),
+                'ttype': 'char',
+                'state': 'manual',
+            }
+            for model, names in studio_fields.items()
+            for name in names
+        ])
+        self.env['ir.model.fields'].create({
+            'name': 'x_studio_sinvoice_buyer_id_type',
+            'model': 'res.partner',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'ttype': 'selection',
+            'selection': "[('1', 'CCCD'), ('3', 'Passport')]",
+            'state': 'manual',
+        })
+
+        self.partner_a.write({
+            'x_studio_sinvoice_buyer_id_type': '3',
+            'x_studio_sinvoice_buyer_id_no': 'B1234567',
+            'x_studio_sinvoice_buyer_nationality_code': 'FR',
+            'x_studio_sinvoice_buyer_nationality_name': 'France',
+            'x_studio_sinvoice_buyer_foreign_organization_id': 'FR-12345',
+            'x_studio_sinvoice_buyer_budget_code': '1234567',
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'x_studio_sinvoice_payment_method': '2',
+            'x_studio_sinvoice_payment_method_name': 'CK',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'x_studio_sinvoice_batch_no': 'LOT-001',
+                'x_studio_sinvoice_exp_date': '31/12/2025',
+            })],
+        })
+        invoice.action_post()
+        json_data = invoice._l10n_vn_edi_generate_invoice_json()
+
+        expected = {
+            'buyerIdType': '3',
+            'buyerIdNo': 'B1234567',
+            'buyerNationalityCode': 'FR',
+            'buyerNationalityName': 'France',
+            'buyerForeignOrganizationId': 'FR-12345',
+            'buyerBudgetCode': '1234567',
+        }
+        actual = json_data['buyerInfo']
+        self.assertDictEqual(actual, actual | expected)
+        self.assertEqual(json_data['payments'], [{'paymentMethod': '2', 'paymentMethodName': 'CK'}])
+        expected = {
+            'batchNo': 'LOT-001',
+            'expDate': '31/12/2025',
+        }
+        actual = json_data['itemInfo'][0]
+        self.assertDictEqual(actual, actual | expected)
+
+    @freeze_time('2024-01-01')
     def test_adjustment_invoice(self):
         """
         Create an invoice, then create an adjustment invoice from it. Ensure that when generating the data dict,
