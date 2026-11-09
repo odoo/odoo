@@ -440,6 +440,7 @@
                         type="object"
                         class="oe_stat_button"
                         icon="payments"
+                        invisible="not transaction_count"
                         groups="account.group_account_invoice,base.group_no_one">
                         <field name="transaction_count" widget="statinfo" string="Payments"/>
                     </button>
