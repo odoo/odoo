@@ -322,6 +322,8 @@ class BusDispatcher(threading.Thread):
         ):
             cr.execute("listen imbus")
             cr.commit()
+            # Queue after the commit: a NOTIFY sent before it may be lost.
+            self._queue_all_topics()
             conn = cr._cnx
             sel.register(conn, selectors.EVENT_READ)
             while not stop_event.is_set():
@@ -344,14 +346,7 @@ class BusDispatcher(threading.Thread):
                             topic = self._topic_by_channel.get(channel)
                             if topic is None:
                                 continue
-                            if topic._state is DispatchState.IDLE:
-                                self._queue_topic(topic)
-                            elif topic._state is DispatchState.IN_FLIGHT:
-                                # Do not enqueue directly, otherwise two workers could
-                                # race to fetch the same topic and order/unicity wouldn't
-                                # be guaranteed.
-                                topic._state = DispatchState.DIRTY
-                            # DIRTY and QUEUED: stay in that state.
+                            self._notify_topic(topic)
 
     def run(self):
         self._run_with_retry(self._listener_loop, "Bus._listener_loop")
@@ -420,10 +415,7 @@ class BusDispatcher(threading.Thread):
                 # Not yet a full subscriber nor in the waiting room: put in the waiting
                 # room for catch-up.
                 topic._waiting_room[websocket] = last_fetched_id
-                if topic._state is DispatchState.IDLE:
-                    self._queue_topic(topic)
-                elif topic._state is DispatchState.IN_FLIGHT:
-                    topic._state = DispatchState.DIRTY
+                self._notify_topic(topic)
             for topic in current_topics:
                 if topic in next_topics:
                     continue
@@ -447,6 +439,29 @@ class BusDispatcher(threading.Thread):
                 lock = threading.Lock()
                 self._lock_by_dbname[dbname] = lock
             return lock
+
+    def _notify_topic(self, topic: ChannelTopic):
+        """Have the topic fetched. The caller must hold the lock of the topic's db."""
+        if topic._state is DispatchState.IDLE:
+            self._queue_topic(topic)
+        elif topic._state is DispatchState.IN_FLIGHT:
+            # Do not enqueue directly, otherwise two workers could race to fetch the
+            # same topic and order/unicity wouldn't be guaranteed.
+            topic._state = DispatchState.DIRTY
+        # DIRTY and QUEUED: stay in that state.
+
+    def _queue_all_topics(self):
+        """Notify every topic: catch up what was committed while the listener was not
+        listening. A NOTIFY lost for another reason (failed postcommit send, writer
+        killed after its commit) is not covered."""
+        topics_by_dbname = defaultdict(list)
+        for topic in list(self._topic_by_channel.values()):
+            topics_by_dbname[topic._dbname].append(topic)
+        for dbname, topics in topics_by_dbname.items():
+            with self._lock_for_db(dbname):
+                for topic in topics:
+                    if self._topic_by_channel.get(topic._channel) is topic:
+                        self._notify_topic(topic)
 
     def _queue_topic(self, topic: ChannelTopic):
         # Must be called with the dbname's lock held.

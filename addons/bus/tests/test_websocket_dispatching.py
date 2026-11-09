@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from threading import Event
+from unittest.mock import patch
 
 from freezegun import freeze_time
 
 from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.bus.bus_dispatcher import ChannelTopic
+from odoo.addons.bus.bus_dispatcher import BusDispatcher, ChannelTopic, DispatchState, dispatch
 
 
 class TestWebsocketDispatching(WebsocketCase):
@@ -73,3 +75,45 @@ class TestWebsocketDispatching(WebsocketCase):
         notifications = json.loads(client.recv())
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0]["message"]["type"], "channel_b_notification_NEW")
+
+    def test_catch_up_notifications_missed_while_not_listening(self):
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ["channel_A"], last=self.env["bus.bus"]._bus_last_id())
+        self.env["bus.bus"]._sendone("channel_A", "missed_notification", None)
+        # Create the bus.bus record without the postcommit NOTIFY.
+        self.env.cr.precommit.run()
+        dispatched = Event()
+        original_dispatch = BusDispatcher._dispatch
+
+        def _mocked_dispatch(self, topics, notifications):
+            original_dispatch(self, topics, notifications)
+            dispatched.set()
+
+        with patch.object(BusDispatcher, "_dispatch", _mocked_dispatch):
+            dispatch._queue_all_topics()
+            self.assertTrue(self.wait_for_event(dispatched))
+        notifications = json.loads(websocket.recv())
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(notifications[0]["message"]["type"], "missed_notification")
+
+    def test_queue_all_topics_ignores_dropped_topics(self):
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ["channel_A"], last=self.env["bus.bus"]._bus_last_id())
+        topic = next(t for c, t in dispatch._topic_by_channel.items() if c[1] == "channel_A")
+        websocket.close()
+        self.wait_remaining_websocket_connections()
+        for _ in range(50):
+            if topic._channel not in dispatch._topic_by_channel:
+                break
+            self.sleep(0.1)
+        self.assertNotIn(topic._channel, dispatch._topic_by_channel)
+        with patch.object(BusDispatcher, "_queue_topic") as queue_topic:
+            dispatch._queue_all_topics()
+        queue_topic.assert_not_called()
+
+    def test_queue_all_topics_marks_in_flight_topics_dirty(self):
+        topic = ChannelTopic((self.env.cr.dbname, "in_flight"), 0)
+        topic._state = DispatchState.IN_FLIGHT
+        with patch.dict(dispatch._topic_by_channel, {topic._channel: topic}):
+            dispatch._queue_all_topics()
+        self.assertIs(topic._state, DispatchState.DIRTY)
