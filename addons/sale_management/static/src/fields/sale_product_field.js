@@ -16,7 +16,7 @@ patch(SaleOrderLineProductField.prototype, {
 
     _prepareNewLineData(line, product) {
         const data = super._prepareNewLineData(line, product);
-        if (this.env.shouldCollapse(line, 'is_optional')) {
+        if (this.env.shouldCollapse?.(line, 'is_optional')) {
             data.quantity = 0;
         }
         return data;
