@@ -2865,6 +2865,7 @@ export class Model extends Array {
         order,
         auto_unfold,
         opening_info,
+        unfold_default_group,
         unfold_read_specification,
         unfold_read_default_limit,
         groupby_read_specification
@@ -2879,6 +2880,7 @@ export class Model extends Array {
             "order",
             "auto_unfold",
             "opening_info",
+            "unfold_default_group",
             "unfold_read_specification",
             "unfold_read_default_limit",
             "groupby_read_specification"
@@ -2892,6 +2894,7 @@ export class Model extends Array {
             order,
             auto_unfold,
             opening_info,
+            unfold_default_group,
             unfold_read_specification,
             unfold_read_default_limit,
             groupby_read_specification,
@@ -2922,6 +2925,7 @@ export class Model extends Array {
             order,
             opening_info,
             auto_unfold,
+            unfold_default_group,
             {
                 specification: unfold_read_specification,
                 offset: 0,
@@ -2942,6 +2946,7 @@ export class Model extends Array {
         order,
         infoOpening,
         autoUnfold,
+        unfoldDefaultGroup,
         webSearchArgs,
         groupbyReadSpecification
     ) {
@@ -2994,7 +2999,7 @@ export class Model extends Array {
                 argsRead.offset = groupInfo.offset;
                 extraDomain = groupInfo.progressbar_domain || [];
                 subgroupOpeningInfo = groupInfo.groups;
-            } else if ((!foldInfo && !autoUnfold) || fold || (field.relation && !groupbyValue)) {
+            } else if ((!foldInfo && !autoUnfold) || fold || (field.relation && !groupbyValue && !unfoldDefaultGroup)) {
                 continue;
             }
 
@@ -3033,6 +3038,7 @@ export class Model extends Array {
                     order,
                     subgroupOpeningInfo,
                     0,
+                    false,
                     webSearchArgs,
                     groupbyReadSpecification
                 );
@@ -3385,6 +3391,44 @@ export class Model extends Array {
                     }
                 }
                 criterion = [criterion[0], "in", Array.from(childIds)];
+            } else if (criterion[1] === "parent_of") {
+                const [fieldName, , value] = criterion;
+                const field = this._fields[fieldName];
+                if (fieldName !== "id" && !field?.relation) {
+                    throw new Error(`Cannot execute parent_of for ${fieldName}, works only for relational fields`);
+                }
+                const comodel = field?.relation ? this.env[field.relation] : this;
+                const parentField =
+                    comodel._name === this._name && fieldName !== "id" ? fieldName : comodel._parent_name;
+                const activeTest = field?.type !== "many2one";
+
+                const values = [value].flat();
+                let ids = values.filter((v) => typeof v === "number");
+                const names = values.filter((v) => typeof v === "string");
+                const searchDomain = [];
+                if (field?.type === "many2many" && ids.length) {
+                    searchDomain.push(["id", "in", ids]);
+                    ids = [];
+                }
+                for (const name of names) {
+                    searchDomain.push(["display_name", "ilike", name]);
+                }
+                if (searchDomain.length) {
+                    const orDomain = [...Array(searchDomain.length - 1).fill("|"), ...searchDomain];
+                    ids.push(...comodel._filter(orDomain, { active_test: activeTest }).map((r) => r.id));
+                }
+
+                const recordsById = new Map(comodel.map((record) => [record.id, record]));
+                const parentIds = new Set();
+                while (ids.length) {
+                    ids = ids.filter((id) => id && !parentIds.has(id));
+                    ids.forEach((id) => parentIds.add(id));
+                    ids = ids.flatMap((id) => [recordsById.get(id)?.[parentField]].flat()).filter(Boolean);
+                }
+                const resultField = fieldName === "id" || (field?.type === "many2one" && comodel._name === this._name)
+                    ? "id"
+                    : fieldName;
+                criterion = [resultField, "in", [...parentIds]];
             }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
             const splitCriterion0 = safeSplit(criterion[0], ".");

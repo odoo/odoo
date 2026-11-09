@@ -204,3 +204,137 @@ describe("level 1", () => {
         });
     });
 });
+
+describe("parent_of operator", () => {
+    class PofCompany extends models.Model {
+        _name = "pof.company";
+
+        name = fields.Char();
+        parent_id = fields.Many2one({ relation: "pof.company" });
+
+        _records = [
+            { id: 1, name: "Main", parent_id: false },
+            { id: 2, name: "Branch", parent_id: 1 },
+            { id: 3, name: "Other", parent_id: false },
+        ];
+    }
+
+    class PofTag extends models.Model {
+        _name = "pof.tag";
+
+        name = fields.Char();
+        active = fields.Boolean({ default: true });
+        parent_id = fields.Many2one({ relation: "pof.tag" });
+
+        _records = [
+            { id: 1, name: "Tag root", active: true, parent_id: false },
+            { id: 2, name: "Tag child", active: true, parent_id: 1 },
+            { id: 3, name: "Tag archived", active: false, parent_id: 1 },
+        ];
+    }
+
+    class PofNode extends models.Model {
+        _name = "pof.node";
+
+        name = fields.Char();
+        parent_id = fields.Many2one({ relation: "pof.node" });
+        child_ids = fields.One2many({ relation: "pof.node", relation_field: "parent_id" });
+        coach_id = fields.Many2one({ relation: "pof.node" });
+        company_id = fields.Many2one({ relation: "pof.company" });
+        tag_ids = fields.Many2many({ relation: "pof.tag" });
+
+        _records = [
+            // Root -> Mid -> Leaf (via parent_id)
+            { id: 1, name: "Root", parent_id: false, child_ids: [2], company_id: 1, tag_ids: [2] },
+            { id: 2, name: "Mid", parent_id: 1, child_ids: [3], coach_id: 4, company_id: 2 },
+            { id: 3, name: "Leaf", parent_id: 2, child_ids: [], company_id: 3, tag_ids: [3] },
+            // Mid -> Coach -> Head coach (via coach_id)
+            { id: 4, name: "Coach", parent_id: false, child_ids: [], coach_id: 5 },
+            { id: 5, name: "Head coach", parent_id: false, child_ids: [] },
+            // Cycle and self parent
+            { id: 6, name: "Cycle A", parent_id: 7, child_ids: [7] },
+            { id: 7, name: "Cycle B", parent_id: 6, child_ids: [6] },
+            { id: 8, name: "Self", parent_id: 8, child_ids: [8] },
+        ];
+    }
+
+    defineModels([PofCompany, PofTag, PofNode]);
+
+    const search = (domain) => MockServer.env["pof.node"].search(domain);
+
+    test("same model many2one: the record and all its ancestors, on id", async () => {
+        await makeMockServer();
+        expect(search([["parent_id", "parent_of", 3]])).toEqual([1, 2, 3]);
+        expect(search([["parent_id", "parent_of", 1]])).toEqual([1]);
+    });
+
+    test("'id' uses the model _parent_name", async () => {
+        await makeMockServer();
+        expect(search([["id", "parent_of", 3]])).toEqual([1, 2, 3]);
+    });
+
+    test("another self many2one follows that field, not _parent_name", async () => {
+        await makeMockServer();
+        expect(search([["coach_id", "parent_of", 2]])).toEqual([2, 4, 5]);
+    });
+
+    test("a list of ids merges the ancestors of each id", async () => {
+        await makeMockServer();
+        expect(search([["parent_id", "parent_of", [3, 4]]])).toEqual([1, 2, 3, 4]);
+    });
+
+    test("cycles and self parents do not loop", async () => {
+        await makeMockServer();
+        expect(search([["parent_id", "parent_of", 6]])).toEqual([6, 7]);
+        expect(search([["parent_id", "parent_of", 8]])).toEqual([8]);
+    });
+
+    test("false or an empty list matches nothing", async () => {
+        await makeMockServer();
+        expect(search([["parent_id", "parent_of", false]])).toEqual([]);
+        expect(search([["parent_id", "parent_of", []]])).toEqual([]);
+    });
+
+    test("a string value is resolved by display_name ilike", async () => {
+        await makeMockServer();
+        expect(search([["parent_id", "parent_of", "mid"]])).toEqual([1, 2]);
+        expect(search([["parent_id", "parent_of", "unknown"]])).toEqual([]);
+    });
+
+    test("many2one to another model walks the comodel and keeps the field", async () => {
+        await makeMockServer();
+        // Branch(2) -> Main(1): nodes whose company is Main or Branch
+        expect(search([["company_id", "parent_of", 2]])).toEqual([1, 2]);
+        // Other(3) has no parent
+        expect(search([["company_id", "parent_of", 3]])).toEqual([3]);
+    });
+
+    test("many2many ids are searched first (archived ones are dropped)", async () => {
+        await makeMockServer();
+        // Tag child(2) -> Tag root(1): nodes tagged with 1 or 2
+        expect(search([["tag_ids", "parent_of", 2]])).toEqual([1]);
+        // Tag archived(3) is filtered out by the active test, as on the server
+        expect(search([["tag_ids", "parent_of", 3]])).toEqual([]);
+    });
+
+    test("self one2many follows the one2many and keeps the field", async () => {
+        await makeMockServer();
+        // walk child_ids from Root: {1, 2, 3}, then nodes whose child_ids intersect it
+        expect(search([["child_ids", "parent_of", 1]])).toEqual([1, 2]);
+    });
+
+    test("can be negated", async () => {
+        await makeMockServer();
+        expect(search([["company_id", "!=", false], "!", ["parent_id", "parent_of", 3]])).toEqual(
+            []
+        );
+        expect(search(["!", ["parent_id", "parent_of", 2]])).toEqual([3, 4, 5, 6, 7, 8]);
+    });
+
+    test("non relational field throws, as on the server", async () => {
+        await makeMockServer();
+        expect(() => search([["name", "parent_of", 1]])).toThrow(
+            "Cannot execute parent_of for name, works only for relational fields"
+        );
+    });
+});
