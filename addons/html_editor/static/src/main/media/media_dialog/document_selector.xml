@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.DocumentAttachment">
     <div class="o_existing_attachment_cell o_we_attachment_highlight card col-2 position-relative mb-2 p-2 opacity-trigger-hover"
-         t-att-class="{ o_we_attachment_selected: this.props.selected }">
+         t-att-class="{ 'o_we_active_wrapper o_we_attachment_selected': this.props.selected }">
         <RemoveButton remove="() => this.remove()"/>
         <div t-att-data-url="this.props.url" role="img" t-att-aria-label="this.props.name" t-att-title="this.props.name" t-att-data-mimetype="this.props.mimetype" class="o_image d-flex align-items-center justify-content-center"/>
         <button

@@ -19,7 +19,7 @@
                         class="font-icons-icon oi m-1 fs-2 p-3 cursor-pointer text-center"
                         t-att-data-icon="icon.dataIcon"
                         t-att-class="{
-                            o_we_attachment_selected: this.isIconSelected(icon, filled),
+                            'o_we_active_wrapper o_we_attachment_selected': this.isIconSelected(icon, filled),
                             'oi-filled': filled,
                         }"
                         t-on-click="() => this.onClickIcon(icon, filled)"/>

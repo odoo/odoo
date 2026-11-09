@@ -5,7 +5,7 @@
          t-att-class="{
             o_we_attachment_optimized: this.props.isOptimized,
             'o_loaded position-relative opacity-100': this.state.loaded,
-            o_we_attachment_selected: this.props.selected,
+            'o_we_active_wrapper o_we_attachment_selected': this.props.selected,
             'position-fixed': !this.state.loaded,
          }">
         <RemoveButton t-if="this.props.isRemovable" model="this.props.model" remove="() => this.remove()"/>

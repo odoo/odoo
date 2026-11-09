@@ -1,0 +1,23 @@
+/* Frame of the selected items: a ring, or a border with a check mark that the items place */
+.o_we_active_wrapper {
+    box-shadow: 0 0 0 3px var(--o-brand-primary);
+
+    &:not(.oi) {
+        border: 3px solid var(--o-brand-primary);
+        box-shadow: none;
+
+        &::before {
+            content: 'check';
+            position: absolute;
+            width: 19px;
+            height: 19px;
+            background-color: var(--o-brand-primary);
+            font-family: var(--o-ms-font-family);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            z-index: 1;
+            box-shadow: var(--box-shadow);
+        }
+    }
+}
