@@ -446,19 +446,3 @@ class BatchDownload(models.Model):
                 'status': {'code': ODOO_ERROR, 'description': "Odoo Error", 'details': [error]},
             }
         return not failed
-
-    def _check_batch_enabled(self):
-        if not self.env.company.l10n_pl_edi_batch_enabled:
-            raise UserError(self.env._("The KSeF batch download isn't enabled for this company."))
-
-    def action_trigger_check_status(self):
-        self._check_batch_enabled()
-        self.env.ref('l10n_pl_edi_batch.ir_cron_check_status').sudo()._trigger()
-
-    def action_trigger_download(self):
-        self._check_batch_enabled()
-        self.env.ref('l10n_pl_edi_batch.ir_cron_download').sudo()._trigger()
-
-    def action_trigger_import(self):
-        self._check_batch_enabled()
-        self.env.ref('l10n_pl_edi_batch.ir_cron_import').sudo()._trigger()
