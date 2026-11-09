@@ -100,16 +100,6 @@ $o-web-calendar-colors: o-build-web-calendar-colors();
 
 
 @for $i from 1 through length($o-web-calendar-colors) {
-    .modal.o_technical_modal.o_modal_full .modal-dialog .modal-content.o_calendar_color_#{$i - 1} {
-        .modal-header {
-            background-color: map-get(nth($o-web-calendar-colors, $i), "color-subtle");
-
-            .btn {
-                color: var(--o-bs-body-color);
-            }
-        }
-    }
-
     .o_calendar_popover.o_calendar_color_#{$i - 1} {
         $-calendar-colors-map: nth($o-web-calendar-colors, $i);
         .o_popover_header {
