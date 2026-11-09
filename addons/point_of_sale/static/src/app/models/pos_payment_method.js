@@ -39,10 +39,28 @@ export class PosPaymentMethod extends Base {
         return { status: true, message: "" };
     }
 
+    _getInProgressPayments() {
+        return this.models["pos.payment"].filter(
+            (payment) =>
+                payment.isProcessing() &&
+                payment.payment_method_id === this &&
+                !payment.pos_order_id?.finalized
+        );
+    }
+
     /**
-     * Called to check if a payment request can be sent for a given payment method and line.
+     * Called to check if a payment request can be sent for a given payment method, order and line.
      */
-    getPaymentInterfaceStates({ paymentline } = {}) {
+    getPaymentInterfaceStates({ paymentline, order } = {}) {
+        if (order) {
+            if (this._getInProgressPayments().length) {
+                return {
+                    status: false,
+                    message: _t("This payment method is currently in use."),
+                };
+            }
+            return this._checkOrder({ paymentline, order });
+        }
         const openOrder = this.models["pos.order"].filter((o) => !o.finalized);
         for (const order of openOrder) {
             const result = this._checkOrder({ order, paymentline });
