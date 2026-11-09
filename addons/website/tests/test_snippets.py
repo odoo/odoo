@@ -209,6 +209,9 @@ class TestSnippets(HttpCase):
     def test_shape_color_sync_with_theme_color(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'shape_color_sync_with_theme_color', login='admin')
 
+    def test_animate_option_preview_hover(self):
+        self.start_tour(self.env["website"].get_client_action_url("/", True), "animate_option_preview_hover", login="admin")
+
 
 @tagged('post_install', '-at_install', 'external', '-standard')
 class TestSnippetsExternal(HttpCase):
