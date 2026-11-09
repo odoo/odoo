@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.exceptions import AccessError
 from odoo.addons.mail.tools.discuss import Store
 
@@ -15,8 +15,8 @@ class CrmLead(models.Model):
         index="btree_not_null",
     )
 
-    @api.model_create_multi
-    def create(self, vals_list):
+    def _prepare_create_values(self, vals_list):
+        vals_list = super()._prepare_create_values(vals_list)
         origin_channel_ids = [
             vals["origin_channel_id"] for vals in vals_list if vals.get("origin_channel_id")
         ]
@@ -24,7 +24,7 @@ class CrmLead(models.Model):
             raise AccessError(
                 self.env._("You cannot create leads linked to channels you don't have access to.")
             )
-        return super().create(vals_list)
+        return vals_list
 
     def write(self, vals):
         if origin_channel_id := vals.get("origin_channel_id"):
