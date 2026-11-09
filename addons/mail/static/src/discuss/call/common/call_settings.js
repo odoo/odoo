@@ -1,4 +1,13 @@
-import { Component, signal, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillUnmount,
+    signal,
+    t,
+    useListener,
+    usePlugin,
+    useProps,
+    xml,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -35,6 +44,7 @@ export class CallSettings extends Component {
         this.pttExtService = usePlugin(PttExtensionPlugin);
         useListener(window, "keydown", (ev) => this._onKeyDown(ev), { capture: true });
         useListener(window, "keyup", (ev) => this._onKeyUp(ev), { capture: true });
+        onWillUnmount(() => (this.store.settings.isRegisteringKey = false));
         this.isMobileOS = isMobileOS;
     }
 
