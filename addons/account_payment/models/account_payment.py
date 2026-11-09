@@ -12,12 +12,14 @@ class AccountPayment(models.Model):
         string="Payment Transaction",
         comodel_name='payment.transaction',
         readonly=True,
+        copy=False,
         auto_join=True,  # No access rule bypass since access to payments means access to txs too
     )
     payment_token_id = fields.Many2one(
         string="Saved Payment Token", comodel_name='payment.token', domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
+        copy=False,
         help="Note that only tokens from providers allowing to capture the amount are available.")
     amount_available_for_refund = fields.Monetary(compute='_compute_amount_available_for_refund')
 
