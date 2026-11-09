@@ -20,9 +20,9 @@
                     </t>
                 </t>
             </t>
-            <span t-if="this.search.searchTerm and !this.search.loading and !this.hasFilteredMembers(this.categories())" class="mx-2 mt-2 text-muted">No members found.</span>
+            <span t-if="this.search.searchTerm() and !this.search.loading() and !this.hasFilteredMembers(this.categories())" class="mx-2 mt-2 text-muted">No members found.</span>
             <span t-if="this.isSearchResultCapped" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.searchResultCapHint"/>
-            <t t-if="!this.search.searchTerm">
+            <t t-if="!this.search.searchTerm()">
                 <span t-if="this.props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
                 <span t-if="this.props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="this.props.channel.unknownMembersCount"/> other members.</span>
                 <div t-if="!this.props.channel.areAllMembersLoaded" class="mx-2 my-1">

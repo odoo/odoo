@@ -1,7 +1,7 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
-import { useSearch } from "@mail/utils/common/hooks";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
-import { computed, useEffect } from "@odoo/owl";
+import { computed, providePlugins, useEffect, usePlugin } from "@odoo/owl";
 
 import { normalize } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
@@ -23,11 +23,11 @@ const messagingMenuPatch = {
         });
         this.channels = computed(() => {
             if (this.state().searchTerm) {
-                return this.channelSearch.results;
+                return this.channelSearch.results();
             }
             return this.filteredChannels();
         });
-        this.channelSearch = useSearch({
+        providePlugins([SearchStatePlugin], {
             fetch: (searchTerm) =>
                 this.state().activeTab.loadMore({
                     filter: this.state().selectedFilter,
@@ -40,9 +40,10 @@ const messagingMenuPatch = {
                 ),
             deps: () => [this.filteredChannels()],
         });
+        this.channelSearch = usePlugin(SearchStatePlugin);
         useEffect(() => {
             if (this.state().activeTab.recordType === "discuss.channel") {
-                this.channelSearch.searchTerm = this.state().searchTerm;
+                this.channelSearch.searchTerm.set(this.state().searchTerm);
             }
         });
         // Bound once so `onClickChannel` is a stable (useProps.static) handler.

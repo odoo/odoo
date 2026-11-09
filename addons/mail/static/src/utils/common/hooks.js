@@ -841,17 +841,6 @@ export class SearchState {
 }
 
 /**
- * `run({ skipFetch: true })` re-applies the filter without re-fetching,
- * e.g. after the upstream data was mutated locally.
- *
- * @param {ConstructorParameters<typeof SearchState>[0]} [options]
- * @returns {SearchState}
- */
-export function useSearch(options = {}) {
-    return proxy(new SearchState(options));
-}
-
-/**
  * Runs the calls one after the other, skipping the queued call a newer one replaces. The
  * signal given to a call is aborted as soon as a newer call is made.
  */
