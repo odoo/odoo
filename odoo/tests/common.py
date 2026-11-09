@@ -82,7 +82,8 @@ from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml_utils import _validate_xml
 
 import odoo.addons.base
-from . import case, test_cursor
+from . import case, result, test_cursor
+from .. import sql_db
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
@@ -678,6 +679,26 @@ class BaseCase(case.TestCase):
     def cursor(self):
         return self.registry.cursor()
 
+    @contextmanager
+    def collect_stats(self, name):
+        """Records time/queries spent in the block as a stats leaf under the
+        current test, e.g. ``self.collect_stats('browser_js')``. `name=None`
+        disables it (for a caller whose time is already accounted elsewhere).
+        """
+        report = self.registry._assertion_report
+        if name is None or not report or not result.stats_logger.isEnabledFor(logging.DEBUG):
+            yield
+            return
+        time_start = real_time()
+        queries_start = sql_db.sql_counter
+        try:
+            yield
+        finally:
+            report.sub_stats[f'{result.test_key(self.id())}.{name}'] += result.Stat(
+                time=real_time() - time_start,
+                queries=sql_db.sql_counter - queries_start,
+            )
+
     @classmethod
     @contextmanager
     def allow_model_create(cls, *model_names: str):
@@ -1214,6 +1235,30 @@ class CrossModule(case.TestCase):
         result['module'] = None
         return result
 
+    def setUp(self):
+        super().setUp()
+        self._module_stats = defaultdict(result.Stat)
+
+    def get_stats_entries(self, stat):
+        # Split this test's stats across the modules
+        if not hasattr(self, '_module_stats') or not self._module_stats:
+            return super().get_stats_entries(stat)
+        module_stats = self._module_stats
+        accounted = sum(module_stats.values(), result.Stat())
+        entries = {
+            self._get_module_stats_id(module): module_stat
+            for module, module_stat in module_stats.items()
+        }
+        entries[self.id()] = result.Stat(
+            time=max(0.0, stat.time - accounted.time),
+            queries=max(0, stat.queries - accounted.queries),
+        )
+        return entries
+
+    def _get_module_stats_id(self, module):
+        _, _, suffix = self.id().partition('.tests.')
+        return f'odoo.addons.{module}.tests.{suffix}'
+
 
 class Like:
     """
@@ -1715,6 +1760,7 @@ class ChromeBrowser:
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
+        self.console_hook = None
         self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
@@ -2158,6 +2204,8 @@ class ChromeBrowser:
         _logger = self._logger.getChild('browser')
         if self._result.done() and IGNORED_MSGS(message):
             log_type = 'dir'
+        if self.console_hook:
+            self.console_hook(message)
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
             "%s%s",
@@ -2326,10 +2374,11 @@ which leads to stray network requests and inconsistencies."""
         self._logger.info('Ready code last try result: %s', result)
         return False
 
-    def _wait_code_ok(self, code, timeout, error_checker=None):
+    def _wait_code_ok(self, code, timeout, error_checker=None, console_hook=None):
         if timeout:
             timeout *= self.throttling_factor
         self.error_checker = error_checker
+        self.console_hook = console_hook
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
         res = self._websocket_request('Runtime.evaluate', params={
@@ -2955,7 +3004,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, console_hook=None, stat_name='browser_js', **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2976,6 +3025,9 @@ class HttpCase(TransactionCase):
         :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
+        :param console_hook: function called with every console message received from the browser
+            (regardless of its level), e.g. to collect stats out of the test's own logging
+        :param string stat_name: `collect_stats` leaf name for this call
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -2993,7 +3045,7 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
-        with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
+        with self.collect_stats(stat_name), self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.
@@ -3053,7 +3105,7 @@ class HttpCase(TransactionCase):
 
             error = None
             try:
-                browser._wait_code_ok(code, timeout, error_checker=error_checker)
+                browser._wait_code_ok(code, timeout, error_checker=error_checker, console_hook=console_hook)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
@@ -3082,7 +3134,10 @@ class HttpCase(TransactionCase):
         with patch.object(Users, 'tour_enabled', False),\
                 patch.object(Users, '_post_model_setup__', _post_model_setup__),\
                 patch.object(Users, '_compute_tour_enabled', lambda _: None):
-            self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
+            self.browser_js(
+                url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded",
+                stat_name=f'start_tour.{tour_name}', **kwargs,
+            )
 
     def profile(self, **kwargs):
         """
