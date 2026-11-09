@@ -556,10 +556,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
-            values['markup_data_json'] = json_scriptsafe.dumps([
+            values['markup_data_json'] = json_scriptsafe.dumps(self._combine_markup_data([
                 website._prepare_ecommerce_store_markup_data(),
                 self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
-            ], indent=2)
+            ]), indent=2)
         values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
@@ -886,7 +886,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
-            'markup_data_json': json_scriptsafe.dumps(markup_data, indent=2),
+            'markup_data_json': json_scriptsafe.dumps(self._combine_markup_data(markup_data), indent=2),
             'shop_path': SHOP_PATH,
         }
 
@@ -2072,4 +2072,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return {
             int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
             for pair in attribute_value_pairs
+        }
+
+    @staticmethod
+    def _combine_markup_data(markup_data_list):
+        return {
+            '@context': 'https://schema.org',
+            '@graph': markup_data_list,
         }
