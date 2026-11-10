@@ -8,25 +8,21 @@ class ResConfigSettings(models.TransientModel):
         'Default Alias Name for Expenses',
         compute='_compute_hr_expense_alias_prefix',
         store=True,
-        readonly=False)
+        readonly=False,
+    )
     hr_expense_alias_domain_id = fields.Many2one(
         comodel_name='mail.alias.domain',
         compute='_compute_hr_expense_alias_domain_id',
         inverse='_inverse_hr_expense_alias_domain_id',
-        readonly=False)
-    hr_expense_use_mailgateway = fields.Boolean(string='Let your employees record expenses by email',
-                                             config_parameter='hr_expense.use_mailgateway')
+        readonly=False,
+    )
+    hr_expense_use_mailgateway = fields.Boolean(
+        string='Let your employees record expenses by email',
+        config_parameter='hr_expense.use_mailgateway',
+    )
     module_hr_payroll_expense = fields.Boolean(string='Reimburse Expenses in Payslip')
     module_hr_expense_extract = fields.Boolean(string='Send bills to OCR to generate expenses')
     module_hr_expense_stripe = fields.Boolean(string='Link your Stripe issuing account to manage company credit cards for your employees through Odoo')
-    expense_journal_id = fields.Many2one('account.journal', related='company_id.expense_journal_id', readonly=False, check_company=True, domain="[('type', '=', 'purchase')]")
-    company_expense_allowed_payment_method_line_ids = fields.Many2many(
-        comodel_name='account.payment.method.line',
-        check_company=True,
-        related='company_id.company_expense_allowed_payment_method_line_ids',
-        readonly=False,
-        domain="[('payment_type', '=', 'outbound'), ('journal_id.active', '=', True)]",
-    )
 
     @api.model
     def get_values(self):

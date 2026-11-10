@@ -7,10 +7,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="expense_id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="product_has_cost" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- Currency of the monetary fields -->
+                        <field name="expense_id" invisible="1"/> <!-- Default of the new lines -->
+                        <field name="company_id" invisible="1"/> <!-- Company-dependent domains -->
+                        <field name="product_has_cost" invisible="1"/> <!-- Readonly condition of the total -->
                         <group>
                             <field name="name"/>
                             <field name="product_id"

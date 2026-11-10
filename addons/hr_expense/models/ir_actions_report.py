@@ -131,8 +131,6 @@ class IrActionsReport(models.Model):
         date = max(expenses_with_dates.mapped('date')) if expenses_with_dates else fields.Date.context_today(self)
 
         return {
-            'untaxed_amount': company_currency.format(sum(expenses.mapped('untaxed_amount'), start=0)),
-            'tax_amount': company_currency.format(sum(expenses.mapped('tax_amount'), start=0)),
             'total_amount': company_currency.format(sum(expenses.mapped('total_amount'), start=0)),
             'date': format_date(self.env, date, lang_code=self.env.user.lang),
             'has_foreign_currency': bool(expenses.currency_id - company_currency),

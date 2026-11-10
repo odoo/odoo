@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.account_hr_expense.tests.common import TestAccountExpenseCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestExpenseAnalytics(TestExpenseCommon):
+class TestExpenseAnalytics(TestAccountExpenseCommon):
 
     def test_company_paid_expense_analytic_on_pnl_line_only(self):
         """ Tests that the analytic distribution must only be on the P&L (expense) line """

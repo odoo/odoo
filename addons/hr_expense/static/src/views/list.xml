@@ -11,6 +11,9 @@
             <button title="Refuse" t-if="this.displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_refuse')">
                 Refuse
             </button>
+            <button t-if="this.displayPay()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_pay')">
+                Pay
+            </button>
         </xpath>
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
             <input type="file" name="ufile" class="d-none" t-ref="this.fileInput" multiple="1" accept="*" t-on-change="this.onChangeFileInput"/>
