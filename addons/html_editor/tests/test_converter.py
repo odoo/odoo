@@ -223,3 +223,23 @@ class TestConvertBack(common.TransactionCase):
             "Bar",
             "element edition should have been change the m2o id"
         )
+
+
+class TestHtmlSanitizePreventEdition(common.TransactionCase):
+    def test_sanitize_prevent_edition(self):
+        """ A user who cannot bypass the sanitizer cannot edit a field whose
+        content was saved by a user who can, as part of it would be lost. """
+        self.patch(self.env['html_editor.converter.test']._fields['html'], 'sanitize_overridable', True)
+        user = common.new_test_user(self.env, login='restricted', groups='base.group_user')
+        record = self.env['html_editor.converter.test'].create({'html': '<p>Hello</p>'})
+
+        def render_as_user():
+            # su=True only grants read access, the check is done for the user
+            env = self.env(user=user, su=True, context={'inherit_branding': True})
+            template = etree.fromstring('<div t-field="record.html"/>')
+            return html.fromstring(env['ir.qweb']._render(template, {'record': record.with_env(env)}))
+
+        self.assertIsNone(render_as_user().get('data-oe-sanitize-prevent-edition'))
+
+        record.with_user(self.env.ref('base.user_admin')).html = '<p>Hello</p><script>alert(1)</script>'
+        self.assertEqual(render_as_user().get('data-oe-sanitize-prevent-edition'), '1')
