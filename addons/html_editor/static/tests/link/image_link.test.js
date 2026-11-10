@@ -47,7 +47,7 @@ test("can remove link from an inline image", async () => {
     await click("button[name='unlink']");
     await animationFrame();
     expect(cleanLinkArtifacts(getContent(el))).toBe(
-        `<p>ab<a href="http://test.test/">cd[</a><img src="${base64Img}"><a href="http://test.test/">]ef</a>g</p>`
+        `<p>ab<a href="http://test.test/">cd[</a><img src="${base64Img}">]<a href="http://test.test/">ef</a>g</p>`
     );
     await expectElementCount(".o-we-linkpopover", 0);
 });
