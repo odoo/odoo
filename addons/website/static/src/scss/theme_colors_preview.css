@@ -1,3 +1,28 @@
 .o_website_theme_colors_preview_label {
     font-family: var(--o-system-fonts);
 }
+
+.o_website_theme_colors_preview_low_contrast {
+    position: relative;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ffc107 !important;
+}
+
+/* Pinned to the corner of the flagged element so the preview layout does not move. */
+.o_website_theme_colors_preview_contrast_warning {
+    position: absolute;
+    top: -0.65rem;
+    inset-inline-end: -0.65rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: #ffc107;
+    color: #000000;
+    font-size: 0.65rem;
+    cursor: pointer;
+}
