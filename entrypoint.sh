@@ -72,48 +72,81 @@ try:
         cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_act_window';\")
         has_act_window = bool(cur.fetchone())
 
+        # Ensure primary keys exist for tables with 'id' column
+        try:
+            cur.execute(\"\"\"
+                SELECT c.table_name
+                FROM information_schema.columns c
+                JOIN information_schema.tables t ON c.table_name = t.table_name AND c.table_schema = t.table_schema
+                LEFT JOIN information_schema.table_constraints tc 
+                    ON c.table_name = tc.table_name 
+                    AND c.table_schema = tc.table_schema 
+                    AND tc.constraint_type = 'PRIMARY KEY'
+                WHERE c.table_schema = 'public' 
+                  AND t.table_type = 'BASE TABLE'
+                  AND c.column_name = 'id'
+                  AND tc.constraint_name IS NULL;
+            \"\"\")
+            for (tbl,) in cur.fetchall():
+                try:
+                    cur.execute(f'ALTER TABLE \"{tbl}\" ADD CONSTRAINT \"{tbl}_pkey\" PRIMARY KEY (id);')
+                    conn.commit()
+                except Exception:
+                    conn.rollback()
+        except Exception:
+            conn.rollback()
+
         # Ensure website_visitor unique constraint exists for ON CONFLICT (access_token)
         cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='website_visitor';\")
         if cur.fetchone():
             cur.execute(\"SELECT 1 FROM pg_constraint WHERE conname = 'website_visitor_access_token_unique';\")
             if not cur.fetchone():
-                cur.execute(\"\"\"
-                    DELETE FROM website_visitor_website_track
-                    WHERE visitor_id IN (
-                        SELECT id FROM website_visitor
+                try:
+                    cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='website_track';\")
+                    if cur.fetchone():
+                        cur.execute(\"\"\"
+                            DELETE FROM website_track
+                            WHERE visitor_id IN (
+                                SELECT id FROM website_visitor
+                                WHERE id NOT IN (
+                                    SELECT MAX(id) FROM website_visitor GROUP BY access_token
+                                )
+                            );
+                        \"\"\")
+                    cur.execute(\"\"\"
+                        DELETE FROM website_visitor
                         WHERE id NOT IN (
                             SELECT MAX(id) FROM website_visitor GROUP BY access_token
-                        )
-                    );
-                    DELETE FROM website_visitor
-                    WHERE id NOT IN (
-                        SELECT MAX(id) FROM website_visitor GROUP BY access_token
-                    );
-                    CREATE UNIQUE INDEX IF NOT EXISTS website_visitor_access_token_unique
-                    ON website_visitor (access_token);
-                \"\"\")
-                cur.execute(\"\"\"
-                    DO \$\$
-                    BEGIN
-                        IF NOT EXISTS (
-                            SELECT 1 FROM pg_constraint WHERE conname = 'website_visitor_access_token_unique'
-                        ) THEN
-                            ALTER TABLE website_visitor
-                            ADD CONSTRAINT website_visitor_access_token_unique
-                            UNIQUE USING INDEX website_visitor_access_token_unique;
-                        END IF;
-                    END \$\$;
-                \"\"\")
-                conn.commit()
+                        );
+                        CREATE UNIQUE INDEX IF NOT EXISTS website_visitor_access_token_unique
+                        ON website_visitor (access_token);
+                    \"\"\")
+                    cur.execute(\"\"\"
+                        DO \$\$
+                        BEGIN
+                            IF NOT EXISTS (
+                                SELECT 1 FROM pg_constraint WHERE conname = 'website_visitor_access_token_unique'
+                            ) THEN
+                                ALTER TABLE website_visitor
+                                ADD CONSTRAINT website_visitor_access_token_unique
+                                UNIQUE USING INDEX website_visitor_access_token_unique;
+                            END IF;
+                        END \$\$;
+                    \"\"\")
+                    conn.commit()
+                except Exception as ce:
+                    conn.rollback()
+                    sys.stderr.write(f'website_visitor constraint warning: {ce}\n')
     conn.close()
 
     if not has_act_window:
         print('1')
 except Exception as e:
     sys.stderr.write(f'Database inspection warning: {e}\n')
-" 2>/dev/null || true)
+" || true)
 fi
 
+# If output was '1', trigger auto-init
 if [ "$AUTO_INIT" = "1" ]; then
     echo "=========================================================="
     echo " Notice: Core table 'ir_act_window' does not exist in database '${DB_NAME}'."
