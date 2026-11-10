@@ -2774,24 +2774,14 @@ export class PosStore extends WithLazyGetterTrap {
         const results = [];
         const searchWord = this.searchProductWord.trim();
         const byCateg = this.models["product.template"].toRaw().getAllBy("pos_categ_ids");
-        const selectedCategoryIds = !this.selectedCategory
-            ? this.models["pos.category"].map((c) => c.id)
-            : this.selectedCategory.getAllChildren().map((c) => c.id);
-
-        // Sorting in place the categories according to their sequence in the database
-        selectedCategoryIds.sort((a, b) => {
-            const categA = this.models["pos.category"].get(a);
-            const categB = this.models["pos.category"].get(b);
-
-            // All category with a parent will be at the end
-            if (categA.parent_id && !categB.parent_id) {
-                return 1;
-            } else if (!categA.parent_id && categB.parent_id) {
-                return -1;
-            }
-
-            return categA.sequence - categB.sequence;
-        });
+        const rootCategories = this.selectedCategory
+            ? [this.selectedCategory]
+            : this.models["pos.category"]
+                  .filter((c) => !c.parent_id)
+                  .sort((a, b) => a.sequence - b.sequence);
+        const selectedCategoryIds = rootCategories.flatMap((c) =>
+            c.getAllChildren().map((child) => child.id)
+        );
 
         if (!this.selectedCategory) {
             // In case of no category selected, we want to display products without category in

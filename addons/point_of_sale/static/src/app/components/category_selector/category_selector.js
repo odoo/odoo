@@ -14,9 +14,9 @@ export class CategorySelector extends Component {
     getCategoriesList(list, allParents, depth) {
         const categoriesList = [...list];
         list.forEach((item) => {
-            if (item.id === allParents[depth]?.id && item.child_ids?.length) {
+            if (item.id === allParents[depth]?.id && item.children.length) {
                 categoriesList.push(
-                    ...this.getCategoriesList(item.child_ids, allParents, depth + 1)
+                    ...this.getCategoriesList(item.children, allParents, depth + 1)
                 );
             }
         });
@@ -55,7 +55,7 @@ export class CategorySelector extends Component {
     }
 
     getChildCategories(selectedCategory) {
-        return selectedCategory ? [...selectedCategory.child_ids] : this.pos.rootCategories;
+        return selectedCategory ? selectedCategory.children : this.pos.rootCategories;
     }
 
     getAllSelected() {
