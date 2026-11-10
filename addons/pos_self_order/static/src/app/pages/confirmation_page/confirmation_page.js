@@ -77,6 +77,15 @@ export class ConfirmationPage extends Component {
                 this.selfOrder.config.self_ordering_pay_after === "each" &&
                 order.state !== "paid")
         ) {
+            const url = new URL(location.href);
+            if (order && url.hash === "#reschedule") {
+                // Back from the payment page because the slot is no longer available
+                url.hash = "";
+                history.replaceState(history.state, "", url);
+                this.selfOrder.rescheduleSlot = true;
+                this.router.navigate("cart");
+                return;
+            }
             this.router.navigate("default");
             return;
         }

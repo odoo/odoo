@@ -9,6 +9,7 @@ import { getDisplayDateInfo } from "@point_of_sale/utils";
  *
  * @props title: string
  * @props subtitle: string
+ * @props isError: boolean, display the subtitle as an error
  * @props close: function
  * @props getPayload: function
  * @props options: {
@@ -32,6 +33,7 @@ export class PillsSelectionPopup extends Component {
         options: t.object(),
         title: t.string(),
         subtitle: t.string(),
+        isError: t.boolean().optional(false),
         close: t.function(),
         getPayload: t.function(),
         selectionType: t.string(),

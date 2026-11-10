@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, proxy, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
@@ -58,6 +58,14 @@ export class CartPage extends Component {
         );
         this.isCheckout =
             !history.state?.fromLanding || this.selfOrder.config.self_ordering_pay_after === "each";
+        onMounted(() => {
+            if (this.selfOrder.rescheduleSlot) {
+                // Back from the payment page because the slot is no longer available
+                this.selfOrder.rescheduleSlot = false;
+                this.selfOrder.currentOrder.preset_time = false;
+                this.pay({ slotUnavailable: true });
+            }
+        });
     }
 
     onClickBack() {
@@ -427,7 +435,7 @@ export class CartPage extends Component {
         return !lastChange ? line.qty : line.getPendingQtyDelta();
     }
 
-    async pay() {
+    async pay({ slotUnavailable = false } = {}) {
         const presets = this.selfOrder.models["pos.preset"].getAll();
         const config = this.selfOrder.config;
         const type = config.self_ordering_mode;
@@ -458,6 +466,22 @@ export class CartPage extends Component {
         }
 
         const order = this.selfOrder.currentOrder;
+        let slotsSynced = false;
+
+        // Reset the preset time if the slot is no longer available
+        if (
+            useTiming &&
+            !isTableService &&
+            order.preset_time &&
+            config.self_ordering_pay_after === "each"
+        ) {
+            await this.selfOrder.syncPresetSlotAvaibility(order.preset_id);
+            slotsSynced = true;
+            if (this.isPresetSlotFull(order)) {
+                order.preset_time = false;
+                slotUnavailable = true;
+            }
+        }
         const partner = order.partner_id || {};
         const time = order.preset_time ? order.preset_time.toSQL() : null;
         const isValidRequiredInfo = this.selfOrder.isValidSelection(time, {
@@ -477,17 +501,25 @@ export class CartPage extends Component {
 
             // Show timing selection popup only if preset uses timing
             if (useTiming) {
-                await this.selfOrder.syncPresetSlotAvaibility(order.preset_id);
+                if (!slotsSynced) {
+                    await this.selfOrder.syncPresetSlotAvaibility(order.preset_id);
+                }
                 result = await makeAwaitable(this.dialog, PillsSelectionPopup, {
                     options: this.presetTimingOptions,
                     title: _t("Select a hour"),
-                    subtitle: _t("Please choose a time slot for your order."),
+                    subtitle: slotUnavailable
+                        ? _t(
+                              "It seems that the slot you selected is no longer available. Please select another one."
+                          )
+                        : _t("Please choose a time slot for your order."),
+                    isError: slotUnavailable,
                     selectionType: "time",
                 });
                 if (!result) {
                     return;
                 }
                 this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(result);
+                this.selfOrder.currentOrder.uiState.forceNextSync = true;
             }
 
             // Always show preset info popup when requirements aren't filled
@@ -531,6 +563,19 @@ export class CartPage extends Component {
         this.selfOrder.rpcLoading = true;
         await this.selfOrder.confirmOrder();
         this.selfOrder.rpcLoading = false;
+    }
+
+    isPresetSlotFull(order) {
+        const preset = order.preset_id;
+        const slotTime = order.preset_time.toFormat("yyyy-MM-dd HH:mm:ss");
+        const daySlots = preset.availabilities[order.preset_time.toFormat("yyyy-MM-dd")] || [];
+        const slot = Object.values(daySlots).find((s) => s.time === slotTime);
+        if (!slot) {
+            // Slot is in the past or outside of the opening hours
+            return true;
+        }
+        const otherOrderIds = [...slot.order_ids].filter((id) => id !== order.id);
+        return otherOrderIds.length >= preset.slots_per_interval;
     }
 
     get presetTimingOptions() {

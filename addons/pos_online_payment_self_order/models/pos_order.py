@@ -1,6 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, tools
+from datetime import timedelta
+
+from odoo import _, models, fields, api, tools
+from odoo.exceptions import ValidationError
+from odoo.fields import Domain
+from odoo.tools import SQL
+
+# Time during which an online payment in progress holds the slot of its self order
+PENDING_ONLINE_PAYMENT_HOLD_MINUTES = 10
+
+
+class PresetSlotUnavailableError(ValidationError):
+    """ The timing slot of the order is already passed or full, another one must be selected. """
 
 
 class PosOrder(models.Model):
@@ -92,3 +104,54 @@ class PosOrder(models.Model):
         data = super()._check_pos_order(pos_config, order, device_type, table)
         data['use_self_order_online_payment'] = order.get('use_self_order_online_payment')
         return data
+
+    @api.model
+    def _get_pending_online_payment_domain(self):
+        """ Draft mobile self orders waiting for their online payment (pay after each order). """
+        return Domain([
+            ('state', '=', 'draft'),
+            ('source', '=', 'mobile'),
+            ('use_self_order_online_payment', '=', True),
+            ('config_id.self_ordering_pay_after', '=', 'each'),
+            ('amount_total', '>', 0),
+        ])
+
+    @api.model
+    def _get_payment_in_progress_domain(self):
+        """ Orders with an online payment started a few minutes ago and not finished yet,
+        or with an online payment accepted by the provider but not processed yet on the order.
+        """
+        cutoff = fields.Datetime.now() - timedelta(minutes=PENDING_ONLINE_PAYMENT_HOLD_MINUTES)
+        transactions_query = self.env['payment.transaction'].sudo()._search(
+            Domain('pos_order_id', '!=', False)
+            & (
+                Domain('state', 'in', ('authorized', 'done'))
+                | (Domain('state', 'in', ('draft', 'pending')) & Domain('create_date', '>=', cutoff))
+            )
+        )
+        return Domain('id', 'in', transactions_query.subselect(SQL('pos_order_id')))
+
+    @api.model
+    def _get_online_payment_not_holding_slot_domain(self):
+        """ Orders waiting for their online payment that do not hold their slot. """
+        return Domain.AND([self._get_pending_online_payment_domain(), ~self._get_payment_in_progress_domain()])
+
+    def _check_preset_slot_availability(self):
+        """ Raise if the timing slot of the order is already in the past or full with other orders. """
+        self.ensure_one()
+        preset = self.preset_id
+        # Only an order waiting for its online payment can lose its slot
+        if not preset.use_timing or not self.preset_time or not self.filtered_domain(self._get_pending_online_payment_domain()):
+            return
+
+        # Slot is in the past
+        if self.preset_time < fields.Datetime.now():
+            raise PresetSlotUnavailableError(_("This timing slot is already passed, please select another one."))
+
+        # Slot is full with other orders: paid ones, ones with a payment in progress, or with nothing to pay online
+        other_orders_count = self.env['pos.order'].search_count(Domain.AND([
+            preset._get_slots_usage_domain(),
+            [('preset_time', '=', self.preset_time), ('id', '!=', self.id)],
+        ]))
+        if other_orders_count >= preset.slots_per_interval:
+            raise PresetSlotUnavailableError(_("Full capacity reached for this timing slot, please select another one."))
