@@ -37,50 +37,38 @@
             <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
-        <!-- last month is reviewed; the last two days go through the review policy -->
-        <record id="attendance_root1" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 08:00:24')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 12:01:33')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="state">validated</field>
-            <field name="in_mode">systray</field>
-            <field name="in_location">1367 Ramillies, Belgium</field>
-            <field name="in_latitude">50.6326412</field>
-            <field name="in_longitude">4.8670315</field>
-            <field name="in_ip_address">198.51.100.24</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">systray</field>
-            <field name="out_location">1367 Ramillies, Belgium</field>
-            <field name="out_latitude">50.6326412</field>
-            <field name="out_longitude">4.8670315</field>
-            <field name="out_ip_address">198.51.100.24</field>
-            <field name="out_browser">chrome</field>
+        <record id="hr.employee_jgo" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
-        <record id="attendance_root2" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 13:02:58')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1, days=-1)).strftime('%Y-%m-%d 18:09:22')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="state">validated</field>
-            <field name="in_mode">systray</field>
-            <field name="in_location">1367 Ramillies, Belgium</field>
-            <field name="in_latitude">50.6326412</field>
-            <field name="in_longitude">4.8670315</field>
-            <field name="in_ip_address">198.51.100.24</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">systray</field>
-            <field name="out_location">1367 Ramillies, Belgium</field>
-            <field name="out_latitude">50.6326412</field>
-            <field name="out_longitude">4.8670315</field>
-            <field name="out_ip_address">198.51.100.24</field>
-            <field name="out_browser">chrome</field>
+        <record id="hr.employee_light" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
+
+        <record id="hr.employee_barty_mcbly" model="hr.employee">
+            <field name="attendance_manager_id" ref="base.user_demo"/>
+        </record>
+
+        <!-- The demo company is in the US: its attendances use the US work types, which the generic schedule rule
+             does not read. As a US customer would, give the company its own overtime rule, after the others. -->
+        <record id="hr_time_rule_demo_overtime" model="hr.time.rule">
+            <field name="name">Overtime</field>
+            <field name="sequence">100</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="employer_tolerance">0.25</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.us_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.l10n_us_work_entry_type_overtime"/>
+        </record>
+
+        <!-- 8-12 and 13-17 expected, with 15 minutes of tolerance: the days without exception are reviewed
+             automatically. Thursdays and Fridays two weeks ago, Marc and Mitchell had regular days. -->
 
         <record id="attendance1" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-01 08:21')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-01 15:51')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=7, minute=57, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=12, minute=1, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">kiosk</field>
             <field name="in_location">1000 Brussels, Belgium</field>
             <field name="in_latitude">50.8465573</field>
@@ -96,10 +84,9 @@
         </record>
 
         <record id="attendance2" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-02 08:47')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-02 15:53')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=12, minute=59, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=17, minute=3, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">kiosk</field>
             <field name="in_location">1000 Brussels, Belgium</field>
             <field name="in_latitude">50.8465573</field>
@@ -115,10 +102,9 @@
         </record>
 
         <record id="attendance3" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-03 08:32')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-03 15:22')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=4, hour=8, minute=4, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=4, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">kiosk</field>
             <field name="in_location">1000 Brussels, Belgium</field>
             <field name="in_latitude">50.8465573</field>
@@ -134,10 +120,9 @@
         </record>
 
         <record id="attendance4" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-04 08:01')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-04 16:21')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=4, hour=13, minute=1, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=4, hour=16, minute=58, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">kiosk</field>
             <field name="in_location">1000 Brussels, Belgium</field>
             <field name="in_latitude">50.8465573</field>
@@ -152,195 +137,485 @@
             <field name="out_browser">chrome</field>
         </record>
 
-        <record id="attendance5" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-05 10:10')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-05 14:42')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
-            <field name="in_mode">kiosk</field>
-            <field name="in_location">1000 Brussels, Belgium</field>
-            <field name="in_latitude">50.8465573</field>
-            <field name="in_longitude">4.3517210</field>
-            <field name="in_ip_address">203.0.113.10</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
-        </record>
-
-        <record id="attendance6" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-06 10:10')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-06 17:34')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
-            <field name="in_mode">kiosk</field>
-            <field name="in_location">1000 Brussels, Belgium</field>
-            <field name="in_latitude">50.8465573</field>
-            <field name="in_longitude">4.3517210</field>
-            <field name="in_ip_address">203.0.113.10</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
-        </record>
-
-        <record id="attendance7" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-07 08:21')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-07 17:29')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
-            <field name="in_mode">kiosk</field>
-            <field name="in_location">1000 Brussels, Belgium</field>
-            <field name="in_latitude">50.8465573</field>
-            <field name="in_longitude">4.3517210</field>
-            <field name="in_ip_address">203.0.113.10</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
-        </record>
-
-        <record id="attendance8" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 09:21')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 14:54')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
-            <field name="in_mode">kiosk</field>
-            <field name="in_location">1000 Brussels, Belgium</field>
-            <field name="in_latitude">50.8465573</field>
-            <field name="in_longitude">4.3517210</field>
-            <field name="in_ip_address">203.0.113.10</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
-        </record>
-
-        <record id="attendance9" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-09 10:32')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-09 17:31')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
-            <field name="in_mode">kiosk</field>
-            <field name="in_location">1000 Brussels, Belgium</field>
-            <field name="in_latitude">50.8465573</field>
-            <field name="in_longitude">4.3517210</field>
-            <field name="in_ip_address">203.0.113.10</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
-        </record>
-
-        <record id="attendance10" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 08:00')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 17:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">validated</field>
-            <field name="in_mode">kiosk</field>
-            <field name="in_location">1000 Brussels, Belgium</field>
-            <field name="in_latitude">50.8465573</field>
-            <field name="in_longitude">4.3517210</field>
-            <field name="in_ip_address">203.0.113.10</field>
-            <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
-        </record>
-
-        <record id="attendance11" model="hr.attendance">
-            <field eval="(datetime.now()+timedelta(hours=-4)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
-            <field eval="(datetime.now()+timedelta(minutes=-30)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_hne"/>
+        <record id="attendance_root1" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=12, minute=1, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">systray</field>
             <field name="in_location">1367 Ramillies, Belgium</field>
             <field name="in_latitude">50.6326412</field>
             <field name="in_longitude">4.8670315</field>
-            <field name="in_ip_address">198.51.100.31</field>
-            <field name="in_browser">firefox</field>
+            <field name="in_ip_address">198.51.100.24</field>
+            <field name="in_browser">chrome</field>
             <field name="out_mode">systray</field>
             <field name="out_location">1367 Ramillies, Belgium</field>
             <field name="out_latitude">50.6326412</field>
             <field name="out_longitude">4.8670315</field>
-            <field name="out_ip_address">198.51.100.31</field>
+            <field name="out_ip_address">198.51.100.24</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_root2" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=13, minute=2, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-20, weekday=0) + relativedelta(days=3, hour=17, minute=9, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">1367 Ramillies, Belgium</field>
+            <field name="in_latitude">50.6326412</field>
+            <field name="in_longitude">4.8670315</field>
+            <field name="in_ip_address">198.51.100.24</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">1367 Ramillies, Belgium</field>
+            <field name="out_latitude">50.6326412</field>
+            <field name="out_longitude">4.8670315</field>
+            <field name="out_ip_address">198.51.100.24</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <!-- Last week. Ernest checks in and out from the systray, at home. -->
+
+        <!-- late, approved by the manager -->
+        <record id="attendance_week_jgo_monday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=9, minute=10, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
             <field name="out_browser">firefox</field>
         </record>
 
-        <record id="attendance12" model="hr.attendance">
-            <field eval="(datetime.now()+timedelta(hours=-31)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
-            <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_mit"/>
+        <record id="attendance_week_jgo_monday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">systray</field>
-            <field name="in_location">1348 Ottignies-Louvain-la-Neuve, Belgium</field>
-            <field name="in_latitude">50.6683022</field>
-            <field name="in_longitude">4.6118734</field>
-            <field name="in_ip_address">198.51.100.57</field>
-            <field name="in_browser">safari</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <record id="attendance_week_jgo_tuesday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=8, minute=2, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <record id="attendance_week_jgo_tuesday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=12, minute=58, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=17, minute=1, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <!-- overtime, approved: the time rule moves the extra hours to an overtime record -->
+        <record id="attendance_week_jgo_wednesday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <record id="attendance_week_jgo_wednesday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=19, minute=30, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <!-- early check-out, to review -->
+        <record id="attendance_week_jgo_thursday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <record id="attendance_week_jgo_thursday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=15, minute=30, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <record id="attendance_week_jgo_friday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=7, minute=58, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=12, minute=1, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <record id="attendance_week_jgo_friday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=13, minute=2, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+            <field name="out_mode">systray</field>
+            <field name="out_location">5000 Namur, Belgium</field>
+            <field name="out_latitude">50.4651325</field>
+            <field name="out_longitude">4.8659862</field>
+            <field name="out_ip_address">198.51.100.77</field>
+            <field name="out_browser">firefox</field>
+        </record>
+
+        <!-- Monica uses the kiosk at the office -->
+
+        <!-- long lunch, a short day to review -->
+        <record id="attendance_week_light_monday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_week_light_monday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=14, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <!-- forgot to check out, the automatic check-out closed the day -->
+        <record id="attendance_week_light_tuesday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=7, minute=58, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_week_light_tuesday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">auto_check_out</field>
+        </record>
+
+        <!-- a second scan at the kiosk, refused -->
+        <record id="attendance_week_light_wednesday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=8, minute=1, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_week_light_wednesday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=17, minute=2, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_week_light_wednesday_scan" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=17, minute=3, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=17, minute=4, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_week_light_thursday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=7, minute=56, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=12, minute=2, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <record id="attendance_week_light_thursday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=12, minute=58, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=3, hour=16, minute=59, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+
+        <!-- Barty encodes his attendances himself: they wait for a review. (Created by the superuser, the demo
+             would review them at once, like an attendance manager's own entries.) -->
+
+        <!-- approved by the manager -->
+        <record id="attendance_week_barty_mcbly_monday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_barty_mcbly"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">manual</field>
             <field name="out_mode">manual</field>
         </record>
 
-        <record id="attendance12_message1" model="mail.message">
+        <record id="attendance_week_barty_mcbly_monday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_barty_mcbly"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=0, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">manual</field>
+            <field name="out_mode">manual</field>
+        </record>
+
+        <record id="attendance_week_barty_mcbly_tuesday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_barty_mcbly"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="state">draft</field>
+            <field name="in_mode">manual</field>
+            <field name="out_mode">manual</field>
+        </record>
+
+        <record id="attendance_week_barty_mcbly_tuesday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_barty_mcbly"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=1, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="state">draft</field>
+            <field name="in_mode">manual</field>
+            <field name="out_mode">manual</field>
+        </record>
+
+        <record id="attendance_week_barty_mcbly_wednesday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_barty_mcbly"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="state">draft</field>
+            <field name="in_mode">manual</field>
+            <field name="out_mode">manual</field>
+        </record>
+
+        <record id="attendance_week_barty_mcbly_wednesday_pm" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_barty_mcbly"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=13, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=2, hour=17, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="state">draft</field>
+            <field name="in_mode">manual</field>
+            <field name="out_mode">manual</field>
+        </record>
+
+        <record id="attendance_week_light_tuesday_message" model="mail.message">
             <field name="model">hr.attendance</field>
-            <field name="res_id" ref="attendance12"/>
-            <field name="body">She didn't check-out.
-            </field>
+            <field name="res_id" ref="attendance_week_light_tuesday_pm"/>
+            <field name="body">She forgot to check out, I asked her when she left.</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
 
-        <record id="attendance13" model="hr.attendance">
-            <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:10')" name="check_in"/>
-            <field eval="(datetime.now()+timedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_mit"/>
-            <field name="in_mode">systray</field>
-            <field name="in_location">1300 Wavre, Belgium</field>
-            <field name="in_latitude">50.7171553</field>
-            <field name="in_longitude">4.6067541</field>
-            <field name="in_ip_address">192.0.2.88</field>
-            <field name="in_browser">safari</field>
-            <field name="out_mode">systray</field>
-            <field name="out_location">1300 Wavre, Belgium</field>
-            <field name="out_latitude">50.7171553</field>
-            <field name="out_longitude">4.6067541</field>
-            <field name="out_ip_address">192.0.2.88</field>
-            <field name="out_browser">safari</field>
-        </record>
+        <function model="hr.attendance" name="action_validate">
+            <value eval="[ref('attendance_week_jgo_monday_am'), ref('attendance_week_jgo_monday_pm'), ref('attendance_week_jgo_wednesday_am'), ref('attendance_week_jgo_wednesday_pm'), ref('attendance_week_barty_mcbly_monday_am'), ref('attendance_week_barty_mcbly_monday_pm')]"/>
+        </function>
 
-        <record id="attendance14" model="hr.attendance">
-            <field eval="(datetime.now()+timedelta(hours=-15)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
-            <field eval="(datetime.now()+timedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_chs"/>
+        <function model="hr.attendance" name="action_refuse">
+            <value eval="[ref('attendance_week_light_wednesday_scan')]"/>
+        </function>
+
+        <!-- today, Monica and Ernest are at work -->
+        <record id="attendance_today_light" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="min(datetime.now(pytz.timezone('Europe/Brussels')) - timedelta(minutes=5), datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
             <field name="in_mode">kiosk</field>
             <field name="in_location">1000 Brussels, Belgium</field>
             <field name="in_latitude">50.8465573</field>
             <field name="in_longitude">4.3517210</field>
             <field name="in_ip_address">203.0.113.10</field>
             <field name="in_browser">chrome</field>
-            <field name="out_mode">kiosk</field>
-            <field name="out_location">1000 Brussels, Belgium</field>
-            <field name="out_latitude">50.8465573</field>
-            <field name="out_longitude">4.3517210</field>
-            <field name="out_ip_address">203.0.113.10</field>
-            <field name="out_browser">chrome</field>
         </record>
+
+        <record id="attendance_today_jgo" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_jgo"/>
+            <field name="check_in" eval="min(datetime.now(pytz.timezone('Europe/Brussels')) - timedelta(minutes=5), datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">systray</field>
+            <field name="in_location">5000 Namur, Belgium</field>
+            <field name="in_latitude">50.4651325</field>
+            <field name="in_longitude">4.8659862</field>
+            <field name="in_ip_address">198.51.100.77</field>
+            <field name="in_browser">firefox</field>
+        </record>
+
+
     </data>
 </odoo>
