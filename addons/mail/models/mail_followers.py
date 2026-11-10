@@ -24,7 +24,7 @@ class MailFollowers(models.Model):
     # However, followers of unlinked models are deleted by models themselves
     # (see 'ir.model' inheritance).
     res_model = fields.Char(
-        'Related Document Model Name', required=True, index=True)
+        'Related Document Model Name', required=True)
     res_id = fields.Many2oneReference(
         'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model',
         ondelete=lambda s, model: 'cascade' if isinstance(model, s.env.registry['mail.thread']) else 'ignore',

@@ -594,7 +594,7 @@ class IrModelFields(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
-    model = fields.Char(string='Model Name', required=True, index=True,
+    model = fields.Char(string='Model Name', required=True,
                         help="The technical name of the model this field belongs to")
     relation = fields.Char(string='Related Model',
                            help="For relationship fields, the technical name of the target model")
@@ -1750,7 +1750,7 @@ class IrModelFieldsSelection(models.Model):
     _allow_sudo_commands = False
 
     field_id = fields.Many2one("ir.model.fields",
-        required=True, ondelete="cascade", index=True,
+        required=True, ondelete="cascade",
         domain=[('ttype', 'in', ['selection', 'reference'])])
     value = fields.Char(required=True)
     name = fields.Char(translate=True, required=True)
@@ -2104,7 +2104,7 @@ class IrModelConstraint(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(
-        string='Constraint', required=True, index=True, readonly=True,
+        string='Constraint', required=True, readonly=True,
         copy=lambda c: f'{c.name}_name',
         help="PostgreSQL constraint or foreign key name.")
     definition = fields.Char(help="PostgreSQL constraint definition", readonly=True)

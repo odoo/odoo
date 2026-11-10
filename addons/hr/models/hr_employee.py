@@ -125,7 +125,6 @@ class HrEmployee(models.Model):
         readonly=False,
         check_company=True,
         precompute=True,
-        index='btree_not_null',
         ondelete='restrict',
         copy=False
     )

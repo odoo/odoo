@@ -107,7 +107,7 @@ class CrmLead(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Salesperson', default=lambda self: self.env.user,
         domain="[('share', '=', False)]",
-        check_company=True, index=True, tracking=True)
+        check_company=True, tracking=True)
     user_company_ids = fields.Many2many(
         'res.company', compute='_compute_user_company_ids',
         help='UX: Limit to lead company or all if no company')

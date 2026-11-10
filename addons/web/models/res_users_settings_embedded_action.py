@@ -6,7 +6,7 @@ class ResUsersSettingsEmbeddedAction(models.Model):
     _name = 'res.users.settings.embedded.action'
     _description = 'User Settings for Embedded Actions'
 
-    user_setting_id = fields.Many2one('res.users.settings', required=True, ondelete='cascade', index='btree_not_null', export_string_translation=False)
+    user_setting_id = fields.Many2one('res.users.settings', required=True, ondelete='cascade', export_string_translation=False)
     action_id = fields.Many2one('ir.actions.act_window', required=True, ondelete='cascade', export_string_translation=False)
     res_model = fields.Char(required=True, export_string_translation=False)
     res_id = fields.Integer(export_string_translation=False)
