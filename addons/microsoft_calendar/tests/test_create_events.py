@@ -589,8 +589,8 @@ class TestCreateEvents(TestCommon):
             'department_id': self.rd_dept.id,
         })
         self.hr_work_entry_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager).create({  # noqa: OLS03001
-            'name': 'Time Off Type',
-            'code': 'Time Off Type',
+            'name': 'Time Type',
+            'code': 'Time Type',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
