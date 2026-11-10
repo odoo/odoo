@@ -128,6 +128,31 @@ class PosPaymentMethod(models.Model):
         # Both business_profile and mcc can be null, see https://docs.stripe.com/api/accounts/object
         return (account.get('business_profile') or {}).get('mcc') or False
 
+    def action_stripe_test_creds(self):
+        self.ensure_one()
+        self._stripe_check_access()
+        is_simulated = self.stripe_serial_number == 'SIMULATOR'
+        params = {'limit': 1} if is_simulated else {'limit': 1, 'serial_number': self.stripe_serial_number}
+        try:
+            readers = self.sudo()._get_stripe_payment_provider()._send_api_request('GET', 'terminal/readers', params=params)
+        except ValidationError as error:
+            raise UserError(_("Stripe connection failed: %s", error.args[0])) from error
+
+        if is_simulated:
+            message, notification_type = _("Connected to Stripe (simulated terminal)."), 'success'
+        elif readers.get('data'):
+            status = readers['data'][0].get('status')
+            message = _("Connected to Stripe. Terminal status: %s.", status)
+            notification_type = 'success' if status == 'online' else 'warning'
+        else:
+            raise UserError(_("No terminal with serial number %s is registered on this Stripe account.", self.stripe_serial_number))
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {'message': message, 'type': notification_type},
+        }
+
     def action_stripe_key(self):
         res_id = self._get_stripe_payment_provider().id
         # Redirect
