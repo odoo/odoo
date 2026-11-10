@@ -657,6 +657,44 @@ test("iframe: default container is the popper owner's document", async () => {
     await mountWithCleanup(Popper, { target: outerIframe.contentDocument.body });
 });
 
+test("default container: popper fits in the viewport of a scrolling page", async () => {
+    // The page inside the iframe is taller than the iframe (its viewport):
+    // the document element is the scrolling element.
+    const def = new Deferred();
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, { height: "300px", width: "300px" });
+    iframe.srcdoc = `<!DOCTYPE html>
+        <html><body style="margin: 0; height: 1000px">
+            <div id="target" style="position: fixed; top: 230px; left: 100px; height: 50px; width: 50px"/>
+        </body></html>`;
+    iframe.onload = () => def.resolve();
+    getFixture().prepend(iframe);
+    await def;
+
+    const iframeDoc = iframe.contentDocument;
+    expect(iframeDoc.documentElement.scrollHeight).toBe(1000);
+    const target = iframeDoc.getElementById("target");
+
+    class Popper extends Component {
+        static props = ["*"];
+        static template = xml`<div id="popper" t-ref="popper" style="height: 100px; width: 100px"/>`;
+        setup() {
+            usePosition("popper", () => target, {
+                onPositioned: (_, { direction, variant }) => {
+                    expect.step(`${direction}-${variant}`);
+                },
+            });
+        }
+    }
+    await mountWithCleanup(Popper, { target: iframeDoc.body, noMainContainer: true });
+    // There is not enough room below the target in the viewport (230 + 50 + 100 > 300)
+    // even though there is in the page: the popper must flip on top of its target.
+    expect.verifySteps(["top-middle"]);
+    const popperBox = iframeDoc.getElementById("popper").getBoundingClientRect();
+    expect(popperBox.top).toBe(130);
+    expect(popperBox.bottom).toBeLessThan(iframeDoc.documentElement.clientHeight + 1);
+});
+
 test("popper as child of another", async () => {
     class Child extends Component {
         static template = /* xml */ xml`
