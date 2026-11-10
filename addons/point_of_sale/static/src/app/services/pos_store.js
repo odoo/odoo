@@ -384,12 +384,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get configFastPaymentMethod() {
-        const fastPaymentMethods = this.config.paymentMethods.filter(
-            (pm) => pm.type !== "pay_later"
-        );
-        // Fall back to all payment methods when there is no cash/bank method
-        // configured, so a fast payment method is always available if any method exists.
-        return fastPaymentMethods.length ? fastPaymentMethods : this.config.paymentMethods;
+        const resolve = (pm) => this.paymentMethods.getDefault(pm.payment_provider) || pm;
+        const fast = this.config.paymentMethods.filter((pm) => pm.type !== "pay_later");
+        return (fast.length ? fast : this.config.paymentMethods).map(resolve);
     }
 
     get defaultPage() {
