@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormSignalRenderer">
+        <div class="o_form_signal_renderer p-3">
+            <div t-foreach="this.props.fieldNames" t-as="name" t-key="name" class="row mb-2">
+                <label class="col-3 fw-bold" t-out="this.props.fields[name].string"/>
+                <div class="col-9">
+                    <input t-if="this.isEditable(name)"
+                           class="o_input"
+                           t-att-name="name"
+                           t-att-value="this.props.record[name]() or ''"
+                           t-on-input="(ev) => this.props.record[name].set(ev.target.value)"/>
+                    <span t-else="" t-att-name="name" t-out="this.displayValue(name)"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
