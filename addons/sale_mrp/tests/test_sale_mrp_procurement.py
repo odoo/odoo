@@ -432,3 +432,43 @@ class TestSaleMrpProcurement(TransactionCase):
             mo_ok.move_finished_ids.filtered(lambda m: m.product_id == product).sale_line_id,
             product_line,
         )
+
+    def test_sale_mrp_multilevel_mts_else_mto(self):
+        """With 'Take From Stock, if unavailable, Trigger Another Rule', every
+        MO of a multi-level chain must be linked to the sale order, not only
+        the first level. The component pickings stay out of the sale order."""
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        route_mto = warehouse.mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = 'mts_else_mto'
+        routes = warehouse.manufacture_pull_id.route_id | route_mto
+        top, middle, bottom = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'route_ids': [Command.set(routes.ids)],
+        } for name in ('Top', 'Middle', 'Bottom')])
+        raw = self.env['product.product'].create({'name': 'Raw', 'is_storable': True})
+        for finished, component in ((top, middle), (middle, bottom), (bottom, raw)):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': finished.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'bom_line_ids': [Command.create({
+                    'product_id': component.id,
+                    'product_qty': 1.0,
+                })],
+            })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Chain Partner'}).id,
+            'order_line': [Command.create({
+                'product_id': top.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        productions = sale_order.mrp_production_ids
+        self.assertEqual(productions.product_id, top | middle | bottom)
+        for production in productions:
+            self.assertEqual(production.sale_order_count, 1)
+        self.assertEqual(sale_order.picking_ids.picking_type_id, warehouse.out_type_id)
