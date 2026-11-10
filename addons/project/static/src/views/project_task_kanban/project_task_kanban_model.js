@@ -18,7 +18,7 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
             );
             return new Promise((resolve) => {
                 this.model.action.doAction(action, {
-                    onClose: ({ success }) => resolve(!!success),
+                    onClose: (closeInfo) => resolve(!!closeInfo?.success),
                 });
             });
         }
