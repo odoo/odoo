@@ -1,11 +1,7 @@
-/* global checkVATNumber */
-
-import { AssetsLoadingError, loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
-import { status, useComponent } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
@@ -18,37 +14,10 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 export function usePartnerAutocomplete() {
     const keepLastOdoo = new KeepLast();
 
-    const component = useComponent();
     const notification = useService("notification");
     const orm = useService("orm");
 
     let lastNoResultsQuery = null;
-
-    function sanitizeVAT(value) {
-        return value ? value.replace(/[^A-Za-z0-9]/g, '') : '';
-    }
-
-    async function isVATNumber(value) {
-        // Lazyload jsvat only if the component is being used.
-        try {
-          await loadJS("/partner_autocomplete/static/lib/jsvat.js");
-        } catch(e) {
-          if (e instanceof AssetsLoadingError) {
-              return new Promise(() => {});
-          }
-          throw e;
-        }
-
-        // Protect the method if the component is destroyed.
-        // Same behaviour as : _protectMethod in web/static/src/core/utils/hooks.js
-        if (status(component) === "destroyed") {
-            return new Promise(() => {});
-        }
-
-        // checkVATNumber is defined in library jsvat.
-        // It validates that the input has a valid VAT number format
-        return checkVATNumber(sanitizeVAT(value));
-    }
 
     function isGSTNumber(value) {
         // Check if the input is a valid GST number.
@@ -69,14 +38,14 @@ export function usePartnerAutocomplete() {
         return isGST;
     }
 
+    function looksLikeVATNumber(value) {
+        // Only the format is checked here, the server validates the number
+        return (value.match(/\d/g) || []).length >= 4;
+    }
+
     async function autocomplete(value, queryCountryId) {
         value = value.trim();
-        const isVAT = await isVATNumber(value);
-        if (isVAT){
-        	value = sanitizeVAT(value);
-        }
-        const isGST = isGSTNumber(value);
-        return await getSuggestions(value, isVAT || isGST, queryCountryId);
+        return await getSuggestions(value, queryCountryId);
     }
 
     /**
@@ -147,25 +116,21 @@ export function usePartnerAutocomplete() {
      * Use Odoo Autocomplete API to return suggestions
      *
      * @param {string} value
-     * @param {boolean} isVAT
      * @returns {Promise}
      * @private
      */
-    async function getSuggestions(value, isVAT, queryCountryId) {
-        const method = isVAT ? 'autocomplete_by_vat' : 'autocomplete_by_name';
+    async function getSuggestions(value, queryCountryId) {
+        // The server also searches a name that looks like a VAT number as a VAT number
+        const isNameOnly = !looksLikeVATNumber(value);
 
         // Optimization: if the search query starts with the same content as a previous query for
         // which there was no results, there won't be any results for the current query.
         // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
-        if (!isVAT && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+        if (isNameOnly && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
             return [];
         }
 
-        const prom = orm.silent.call(
-            'res.partner',
-            method,
-            [value, queryCountryId],
-        );
+        const prom = orm.silent.call('res.partner', 'autocomplete_by_field', ['name', value, queryCountryId]);
 
         let suggestions = [];
         try {
@@ -176,7 +141,7 @@ export function usePartnerAutocomplete() {
           }
         }
 
-        if (!isVAT && suggestions.length === 0) {
+        if (isNameOnly && suggestions.length === 0) {
             lastNoResultsQuery = value;
         }
 
