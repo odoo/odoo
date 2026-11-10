@@ -50,6 +50,7 @@ MAX_CRON_THREADS="${MAX_CRON_THREADS:-1}"
 
 # Export variables for child python processes
 export DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DB_SSLMODE
+export PGKEEPALIVES=1 PGKEEPALIVESIDLE=30 PGKEEPALIVESINTERVAL=10 PGKEEPALIVESCOUNT=3
 
 # Check if target database has core tables initialized and fix missing constraints
 AUTO_INIT=""
