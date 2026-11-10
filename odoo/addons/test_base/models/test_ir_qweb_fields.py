@@ -9,7 +9,7 @@ class TestIrQwebFields(models.Model):
     integer = fields.Integer()
     float = fields.Float()
     numeric = fields.Float(digits=(16, 2))
-    monetary = fields.Float(digits=(16, 55))
+    monetary = fields.Float(digits=(16, 28))
     many2one = fields.Many2one('test_ir_qweb_fields.relations')
     binary = fields.Binary(attachment=False)
     date = fields.Date()

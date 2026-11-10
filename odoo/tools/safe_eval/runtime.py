@@ -862,6 +862,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('urllib.parse.quote')
     # Standard Numbers
     safe_whitelist.add_function('stdnum.pl.nip.compact')
+    safe_whitelist.add_instance('decimal.Decimal')
     # Werkzeug
     safe_whitelist.add_class('werkzeug.datastructures.structures.ImmutableMultiDict')
     safe_whitelist.add_class('werkzeug.datastructures.structures.MultiDict')
