@@ -554,7 +554,8 @@ class Cursor(BaseCursor):
             self._cnx.leaked = True  # type: ignore
         else:
             chosen_template = tools.config['db_template']
-            keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
+            is_configured_db = bool(self.dbname and self.dbname in (tools.config.get('db_name') or '').split(','))
+            keep_in_pool = is_configured_db or self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     def commit(self) -> None:
@@ -665,7 +666,7 @@ class ConnectionPool:
             if not cnx._pool_in_use and self._dsn_equals(cnx.dsn, connection_info):
                 try:
                     cnx.reset()
-                except psycopg2.OperationalError:
+                except (psycopg2.OperationalError, psycopg2.InterfaceError):
                     self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
                     # psycopg2 2.4.4 and earlier do not allow closing a closed connection
                     if not cnx.closed:
