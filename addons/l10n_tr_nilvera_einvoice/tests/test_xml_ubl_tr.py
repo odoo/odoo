@@ -1,8 +1,9 @@
 from freezegun import freeze_time
 
-from odoo.addons.l10n_tr_nilvera_einvoice.tests.test_xml_ubl_tr_common import TestUBLTRCommon
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import file_open
+from odoo.addons.l10n_tr_nilvera_einvoice.tests.test_xml_ubl_tr_common import TestUBLTRCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -163,3 +164,13 @@ class TestUBLTR(TestUBLTRCommon):
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
+    def test_xml_line_without_product_label_to_item_name_and_description(self):
+        with freeze_time('2025-03-05'):
+            invoice_line_ids = [Command.create({'name': 'Consulting\nNovember work', 'price_unit': 50.0, 'tax_ids': [Command.set(self.tax_20.ids)]})]
+            generated_xml = self._generate_invoice_xml(self.einvoice_partner, invoice_line_ids=invoice_line_ids)
+
+        self.assertIn(b"<cbc:Name>Consulting</cbc:Name>", generated_xml)
+        self.assertIn(b"<cbc:Description>November work</cbc:Description>", generated_xml)
+        bill = self._create_invoice_from_xml(generated_xml)
+        self.assertEqual(bill.invoice_line_ids.filtered(lambda line: line.display_type == 'product').name, 'Consulting\nNovember work')
