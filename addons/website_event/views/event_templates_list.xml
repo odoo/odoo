@@ -53,18 +53,23 @@
             <t t-foreach="categories" t-as="category">
                 <div t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="dropdown d-none d-lg-block">
                     <t t-set="searched_category_tags" t-value="search_tags.filtered(lambda tag: tag.category_id == category)"/>
-                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
+                    <button type="button" t-att-id="'navToggleTagGroup%s' % category.id" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                            t-att-title="'Filter by %s' % category.name" t-att-aria-label="'Filter by %s' % category.name"
+                            aria-haspopup="true" aria-expanded="false" t-att-aria-controls="'navMenuTagGroup%s' % category.id">
                         <t t-out="category.name"/>
                         <span t-if="len(searched_category_tags)" t-out="len(searched_category_tags)"
                             class="badge bg-primary ms-1"/>
                     </button>
-                    <div class="dropdown-menu">
-                        <button type="button" t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids), prevent_redirect=True)"
+                    <div class="dropdown-menu" role="menu" t-att-id="'navMenuTagGroup%s' % category.id" t-att-aria-labelledby="'navToggleTagGroup%s' % category.id">
+                        <button
+                            type="button" role="menuitemcheckbox" t-att-aria-checked="'true' if not searched_category_tags else 'false'"
+                            t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids), prevent_redirect=True)"
                             t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not searched_category_tags else ''}">
                             All
                         </button>
                         <t t-foreach="category.tag_ids" t-as="tag">
-                            <button type="button" t-if="tag.color"
+                            <button t-if="tag.color"
+                                type="button" role="menuitemcheckbox" t-att-aria-checked="'true' if tag in search_tags else 'false'"
                                 t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
                                 t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                                 <t t-out="tag.name"/>
@@ -155,15 +160,15 @@
 <template id="event_time" inherit_id="website_event.index_topbar" name="Filter by Date">
     <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
         <div class="dropdown d-none d-lg-block">
-            <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date" aria-label="Filter by date" aria-expanded="false">
+            <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date" aria-label="Filter by Date" aria-haspopup="true" aria-expanded="false" aria-controls="menuEventDate">
                 <t t-if="current_date" t-out="current_date"/>
                 <t t-else="">Scheduled Events</t>
             </button>
-            <div class="dropdown-menu">
+            <div id="menuEventDate" class="dropdown-menu" role="menu" aria-label="Filter by date">
                 <t t-foreach="dates" t-as="date">
                     <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
                         <t t-set="is_active" t-value="searches.get('date') == date[0]"/>
-                        <a t-att-href="keep_event_url('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
+                        <a role="menuitem" t-att-href="keep_event_url('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
                             <t t-out="date[1]"/>
                             <span t-if="date[3]" t-out="date[3]" t-attf-class="badge pagination ms-3 text-bg-primary"/>
                         </a>
