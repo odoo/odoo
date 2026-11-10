@@ -476,6 +476,8 @@ class AccountEdiFormat(models.Model):
         serv = client.bind('siiService', service_name)
         if company.l10n_es_sii_test_env and connection_vals.get('test_url'):
             serv._binding_options['address'] = connection_vals['test_url']
+        elif not company.l10n_es_sii_test_env and connection_vals.get('address'):
+            serv._binding_options['address'] = connection_vals['address']
 
         error_msg = None
         try:
