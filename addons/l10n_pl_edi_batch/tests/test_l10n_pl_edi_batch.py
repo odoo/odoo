@@ -735,6 +735,17 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'state': 'requested',
         }])
 
+    def test_cron_check_status_nothing_new(self):
+        now = fields.Datetime.now().replace(microsecond=0)
+        requested_batch = self._create_batch('requested')
+        self._set_write_date(requested_batch, now - timedelta(seconds=10))
+
+        # KSeF has stored nothing after the window's start yet: the batch is done, and isn't requested again
+        with freeze_time(now), self._mock_ksef({'status': {'code': 420}}), self._mock_batch_requests():
+            self.Batch._cron_check_status()
+        self.assertEqual(requested_batch.state, 'done')
+        self.assertEqual(self._company_batches(self.company), requested_batch)
+
     # Test the download cron ---------------------------------------------------
 
     def test_cron_download(self):

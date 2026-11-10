@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 KSEF_WINDOW = 7
 KSEF_IN_PROGRESS = 100
 KSEF_READY = 200
+KSEF_AFTER_HWM = 420
 ODOO_ERROR = 999
 
 CRON_REQUEST_TODAY = 'l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills'
@@ -121,6 +122,8 @@ class BatchDownload(models.Model):
 
     def _get_state_by_code(self, code):
         self.ensure_one()
+        if code == KSEF_AFTER_HWM:  # `from` is after KSeF's high water mark: nothing new is stored yet
+            return 'done'
         if code not in (KSEF_IN_PROGRESS, KSEF_READY) or self.retry_count > MAX_RETRIES:
             return 'failed'
         elif code == KSEF_IN_PROGRESS:
