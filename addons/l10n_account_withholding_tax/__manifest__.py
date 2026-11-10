@@ -23,6 +23,9 @@
         'web.assets_frontend': [
             'l10n_account_withholding_tax/static/src/helpers/*.js',
         ],
+        'web.assets_unit_tests': [
+            'l10n_account_withholding_tax/static/tests/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'post_init_hook': '_post_init_hook',

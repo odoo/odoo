@@ -7,7 +7,8 @@
         <field name="priority">30</field> <!-- Used to order the tabs in the notebook -->
         <field name="arch" type="xml">
             <field name="payment_type" position="after">
-                <field name="withhold" widget="withhold_selector" options="{'horizontal': True}" invisible="not display_withholding" readonly="state != 'draft'"/>
+                <field name="available_withhold_values" invisible="1"/>  <!-- used for widget `withhold_selector` -->
+                <field name="withhold" widget="withhold_selector" options="{'horizontal': True, 'whitelist_fname': 'available_withhold_values'}" invisible="not display_withholding" readonly="state != 'draft'"/>
             </field>
             <field name="payment_method_line_id" position="attributes">
                 <attribute name="invisible">withhold == 'withhold'</attribute>

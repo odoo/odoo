@@ -19,6 +19,7 @@ class AccountPayment(models.Model):
         copy=False,
         default='payment',
     )
+    available_withhold_values = fields.Json(compute='_compute_available_withhold_values')
     withholding_line_ids = fields.One2many(
         string='Withholding Lines',
         comodel_name='account.payment.withholding.line',
@@ -44,6 +45,9 @@ class AccountPayment(models.Model):
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
+
+    def _compute_available_withhold_values(self):
+        self.available_withhold_values = self._fields['withhold'].get_values(self.env)
 
     @api.depends('company_id')
     def _compute_display_withholding(self):
