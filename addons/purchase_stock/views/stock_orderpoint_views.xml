@@ -11,4 +11,9 @@
             </xpath>
         </field>
     </record>
+
+    <menuitem id="menu_purchase_replenishment"
+        action="stock.action_replenishment"
+        parent="purchase.menu_purchase_procurement" sequence="20"
+        groups="stock.group_stock_manager"/>
 </odoo>
