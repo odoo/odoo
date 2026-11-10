@@ -1,3 +1,29 @@
 .o_website_theme_colors_preview_label {
     font-family: var(--o-system-fonts);
 }
+
+.o_theme_colors_preview_low_contrast {
+    position: relative;
+    outline: 2px dashed #ffc107;
+    outline-offset: 2px;
+}
+
+/* Pinned to the corner of the flagged element so the preview layout does not move. */
+.o_theme_colors_preview_contrast_warning {
+    position: absolute;
+    top: -0.65rem;
+    inset-inline-end: -0.65rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background-color: #ffc107;
+    box-shadow: 0 0 0 2px #ffffff;
+    color: #000000;
+    font-size: 0.65rem;
+    line-height: 1;
+    cursor: help;
+}
