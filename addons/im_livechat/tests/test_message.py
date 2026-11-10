@@ -235,6 +235,15 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         def notifications():
             message = self.env["mail.message"].sudo().search([], order="id desc", limit=1)
             return [
+                BusResult(
+                    channel,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {"id": channel.id, "livechat_rating": "5"},
+                        ]
+                    },
+                ),
                 BusResult(self.env.user, "mail.record/insert"),
                 BusResult(
                     channel,

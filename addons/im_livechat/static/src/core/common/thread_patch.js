@@ -47,4 +47,10 @@ patch(Thread.prototype, {
         }
         return super.errorStateText;
     },
+    showNewMessageLine() {
+        return (
+            (!this.channel?.chatbot || this.channel.selfMemberType !== "visitor") &&
+            super.showNewMessageLine(...arguments)
+        );
+    },
 });

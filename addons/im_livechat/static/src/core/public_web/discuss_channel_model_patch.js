@@ -86,7 +86,7 @@ const discussChannelPatch = {
         }
     },
     showThreadIcon(...args) {
-        if (this.self_member_id?.livechat_member_type === "visitor") {
+        if (this.selfMemberType === "visitor") {
             return false;
         }
         return (
