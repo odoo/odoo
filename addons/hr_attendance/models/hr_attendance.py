@@ -11,7 +11,7 @@ from markupsafe import Markup
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import convert, float_compare, float_is_zero, format_datetime
+from odoo.tools import SQL, convert, float_compare, float_is_zero, format_datetime
 from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
 from odoo.tools.intervals import Intervals
 
@@ -356,46 +356,85 @@ class HrAttendance(models.Model):
         attendances. Skipped when the context has ``skip_time_rules``, i.e. for the writes of
         the time rule pipeline, the refusal and the automatic check-out.
 
+        A single query finds, for all the attendances, the other attendances of their employee
+        they are checked against, so that a batch of attendances costs no more than one.
+
         :raise ValidationError: if the attendance overlaps another one or if another attendance
             of the employee is still open
         """
-        if self.env.context.get('skip_time_rules'):
+        if not self or self.env.context.get('skip_time_rules'):
             return
+        self.flush_model(['employee_id', 'check_in', 'check_out'])
+        rows = self.env.execute_query(SQL(
+            """
+            SELECT attendance.id,
+                   before_check_in.id, before_check_in.check_in, before_check_in.check_out,
+                   other_open.check_in,
+                   before_check_out.id, before_check_out.check_in
+              FROM hr_attendance attendance
+              -- the latest attendance checked in before this one
+         LEFT JOIN LATERAL (
+                       SELECT other.id, other.check_in, other.check_out
+                         FROM hr_attendance other
+                        WHERE other.employee_id = attendance.employee_id
+                          AND other.check_in <= attendance.check_in
+                          AND other.id != attendance.id
+                     ORDER BY other.check_in DESC
+                        LIMIT 1
+                   ) before_check_in ON TRUE
+              -- another open attendance, if this one is open
+         LEFT JOIN LATERAL (
+                       SELECT other.check_in
+                         FROM hr_attendance other
+                        WHERE attendance.check_out IS NULL
+                          AND other.employee_id = attendance.employee_id
+                          AND other.check_out IS NULL
+                          AND other.id != attendance.id
+                     ORDER BY other.check_in DESC
+                        LIMIT 1
+                   ) other_open ON TRUE
+              -- the latest attendance checked in before this one checks out
+         LEFT JOIN LATERAL (
+                       SELECT other.id, other.check_in
+                         FROM hr_attendance other
+                        WHERE other.employee_id = attendance.employee_id
+                          AND other.check_in < attendance.check_out
+                          AND other.id != attendance.id
+                     ORDER BY other.check_in DESC
+                        LIMIT 1
+                   ) before_check_out ON TRUE
+             WHERE attendance.id IN %s
+            """,
+            tuple(self.ids),
+        ))
+        others = {row[0]: row[1:] for row in rows}
         for attendance in self:
-            # we take the latest attendance before our check_in time and check it doesn't overlap with ours
-            last_attendance_before_check_in = self.env['hr.attendance'].search([
-                ('employee_id', '=', attendance.employee_id.id),
-                ('check_in', '<=', attendance.check_in),
-                ('id', '!=', attendance.id),
-            ], order='check_in desc', limit=1)
-            if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
-                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                   empl_name=attendance.employee_id.name,
-                                                   datetime=format_datetime(self.env, last_attendance_before_check_in.check_in, dt_format=False)))
-
-            if not attendance.check_out:
-                # if our attendance is "open" (no check_out), we verify there is no other "open" attendance
-                no_check_out_attendances = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_out', '=', False),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if no_check_out_attendances:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))
-            else:
-                # we verify that the latest attendance with check_in time before our check_out time
-                # is the same as the one before our check_in time computed before, otherwise it overlaps
-                last_attendance_before_check_out = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<', attendance.check_out),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
+            (
+                before_check_in_id, before_check_in, before_check_in_out,
+                other_open_check_in,
+                before_check_out_id, before_check_out,
+            ) = others[attendance.id]
+            # the latest attendance before our check_in must not overlap with ours
+            if before_check_in_out and before_check_in_out > attendance.check_in:
+                raise exceptions.ValidationError(self.env._(
+                    "Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                    empl_name=attendance.employee_id.name,
+                    datetime=format_datetime(self.env, before_check_in, dt_format=False),
+                ))
+            # if our attendance is open, no other attendance may be open
+            if not attendance.check_out and other_open_check_in:
+                raise exceptions.ValidationError(self.env._(
+                    "Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
+                    empl_name=attendance.employee_id.name,
+                    datetime=format_datetime(self.env, other_open_check_in, dt_format=False),
+                ))
+            # the latest attendance before our check_out must be the one before our check_in, otherwise it overlaps
+            if attendance.check_out and before_check_out_id and before_check_out_id != before_check_in_id:
+                raise exceptions.ValidationError(self.env._(
+                    "Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                    empl_name=attendance.employee_id.name,
+                    datetime=format_datetime(self.env, before_check_out, dt_format=False),
+                ))
 
     # The fields a manager approves when reviewing an attendance. When one of them changes, the time rule outputs of
     # the attendance are out of date, the issues of its day may change, and a change by the employee needs a new review.

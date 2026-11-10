@@ -81,6 +81,35 @@ class TestHrAttendance(TransactionCase):
             })
         self.assertIn(format_datetime(self.env, existing.check_in, dt_format=False), str(error.exception))
 
+    def test_batch_validity(self):
+        """A batch of attendances is checked with a single query, against each other and the existing attendances."""
+        employees = self.env['hr.employee'].create([{'name': "Batch 1"}, {'name': "Batch 2"}])
+        attendances = self.attendance.create([{
+            'employee_id': employee.id,
+            'check_in': f'2024-03-{day:02} 08:00:00',
+            'check_out': f'2024-03-{day:02} 12:00:00',
+        } for employee in employees for day in range(1, 11)])
+        attendances.invalidate_recordset()
+        with self.assertQueryCount(2):  # the times of the attendances, then the attendances they are checked against
+            attendances._check_validity()
+        self.attendance._check_validity()  # nothing to check
+
+        with self.assertRaisesRegex(ValidationError, "Batch 2, the employee was already checked in on"):
+            self.attendance.create([{
+                'employee_id': employees[0].id,
+                'check_in': '2024-03-20 08:00:00',
+                'check_out': '2024-03-20 12:00:00',
+            }, {
+                'employee_id': employees[1].id,
+                'check_in': '2024-03-01 10:00:00',
+                'check_out': '2024-03-01 13:00:00',
+            }])
+        with self.assertRaisesRegex(ValidationError, "Batch 1, the employee hasn't checked out since"):
+            self.attendance.create([{
+                'employee_id': employees[0].id,
+                'check_in': f'2024-03-2{day} 08:00:00',
+            } for day in (1, 2)])
+
     @freeze_time("2024-02-05 11:00:00")
     def test_attendance_in_the_future(self):
         employee = self.env['hr.employee'].create({'name': "Test"})
