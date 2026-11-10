@@ -221,9 +221,9 @@ class IrCache(models.Model):
                             "INSERT INTO ir_cache (create_date, kind, key, control, hash, data, signature) VALUES %s",
                             SQL(", ").join(SQL("(NOW() AT TIME ZONE 'UTC', %s, %s, %s, %s, %s, %s)", *row) for row in rows),
                         ))
-                except Exception:  # noqa: BLE001
+                except Exception as e:  # noqa: BLE001
                     # the response is already computed, the entries are only a cache
-                    _logger.info("ir.cache: failed to store %s entries", len(rows), exc_info=True)
+                    _logger.info("ir.cache: failed to store %s entries: %s", len(rows), e)
 
         rows.append(row)
 

@@ -17,6 +17,7 @@ IGNORE_MODEL_NAMES_DISPLAY_NAME = {
     'account.multicurrency.revaluation.wizard',
     'account_followup.manual_reminder',
     'product.fetch.image.wizard',
+    'ir.cache',  # can not be instantiated
 }
 
 IGNORE_MODEL_NAMES_NEW_FORM = {
