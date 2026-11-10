@@ -532,6 +532,15 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 400)
         self.assertEqual(self.product.qty_available, 10)
 
+    def test_negative_last_in_other_uom(self):
+        """ Delivering more than on hand extrapolates the missing quantity with the
+        unit cost of the last receipt, whatever the UoM that receipt was made in. """
+        self._make_in_move(self.product, 1, unit_cost=10, uom_id=self.uom_pack_of_6.id)
+        out_move = self._make_out_move(self.product, 8)
+
+        self.assertEqual(out_move.value, 80)
+        self.assertEqual(self.product.qty_available, -2)
+
     def test_change_in_past_decrease_in_1(self):
         move1 = self._make_in_move(self.product, 20, unit_cost=10)
         self._make_out_move(self.product, 10)
