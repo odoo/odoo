@@ -935,6 +935,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(invoice.amount_total, 90)
 
     def test_fiscal_position_zero_rates(self):
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_customer_count', 1)
         included = self.env['account.tax'].create({
             'name': 'Included 6%', 'amount': 6, 'amount_type': 'percent',
             'type_tax_use': 'sale', 'price_include_override': 'tax_included',
