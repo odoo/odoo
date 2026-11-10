@@ -362,7 +362,6 @@ class AccountReportLine(models.Model):
         required=True,
         recursive=True,
         precompute=True,
-        index=True,
         ondelete='cascade'
     )
     hierarchy_level = fields.Integer(
@@ -581,7 +580,7 @@ class AccountReportExpression(models.Model):
     _description = "Accounting Report Expression"
     _rec_name = 'report_line_name'
 
-    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, index=True, ondelete='cascade')
+    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, ondelete='cascade')
     report_line_name = fields.Char(string="Report Line Name", related="report_line_id.name")
     label = fields.Char(string="Label", required=True, copy=True)
     engine = fields.Selection(

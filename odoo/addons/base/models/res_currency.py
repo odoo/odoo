@@ -350,7 +350,7 @@ class ResCurrencyRate(models.Model):
     _order = "name desc, id"
     _check_company_domain = models.check_company_domain_parent_of
 
-    name = fields.Date(string='Date', required=True, index=True,
+    name = fields.Date(string='Date', required=True,
                            default=fields.Date.context_today)
     rate = fields.Float(
         digits=0,

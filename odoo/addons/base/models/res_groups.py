@@ -33,7 +33,7 @@ class ResGroups(models.Model):
         help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
     sequence = fields.Integer(string='Sequence')
-    privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
+    privilege_id = fields.Many2one('res.groups.privilege', string='Privilege')
     view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
 
     _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
