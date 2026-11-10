@@ -927,6 +927,18 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if line_node.get('cac:Item', {}).get('cac:StandardItemIdentification'):
             line_node['cac:Item']['cac:StandardItemIdentification'] = None
 
+    def _add_invoice_line_item_nodes(self, line_node, vals):
+        # EXTENDS account.edi.xml.ubl_20
+        # Without a product, the first line of the label is the item name and the next lines its description.
+        super()._add_invoice_line_item_nodes(line_node, vals)
+        line = vals['base_line']['record']
+        if vals['base_line']['product_id'] or not line or not line.name:
+            return
+        name, _separator, description = line.name.partition('\n')
+        item_node = line_node['cac:Item']
+        item_node['cbc:Name']['_text'] = name.strip() or item_node['cbc:Name']['_text']
+        item_node['cbc:Description']['_text'] = ' '.join(description.split()) or None
+
     def _add_document_line_tax_category_nodes(self, line_node, vals):
         # No InvoiceLine/Item/ClassifiedTaxCategory in Turkey
         pass
@@ -1016,6 +1028,17 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             xpath = './{*}InvoiceLine'
             document_type = {'in_refund': 'in_invoice', 'out_refund': 'out_invoice'}.get(document_type, document_type)
         return super()._import_lines(record, tree, xpath, document_type=document_type, tax_type=tax_type, qty_factor=qty_factor)
+
+    def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
+        # EXTENDS account.edi.common
+        # Without a matching product, the label is the item name followed by the item description.
+        line_vals = super()._retrieve_line_vals(record, tree, document_type, qty_factor)
+        if not line_vals['product_id']:
+            item_name = (tree.findtext('./{*}Item/{*}Name') or '').strip()
+            description = (tree.findtext('./{*}Item/{*}Description') or '').strip()
+            if item_name and description and item_name != description:
+                line_vals['name'] = f'{item_name}\n{description}'
+        return line_vals
 
     def _l10n_tr_match_refund_reversed_entry(self, invoice, tree):
         if invoice.move_type not in {'in_refund', 'out_refund'}:
