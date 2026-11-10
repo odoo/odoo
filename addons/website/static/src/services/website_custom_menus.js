@@ -102,6 +102,7 @@ registry
         (env) =>
             env.services.website.currentWebsite &&
             env.services.website.isRestrictedEditor &&
+            !env.services.website.currentWebsite.metadata.isErrorPage &&
             !!env.services.website.currentWebsite.metadata.canOptimizeSeo
     );
 registry.category("website_custom_menus").add("website.menu_optimize_seo", {
@@ -126,6 +127,7 @@ registry
         (env) =>
             env.services.website.currentWebsite &&
             env.services.website.isDesigner &&
+            !env.services.website.currentWebsite.metadata.isErrorPage &&
             !!env.services.website.currentWebsite.metadata.mainObject
     );
 registry.category("website_custom_menus").add("website.menu_page_properties", {
