@@ -36,8 +36,8 @@ class ResCompany(models.Model):
     absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_validation = fields.Selection([
         ('manual_validation', 'Review everything'),
-        ('tolerance_validation', 'Review exceptions only'),
-    ], string="Attendance Validation", default='tolerance_validation', required=True)
+        ('exception_validation', 'Review exceptions only'),
+    ], string="Attendance Validation", default='exception_validation', required=True)
     attendance_validation_tolerance = fields.Integer(
         string="Validation Tolerance (Minutes)",
         default=15,

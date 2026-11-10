@@ -25,7 +25,7 @@
                 <field name="check_in" decoration-danger="state == 'draft' and in_mode == 'manual'"/>
                 <field name="check_out" options="{}" decoration-danger="state == 'draft' and out_mode == 'manual'"/>
                 <field name="break_duration" widget="float_time" optional="show"/>
-                <field name="worked_hours" string="Hours" widget="float_time" decoration-danger="is_overtime"/>
+                <field name="worked_hours" string="Hours" widget="float_time" decoration-danger="is_overtime or is_undertime"/>
                 <field name="work_entry_type_id" widget="many2one_work_entry_type" optional="show"
                        groups="hr.group_hr_user"/>
                 <field name="state" widget="badge"
@@ -41,6 +41,7 @@
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
                 <field name="is_overtime" column_invisible="1"/> <!-- drives decoration-danger of worked_hours -->
+                <field name="is_undertime" column_invisible="1"/> <!-- drives decoration-danger of worked_hours -->
                 <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list and invisible of the Mark as Reviewed button -->
                 <field name="source_stale" column_invisible="1"/> <!-- drives invisible of the Mark as Reviewed button -->
                 <button name="action_mark_reviewed" type="object"
@@ -78,6 +79,7 @@
                 <field name="is_late_check_in"/>
                 <field name="is_early_check_out"/>
                 <field name="is_overtime"/>
+                <field name="is_undertime"/>
                 <field name="source_stale"/>
                 <field name="time_rule_id"/>
                 <templates>
@@ -105,8 +107,8 @@
                                     <span class="badge rounded-pill text-bg-success ms-1">In Progress</span>
                                 </t>
                             </div>
-                            <field name="worked_hours" widget="float_time" class="fw-bold" invisible="not check_out"
-                                   decoration-danger="is_overtime"/>
+                            <field name="worked_hours" widget="float_time" invisible="not check_out"
+                                   decoration-danger="is_overtime or is_undertime"/>
                         </div>
                         <div t-if="record.source_stale.raw_value and record.time_rule_id.raw_value"
                              class="text-warning small mt-1">
@@ -315,7 +317,7 @@
     <record id="hr_attendance_my_calendar_view" model="ir.ui.view">
         <field name="name">hr.attendance.my.calendar</field>
         <field name="model">hr.attendance</field>
-        <!-- pinned on the My Attendances action; the other actions use the general calendar -->
+        <!-- after the general calendar: only the My Attendances action uses this one -->
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <calendar string="My Attendances"
@@ -422,10 +424,11 @@
                 <filter string="Refused" name="state_refused" domain="[('state', '=', 'refused')]"/>
                 <separator/>
                 <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
-                <filter string="Forgot Check-Out" name="auto_check" domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <filter string="Late Clock In" name="late_check_in" domain="[('is_late_check_in', '=', True)]"/>
                 <filter string="Early Clock Out" name="early_check_out" domain="[('is_early_check_out', '=', True)]"/>
+                <filter string="No Check-Out" name="auto_check" domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <filter string="Overtime" name="overtime" domain="[('is_overtime', '=', True)]"/>
+                <filter string="Undertime" name="undertime" domain="[('is_undertime', '=', True)]"/>
                 <separator/>
                 <filter string="Date" name="check_in_filter" date="check_in"/>
                 <field name="day_of_date"/>
@@ -461,7 +464,7 @@
     </record>
 
     <record id="hr_attendance_action" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
+        <field name="name">Overview</field>
         <field name="path">attendances</field>
         <field name="res_model">hr.attendance</field>
         <field name="group_ids" eval="[(6, 0, [ref('hr_attendance.group_hr_attendance_officer')])]"/>
@@ -491,14 +494,8 @@
         ]"/>
         <field name="domain">[('employee_id.user_id', '=', uid)]</field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
+        <!-- the help, with the user's name, comes from hr.attendance.get_empty_list_help -->
         <field name="context">{"my_attendances": True}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Welcome! Log your attendances here.
-            </p><p>
-                Check in from the top bar when you start and check out when you leave: your worked hours show up here.
-            </p>
-        </field>
     </record>
 
     <record id="hr_attendance_reporting" model="ir.actions.act_window">
@@ -564,7 +561,7 @@
 
     <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="200" action="action_hr_attendance_home" groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer" web_icon="hr_attendance,static/description/icon.png"/>
 
-    <menuitem id="menu_hr_attendance_view_dashboard" name="Dashboard" action="hr_attendance_action" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance_officer"/>
+    <menuitem id="menu_hr_attendance_view_dashboard" name="Overview" action="hr_attendance_action" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance_officer"/>
 
     <menuitem id="menu_hr_attendance_management_list" name="To Review" action="hr_attendance_action_to_review" parent="menu_hr_attendance_root" sequence="2" groups="hr_attendance.group_hr_attendance_officer"/>
 

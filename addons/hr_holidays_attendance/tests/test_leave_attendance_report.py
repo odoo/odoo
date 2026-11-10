@@ -539,3 +539,35 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             )
             self.env['hr.attendance']._cron_auto_check_out()
         self.assertFalse(attendance.check_out)
+
+    def test_attendance_issues_follow_time_off(self):
+        """A day off approved over a worked afternoon changes its issues: it is not late any more, and all its hours
+        are overtime. Refusing the day off brings the late check-in back."""
+        employee = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        employee.contract_date_start = monday - timedelta(days=7)
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': datetime.combine(monday, time(13, 0)),
+            'check_out': datetime.combine(monday, time(17, 0)),
+            'in_mode': 'kiosk',
+            'out_mode': 'kiosk',
+        })
+        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'is_overtime': False, 'state': 'draft'}])
+        day_off = self.env['hr.leave'].create({
+            'name': 'Day off',
+            'work_entry_type_id': self.env['hr.work.entry.type'].create({
+                'code': 'DAY_OFF_ISSUES',
+                'name': 'Day off',
+                'count_as': 'absence',
+                'requires_allocation': False,
+            }).id,
+            'employee_id': employee.id,
+            'request_date_from': monday,
+            'request_date_to': monday,
+        })
+        self.assertEqual(day_off.state, 'validate', "Created by a time off officer for another employee: approved")
+        self.assertRecordValues(attendance, [{'is_late_check_in': False, 'is_overtime': True, 'state': 'draft'}])
+        day_off.action_refuse()
+        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'is_overtime': False, 'state': 'draft'}])

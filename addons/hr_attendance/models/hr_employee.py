@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from odoo.tools.intervals import Intervals
-from odoo import SUPERUSER_ID, models, fields, api, exceptions, _
+from odoo import SUPERUSER_ID, models, fields, api, exceptions
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes
 from odoo.tools.date_utils import sum_intervals
@@ -378,13 +378,14 @@ class HrEmployee(models.Model):
                     'check_out': action_date,
                     **{'out_%s' % key: geo_information[key] for key in geo_information}
                 })
+                attendance._message_log(body=attendance._get_check_in_out_log('out'))
             else:
                 attendance.write({
                     'check_out': action_date
                 })
             self._notify_employee_presence_status()
         else:
-            raise exceptions.UserError(_(
+            raise exceptions.UserError(self.env._(
                 'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
                 'Your attendances have probably been modified manually by human resources.',
                 empl_name=self.sudo().name))
@@ -399,7 +400,7 @@ class HrEmployee(models.Model):
         month_end = (now_tz + relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0).astimezone(datetime.UTC).replace(tzinfo=None)
         return {
             "type": "ir.actions.act_window",
-            "name": _("Attendances This Month"),
+            "name": self.env._("Attendances This Month"),
             "res_model": "hr.attendance",
             "views": [[False, "list"], [False, "kanban"], [False, "form"]],
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
@@ -446,6 +447,77 @@ class HrEmployee(models.Model):
             "tag": "employee_barcode_scanner",
             "name": "Badge Scanner"
         }
+
+    def _get_expected_attendances_by_day(self, days):
+        """Return the shifts the employee is expected to work on each of the given days.
+
+        A shift belongs to the day it starts on, in the employee's timezone, like an attendance. So a night shift from
+        Monday 22:00 to Tuesday 06:00 belongs to Monday. A day off is in the result with no shift. A day with a flexible
+        schedule is not in the result, because no hours are expected.
+
+        :param days: dates
+        :return: ``{day: [(start, stop, resource.calendar.attendance)]}``, the shifts sorted by start
+        :rtype: dict
+        """
+        # one employee because hr.employee._get_expected_attendances is for one employee
+        self.ensure_one()
+        days_by_tz_and_contract = defaultdict(list)
+        for day in days:
+            if self._get_version(day)._is_flexible():
+                continue
+            in_contract = bool(self._get_versions_with_contract_overlap_with_period(day, day))
+            days_by_tz_and_contract[self._get_tz(day), in_contract].append(day)
+
+        expected_by_day = {}
+        for (tz_name, in_contract), group_days in days_by_tz_and_contract.items():
+            tz = ZoneInfo(tz_name)
+            first_day, last_day = min(group_days), max(group_days)
+            # When a period overlaps a contract, _get_expected_attendances gives no shift outside of the contract. So
+            # the days out of contract with a contract between them are computed one by one. The others are computed
+            # together, with a single call.
+            has_contract_between = not in_contract and self._get_versions_with_contract_overlap_with_period(
+                first_day, last_day,
+            )
+            periods = [(day, day) for day in group_days] if has_contract_between else [(first_day, last_day)]
+            for period_start, period_end in periods:
+                # until the end of the next day, where the night shifts of the last day end. Unless the next day is in
+                # contract and the period is not: the period would overlap the contract and get no shift.
+                # shortcut: a night shift on the day before a contract is cut at midnight, fix it if anyone needs it
+                period_stop = period_end + datetime.timedelta(days=1)
+                if not in_contract and self._get_versions_with_contract_overlap_with_period(period_stop, period_stop):
+                    period_stop = period_end
+                expected = self._get_expected_attendances(
+                    datetime.datetime.combine(period_start, time.min, tz),
+                    datetime.datetime.combine(period_stop, time.max, tz),
+                )
+                # The schedule ends a day at 23:59:59.999999. Move that end to midnight, so that Intervals joins it to
+                # the next day's shift starting at midnight, i.e. the rest of the night shift.
+                # shortcut: a round-the-clock schedule becomes one shift on its first day, split it if one is needed
+                shifts = Intervals([
+                    (start, stop + datetime.timedelta(microseconds=1) if stop.astimezone(tz).time() == time.max else stop,
+                     calendar_attendance)
+                    for start, stop, calendar_attendance in expected
+                ])
+                shifts_by_day = defaultdict(list)
+                for shift in shifts:
+                    shifts_by_day[shift[0].astimezone(tz).date()].append(shift)
+                for day in group_days:
+                    if period_start <= day <= period_end:
+                        expected_by_day[day] = shifts_by_day[day]
+        return expected_by_day
+
+    def _filter_attendance_managed_by_current_user(self):
+        """Return the employees whose attendances the current user manages. An attendance manager manages all of them.
+        An attendance officer only manages the employees they are the attendance approver of.
+
+        :rtype: hr.employee
+        """
+        user = self.env.user
+        if user.has_group('hr_attendance.group_hr_attendance_user'):
+            return self
+        if user.has_group('hr_attendance.group_hr_attendance_officer'):
+            return self.filtered(lambda employee: employee.sudo().attendance_manager_id == user)
+        return self.browse()
 
     def _get_calendar_attendance_domain(self):
         """Return the domain on ``resource.calendar.attendance`` used by

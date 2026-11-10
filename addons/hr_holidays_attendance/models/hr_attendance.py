@@ -7,9 +7,6 @@ from odoo.tools import SQL
 # fields that when changed invalidate previously credited allocations
 _TIME_FIELDS = frozenset({'check_in', 'check_out', 'employee_id'})
 
-# states in which an attendance no longer counts as valid source material
-_INVALID_STATES = frozenset({'refused', 'draft'})
-
 
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
@@ -18,29 +15,23 @@ class HrAttendance(models.Model):
         string="On Time Off", compute='_compute_has_time_off_conflict', search='_search_has_time_off_conflict',
         help="The attendance overlaps an approved time off of the employee.")
 
-    def _get_time_off_conflicts(self):
-        """Return the approved time off of the employees overlapping the attendances.
-
-        An open attendance is considered until now.
-
-        :rtype: hr.leave
+    @api.depends('employee_id', 'check_in', 'check_out')
+    def _compute_has_time_off_conflict(self):
+        """Flag the attendances that overlap an approved time off of the employee. An attendance that is not checked
+        out yet counts until the moment it is read as the field is not stored, so it is computed again at each read.
         """
+        self.has_time_off_conflict = False
         attendances = self.filtered(lambda a: a.employee_id and a.check_in)
         if not attendances:
-            return self.env['hr.leave']
+            return
         now = fields.Datetime.now()
-        return self.env['hr.leave'].sudo().search([
+        leaves_by_employee = self.env['hr.leave'].sudo().search([
             ('state', '=', 'validate'),
             ('employee_id', 'in', attendances.employee_id.ids),
             ('date_from', '<', max(attendances.mapped(lambda a: a.check_out or now))),
             ('date_to', '>', min(attendances.mapped('check_in'))),
-        ])
-
-    @api.depends('employee_id', 'check_in', 'check_out')
-    def _compute_has_time_off_conflict(self):
-        leaves_by_employee = self._get_time_off_conflicts().grouped('employee_id')
-        now = fields.Datetime.now()
-        for attendance in self:
+        ]).grouped('employee_id')
+        for attendance in attendances:
             check_out = attendance.check_out or now
             attendance.has_time_off_conflict = any(
                 leave.date_from < check_out and leave.date_to > attendance.check_in
@@ -66,30 +57,27 @@ class HrAttendance(models.Model):
 
     @api.depends('has_time_off_conflict')
     def _compute_has_issue(self):
-        super()._compute_has_issue()
-
-    def _has_issue(self):
         """Overlapping an approved time off is an issue."""
-        return super()._has_issue() or self.has_time_off_conflict
+        super()._compute_has_issue()
+        self.filtered('has_time_off_conflict').has_issue = True
 
     def write(self, vals):
-        """Reverse the allocation credits logged on the attendances before an invalidating
-        write.
+        """Reverse the allocation credits of the attendances that are no longer reviewed or whose times change.
 
-        Credits are reversed when ``check_in``, ``check_out`` or ``employee_id`` change (unless
-        the context has ``skip_time_rules``), or when a validated attendance goes back to
-        ``draft`` or is ``refused``. Re-running the rules credits the new values again.
+        The times are ``check_in``, ``check_out`` and ``employee_id``, unless the context has ``skip_time_rules``.
+        Running the time rules again credits the new times. The review state is checked after the write, because
+        ``hr_attendance`` may change it there: an employee's edit sends their attendance back to To Review.
 
         :raise ValidationError: if the allocation was already used beyond its allowed balance
         """
-        to_reverse = set()
         if not self.env.context.get('skip_time_rules') and _TIME_FIELDS & vals.keys():
-            to_reverse.update(self.ids)
-        if vals.get('state') in _INVALID_STATES:
-            to_reverse.update(self.filtered(lambda a: a.state == 'validated').ids)
-        if to_reverse:
-            self.env['hr.time.rule']._reverse_allocation_credits('hr.attendance', to_reverse)
-        return super().write(vals)
+            self.env['hr.time.rule']._reverse_allocation_credits('hr.attendance', self.ids)
+            return super().write(vals)
+        reviewed = self.filtered(lambda a: a.state == 'validated')
+        result = super().write(vals)
+        if no_longer_reviewed := reviewed.filtered(lambda a: a.state != 'validated'):
+            self.env['hr.time.rule']._reverse_allocation_credits('hr.attendance', no_longer_reviewed.ids)
+        return result
 
     @api.ondelete(at_uninstall=False)
     def _reverse_credits_on_unlink(self):

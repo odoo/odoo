@@ -404,29 +404,30 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
 
     def test_auto_check_out_gives_no_extra_hours(self):
-        """The tolerance only delays the automatic check-out: the day ends after the hours of the
-        schedule plus the breaks between the attendances, with no extra hours."""
+        """An automatic check-out gives the employee exactly the hours of their schedule.
+
+        The tolerance only waits longer before checking out: the check-out is set where the scheduled hours end.
+        """
         self.company.write({'auto_check_out': True, 'auto_check_out_tolerance': 2})
         self.employee.resource_calendar_id.write({
             'calendar_type': 'variable',
             'attendance_ids': [(5, 0, 0), (0, 0, {'date': datetime(2025, 3, 5), 'hour_from': 8, 'hour_to': 16})],
         })
-        Attendance = self.env['hr.attendance']
-        Attendance.create({
+        self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
             'check_in': datetime(2025, 3, 5, 8, 0),
             'check_out': datetime(2025, 3, 5, 12, 0),
         })
-        att = Attendance.create({
+        att = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
             'check_in': datetime(2025, 3, 5, 13, 0),
         })
         # 8:00 + 8 hours of schedule + 1 hour of lunch = 17:00, then 2 hours of tolerance
         with freeze_time("2025-03-05 18:59:00"):
-            Attendance._cron_auto_check_out()
-        self.assertFalse(att.check_out)
+            self.env['hr.attendance']._cron_auto_check_out()
+        self.assertFalse(att.check_out, "The employee is still within the tolerance")
         with freeze_time("2025-03-05 19:01:00"):
-            Attendance._cron_auto_check_out()
+            self.env['hr.attendance']._cron_auto_check_out()
         self.assertRecordValues(att, [{
             'check_out': datetime(2025, 3, 5, 17, 0),
             'worked_hours': 4,
@@ -646,6 +647,10 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             'contract_date_start': '2020-01-01',
             'wage': 3000,
         })
+        cls.light_user = new_test_user(
+            cls.env, login='light_att', groups='base.group_user,hr_attendance.group_hr_attendance_own',
+        )
+        cls.employee.user_id = cls.light_user
 
     def _get_overtime_hours(self):
         outputs = self.env['hr.attendance'].search([
@@ -654,42 +659,6 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             ('state', '=', 'validated'),
         ])
         return sum(outputs.mapped('worked_hours'))
-
-    def _create_9h_attendance(self):
-        return self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2024, 1, 1, 8, 0),  # Monday, 8h expected
-            'check_out': datetime(2024, 1, 1, 17, 0),
-        })
-
-    @freeze_time('2024-01-03 06:00:00')
-    def test_manager_encoded_attendance_runs_time_rules(self):
-        self.env.company.attendance_validation = 'manual_validation'
-        attendance = self._create_9h_attendance()
-        self.assertEqual(attendance.state, 'validated')
-        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
-
-    @freeze_time('2024-01-03 06:00:00')
-    def test_exceptions_only_on_check_out_runs_time_rules(self):
-        """A clock-out without exception is reviewed at once, overtime waits for a review."""
-        self.env.company.attendance_validation = 'tolerance_validation'
-        self.env.company.attendance_validation_tolerance = 15
-        attendance = self.env['hr.attendance'].create({
-            'employee_id': self.employee.id,
-            'check_in': datetime(2024, 1, 1, 8, 0),
-            'in_mode': 'kiosk',
-        })
-        self.assertEqual(attendance.state, 'draft')
-        attendance.write({'check_out': datetime(2024, 1, 1, 17, 0), 'out_mode': 'kiosk'})
-        self.assertTrue(attendance.is_overtime)
-        self.assertEqual(attendance.state, 'draft')
-        self.assertFalse(self._get_overtime_hours())
-
-        # the lunch break recorded at the kiosk after the check-out
-        attendance.break_duration = 1.0
-        self.assertFalse(attendance.is_overtime)
-        self.assertEqual(attendance.state, 'validated')
-        self.assertFalse(self._get_overtime_hours())
 
     def _create_kiosk_attendances(self, *spans):
         return self.env['hr.attendance'].create([{
@@ -701,20 +670,156 @@ class TestAttendanceValidationTimeRules(TransactionCase):
         } for start, stop in spans])
 
     @freeze_time('2024-01-03 06:00:00')
-    def test_review_exception_flags(self):
-        self.env.company.attendance_validation = 'tolerance_validation'
+    def test_manager_encoded_attendance_runs_time_rules(self):
+        self.env.company.attendance_validation = 'manual_validation'
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 8, 0),  # Monday, 8h expected
+            'check_out': datetime(2024, 1, 1, 17, 0),
+        })
+        self.assertEqual(attendance.state, 'validated')
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_exceptions_only_on_check_out_runs_time_rules(self):
+        """A clock-out without exception is reviewed at once, overtime waits for a review."""
+        self.env.company.attendance_validation = 'exception_validation'
+        self.env.company.attendance_validation_tolerance = 15
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 8, 0),
+            'in_mode': 'kiosk',
+        })
+        self.assertEqual(attendance.state, 'draft')
+        attendance.write({'check_out': datetime(2024, 1, 1, 17, 0), 'out_mode': 'kiosk'})
+        self.assertRecordValues(attendance, [{'is_overtime': True, 'state': 'draft'}])
+        self.assertFalse(self._get_overtime_hours())
+
+        # the lunch break recorded at the kiosk after the check-out
+        attendance.break_duration = 1.0
+        self.assertRecordValues(attendance, [{'is_overtime': False, 'state': 'validated'}])
+        self.assertFalse(self._get_overtime_hours())
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_issue_flags(self):
+        self.env.company.attendance_validation = 'exception_validation'
         self.env.company.attendance_validation_tolerance = 15
         morning, afternoon = self._create_kiosk_attendances(((8, 30), (12, 0)), ((13, 0), (16, 30)))
-        self.assertTrue(morning.is_late_check_in)
-        self.assertTrue(afternoon.is_early_check_out)
-        self.assertFalse((morning | afternoon).filtered('is_overtime'))
-        self.assertTrue(morning.has_issue and afternoon.has_issue)
-        self.assertEqual((morning | afternoon).mapped('state'), ['draft', 'draft'])
-        Attendance = self.env['hr.attendance']
-        self.assertEqual(Attendance.search([('is_late_check_in', '=', True), ('employee_id', '=', self.employee.id)]), morning)
-        self.assertEqual(Attendance.search([('is_early_check_out', '=', True), ('employee_id', '=', self.employee.id)]), afternoon)
+        self.assertRecordValues(morning | afternoon, [
+            {'is_late_check_in': True, 'is_early_check_out': False, 'is_overtime': False, 'has_issue': True, 'state': 'draft'},
+            {'is_late_check_in': False, 'is_early_check_out': True, 'is_overtime': False, 'has_issue': True, 'state': 'draft'},
+        ])
+        self.assertEqual(
+            self.env['hr.attendance'].search([('is_late_check_in', '=', True), ('employee_id', '=', self.employee.id)]),
+            morning, "The flags are stored, so that the filters and counters can search them",
+        )
 
-        # a refused attendance does not count: the afternoon starts the day late
+        # within the tolerance, the day is reviewed
+        afternoon.write({'check_out': datetime(2024, 1, 1, 17, 10), 'out_mode': 'kiosk'})
+        morning.write({'check_in': datetime(2024, 1, 1, 8, 5), 'in_mode': 'kiosk'})
+        self.assertRecordValues(morning | afternoon, [
+            {'has_issue': False, 'state': 'validated'},
+            {'has_issue': False, 'state': 'validated'},
+        ])
+
+    @freeze_time('2024-01-06 06:00:00')
+    def test_undertime(self):
+        """A day with fewer worked hours than expected is an undertime, flagged on its last attendance."""
+        self.env.company.attendance_validation = 'exception_validation'
+        self.env.company.attendance_validation_tolerance = 15
+        Attendance = self.env['hr.attendance']
+        kiosk = {'employee_id': self.employee.id, 'in_mode': 'kiosk', 'out_mode': 'kiosk'}
+        morning, afternoon = Attendance.create([{
+            **kiosk, 'check_in': datetime(2024, 1, 1, 8, 0), 'check_out': datetime(2024, 1, 1, 12, 0),
+        }, {
+            # Monday, 8-12 and 13-17 expected: on time, but a long break
+            **kiosk, 'check_in': datetime(2024, 1, 1, 13, 0), 'check_out': datetime(2024, 1, 1, 17, 0), 'break_duration': 1,
+        }])
+        self.assertRecordValues(morning | afternoon, [
+            {'is_undertime': False, 'is_early_check_out': False, 'has_issue': False, 'state': 'validated'},
+            {'is_undertime': True, 'is_early_check_out': False, 'has_issue': True, 'state': 'draft'},
+        ])
+        self.assertEqual(
+            Attendance.search([('is_undertime', '=', True), ('employee_id', '=', self.employee.id)]), afternoon,
+        )
+        # within the tolerance
+        afternoon.break_duration = 0.1
+        self.assertRecordValues(afternoon, [{'is_undertime': False, 'state': 'validated'}])
+
+        open_day, auto_checked_out, day_off = Attendance.create([{
+            # Tuesday, still at work
+            'employee_id': self.employee.id, 'check_in': datetime(2024, 1, 2, 8, 0), 'in_mode': 'kiosk',
+        }, {
+            # Wednesday, checked out by the cron: no undertime, it goes to review as such
+            **kiosk, 'check_in': datetime(2024, 1, 3, 8, 0), 'check_out': datetime(2024, 1, 3, 10, 0),
+            'out_mode': 'auto_check_out',
+        }, {
+            # Saturday
+            **kiosk, 'check_in': datetime(2024, 1, 6, 1, 0), 'check_out': datetime(2024, 1, 6, 2, 0),
+        }])
+        self.assertFalse(open_day.is_undertime)
+        self.assertRecordValues(auto_checked_out, [{'is_undertime': False, 'state': 'draft'}])
+        self.assertRecordValues(day_off, [{'is_undertime': False, 'is_overtime': True}])
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_issues_follow_time_off(self):
+        """A morning off approved after the afternoon was worked: the afternoon is neither late nor short any more,
+        and is reviewed, which runs the time rules. Taken back, the issues come back, but the attendance stays
+        reviewed."""
+        self.env.company.attendance_validation = 'exception_validation'
+        self.env.company.attendance_validation_tolerance = 15
+        afternoon = self._create_kiosk_attendances(((13, 0), (17, 10)))
+        self.assertRecordValues(afternoon, [{'is_late_check_in': True, 'is_undertime': True, 'state': 'draft'}])
+        # as the time off approval does
+        morning_off = self.env['resource.calendar.leaves'].with_context(skip_time_rules=True).create({
+            'name': 'Morning off',
+            'resource_id': self.employee.resource_id.id,
+            'calendar_id': self.employee.resource_calendar_id.id,
+            'date_from': datetime(2024, 1, 1, 8, 0),
+            'date_to': datetime(2024, 1, 1, 12, 0),
+        })
+        self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'is_undertime': False, 'state': 'validated'}])
+        self.assertAlmostEqual(self._get_overtime_hours(), 1 / 6, msg="The review ran the time rules")
+        # the time rules moved the extra 10 minutes to an output, now the last attendance of the day
+        day = afternoon | afternoon.overtime_attendance_ids
+        morning_off.date_from = datetime(2024, 1, 1, 10, 0)
+        self.assertRecordValues(afternoon, [{'is_late_check_in': True, 'state': 'validated'}])
+        self.assertTrue(day.filtered('is_undertime'))
+        morning_off.unlink()
+        self.assertRecordValues(afternoon, [{'is_late_check_in': True, 'state': 'validated'}])
+        self.assertTrue(day.filtered('is_undertime'))
+
+        # a public holiday in the morning, for the employees of the company
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Half holiday',
+            'company_id': self.employee.company_id.id,
+            'calendar_id': self.employee.resource_calendar_id.id,
+            'date_from': datetime(2024, 1, 1, 8, 0),
+            'date_to': datetime(2024, 1, 1, 12, 0),
+        })
+        self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'is_undertime': False}])
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_manager_edit_is_manual(self):
+        """A manager's edit of the times is manual, like the employee's, but keeps the review state. The devices, the
+        automatic check-out and the time rules write as superuser and keep their mode."""
+        self.env.company.attendance_validation = 'exception_validation'
+        officer = new_test_user(
+            self.env, login='att_officer_edit', groups='base.group_user,hr_attendance.group_hr_attendance_officer',
+        )
+        self.employee.attendance_manager_id = officer
+        morning, afternoon = self._create_kiosk_attendances(((8, 0), (12, 0)), ((13, 0), (17, 0)))
+        afternoon.with_user(officer).write({'check_out': datetime(2024, 1, 1, 17, 5)})
+        self.assertRecordValues(afternoon, [{'state': 'validated', 'in_mode': 'kiosk', 'out_mode': 'manual'}])
+        morning.with_user(officer).write({'check_in': datetime(2024, 1, 1, 7, 55), 'in_mode': 'kiosk'})
+        self.assertRecordValues(morning, [{'in_mode': 'kiosk', 'out_mode': 'kiosk'}])
+        morning.sudo().write({'check_out': datetime(2024, 1, 1, 12, 5)})
+        self.assertRecordValues(morning, [{'in_mode': 'kiosk', 'out_mode': 'kiosk'}])
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_issues_follow_the_other_attendances_of_the_day(self):
+        """Refusing, resetting or deleting an attendance moves the issues of the other attendances of its day."""
+        morning, afternoon = self._create_kiosk_attendances(((8, 30), (12, 0)), ((13, 0), (16, 30)))
         morning.action_refuse()
         self.assertRecordValues(morning | afternoon, [
             {'is_late_check_in': False, 'is_early_check_out': False},
@@ -725,71 +830,134 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             {'is_late_check_in': True, 'is_early_check_out': False},
             {'is_late_check_in': False, 'is_early_check_out': True},
         ])
-
-        # within the tolerance, the day is reviewed
-        afternoon.write({'check_out': datetime(2024, 1, 1, 17, 10), 'out_mode': 'kiosk'})
-        morning.write({'check_in': datetime(2024, 1, 1, 8, 5), 'in_mode': 'kiosk'})
-        self.assertFalse((morning | afternoon).filtered('has_issue'))
-        self.assertEqual((morning | afternoon).mapped('state'), ['validated', 'validated'])
-
-        # once the morning is deleted, the afternoon starts the day late
         morning.unlink()
         self.assertTrue(afternoon.is_late_check_in)
 
     @freeze_time('2024-01-03 06:00:00')
+    def test_lunch_check_out_reviewed_once_back(self):
+        """Checking out for lunch is an early check-out until the employee checks in again. Then the
+        morning attendance has no issue left, and is reviewed like the afternoon one.
+        """
+        self.env.company.attendance_validation = 'exception_validation'
+        morning = self._create_kiosk_attendances(((8, 0), (12, 0)))
+        self.assertRecordValues(morning, [{'is_early_check_out': True, 'state': 'draft'}])
+
+        afternoon = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 13, 0),
+            'in_mode': 'kiosk',
+        })
+        afternoon.write({'check_out': datetime(2024, 1, 1, 17, 0), 'out_mode': 'kiosk'})
+        self.assertRecordValues(morning | afternoon, [
+            {'is_early_check_out': False, 'has_issue': False, 'state': 'validated'},
+            {'is_early_check_out': False, 'has_issue': False, 'state': 'validated'},
+        ])
+
+    @freeze_time('2024-01-10 06:00:00')
+    def test_expected_attendances_before_contract(self):
+        """The days before a contract follow the employee's schedule, also the last one, alone or with earlier days."""
+        self.employee.version_id.write({'date_version': date(2024, 1, 2), 'contract_date_start': date(2024, 1, 2)})
+        friday, monday, tuesday = date(2023, 12, 29), date(2024, 1, 1), date(2024, 1, 2)  # contract from Tuesday
+        for days in ([monday], [friday, monday], [friday, monday, tuesday]):
+            with self.subTest(days=days):
+                expected = self.employee._get_expected_attendances_by_day(days)
+                self.assertEqual({day: len(shifts) for day, shifts in expected.items()}, dict.fromkeys(days, 2))
+
+    def test_issues_of_night_shift(self):
+        """A shift over midnight belongs to the day it starts, like its attendance."""
+        self.employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Nights',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': str(wd), 'hour_from': 22, 'hour_to': 24}) for wd in range(5)
+            ] + [
+                (0, 0, {'dayofweek': str(wd), 'hour_from': 0, 'hour_to': 6}) for wd in range(1, 6)
+            ],
+        })
+        night, long_night = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, day, 22, 0),  # Monday and Tuesday nights
+            'check_out': datetime(2024, 1, day + 1, check_out_hour, 0),
+            'in_mode': 'kiosk',
+            'out_mode': 'kiosk',
+        } for day, check_out_hour in ((1, 6), (2, 9))])
+        self.assertRecordValues(night | long_night, [
+            {'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': False},
+            {'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': True},
+        ])
+
+    @freeze_time('2024-01-03 06:00:00')
     def test_light_user_edit_sends_back_to_review(self):
-        self.env.company.attendance_validation = 'tolerance_validation'
-        user = new_test_user(self.env, login='light_att', groups='base.group_user,hr_attendance.group_hr_attendance_own')
-        self.employee.user_id = user
+        self.env.company.attendance_validation = 'exception_validation'
         morning, afternoon = self._create_kiosk_attendances(((8, 0), (12, 0)), ((13, 0), (17, 0)))
         self.assertEqual(afternoon.state, 'validated')
 
-        afternoon.with_user(user).write({'check_out': datetime(2024, 1, 1, 16, 55)})
-        self.assertEqual(afternoon.state, 'draft')
-        self.assertEqual(afternoon.out_mode, 'manual')
-        self.assertEqual(afternoon.in_mode, 'kiosk')
-        self.assertEqual(morning.state, 'validated')
+        afternoon.with_user(self.light_user).write({'check_out': datetime(2024, 1, 1, 16, 55)})
+        self.assertRecordValues(morning | afternoon, [
+            {'state': 'validated', 'in_mode': 'kiosk', 'out_mode': 'kiosk'},
+            {'state': 'draft', 'in_mode': 'kiosk', 'out_mode': 'manual'},
+        ])
 
-        morning.with_user(user).write({'break_duration': 0.25})
-        self.assertEqual(morning.state, 'draft')
-        self.assertEqual((morning.in_mode, morning.out_mode), ('kiosk', 'kiosk'))
+        morning.with_user(self.light_user).write({'break_duration': 0.25})
+        self.assertRecordValues(morning, [{'state': 'draft', 'in_mode': 'kiosk', 'out_mode': 'kiosk'}])
 
         morning.action_validate()
-        morning.with_user(user).write({'check_in': datetime(2024, 1, 1, 8, 5)})
-        self.assertEqual(morning.state, 'draft')
-        self.assertEqual((morning.in_mode, morning.out_mode), ('manual', 'kiosk'))
+        morning.with_user(self.light_user).write({'check_in': datetime(2024, 1, 1, 8, 5)})
+        self.assertRecordValues(morning, [{'state': 'draft', 'in_mode': 'manual', 'out_mode': 'kiosk'}])
 
-        with self.assertRaises(AccessError):
-            afternoon.with_user(user).write({'state': 'validated'})
-
-        # a check-out sent with a mode on a closed attendance is still a change by hand
-        morning.action_validate()
-        morning.with_user(user).write({'check_out': datetime(2024, 1, 1, 12, 5), 'out_mode': 'systray'})
-        self.assertRecordValues(morning, [{'state': 'draft', 'out_mode': 'manual'}])
-
-        # the time rules wait for the review of the changed hours
-        (morning | afternoon).action_validate()
-        afternoon.with_user(user).write({'check_out': datetime(2024, 1, 1, 19, 0)})
-        self.assertEqual(afternoon.state, 'draft')
-        self.assertFalse(self._get_overtime_hours())
         afternoon.action_validate()
-        self.assertAlmostEqual(self._get_overtime_hours(), 1.75)  # 3h45 + 6h - 8h
+        afternoon.with_user(self.light_user).write({'check_in': datetime(2024, 1, 1, 13, 5), 'state': 'draft'})
+        self.assertRecordValues(afternoon, [{'state': 'draft', 'in_mode': 'manual', 'out_mode': 'manual'}])
 
-        # nor can the user create a reviewed attendance or a time rule output
-        for vals in ({'state': 'validated'}, {'time_rule_id': self.rule.id}, {'source_attendance_id': morning.id}):
-            with self.assertRaises(AccessError):
-                self.env['hr.attendance'].with_user(user).create({
-                    'employee_id': self.employee.id,
-                    'check_in': datetime(2024, 1, 2, 8, 0),
-                    'check_out': datetime(2024, 1, 2, 20, 0),
-                    **vals,
-                })
+    @freeze_time('2024-01-03 06:00:00')
+    def test_light_user_edit_overtime_waits_for_review(self):
+        self.env.company.attendance_validation = 'exception_validation'
+        _morning, afternoon = self._create_kiosk_attendances(((8, 0), (12, 0)), ((13, 0), (17, 0)))
+        self.assertEqual(afternoon.state, 'validated')
+        afternoon.with_user(self.light_user).write({'check_out': datetime(2024, 1, 1, 20, 0)})
+        self.assertRecordValues(afternoon, [{'state': 'draft', 'out_mode': 'manual'}])
+        self.assertFalse(self._get_overtime_hours(), "The overtime waits for a review")
+        afternoon.action_validate()
+        self.assertAlmostEqual(self._get_overtime_hours(), 3)  # 4h + 7h - 8h
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_light_user_cannot_set_trusted_values(self):
+        """Only the managers review attendances, and only the devices and the time rules (in sudo) set the check in/out
+        modes and create time rule outputs."""
+        self.env.company.attendance_validation = 'exception_validation'
+        self._create_kiosk_attendances(((8, 0), (12, 0)))
+        attendances = self.env['hr.attendance'].with_user(self.light_user)
+        afternoon = attendances.create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 13, 0),
+            'check_out': datetime(2024, 1, 1, 17, 0),
+        })
+        self.assertRecordValues(afternoon, [{'state': 'draft', 'in_mode': 'manual', 'out_mode': 'manual'}])
+        for trusted_vals in (
+            {'state': 'validated'},
+            {'in_mode': 'systray'},
+            {'out_mode': 'kiosk'},
+            {'time_rule_id': self.rule.id},
+            {'source_attendance_id': afternoon.id},
+        ):
+            with self.subTest(vals=trusted_vals):
+                with self.assertRaises(AccessError):
+                    attendances.create({
+                        'employee_id': self.employee.id,
+                        'check_in': datetime(2024, 1, 2, 8, 0),
+                        **trusted_vals,
+                    })
+                with self.assertRaises(AccessError):
+                    # without the times, the review policy would review it
+                    afternoon.with_user(self.light_user).write({
+                        'work_entry_type_id': afternoon.work_entry_type_id.id,
+                        **trusted_vals,
+                    })
 
     @freeze_time('2024-01-03 06:00:00')
     def test_review_exceptions_after_time_rules(self):
         """The excess hours that the time rules move to an output on review still count in the
         day: the reviewed day keeps its overtime and does not become an early check-out."""
-        self.env.company.attendance_validation = 'tolerance_validation'
+        self.env.company.attendance_validation = 'exception_validation'
         self.env.company.attendance_validation_tolerance = 15
         morning, afternoon = self._create_kiosk_attendances(((7, 30), (12, 0)), ((13, 0), (17, 0)))
         self.assertTrue(afternoon.is_overtime)
@@ -804,7 +972,7 @@ class TestAttendanceValidationTimeRules(TransactionCase):
     def test_auto_check_out_is_reviewed(self):
         """An automatic check-out goes to review as such, not as an early check-out."""
         self.env.company.write({
-            'attendance_validation': 'tolerance_validation',
+            'attendance_validation': 'exception_validation',
             'attendance_validation_tolerance': 15,
             'auto_check_out': True,
             'auto_check_out_tolerance': 1,
@@ -823,23 +991,62 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             'state': 'draft',
         }])
 
+    def test_check_in_out_log_gives_the_device(self):
+        """The chatter message of a check-in or check-out gives the browser and the IP address on a second line."""
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 8, 0),
+            'in_mode': 'systray',
+            'in_browser': 'chrome',
+            'in_ip_address': '192.0.2.1',
+        })
+        self.assertIn(
+            '<br><span class="text-muted">Browser: chrome · IP address: 192.0.2.1</span>',
+            attendance.message_ids[-1].body,
+        )
+        attendance.write({'check_out': datetime(2024, 1, 1, 17, 0), 'out_mode': 'systray', 'out_browser': 'firefox'})
+        self.assertEqual(
+            attendance._get_check_in_out_log('out'),
+            'Check out (Systray)<br/><span class="text-muted">Browser: firefox</span>',
+        )
+        manual = self._create_kiosk_attendances(((18, 0), (19, 0)))
+        self.assertNotIn('text-muted', manual.message_ids[-1].body, "Nothing to add without the browser nor the IP address")
+
+    def test_auto_check_out_counts_worked_time_only(self):
+        """The automatic check-out completes the hours of the day: a refused attendance of the day does not count."""
+        self.env.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+        })
+        morning = self._create_kiosk_attendances(((8, 0), (12, 0)))
+        morning.action_refuse()
+        afternoon = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 13, 0),
+            'in_mode': 'kiosk',
+        })
+        with freeze_time('2024-01-01 23:00:00'):
+            self.env['hr.attendance']._cron_auto_check_out()
+        self.assertRecordValues(afternoon, [{'check_out': datetime(2024, 1, 1, 21, 0), 'out_mode': 'auto_check_out'}])
+
     @freeze_time('2023-12-31 10:00:00')  # Sunday
     def test_home_action_and_dashboard(self):
-        self.env.company.attendance_validation = 'tolerance_validation'
+        self.env.company.attendance_validation = 'exception_validation'
         officer = new_test_user(self.env, login='att_officer', groups='base.group_user,hr_attendance.group_hr_attendance_officer')
         light = new_test_user(self.env, login='att_light', groups='base.group_user,hr_attendance.group_hr_attendance_own')
-        Attendance = self.env['hr.attendance']
         my_action_id = self.env.ref('hr_attendance.hr_attendance_my_action').id
-        self.assertEqual(Attendance.with_user(officer)._get_home_action()['id'], self.env.ref('hr_attendance.hr_attendance_action').id)
-        self.assertEqual(Attendance.with_user(light)._get_home_action()['id'], my_action_id, "No employee: no check in panel")
+        self.assertEqual(self.env['hr.attendance'].with_user(officer)._get_home_action()['id'], self.env.ref('hr_attendance.hr_attendance_action').id)
+        self.assertEqual(self.env['hr.attendance'].with_user(light)._get_home_action()['id'], my_action_id, "No employee: no check in panel")
         self.env['hr.employee'].create({'name': 'Light', 'user_id': light.id})
-        self.assertEqual(Attendance.with_user(light)._get_home_action()['tag'], 'hr_attendance_my_attendance')
+        self.assertEqual(self.env['hr.attendance'].with_user(light)._get_home_action()['tag'], 'hr_attendance_my_attendance')
         self.env.company.attendance_from_systray = False
-        self.assertEqual(Attendance.with_user(light)._get_home_action()['id'], my_action_id, "Check in from the kiosk only")
+        self.assertEqual(self.env['hr.attendance'].with_user(light)._get_home_action()['id'], my_action_id, "Check in from the kiosk only")
         self.env.company.attendance_from_systray = True
+        my_action = self.env['ir.actions.act_window'].with_user(light)._for_xml_id('hr_attendance.hr_attendance_my_action')
+        self.assertIn(f'Welcome {light.name}! Log your attendances here.', my_action['help'], "The users are welcomed by name")
 
         self.employee.attendance_manager_id = officer
-        Attendance.create([{
+        self.env['hr.attendance'].create([{
             'employee_id': self.employee.id,
             'check_in': datetime(2023, 12, 29, 8, 30),  # Friday, late
             'check_out': datetime(2023, 12, 29, 17, 0),
@@ -847,19 +1054,29 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             'out_mode': 'kiosk',
         }, {
             'employee_id': self.employee.id,
+            'check_in': datetime(2023, 12, 28, 8, 0),  # Thursday, checked out by the cron
+            'check_out': datetime(2023, 12, 28, 12, 0),
+            'in_mode': 'kiosk',
+            'out_mode': 'auto_check_out',
+        }, {
+            'employee_id': self.employee.id,
             'check_in': datetime(2023, 12, 30, 9, 0),  # Saturday, never checked out
             'in_mode': 'kiosk',
         }])
-        counts = Attendance.with_user(officer).get_attendance_dashboard_data()
-        self.assertEqual(counts['to_review'], 1)
+        counts = self.env['hr.attendance'].with_user(officer).get_attendance_dashboard_data()
+        self.assertEqual(counts['to_review'], 2)
         self.assertEqual(counts['late_check_in'], 1)
+        self.assertEqual(counts['no_check_out'], 1)
         self.assertEqual(counts['at_work'], 1)
-        # among the records of the action
-        counts = Attendance.with_user(officer).get_attendance_dashboard_data([('check_in', '>=', '2023-12-30')])
-        self.assertEqual((counts['to_review'], counts['late_check_in'], counts['at_work']), (0, 0, 1))
+        counts = self.env['hr.attendance'].with_user(officer).get_attendance_dashboard_data([('check_in', '>=', datetime(2023, 12, 30))])
+        self.assertEqual(counts, {
+            'to_review': 0, 'late_check_in': 0, 'early_check_out': 0, 'no_check_out': 0, 'overtime': 0, 'undertime': 0,
+            'at_work': 1,
+        },
+            "The counters only count the attendances of the action")
 
         # To Review opens the dashboard action, filtered, under its own URL
-        to_review = Attendance.with_user(officer)._get_to_review_action()
+        to_review = self.env['hr.attendance'].with_user(officer)._get_to_review_action()
         self.assertEqual(to_review['id'], self.env.ref('hr_attendance.hr_attendance_action').id)
         self.assertEqual(to_review['name'], 'To Review')
         self.assertEqual(to_review['display_name'], 'To Review')

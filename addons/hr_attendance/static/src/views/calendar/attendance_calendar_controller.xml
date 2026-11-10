@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_attendance.AttendanceCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
-        <!-- the period is in the navigation already: keep the header on one line -->
+        <!-- on desktop, the date navigation already shows the period -->
         <xpath expr="//div[hasclass('o_calendar_header')]/h5" position="attributes">
             <attribute name="t-if">this.uiService.isSmall</attribute>
+        </xpath>
+        <!-- on mobile, the week number alone keeps the header on one line -->
+        <xpath expr="//div[hasclass('o_calendar_header')]/h5//t[@t-out='this.weekHeader']" position="replace"/>
+        <xpath expr="//div[hasclass('o_calendar_header')]/h5//span[hasclass('o_current_week')]" position="attributes">
+            <attribute name="class" remove="ms-1" separator=" "/>
         </xpath>
     </t>
 </templates>

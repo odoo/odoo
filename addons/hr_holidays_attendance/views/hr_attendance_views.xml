@@ -7,8 +7,10 @@
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
         <field name="arch" type="xml">
-            <filter name="overtime" position="after">
+            <filter name="early_check_out" position="after">
                 <filter string="On Time Off" name="time_off_conflict" domain="[('has_time_off_conflict', '=', True)]"/>
+            </filter>
+            <filter name="undertime" position="after">
                 <separator/>
                 <filter string="Overtime Entries" name="is_time_rule_output"
                         domain="[('time_rule_id', '!=', False)]"/>

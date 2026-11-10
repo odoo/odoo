@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
@@ -268,6 +268,23 @@ class TestTimeRuleAllocationLog(TransactionCase):
             alloc.number_of_days, 0.0, places=5,
             msg="After write: source credit reversed; engine skips (WET mismatch) -> 0d",
         )
+
+    def test_employee_break_edit_reverses_credit(self):
+        """An employee who changes the break of their reviewed attendance sends it back to To Review, so its credit
+        is reversed until a manager reviews it again."""
+        self._make_rule()
+        self.emp.user_id = new_test_user(
+            self.env, login='log_employee', groups='base.group_user,hr_attendance.group_hr_attendance_own',
+        )
+        att = self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
+        alloc = self._alloc()
+        self.assertAlmostEqual(alloc.number_of_days, 0.5, places=5)
+
+        att.with_user(self.emp.user_id).write({'break_duration': 1})
+
+        self.assertEqual(att.state, 'draft')
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5)
 
     def test_source_write_no_change_when_non_time_field(self):
         """Writing a non-time field must NOT trigger reversal (allocation stays)."""

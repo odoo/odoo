@@ -149,7 +149,7 @@ class HrAttendance(http.Controller):
         try:
             location = request.env['base.geocoder']._get_localisation(latitude, longitude)
         except (UserError, RequestException):
-            location = _("Unknown")
+            location = request.env._("Unknown")
 
         response.update({
             'location': location,
@@ -490,7 +490,8 @@ class HrAttendance(http.Controller):
                                                   longitude=longitude,
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
         check_in_image_data = self._get_validated_check_in_image_and_type(check_in_image, employee.company_id.attendance_capture_check_in)
-        notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
+        # in sudo like the kiosk: only the devices set the check in/out modes
+        notification = employee.sudo().with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
         response = self._get_attendance_action_response(employee, notification)
         response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
         return response

@@ -142,6 +142,20 @@ class TestHrAttendanceKiosk(HttpCase):
                 break_duration=1,
             )
 
+    def test_update_break_duration_changes_validated_attendance(self):
+        """The kiosk asks for the break after the check-out, when the attendance may already be reviewed."""
+        attendance = self._create_checked_out_attendance()
+        attendance.with_context(skip_time_rules=True).write({'state': 'validated'})
+
+        result = self._update_break(
+            employee_id=self.employee_A.id,
+            attendance_id=attendance.id,
+            break_duration=0.5,
+        )
+
+        self.assertTrue(result['attendance'])
+        self.assertEqual(attendance.break_duration, 0.5)
+
     def test_update_break_duration_does_not_change_refused_attendance(self):
         attendance = self._create_checked_out_attendance()
         attendance.with_context(skip_time_rules=True).write({'state': 'refused'})

@@ -1,9 +1,7 @@
 .o_attendance_dashboard {
     background-color: var(--o-control-panel-background-color);
-    scrollbar-width: none;
 }
 
-/* Tinted tiles: each counter mixes its hue into the view background (light and dark themes alike). */
 .o_attendance_kpi {
     --o-attendance-kpi-color: var(--o-brand-primary);
     flex: 0 0 auto;
@@ -12,7 +10,7 @@
     flex-direction: column;
     align-items: center;
     padding: var(--o-bs-spacer-2) var(--o-bs-spacer-3);
-    border: 1px solid transparent;
+    border: var(--border-width) solid transparent;
     border-radius: var(--border-radius-lg);
     background-color: color-mix(in srgb, var(--o-attendance-kpi-color) 16%, var(--o-view-background-color));
     color: var(--body-color);
@@ -39,7 +37,9 @@
     &[name="at_work"] { --o-attendance-kpi-color: var(--success); }
     &[name="late_check_in"] { --o-attendance-kpi-color: var(--danger); }
     &[name="early_check_out"] { --o-attendance-kpi-color: var(--purple); }
+    &[name="no_check_out"] { --o-attendance-kpi-color: var(--warning); }
     &[name="overtime"] { --o-attendance-kpi-color: var(--blue); }
+    &[name="undertime"] { --o-attendance-kpi-color: var(--info); }
 
     @media (max-width: 767.98px) {
         min-width: 0;

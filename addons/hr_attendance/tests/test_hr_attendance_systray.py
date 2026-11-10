@@ -61,10 +61,9 @@ class TestHrAttendanceSystray(HttpCase):
         self.authenticate('user_with_employee', 'user_with_employee')
         chrome = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'}
         position = {'latitude': 50.8466, 'longitude': 4.3528}
-        Geocoder = self.registry['base.geocoder']
         for tracking in (False, True):
             with self.subTest(tracking=tracking), \
-                    patch.object(Geocoder, '_get_localisation', lambda self, latitude, longitude: 'Brussels'):
+                    patch.object(self.registry['base.geocoder'], '_get_localisation', lambda self, latitude, longitude: 'Brussels'):
                 self.company.attendance_device_tracking = tracking
                 self.env.flush_all()
                 self.make_jsonrpc_request('/hr_attendance/systray_check_in_out', position, headers=chrome)

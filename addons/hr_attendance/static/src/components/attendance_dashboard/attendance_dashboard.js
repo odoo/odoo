@@ -37,7 +37,9 @@ export class AttendanceDashboard extends Component {
             { key: "at_work", filter: "nocheckout", label: _t("At Work") },
             { key: "late_check_in", filter: "late_check_in", label: _t("Late Clock In") },
             { key: "early_check_out", filter: "early_check_out", label: _t("Early Clock Out") },
+            { key: "no_check_out", filter: "auto_check", label: _t("No Check-Out") },
             { key: "overtime", filter: "overtime", label: _t("Overtime") },
+            { key: "undertime", filter: "undertime", label: _t("Undertime") },
         ]
             .map((card) => ({
                 ...card,
@@ -69,7 +71,7 @@ export class AttendanceDashboard extends Component {
     onCardClick(card) {
         const { searchModel } = this.env;
         if (!this.isActive(card)) {
-            // one counter at a time: drop the filters of the other counters
+            // only one counter is active at a time
             const cardItemIds = new Set(this.cards.map((c) => c.searchItem.id));
             for (let index = searchModel.query.length - 1; index >= 0; index--) {
                 if (cardItemIds.has(searchModel.query[index].searchItemId)) {
