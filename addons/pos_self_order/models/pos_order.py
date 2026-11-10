@@ -469,8 +469,7 @@ class PosOrder(models.Model):
         )
         applicable_lines = self.lines.filtered(
             lambda line: line.product_id != service_fee_product
-            and line.product_id != self.config_id.tip_product_id
-            and not line.combo_parent_id,
+            and line.product_id != self.config_id.tip_product_id,
         )
 
         if not applicable_lines:

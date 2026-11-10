@@ -566,6 +566,96 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertAlmostEqual(sum(fee_lines.mapped('price_subtotal_incl')), 0.46, places=2)
         self.assertAlmostEqual(order.amount_total, 5.08, places=2)
 
+    def _create_combo_order(self, fee_product, items, menu_price, menu_taxes, nb_fee_lines):
+        """Create a draft order holding one combo, made of (product, extra_price) items."""
+        combos = self.env['product.combo'].create([{
+            'name': product.name,
+            'combo_item_ids': [Command.create({'product_id': product.id, 'extra_price': extra_price})],
+        } for product, extra_price in items])
+        menu = self.env['product.product'].create({
+            'name': 'Menu',
+            'type': 'combo',
+            'list_price': menu_price,
+            'available_in_pos': True,
+            'taxes_id': [Command.set(menu_taxes.ids)],
+            'combo_ids': [Command.set(combos.ids)],
+        })
+        self.pos_config.self_ordering_mode = 'mobile'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'preset_id': self.in_preset.id,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+        })
+
+        def create_line(product, **values):
+            return self.env['pos.order.line'].create({
+                'order_id': order.id,
+                'product_id': product.id,
+                'qty': 1,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'price_subtotal_incl': 0.0,
+                'uuid': uuid.uuid4().hex,
+                'full_product_name': product.name,
+                **values,
+            })
+
+        parent = create_line(menu)
+        children = self.env['pos.order.line']
+        for combo in combos:
+            item = combo.combo_item_ids
+            children |= create_line(
+                item.product_id,
+                tax_ids=item.product_id.taxes_id.ids,
+                combo_parent_id=parent.id,
+                combo_item_id=item.id,
+            )
+        fee_uuids = {create_line(fee_product).uuid for _index in range(nb_fee_lines)}
+        return order, children, fee_uuids
+
+    def test_service_fee_is_computed_on_combo_items(self):
+        """The combo price is carried by its items: their fee lines must be kept and priced."""
+        tax_10 = self.env['account.tax'].create({'name': 'Fee Combo 10%', 'amount': 10})
+        tax_21 = self.env['account.tax'].create({'name': 'Fee Combo 21%', 'amount': 21})
+        fee_product = self._setup_service_fee()
+        self.cola.taxes_id = tax_10
+        self.fanta.taxes_id = tax_21
+
+        order, children, fee_uuids = self._create_combo_order(
+            fee_product, [(self.cola, 0.0), (self.fanta, 0.0)], 10.0, tax_10, 2,
+        )
+        order.recompute_prices()
+
+        fee_lines = order.lines.filtered(lambda line: line.product_id == fee_product)
+        self.assertEqual(set(fee_lines.mapped('uuid')), fee_uuids)
+        items_total = sum(children.mapped('price_subtotal_incl'))
+        self.assertGreater(items_total, 0)
+        self.assertAlmostEqual(sum(fee_lines.mapped('price_subtotal_incl')), items_total * 0.1, delta=0.01)
+        self.assertAlmostEqual(order.amount_total, items_total * 1.1, delta=0.01)
+
+    def test_service_fee_percent_on_combo_price(self):
+        """A percentage fee applies to what the customer pays for the combo, extras included."""
+        fee_product = self._setup_service_fee()
+        burger, drink = self.env['product.product'].create([
+            {'name': 'Fee Burger', 'list_price': 8.0, 'taxes_id': False, 'available_in_pos': True},
+            {'name': 'Fee Drink', 'list_price': 12.0, 'taxes_id': False, 'available_in_pos': True},
+        ])
+
+        order, _children, _fee_uuids = self._create_combo_order(
+            fee_product, [(burger, 0.0), (drink, 3.0)], 20.0, self.env['account.tax'], 1,
+        )
+        order.recompute_prices()
+
+        fee_line = order.lines.filtered(lambda line: line.product_id == fee_product)
+        self.assertEqual(len(fee_line), 1)
+        self.assertAlmostEqual(fee_line.price_subtotal_incl, 2.3, places=2)
+        self.assertAlmostEqual(order.amount_total, 25.3, places=2)
+
     def test_preparation_categories_are_loaded(self):
         """
         Preparation categories needs to be loaded in the self-ordering interface
