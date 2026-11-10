@@ -393,6 +393,36 @@ class Website(models.Model):
     # === BUSINESS METHODS ===#
 
     @api.model
+    def _get_shop_config_fields(self):
+        """Return the website fields the shop and product page builder options can write."""
+        return {
+            "shop_page_container",
+            "shop_ppg",
+            "shop_ppr",
+            "shop_default_sort",
+            "shop_gap",
+            "shop_opt_products_design_classes",
+            "product_page_container",
+            "product_page_image_layout",
+            "product_page_image_width",
+            "product_page_grid_columns",
+            "product_page_image_spacing",
+            "product_page_image_ratio",
+            "product_page_image_ratio_mobile",
+            "product_page_cols_order",
+            "product_page_image_roundness",
+            # category
+            "align_category_content",
+            "show_category_title",
+            "show_category_description",
+            # wishlist
+            "wishlist_opt_products_design_classes",
+            "wishlist_grid_columns",
+            "wishlist_mobile_columns",
+            "wishlist_gap",
+        }
+
+    @api.model
     def _render_template(self, template, values=None):
         self.ensure_one()
 
@@ -411,7 +441,7 @@ class Website(models.Model):
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
-            style['preview_url']
+            style["preview_url"]
             for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
             for style in mapping.values()
         }

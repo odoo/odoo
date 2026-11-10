@@ -1876,34 +1876,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
             raise NotFound
 
-        # Restrict options we can write to.
-        writable_fields = {
-            "shop_page_container",
-            "shop_ppg",
-            "shop_ppr",
-            "shop_default_sort",
-            "shop_gap",
-            "shop_opt_products_design_classes",
-            "product_page_container",
-            "product_page_image_layout",
-            "product_page_image_width",
-            "product_page_grid_columns",
-            "product_page_image_spacing",
-            "product_page_image_ratio",
-            "product_page_image_ratio_mobile",
-            "product_page_cols_order",
-            "product_page_image_roundness",
-            "product_page_cta_design",
-            # category
-            "align_category_content",
-            "show_category_title",
-            "show_category_description",
-            # wishlist
-            "wishlist_opt_products_design_classes",
-            "wishlist_grid_columns",
-            "wishlist_mobile_columns",
-            "wishlist_gap",
-        }
         # Default ppg to 1.
         if "ppg" in options and not options["ppg"]:
             options["ppg"] = 1
@@ -1922,6 +1894,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 self.env["product.public.category"].browse(category_ids).exists()
             )
 
+        writable_fields = self.env.website._get_shop_config_fields()
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:
             self.env.website.write(write_vals)
