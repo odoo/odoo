@@ -31,7 +31,8 @@ class AccountMove(models.Model):
             ("OTHER", "Other"),
         ],
         string="Payment mode",
-        help="NAV expected payment mode of the invoice.",
+        help="NAV expected payment mode of the invoice. When empty, the payment mode of the payment method of "
+             "the invoice is used: cash for a cash journal, transfer for a bank journal.",
     )
 
     # === EDI Fields === #
@@ -125,9 +126,50 @@ class AccountMove(models.Model):
 
     # === Computes === #
 
+    @api.depends('l10n_hu_payment_mode')
+    def _compute_invoice_cash_rounding_id(self):
+        # Hungarian invoices paid in cash only according to their NAV payment mode get the cash rounding of the cash
+        # journals, and lose it when they are no longer paid in cash.
+        super()._compute_invoice_cash_rounding_id()
+        hu_moves = self.filtered(lambda move: (
+            move.country_code == 'HU'
+            and move.state == 'draft'
+            and move.is_sale_document(include_receipts=True)
+        ))
+        if not hu_moves:
+            return
+        CashRounding = self.env['account.cash.rounding']
+        cash_roundings = CashRounding.search([
+            *CashRounding._check_company_domain(hu_moves.company_id),
+            ('payment_method_line_ids.journal_id.type', '=', 'cash'),
+        ])
+        for move in hu_moves:
+            if move.l10n_hu_payment_mode == 'CASH':
+                if not move.invoice_cash_rounding_id:
+                    move.invoice_cash_rounding_id = next((
+                        cash_rounding
+                        for cash_rounding in cash_roundings
+                        if (not cash_rounding.company_id or cash_rounding.company_id == move.company_id)
+                        and (not cash_rounding.currency_ids or move.currency_id in cash_rounding.currency_ids)
+                        and (not cash_rounding.partner_category_ids or move.partner_id.category_id & cash_rounding.partner_category_ids)
+                    ), False)
+            elif (
+                move.invoice_cash_rounding_id in cash_roundings
+                and move.preferred_payment_method_line_id not in move.invoice_cash_rounding_id.payment_method_line_ids
+            ):
+                move.invoice_cash_rounding_id = False
+
     @api.depends('delivery_date')
     def _compute_expected_currency_rate(self):
         super()._compute_expected_currency_rate()
+
+    def _l10n_hu_edi_get_payment_mode(self):
+        """ The NAV payment mode of the invoice: the one set on the invoice, otherwise the one of the journal of its
+        payment method for customer invoices (cash journal: cash, bank journal: transfer). """
+        self.ensure_one()
+        if self.l10n_hu_payment_mode or not self.is_sale_document():
+            return self.l10n_hu_payment_mode
+        return {'cash': 'CASH', 'bank': 'TRANSFER'}.get(self.preferred_payment_method_line_id.journal_id.type, False)
 
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
@@ -476,6 +518,10 @@ class AccountMove(models.Model):
 
             # Set chain index
             invoice._l10n_hu_edi_set_chain_index()
+
+            # Freeze the payment mode sent to NAV, so that it no longer follows the payment method
+            if not invoice.l10n_hu_payment_mode:
+                invoice.l10n_hu_payment_mode = invoice._l10n_hu_edi_get_payment_mode()
 
             # Generate XML
             invoice.l10n_hu_edi_attachment = BinaryBytes(
