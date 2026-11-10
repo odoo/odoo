@@ -24,6 +24,10 @@ class StockPackageType(models.Model):
     packaging_length = fields.Float('Length', help="Packaging Length")
     base_weight = fields.Float(string='Weight', help='Weight of the package type')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
+    stackable = fields.Boolean(
+        'Stackable', default=True,
+        help="Packages of this type can be stacked on each other during transport. Carriers need it, with the "
+             "dimensions, to plan the floor space of the load.")
     barcode = fields.Char('Barcode', copy=False)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', default=_get_default_weight_uom)
     length_uom_name = fields.Char(string='Length unit of measure label', compute='_compute_length_uom_name', default=_get_default_length_uom)

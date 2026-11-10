@@ -441,6 +441,45 @@ class StockPicking(models.Model):
                 shipping_weight += weight
             picking.shipping_weight = shipping_weight
 
+    def _get_load_summary(self):
+        """ What a carrier needs to know about the load of the transfer, at three levels: the quantities of products,
+        their packagings (e.g. 162 x 14 kg) and the outermost packages grouped by package type (e.g. 8 pallets),
+        with the floor area they take. Shared by the documents sent to carriers.
+
+        :return: dict with keys 'weight', 'volume', 'quantities' {uom: quantity}, 'packagings' {packaging: count},
+            'packages' [{'package_type', 'count', 'shipping_weights'}] and 'floor_area' (m2 or ft2)
+        """
+        self.ensure_one()
+        moves = self.move_ids.filtered(lambda move: move.state != 'cancel' and move.product_id.type == 'consu')
+        quantities = defaultdict(float)
+        packagings = defaultdict(float)
+        for move in moves:
+            quantities[move.product_id.uom_id] += move.product_qty
+            if move.packaging_uom_id and move.packaging_uom_id != move.product_id.uom_id:
+                packagings[move.packaging_uom_id] += move.packaging_uom_qty
+        if self.state == 'done':
+            outermost_packages = self.package_history_ids.outermost_dest_id
+        else:
+            outermost_packages = self.move_line_ids.result_package_id.outermost_package_id
+        floor_area_factor = 1e-6 if self.env['product.template']._get_length_uom_id_from_ir_config_parameter() == self.env.ref('uom.product_uom_millimeter') else 1.0
+        packages = []
+        floor_area = 0.0
+        for package_type, type_packages in outermost_packages.grouped('package_type_id').items():
+            packages.append({
+                'package_type': package_type,
+                'count': len(type_packages),
+                'shipping_weights': type_packages.filtered('shipping_weight').mapped('shipping_weight'),
+            })
+            floor_area += package_type.packaging_length * package_type.width * floor_area_factor * len(type_packages)
+        return {
+            'weight': self.shipping_weight,
+            'volume': self.shipping_volume,
+            'quantities': dict(quantities),
+            'packagings': dict(packagings),
+            'packages': packages,
+            'floor_area': floor_area,
+        }
+
     def _compute_shipping_volume(self):
         for picking in self:
             volume = 0
