@@ -86,7 +86,8 @@ patch(PosTicketPrinterPlugin.prototype, {
         img.src = `data:image/jpeg;base64,${base64}`;
         await img.decode();
         const canvas = document.createElement("canvas");
-        canvas.width = img.width;
+        // The Epson raster encoder needs a width that is a multiple of 8
+        canvas.width = img.width - (img.width % 8);
         canvas.height = img.height;
         canvas.getContext("2d").drawImage(img, 0, 0);
         return canvas;
