@@ -1,6 +1,7 @@
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
+    isBold,
     isEmptyBlock,
     isShrunkBlock,
     isVisible,
@@ -672,5 +673,15 @@ describe("isBlock on display none elements", () => {
         const [span] = insertTestHtml(`<span style="display: none"></span>`);
         const result = isBlock(span);
         expect(result).toBe(false);
+    });
+});
+
+describe("isBold", () => {
+    test("should not consider button with font-weight 500 as bold if rendered face is same as 400", () => {
+        const [p] = insertTestHtml(
+            `<p style="font-family: Arial;"><a href="#" class="btn" style="font-family: Arial; font-weight: 500;">button</a></p>`
+        );
+        const btnText = p.querySelector(".btn").firstChild;
+        expect(isBold(btnText)).toBe(false);
     });
 });
