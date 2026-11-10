@@ -396,6 +396,44 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
         self.assertTrue(create_invoices_mock.call_args.kwargs["final"])
 
+    def test_auto_invoice_mixed_invoice_policies_is_fully_invoiced(self):
+        """Test that an order automatically invoiced upon payment is not invoiceable anymore, even
+        if some of its products are invoiced on delivered quantities and not delivered yet."""
+        self.env.company.sale_automatic_invoice = True
+        self.product.invoice_policy = "delivery"
+        self.service_product.invoice_policy = "order"
+
+        self.amount = self.sale_order.amount_total
+        self._create_transaction(flow="redirect", sale_order_ids=[self.sale_order.id], state="done")
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            self._run_post_processing()
+
+        order_lines = self.sale_order.order_line
+        self.assertEqual(len(self.sale_order.invoice_ids), 1)
+        self.assertEqual(order_lines.mapped("qty_to_invoice"), [0.0, 0.0])
+        self.assertEqual(self.sale_order.invoice_status, "invoiced")
+
+        # Delivering the products should not make the order invoiceable either.
+        delivery_line = order_lines.filtered(lambda sol: sol.product_id == self.product)
+        delivery_line.qty_delivered = delivery_line.product_uom_qty
+        self.assertFalse(delivery_line.qty_to_invoice)
+        self.assertEqual(self.sale_order.invoice_status, "invoiced")
+
+    def test_manual_invoice_keeps_negative_qty_to_invoice(self):
+        """Test that lines not invoiced upon payment can still have a negative quantity to invoice,
+        e.g. to credit returned products."""
+        self.product.invoice_policy = "delivery"
+        self.sale_order.action_confirm()
+        delivery_line = self.sale_order.order_line.filtered(
+            lambda sol: sol.product_id == self.product
+        )
+        delivery_line.qty_delivered = delivery_line.product_uom_qty
+        self.sale_order._create_invoices().action_post()
+
+        delivery_line.qty_delivered = 3.0  # 2 of the 5 invoiced products are returned
+        self.assertEqual(delivery_line.qty_to_invoice, -2.0)
+        self.assertEqual(self.sale_order.invoice_status, "to invoice")
+
     def test_linked_transactions_when_invoicing(self):
         self.provider.support_manual_capture = "partial"
         partial_amount = self.sale_order.amount_total - 2
