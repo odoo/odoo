@@ -30,6 +30,7 @@ function getFakeAceEditor() {
             on: () => {},
             setMode: () => {},
             setUseWorker: () => {},
+            setAnnotations: () => {},
             setOptions: () => {},
             getValue: () => {},
             setValue: () => {},
@@ -268,6 +269,43 @@ test("Theme props updates imports the theme", async () => {
     await codeEditor.setTheme("monokai");
     await animationFrame();
     expect.verifySteps(["ace/theme/monokai"]);
+});
+
+test("annotations props are displayed in the gutter", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`
+            <CodeEditor value="'a\nb'" maxLines="10" annotations="this.state.annotations"/>
+        `;
+        state = proxy({ annotations: [{ row: 1, column: 0, text: "Oops", type: "error" }] });
+    }
+    const parent = await mountWithCleanup(Parent);
+    const session = window.ace.edit(queryOne(".ace_editor")).getSession();
+    expect(session.getAnnotations()).toEqual([
+        { row: 1, column: 0, text: "Oops", type: "error" },
+    ]);
+    await animationFrame();
+    expect(".ace_gutter-cell:eq(1)").toHaveClass("ace_error");
+
+    parent.state.annotations = [];
+    await animationFrame();
+    expect(session.getAnnotations()).toEqual([]);
+    expect(".ace_gutter-cell.ace_error").toHaveCount(0);
+});
+
+test("tabNavigation props lets Tab move the focus", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`
+            <CodeEditor maxLines="10"/>
+            <CodeEditor maxLines="10" tabNavigation="true"/>
+        `;
+    }
+    await mountWithCleanup(Parent);
+    const [editor, tabEditor] = queryAll(".ace_editor").map((el) => window.ace.edit(el));
+    expect(editor.commands.commandKeyBinding.tab).not.toBe(undefined);
+    expect(tabEditor.commands.commandKeyBinding.tab).toBe(undefined);
+    expect(tabEditor.commands.commandKeyBinding["shift-tab"]).toBe(undefined);
 });
 
 test("initial value cannot be undone", async () => {
