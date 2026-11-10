@@ -571,7 +571,10 @@ export function searchProduct(string) {
     ];
 }
 export function totalAmountIs(amount) {
-    return inLeftSide(...Order.hasTotal(amount));
+    return inLeftSide({
+        content: `order total amount is '${amount}'`,
+        trigger: `.product-screen .order-summary .total:contains("${amount}")`,
+    });
 }
 export function modeIsActive(mode) {
     return inLeftSide(Numpad.isActive(mode));
