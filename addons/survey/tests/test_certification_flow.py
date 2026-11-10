@@ -267,3 +267,51 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
                 'skipped': 0,
             }
         }, "With the configured randomization, there should be exactly 1 correctly answered question in the 'Page 1' section.")
+
+    def test_unauthenticated_survey_flow(self):
+        partner = self.user_portal.partner_id
+        survey = self.survey
+        survey.write({
+            'access_mode': 'token',
+            'users_login_required': False,
+            'questions_layout': 'one_page',
+        })
+        survey.question_and_page_ids.unlink()
+        question = self.env['survey.question'].create({
+            'survey_id': survey.id,
+            'title': 'What is your name?',
+            'question_type': 'char_box',
+            'constr_mandatory': True,
+            'sequence': 1,
+        })
+        user_input = self.env['survey.user_input'].create({
+            'survey_id': self.survey.id,
+            'partner_id': partner.id,
+        })
+        self.assertEqual(len(user_input), 1, 'The invite should create one user_input')
+        answer_token = user_input.access_token
+
+        self.authenticate(None, None)
+        url = user_input.get_start_url()
+        res = self.url_open(url)
+        self.assertResponse(res, 200, [survey.title])
+        csrf_token = self._find_csrf_token(res.text)
+
+        res = self._access_begin(survey, answer_token)
+        self.assertResponse(res, 200)
+
+        self.assertFalse(self.env['bus.presence'].search([('user_id', '=', self.user_portal.id)], limit=1))
+
+        post_data = self._format_submission_data(
+            question, 'John Public',
+            {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'},
+        )
+        res = self._access_submit(survey, answer_token, post_data)
+        self.assertResponse(res, 200)
+
+        self.assertTrue(self.env['bus.presence'].search([('user_id', '=', self.user_portal.id)], limit=1))
+
+        user_input.invalidate_recordset()
+        self.assertEqual(user_input.state, 'done')
+        self.assertEqual(user_input.user_input_line_ids.question_id, question)
+        self.assertEqual(user_input.user_input_line_ids.value_char_box, 'John Public')
