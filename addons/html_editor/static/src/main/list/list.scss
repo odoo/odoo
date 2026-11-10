@@ -15,16 +15,19 @@ ul.o_checklist {
             display: block;
             height: 14px;
             width: 14px;
-            top: 1px;
+            top: calc(50% - 7px);
             border: 1px solid;
             cursor: pointer;
         }
-        &.o_checked:after {
+        &.o_checked:before {
             content: "✓";
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 1px #{"/*rtl:ignore*/"};
+            padding-top: 1px;
             transition: opacity .5s;
-            position: absolute;
-            left: -18px;
-            top: -1px;
             opacity: 1;
         }
     }
