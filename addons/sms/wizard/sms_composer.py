@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from ast import literal_eval
 from uuid import uuid4
 
@@ -28,6 +29,7 @@ class SmsComposer(models.TransientModel):
                 'res_id': scheduled_message.res_id,
                 'res_model': scheduled_message.model,
                 'scheduled_date': scheduled_message.scheduled_date,
+                'number_field_name': json.loads(scheduled_message.notification_parameters or '{}').get('number_field'),
             }
         else:
             values = {
@@ -288,7 +290,7 @@ class SmsComposer(models.TransientModel):
             'composition_comment_option': False,
             'is_note': False,
             'model': self.res_model,
-            'notification_parameters': '{}',
+            'notification_parameters': json.dumps({'number_field': self.number_field_name}),
             'partner_ids': [],
             'res_id': self.res_id,
             'scheduled_date': self.scheduled_date,
