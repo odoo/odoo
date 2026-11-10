@@ -77,7 +77,7 @@ class KsefApiServiceBatch(KsefApiService):
                     'part_name': part['partName'],
                     'part_number': part['ordinalNumber'],
                     'download_url': part['url'],
-                    'download_method': (part['method'] or '').upper(),
+                    'download_method': (part['method'] or 'GET').upper(),
                 })
                 for part in json_response.get('package', {}).get('parts', [])
             ],
