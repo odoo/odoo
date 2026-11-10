@@ -281,8 +281,8 @@ test("Pivot in tabular form", async function () {
     setCellContent(model, "A1", `=PIVOT(1)`, "42");
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:D7", "42")).toEqual([
-            ["Partner Pivot",     "",        "Total",          null],
-            ["Product",           "Bar",     "Probability",    null],
+            ["Product",           "Bar",     "Total",          null],
+            ["",                  "",        "Probability",    null],
             ["xphone",            "Yes",      10,              null],
             ["xpad",              "No",       15,              null],
             ["xpad",              "Yes",      106,             null],
