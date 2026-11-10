@@ -576,6 +576,33 @@ class TestMessageNotify(TestMessagePostCommon):
             }],
         )
 
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_notify_thread_references(self):
+        """ Notifying on ``mail.thread`` has no document: other messages
+        without document must not be used as ancestors in references. """
+        with self.mock_mail_gateway():
+            # unrelated previous message
+            previous = self.env['mail.thread'].message_notify(
+                body=Markup('<p>Unrelated notification</p>'),
+                partner_ids=self.partner_1.ids,
+                subject='Unrelated',
+            )
+            new_notification = self.env['mail.thread'].message_notify(
+                body=Markup('<p>You have received a notification</p>'),
+                partner_ids=self.partner_1.ids,
+                subject='Related to nothing',
+            )
+        self.assertFalse(previous.model)
+        self.assertFalse(new_notification.model)
+        self.assertNotEqual(previous.message_id, new_notification.message_id)
+
+        mail = self._find_mail_mail_wpartners(self.partner_1, 'sent', mail_message=new_notification)
+        self.assertEqual(
+            mail.references, new_notification.message_id,
+            'Messages without document should only reference themselves',
+        )
+
 
 @tagged('mail_post')
 class TestMessageLog(TestMessagePostCommon):
