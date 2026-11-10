@@ -1800,7 +1800,12 @@ class Website(models.Model):
     def image_url(self, record, field, size=None):
         """ Returns a local url that points to the image field of a given browse record. """
         sudo_record = record.sudo()
-        sha = hashlib.sha512(str(sudo_record.write_date).encode('utf-8')).hexdigest()[:7]
+        sha_str = str(
+            sudo_record.favicon
+            if record._name == 'website' and field == 'favicon' and sudo_record.favicon
+            else sudo_record.write_date
+        )
+        sha = hashlib.sha512(sha_str.encode('utf-8')).hexdigest()[:7]
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
