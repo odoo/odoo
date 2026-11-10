@@ -6,3 +6,20 @@ patch(PosPaymentMethod.prototype, {
         return [...super._load_pos_data_fields(), "viva_com_terminal_id"];
     },
 });
+
+PosPaymentMethod._records = [
+    ...PosPaymentMethod._records,
+    {
+        id: 6,
+        name: "Viva",
+        is_cash_count: false,
+        split_transactions: false,
+        type: "bank",
+        image: false,
+        sequence: 1,
+        payment_method_type: "terminal",
+        use_payment_terminal: "viva_com",
+        viva_com_terminal_id: "01234543210",
+        default_qr: false,
+    },
+];
