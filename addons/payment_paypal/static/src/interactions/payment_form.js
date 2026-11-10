@@ -121,12 +121,9 @@ patch(PaymentForm.prototype, {
         // Hide the submit button and let PayPal SDK display the alternative buttons for
         // non-redirect and non-card payment methods.
         const isCard = paymentMethodCode === 'card';
-        const paypalLoadingList = document.querySelectorAll('#o_paypal_loading');
         if (!isCard) {
             this._hideInputs();
-            for (const paypalLoading of paypalLoadingList) {
-                paypalLoading.classList.remove('d-none');
-            }
+            this._paypalToggleLoading(true);
         }
 
         // Check if instantiation of the component is needed.
@@ -178,11 +175,10 @@ patch(PaymentForm.prototype, {
                     this._paypalRenderButtons(paymentOptionId, paymentMethodCode);
             }
         }
-        for (const paypalLoading of paypalLoadingList) {
-            paypalLoading.classList.add('d-none');
-        }
-        for (const buttonContainer of document.querySelectorAll('#o_paypal_button_container')) {
-            buttonContainer.classList.toggle('d-none', isCard);
+        if (isCard) {
+            this._paypalHideButtonContainers();
+        } else {
+            this._paypalToggleLoading(false);
         }
         this.selectedOptionId = paymentOptionId;
     },
@@ -204,14 +200,29 @@ patch(PaymentForm.prototype, {
     },
 
     /**
-     * Hide both the PayPal button containers.
+     * Hide both the PayPal button containers, or show them back.
      *
      * @private
+     * @param {boolean} hide - Whether the button containers should be hidden.
      * @return {void}
      */
-    _paypalHideButtonContainers() {
+    _paypalHideButtonContainers(hide = true) {
         for (const container of document.querySelectorAll("#o_paypal_button_container")) {
-            container.classList.add("d-none");
+            container.classList.toggle("d-none", hide);
+        }
+    },
+
+    /**
+     * Show the loading spinner in place of the PayPal button containers, or restore them.
+     *
+     * @private
+     * @param {boolean} isLoading - Whether the spinner should replace the button containers.
+     * @return {void}
+     */
+    _paypalToggleLoading(isLoading) {
+        this._paypalHideButtonContainers(isLoading);
+        for (const paypalLoading of document.querySelectorAll("#o_paypal_loading")) {
+            paypalLoading.classList.toggle("d-none", !isLoading);
         }
     },
 
@@ -505,7 +516,6 @@ patch(PaymentForm.prototype, {
         };
         try {
             await this.waitFor(paymentsClient.loadPaymentData(paymentDataRequest));
-            window.location = "/payment/status";
         } catch (error) {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
@@ -540,18 +550,11 @@ patch(PaymentForm.prototype, {
             );
             const { status } = confirmOrderResponse;
             switch (status) {
-                case "PAYER_ACTION_REQUIRED": {
-                    await this.waitFor(
-                        paypal.Googlepay().initiatePayerAction({ orderId: orderId }),
-                    );
-                }
+                case "PAYER_ACTION_REQUIRED":
+                    this._paypalGoogleHandle3DS(paymentOptionId);
+                    return { transactionState: "SUCCESS" };
                 case "APPROVED":
-                    await this.waitFor(
-                        rpc("/payment/paypal/complete_order", {
-                            order_id: orderId,
-                            reference: this.paypalData[paymentOptionId].paypalTxRef,
-                        }),
-                    );
+                    await this.waitFor(this._paypalGoogleCompleteOrder(paymentOptionId));
                     return { transactionState: "SUCCESS" };
                 default:
                     return this._paypalGetGoogleErrorResponse(
@@ -560,6 +563,54 @@ patch(PaymentForm.prototype, {
             }
         } catch (error) {
             return this._paypalGetGoogleErrorResponse(error.message);
+        }
+    },
+
+    /**
+     * Capture the PayPal order of the Google Pay payment.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {Promise}
+     */
+    async _paypalGoogleCompleteOrder(paymentOptionId) {
+        const paypalData = this.paypalData[paymentOptionId];
+        await rpc("/payment/paypal/complete_order", {
+            order_id: paypalData.paypalOrderId,
+            reference: paypalData.paypalTxRef,
+        });
+        window.location = "/payment/status";
+    },
+
+    /**
+     * Initiate the payer action (e.g., 3DS) of the Google Pay payment and capture the order once
+     * the payer is authenticated.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    async _paypalGoogleHandle3DS(paymentOptionId) {
+        const paypalData = this.paypalData[paymentOptionId];
+        this._paypalToggleLoading(true);
+        try {
+            const { liabilityShift } = await this.waitFor(
+                paypal.Googlepay().initiatePayerAction({ orderId: paypalData.paypalOrderId }),
+            );
+            if (liabilityShift !== "POSSIBLE") {
+                this._paypalToggleLoading(false);
+                this._displayErrorDialog(
+                    _t("Payment processing failed"), _t("3D Secure authentication failed.")
+                );
+                this._enableButton();
+                return;
+            }
+            await this.waitFor(this._paypalGoogleCompleteOrder(paymentOptionId));
+        } catch (error) {
+            this._paypalToggleLoading(false);
+            const message = error instanceof RPCError ? error.data.message : error.message;
+            this._displayErrorDialog(_t("Payment processing failed"), message);
+            this._enableButton();
         }
     },
 
