@@ -18,7 +18,7 @@
                         options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                         placeholder="Add to New Job"
                         domain="[('id', 'not in', context.get('active_applicant_job_ids', []))]"
-                        context="{'show_matching_score_in_name': True}"
+                        context="{'show_matching_score_in_name': True, 'list_view_ref': 'hr_recruitment.hr_job_view_list_matching'}"
                     />
                 </group>
                 <footer>
@@ -57,7 +57,7 @@
                             ('talent_pool_ids', '!=', False),
                             ('linked_applicant_ids', 'not in', context.get('active_job_applicant_ids', [])),
                         ]"
-                        context="{'show_matching_score_in_name': True, 'search_default_non_linked_talents': True, 'matching_job_id': job_ids, 'active_job_applicant_ids': context.get('active_job_applicant_ids', [])}"
+                        context="{'show_matching_score_in_name': True, 'search_default_non_linked_talents': True, 'list_view_ref': 'hr_recruitment.crm_case_tree_view_inherit_hr_recruitment_skills'}"
                     />
                 </group>
                 <footer>

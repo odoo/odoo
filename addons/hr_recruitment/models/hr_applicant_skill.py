@@ -29,7 +29,7 @@ class HrApplicantSkill(models.Model):
                 lambda a_s: not a_s.valid_to or a_s.valid_to >= today,
             )
             if skill.skill_type_id.is_certification and not filtered_applicant_skills:
-                most_recent_certification = max(applicant_skills, key=lambda a_s: a_s.valid_to)
+                most_recent_certification = max(applicant_skills, key=lambda a_s: (a_s.valid_to, a_s.level_progress))
                 result_dict[applicant.id] += most_recent_certification
                 continue
             result_dict[applicant.id] += filtered_applicant_skills

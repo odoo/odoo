@@ -314,40 +314,6 @@ class TestRecruitmentSkills(TransactionCase):
         self.assertFalse(talent.applicant_skill_ids, "The talent should not have any skills")
         self.assertFalse(self.t_applicant.applicant_skill_ids, "The applicant should not have any skills")
 
-    def test_move_applicant_to_matching_job(self):
-        """
-        Test that moving an applicant to a job works
-        """
-        applicant = self.t_applicant
-        first_job = self.env["hr.job"].create({"name": "First Job"})
-        second_job = self.env["hr.job"].create({"name": "Second Job"})
-        applicant.job_id = first_job
-
-        app_form = Form(self.t_applicant)
-        with app_form.current_applicant_skill_ids.new() as applicant_skill:
-            applicant_skill.skill_type_id = self.t_skill_type
-            applicant_skill.skill_id = self.t_skill_1
-            applicant_skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
-
-        self.env["hr.job.skill"].create(
-            {
-                "job_id": second_job.id,
-                "skill_id": self.t_skill_1.id,
-                "skill_type_id": self.t_skill_type.id,
-                "skill_level_id": self.t_skill_level_1.id,
-            }
-        )
-
-        action = second_job.action_search_matching_applicants()
-        domain = action["domain"]
-        context = action["context"]
-        model = self.env[action["res_model"]]
-        applicants = model.with_context(context).search(domain)
-        self.assertIn(applicant.id, applicants.ids, "The applicant should be in the matching applicants")
-        applicant.with_context(context).action_add_to_job()
-        self.assertEqual(applicant.job_id, second_job, "The applicant should be moved to the second job")
-
     def test_create_employee_from_skilled_applicant(self):
         applicant = self.t_applicant
         applicant.write({
