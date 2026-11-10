@@ -67,6 +67,13 @@ class AuthPasskeyKey(models.Model):
         return challenge
 
     @api.model
+    def _get_allowed_origins(self):
+        base_url = url_parse(self.get_base_url()).replace(path='').to_url()
+        additional_origins_str = self.env['ir.config_parameter'].sudo().get_param('auth_passkey.additional_origins', '')
+        additional_origins = [origin for origin in additional_origins_str.split(';') if origin]
+        return [base_url, *_VALID_APK_KEY_HASHES, *additional_origins]
+
+    @api.model
     def _start_auth(self):
         assert request
         authentication_options = json.loads(options_to_json(generate_authentication_options(
@@ -79,11 +86,10 @@ class AuthPasskeyKey(models.Model):
     @api.model
     def _verify_auth(self, auth, public_key, sign_count):
         parsed_url = url_parse(self.get_base_url())
-        expected_origins = [parsed_url.replace(path='').to_url()] + _VALID_APK_KEY_HASHES
         auth_verification = verify_authentication_response(
             credential=auth,
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
-            expected_origin=expected_origins,
+            expected_origin=self._get_allowed_origins(),
             expected_rp_id=parsed_url.host,
             credential_public_key=base64url_to_bytes(public_key),
             credential_current_sign_count=sign_count,
@@ -110,11 +116,10 @@ class AuthPasskeyKey(models.Model):
     @api.model
     def _verify_registration_options(self, registration):
         parsed_url = url_parse(self.get_base_url())
-        expected_origins = [parsed_url.replace(path='').to_url()] + _VALID_APK_KEY_HASHES
         verification = verify_registration_response(
             credential=registration,
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
-            expected_origin=expected_origins,
+            expected_origin=self._get_allowed_origins(),
             expected_rp_id=parsed_url.host,
             require_user_verification=True,
         )
