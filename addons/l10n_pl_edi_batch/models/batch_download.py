@@ -206,7 +206,7 @@ class BatchDownload(models.Model):
         service = Service(company)
         encryption_data = service._create_encryption_data()
         batch_data = service.download_batch_request(date_from, date_to, encryption_data)
-        batch = self.sudo().create({
+        batch = self.create({
             'company_id': company.id,
             'name': batch_data['referenceNumber'],
             'date_from': date_from,
@@ -228,8 +228,7 @@ class BatchDownload(models.Model):
         """
         retry_at = False
         done = remaining = 0
-        CompanySudo = self.env['res.company'].sudo()
-        companies = CompanySudo.search([
+        companies = self.env['res.company'].search([
             ('l10n_pl_edi_access_token', '!=', False),
             *(company_domain or []),
         ])
@@ -282,7 +281,7 @@ class BatchDownload(models.Model):
     @api.model
     def _cron_request_historic(self):
         """ Request the past invoices """
-        pending_companies_ids = self.sudo().search([
+        pending_companies_ids = self.search([
             ('kind', '=', 'historic'),
             ('state', 'in', ('requested', 'downloading', 'downloaded')),
         ]).mapped("company_id.id")
