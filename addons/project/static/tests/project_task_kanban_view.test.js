@@ -140,3 +140,34 @@ test("delete existing stage", async () => {
     await animationFrame();
     expect(".o_column_title").toHaveCount(0, { mesage: "The stage should have been deleted." });
 });
+
+test("delete existing stage: closing modal with 'x' causes no error", async () => {
+    onRpc("web_read_group", () => {
+        return {
+            groups: [{ stage_id: [1, "Stage 1"] }],
+            length: 1,
+        };
+    });
+
+    await mountView({
+        resModel: "project.task",
+        type: "kanban",
+        context: {
+            active_model: "project.project",
+            default_project_id: 1,
+        },
+    });
+
+    const clickColumnAction = await toggleKanbanColumnActions(0);
+    await clickColumnAction("Delete");
+
+    expect(".modal").toHaveCount(1);
+
+    await click(".modal-header .btn-close");
+    await animationFrame();
+
+    expect(".modal").toHaveCount(0);
+    expect(".o_column_title").toHaveCount(1, {
+        message: "The stage should not have been deleted.",
+    });
+});
