@@ -1557,11 +1557,19 @@ export class PosStore extends Reactive {
         }
 
         const taxProduct = accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-            this.config._product_default_values, product
+            this.config._product_default_values,
+            product
         );
         if (!this.config.module_pos_restaurant) {
             priceUnit = roundDecimals(
-                adaptPriceUnit(priceUnit, taxProduct, product.taxes_id, product.taxes_id, taxes, product.uom_id),
+                adaptPriceUnit(
+                    priceUnit,
+                    taxProduct,
+                    product.taxes_id,
+                    product.taxes_id,
+                    taxes,
+                    product.uom_id
+                ),
                 this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
             );
         }

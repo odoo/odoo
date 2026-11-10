@@ -4,8 +4,11 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline.prototype, {
     isFiscalPositionPriceAdaptable() {
-        return super.isFiscalPositionPriceAdaptable() &&
-            !this.sale_order_origin_id && !this.sale_order_line_id;
+        return (
+            super.isFiscalPositionPriceAdaptable() &&
+            !this.sale_order_origin_id &&
+            !this.sale_order_line_id
+        );
     },
     setup(_defaultObj) {
         super.setup(...arguments);

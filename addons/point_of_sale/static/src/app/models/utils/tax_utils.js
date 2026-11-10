@@ -84,7 +84,14 @@ export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {
     return models["account.tax"].filter((tax) => newTaxIds.includes(tax.id));
 };
 
-export const adaptPriceUnit = (price, product, originalTaxes, currentTaxes, destinationTaxes, product_uom) => {
+export const adaptPriceUnit = (
+    price,
+    product,
+    originalTaxes,
+    currentTaxes,
+    destinationTaxes,
+    product_uom
+) => {
     const currentIds = new Set(currentTaxes.map((tax) => tax.id));
     const destinationIds = new Set(destinationTaxes.map((tax) => tax.id));
     if (
@@ -103,6 +110,10 @@ export const adaptPriceUnit = (price, product, originalTaxes, currentTaxes, dest
         currentTaxes = [];
     }
     return accountTaxHelpers.adapt_price_unit_to_another_taxes(
-        price, product, currentTaxes, destinationTaxes, { product_uom }
+        price,
+        product,
+        currentTaxes,
+        destinationTaxes,
+        { product_uom }
     );
 };

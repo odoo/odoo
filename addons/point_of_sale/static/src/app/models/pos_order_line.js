@@ -5,7 +5,10 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
 import { roundCurrency, formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
-import { adaptPriceUnit, getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
+import {
+    adaptPriceUnit,
+    getTaxesAfterFiscalPosition,
+} from "@point_of_sale/app/models/utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 export class PosOrderline extends Base {
@@ -329,7 +332,9 @@ export class PosOrderline extends Base {
             roundDecimals(this.price_unit || 0, productPriceUnit).toFixed(productPriceUnit)
         );
         const order_line_price = orderline.priceFromProductTaxes(
-            orderline.get_product().get_price(orderline.order_id.pricelist_id, this.get_quantity()) +
+            orderline
+                .get_product()
+                .get_price(orderline.order_id.pricelist_id, this.get_quantity()) +
                 orderline.get_price_extra()
         );
 
@@ -433,7 +438,9 @@ export class PosOrderline extends Base {
             this.tax_ids,
             this.tax_ids,
             getTaxesAfterFiscalPosition(
-                this.tax_ids, this.order_id.fiscal_position_id, this.models
+                this.tax_ids,
+                this.order_id.fiscal_position_id,
+                this.models
             ),
             this.get_unit()
         );

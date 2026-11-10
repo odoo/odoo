@@ -143,10 +143,7 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ]),
             ProductScreen.totalAmountIs("58.22"),
             inLeftSide(Order.hasTax("2.78")),
-            inLeftSide([
-                ...ProductScreen.clickLine("Combo Product 2 (Blue)"),
-                Numpad.click("2"),
-            ]),
+            inLeftSide([...ProductScreen.clickLine("Combo Product 2 (Blue)"), Numpad.click("2")]),
             ProductScreen.totalAmountIs("116.44"),
             ProductScreen.clickPriceList("Combo Discount"),
             ProductScreen.totalAmountIs("106.92"),

@@ -474,24 +474,31 @@ export class PosOrder extends Base {
         }
         const prices = this.config.module_pos_restaurant
             ? []
-            : this.lines.filter((line) => line.isFiscalPositionPriceAdaptable()).map((line) => {
-                  const product = accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                      this.config._product_default_values,
-                      line.product_id
-                  );
-                  const taxes = line.tax_ids;
-                  return [
-                      line,
-                      adaptPriceUnit(
-                          line.price_unit,
-                          product,
-                          taxes,
-                          getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models),
-                          getTaxesAfterFiscalPosition(taxes, fiscalPosition, this.models),
-                          line.get_unit()
-                      ),
-                  ];
-              });
+            : this.lines
+                  .filter((line) => line.isFiscalPositionPriceAdaptable())
+                  .map((line) => {
+                      const product =
+                          accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+                              this.config._product_default_values,
+                              line.product_id
+                          );
+                      const taxes = line.tax_ids;
+                      return [
+                          line,
+                          adaptPriceUnit(
+                              line.price_unit,
+                              product,
+                              taxes,
+                              getTaxesAfterFiscalPosition(
+                                  taxes,
+                                  this.fiscal_position_id,
+                                  this.models
+                              ),
+                              getTaxesAfterFiscalPosition(taxes, fiscalPosition, this.models),
+                              line.get_unit()
+                          ),
+                      ];
+                  });
         this.update({ fiscal_position_id: fiscalPosition || false });
         for (const [line, price] of prices) {
             line.set_unit_price(price);
@@ -546,7 +553,9 @@ export class PosOrder extends Base {
                         return {
                             combo_item_id: cLine.combo_item_id,
                             configuration: {
-                                attribute_value_ids: cLine.attribute_value_ids.map((value) => value.id),
+                                attribute_value_ids: cLine.attribute_value_ids.map(
+                                    (value) => value.id
+                                ),
                             },
                         };
                     } else {

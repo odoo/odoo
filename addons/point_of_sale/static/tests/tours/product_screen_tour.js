@@ -321,15 +321,25 @@ registry.category("web_tour.tours").add("FiscalPositionZeroRates", {
             ]),
             ProductScreen.totalAmountIs("200.00"),
             ProductScreen.clickDisplayedProduct("Six Percent Product"),
-            inLeftSide(ProductScreen.selectedOrderlineHasDirect("Six Percent Product", "1.0", "80.00")),
+            inLeftSide(
+                ProductScreen.selectedOrderlineHasDirect("Six Percent Product", "1.0", "80.00")
+            ),
             ProductScreen.totalAmountIs("280.00"),
             ProductScreen.clickDisplayedProduct("Six Percent Lot Product"),
             ProductScreen.enterLotNumber("LOT-1"),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Six Percent Lot Product", "1.0", "80.00"),
+                ...ProductScreen.selectedOrderlineHasDirect(
+                    "Six Percent Lot Product",
+                    "1.0",
+                    "80.00"
+                ),
                 Numpad.click("Qty"),
                 Numpad.click("2"),
-                ...ProductScreen.selectedOrderlineHasDirect("Six Percent Lot Product", "2.0", "160.00"),
+                ...ProductScreen.selectedOrderlineHasDirect(
+                    "Six Percent Lot Product",
+                    "2.0",
+                    "160.00"
+                ),
             ]),
             ProductScreen.totalAmountIs("440.00"),
         ].flat(),

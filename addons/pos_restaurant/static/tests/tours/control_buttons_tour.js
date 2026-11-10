@@ -112,19 +112,20 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 });
 
 registry.category("web_tour.tours").add("RestaurantFiscalPositionPrice", {
-    steps: () => [
-        Chrome.startPoS(),
-        Dialog.confirm("Open Register"),
-        FloorScreen.clickTable("2"),
-        ProductScreen.clickDisplayedProduct("Restaurant Tax Product"),
-        ProductScreen.totalAmountIs("115.00"),
-        ProductScreen.clickFiscalPosition("No Tax", true),
-        ProductScreen.totalAmountIs("115.00"),
-        Numpad.click("Price"),
-        ...["1", "2", "0"].map(Numpad.click),
-        ProductScreen.totalAmountIs("120.00"),
-        ProductScreen.clickFiscalPosition("Dine in"),
-        ProductScreen.checkFiscalPosition("Tax"),
-        ProductScreen.totalAmountIs("120.00"),
-    ].flat(),
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Restaurant Tax Product"),
+            ProductScreen.totalAmountIs("115.00"),
+            ProductScreen.clickFiscalPosition("No Tax", true),
+            ProductScreen.totalAmountIs("115.00"),
+            Numpad.click("Price"),
+            ...["1", "2", "0"].map(Numpad.click),
+            ProductScreen.totalAmountIs("120.00"),
+            ProductScreen.clickFiscalPosition("Dine in"),
+            ProductScreen.checkFiscalPosition("Tax"),
+            ProductScreen.totalAmountIs("120.00"),
+        ].flat(),
 });
