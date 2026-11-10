@@ -530,7 +530,7 @@
     </template>
 
     <template id="external_layout_bubble">
-        <div t-attf-class="o_company_#{company.id}_layout header {{report_type == 'pdf' and 'pt-5'}}">
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_bubble_header header {{report_type == 'pdf' and 'pt-5'}}">
             <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100">
                 <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
             </svg>
