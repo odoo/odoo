@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 import logging
+from unittest.mock import patch
 
+import odoo.modules.module
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools import mute_logger
+from odoo.tools import SQL, mute_logger
 from odoo.tools.version_tag_reset import assign_version_tag
 from odoo import Command
 
@@ -355,6 +357,57 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}')
                         )
+
+
+# the modules of the fields must be installed
+@tagged('-at_install', 'post_install')
+class TestCheckRemovedColumns(TransactionCase):
+    """ While modules load, the NOT NULL constraint of a column the registry
+    doesn't know is kept if the module of its field will load later. """
+
+    def setUp(self):
+        super().setUp()
+        self.Category = self.env['res.partner.category']
+        self.installed = set(self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name'))
+        # make the registry miss a field of base, as if base were not loaded yet
+        fields = patch.dict(type(self.Category)._fields)
+        fields.start()
+        self.addCleanup(fields.stop)
+        del type(self.Category)._fields['name']
+        self.patch(self.registry, 'loaded', False)
+        self.patch(self.registry, '_init_modules', self.installed - {'base'})
+
+    def _check_removed_columns(self):
+        """ Return whether the column keeps its NOT NULL constraint. """
+        self.Category._check_removed_columns()
+        self.env.cr.execute(SQL(
+            "SELECT attnotnull FROM pg_attribute WHERE attrelid = %s::regclass AND attname = 'name'",
+            self.Category._table,
+        ))
+        return self.env.cr.fetchone()[0]
+
+    def test_module_not_loaded(self):
+        self.assertTrue(self._check_removed_columns())
+
+    def test_module_loaded(self):
+        # the module has removed the field
+        self.patch(self.registry, '_init_modules', self.installed)
+        self.assertFalse(self._check_removed_columns())
+
+    def test_modules_loaded(self):
+        # all modules are loaded: no module will add the field
+        self.patch(self.registry, 'loaded', True)
+        self.assertFalse(self._check_removed_columns())
+
+    def test_module_from_another_series(self):
+        # in an upgrade from another series, the module may have lost the field
+        self.env.cr.execute("UPDATE ir_module_module SET latest_version = '1.0' WHERE name = 'base'")
+        self.assertFalse(self._check_removed_columns())
+
+    def test_module_without_code(self):
+        # a module whose code is missing won't load
+        self.patch(odoo.modules.module, 'get_manifest', lambda module, mod_path=None: {})
+        self.assertFalse(self._check_removed_columns())
 
 
 @tagged('-at_install', 'post_install')

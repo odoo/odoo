@@ -3386,12 +3386,42 @@ class BaseModel(metaclass=MetaModel):
                    AND a.attname NOT IN %s """,
             self._table, False, tuple(cols),
         ))
+        rows = cr.dictfetchall()
 
-        for row in cr.dictfetchall():
+        # While modules are loading, keep the NOT NULL constraints of the
+        # fields of modules that will load later: those modules check the
+        # constraints when they load, and dropping them meanwhile locks the
+        # table exclusively until the current module is committed
+        unloaded_columns = set()
+        not_null_columns = [row['attname'] for row in rows if row['attnotnull']]
+        if not_null_columns and not self.pool.loaded:
+            loaded_modules = set(self.pool._init_modules)
+            if self.env.context.get('module'):
+                loaded_modules.add(self.env.context['module'])
+            # the external ids of the fields give their modules
+            cr.execute(SQL(
+                """ SELECT f.name, m.name, m.latest_version
+                      FROM ir_model_fields f
+                      JOIN ir_model_data d ON d.model = 'ir.model.fields' AND d.res_id = f.id
+                      JOIN ir_module_module m ON m.name = d.module
+                     WHERE f.model = %s AND f.name IN %s AND m.name != ALL(%s) """,
+                self._name, tuple(not_null_columns), sorted(loaded_modules),
+            ))
+            series = odoo.release.major_version + '.'
+            unloaded_columns = {
+                column
+                for column, module, version in cr.fetchall()
+                # in an upgrade from another series, the module may have lost
+                # the field; a module without code won't load
+                if (version or '').startswith(series)
+                and odoo.modules.module.get_manifest(module).get('installable')
+            }
+
+        for row in rows:
             if log:
                 _logger.debug("column %s is in the table %s but not in the corresponding object %s",
                               row['attname'], self._table, self._name)
-            if row['attnotnull']:
+            if row['attnotnull'] and row['attname'] not in unloaded_columns:
                 sql.drop_not_null(cr, self._table, row['attname'])
 
     def _init_column(self, column_name):
