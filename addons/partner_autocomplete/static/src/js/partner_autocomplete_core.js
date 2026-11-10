@@ -1,11 +1,7 @@
-/* global checkVATNumber */
-
-import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
-import { onWillStart } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
@@ -23,18 +19,8 @@ export function usePartnerAutocomplete() {
 
     let lastNoResultsQuery = null;
 
-    onWillStart(async () => {
-        await loadJS("/partner_autocomplete/static/lib/jsvat.js");
-    });
-
     function sanitizeVAT(value) {
         return value ? value.replace(/[^A-Za-z0-9]/g, '') : '';
-    }
-
-    async function isVATNumber(value) {
-        // checkVATNumber is defined in library jsvat.
-        // It validates that the input has a valid VAT number format
-        return checkVATNumber(sanitizeVAT(value));
     }
 
     function isGSTNumber(value) {
@@ -56,14 +42,14 @@ export function usePartnerAutocomplete() {
         return isGST;
     }
 
+    function looksLikeVATNumber(value) {
+        // Only the format is checked here, the server validates the number
+        return (value.match(/\d/g) || []).length >= 4;
+    }
+
     async function autocomplete(value, queryCountryId) {
         value = value.trim();
-        const isVAT = await isVATNumber(value);
-        if (isVAT){
-        	value = sanitizeVAT(value);
-        }
-        const isGST = isGSTNumber(value);
-        return await getSuggestions(value, isVAT || isGST, queryCountryId);
+        return await getSuggestions(value, looksLikeVATNumber(value), queryCountryId);
     }
 
     /**
@@ -134,36 +120,35 @@ export function usePartnerAutocomplete() {
      * Use Odoo Autocomplete API to return suggestions
      *
      * @param {string} value
-     * @param {boolean} isVAT
+     * @param {boolean} mayBeVAT
      * @returns {Promise}
      * @private
      */
-    async function getSuggestions(value, isVAT, queryCountryId) {
-        const method = isVAT ? 'autocomplete_by_vat' : 'autocomplete_by_name';
-
+    async function getSuggestions(value, mayBeVAT, queryCountryId) {
         // Optimization: if the search query starts with the same content as a previous query for
         // which there was no results, there won't be any results for the current query.
         // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
-        if (!isVAT && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+        if (!mayBeVAT && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
             return [];
         }
 
-        const prom = orm.silent.call(
-            'res.partner',
-            method,
-            [value, queryCountryId],
-        );
+        // A name that looks like a VAT number may be either: search both
+        const calls = [orm.silent.call('res.partner', 'autocomplete_by_name', [value, queryCountryId])];
+        if (mayBeVAT) {
+            calls.unshift(orm.silent.call('res.partner', 'autocomplete_by_vat', [sanitizeVAT(value), queryCountryId]));
+        }
+        const prom = Promise.all(calls);
 
         let suggestions = [];
         try {
-          suggestions = await keepLastOdoo.add(prom);
+          suggestions = (await keepLastOdoo.add(prom)).flat();
         } catch (e) {
           if (!(e instanceof ConnectionLostError)) {
             throw e;
           }
         }
 
-        if (!isVAT && suggestions.length === 0) {
+        if (!mayBeVAT && suggestions.length === 0) {
             lastNoResultsQuery = value;
         }
 

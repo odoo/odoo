@@ -92,6 +92,29 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             result = self.env['res.partner'].with_context(enriched_company_data=be_company_data).enrich_by_duns('BE1234567')
             self.assertEqual(result.get('vat'), '')
 
+    def test_enrich_by_duns_vat_from_query(self):
+        """Ensure the VAT number is taken from the query when the company was found from it."""
+        if self.env['ir.module.module']._get('base_vat').state != 'installed':
+            self.skipTest("The module base vat is required to run this test.")
+
+        for country_code, query, expected_vat in (
+            ('BE', 'BE0477472701', 'BE0477472701'),
+            ('BE', 'NotOdoo 2024', None),
+            ('US', '94-2404110', None),  # there is no validation for US TIN
+        ):
+            # The suggestion found from the query, which the enrichment completes without VAT number
+            company_data = {'name': 'Test Company', 'duns': '123456789', 'country_code': country_code}
+            suggestion = self.env['res.partner']._format_data_company({**company_data, 'query': query})
+            with (
+                self.subTest(query=query),
+                patch(
+                    'odoo.addons.partner_autocomplete.models.iap_autocomplete_api.IapAutocompleteApi._contact_iap',
+                    return_value={'data': company_data},
+                ),
+            ):
+                result = self.env['res.partner'].with_context(enriched_company_data=suggestion).enrich_by_duns('123456789')
+                self.assertEqual(result.get('vat'), expected_vat)
+
     def test_enrich_with_industry_id(self):
         """Test that the industry ID is extracted from the enrichment data."""
         company = self.env['res.company'].create({
