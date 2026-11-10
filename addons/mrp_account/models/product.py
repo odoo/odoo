@@ -69,7 +69,8 @@ class ProductProduct(models.Model):
             return 0
         if not boms_to_recompute:
             boms_to_recompute = []
-        total = bom.extra_cost if bom.type == 'normal' else 0
+        # the extra cost is defined per manufactured unit
+        total = bom.extra_cost * bom.product_qty if bom.type == 'normal' else 0
         for opt in bom.operation_ids:
             if opt._skip_operation_line(self):
                 continue
