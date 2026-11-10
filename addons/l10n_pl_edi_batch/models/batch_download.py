@@ -317,7 +317,7 @@ class BatchDownload(models.Model):
                 old_date_to = batch.date_to
                 package = data['content'].get('package') or {}
                 if is_truncated := package.get('isTruncated'):
-                    data['date_to'] = parse(package['lastInvoicingDate']).astimezone(timezone.utc).replace(tzinfo=None)
+                    data['date_to'] = parse(package['lastPermanentStorageDate']).astimezone(timezone.utc).replace(tzinfo=None)
 
                 batch.update(data)
                 if batch.state == 'downloading':

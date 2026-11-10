@@ -441,7 +441,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
 
     @freeze_time('2026-03-15 12:00:00')
     def test_request_date_types(self):
-        # The batch export filters by the day KSeF received the invoice, as the single-invoice download does
+        # The batch export filters by the day KSeF stored the invoice, up to its high water mark
         with (
             patch.object(KsefApiServiceBatch, '_create_encryption_data', return_value=self.encryption_data),
             self._mock_ksef({'referenceNumber': '20260315-EX-1'}) as mock_request,
@@ -454,16 +454,17 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'encryption': {'encryptedSymmetricKey': 'RU5D', 'initializationVector': 'SVY='},
             'filters': {
                 'dateRange': {
-                    'dateType': 'Invoicing',
+                    'dateType': 'PermanentStorage',
                     'from': '2026-03-08T00:00:00.000Z',
                     'to': '2026-03-15T12:00:00.000Z',
+                    'restrictToPermanentStorageHwmDate': True,
                 },
                 'subjectType': 'Subject2',
             },
         })
         self.assertRecordValues(batch, [{'name': '20260315-EX-1', 'state': 'requested'}])
 
-        # The single-invoice download of l10n_pl_edi filters by Invoicing too
+        # The single-invoice download of l10n_pl_edi still filters by Invoicing
         with self._mock_ksef({'invoices': [], 'hasMore': False}) as mock_request:
             self.env['account.move'].with_company(self.company)._fetch_bills_metadata(KsefApiService(self.company))
         mock_request.assert_called_once()
@@ -721,7 +722,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         historic_batch = self._create_batch('historic')
         historic_batch.write({'date_from': datetime(2026, 3, 1), 'date_to': datetime(2026, 3, 8)})
         self._set_write_date(historic_batch, now - timedelta(seconds=10))
-        truncated_answer = self._ready_answer(now, isTruncated=True, lastInvoicingDate='2026-03-05T10:00:00+00:00')
+        truncated_answer = self._ready_answer(now, isTruncated=True, lastPermanentStorageDate='2026-03-05T10:00:00+00:00')
 
         # The batch ends where its package does, and the rest of its window is requested right away
         with freeze_time(now), self._mock_ksef(truncated_answer), self._mock_batch_requests():

@@ -97,6 +97,7 @@ class KsefApiServiceBatch(KsefApiService):
                         'dateType': 'PermanentStorage',
                         'from': date_from.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
                         'to': date_to.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
+                        'restrictToPermanentStorageHwmDate': True,
                     },
                     'subjectType': subject_type,
                 },
