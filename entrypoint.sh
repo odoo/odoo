@@ -96,6 +96,16 @@ try:
         except Exception:
             conn.rollback()
 
+        # Ensure ir_model_data unique index exists for ON CONFLICT (module, name)
+        cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_model_data';\")
+        if cur.fetchone():
+            try:
+                cur.execute(\"CREATE UNIQUE INDEX IF NOT EXISTS ir_model_data_module_name_uniq_index ON ir_model_data (module, name);\")
+                conn.commit()
+            except Exception as e:
+                conn.rollback()
+                sys.stderr.write(f'ir_model_data index warning: {e}\\n')
+
         # Ensure website_visitor unique constraint exists for ON CONFLICT (access_token)
         cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='website_visitor';\")
         if cur.fetchone():
@@ -136,13 +146,13 @@ try:
                     conn.commit()
                 except Exception as ce:
                     conn.rollback()
-                    sys.stderr.write(f'website_visitor constraint warning: {ce}\n')
+                    sys.stderr.write(f'website_visitor constraint warning: {ce}\\n')
     conn.close()
 
     if not has_act_window:
         print('1')
 except Exception as e:
-    sys.stderr.write(f'Database inspection warning: {e}\n')
+    sys.stderr.write(f'Database inspection warning: {e}\\n')
 " || true)
 fi
 
