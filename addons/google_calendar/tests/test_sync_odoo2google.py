@@ -3,6 +3,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
+from freezegun import freeze_time
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
@@ -97,6 +98,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
     @patch_api
     @users('__system__')
     @warmup
+    @freeze_time('2020-01-15 08:00:00')
     def test_recurring_event_creation_perf(self):
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
         alarm = self.env['calendar.alarm'].create({
