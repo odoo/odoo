@@ -772,6 +772,8 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
+        if 'company_type' in vals and 'is_company' not in vals:
+            vals['is_company'] = vals['company_type'] == 'company'
         if vals.get('name'):
             for partner in self:
                 for bank in partner.bank_ids:
@@ -809,6 +811,8 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
+            if 'company_type' in vals and 'is_company' not in vals:
+                vals['is_company'] = vals['company_type'] == 'company'
         create_self = self
         if 'default_user_ids' in self.env.context:
             # default_user_ids targets other models (e.g. task assignees); as
