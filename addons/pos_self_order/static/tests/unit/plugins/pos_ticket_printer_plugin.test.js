@@ -10,9 +10,9 @@ definePosSelfModels();
 const CHANGE_RECEIPT_ROUTE = "/pos-self-order/kiosk/change-receipt";
 const CLIENT_IMAGE = "client-image";
 
-function serverImage() {
+function serverImage(width = 515) {
     const canvas = document.createElement("canvas");
-    canvas.width = 515;
+    canvas.width = width;
     canvas.height = 100;
     return canvas.toDataURL("image/jpeg").split(",")[1];
 }
@@ -270,5 +270,21 @@ describe("printOrderChanges", () => {
             expect(printedBy(store, "server")).toEqual([]);
             expect(printedBy(store, "client")).toEqual(["Label"]);
         });
+    });
+});
+
+describe("base64ToCanvas", () => {
+    test("server image width is reduced to a multiple of 8", async () => {
+        const { store } = await setupKiosk();
+
+        for (const [width, expectedWidth] of [
+            [515, 512],
+            [512, 512],
+        ]) {
+            const canvas = await store.ticketPrinter.base64ToCanvas(serverImage(width));
+
+            expect(canvas.width).toBe(expectedWidth);
+            expect(canvas.height).toBe(100);
+        }
     });
 });

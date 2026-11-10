@@ -286,7 +286,7 @@ class PosSelfOrderController(http.Controller):
             # For the moment, the backend only generates 80mm receipts
             if printer.paper_size != '80' or not htmls:
                 continue
-            images = pos_order_sudo.env['ir.actions.report']._run_image_engine('wkhtmltopdf', htmls, 500, 0)
+            images = pos_order_sudo.env['ir.actions.report']._run_image_engine('wkhtmltopdf', htmls, 512, 0)
             receipts[printer.id] = [base64.b64encode(image).decode() for image in images] if all(images) else []
 
         return {'receipts': receipts}
