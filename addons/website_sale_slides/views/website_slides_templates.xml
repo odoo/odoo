@@ -125,7 +125,7 @@
                      t-out="product_info['list_price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
             </div>
-            <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
+            <div t-if="editable" class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
                  t-att-data-precision="str(product_info['currency'].decimal_places)">
                 <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
             </div>
