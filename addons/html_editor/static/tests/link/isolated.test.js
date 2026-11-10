@@ -112,7 +112,7 @@ describe("should zwnbsp-pad simple text link", () => {
                 // insert the zwnbsp again
                 processThroughNormalize(editor);
             },
-            contentAfterEdit: '<p>a\ufeff[]<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
+            contentAfterEdit: '<p>a[]\ufeff<a href="#/">\ufeffbc\ufeff</a>\ufeffd</p>',
         });
     });
     test("should zwnbsp-pad simple text link (2)", async () => {
