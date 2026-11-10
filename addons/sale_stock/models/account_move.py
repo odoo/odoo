@@ -48,9 +48,18 @@ class AccountMove(models.Model):
 
         if self.move_type == 'out_invoice':
             # Ignore a reversed invoice only if its reversing move also precedes the invoice being rendered.
-            previous_amls = previous_amls.filtered(
-                lambda aml: aml.move_id.payment_state != 'reversed' or not (aml.move_id.reversal_move_ids & previous_amls.move_id)
+            reversed_moves = previous_amls.move_id.filtered(
+                lambda move: move.payment_state == 'reversed' and move.reversal_move_ids & previous_amls.move_id
             )
+            previous_amls = previous_amls.filtered(lambda aml: aml.move_id not in reversed_moves)
+            invoiced_later = set()
+            ignored_credit_note_amls = previous_amls.browse()
+            for aml in previous_amls[::-1]:
+                if aml.move_id.move_type == 'out_invoice':
+                    invoiced_later.add(aml.product_id)
+                elif aml.move_id.reversed_entry_id in reversed_moves and aml.product_id in invoiced_later:
+                    ignored_credit_note_amls |= aml
+            previous_amls -= ignored_credit_note_amls
 
         previous_qties_invoiced = previous_amls._get_invoiced_qty_per_product()
 
