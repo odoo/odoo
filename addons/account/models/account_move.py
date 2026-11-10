@@ -1566,6 +1566,9 @@ class AccountMove(models.Model):
             sign=sign,
             special_mode='total_excluded',
             special_type='early_payment',
+            # Keep the balance computed for the epd lines: converting each line separately with the rate
+            # could unbalance them since they must sum to zero.
+            manual_total_excluded=sign * epd_line.balance,
 
             is_refund=self.move_type in ('out_refund', 'in_refund'),
             rate=rate,
@@ -1596,6 +1599,7 @@ class AccountMove(models.Model):
                 sign=1,
                 special_mode='total_excluded',
                 special_type='early_payment',
+                manual_total_excluded=sign * values['balance'],
 
                 partner_id=self.commercial_partner_id,
                 account_id=self.env['account.account'].browse(all_values['account_id']),
