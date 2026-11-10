@@ -6,8 +6,6 @@
 Downloads the vendor bills received in KSeF in batches, one encrypted ZIP per
 timeframe, instead of one by one: the single-invoice download is limited to 64
 invoices an hour.
-
-Opt-in: enable "KSeF batch download" in the Accounting settings.
 """,
     'data': [
         'security/ir.model.access.csv',
