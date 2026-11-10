@@ -1397,12 +1397,15 @@ export class SelectionPlugin extends Plugin {
     selectElement(element) {
         const [anchorNode, anchorOffset] = leftPos(element);
         const [focusNode, focusOffset] = rightPos(element);
-        this.setSelection({
-            anchorNode,
-            anchorOffset,
-            focusNode,
-            focusOffset,
-        });
+        this.setSelection(
+            {
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            },
+            { normalize: false }
+        );
     }
 
     // =======
