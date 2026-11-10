@@ -2,7 +2,7 @@ import { BackgroundOption } from "@html_builder/plugins/background_option/backgr
 import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, press, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -126,6 +126,13 @@ test("Change the background position and click out of the iframe", async () => {
     await contains(".o_customize_tab").click();
     expect(".o_we_background_position_overlay").toHaveCount(0);
     expect("button.fa-undo").not.toBeEnabled();
+});
+
+test("Change the background position and save with Alt+S", async () => {
+    await dragAndDropBgImage();
+    await press(["alt", "s"]);
+    await animationFrame();
+    expect(".o_we_background_position_overlay").toHaveCount(0);
 });
 
 test("Background position overlay layout", async () => {
