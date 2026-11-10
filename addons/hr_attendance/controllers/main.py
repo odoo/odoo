@@ -4,6 +4,7 @@ import base64
 import binascii
 import re
 import datetime
+import secrets
 from requests.exceptions import RequestException
 
 import odoo.release
@@ -28,6 +29,28 @@ class HrAttendance(http.Controller):
         """
         company = request.env['res.company'].sudo().search([('attendance_kiosk_key', '=', token)])
         return company
+
+    @staticmethod
+    def _get_kiosk_employee(company, employee_id=False, pin_code=False, barcode=False):
+        """Return the employee (as superuser) of the company identified on its kiosk, by badge or by id. By id, the PIN
+        code must match when the company uses ``attendance_kiosk_use_pin``.
+
+        :rtype: hr.employee, empty if no employee of the company matches
+        """
+        Employee = request.env['hr.employee'].sudo()
+        if barcode:
+            return Employee.search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
+        if not employee_id:
+            return Employee
+        employee = Employee.browse(employee_id)
+        if employee.company_id != company:
+            return Employee
+        # an employee without PIN code matches an empty one (false, null or '')
+        if company.attendance_kiosk_use_pin and not secrets.compare_digest(
+            (employee.pin or '').encode(), str(pin_code or '').encode(),
+        ):
+            return Employee
+        return employee
 
     @staticmethod
     def _get_user_attendance_data(
@@ -364,7 +387,7 @@ class HrAttendance(http.Controller):
         """
         company = self._get_company(token)
         if company:
-            employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
+            employee = self._get_kiosk_employee(company, barcode=barcode)
             if employee:
                 notification = employee._attendance_action_change(
                     self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude, device_tracking_enabled=company.attendance_device_tracking),
@@ -382,9 +405,9 @@ class HrAttendance(http.Controller):
         """
         company = self._get_company(token)
         if company:
-            employee = request.env['hr.employee'].sudo().browse(employee_id)
-            if employee.company_id == company and ((not company.attendance_kiosk_use_pin) or (employee.pin == pin_code)):
-                notification = employee.sudo()._attendance_action_change(
+            employee = self._get_kiosk_employee(company, employee_id=employee_id, pin_code=pin_code)
+            if employee:
+                notification = employee._attendance_action_change(
                     self._get_geoip_response(
                         mode='kiosk',
                         latitude=latitude,
@@ -411,30 +434,12 @@ class HrAttendance(http.Controller):
         company = self._get_company(token)
         if not company or not company.attendance_break_management:
             return {}
-        employee = request.env['hr.employee'].sudo()
-        if barcode:
-            employee = employee.search([
-                ('barcode', '=', barcode),
-                ('company_id', '=', company.id),
-            ], limit=1)
-        elif employee_id:
-            employee = employee.browse(employee_id)
-            if employee.company_id != company or (
-                company.attendance_kiosk_use_pin and employee.pin != pin_code
-            ):
-                employee = request.env['hr.employee'].sudo()
-        if not employee:
+        employee = self._get_kiosk_employee(company, employee_id=employee_id, pin_code=pin_code, barcode=barcode)
+        # bool is an int in Python, ids are not
+        if not employee or isinstance(attendance_id, bool) or not isinstance(attendance_id, int):
             return {}
-        if isinstance(attendance_id, bool) or not isinstance(attendance_id, int):
-            return {}
-        attendance = request.env['hr.attendance'].sudo().browse(attendance_id).exists()
-        if (
-            not attendance
-            or attendance.employee_id != employee
-            or attendance != employee.last_attendance_id
-            or not attendance.check_out
-            or attendance.state == 'refused'
-        ):
+        attendance = employee.last_attendance_id
+        if attendance.id != attendance_id or not attendance.check_out or attendance.state == 'refused':
             return {}
         attendance.write({'break_duration': break_duration})
         return self._get_attendance_action_response(employee)

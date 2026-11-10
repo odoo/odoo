@@ -116,6 +116,32 @@ class TestHrAttendanceKiosk(HttpCase):
         self.assertTrue(result['attendance'])
         self.assertEqual(attendance.break_duration, 0.5)
 
+    def test_kiosk_identifies_employee_by_pin_or_badge(self):
+        self.company_B.attendance_kiosk_use_pin = True
+
+        def manual_selection(employee, pin_code):
+            return self.make_jsonrpc_request('/hr_attendance/manual_selection', {
+                'token': self.company_B.attendance_kiosk_key,
+                'employee_id': employee.id,
+                'pin_code': pin_code,
+            })
+
+        self.assertFalse(manual_selection(self.employee_A, 'wrong'))
+        self.assertFalse(manual_selection(self.employee_B, False))  # another company
+        self.assertFalse(self.employee_A.attendance_ids)
+        self.assertTrue(manual_selection(self.employee_A, '1234')['attendance'])
+        self.assertEqual(self.employee_A.attendance_state, 'checked_in')
+
+        self.assertFalse(self.make_jsonrpc_request('/hr_attendance/attendance_barcode_scanned', {
+            'token': self.company_B.attendance_kiosk_key,
+            'barcode': 'UNKNOWN',
+        }))
+        self.make_jsonrpc_request('/hr_attendance/attendance_barcode_scanned', {
+            'token': self.company_B.attendance_kiosk_key,
+            'barcode': self.employee_A.barcode,
+        })
+        self.assertEqual(self.employee_A.attendance_state, 'checked_out')
+
     def test_update_break_duration_only_updates_last_closed_attendance(self):
         previous_attendance = self._create_checked_out_attendance()
         now = fields.Datetime.now()
