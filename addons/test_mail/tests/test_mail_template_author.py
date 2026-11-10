@@ -106,3 +106,32 @@ class TestMailTemplateAuthor(MailCommon):
             )
         self.assertEqual(message.author_id, self.partner_root)
         self.assertEqual(message.email_from, self.partner_root.email_formatted)
+
+    def test_template_signature(self):
+        """ Signature rendered in template body through '_mail_get_default_signature'
+        matches the default author: responsible for automated sending, current
+        user otherwise, nothing when falling back on the company. """
+        self.test_template.body_html = '<p>Hello</p><t t-out="object._mail_get_default_signature()"/>'
+        self.user_employee.signature = '<p>Employee Signature</p>'
+        self.user_admin.signature = '<p>Admin Signature</p>'
+        for user, has_responsible, expected, not_expected in [
+            (self.user_root, True, 'Employee Signature', 'Admin Signature'),
+            (self.user_admin, True, 'Admin Signature', 'Employee Signature'),
+            (self.user_root, False, False, 'Signature'),
+        ]:
+            self.test_record.user_id = self.user_employee if has_responsible else False
+            for sending in ('composer', 'send_mail'):
+                with self.subTest(user=user.name, has_responsible=has_responsible, sending=sending), \
+                     self.mock_mail_gateway():
+                    record = self.test_record.with_user(user)
+                    if sending == 'composer':
+                        body = record.message_post_with_source(
+                            self.test_template.with_user(user),
+                            subtype_xmlid='mail.mt_comment',
+                        ).body
+                    else:
+                        mail_id = self.test_template.with_user(user).send_mail(record.id)
+                        body = self.env['mail.mail'].sudo().browse(mail_id).body_html
+                    if expected:
+                        self.assertIn(expected, body)
+                    self.assertNotIn(not_expected, body)

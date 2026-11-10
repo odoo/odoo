@@ -187,6 +187,16 @@ class Base(models.AbstractModel):
             result[record.id] = author.sudo(False)
         return result
 
+    def _mail_get_default_signature(self):
+        """ Signature (html) of the default author (see ``_mail_get_default_author``),
+        to be used in template bodies so that the signature matches the sender
+        when the template does not define any sender ('Send From'). Empty when
+        the default author is not a user (e.g. company). """
+        self.ensure_one()
+        author = self._mail_get_default_author()[self.id]
+        # sudo: signature of another user (e.g. salesperson) may not be readable
+        return author.sudo().main_user_id.signature or ''
+
     def _mail_get_customer(self, introspect_fields=False):
         """ Return the 'main partner' (customer business wise) of the record.
         Mainly a helper for future changes e.g. main customer in templates. """

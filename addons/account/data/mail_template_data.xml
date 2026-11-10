@@ -57,9 +57,9 @@
         </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
             <br /><br />
-            <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -133,9 +133,9 @@
         from <t t-out="object.company_id.name or ''">YourCompany</t>.
         <br /><br />
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
             <br /><br />
-            <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -185,9 +185,9 @@
         </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
             <br /><br />
-            <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -229,9 +229,9 @@
                 from <t t-out="object.company_id.name or ''">YourCompany</t>.
                 <br /><br />
                 Do not hesitate to contact us if you have any questions.
-                <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+                <t t-if="not is_html_empty(object._mail_get_default_signature())">
                     <br /><br />
-                    <div>--<br/><t t-out="object.invoice_user_id.signature or ''">Mitchell Admin</t></div>
+                    <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
                 </t>
             </p>
         </div>

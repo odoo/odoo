@@ -56,8 +56,8 @@
         </t>
         <br/>
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -94,8 +94,8 @@
         amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -178,8 +178,8 @@
                                 </t>
                             </ul>
                         </t>
-                        <t t-if="not is_html_empty(object.user_id.signature)">
-                            <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+                        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+                            <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
                         </t>
                     </p>
                     <t t-if="hasattr(object, 'website_id') and object.website_id">
@@ -439,8 +439,8 @@
         Thank you for your trust!
         <br/>
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
