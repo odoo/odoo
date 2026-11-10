@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import convert, float_compare, float_is_zero, format_datetime
-from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
+from odoo.tools.date_utils import date_range, float_to_time, sum_intervals, time_to_float
 from odoo.tools.intervals import Intervals
 
 
@@ -890,3 +890,60 @@ class HrAttendance(models.Model):
         employee_id = self.env.context.get('employee_id', False)
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
+
+    @api.model
+    def get_working_hours_for_calendar(self, employee_id, date_from, date_to):
+        """Return FullCalendar `businessHours` for the employee.
+
+        :param employee_id: ID of the employee.
+        :param date_from: Start date (YYYY-MM-DD).
+        :param date_to: End date (YYYY-MM-DD).
+        """
+        employee = self.env["hr.employee"].browse(employee_id).exists()
+        if not employee:
+            return []
+
+        tz = self.env.tz
+        start_period = datetime.combine(fields.Date.to_date(date_from), time.min, tz)
+        stop_period = datetime.combine(fields.Date.to_date(date_to) + timedelta(days=1), time.min, tz)
+        # Include adjacent employee-local dates and generate complete duration-based days.
+        query_start = start_period.astimezone(UTC) - timedelta(days=1)
+        query_stop = stop_period.astimezone(UTC) + timedelta(days=1)
+        calendar_periods = employee.sudo()._get_version_periods(
+            query_start.date(), query_stop.date(), ['resource_calendar_id', 'tz'], check_contract=True,
+        ).get(employee, [])
+        calendar_periods = [
+            (start, stop, (calendar, employee_tz))
+            for start, stop, (calendar, employee_tz) in calendar_periods
+            if datetime.combine(start, time.min, ZoneInfo(employee_tz)) < stop_period
+            and datetime.combine(stop + timedelta(days=1), time.min, ZoneInfo(employee_tz)) > start_period
+        ]
+        if not calendar_periods:
+            calendar_periods = [(
+                query_start.date(), query_stop.date(),
+                (employee.resource_calendar_id, employee.tz or 'UTC'),
+            )]
+        work_intervals = employee._get_schedule_work_intervals(query_start, query_stop, {employee: calendar_periods})
+        business_hours = []
+        for employee_tz, intervals in work_intervals[employee]:
+            employee_tzinfo = ZoneInfo(employee_tz)
+            for start, stop, _meta in intervals:
+                # Resource attendances encode 24:00 as the last microsecond of the day.
+                if stop.astimezone(employee_tzinfo).time() == time.max:
+                    stop += timedelta(microseconds=1)
+                start = max(start.astimezone(tz), start_period)
+                stop = min(stop.astimezone(tz), stop_period)
+                if start >= stop:
+                    continue
+                for day in date_range(
+                    start.date(), (stop - timedelta(microseconds=1)).date(), step=timedelta(days=1),
+                ):
+                    day_start = datetime.combine(day, time.min, tzinfo=tz)
+                    day_end = datetime.combine(day + timedelta(days=1), time.min, tzinfo=tz)
+                    seg_start, seg_stop = max(start, day_start), min(stop, day_end)
+                    business_hours.append({
+                        "daysOfWeek": [(day.weekday() + 1) % 7],
+                        "startTime": seg_start.strftime("%H:%M"),
+                        "endTime": "24:00" if seg_stop == day_end else seg_stop.strftime("%H:%M"),
+                    })
+        return business_hours
