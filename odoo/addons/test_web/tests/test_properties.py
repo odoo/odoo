@@ -352,7 +352,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum', 'myinteger': 1337}
 
         # group by the char property
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -380,7 +380,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._check_domains_count(result)
 
         # group by the integer property
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -399,7 +399,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # falsy properties
         self.message_3.attributes = {'mychar': False, 'myinteger': False}
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -419,7 +419,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             """,
             [self.message_2.id],
         )
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -502,7 +502,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum'}
 
         Model = self.env['test_orm.message']
-        with self.assertQueryCount(10):  # 3 for formatted_read_group + 1 query by group opened + 2 queries by get_property_definition (groupby and order)
+        with self.assertQueryCount(9):  # 3 for formatted_read_group + 1 query by group opened + 1 query by get_property_definition
             result = Model.web_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -891,7 +891,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         (partners[4] | partners[7] | partners[9]).unlink()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -918,7 +918,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # now message 1 and 2 will also be in the falsy group
         partners[:8].unlink()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -992,7 +992,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
 
         self.env.invalidate_all()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 groupby=['attributes.mypartner'],
@@ -1091,7 +1091,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [self.message_3.id],
         )
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 groupby=['attributes.myselection'],
@@ -1166,7 +1166,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -1208,7 +1208,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
