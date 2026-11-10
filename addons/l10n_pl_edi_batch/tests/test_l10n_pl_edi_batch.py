@@ -144,8 +144,11 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         new_batch.content = {'status': {'code': 200}}
         return new_batch
 
-    def _assert_requested_again(self, failed_batch):
-        """ The window of `failed_batch` is requested again, in a new batch. """
+    def _assert_requested_again(self, failed_batch, now):
+        """ The window of `failed_batch` is requested again 5 minutes later, by the historic cron, in a new batch. """
+        self.assertIn(now + timedelta(minutes=5), self._search_triggers_by_cron('request_historic'))
+        with freeze_time(now + timedelta(minutes=5)), self._mock_batch_requests():
+            self.Batch._cron_request_historic()
         self.assertRecordValues(self._company_batches(self.company) - failed_batch, [{
             'date_from': failed_batch.date_from,
             'date_to': failed_batch.date_to,
@@ -396,7 +399,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             self.Batch._cron_import()
         self.assertEqual(ready_batch.state, 'failed')
         self.assertTrue(ready_batch.error.startswith("999: Odoo Error\nThe KSeF batch ZIP is corrupt"))
-        self._assert_requested_again(ready_batch)
+        self._assert_requested_again(ready_batch, now)
 
     def test_import_bills_bad_xmls(self):
         zip_bytes = self._make_zip({
@@ -600,14 +603,14 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             self.Batch._cron_request_historic()
         self.assertEqual(self._company_batches(self.company), first_batch)
 
-        # Failed: the next window comes anyway
+        # Failed: the same window is requested again
         first_batch.content = {'status': {'code': 415}}
         with freeze_time(now), self._mock_batch_requests():
             self.Batch._cron_request_historic()
         second_batch = self._company_batches(self.company) - first_batch
         self.assertRecordValues(second_batch, [{
-            'date_from': ksef_midnight(yesterday - timedelta(days=14)),
-            'date_to': ksef_midnight(yesterday - timedelta(days=7)),
+            'date_from': ksef_midnight(yesterday - timedelta(days=7)),
+            'date_to': ksef_midnight(yesterday),
         }])
 
         # The last window stops at the day KSeF 2.0 went live, then there's nothing left to request
@@ -651,6 +654,27 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         self.assertEqual(self._run_historic_cron(now).date_from, ksef_midnight(date(2026, 1, 31)))
         self.assertEqual(self.company.l10n_pl_edi_batch_historic_date, date(2026, 1, 31))
         self.assertFalse(self._run_historic_cron(now))
+
+    def test_cron_request_historic_failed_window(self):
+        failed_batches = self.Batch.concat(*(self._create_batch(f'failed-{n}', {'status': {'code': 415}}) for n in range(8)))
+        window = {'date_from': failed_batches[0].date_from, 'date_to': failed_batches[0].date_to}
+
+        # The last historic window failed 8 times: it is requested a 9th time
+        with self._mock_batch_requests():
+            self.Batch._cron_request_historic()
+        last_attempt = self._company_batches(self.company) - failed_batches
+        self.assertRecordValues(last_attempt, [{**window, 'state': 'requested'}])
+
+        # It fails a 9th time: the error is logged, and the walk goes on with the next window
+        last_attempt.content = {'status': {'code': 415}}
+        historic_date = self.company.l10n_pl_edi_batch_historic_date
+        with self._mock_batch_requests(), self.assertLogs('odoo.addons.l10n_pl_edi_batch.models.batch_download', 'ERROR'):
+            self.Batch._cron_request_historic()
+        next_batch = self._company_batches(self.company) - failed_batches - last_attempt
+        self.assertRecordValues(next_batch, [{
+            'date_from': ksef_midnight(historic_date - timedelta(days=7)),
+            'date_to': ksef_midnight(historic_date),
+        }])
 
     # Test the status cron -----------------------------------------------------
 
@@ -715,7 +739,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         with freeze_time(now), self._mock_ksef({'status': {'code': 415}}), self._mock_batch_requests():
             self.Batch._cron_check_status()
         self.assertEqual(requested_batch.state, 'failed')
-        self._assert_requested_again(requested_batch)
+        self._assert_requested_again(requested_batch, now)
 
     def test_cron_check_status_truncated_historic(self):
         now = fields.Datetime.now().replace(microsecond=0)
@@ -787,7 +811,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             self.Batch._cron_download()
         self.assertEqual(downloading_batch.state, 'failed')
         self.assertTrue(downloading_batch.error.startswith("999: Odoo Error\nCouldn't download KSeF batch part downloading_batch-001.zip.aes"))
-        self._assert_requested_again(downloading_batch)
+        self._assert_requested_again(downloading_batch, now)
 
     # Test the import cron -----------------------------------------------------
 

@@ -49,6 +49,11 @@ def ksef_midnight(day):
     return utc_midnight.replace(tzinfo=None)
 
 
+def exp_backoff_delay(retry_count, base_delay=10):
+    """ Exponential backoff: `base_delay` seconds, doubled at each retry. """
+    return timedelta(seconds=base_delay * 2 ** retry_count)
+
+
 class BatchDownload(models.Model):
     _name = 'l10n_pl_edi_batch.download'
     _description = "KSeF Batch Download"
@@ -290,10 +295,26 @@ class BatchDownload(models.Model):
         ]).mapped("company_id.id")
 
         def request_historic(company):
-            day_to = company.l10n_pl_edi_batch_historic_date
-            day_from = max(day_to - timedelta(days=KSEF_WINDOW), KSEF_FIRST_DAY)
-            self._create_batch_download(company, ksef_midnight(day_from), ksef_midnight(day_to))
-            company.l10n_pl_edi_batch_historic_date = day_from
+            last_batch = self.search([
+                ('company_id', '=', company.id),
+                ('kind', '=', 'historic'),
+            ], order='create_date desc, id desc', limit=1)
+            attempts = last_batch.state == 'failed' and self.search_count([
+                ('company_id', '=', company.id),
+                ('date_from', '=', last_batch.date_from),
+                ('date_to', '=', last_batch.date_to),
+            ])
+            if attempts and attempts < MAX_RETRIES:
+                # the last window failed: request it again
+                self._create_batch_download(company, last_batch.date_from, last_batch.date_to)
+            else:
+                if attempts:
+                    _logger.error("KSeF batch window %s - %s failed %s times, it is not requested again: %s",
+                                  last_batch.date_from, last_batch.date_to, attempts, last_batch.error)
+                day_to = company.l10n_pl_edi_batch_historic_date
+                day_from = max(day_to - timedelta(days=KSEF_WINDOW), KSEF_FIRST_DAY)
+                self._create_batch_download(company, ksef_midnight(day_from), ksef_midnight(day_to))
+                company.l10n_pl_edi_batch_historic_date = day_from
 
         self._run_for_all_companies(
             request_historic,
@@ -328,15 +349,16 @@ class BatchDownload(models.Model):
                         self._create_batch_download(company, batch.date_to, old_date_to)
                 elif batch.state == 'done' and batch.kind == 'historic':
                     # empty window: request the next one
-                    self.env.ref(CRON_REQUEST_HISTORIC)._trigger(at=fields.Datetime.now() + HISTORIC_REQUEST_DELAY)
+                    self._trigger_delayed(CRON_REQUEST_HISTORIC, HISTORIC_REQUEST_DELAY)
                 elif batch.state == 'requested':
                     if batch.retry_count < MAX_RETRIES:
                         batch.retry_count += 1
-                        batch._delayed_trigger(CRON_CHECK_STATUS)
+                        self._trigger_delayed(CRON_CHECK_STATUS, delay=exp_backoff_delay(batch.retry_count))
                     else:
                         batch.retry_count = 0  # stop the quick retries, the next run asks again
-                elif batch.state == 'failed':
-                    self._create_batch_download(company, batch.date_from, batch.date_to)  # request the same window again
+                elif batch.state == 'failed' and batch.kind == 'historic':
+                    # request the same window again
+                    self._trigger_delayed(CRON_REQUEST_HISTORIC, HISTORIC_REQUEST_DELAY)
 
                 # this batch is no longer waiting: check the next requested one right away
                 if batch.state != 'requested' and len(batches) > 1:
@@ -435,23 +457,24 @@ class BatchDownload(models.Model):
 
             if batch.kind == 'historic':
                 # request the next window
-                self.env.ref(CRON_REQUEST_HISTORIC)._trigger(at=fields.Datetime.now() + HISTORIC_REQUEST_DELAY)
+                self._trigger_delayed(CRON_REQUEST_HISTORIC, HISTORIC_REQUEST_DELAY)
             return len(batches) - 1
 
         self._run_for_all_companies(do_import, CRON_IMPORT)
 
-    def _delayed_trigger(self, cron_ref):
-        """ Run the cron once the batch, just written, is due again. """
-        self.env.ref(cron_ref)._trigger(at=fields.Datetime.now() + timedelta(seconds=10 * 2 ** self.retry_count))
+    @api.model
+    def _trigger_delayed(self, cron_xmlid, delay):
+        """ Run the cron after `delay`. """
+        self.env.ref(cron_xmlid)._trigger(at=fields.Datetime.now() + delay)
 
     def _retry_download(self, error):
         """ Count a download retry, and download again once due. After the last retry, the batch fails
-            with `error`, and the same window is requested again. """
+            with `error`, and a historic window is requested again in a while. """
         self.ensure_one()
         if self._raise_retry_count(error):
-            self._delayed_trigger(CRON_DOWNLOAD)
-        else:
-            self._create_batch_download(self.company_id, self.date_from, self.date_to)
+            self._trigger_delayed(CRON_DOWNLOAD, delay=exp_backoff_delay(self.retry_count))
+        elif self.kind == 'historic':
+            self._trigger_delayed(CRON_REQUEST_HISTORIC, HISTORIC_REQUEST_DELAY)
 
     def _raise_retry_count(self, error):
         """ Count a retry, and return whether the batch can be retried. After the last retry, or once the package
