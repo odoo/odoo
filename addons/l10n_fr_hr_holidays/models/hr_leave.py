@@ -131,7 +131,7 @@ class HrLeave(models.Model):
                 company_cal = company.resource_calendar_id
                 holidays_days_list = []
                 public_holidays_filtered = public_holidays.filtered_domain([
-                    ('calendar_id', 'in', [False, company_cal.id]),
+                    ('calendar_ids', 'in', [False, company_cal.id]),
                     ('company_id', '=', company.id)
                 ])
                 for holiday in public_holidays_filtered:

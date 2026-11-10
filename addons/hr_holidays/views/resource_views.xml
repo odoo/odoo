@@ -58,10 +58,10 @@
                     options="{'end_date_field': 'date_to'}"/>
             </xpath>
             <xpath expr="//field[@name='date_to']" position="replace">
-                <field name="company_id" column_invisible="True"/> <!-- used in the domain of calendar_id and by its check_company injection -->
-                <xpath expr="//field[@name='calendar_id']" position="move"/>
+                <field name="company_id" column_invisible="True"/> <!-- used in the domain of calendar_ids and by its check_company injection -->
+                <xpath expr="//field[@name='calendar_ids']" position="move"/>
             </xpath>
-            <xpath expr="//field[@name='calendar_id']" position="attributes">
+            <xpath expr="//field[@name='calendar_ids']" position="attributes">
                 <attribute name="placeholder">All Schedules</attribute>
                 <attribute name="optional">hide</attribute>
             </xpath>
@@ -74,7 +74,7 @@
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">list</field>
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
-        <field name="domain">[('resource_id', '=', False), '|', ('calendar_id', '=', False), ('calendar_id', '=', active_id), ('company_id', '=', company_id)]</field>
+        <field name="domain">[('resource_id', '=', False), '|', ('calendar_ids', '=', False), ('calendar_ids', '=', active_id), ('company_id', '=', company_id)]</field>
         <field name="context">{
             'default_calendar_id': active_id,
             'search_default_filter_date': True}</field>

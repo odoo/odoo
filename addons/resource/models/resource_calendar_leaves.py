@@ -34,9 +34,13 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
         default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one(
-        'resource.calendar', "Working Hours",
-        compute='_compute_calendar_id', store=True, readonly=False,
+    calendar_ids = fields.Many2many(
+        'resource.calendar',
+        'resource_calendar_leaves_calendar_rel',
+        'leave_id',
+        'calendar_id',
+        string="Working Hours",
+        compute='_compute_calendar_ids', store=True, readonly=False,
         domain="[('company_id', 'in', [company_id, False])]",
         check_company=True, index=True,
     )
@@ -49,14 +53,15 @@ class ResourceCalendarLeaves(models.Model):
                                  help="Whether this should be computed as a time off or as work time (eg: formation)")
 
     @api.depends('resource_id.calendar_id')
-    def _compute_calendar_id(self):
+    def _compute_calendar_ids(self):
         for leave in self.filtered('resource_id'):
-            leave.calendar_id = leave.resource_id.calendar_id
+            leave.calendar_ids = leave.resource_id.calendar_id
 
-    @api.depends('calendar_id')
+    @api.depends('calendar_ids')
     def _compute_company_id(self):
         for leave in self:
-            leave.company_id = leave.calendar_id.company_id or leave.company_id or self.env.company
+            for calendar in leave.calendar_ids:
+                leave.company_id = calendar.company_id or leave.company_id or self.env.company
 
     @api.depends('date_from')
     def _compute_date_to(self):

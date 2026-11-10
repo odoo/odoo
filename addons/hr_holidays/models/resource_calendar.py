@@ -18,11 +18,11 @@ class ResourceCalendar(models.Model):
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(
             [('resource_id', '=', False),
              '|',
-                ('calendar_id', 'in', self.ids),
+                ('calendar_ids', 'in', self.ids),
                 '&',
-                    ('calendar_id', '=', False),
+                    ('calendar_ids', '=', False),
                     ('company_id', 'in', self.company_id.ids + [False])],
-            ['calendar_id', 'company_id'],
+            ['calendar_ids', 'company_id'],
             ['__count'],
         )
         calendar_leaves = {}
@@ -46,9 +46,9 @@ class ResourceCalendar(models.Model):
             'domain': [
                 ('resource_id', '=', False),
                 '|',
-                    ('calendar_id', '=', self.id),
+                    ('calendar_ids', '=', self.id),
                     '&',
-                        ('calendar_id', '=', False),
+                        ('calendar_ids', '=', False),
                         ('company_id', 'in', self.company_id.ids + [False]),
             ],
             'context': {

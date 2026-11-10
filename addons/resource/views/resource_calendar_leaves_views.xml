@@ -8,7 +8,7 @@
                 <field name="name"/>
                 <field name="resource_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="calendar_id"/>
+                <field name="calendar_ids"/>
                 <filter name="filter_date" date="date_from" default_period="year" string="Period"/>
                 <group>
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
@@ -40,8 +40,8 @@
                 <group>
                     <group name="leave_details">
                         <field name="name" string="Reason"/>
-                        <field name="calendar_id"/>
-                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="not calendar_id"/>
+                        <field name="calendar_ids"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="not calendar_ids"/>
                         <field name="resource_id" options="{'no_create': True}"/>
                     </group>
                     <group name="leave_dates">
@@ -63,7 +63,7 @@
                 <field name="name" string="Reason"/>
                 <field name="resource_id" />
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                <field name="calendar_id"/>
+                <field name="calendar_ids" widget="many2many_tags"/>
                 <field name="date_from" />
                 <field name="date_to" />
             </list>
@@ -91,7 +91,7 @@
         <field name="name">Closing Days</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">calendar,list,form</field>
-        <field name="domain">[('calendar_id','=',active_id), ('resource_id','=',False)]</field>
+        <field name="domain">[('calendar_ids','=',active_id), ('resource_id','=',False)]</field>
         <field name="context">{'default_calendar_id': active_id}</field>
         <field name="binding_model_id" ref="model_resource_calendar"/>
         <field name="binding_view_types">form</field>
@@ -101,7 +101,7 @@
         <field name="name">Resources Time Off</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">calendar,list,form</field>
-        <field name="domain">[('calendar_id','=',active_id), ('resource_id','!=',False)]</field>
+        <field name="domain">[('calendar_ids','=',active_id), ('resource_id','!=',False)]</field>
         <field name="context">{'default_calendar_id': active_id}</field>
         <field name="binding_model_id" ref="model_resource_calendar"/>
         <field name="binding_view_types">form</field>
