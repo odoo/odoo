@@ -691,6 +691,7 @@ class ProductProduct(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
+        products._refresh_variant_value_ids()
         # `_get_variant_id_for_combination` depends on existing variants
         self.env.registry.clear_cache()
         return products
@@ -698,12 +699,21 @@ class ProductProduct(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if 'product_template_attribute_value_ids' in vals:
+            self._refresh_variant_value_ids()
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`
             self.env.registry.clear_cache()
         elif 'active' in vals:
             # `_get_first_possible_variant_id` depends on variants active state
             self.env.registry.clear_cache()
         return res
+
+    def _refresh_variant_value_ids(self):
+        """ `product_template_variant_value_ids` shares its relation table with
+        `product_template_attribute_value_ids`, but the ORM only updates the cache
+        of the field that is written: refresh the other one, and recompute what
+        depends on it. """
+        self.invalidate_recordset(['product_template_variant_value_ids'], flush=False)
+        self.modified(['product_template_variant_value_ids'])
 
     def action_archive(self):
         records = self.filtered('active')
