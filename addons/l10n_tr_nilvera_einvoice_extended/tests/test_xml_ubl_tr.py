@@ -1,5 +1,6 @@
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import file_open
 from odoo.addons.l10n_tr_nilvera_einvoice.tests.test_xml_ubl_tr_common import TestUBLTRCommon
@@ -99,16 +100,21 @@ class TestUBLTR(TestUBLTRCommon):
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
 
-    def test_xml_item_description_uses_product_description(self):
+    def test_xml_item_name_and_description_from_line_label(self):
         self.product_a.write({"default_code": "SCRW-01", "description_sale": "Stainless steel screw"})
         with freeze_time("2025-03-05"):
-            generated_xml = self._generate_invoice_xml(self.einvoice_partner)
+            generated_xml = self._generate_invoice_xml(self.einvoice_partner, invoice_line_ids=[Command.create({
+                "product_id": self.product_a.id,
+                "name": "[SCRW-01] product_a\nBlue screw\nlarge",
+                "price_unit": 50.0,
+                "tax_ids": [Command.set(self.tax_20.ids)],
+            })])
 
-        self.assertIn(b"<cbc:Description>Stainless steel screw</cbc:Description>", generated_xml)
-        self.assertIn(b"<cbc:ID>SCRW-01</cbc:ID>", generated_xml)
         self.assertIn(b"<cbc:Name>product_a</cbc:Name>", generated_xml)
+        self.assertIn(b"<cbc:Description>Blue screw large</cbc:Description>", generated_xml)
+        self.assertIn(b"<cbc:ID>SCRW-01</cbc:ID>", generated_xml)
 
-    def test_import_bill_description_from_product(self):
+    def test_import_bill_description_from_xml(self):
         product = self.env["product.product"].create({
             "name": "Imported Product",
             "default_code": "DECODE-1",
@@ -127,4 +133,4 @@ class TestUBLTR(TestUBLTRCommon):
         bill = journal.with_context(default_move_type="in_invoice")._create_document_from_attachment(attachment.id)
 
         self.assertEqual(bill.invoice_line_ids.product_id, product)
-        self.assertEqual(bill.invoice_line_ids.name, "Purchased widget")
+        self.assertEqual(bill.invoice_line_ids.name, "Vendor's own description")
