@@ -165,3 +165,26 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.env.user.group_ids -= self.env.ref('account.group_validate_bank_account')
         with self.assertRaisesRegex(UserError, "You do not have the rights to trust"), self.cr.savepoint():
             account.write({'allow_out_payment': True})
+
+    def test_clabe_only_for_mexican_accounts(self):
+        # 18 digits that pass the CLABE checksum
+        account_number = '002010077777777771'
+        mx_account = self.env['res.partner.bank'].create({
+            'account_number': account_number,
+            'partner_id': self.partner_a.id,
+            'country_id': self.env.ref('base.mx').id,
+        })
+        self.assertEqual(mx_account.account_type, 'clabe')
+
+        ar_partner = self.env['res.partner'].create({'name': 'AR Partner', 'country_id': self.env.ref('base.ar').id})
+        ar_account = self.env['res.partner.bank'].create({
+            'account_number': account_number,
+            'partner_id': ar_partner.id,
+        })
+        self.assertEqual(ar_account.country_id, self.env.ref('base.ar'))
+        self.assertEqual(ar_account.account_type, 'bank')
+        self.assertFalse(ar_account.phishing_warnings)
+
+        # Without a record, as the account number widget calls it, the company's country is used
+        self.env.company.country_id = self.env.ref('base.ar')
+        self.assertEqual(self.env['res.partner.bank'].retrieve_account_type(account_number), 'bank')
