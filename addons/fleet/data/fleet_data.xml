@@ -16,24 +16,19 @@
             <field name="sequence">4</field>
         </record>
 
-        <record id="fleet_vehicle_state_to_order" model="fleet.vehicle.state">
-            <field name="name">To Order</field>
-            <field name="sequence">5</field>
+        <record id="fleet_vehicle_state_ordered" model="fleet.vehicle.state">
+            <field name="name">Ordered</field>
+            <field name="sequence">6</field>
         </record>
 
         <record id="fleet_vehicle_state_registered" model="fleet.vehicle.state">
-            <field name="name">Registered</field>
+            <field name="name">In Use</field>
             <field name="sequence">7</field>
         </record>
 
         <record id="fleet_vehicle_state_downgraded" model="fleet.vehicle.state">
-            <field name="name">Downgraded</field>
+            <field name="name">Retired</field>
             <field name="sequence">8</field>
-        </record>
-
-        <record id="fleet_vehicle_state_waiting_list" model="fleet.vehicle.state">
-            <field name="name">Waiting List</field>
-            <field name="sequence">10</field>
         </record>
 
         <record id="type_contract_omnium" model="fleet.service.type">
