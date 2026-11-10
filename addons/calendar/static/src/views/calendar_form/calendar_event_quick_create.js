@@ -61,7 +61,6 @@ export class CalendarEventQuickCreateFormController extends CalendarEventFormCon
                 additionalContext: {
                     ...this.props.context,
                     ...this.getFullEventContext(),
-                    form_view_ref: this.props.expandedFormRef,
                 },
             }
         );
