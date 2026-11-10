@@ -3610,8 +3610,37 @@ class BaseModel(metaclass=MetaModel):
     def unlink(self) -> typing.Literal[True]:
         """ Delete the records in ``self``.
 
+        The ORM first determines all the records impacted by the deletion:
+
+        * the records linked to ``self`` by another field with ``ondelete='cascade'``
+        * the records returned by :meth:`_delete_extra`
+        * recursively, the records impacted by the deletion of the above.
+
+        The methods decorated with :func:`~odoo.api.ondelete` are then called
+        on *all* the records to delete, including the cascade-deleted ones,
+        before anything is removed from the database. The callables they
+        return are called once the records have been deleted.
+
+        The cache is updated accordingly afterwards: fields with ``ondelete='set
+        null'`` are set to ``False``, and the fields depending on the deleted
+        records are marked to recompute.
+
+        .. note::
+
+            Avoid overriding this method to customize deletion. Implement
+            :meth:`_delete_extra` to delete additional records, and use
+            :func:`~odoo.api.ondelete` methods to prevent the deletion or to
+            run some code after it. Contrary to an override of ``unlink``,
+            both are also applied on the records deleted in cascade.
+
+            Override only when you need an action when the user directly unlinks
+            that record.
+
         :raise AccessError: if the user is not allowed to delete all the given records
-        :raise UserError: if the record is default property for other records
+        :raise UserError: if a record is used as the default value of a
+            company-dependent field
+        :raise ValidationError: if a record is referenced by a field with
+            ``ondelete='restrict'``
         """
         if not self:
             return True
@@ -3817,8 +3846,24 @@ class BaseModel(metaclass=MetaModel):
 
     def _delete_extra(self) -> Iterator[BaseModel]:
         """ Return records that must also be deleted whenever ``self`` is deleted.
-        This method is aimed at being overridden by models, instead of overriding
-        :meth:`unlink`.
+
+        This method is aimed at being overridden by models, instead of
+        overriding :meth:`unlink`. It is called by :meth:`unlink` on every
+        record to delete, including the ones deleted in cascade, and the
+        yielded records are deleted in the same operation (their own
+        :meth:`_delete_extra` and :func:`~odoo.api.ondelete` methods are
+        processed too).
+
+        The method is called in superuser mode, without the active test.
+        Overrides should yield the records of the parent method, then yield
+        recordsets (possibly empty) to delete::
+
+            def _delete_extra(self):
+                yield from super()._delete_extra()
+                # delete the messages of mails that are not notifications
+                yield self.filtered(lambda m: not m.is_notification).mail_message_id
+
+        :return: an iterator of recordsets to delete together with ``self``
         """
         env = self.env
         assert env.su and not env.context['active_test']

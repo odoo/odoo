@@ -92,21 +92,20 @@ def ondelete(*, at_uninstall: bool) -> Decorator:
     """
     Mark a method to be executed during :meth:`~odoo.models.BaseModel.unlink`.
 
-    The goal of this decorator is to allow client-side errors when unlinking
-    records if, from a business point of view, it does not make sense to delete
-    such records. For instance, a user should not be able to delete a validated
-    sales order.
+    The goal of this decorator is to hook around deletion of records.
+    The decorated method will be called before deletion of any records and may
+    return a callable, which is called after the deletion. This is useful to
+    perform some actions only when the deletion succeeded, like removing files
+    from the filestore. The method has to collect whatever information it needs
+    beforehand, as the records no longer exist when the callable is invoked.
 
-    While this could be implemented by simply overriding the method ``unlink``
-    on the model, it has the drawback of not being compatible with module
-    uninstallation. When uninstalling the module, the override could raise user
-    errors, but we shouldn't care because the module is being uninstalled, and
-    thus **all** records related to the module should be removed anyway.
+    From a business point of view, if it does not make sense to delete such
+    records, the function may raise an exception. For instance, a user should
+    not be able to delete a validated sales order.
 
-    This means that by overriding ``unlink``, there is a big chance that some
-    tables/records may remain as leftover data from the uninstalled module. This
-    leaves the database in an inconsistent state. Moreover, there is a risk of
-    conflicts if the module is ever reinstalled on that database.
+    When uninstalling the module, these methods could raise user errors, but we
+    shouldn't care because the module is being uninstalled, and thus **all**
+    records related to the module should be removed anyway.
 
     Methods decorated with ``@ondelete`` should raise an error following some
     conditions, and by convention, the method should be named either
@@ -124,6 +123,16 @@ def ondelete(*, at_uninstall: bool) -> Decorator:
         def _unlink_except_active_user(self):
             if any(user.active for user in self):
                 raise UserError("Can't delete an active user!")
+
+        @api.ondelete(at_uninstall=False)
+        def _delete_file_hook(self):
+            to_delete = OrderedSet(attach.store_fname for attach in self if attach.store_fname)
+
+            def _post_hook():
+                for file_path in to_delete:
+                    self._file_delete(file_path)
+
+            return _post_hook
 
     :param bool at_uninstall: Whether the decorated method should be called if
         the module that implements said method is being uninstalled. Should
