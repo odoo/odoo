@@ -68,7 +68,8 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     get displayAttendeeAnswerChoice() {
         return (
             this.props.record.rawRecord.partner_ids.some((partner) => partner !== user.partnerId) &&
-            this.props.record.isCurrentPartner
+            this.props.record.isCurrentPartner &&
+            Boolean(this.selectedStatusInfo)
         );
     }
 
