@@ -160,6 +160,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_mo_summary(self, production, components, current_mo_cost, remaining_cost_share):
         currency = (production.company_id or self.env.company).currency_id
         mo_cost = current_mo_cost * remaining_cost_share
+        producible_qty = self._compute_producible_qty(production, components)
         return {
             'level': 0,
             'model': production._name,
@@ -168,7 +169,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'product_model': production.product_id._name,
             'product_id': production.product_id.id,
             'state': production.state,
-            'formatted_state': self._format_state(production, components),
+            'producible_qty': producible_qty,
+            'formatted_state': self._format_state(production, components, producible_qty),
             'has_bom': bool(production.bom_id),
             'quantity': production.product_qty if production.state != 'done' else production.qty_produced,
             'uom_name': production.uom_id.display_name,
@@ -188,14 +190,9 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return 0.0
         return move.product_id.uom_id._compute_price(move.product_id.standard_price, move.uom_id)
 
-    def _format_state(self, record, components=False):
-        """ For MOs, provide a custom state based on the demand vs quantities available for components.
-        All other records types will provide their standard state value.
-        :param dict components: components in the structure provided by `_get_components_data`
-        :return: string to be used as custom state
-        """
+    def _compute_producible_qty(self, record, components):
         if record._name != 'mrp.production' or record.state not in ('draft', 'confirmed') or not components:
-            return dict(record._fields['state']._description_selection(self.env)).get(record.state)
+            return 0
         components_qty_to_produce = defaultdict(float)
         components_qty_reserved = defaultdict(float)
         components_qty_free = defaultdict(float)
@@ -208,7 +205,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             components_qty_to_produce[product] += uom._compute_quantity(component["quantity"], product.uom_id)
             components_qty_reserved[product] += uom._compute_quantity(component["quantity_reserved"], product.uom_id)
             components_qty_free[product] = uom._compute_quantity(component["quantity_free"], product.uom_id)
-        producible_qty = record.product_qty
+        producible_qty = 0
         for product, comp_qty_to_produce in components_qty_to_produce.items():
             if product.uom_id.is_zero(comp_qty_to_produce):
                 continue
@@ -216,14 +213,22 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 record.product_qty * (components_qty_reserved[product] + components_qty_free[product]) / comp_qty_to_produce,
                 rounding_method='DOWN',
             )
-            if record.uom_id.compare(comp_producible_qty, 0) <= 0:
-                return _("Not Ready")
-            producible_qty = min(comp_producible_qty, producible_qty)
+            producible_qty = min(comp_producible_qty, producible_qty) if producible_qty else comp_producible_qty
+        return producible_qty
+
+    def _format_state(self, record, components=False, producible_qty=0):
+        """ For MOs, provide a custom state based on the demand vs quantities available for components.
+        All other records types will provide their standard state value.
+        :param dict components: components in the structure provided by `_get_components_data`
+        :return: string to be used as custom state
+        """
+        if record._name != 'mrp.production' or record.state not in ('draft', 'confirmed') or not components:
+            return dict(record._fields['state']._description_selection(self.env)).get(record.state)
         if record.uom_id.compare(producible_qty, 0) <= 0:
             return _("Not Ready")
         elif record.uom_id.compare(producible_qty, record.product_qty) == -1:
             producible_qty = float_repr(producible_qty, self.env['decimal.precision'].precision_get('Product Unit'))
-            return _("%(producible_qty)s Ready", producible_qty=producible_qty)
+            return _("%(producible_qty)s Ready To Produce", producible_qty=producible_qty)
         return _("Ready")
 
     def _get_uom_precision(self):
@@ -546,7 +551,12 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             else:
                 replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
 
-            replenishment['summary']['formatted_state'] = self._format_state(doc_in, replenishment['components']) if doc_in._name == 'mrp.production' else self._format_state(doc_in)
+            if doc_in._name == 'mrp.production':
+                producible_qty = self._compute_producible_qty(production, replenishment['components'])
+                replenishment['summary']['producible_qty'] = producible_qty
+                replenishment['summary']['formatted_state'] = self._format_state(doc_in, replenishment['components'], producible_qty)
+            else:
+                replenishment['summary']['formatted_state'] = self._format_state(doc_in)
             replenishments.append(replenishment)
             total_ordered += replenishment['summary']['quantity']
 

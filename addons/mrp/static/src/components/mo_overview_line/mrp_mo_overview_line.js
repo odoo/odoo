@@ -129,6 +129,15 @@ export class MoOverviewLine extends Component {
     }
 
     get stateDecorator() {
+        if(this.data.model == "mrp.production") {
+            if(this.data.producible_qty == 0) {
+                return "text-bg-danger";
+            }
+            if(this.data.producible_qty < this.data.quantity) {
+                return "text-bg-muted";
+            }
+            return "text-bg-success";
+        }
         return getStateDecorator(this.data.model, this.data.state);
     }
 
