@@ -11,3 +11,9 @@ class WebauthnController(http.Controller):
     def json_start_authentication(self):
         auth_options = request.env['auth.passkey.key']._start_auth()
         return auth_options
+
+    @http.route(['/.well-known/webauthn'], type='http', auth='public')
+    def web_well_known_webauthn(self):
+        return request.make_json_response({
+            "origins": request.env['auth.passkey.key']._get_allowed_origins()
+        })

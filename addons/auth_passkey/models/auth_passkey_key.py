@@ -64,6 +64,13 @@ class PassKey(models.Model):
         return challenge
 
     @api.model
+    def _get_allowed_origins(self):
+        base_url = url_parse(self.get_base_url()).replace(path='').to_url()
+        additional_origins_str = self.env['ir.config_parameter'].sudo().get_param('auth_passkey.additional_origins', '')
+        additional_origins = [origin.strip() for origin in additional_origins_str.split(',') if origin.strip()]
+        return [base_url, *additional_origins]
+
+    @api.model
     def _start_auth(self):
         assert request
         authentication_options = json.loads(options_to_json(generate_authentication_options(
@@ -79,7 +86,7 @@ class PassKey(models.Model):
         auth_verification = verify_authentication_response(
             credential=auth,
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
-            expected_origin=parsed_url.replace(path='').to_url(),
+            expected_origin=self._get_allowed_origins(),
             expected_rp_id=parsed_url.host,
             credential_public_key=base64url_to_bytes(public_key),
             credential_current_sign_count=sign_count,
@@ -109,7 +116,7 @@ class PassKey(models.Model):
         verification = verify_registration_response(
             credential=registration,
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
-            expected_origin=parsed_url.replace(path='').to_url(),
+            expected_origin=self._get_allowed_origins(),
             expected_rp_id=parsed_url.host,
             require_user_verification=True,
         )
