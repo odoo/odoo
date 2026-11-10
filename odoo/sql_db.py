@@ -554,7 +554,13 @@ class Cursor(BaseCursor):
             self._cnx.leaked = True  # type: ignore
         else:
             chosen_template = tools.config['db_template']
-            is_configured_db = bool(self.dbname and self.dbname in (tools.config.get('db_name') or '').split(','))
+            configured_dbs = tools.config.get('db_name')
+            if isinstance(configured_dbs, (list, tuple, set)):
+                is_configured_db = bool(self.dbname and self.dbname in configured_dbs)
+            elif isinstance(configured_dbs, str):
+                is_configured_db = bool(self.dbname and self.dbname in [d.strip() for d in configured_dbs.split(',') if d.strip()])
+            else:
+                is_configured_db = False
             keep_in_pool = is_configured_db or self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
