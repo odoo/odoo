@@ -719,3 +719,25 @@ class TestAttendanceValidationTimeRules(TransactionCase):
                 ('time_rule_id', '=', self.rule.id),
             ])
             self.assertAlmostEqual(sum(outputs.mapped('worked_hours')), 1.0, places=2, msg=tz)
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_refuse_reset_validate_restores_overtime(self):
+        """Resetting to draft and validating a refused attendance also resets and validates
+        the time rule outputs refused with it."""
+        self.env.company.attendance_validation = 'no_validation'
+        attendance = self._create_9h_attendance()
+        output = attendance.overtime_attendance_ids
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+        attendance.action_refuse()
+        self.assertEqual(output.state, 'refused')
+        attendance.action_reset_to_draft()
+        attendance.action_validate()
+
+        validated = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee.id),
+            ('state', '=', 'validated'),
+        ])
+        self.assertAlmostEqual(sum(validated.mapped('worked_hours')), 9.0)
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+        self.assertEqual(validated, attendance | output)
