@@ -5737,9 +5737,11 @@ class AccountMove(models.Model):
                     l.is_account_reconcile or
                     l.move_id.tax_cash_basis_origin_move_id
                 )) \
+                .sorted(lambda l: l.account_type not in ('asset_receivable', 'liability_payable')) \
                 .grouped(lambda l: (l.account_id, l.currency_id))
-            reconciliation_plan.extend(group.values())
-        self.env['account.move.line'].with_context(move_reverse_cancel=move_reverse_cancel)._reconcile_plan(reconciliation_plan)
+            for (_account, _currency), lines in group.items():
+                if all(not line.reconciled for line in lines):
+                    lines.with_context(move_reverse_cancel=move_reverse_cancel).reconcile()
         return reverse_moves
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
