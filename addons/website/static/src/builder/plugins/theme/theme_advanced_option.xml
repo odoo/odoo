@@ -3,10 +3,17 @@
 
 <t t-name="website.ThemeAdvancedOption">
     <BuilderContext preview="false">
-        <BuilderRow label.translate="Show Header" tooltip.translate="Show/Hide the header on all pages">
-            <BuilderCheckbox action="'websiteConfig'"
+        <BuilderRow label.translate="Show Header" tooltip="this.getHeaderTooltip()">
+            <BuilderCheckbox id="'show_header_opt'" action="'websiteConfig'"
                 actionParam="{
                     views: ['!website.option_layout_hide_header'],
+                }"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Show Footer" tooltip="this.getFooterTooltip()">
+            <BuilderCheckbox id="'show_footer_opt'" action="'websiteConfig'"
+                actionParam="{
+                    views: ['!website.option_layout_hide_footer'],
                 }"
             />
         </BuilderRow>

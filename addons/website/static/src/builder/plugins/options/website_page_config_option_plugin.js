@@ -106,9 +106,12 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
             return;
         }
 
-        const pageOptions = {
-            footer_visible: () => !this.getFooterVisibility(),
-        };
+        const pageOptions = {};
+
+        const footerEl = this.document.querySelector("#wrapwrap > footer");
+        if (footerEl) {
+            pageOptions.footer_visible = () => !this.getFooterVisibility();
+        }
 
         const headerEl = this.document.querySelector("#wrapwrap > header");
         if (headerEl) {
