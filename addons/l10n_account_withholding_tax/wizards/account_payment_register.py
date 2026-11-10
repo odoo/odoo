@@ -19,6 +19,7 @@ class AccountPaymentRegister(models.TransientModel):
         ],
         copy=False,
     )
+    available_withhold_values = fields.Json(compute='_compute_available_withhold_values')
     withholding_line_ids = fields.One2many(
         string="Withholding Lines",
         comodel_name='account.payment.register.withholding.line',
@@ -81,6 +82,9 @@ class AccountPaymentRegister(models.TransientModel):
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
+
+    def _compute_available_withhold_values(self):
+        self.available_withhold_values = self._fields['withhold'].get_values(self.env)
 
     @api.depends('withholding_line_ids.amount', 'amount')
     def _compute_withholding_net_amount(self):
