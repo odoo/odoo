@@ -163,18 +163,18 @@ describe("pos.order restaurant patches", () => {
         const table = store.models["restaurant.table"].get(2);
         const order = store.addNewOrder({ table_id: table });
         const comboTemplate = store.models["product.template"].get(17);
-        const steelDeskItem = store.models["product.combo.item"].get(4);
         const woodChairItem = store.models["product.combo.item"].get(5);
+        const steelDeskItem = store.models["product.combo.item"].get(8);
 
         await store.addLineToOrder(
             {
                 product_tmpl_id: comboTemplate,
                 payload: [
                     [
-                        { combo_item_id: steelDeskItem, qty: 2 },
-                        { combo_item_id: woodChairItem, qty: 1 },
+                        { combo_item_id: woodChairItem, qty: 2 },
+                        { combo_item_id: steelDeskItem, qty: 1 },
                     ],
-                    [{ combo_item_id: steelDeskItem, qty: 2 }],
+                    [{ combo_item_id: woodChairItem, qty: 2 }],
                 ],
             },
             order
@@ -182,19 +182,21 @@ describe("pos.order restaurant patches", () => {
         store.addPendingOrder([order.id]);
 
         const comboParent = order.lines.find((l) => l.combo_line_ids.length > 0);
-        const deskLine = order.lines.filter((l) => l.product_id.id === steelDeskItem.product_id.id);
-        const chairLine = order.lines.find((l) => l.product_id.id === woodChairItem.product_id.id);
+        const chairLine = order.lines.filter(
+            (l) => l.product_id.id === woodChairItem.product_id.id
+        );
+        const deskLine = order.lines.find((l) => l.product_id.id === steelDeskItem.product_id.id);
 
-        expect(deskLine.length).toBe(2);
-        expect(deskLine[0].getQuantity()).toBe(2);
-        expect(deskLine[1].getQuantity()).toBe(2);
-        expect(chairLine.getQuantity()).toBe(1);
+        expect(chairLine.length).toBe(2);
+        expect(chairLine[0].getQuantity()).toBe(2);
+        expect(chairLine[1].getQuantity()).toBe(2);
+        expect(deskLine.getQuantity()).toBe(1);
 
         order.updateLastOrderChange();
 
-        expect(deskLine[0].prep_line_ids[0].quantity).toBe(2);
-        expect(deskLine[1].prep_line_ids[0].quantity).toBe(2);
-        expect(chairLine.prep_line_ids[0].quantity).toBe(1);
+        expect(chairLine[0].prep_line_ids[0].quantity).toBe(2);
+        expect(chairLine[1].prep_line_ids[0].quantity).toBe(2);
+        expect(deskLine.prep_line_ids[0].quantity).toBe(1);
         expect(
             order.getChanges().addedQuantity.filter((c) => c.combo_parent_uuid === comboParent.uuid)
                 .length
@@ -204,56 +206,56 @@ describe("pos.order restaurant patches", () => {
 
         const changesAfterScale = order.getChanges();
         const chairChanges = changesAfterScale.addedQuantity.filter(
-            (c) => c.product_id === steelDeskItem.product_id.id
+            (c) => c.product_id === woodChairItem.product_id.id
         );
         expect(chairChanges.length).toBe(2);
         expect(chairChanges[0].quantity).toBe(4);
         expect(chairChanges[1].quantity).toBe(4);
         expect(
             changesAfterScale.addedQuantity.find(
-                (c) => c.product_id === woodChairItem.product_id.id
+                (c) => c.product_id === steelDeskItem.product_id.id
             ).quantity
         ).toBe(2);
 
         order.updateLastOrderChange();
 
-        expect(deskLine[0].prepQty).toBe(6);
-        expect(deskLine[1].prepQty).toBe(6);
-        expect(chairLine.prepQty).toBe(3);
+        expect(chairLine[0].prepQty).toBe(6);
+        expect(chairLine[1].prepQty).toBe(6);
+        expect(deskLine.prepQty).toBe(3);
         expect(order.getChanges().addedQuantity.length).toBe(0);
 
         const screen = await mountWithCleanup(SplitBillScreen, {
             props: { orderUuid: order.uuid },
         });
         screen.qtyTracker[comboParent.uuid] = 1;
-        screen.qtyTracker[deskLine[0].uuid] = 2;
-        screen.qtyTracker[deskLine[1].uuid] = 2;
-        screen.qtyTracker[chairLine.uuid] = 1;
+        screen.qtyTracker[chairLine[0].uuid] = 2;
+        screen.qtyTracker[chairLine[1].uuid] = 2;
+        screen.qtyTracker[deskLine.uuid] = 1;
         await screen.createSplittedOrder();
 
         const splitOrder = store.getOrder();
-        const splitDeskLine = splitOrder.lines.filter(
-            (l) => l.product_id.id === steelDeskItem.product_id.id
-        );
-        const splitChairLine = splitOrder.lines.find(
+        const splitChairLine = splitOrder.lines.filter(
             (l) => l.product_id.id === woodChairItem.product_id.id
         );
+        const splitDeskLine = splitOrder.lines.find(
+            (l) => l.product_id.id === steelDeskItem.product_id.id
+        );
 
-        expect(deskLine[0].getQuantity()).toBe(4);
-        expect(deskLine[0].prep_line_ids[0].quantity).toBe(4);
-        expect(deskLine[1].getQuantity()).toBe(4);
-        expect(deskLine[1].prep_line_ids[0].quantity).toBe(4);
-        expect(chairLine.getQuantity()).toBe(2);
-        expect(chairLine.prep_line_ids[0].quantity).toBe(2);
+        expect(chairLine[0].getQuantity()).toBe(4);
+        expect(chairLine[0].prep_line_ids[0].quantity).toBe(4);
+        expect(chairLine[1].getQuantity()).toBe(4);
+        expect(chairLine[1].prep_line_ids[0].quantity).toBe(4);
+        expect(deskLine.getQuantity()).toBe(2);
+        expect(deskLine.prep_line_ids[0].quantity).toBe(2);
         expect(order.getChanges().addedQuantity.length).toBe(0);
         expect(order.getChanges().removedQuantity.length).toBe(0);
 
-        expect(splitDeskLine[0].getQuantity()).toBe(2);
-        expect(splitDeskLine[0].prep_line_ids[0].quantity).toBe(2);
-        expect(splitDeskLine[1].getQuantity()).toBe(2);
-        expect(splitDeskLine[1].prep_line_ids[0].quantity).toBe(2);
-        expect(splitChairLine.getQuantity()).toBe(1);
-        expect(splitChairLine.prep_line_ids[0].quantity).toBe(1);
+        expect(splitChairLine[0].getQuantity()).toBe(2);
+        expect(splitChairLine[0].prep_line_ids[0].quantity).toBe(2);
+        expect(splitChairLine[1].getQuantity()).toBe(2);
+        expect(splitChairLine[1].prep_line_ids[0].quantity).toBe(2);
+        expect(splitDeskLine.getQuantity()).toBe(1);
+        expect(splitDeskLine.prep_line_ids[0].quantity).toBe(1);
         expect(splitOrder.getChanges().addedQuantity.length).toBe(0);
         expect(splitOrder.getChanges().removedQuantity.length).toBe(0);
     });
