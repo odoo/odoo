@@ -114,6 +114,8 @@ class IrActionsReport(models.Model):
         if footer and not footers:
             extra_args += ['--footer', 'pipe:/paper-muncher/footer.html']
 
+        extra_args.append('--sandboxed')
+
         if landscape or specific_paperformat_args.get('data-report-landscape', False):
             extra_args += ['--orientation', 'landscape']
         elif paperformat and paperformat.orientation:
@@ -133,7 +135,6 @@ class IrActionsReport(models.Model):
                 extra_args += ['--width', f'{paperformat.page_width}mm']
                 extra_args += ['--height', f'{paperformat.page_height}mm']
 
-        extra_args += ['--debug', 'http-client']
         os_env = os.environ.copy()
         # Disable ANSI color codes in subprocess logs to prevent parsing errors.
         os_env['NO_COLOR'] = '1'
