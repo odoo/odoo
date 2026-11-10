@@ -15,12 +15,12 @@
                         t-ref="this.autofocusRef"
                         type="text"
                         class="form-control form-control-lg"
-                        placeholder="Name"
+                        placeholder="Name" autocomplete="name"
                         t-model.proxy="this.state.name"/>
                     <input t-if="this.preset.needsEmail || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
-                        placeholder="Email"
+                        placeholder="Email" autocomplete="email"
                         t-model.proxy="this.state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <div class="d-flex gap-3">
@@ -46,7 +46,7 @@
                             </SelectMenu>
                             <input type="tel"
                                 class="form-control form-control-lg"
-                                placeholder="Phone"
+                                placeholder="Phone" autocomplete="tel-national"
                                 t-on-input="this.onPhoneInput" />
                         </div>
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
@@ -76,7 +76,7 @@
                         <t t-else="">
                             <input type="text"
                                 class="form-control form-control-lg"
-                                placeholder="Address"
+                                placeholder="Address" autocomplete="address-line1"
                                 t-model.proxy="this.state.street"/>
                         </t>
                     </t>
