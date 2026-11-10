@@ -522,6 +522,39 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         next_day_batch = self._company_batches(self.company) - first_batch - second_batch
         self.assertRecordValues(next_day_batch, [{'date_from': ksef_midnight(now.date()), 'date_to': next_day}])
 
+    def test_cron_today_from_last_storage_date(self):
+        now = fields.Datetime.start_of(fields.Datetime.now(), 'day') + timedelta(hours=10)
+        hwm = now - timedelta(hours=1)
+        last_storage = now - timedelta(hours=2)
+        with freeze_time(now):
+            done_batch = self._create_batch('done', {
+                'status': {'code': 200},
+                'package': {'parts': [], 'permanentStorageHwmDate': hwm.isoformat() + '+00:00'},
+            })
+            done_batch.date_to = now
+
+        # After a done today batch, the next run starts from its high water mark
+        with freeze_time(now), self._mock_batch_requests():
+            self.env['account.move']._cron_l10n_pl_edi_download_bills()
+        next_batch = self._company_batches(self.company) - done_batch
+        self.assertRecordValues(next_batch, [{'date_from': hwm, 'date_to': now}])
+
+        # After a truncated one, from where its export stopped
+        next_batch.unlink()
+        done_batch.content = {
+            'status': {'code': 200},
+            'package': {
+                'parts': [],
+                'isTruncated': True,
+                'lastPermanentStorageDate': last_storage.isoformat() + '+00:00',
+                'permanentStorageHwmDate': hwm.isoformat() + '+00:00',
+            },
+        }
+        with freeze_time(now), self._mock_batch_requests():
+            self.env['account.move']._cron_l10n_pl_edi_download_bills()
+        next_batch = self._company_batches(self.company) - done_batch
+        self.assertRecordValues(next_batch, [{'date_from': last_storage, 'date_to': now}])
+
     def test_cron_today_errors(self):
         now = fields.Datetime.now().replace(microsecond=0)
 

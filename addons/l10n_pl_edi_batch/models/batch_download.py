@@ -22,6 +22,12 @@ KSEF_IN_PROGRESS = 100
 KSEF_READY = 200
 ODOO_ERROR = 999
 
+CRON_REQUEST_TODAY = 'l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills'
+CRON_REQUEST_HISTORIC = 'l10n_pl_edi_batch.ir_cron_request_historic'
+CRON_CHECK_STATUS = 'l10n_pl_edi_batch.ir_cron_check_status'
+CRON_DOWNLOAD = 'l10n_pl_edi_batch.ir_cron_download'
+CRON_IMPORT = 'l10n_pl_edi_batch.ir_cron_import'
+
 STATES = [
     ('requested', 'Requested'),
     ('downloading', 'Downloading'),
@@ -190,7 +196,7 @@ class BatchDownload(models.Model):
 
     @api.model
     def _get_company_batches(self, company, state):
-        return self.search([('company_id', '=', company.id)], order='date_to desc').filtered(lambda batch: batch.state == state)
+        return self.search([('company_id', '=', company.id), ('state', '=', state)], order='date_to desc')
 
     @api.model
     def _create_batch_download(self, company, date_from, date_to):
@@ -209,7 +215,7 @@ class BatchDownload(models.Model):
             'encrypted_symmetric_key': encryption_data['encrypted_symmetric_key'],
             'raw_iv': encryption_data['raw_iv'],
         }).with_env(self.env)
-        self.env.ref('l10n_pl_edi_batch.ir_cron_check_status')._trigger()
+        self.env.ref(CRON_CHECK_STATUS)._trigger()
         return batch
 
     def _run_for_all_companies(self, method, cron_xmlid, company_domain=None):
@@ -251,13 +257,27 @@ class BatchDownload(models.Model):
 
     @api.model
     def _cron_request_today(self):
-        """ Request yesterday and today's invoices """
-        self._run_for_all_companies(self._request_today, 'l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+        self._run_for_all_companies(self._request_today, CRON_REQUEST_TODAY)
 
     @api.model
     def _request_today(self, company):
+        """ Request the most recent bills, up to now: from where the last done today batch is complete
+            (where its export stopped if truncated, its high water mark otherwise), or from yesterday at Polish midnight.
+        """
         yesterday = ksef_midnight(fields.Date.today() - timedelta(days=1))
-        self._create_batch_download(company, date_from=yesterday, date_to=fields.Datetime.now())
+        date_from = yesterday
+        last_done_batch = self.search([
+            ('company_id', '=', company.id),
+            ('kind', '=', 'today'),
+            ('state', '=', 'done'),
+            ('create_date', '>=', yesterday),
+        ], order='create_date desc', limit=1)
+        package = (last_done_batch.content or {}).get('package') or {}
+        date_key = 'lastPermanentStorageDate' if package.get('isTruncated') else 'permanentStorageHwmDate'
+        if last_storage_date := package.get(date_key):
+            last_storage_date = parse(last_storage_date).astimezone(timezone.utc).replace(tzinfo=None)
+            date_from = max(yesterday, last_storage_date)
+        self._create_batch_download(company, date_from=date_from, date_to=fields.Datetime.now())
 
     @api.model
     def _cron_request_historic(self):
@@ -275,7 +295,7 @@ class BatchDownload(models.Model):
 
         self._run_for_all_companies(
             request_historic,
-            'l10n_pl_edi_batch.ir_cron_request_historic',
+            CRON_REQUEST_HISTORIC,
             company_domain=[
                 ('id', 'not in', pending_companies_ids),
                 ('l10n_pl_edi_batch_historic_date', '>', KSEF_FIRST_DAY),
@@ -300,17 +320,17 @@ class BatchDownload(models.Model):
                 batch.update(data)
                 if batch.state == 'downloading':
                     batch.retry_count = 0  # the download counts its own retries
-                    self.env.ref('l10n_pl_edi_batch.ir_cron_download')._trigger()
+                    self.env.ref(CRON_DOWNLOAD)._trigger()
                     # A truncated historic export: this batch now ends where KSeF stopped, request the rest
                     if is_truncated:
                         self._create_batch_download(company, batch.date_to, old_date_to)
                 elif batch.state == 'done' and batch.kind == 'historic':
                     # empty window: request the next one
-                    self.env.ref('l10n_pl_edi_batch.ir_cron_request_historic')._trigger(at=fields.Datetime.now() + HISTORIC_REQUEST_DELAY)
+                    self.env.ref(CRON_REQUEST_HISTORIC)._trigger(at=fields.Datetime.now() + HISTORIC_REQUEST_DELAY)
                 elif batch.state == 'requested':
                     if batch.retry_count < MAX_RETRIES:
                         batch.retry_count += 1
-                        batch._delayed_trigger('l10n_pl_edi_batch.ir_cron_check_status')
+                        batch._delayed_trigger(CRON_CHECK_STATUS)
                     else:
                         batch.retry_count = 0  # stop the quick retries, the next run asks again
                 elif batch.state == 'failed':
@@ -318,9 +338,9 @@ class BatchDownload(models.Model):
 
                 # this batch is no longer waiting: check the next requested one right away
                 if batch.state != 'requested' and len(batches) > 1:
-                    self.env.ref('l10n_pl_edi_batch.ir_cron_check_status')._trigger()
+                    self.env.ref(CRON_CHECK_STATUS)._trigger()
 
-        self._run_for_all_companies(check_status, 'l10n_pl_edi_batch.ir_cron_check_status')
+        self._run_for_all_companies(check_status, CRON_CHECK_STATUS)
 
     @api.model
     def _cron_download(self):
@@ -334,9 +354,9 @@ class BatchDownload(models.Model):
                     batch._retry_download(str(e))
                     return
                 if batch.state != 'downloading':
-                    self.env.ref('l10n_pl_edi_batch.ir_cron_import')._trigger()
+                    self.env.ref(CRON_IMPORT)._trigger()
                 return len(missing_parts) - 1
-        self._run_for_all_companies(do_download, 'l10n_pl_edi_batch.ir_cron_download')
+        self._run_for_all_companies(do_download, CRON_DOWNLOAD)
 
     @api.model
     def _cron_import(self):
@@ -406,17 +426,17 @@ class BatchDownload(models.Model):
 
                         # out of time: the next run imports the rest
                         if count < len(new_ksef_numbers) and time.monotonic() >= deadline:
-                            self.env.ref('l10n_pl_edi_batch.ir_cron_import')._trigger()
+                            self.env.ref(CRON_IMPORT)._trigger()
                             return
 
                 batch.part_ids.unlink()
 
             if batch.kind == 'historic':
                 # request the next window
-                self.env.ref('l10n_pl_edi_batch.ir_cron_request_historic')._trigger(at=fields.Datetime.now() + HISTORIC_REQUEST_DELAY)
+                self.env.ref(CRON_REQUEST_HISTORIC)._trigger(at=fields.Datetime.now() + HISTORIC_REQUEST_DELAY)
             return len(batches) - 1
 
-        self._run_for_all_companies(do_import, 'l10n_pl_edi_batch.ir_cron_import')
+        self._run_for_all_companies(do_import, CRON_IMPORT)
 
     def _delayed_trigger(self, cron_ref):
         """ Run the cron once the batch, just written, is due again. """
@@ -427,7 +447,7 @@ class BatchDownload(models.Model):
             with `error`, and the same window is requested again. """
         self.ensure_one()
         if self._raise_retry_count(error):
-            self._delayed_trigger('l10n_pl_edi_batch.ir_cron_download')
+            self._delayed_trigger(CRON_DOWNLOAD)
         else:
             self._create_batch_download(self.company_id, self.date_from, self.date_to)
 
