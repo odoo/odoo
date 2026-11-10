@@ -356,9 +356,11 @@ export class LinkPlugin extends Plugin {
                 const clickedInsideNonEditableLink =
                     !linkEl.isContentEditable &&
                     !isContentEditable(closestElement(selection.anchorNode));
+                const selectionEntirelyInLink =
+                    linkEl.contains(selection.anchorNode) && linkEl.contains(selection.focusNode);
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(linkEl.href, "_blank");
-                } else if (clickedInsideNonEditableLink) {
+                } else if (clickedInsideNonEditableLink && !selectionEntirelyInLink) {
                     this.dependencies.selection.setSelection({
                         anchorNode: linkEl,
                         anchorOffset: 0,
