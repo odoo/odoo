@@ -17,7 +17,6 @@
                     <field name="name" optional="show" required="0" readonly="readonly_timesheet"/>
                     <field name="unit_amount" string="Time Spent" optional="show" widget="timesheet_uom" sum="Total" readonly="readonly_timesheet"
                         decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" decoration-muted="unit_amount == 0"/>
-                    <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of general_account_id, helpdesk_ticket_id, journal_id -->
                     <field name="user_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 </list>
             </field>
@@ -165,7 +164,6 @@
                         </div>
                         <group>
                             <group>
-                                <field name="readonly_timesheet" invisible="1"/> <!-- drives readonly of project_id, task_id and 3 more -->
                                 <field name="project_id" options="{'no_create_edit': True}"
                                     context="{'search_default_my_projects': True}"
                                     required="1"
@@ -173,7 +171,6 @@
                                 <field name="task_id" widget="task_with_hours" options="{'no_create_edit': True}"
                                     context="{'default_project_id': project_id, 'search_default_my_tasks': True, 'search_default_open_tasks': True}"
                                     readonly="readonly_timesheet"/>
-                                <field name="company_id" groups="base.group_multi_company" invisible="1"/> <!-- used in the python-declared domain of general_account_id, helpdesk_ticket_id, journal_id -->
                             </group>
                             <group>
                                 <field name="date" readonly="readonly_timesheet"/>
@@ -181,7 +178,6 @@
                                 <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"
                                     readonly="readonly_timesheet" decoration-muted="unit_amount == 0"/>
                                 <field name="currency_id" invisible="1"/> <!-- currency of the amount monetary field -->
-                                <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of general_account_id, helpdesk_ticket_id, journal_id -->
                             </group>
                         </group>
                         <field name="name" placeholder="Describe your activity" widget="text" nolabel="1" required="0" readonly="readonly_timesheet"/>

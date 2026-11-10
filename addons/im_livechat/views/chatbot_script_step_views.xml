@@ -6,7 +6,6 @@
         <field name="model">chatbot.script.step</field>
         <field name="arch" type="xml">
             <form disable_autofocus="1">
-                <field name="is_forward_operator_child" invisible="1"/> <!-- drives invisible of the alert block -->
                 <div class="alert alert-info text-center mb-0" role="alert" invisible="not is_forward_operator_child">
                     <span>Reminder: This step will only be played if no operator is available.</span>
                 </div>

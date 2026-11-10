@@ -8,8 +8,6 @@
         <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <field name="display_sale_order_button" invisible="1"/> <!-- drives invisible of the action_project_sharing_view_so button -->
-                <field name="allow_billable" invisible="1"/> <!-- used in the column_invisible, invisible attribute(s) this view sets on other fields -->
                 <button class="oe_stat_button"
                         type="object" name="action_project_sharing_view_so" icon="attach_money"
                         invisible="not display_sale_order_button">

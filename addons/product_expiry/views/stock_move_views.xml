@@ -20,7 +20,6 @@
                 <field name="is_expired" column_invisible="True"/> <!-- drives decoration-bf/danger of expiration_date -->
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="after">
-                <field name="picking_type_use_existing_lots" column_invisible="True"/> <!-- drives readonly of expiration_date -->
                 <field name="expiration_date" force_save="1"
                     column_invisible="not context.get('show_lot_expiration_date')"
                     readonly="picking_type_use_existing_lots"
@@ -36,7 +35,6 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
-                <field name="picking_type_use_existing_lots" column_invisible="True"/> <!-- drives readonly of expiration_date -->
                 <field name="expiration_date" force_save="1"
                     column_invisible="not context.get('show_lot_expiration_date')"
                     invisible="not use_expiration_date"
@@ -56,7 +54,6 @@
         <field name="inherit_id" ref="stock.stock_move_line_view_list_from_batch"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='quant_id']" position="after">
-                <field name="picking_type_use_existing_lots" column_invisible="True"/> <!-- drives readonly of expiration_date -->
                 <field name="expiration_date" force_save="1"
                     column_invisible="not context.get('show_lot_expiration_date')"
                     invisible="not use_expiration_date"

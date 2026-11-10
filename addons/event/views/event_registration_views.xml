@@ -95,7 +95,6 @@
                         <page string="Questions" name="questions">
                             <field name="registration_answer_ids" widget="one2many">
                                 <list editable="bottom">
-                                    <field name="event_id" column_invisible="True" /> <!-- drives invisible of event_ticket_id -->
                                     <field name="question_id" domain="[('event_ids', 'in', event_id)]" options="{'no_create': True}"/>
                                     <field name="question_type" string="Type" />
                                     <field name="value_answer_id"

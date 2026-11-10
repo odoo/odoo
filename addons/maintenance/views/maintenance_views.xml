@@ -77,7 +77,6 @@
         <field name="arch" type="xml">
             <form string="Maintenance Request">
                 <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of equipment_id, maintenance_team_id, production_id -->
-                <field name="category_id" invisible="1"/> <!-- passed as default_category_id in the context of equipment_id -->
                 <header>
                     <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled' or not id"/>
                     <button string="Reopen Request" name="reset_equipment_request" type="object" invisible="state != 'cancelled'"/>

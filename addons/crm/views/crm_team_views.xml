@@ -182,9 +182,6 @@
                     <attribute name="invisible">not assignment_enabled</attribute>
                 </xpath>
                 <xpath expr="//group[@name='right']" position="inside">
-                    <field name="assignment_enabled" invisible="1"/> <!-- drives invisible of the header, the action_assign_leads button and 3 more -->
-                    <field name="assignment_auto_enabled" invisible="1"/> <!-- drives invisible of assignment_optout -->
-                    <field name="lead_all_assigned_month_exceeded" invisible="1"/> <!-- drives invisible of the Exceeded i -->
                     <field name="assignment_optout" widget="boolean_toggle" invisible="not assignment_auto_enabled"/>
                     <label for="lead_all_assigned_month_count" invisible="assignment_optout"/>
                     <div class="d-flex align-items-baseline gap-1" invisible="assignment_optout">
