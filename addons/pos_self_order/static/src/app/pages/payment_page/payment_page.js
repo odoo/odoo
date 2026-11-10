@@ -4,10 +4,12 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
 // This component is only use in Kiosk mode
 export class PaymentPage extends Component {
     static template = "pos_self_order.PaymentPage";
+    static components = { PriceFormatter };
 
     setup() {
         this.selfOrder = useSelfOrder();
