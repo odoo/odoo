@@ -20,14 +20,19 @@ export class ResourceCalendarAttendanceFilteredOne2Many extends X2ManyField {
             return list;
         }
 
-        const filteredList = Object.assign(Object.create(Object.getPrototypeOf(list)), list);
-
         if (list.records) {
-            filteredList.records = list.records.filter((r) =>
-                this.props.domainFilter.contains(r.data)
-            );
+            // Only `records` is filtered; methods run on the real list so its state stays in sync.
+            const records = list.records.filter((r) => this.props.domainFilter.contains(r.data));
+            props.list = new Proxy(list, {
+                get(target, property) {
+                    if (property === "records") {
+                        return records;
+                    }
+                    const value = Reflect.get(target, property, target);
+                    return typeof value === "function" ? value.bind(target) : value;
+                },
+            });
         }
-        props.list = filteredList;
         return props;
     }
 }
