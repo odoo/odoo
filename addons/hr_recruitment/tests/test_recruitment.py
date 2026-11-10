@@ -341,13 +341,13 @@ class TestRecruitment(MailCase, TransactionCase):
         refuse_reason = self.env['hr.applicant.refuse.reason'].create([{'name': 'Fired'}])
         pool = self.env['hr.talent.pool'].create({'name': 'Developers'})
         talent = self.env['hr.applicant'].create({
-            'partner_name': 'Cameron Ellis',
-            'email_from': 'cameron.ellis@example.com',
+            'partner_name': 'Faruk Demo',
+            'email_from': 'refuse.duplicates@example.com',
             'talent_pool_ids': [Command.set(pool.ids)],
         })
         applicant, duplicate = self.env['hr.applicant'].create([{
-            'partner_name': 'Cameron Ellis',
-            'email_from': 'cameron.ellis@example.com',
+            'partner_name': 'Faruk Demo',
+            'email_from': 'refuse.duplicates@example.com',
         } for _i in range(2)])
         wizard = self.env['applicant.get.refuse.reason'].create({
             'refuse_reason_id': refuse_reason.id,
