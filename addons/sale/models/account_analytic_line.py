@@ -214,7 +214,9 @@ class AccountAnalyticLine(models.Model):
         If not, the analytic line update will automatically trigger the recomputation
         of the `qty_delivered` field on the linked so lines .
         """
-        for line in self.filtered(lambda line: line.so_line):
+        # The analytic lines of a customer invoice are linked to the item they invoice, but they
+        # never delivered it.
+        for line in self.filtered(lambda line: line.so_line and line.category != "invoice"):
             if not line.so_line._is_analytic_reinvoice_line():
                 continue
             if (

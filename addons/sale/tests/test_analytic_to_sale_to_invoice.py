@@ -483,3 +483,17 @@ class TestAnalyticToSaleToInvoice(SaleCommon):
             15,
             "Unit Price should be recomputed when AAL amount is changed.",
         )
+
+    def test_reset_to_draft_invoice_of_upsale_lines(self):
+        """Resetting an invoice to draft deletes its analytic lines, which are linked to the
+        invoiced sale order items: this must not remove the upsale lines they invoice."""
+        self.services_sale_order.order_line.analytic_distribution = {str(self.at_cost_aal.account_id.id): 100}
+        at_cost_sol = self.at_cost_aal.so_line
+        invoice = self.services_sale_order._create_invoices().with_context(from_services_and_material=False)
+        invoice.action_post()
+        self.assertIn(at_cost_sol, invoice.invoice_line_ids.analytic_line_ids.so_line)
+
+        invoice.button_draft()
+        self.assertFalse(invoice.invoice_line_ids.analytic_line_ids)
+        self.assertTrue(at_cost_sol.exists())
+        self.assertEqual(at_cost_sol.qty_delivered, 1)
