@@ -423,6 +423,12 @@ export class ListRenderer extends Component {
             if (col.optional && !this.optionalActiveFields[col.name]) {
                 return false;
             }
+            if (
+                col.type === "column_group" &&
+                col.fields.every((f) => f.optional && !this.optionalActiveFields[f.name])
+            ) {
+                return false;
+            }
             if (this.evalColumnInvisible(col.column_invisible)) {
                 return false;
             }

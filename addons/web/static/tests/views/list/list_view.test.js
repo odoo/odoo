@@ -22230,6 +22230,35 @@ test(`column tag: optional attribute on sub-fields shows/hides individual sub-fi
     ).toHaveCount(2);
 });
 
+test(`column tag: column is hidden when all its fields are optional and disabled`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <column>
+                    <field name="int_field" optional="show"/>
+                    <field name="date" optional="hide"/>
+                </column>
+            </list>
+        `,
+    });
+
+    // Disable int_field: no sub-field is left, so the whole column disappears
+    await contains(`table .o_optional_columns .dropdown-toggle`).click();
+    await contains(`.o-dropdown-item:eq(0)`).click();
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(2);
+    expect(`tbody tr:eq(0) td:not(.o_list_record_selector)`).toHaveCount(2);
+
+    // Enable date: the column is back, with date only
+    await contains(`.o-dropdown-item:eq(1)`).click();
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(3);
+    expect(
+        `tbody tr:eq(0) td:not(.o_list_record_selector):eq(1) .o_column_group_field`
+    ).toHaveCount(1);
+});
+
 test(`column tag: aggregate computed for first aggregatable stacked field`, async () => {
     await mountView({
         resModel: "foo",
