@@ -1,4 +1,5 @@
 import argparse
+import difflib
 import logging
 import os
 import re
@@ -139,7 +140,18 @@ class TestCommand(BaseCase):
                 _logger.info("  upgrade_code %s", script_name)
                 result = migrate(file_manager, glob=None, script=script_name, dry_run=True)
                 if not accept_changes and result:
-                    self.fail("files should not be changed")
+                    diff = ''.join(
+                        line
+                        for file in file_manager
+                        if file.dirty
+                        for line in difflib.unified_diff(
+                            file.path.read_text().splitlines(keepends=True) if file.path.exists() else [],
+                            (file.content or '').splitlines(keepends=True),
+                            fromfile=f'a/{file.path}',
+                            tofile=f'b/{file.path}',
+                        )
+                    )
+                    self.fail(f"files should not be changed\n{diff}")
 
     @unittest.skipIf(os.name != 'posix', '`os.openpty` only available on POSIX systems')
     def test_shell(self):
