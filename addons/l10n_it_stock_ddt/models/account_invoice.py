@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import models, api, fields, _
-from odoo.tools.float_utils import float_compare
 
 
 class AccountMove(models.Model):
@@ -74,7 +70,7 @@ class AccountMove(models.Model):
                             if total_invs:
                                 inv_qty, inv_line = total_invs.pop(0)
                             else:
-                                move_qty = 0 #abort when not enough matched invoices
+                                move_qty = 0  # abort when not enough matched invoices
                         # If in our FIFO iteration we stumble upon the line we were checking
                         if invoice_line == line and line_count not in invoice_line_pickings.get(move.picking_id, []):
                             invoice_line_pickings.setdefault(move.picking_id, []).append(line_count)
@@ -104,7 +100,7 @@ class AccountMove(models.Model):
             'domain': [('id', 'in', self.l10n_it_ddt_ids.ids)],
         }
 
-    def _l10n_it_edi_get_values(self, pdf_values=None, extra_attachments=None):
-        template_values = super()._l10n_it_edi_get_values(pdf_values, extra_attachments)
+    def _l10n_it_edi_get_values(self):
+        template_values = super()._l10n_it_edi_get_values()
         template_values['ddt_dict'] = self._get_ddt_values()
         return template_values

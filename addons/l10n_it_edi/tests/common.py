@@ -1,4 +1,4 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from lxml import etree
 
 from odoo import tools
@@ -108,6 +108,12 @@ class TestItEdi(AccountTestInvoicingCommon):
             'is_company': True,
         })
 
+        cls.french_partner = cls.env['res.partner'].create({
+            'name': 'Engie France',
+            'vat': 'FR13542107651',
+            'country_id': cls.env.ref('base.fr').id,
+        })
+
         cls.american_partner = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': '00465840031',
@@ -122,6 +128,7 @@ class TestItEdi(AccountTestInvoicingCommon):
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'proxy_type': 'l10n_it_edi',
             'id_client': 'l10n_it_edi_test',
+            'edi_mode': 'test',
             'company_id': cls.company.id,
             'edi_identification': 'l10n_it_edi_test',
             'private_key_id': cls.private_key_id.id,
@@ -153,6 +160,11 @@ class TestItEdi(AccountTestInvoicingCommon):
 
         cls.module = 'l10n_it_edi'
 
+    def _get_failed_check_codes(self, record, checks=None, model=None):
+        model_name = (record._name or model).split('.')[-1]
+        checks = checks or record._l10n_it_edi_export_data_check()
+        return checks.get(f'l10n_it_edi_{model_name}', {}).get('codes', [])
+
     def _remove_all_namespaces(self, root):
         """Strip XML namespaces and schemaLocation for deterministic test comparisons.
 
@@ -180,8 +192,25 @@ class TestItEdi(AccountTestInvoicingCommon):
             expected_tree = etree.fromstring(fd.read())
             expected_tree = self._remove_all_namespaces(expected_tree)
 
-        xml = invoice._l10n_it_edi_render_xml(pdf_values=pdf_values, extra_attachments=extra_attachments)
-        invoice_etree = etree.fromstring(xml)
+        values = invoice._l10n_it_edi_get_values()
+        if pdf_values:
+            values.update({
+                'pdf_name': pdf_values['name'],
+                'pdf': base64.b64encode(pdf_values['raw']).decode(),
+            })
+        if extra_attachments:
+            values['extra_attachments'] = [
+                {
+                    'name': attachment.name,
+                    'content': base64.b64encode(attachment.raw.content).decode(),
+                }
+                for attachment_data in extra_attachments
+                if attachment_data.get('manual')
+                and (attachment_id := attachment_data.get('id'))
+                and (attachment := self.env['ir.attachment'].browse(attachment_id))
+            ]
+        xml_content = invoice._l10n_it_edi_render_xml(values)
+        invoice_etree = etree.fromstring(xml_content)
         invoice_etree = self._remove_all_namespaces(invoice_etree)
 
         try:
@@ -189,6 +218,10 @@ class TestItEdi(AccountTestInvoicingCommon):
         except AssertionError as ae:
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
+
+    def _render(self, move):
+        values = move._l10n_it_edi_get_values()
+        return etree.fromstring(move._l10n_it_edi_render_xml(values))
 
     def _assert_import_invoice(self, filename, expected_values_list, xml_to_apply=None, move_type="in_invoice"):
         """ Tests an invoice imported from an XML vendor bill file on the filesystem
