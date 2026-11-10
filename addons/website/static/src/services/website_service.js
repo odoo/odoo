@@ -158,6 +158,7 @@ export const websiteService = {
                     const {
                         mainObject,
                         seoObject,
+                        isErrorPage,
                         isPublished,
                         publishOn,
                         canOptimizeSeo,
@@ -186,6 +187,7 @@ export const websiteService = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
                         seoObject: unslugHtmlDataObject(seoObject),
+                        isErrorPage: isErrorPage === "True",
                         isPublished: isPublished === "True",
                         publishOn: publishOn || false,
                         canOptimizeSeo: canOptimizeSeo === "True",
