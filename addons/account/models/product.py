@@ -132,17 +132,17 @@ class ProductTemplate(models.Model):
             # Copy: some overrides mutate the returned dict in place (e.g. `mrp_account`, `l10n_de`).
             return dict(cache[key])
 
-        stock_valuation = self._get_category_account('property_stock_valuation_account_id')\
-            or (self.company_id or self.env.company).account_stock_valuation_id
+        stock_valuation = self._get_category_account('property_stock_valuation_account_id', 'account_stock_valuation_id')
         cache[key] = {
             'income': (
                 self.property_account_income_id
                 or self._get_category_account('property_account_income_categ_id', 'income_account_id')
-            ), 'expense': (
+            ),
+            'expense': (
                 self.property_account_expense_id
-                or self._get_category_account('property_account_expense_categ_id')
-                or (self.company_id or self.env.company).expense_account_id
-            ), 'stock_valuation': stock_valuation,
+                or self._get_category_account('property_account_expense_categ_id', 'expense_account_id')
+            ),
+            'stock_valuation': stock_valuation,
             'stock_variation': stock_valuation.account_stock_variation_id,
         }
         return dict(cache[key])
@@ -160,7 +160,7 @@ class ProductTemplate(models.Model):
                 return account
             categ = categ.parent_id
         if company_field:
-            return (self.company_id or self.env.company)[company_field]
+            return (self.company_id or self.env.company).sudo()[company_field].with_env(self.env)
         return self.env['account.account']
 
     def get_product_accounts(self, fiscal_pos=None):
