@@ -102,7 +102,7 @@ test("should apply color on fully selected list items with empty text nodes at l
             setColor("rgb(255, 0, 0)", "color")(editor);
         },
         contentAfterEdit:
-            '<ul><li style="color: rgb(255, 0, 0);">\ufeff[<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="color: rgb(255, 0, 0);">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+            '<ul><li style="color: rgb(255, 0, 0);">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="color: rgb(255, 0, 0);">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
         contentAfter:
             '<ul><li style="color: rgb(255, 0, 0);">[<a href="#">abc</a></li><li style="color: rgb(255, 0, 0);"><a href="#">abc</a>]</li></ul>',
     });

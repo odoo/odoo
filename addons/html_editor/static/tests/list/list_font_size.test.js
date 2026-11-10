@@ -122,7 +122,7 @@ test("should apply font-size on fully selected list items with empty text nodes 
             setFontSize("32px")(editor);
         },
         contentAfterEdit:
-            '<ul><li style="font-size: 32px;">\ufeff[<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="font-size: 32px;">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+            '<ul><li style="font-size: 32px;">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="font-size: 32px;">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
         contentAfter:
             '<ul><li style="font-size: 32px;">[<a href="#">abc</a></li><li style="font-size: 32px;"><a href="#">abc</a>]</li></ul>',
     });
