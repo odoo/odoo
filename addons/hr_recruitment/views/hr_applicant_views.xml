@@ -197,7 +197,7 @@
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-300" invisible="application_status != 'archived'"/>
                 <widget name="web_ribbon" title="Hired" invisible="application_status != 'hired'" />
                 <field name="active" invisible="1"/> <!-- drives invisible of the Create Employee/Refuse/Restore buttons, of stage_id and of refuse_reason_id -->
-                <field name="kanban_state" widget="hr_applicant_state_selection" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant" class="o_field_state_selection"/>
+                <field name="kanban_state" widget="hr_applicant_state_selection" options="{'hide_label': false}" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant" class="o_field_state_selection"/>
                 <div class="oe_title pe-0">
                     <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
                     <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>
@@ -529,24 +529,29 @@
                         <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
                         <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-300" invisible="application_status != 'archived'"/>
-                        <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
+                        <div class="d-flex align-items-baseline gap-2 w-100">
+                            <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
+                            <div class="d-flex gap-1 ms-auto">
+                                <t t-call="menu"/>
+                                <field name="kanban_state" widget="hr_applicant_state_selection"/>
+                            </div>
+                        </div>
                         <field name="job_id" invisible="context.get('search_default_job_id', False) or is_pool_applicant"/>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         <field name="applicant_properties" widget="properties"/>
                         <footer>
                             <field name="priority" widget="priority"/>
-                            <field class="ms-1 align-items-center" name="activity_ids" widget="kanban_activity"/>
+                            <field name="activity_ids" widget="kanban_activity"/>
                             <field name="is_rotting" invisible="1"/>
                             <field name="rotting_days" class="d-flex" widget="rotting_days"/>
-                            <div class="d-flex ms-auto align-items-center">
-                                <span class="text-primary me-1 rounded-pill badge" invisible="matching_score == 0">
+                            <div class="d-flex ms-auto align-items-center gap-1">
+                                <span class="text-primary rounded-pill badge" invisible="matching_score == 0">
                                     <span><field name="matching_score"/>%</span>
                                 </span>
-                                <a name="action_open_attachments" type="object">
+                                <a name="action_open_attachments" role="button" type="object" class="btn btn-light d-flex align-items-center p-1 lh-1">
                                     <i class="oi" data-icon="attach_file" role="img" aria-label="Documents"/>
                                     <field name="attachment_number"/>
                                 </a>
-                                <field name="kanban_state" class="mx-1" widget="hr_applicant_state_selection"/>
                                 <field name="recruiter_id" widget="many2one_avatar_employee"/>
                             </div>
                         </footer>

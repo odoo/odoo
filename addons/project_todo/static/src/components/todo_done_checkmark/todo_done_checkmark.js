@@ -60,17 +60,13 @@ export class TodoDoneCheckmark extends StateSelectionField {
                 [this.props.name]: value,
             });
         }
+        this.stateDone.isDone = this.props.record.data[this.props.name] == '1_done';
     }
 }
 
 export const todoDoneCheckmark = {
     ...stateSelectionField,
     component: TodoDoneCheckmark,
-    extractProps: (fieldInfo, dynamicInfo) => {
-        const props = stateSelectionField.extractProps(fieldInfo, dynamicInfo);
-        props.viewType = fieldInfo.viewType;
-        return props;
-    },
 }
 
 registry.category("fields").add("todo_done_checkmark", todoDoneCheckmark);

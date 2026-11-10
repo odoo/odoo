@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { renderToMarkup } from '@web/core/utils/render';
 import { markup } from "@odoo/owl";
 
-const greenBullet = markup`<span class="o_status d-inline-block o_status_green"></span>`;
+const greenBullet = markup`<span class="o_status d-inline-block o_status_success"></span>`;
 const orangeBullet = markup`<span class="o_status d-inline-block text-warning"></span>`;
 const star = markup`<a style="color: gold;" class="oi oi-filled" data-icon="star"></a>`;
 const clock = markup`<a class="oi" data-icon="schedule"></a>`;

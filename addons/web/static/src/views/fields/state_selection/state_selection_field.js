@@ -1,6 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -17,14 +18,17 @@ export class StateSelectionField extends Component {
         ...standardFieldProps,
         showLabel: t.boolean().optional(true),
         withCommand: t.boolean().optional(),
+        viewType: t.string().optional(),
     });
+    dropdownState = useDropdownState();
 
     setup() {
-        this.colorPrefix = "o_status_";
         this.colors = {
-            blocked: "red",
-            done: "green",
+            blocked: "danger",
+            done: "success",
         };
+        this.icons = this.icons || {};
+        this.classIcons = this.classIcons || {};
         if (this.props.withCommand) {
             const hotkeys = ["D", "F", "G"];
             for (const [index, [value, label]] of this.options.entries()) {
@@ -36,7 +40,9 @@ export class StateSelectionField extends Component {
                     {
                         category: "smart_action",
                         hotkey: hotkeys[index] && "alt+" + hotkeys[index],
-                        isAvailable: () => this.props.record.data[this.props.name] !== value,
+                        isAvailable: () =>
+                            !this.props.readonly &&
+                            this.props.record.data[this.props.name] !== value,
                     }
                 );
             }
@@ -62,7 +68,15 @@ export class StateSelectionField extends Component {
     }
 
     statusColor(value) {
-        return this.colors[value] ? this.colorPrefix + this.colors[value] : "";
+        return this.colors[value] ? `o_status_${this.colors[value]} bg-subtle-${this.colors[value]}` : "text-muted";
+    }
+
+    stateIcon(value) {
+        return this.icons[value] || "circle";
+    }
+
+    stateIconClass(value) {
+        return value in this.classIcons ? this.classIcons[value] : this.colors[value] ? "oi-filled" : "";
     }
 
     async updateRecord(value) {
@@ -85,6 +99,9 @@ export const stateSelectionField = {
         return {
             showLabel: "hide_label" in options ? !options.hide_label : false,
             withCommand: viewType === "form",
+            // Type of the arch where this <field> is declared (e.g. "list" for a one2many list
+            // inside a form). Use it instead of env.config.viewType, which is the main view ("form").
+            viewType,
             readonly: dynamicInfo.readonly,
         };
     },

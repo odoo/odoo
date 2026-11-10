@@ -3505,12 +3505,17 @@ test(`change a record field in readonly should change same record in other group
     await contains(`.o_group_header`).click(); // open Value 1 group
     await contains(`.o_group_header:eq(1)`).click(); // open Value 2 group
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "yop"]);
-    expect(`.o_priority_star[data-icon='star'].oi-filled`).toHaveCount(0, {
+    expect(`.o_priority_star.o_star_active`).toHaveCount(0, {
         message: "should not have any starred records",
     });
 
-    await contains(`.o_priority_star`).click();
-    expect(`.o_priority_star[data-icon='star'].oi-filled`).toHaveCount(2, {
+    if (isSmall()) {
+        await contains(`.o_priority_dropdown_toggle`).click();
+        await contains(`.o_priority_menu .dropdown-item:last`).click();
+    } else {
+        await contains(`.o_priority_star`).click();
+    }
+    expect(`.o_priority_star.o_star_active`).toHaveCount(2, {
         message: "both 'yop' records should have been starred",
     });
     expect.verifySteps(["web_save"]);

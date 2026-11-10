@@ -2,22 +2,30 @@
 <templates xml:space="preserve">
 
     <t t-name="project_todo.TodoDoneCheckmark">
-        <t t-if="!this.uiService.isSmall">
-            <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
-               t-on-click.stop="this.onDoneToggled"
-               t-on-mouseleave="this.actualizeDoneState"
-               t-on-mouseover="this.freezeDoneState"
-               class="o_todo_done_button o_hover_text_color oi oi-lg"
-               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone}"
-               data-icon="check_circle"/>
-        </t>
-        <t t-else="">
-            <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
-               t-on-click.stop="this.onDoneToggled"
-               class="o_todo_done_button_mobile oi oi-lg"
-               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone}"
-               data-icon="check_circle"/>
-        </t>
+        <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
+           t-on-click.stop="this.onDoneToggled"
+           t-on-mouseleave="() => !this.uiService.isSmall and this.actualizeDoneState()"
+           t-on-mouseover="() => !this.uiService.isSmall and this.freezeDoneState()"
+           class="o_state_selection_btn btn btn-secondary mw-100 rounded-pill lh-1 text-truncate opacity-trigger-hover"
+           t-att-class="{
+                'o_todo_done_button': !this.uiService.isSmall,
+                'o_todo_done_button_mobile': this.uiService.isSmall,
+                'done_button_enabled': this.stateDone.isDone,
+                'o_has_not_label': !this.props.showLabel,
+                'btn-sm py-1 px-2': this.props.showLabel and this.props.viewType != 'form',
+           }"
+        >
+            <i
+                class="oi transition-base opacity-100-hover"
+                t-att-class="{
+                    'o_status o_status_success': this.stateDone.isDone,
+                    'text-muted': !this.stateDone.isDone,
+                    'me-1': this.props.showLabel,
+                }"
+                t-att-data-icon="this.stateDone.isDone ? 'check_circle_f': 'check_circle'"/>
+
+            <span t-if="this.props.showLabel" class="o_status_label" t-out="this.label"/>
+        </a>
     </t>
 
 </templates>

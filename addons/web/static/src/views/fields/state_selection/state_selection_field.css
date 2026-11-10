@@ -7,15 +7,28 @@
     @media screen and (min-width: 576px), print and (min-width: 100mm) {
         float: inline-end;
     }
-
-    .dropdown-toggle .o_status {
-        height: var(--o-bs-h3-font-size);
-        width: var(--o-bs-h3-font-size);
-    }
 }
 
 .o_list_renderer {
     .o_field_state_selection {
         margin-top: var(--o-bs-spacer-1);
+    }
+}
+
+.o_state_selection_btn {
+    --btn-disabled-border-color: transparent;
+    --btn-disabled-bg: transparent;
+    --btn-disabled-opacity: 1;
+
+    &.o_has_not_label {
+        --gradient: none;
+        --btn-active-border-color: var(--o-action);
+        --btn-bg: transparent;
+        --btn-hover-bg: transparent;
+        --btn-border-color: transparent;
+        --btn-hover-border-color: transparent;
+        --oi-font-size: 1.125rem;
+
+        padding: .125rem;
     }
 }

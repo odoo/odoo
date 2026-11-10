@@ -1,6 +1,7 @@
 import { useProps, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
@@ -17,17 +18,23 @@ export class MOListViewDropdown extends BadgeField {
     props = useProps({
         ...standardFieldProps,
         display: t.string(),
+        viewType: t.string().optional(),
     });
+    dropdownState = useDropdownState();
 
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.colorIcons = {
-            "blocked": "text-bg-warning",
-            "ready": "text-bg-secondary",
-            "progress": "text-bg-info",
-            "cancel": "text-bg-danger",
-            "done": "text-bg-success",
+            "blocked": "o_status_warning",
+            "progress": "o_status_info",
+            "cancel": "o_status_danger",
+            "done": "o_status_success",
+        };
+        this.icons = {
+            "progress": "play_circle",
+            "cancel": "cancel",
+            "done": "check_circle",
         };
     }
 
@@ -40,6 +47,11 @@ export class MOListViewDropdown extends BadgeField {
     get statusColor() {
         const state = this.props.record.data.state;
         return this.colorIcons[state] || "";
+    }
+
+    get statusIcon() {
+        const state = this.props.record.data.state;
+        return this.icons[state] || "circle";
     }
 
     async setState(state) {
@@ -87,8 +99,10 @@ registry.category("fields").add("mo_view_list_dropdown", {
             type: "String",
         },
     ],
-    extractProps: ({ options }) => ({
+    extractProps: ({ options, viewType }) => ({
         display: options.display,
+        // Arch type where the <field> is declared (e.g. "list" for a one2many inside a form).
+        viewType,
     }),
     component: MOListViewDropdown,
 });

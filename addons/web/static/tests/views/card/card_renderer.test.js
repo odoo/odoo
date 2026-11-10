@@ -16,6 +16,7 @@ import {
     contains,
     defineModels,
     fields,
+    isSmall,
     mockService,
     models,
     mountWithCleanup,
@@ -713,7 +714,12 @@ test("many2many_tags in card views", async () => {
     });
 
     // Write on the record using the priority widget to trigger a re-render in readonly
-    await contains(".o_priority_star:first-child").click();
+    if (isSmall()) {
+        await contains(".o_priority_dropdown_toggle").click();
+        await contains(".o_priority_menu .dropdown-item:contains(DEF)").click();
+    } else {
+        await contains(".o_priority_star:first-child").click();
+    }
 
     expect.verifySteps(["web_save"]);
     expect(".o_field_many2many_tags .o_tag").toHaveCount(2, {
@@ -739,9 +745,9 @@ test("priority field should not be editable when missing access rights", async (
             </card>`,
         readonly: true,
     });
-    expect(".o_card_record .o_priority [data-icon='star']:not(.oi-filled)").toHaveCount(2);
+    expect(".o_card_record .o_priority .o_priority_star:not(.o_star_active)").toHaveCount(2);
     await contains(".o_card_record .o_priority_star:first-child").click();
-    expect(".o_card_record .o_priority [data-icon='star']:not(.oi-filled)").toHaveCount(2);
+    expect(".o_card_record .o_priority .o_priority_star:not(.o_star_active)").toHaveCount(2);
 });
 
 test("can use JSON in card template", async () => {

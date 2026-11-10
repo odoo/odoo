@@ -112,7 +112,7 @@ export class KanbanRenderer extends Component {
                 // Params
                 ref: this.rootRef,
                 elements: ".o_draggable",
-                ignore: ".dropdown,select",
+                ignore: ".dropdown,select,button",
                 groups: () => this.props.list.isGrouped && ".o_kanban_group",
                 connectGroups: () => this.canMoveRecords,
                 cursor: "move",

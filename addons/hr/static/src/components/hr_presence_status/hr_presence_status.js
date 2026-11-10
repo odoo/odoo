@@ -9,7 +9,7 @@ export class HrPresenceStatus extends Component {
     props = useProps(standardFieldProps);
 
     get classNames() {
-        return `o_employee_availability oi ${this.iconClass} oi-fw o_button_icon hr_presence align-middle ${this.color}`;
+        return `o_employee_availability oi ${this.iconClass} o_button_icon hr_presence rounded-circle border border-transparent ${this.color}`;
     }
 
     get color() {
@@ -45,12 +45,23 @@ export class HrPresenceStatus extends Component {
                 case "other":
                     return "location_on";
             }
+        } else {
+            switch (this.value) {
+                case "presence_present":
+                    return "circle";
+                case "presence_absent":
+                    return "contrast";
+                case "presence_out_of_working_hour":
+                    return "circle";
+            }
         }
-        return "circle";
     }
 
     get iconClass() {
-        return this.location === "office" || !this.location ? "oi-filled" : "";
+        if (this.location) {
+            return this.location === "office" ? "oi-filled" : "";
+        }
+        return this.value !== "presence_out_of_working_hour" ? "oi-filled" : "";
     }
 
     get location() {

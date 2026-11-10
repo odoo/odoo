@@ -3,7 +3,7 @@
         &.o_kanban_ungrouped {
             .o_kanban_record {
                 --Card-padding-v: var(--o-bs-spacer-2) !important;
-                --Card-padding-h: 0px !important;
+                --Card-padding-h: 8px !important;
                 --Ribbon-font-size: 0.6rem;
                 --Ribbon-wrapper-width: 5rem;
                 --Ribbon-height: 1.9;
@@ -64,6 +64,11 @@
             [data-icon="mail"] {
                 width: var(--Avatar-size);
             }
+
+            .o_new_applications_icon {
+                width: var(--Avatar-size);
+                aspect-ratio: 1;
+            }
         }
 
         @media screen and (max-width: 1399.98px), print and (max-width: 249.98mm) {
@@ -85,14 +90,6 @@
                 margin-right: var(--o-bs-spacer-1);
                 max-width: 1.5rem;
             }
-
-            .o_m2o_avatar {
-                margin-right: 0;
-
-                img {
-                    margin-left: var(--o-bs-spacer-1);
-                }
-            }
         }
 
         &.o_kanban_grouped {
@@ -103,18 +100,6 @@
     }
 }
 
-.o_kanban_applicant {
-    .o_kanban_renderer.o_kanban_grouped {
-        .o_kanban_record {
-            margin: 0 0 calc(var(--o-bs-border-width) * -1);
-        }
-    }
-}
-
-.o_hr_recruitment_kanban .o_kanban_ungrouped .o_kanban_record {
-    margin: 0px;
-}
-
 .o_hr_recruitment_kanban_card_mobile_screen {
     min-height: 0px !important;
 }
@@ -123,15 +108,9 @@
     --Avatar-size: 1.5em;
 
     .o_m2o_avatar {
-        margin-right: var(--o-bs-spacer-2);
-
         a {
             height: var(--Avatar-size);
             aspect-ratio: 1;
-
-            i {
-                --oi-font-size: var(--o-bs-h3-font-size);
-            }
         }
     }
 
@@ -141,17 +120,6 @@
         align-content: center;
         font-variant-numeric: tabular-nums;
     }
-}
-
-.oe_kanban_action i[aria-label="Activities"], .o_kanban_card_header i[data-icon="person"] {
-    font-size: 1.2rem;
-}
-
-.btn .activity_badge {
-    --badge-padding-x: .55em;
-
-    top: 0.25rem;
-    right: -1rem;
 }
 
 .oe_kanban_action[name="open_website_url"] {

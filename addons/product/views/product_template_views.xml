@@ -138,10 +138,10 @@
                 <field name="is_storable" invisible="1"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="card" class="o_card_product_record flex-row">
+                    <t t-name="card" class="o_card_product_record flex-row opacity-trigger-hover">
                         <main class="pe-2">
                             <div class="mb-1">
-                                <div class="d-flex gap-1 mb-0 h5">
+                                <div class="d-flex gap-1 align-items-center mb-0 h5">
                                     <field name="name"/>
                                     <div class="o_kanban_hover">
                                         <field name="is_favorite" widget="boolean_favorite" nolabel="1" class="me-1" invisible="not is_favorite"/>
