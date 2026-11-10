@@ -1,6 +1,6 @@
 from odoo import api, models
 
-from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
+from odoo.addons.l10n_pl_edi_batch.models.batch_download import CRON_REQUEST_TODAY
 
 
 class AccountMove(models.Model):
@@ -11,19 +11,8 @@ class AccountMove(models.Model):
         self.env['l10n_pl_edi_batch.download']._cron_request_today()
 
     def action_l10n_pl_edi_import_from_ksef(self):
-        # Request yesterday and today's bills: the batch crons then import them
-        self.env['l10n_pl_edi_batch.download'].sudo()._request_today(self.env.company)
-
-        # Only do half-fetched invoices
-        half_fetched_bills = self.search([
-            ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
-            ('l10n_pl_edi_status', 'in', ('fetch_ready', 'fetch_failed')),
-            *self._check_company_domain(self.env.company),
-        ])
-
-        self._fetch_bills_data(KsefApiService(self.env.company), half_fetched_bills)
-
+        # Request the latest bills: the batch crons then import them, and fill the half-fetched ones
+        self.env.ref(CRON_REQUEST_TODAY).sudo()._trigger()
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',

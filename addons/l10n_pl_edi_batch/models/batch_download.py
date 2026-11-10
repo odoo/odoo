@@ -420,14 +420,20 @@ class BatchDownload(models.Model):
                         ('l10n_pl_edi_number', 'in', list(ksef_numbers)),
                         ('company_id', '=', batch.company_id.id),
                         ('move_type', '=', 'in_invoice'),
+                        ('l10n_pl_edi_status', 'not in', ('fetch_ready', 'fetch_failed')),
                     ]).mapped('l10n_pl_edi_number'))
 
                     # loop over zipped files
                     new_ksef_numbers = ksef_numbers - existing_ksef_numbers
+                    half_fetched_bills = AccountMove.search([
+                        ('l10n_pl_edi_number', 'in', list(new_ksef_numbers)),
+                        ('company_id', '=', batch.company_id.id),
+                        ('move_type', '=', 'in_invoice'),
+                    ]).grouped('l10n_pl_edi_number')
                     for count, ksef_number in enumerate(new_ksef_numbers, 1):
 
-                        # create the move and the attachment
-                        move = AccountMove.create([{'move_type': 'in_invoice', 'l10n_pl_edi_number': ksef_number}])
+                        # create the move (or fill the half-fetched one) and the attachment
+                        move = half_fetched_bills.get(ksef_number) or AccountMove.create([{'move_type': 'in_invoice', 'l10n_pl_edi_number': ksef_number}])
                         attachment = self.env['ir.attachment'].create({
                             'name': f"KSeF-{ksef_number.replace('/', '_')}.xml",
                             'description': self.env._('KSeF Fetched Invoice XML'),

@@ -15,7 +15,7 @@ from odoo.tools import file_open
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
-from odoo.addons.l10n_pl_edi_batch.models.batch_download import ksef_midnight
+from odoo.addons.l10n_pl_edi_batch.models.batch_download import CRON_REQUEST_TODAY, ksef_midnight
 from odoo.addons.l10n_pl_edi_batch.tools.ksef_api_service import KsefApiServiceBatch
 
 
@@ -378,6 +378,21 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         # Nothing left to import: a second run does nothing
         self.Batch._cron_import()
         self.assertEqual(self._search_imported() - bills_before, new_bill)
+
+    def test_import_bills_fills_half_fetched_bills(self):
+        half_fetched_bill = self._create_single_download_bill('20260501', 'fetch_ready')
+        ready_batch = self._create_batch('ready', {'status': {'code': 200}})
+        self._add_zip_parts(ready_batch, self._make_zip({
+            f'{half_fetched_bill.l10n_pl_edi_number}.xml': self.xml_content,
+            '_metadata.json': '{}',
+        }))
+
+        # The bill left half-fetched by the single download gets its XML, and no new bill is created
+        bills_before = self._search_imported()
+        self.Batch._cron_import()
+        self.assertEqual(self._search_imported(), bills_before)
+        self.assertEqual(half_fetched_bill.l10n_pl_edi_status, 'fetched')
+        self.assertRecordValues(self._search_xml_from_bill(half_fetched_bill), [{'raw': self.xml_content}])
 
     def test_import_bills_corrupt_zip(self):
         now = fields.Datetime.now().replace(microsecond=0)
@@ -961,21 +976,10 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         company.l10n_pl_edi_access_token = 'refreshed token'
         self.assertEqual(company.l10n_pl_edi_batch_historic_date, date(2026, 2, 10))
 
-    def test_import_from_ksef_fills_half_fetched_bills(self):
-        half_fetched_bills = self._create_single_download_bill('20260501', 'fetch_ready')
-        half_fetched_bills |= self._create_single_download_bill('20260502', 'fetch_failed')
-        AccountMove = type(self.env['account.move'])
+    def test_import_from_ksef_triggers_today_request(self):
+        today_cron = self.env.ref(CRON_REQUEST_TODAY)
 
-        # An accountant requests today's batch, and the half-fetched bills are downloaded by KSeF number: no metadata
-        # query for new bills
-        with (
-            self._mock_batch_requests(),
-            patch.object(KsefApiService, 'get_invoice_by_ksef_number', return_value={'xml_content': self.xml_content}) as get_invoice,
-            patch.object(AccountMove, '_fetch_bills_metadata') as fetch_metadata,
-        ):
-            self.env['account.move'].with_user(self.simple_accountman).with_company(self.company).action_l10n_pl_edi_import_from_ksef()
-        fetch_metadata.assert_not_called()
-        self.assertEqual(get_invoice.call_count, 2)
-        self.assertEqual(half_fetched_bills.mapped('l10n_pl_edi_status'), ['fetched', 'fetched'])
-
-        self.assertRecordValues(self._company_batches(self.company), [{'kind': 'today', 'state': 'requested'}])
+        # An accountant asks for the latest bills: the today cron is triggered, the batch crons do the rest
+        self.env['account.move'].with_user(self.simple_accountman).with_company(self.company).action_l10n_pl_edi_import_from_ksef()
+        self.assertTrue(self.env['ir.cron.trigger'].search([('cron_id', '=', today_cron.id)]))
+        self.assertFalse(self._company_batches(self.company))
