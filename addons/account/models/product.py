@@ -66,15 +66,17 @@ class ProductTemplate(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
 
     def _get_product_accounts(self):
+        # Branch users can read the parent company's products but not the parent company itself
+        company = (self.company_id or self.env.company).sudo()
         return {
             'income': (
                 self.property_account_income_id
                 or self._get_category_account('property_account_income_categ_id')
-                or (self.company_id or self.env.company).income_account_id
+                or company.income_account_id.with_env(self.env)
             ), 'expense': (
                 self.property_account_expense_id
                 or self._get_category_account('property_account_expense_categ_id')
-                or (self.company_id or self.env.company).expense_account_id
+                or company.expense_account_id.with_env(self.env)
             ),
         }
 
