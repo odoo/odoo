@@ -374,9 +374,29 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_invoice_period(self, invoice, move, flow):
-        invoice['InvoicePeriod'] = {
-            'StartDate': {'_text': self._format_date(flow.period_start or move.date)},
-            'EndDate': {'_text': self._format_date(flow.period_end or move.invoice_date_due or move.date)},
+        periods = [
+            self._get_line_invoice_period(line)
+            for line in move.invoice_line_ids if line.display_type == 'product'
+        ]
+        # Only infer a billing period when it covers all invoice lines, not the reporting period.
+        if periods and all(periods):
+            invoice['InvoicePeriod'] = {
+                'StartDate': {'_text': self._format_date(min(period['start_date'] for period in periods))},
+                'EndDate': {'_text': self._format_date(max(period['end_date'] for period in periods))},
+            }
+
+    @api.model
+    def _get_line_invoice_period(self, line):
+        # Deferred dates are only available when the Enterprise accounting module is installed.
+        if 'deferred_start_date' not in line._fields or 'deferred_end_date' not in line._fields:
+            return {}
+        start_date = line.deferred_start_date
+        end_date = line.deferred_end_date
+        if not start_date or not end_date:
+            return {}
+        return {
+            'start_date': start_date,
+            'end_date': end_date,
         }
 
     @api.model
@@ -587,6 +607,12 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                         'ID': {'_text': ref_id},
                         'IssueDate': {'_text': self._format_date(ref_date)},
                     }
+
+            if period := self._get_line_invoice_period(line):
+                res['InvoicePeriod'] = {
+                    'StartDate': {'_text': self._format_date(period['start_date'])},
+                    'EndDate': {'_text': self._format_date(period['end_date'])},
+                }
 
             fixed_tax_ids = {
                 tax.id for tax in line.tax_ids.flatten_taxes_hierarchy() if tax.amount_type == 'fixed'
