@@ -309,6 +309,20 @@ export class ProductTemplateAccounting extends Base {
                 .map((attr) => attr?.price_extra || 0)
                 .reduce((acc, price) => acc + price, 0);
 
+        let sequenceCounter = 0;
+        const mapSequence = this.combo_ids.reduce((acc, combo) => {
+            combo.combo_item_ids.forEach((item) => {
+                acc[item.id] = sequenceCounter++;
+            });
+            return acc;
+        }, {});
+        const sortBySequence = (a, b) =>
+            (mapSequence[a.combo_item_id.id] ?? Infinity) -
+            (mapSequence[b.combo_item_id.id] ?? Infinity);
+        // Sorted as the combo lines: the split last line must be the same when the combo is added
+        // (configurator order) and when its prices are recomputed
+        childLineConf.sort(sortBySequence);
+
         let remainingTotal = parentLstPrice;
         const ProductPrice =
             this.config.currency_id || decimalPrecision.find((dp) => dp.name === "Product Price");
@@ -382,19 +396,7 @@ export class ProductTemplateAccounting extends Base {
             });
         }
 
-        let sequenceCounter = 0;
-        const mapSequence = this.combo_ids.reduce((acc, combo) => {
-            combo.combo_item_ids.forEach((item) => {
-                acc[item.id] = sequenceCounter++;
-            });
-            return acc;
-        }, {});
-
-        comboItems.sort(
-            (a, b) =>
-                (mapSequence[a.combo_item_id.id] ?? Infinity) -
-                (mapSequence[b.combo_item_id.id] ?? Infinity)
-        );
+        comboItems.sort(sortBySequence);
         return comboItems;
     }
 }
