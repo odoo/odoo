@@ -10,7 +10,7 @@ from markupsafe import Markup
 from odoo import _, api, exceptions, models, tools
 from odoo.fields import Domain
 from odoo.tools import parse_contact_from_email
-from odoo.tools.mail import email_normalize, email_split_and_format
+from odoo.tools.mail import email_normalize, email_split_and_format, html_to_inner_content
 
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.addons.mail.tools.discuss import Store, StoreVersion
@@ -852,6 +852,20 @@ class Base(models.AbstractModel):
             return ' '.join(
                 last_field.convert_to_export(value, last_model)
                 for value in field_value
+            )
+        # use the qweb converters
+        elif last_field.type == 'float':
+            return ' '.join(
+                self.env['ir.qweb.field.float'].record_to_html(record, last_fname, {})
+                for record in last_model
+            )
+        elif last_field.type == 'monetary':
+            currency_fname = last_field.get_currency_field(last_model)
+            monetary_converter = self.env['ir.qweb.field.monetary']
+            return ' '.join(
+                html_to_inner_content(monetary_converter.record_to_html(record, last_fname, {}))
+                if record[currency_fname] else str(record[last_fname])
+                for record in last_model  # In case no currency --> Show the value as it is
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
 
