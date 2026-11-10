@@ -89,6 +89,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         part = self.Part.create({
             'batch_id': batch.id,
             'part_number': number,
+            'part_name': f'{batch.name}-{number:03}.zip.aes',
             'download_method': 'GET',
             'download_url': f'{self.server_url}/{batch.name}-{number:03}.zip.aes',
         })
@@ -281,7 +282,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             'status': {'code': 200},
             'packageExpirationDate': (now + timedelta(days=1)).isoformat() + '+00:00',
             'package': {
-                'parts': [{'ordinalNumber': 1, 'url': f'{self.server_url}/part-001.zip.aes', 'method': 'get'}],
+                'parts': [{'ordinalNumber': 1, 'partName': 'part-001.zip.aes', 'url': f'{self.server_url}/part-001.zip.aes', 'method': 'get'}],
                 **package,
             },
         }

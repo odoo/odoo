@@ -7,7 +7,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.exceptions import InvalidKey, InvalidSignature, UnsupportedAlgorithm
 from requests import request, RequestException
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import TIMEOUT
 from odoo.addons.l10n_pl_edi_batch.tools.ksef_api_service import KsefApiServiceBatch as Service
@@ -27,7 +27,7 @@ class BatchDownloadPart(models.Model):
 
     company_id = fields.Many2one(related='batch_id.company_id')
     batch_name = fields.Char("KSeF batch name", related='batch_id.name')
-    part_name = fields.Char(compute="_compute_part_name")
+    part_name = fields.Char("KSeF part name", readonly=True, required=True)
     part_number = fields.Integer("KSeF part ordinal number", readonly=True, required=True)
 
     download_method = fields.Selection(selection=HTTP_METHODS, readonly=True, required=True)
@@ -35,11 +35,6 @@ class BatchDownloadPart(models.Model):
 
     batch_id = fields.Many2one(comodel_name='l10n_pl_edi_batch.download', readonly=True, required=True)
     decrypted_file = fields.Binary("Decrypted part", attachment=True, readonly=True, copy=False)
-
-    @api.depends('download_url')
-    def _compute_part_name(self):
-        for record in self:
-            record.part_name = Service._url_to_name(record.download_url)
 
     def _decrypt_stream(self, response_stream):
         self.ensure_one()
