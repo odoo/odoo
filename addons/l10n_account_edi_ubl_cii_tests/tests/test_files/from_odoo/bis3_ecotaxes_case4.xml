@@ -138,11 +138,6 @@
         <cbc:InvoicedQuantity unitCode="C62">2.0</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="USD">180.20</cbc:LineExtensionAmount>
         <cac:AllowanceCharge>
-            <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-            <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-            <cbc:Amount currencyID="USD">19.80</cbc:Amount>
-        </cac:AllowanceCharge>
-        <cac:AllowanceCharge>
             <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
             <cbc:AllowanceChargeReasonCode>AEO</cbc:AllowanceChargeReasonCode>
             <cbc:AllowanceChargeReason>RECUPEL</cbc:AllowanceChargeReason>
@@ -159,7 +154,12 @@
             </cac:ClassifiedTaxCategory>
         </cac:Item>
         <cac:Price>
-            <cbc:PriceAmount currencyID="USD">99.0</cbc:PriceAmount>
-        </cac:Price>
+		    <cbc:PriceAmount currencyID="USD">89.10</cbc:PriceAmount>
+            <cac:AllowanceCharge>
+            <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="USD">9.90</cbc:Amount>
+                <cbc:BaseAmount currencyID="USD">99.0</cbc:BaseAmount>
+            </cac:AllowanceCharge>
+	    </cac:Price>
     </cac:InvoiceLine>
 </Invoice>

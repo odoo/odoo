@@ -129,14 +129,6 @@
 		<cbc:ID>___ignore___</cbc:ID>
 		<cbc:InvoicedQuantity unitCode="C62">4.0</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="EUR">126.77</cbc:LineExtensionAmount>
-		<cac:AllowanceCharge>
-			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
-			<cbc:MultiplierFactorNumeric>20.0</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="EUR">31.69</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">158.46</cbc:BaseAmount>
-		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Name>product_a</cbc:Name>
 			<cac:ClassifiedTaxCategory>
@@ -148,21 +140,18 @@
 			</cac:ClassifiedTaxCategory>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="EUR">39.615</cbc:PriceAmount>
-		</cac:Price>
+	      	<cbc:PriceAmount currencyID="EUR">31.692</cbc:PriceAmount>
+      		<cac:AllowanceCharge>
+	        	<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+        		<cbc:Amount currencyID="EUR">7.923</cbc:Amount>
+        		<cbc:BaseAmount currencyID="EUR">39.615</cbc:BaseAmount>
+      		</cac:AllowanceCharge>
+    	</cac:Price>
 	</cac:InvoiceLine>
 	<cac:InvoiceLine>
 		<cbc:ID>___ignore___</cbc:ID>
 		<cbc:InvoicedQuantity unitCode="C62">4.0</cbc:InvoicedQuantity>
 		<cbc:LineExtensionAmount currencyID="EUR">2.69</cbc:LineExtensionAmount>
-		<cac:AllowanceCharge>
-			<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-			<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
-			<cbc:MultiplierFactorNumeric>20.0</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="EUR">0.67</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">3.36</cbc:BaseAmount>
-		</cac:AllowanceCharge>
 		<cac:Item>
 			<cbc:Name>product_a</cbc:Name>
 			<cac:ClassifiedTaxCategory>
@@ -174,7 +163,12 @@
 			</cac:ClassifiedTaxCategory>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="EUR">0.84</cbc:PriceAmount>
+	      	<cbc:PriceAmount currencyID="EUR">0.672</cbc:PriceAmount>
+      		<cac:AllowanceCharge>
+	        	<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+        		<cbc:Amount currencyID="EUR">0.168</cbc:Amount>
+        		<cbc:BaseAmount currencyID="EUR">0.84</cbc:BaseAmount>
+      		</cac:AllowanceCharge>
 		</cac:Price>
 	</cac:InvoiceLine>
 </Invoice>

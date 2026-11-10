@@ -6,12 +6,15 @@ from odoo.tests import tagged
 class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
 
     def test_partial_import_invoice_line_line_extension_amount(self):
+        # gross_price = 1000
+        # allowance_on_gross = 100
+        # net_price = 900
         # charge = 50
-        # allowance = 100
-        # line_total_amount = 950 (including allowance and charge)
-        # gross_price = line_total_amount + allowance - charge = 950 + 100 - 50 = 1000
-        # price_unit = gross_price + charge = 1050
-        # discount = allowance --> discount_percentage = (allowance / price_unit) * 100
+        # line_total_amount = 950 (including charge)
+        # subtotal = line_total_amount - charge = 900
+        # qty = subtotal / net_price = 1
+        # price_unit = net_price + allowance_on_gross + charge / qty = 900 + 100 + 50 = 1050
+        # discount_percentage = (allowance_on_gross / price_unit) * 100 = 9.523809...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount')
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 1050.00,
@@ -20,15 +23,16 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_price_allowance_base_amount(self):
-        # net_price = gross_price = 200
+        # gross_price = 200
+        # allowance_on_gross = 20
+        # net_price = 180
         # charge = 50
-        # allowance = 100
-        # line_total_amount = 950 (including allowance and charge)
-        # net_price = (line_total_amount + allowance - charge) / qty
-        # qty = (950 + 100 - 50) / 200 = 5
+        # line_total_amount = 950 (including charge)
+        # subtotal = line_total_amount - charge = 900
+        # qty = subtotal / net_price = 900 / 180 = 5
         # charge_per_unit = charge / qty = 10
-        # unit_price = gross_price + charge_per_unit = 210
-        # discount_percentage = (allowance_per_unit / unit_price) * 100 = 9.523809...
+        # price_unit = net_price + allowance_on_gross + charge_per_unit = 180 + 20 + 10 = 210
+        # discount_percentage = (allowance_on_gross / price_unit) * 100 = 9.523809...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_price_allowance_base_amount')
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
@@ -38,17 +42,15 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
 
     def test_partial_import_invoice_line_line_extension_amount_price_allowance_base_amount_and_amount(self):
         # gross_price = 250
-        # allowance_on_gross = 50
-        # net_price = 200
+        # allowance_on_gross = 70
+        # net_price = 180
         # charge = 50
-        # total_allowance = 100
-        # line_total_amount = 950 (including allowance and charge)
-        # net_price = (line_total_amount + allowance - charge) / qty
-        # qty = (950 + 100 - 50) / 200 = 5
-        # allowance_per_unit = allowance_on_gross + total_allowance / qty = 50 + 100 / 5 = 70
+        # line_total_amount = 950 (including charge)
+        # subtotal = line_total_amount - charge = 900
+        # qty = subtotal / net_price = 900 / 180 = 5
         # charge_per_unit = charge / qty = 10
-        # unit_price = gross_price + charge_per_unit = 260
-        # discount_percentage = (allowance_per_unit / unit_price) * 100 = 26.923...
+        # price_unit = net_price + allowance_on_gross + charge_per_unit = 180 + 70 + 10 = 260
+        # discount_percentage = (allowance_on_gross / price_unit) * 100 = 26.923...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_price_allowance_base_amount_and_amount')
         self.assertRecordValues(invoice.invoice_line_ids, [
             {
@@ -99,15 +101,14 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
 
     def test_partial_import_invoice_line_line_extension_amount_quantity(self):
         # billed_qty = 5
-        # total_charge = 50
-        # total_allowance = 100
-        # line_total_amount = 950
-        # gross_price = (line_total_amount + allowance - charge) / qty
-        # gross_price = 1000 / 5 = 200 (= gross_price_unit bc gross_unit = 1)
-        # allowance_per_unit = total_allowance / qty = 20
-        # charge_per_unit = total_charge / qty = 50 / 5 = 10
-        # price_unit = gross_price + charge_per_unit = 210
-        # discount_percentage = (allowance_per_unit / price_unit) * 100 = 9.523809...
+        # gross_price = 200
+        # allowance_on_gross = 20
+        # net_price = 180
+        # charge = 50
+        # line_total_amount = 950 (including charge)
+        # charge_per_unit = charge / qty = 50 / 5 = 10
+        # price_unit = net_price + allowance_on_gross + charge_per_unit = 180 + 20 + 10 = 210
+        # discount_percentage = (allowance_on_gross / price_unit) * 100 = 9.523809...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_quantity')
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
@@ -116,17 +117,16 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_price_amount(self):
-        # net_amount = 200
-        # total_charge = 50
-        # total_allowance = 100
-        # line_total_amount = 950
-        # net_price = (line_total_amount + allowance - charge) / qty
-        # qty = 1000 / 200 = 5
-        # gross_price = 1000 / 5 = 200
-        # allowance_per_unit = total_allowance / qty = 20
-        # charge_per_unit = total_charge / qty = 50 / 5 = 10
-        # price_unit = gross_price_unit + charge_per_unit = 210
-        # discount_percentage = (allowance_per_unit / price_unit) * 100 = 9.523809...
+        # gross_price = 200
+        # allowance_on_gross = 20
+        # net_price = 180
+        # charge = 50
+        # line_total_amount = 950 (including charge)
+        # subtotal = line_total_amount - charge = 900
+        # qty = subtotal / net_price = 900 / 180 = 5
+        # charge_per_unit = charge / qty = 50 / 5 = 10
+        # price_unit = net_price + allowance_on_gross + charge_per_unit = 180 + 20 + 10 = 210
+        # discount_percentage = (allowance_on_gross / price_unit) * 100 = 9.523809...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_price_amount')
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
@@ -135,12 +135,16 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_zero_quantity(self):
+        # billed_qty = 0 --> ignored, qty computed from the net price
+        # gross_price = 1000
+        # allowance_on_gross = 100
+        # net_price = 900
         # charge = 50
-        # allowance = 100
-        # line_total_amount = 950 (including allowance and charge)
-        # gross_price = line_total_amount + allowance - charge = 950 + 100 - 50 = 1000
-        # price_unit = gross_price + charge = 1050
-        # discount_percentage = (allowance / price_unit) * 100 = 9.523809...
+        # line_total_amount = 950 (including charge)
+        # subtotal = line_total_amount - charge = 900
+        # qty = subtotal / net_price = 1
+        # price_unit = net_price + allowance_on_gross + charge / qty = 900 + 100 + 50 = 1050
+        # discount_percentage = (allowance_on_gross / price_unit) * 100 = 9.523809...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_zero_quantity')
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 1050.00,
@@ -149,31 +153,31 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_zero_quantity_zero_price_amount(self):
+        # billed_qty = 0, net_price = 0 --> no price information, qty = 1
         # charge = 50
-        # allowance = 100
+        # allowance = 100 (line allowance, not a discount)
         # line_total_amount = 950 (including allowance and charge)
-        # gross_price = line_total_amount + allowance - charge = 950 + 100 - 50 = 1000
-        # price_unit = gross_price + charge = 1050
-        # discount_percentage = (allowance / price_unit) * 100 = 9.523809...
+        # subtotal = line_total_amount - (charge - allowance) = 950 + 50 = 1000
+        # price_unit = subtotal + (charge - allowance) = 1000 - 50 = 950
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_zero_quantity_zero_price_amount')
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'price_unit': 1050.00,
+            'price_unit': 950.00,
             'quantity': 1.0,
-            'discount': 9.52380952380953,
         }])
 
     def test_partial_import_invoice_line_price_amount_base_quantity(self):
-        # net_price = 1000
-        # net_qty = 5
-        # net_price_per_unit = 1000 / 5 = 200
+        # gross_price = 1000
+        # allowance_on_gross = 100
+        # net_price = 900
+        # gross_qty = net_qty = 5
         # charge = 50
-        # allowance = 100
-        # line_total_amount = 950 (including allowance and charge)
-        # gross_price = line_total_amount + allowance - charge = 950 + 100 - 50 = 1000
-        # gross_price_per_unit = 1000 / 5 = 200
-        # charge_per_unit = 50 / 5 = 10
-        # price_unit = gross_price_per_unit + charge_per_unit = 210
+        # line_total_amount = 950 (including charge)
+        # subtotal = line_total_amount - charge = 900
+        # qty = subtotal * net_qty / net_price = 900 * 5 / 900 = 5
+        # net_price_per_unit = 900 / 5 = 180
         # allowance_per_unit = 100 / 5 = 20
+        # charge_per_unit = 50 / 5 = 10
+        # price_unit = net_price_per_unit + allowance_per_unit + charge_per_unit = 180 + 20 + 10 = 210
         # discount_percentage = (allowance_per_unit / price_unit) * 100 = 9.523809...
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_amount_base_quantity')
         self.assertRecordValues(invoice.invoice_line_ids, [{
@@ -235,6 +239,6 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
         self.assertRecordValues(imported_invoice.invoice_line_ids, [{
             'label': self.product_a.name,
             'price_subtotal': 1.5,
-            'price_unit': 2.0,
-            'discount': 25.0,
+            'price_unit': 1.5,
+            'discount': 0.0,
         }])

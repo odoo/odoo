@@ -135,11 +135,6 @@
     <cbc:ID>576</cbc:ID>
     <cbc:CreditedQuantity unitCode="DZN">2.0</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="USD">1782.00</cbc:LineExtensionAmount>
-    <cac:AllowanceCharge>
-      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-      <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-      <cbc:Amount currencyID="USD">198.00</cbc:Amount>
-    </cac:AllowanceCharge>
     <cac:Item>
       <cbc:Name>producta</cbc:Name>
       <cac:ClassifiedTaxCategory>
@@ -151,8 +146,13 @@
       </cac:ClassifiedTaxCategory>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="USD">990.0</cbc:PriceAmount>
-    </cac:Price>
+      <cbc:PriceAmount currencyID="USD">891.0</cbc:PriceAmount>
+      <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+          <cbc:Amount currencyID="USD">99.0</cbc:Amount>
+          <cbc:BaseAmount currencyID="USD">990.0</cbc:BaseAmount>
+      </cac:AllowanceCharge>
+	  </cac:Price>
   </cac:CreditNoteLine>
   <cac:CreditNoteLine>
     <cbc:ID>577</cbc:ID>

@@ -6,13 +6,28 @@
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='country_id']" position="after">
-                <field name="ubl_cii_tax_category_code"/>
+                <separator string="Peppol/UBL"/>
+                <field name="ubl_cii_category" invisible="not ubl_cii_is_allowance_charge_supported"/>
+                <field name="ubl_cii_tax_category_code" invisible="ubl_cii_category != 'tax'"/>
                 <field name="ubl_cii_tax_exemption_reason_code"
-                       invisible="not ubl_cii_requires_exemption_reason"
-                       />
-                <field name="ubl_cii_tax_exemption_reason"
-                       invisible="not ubl_cii_requires_exemption_reason"
-                       />
+                       string="Exemption Reason Code"
+                       invisible="ubl_cii_category != 'tax' or not ubl_cii_requires_exemption_reason"/>
+                <field name="ubl_cii_allowance_reason_code"
+                       string="Allowance Reason Code"
+                       invisible="ubl_cii_category != 'allowance'"
+                       required="ubl_cii_category == 'allowance'"/>
+                <field name="ubl_cii_charge_reason_code"
+                       string="Charge Reason Code"
+                       invisible="ubl_cii_category != 'charge'"
+                       required="ubl_cii_category == 'charge'"/>
+                <label name="ubl_cii_exemption_reason_label" for="ubl_cii_category_reason" string="Exemption Reason"
+                       invisible="ubl_cii_category != 'tax' or not ubl_cii_requires_exemption_reason"/>
+                <label name="ubl_cii_allowance_reason_label" for="ubl_cii_category_reason" string="Allowance Reason"
+                       invisible="ubl_cii_category != 'allowance'"/>
+                <label name="ubl_cii_charge_reason_label" for="ubl_cii_category_reason" string="Charge Reason"
+                       invisible="ubl_cii_category != 'charge'"/>
+                <field name="ubl_cii_category_reason" nolabel="1"
+                       invisible="ubl_cii_category == 'tax' and not ubl_cii_requires_exemption_reason"/>
             </xpath>
         </field>
     </record>
