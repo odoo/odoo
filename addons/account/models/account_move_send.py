@@ -71,10 +71,10 @@ class AccountMoveSend(models.AbstractModel):
         Either takes the provided custom_settings, or the default value.
         """
         def get_setting(key, from_cron=False, default_value=None):
-            return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
+            return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key, default_value) if from_cron else default_value
 
         vals = {
-            'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_methods(move)) or [],
+            'sending_methods': get_setting('sending_methods', from_cron=from_cron, default_value=self._get_default_sending_methods(move)) or [],
             'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or [],
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
             'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
@@ -890,7 +890,8 @@ class AccountMoveSend(models.AbstractModel):
         moves_without_sending_method = self.env['account.move']
         if from_cron:
             moves_without_sending_method = moves.filtered(
-                lambda move: not moves_data[move]['extra_edis']
+                lambda move: moves_data[move]['sending_methods']
+                and not moves_data[move]['extra_edis']
                 and not self._get_applicable_sending_methods(move, moves_data[move])
             )
 
