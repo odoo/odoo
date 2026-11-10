@@ -85,6 +85,34 @@ class TestProduct(AccountTestInvoicingCommon):
 
         self.assertEqual(product.taxes_id, tax_new, "The branch company default tax shouldn't be set if we set a different tax on the product from the parent company.")
 
+    def test_product_accounts_company_fallback_branch_user(self):
+        """A user of a branch only can read the products of the parent company, but not
+        the parent company itself: the company accounts fallback must not raise."""
+        parent_company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': parent_company.id,
+        })
+        branch_user = new_test_user(
+            self.env,
+            login="branch_user",
+            groups="account.group_account_invoice",
+            company_id=branch.id,
+            company_ids=branch.ids,
+        )
+        product = self.env['product.product'].create({
+            'name': 'Parent Company Product',
+            'company_id': parent_company.id,
+            'categ_id': False,
+            'property_account_income_id': False,
+            'property_account_expense_id': False,
+        })
+
+        self.env.invalidate_all()
+        accounts = product.with_user(branch_user).with_company(branch)._get_product_accounts()
+        self.assertEqual(accounts['income'], parent_company.income_account_id)
+        self.assertEqual(accounts['expense'], parent_company.expense_account_id)
+
     def test_product_category_parent_account_fallback(self):
         """When no account is set on a product category, accounts should be inherited from parent categories.
         Also covers the case where income and expense are defined at different hierarchy levels.
