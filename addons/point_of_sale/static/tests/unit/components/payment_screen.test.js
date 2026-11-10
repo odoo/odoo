@@ -224,3 +224,13 @@ test("addTip default amount of a currency without decimals", async () => {
     });
     expect(tip).toBe(2405);
 });
+
+test("configFastPaymentMethod uses the provider default", async () => {
+    const store = await setupPosEnv();
+    const [terminal1, terminal2] = addTestTerminals(store);
+    terminal1.sequence = -2;
+    terminal2.sequence = -1;
+    expect(store.configFastPaymentMethod[0]).toBe(terminal1);
+    store.paymentMethods.setDefault("test_terminal", terminal2.id);
+    expect(store.configFastPaymentMethod[0]).toBe(terminal2);
+});

@@ -223,7 +223,10 @@ export class PaymentScreen extends Component {
     }
     updateSelectedPaymentline(amount = false) {
         if (!this.paymentLines.length) {
-            this.currentOrder.addPaymentline(this.payment_methods_from_config[0]);
+            const pm = this.payment_methods_from_config[0];
+            this.currentOrder.addPaymentline(
+                this.pos.paymentMethods.getDefault(pm.payment_provider) || pm
+            );
         }
         if (!this.selectedPaymentLine) {
             return;
