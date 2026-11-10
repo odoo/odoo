@@ -25,6 +25,7 @@
                     t-if="shouldShowPtal(ptal)"
                     t-props="ptal"
                     productTmplId="this.props.product_tmpl_id"
+                    isLoading="!!this.props.loadingPtalIds?.has(ptal.id)"
                 />
             </t>
         </td>
