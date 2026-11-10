@@ -41,6 +41,7 @@ class CalendarEvent(models.Model):
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
     microsoft_sync_active = fields.Boolean('Microsoft Sync Active', compute='_compute_microsoft_sync_active')
+    is_organizer_microsoft_synced = fields.Boolean(compute='_compute_is_organizer_microsoft_synced')
 
     @api.depends('user_id.microsoft_calendar_rtoken', 'user_id.microsoft_synchronization_stopped')
     def _compute_microsoft_sync_active(self):
@@ -57,6 +58,12 @@ class CalendarEvent(models.Model):
     def _compute_user_can_edit(self):
         super()._compute_user_can_edit()
         self.filtered(lambda e: e.microsoft_sync_active and e.recurrency).user_can_edit = False
+
+    @api.depends('user_id.microsoft_calendar_token')
+    def _compute_is_organizer_microsoft_synced(self):
+        # replace token check with _get_microsoft_sync_status() == 'sync_active' after task 6620119 is merged
+        for event in self:
+            event.is_organizer_microsoft_synced = bool(event.user_id.sudo().microsoft_calendar_token)
 
     def _get_organizer(self):
         return self.user_id
