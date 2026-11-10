@@ -4,6 +4,7 @@ import textwrap
 
 from odoo import api, models, fields
 from odoo.fields import Domain
+from odoo.tools.mail import html_to_inner_content
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -29,9 +30,9 @@ class ChatbotScriptAnswer(models.Model):
 
         for answer in self:
             if answer.script_step_id:
-                answer_message = answer.script_step_id.message.replace('\n', ' ')
+                answer_message = html_to_inner_content(answer.script_step_id.message)
                 shortened_message = textwrap.shorten(answer_message, width=26, placeholder=" [...]")
-                answer.display_name = f"{shortened_message}: {answer.name}"
+                answer.display_name = f"{shortened_message} → {answer.name}"
             else:
                 answer.display_name = answer.name
 
@@ -43,5 +44,10 @@ class ChatbotScriptAnswer(models.Model):
             return Domain('name', operator, value) | Domain('script_step_id.message', operator, value)
         return super()._search_display_name(operator, value)
 
+    def _get_redirect_link(self):
+        self.ensure_one()
+        return self.redirect_link
+
     def _store_script_answer_fields(self, res: Store.FieldList):
-        res.extend(["name", "redirect_link"])
+        res.extend(["name"])
+        res.attr("redirect_link", lambda answer: answer._get_redirect_link())

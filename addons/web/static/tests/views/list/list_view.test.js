@@ -6464,6 +6464,43 @@ test(`deleting one record and verify context key`, async () => {
     expect(`tbody td.o_field_cell`).toHaveCount(3, { message: "should have 3 records" });
 });
 
+test(`deleting records with an additional context`, async () => {
+    const listView = registry.category("views").get("list");
+    class ExtraContextController extends listView.Controller {
+        onDeleteSelectedRecords() {
+            return this.model.root.deleteRecords([], { context: { extra_key: "extra_val" } });
+        }
+    }
+    registry.category("views").add("extra_context", {
+        ...listView,
+        Controller: ExtraContextController,
+    });
+    onRpc("web_unlink", ({ args, kwargs }) => {
+        expect.step(["web_unlink", args[0], kwargs.context.ctx_key, kwargs.context.extra_key]);
+    });
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(["web_search_read", kwargs.context.extra_key]);
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list js_class="extra_context"><field name="foo"/></list>`,
+        actionMenus: {},
+        context: { ctx_key: "ctx_val" },
+    });
+    expect.verifySteps([["web_search_read", undefined]]);
+
+    await clickRecordSelector();
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    expect.verifySteps([
+        ["web_unlink", [1], "ctx_val", "extra_val"],
+        ["web_search_read", undefined],
+    ]);
+    expect(`tbody tr.o_data_row`).toHaveCount(3);
+});
+
 test(`custom delete confirmation dialog`, async () => {
     const listView = registry.category("views").get("list");
     class CautiousController extends listView.Controller {
