@@ -38,6 +38,17 @@
         .o_group {
             margin: 0;
         }
+        .o_hr_leave_dates {
+            .o_field_daterange > div, .o_hr_leave_periods {
+                display: grid !important; // override the widget's .d-flex
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+                align-items: center;
+                column-gap: map-get($spacers, 2);
+            }
+            .o_field_daterange .oi[data-icon='calendar_today'] {
+                display: none !important;
+            }
+        }
         .o_hr_leave_title, .o_hr_leave_subtitle {
             line-height: 1.2;
             font-weight: 500;
@@ -78,6 +89,36 @@
             @include media-breakpoint-down(md) {
                 flex-direction: row;
             }
+        }
+    }
+}
+
+// Mobile: make the icon + label wrapper the field legend (instead of the label alone, see form_controller_m3.scss)
+.o_form_view .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_hr_leave_label {
+    @include media-breakpoint-down(md) {
+        width: max-content;
+        align-items: center;
+        gap: map-get($spacers, 1) !important;
+        transform: translate(var(--field-spacing-unit), calc(-.5 * var(--field-spacing-unit)));
+        padding: 0 calc(var(--field-spacing-unit) / 2);
+        border-radius: var(--field-spacing-unit);
+        margin-bottom: calc(-1 * var(--body-font-size));
+        background: linear-gradient(0deg, transparent 0%, $o-view-background-color 45%, $o-view-background-color 55%, transparent 100%);
+        line-height: $line-height-base;
+        font-size: $font-size-sm;
+        position: relative;
+        z-index: 1;
+
+        .oi {
+            font-size: inherit;
+            align-self: auto !important;
+        }
+
+        .o_form_label {
+            transform: none;
+            margin-bottom: 0 !important;
+            padding: 0 !important;
+            background: none;
         }
     }
 }
@@ -142,6 +183,10 @@
     .o_hr_holidays_kanban_mobile {
 
         container-type: inline-size;
+
+        .o_record_main {
+            min-width: 0;
+        }
 
         .btn-sm {
             padding: $btn-padding-y-sm $btn-padding-x-sm;
