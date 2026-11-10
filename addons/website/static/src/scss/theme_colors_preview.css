@@ -1,3 +1,39 @@
 .o_website_theme_colors_preview_label {
     font-family: var(--o-system-fonts);
 }
+
+/* :where() lets the element's own position rule win. */
+:where(.o_website_theme_colors_preview_low_contrast) {
+    position: relative;
+}
+
+.o_website_theme_colors_preview_low_contrast {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ffc107 !important;
+}
+
+.o_website_theme_colors_preview_contrast_warning {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border: 0;
+    background: none;
+}
+
+a > .o_website_theme_colors_preview_contrast_warning {
+    z-index: 2;
+}
+
+.o_website_theme_colors_preview_contrast_warning > .oi {
+    position: absolute;
+    top: -0.65rem;
+    inset-inline-end: -0.65rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background-color: #ffc107;
+    color: #000000;
+    font-size: 0.65rem;
+}

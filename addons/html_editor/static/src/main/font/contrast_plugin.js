@@ -4,6 +4,7 @@ import { hasColor, hasTextColorClass } from "@html_editor/utils/color";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { removeStyle } from "@html_editor/utils/dom";
+import { getContrastRatio, getRelativeLuminance } from "@html_editor/utils/contrast";
 
 export class ContrastPlugin extends Plugin {
     static id = "contrast";
@@ -147,17 +148,6 @@ export class ContrastPlugin extends Plugin {
     }
 }
 
-const srgbToLin = (v) =>
-    v / 255 <= 0.04045 ? v / 255 / 12.92 : Math.pow((v / 255 + 0.055) / 1.055, 2.4);
-
-const lum = ([r, g, b]) => 0.2126 * srgbToLin(r) + 0.7152 * srgbToLin(g) + 0.0722 * srgbToLin(b);
-
-const contrast = (fg, bg) => {
-    const hi = Math.max(lum(fg), lum(bg));
-    const lo = Math.min(lum(fg), lum(bg));
-    return (hi + 0.05) / (lo + 0.05);
-};
-
 /**
  * Adjusts color lightness to improve contrast against background.
  * Uses binary search for optimal lightness.
@@ -181,7 +171,7 @@ export function adjustColorContrast(color, background) {
 
     // Early exit: contrast already sufficient
     const MIN_CONTRAST = 2;
-    if (contrast(fg, bg) >= MIN_CONTRAST) {
+    if (getContrastRatio(fg, bg) >= MIN_CONTRAST) {
         return;
     }
 
@@ -194,7 +184,7 @@ export function adjustColorContrast(color, background) {
     // Adjust lightness toward the opposite end from the background
     // If the background is light, push the color darker (dir = -1).
     // If the background is dark,  push the color lighter (dir = +1).
-    const dir = lum(bg) > 0.5 ? -1 : 1;
+    const dir = getRelativeLuminance(bg) > 0.5 ? -1 : 1;
     const MAX_DELTA = 50;
 
     let low = 0,
@@ -208,7 +198,7 @@ export function adjustColorContrast(color, background) {
         const delta = (low + high) / 2;
         const lCandidate = l + dir * delta;
         const rgb = convertHslToRgb(h, s, lCandidate);
-        if (rgb && contrast([rgb.red, rgb.green, rgb.blue], bg) >= MIN_CONTRAST) {
+        if (rgb && getContrastRatio([rgb.red, rgb.green, rgb.blue], bg) >= MIN_CONTRAST) {
             bestL = lCandidate;
             high = delta;
         } else {
