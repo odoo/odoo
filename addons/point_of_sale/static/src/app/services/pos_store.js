@@ -429,7 +429,7 @@ export class PosStore extends WithLazyGetterTrap {
                     if (!this.saveIfOrder()) {
                         return false;
                     }
-                    this.resetCashier();
+                    this.accessRight.resetCashier();
                     return this.navigate("SaverScreen");
                 },
             },
