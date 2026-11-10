@@ -42,12 +42,21 @@ class ResPartnerBank(models.Model):
     lock_trust_fields = fields.Boolean(compute='_compute_lock_trust_fields')
     duplicate_bank_partner_ids = fields.Many2many('res.partner', compute="_compute_duplicate_bank_partner_ids")
 
+    @api.depends('country_id')
+    def _compute_account_type(self):
+        super()._compute_account_type()
+
     @api.model
     def retrieve_account_type(self, account_number):
         for validator, account_type in (
             (validate_iban, 'iban'),
             (validate_clabe, 'clabe'),
         ):
+            # A CLABE only exists in Mexico: an account of another country that passes its checksum is not one.
+            # Without a record (the account number widget of the bank setup wizard), the account is the company's own.
+            country_code = self.country_code if len(self) == 1 else self.env.company.country_code
+            if account_type == 'clabe' and country_code not in (False, 'MX'):
+                continue
             try:
                 validator(self.env, account_number)
                 return account_type
