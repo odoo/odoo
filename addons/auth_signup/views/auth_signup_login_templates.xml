@@ -4,8 +4,17 @@
             <xpath expr="//div[hasclass('oe_login_buttons')]/button" position="after">
                 <a t-if="signup_enabled" class="btn btn-link btn-sm mt-2" t-attf-href="/web/signup?{{ keep_query() }}">Don't have an account?</a>
             </xpath>
-            <xpath expr="//label[@for='password']" position="after">
-                <a t-if="reset_password_enabled" class="btn btn-link btn-sm" tabindex="1" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
+            <!-- "Reset Password" follows the password field, so that Tab goes from the email
+                 to the password: flex order shows it next to the password label. Its tabindex
+                 of 0 makes it a Tab stop in Safari too, where Tab skips links by default. -->
+            <xpath expr="//div[hasclass('o_caps_lock_warning')]" position="attributes">
+                <attribute name="class" add="d-flex flex-wrap align-items-start" separator=" "/>
+            </xpath>
+            <xpath expr="//label[@for='password']/.." position="attributes">
+                <attribute name="class" add="order-first flex-grow-1" separator=" "/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_caps_lock_warning')]/div[hasclass('input-group')]" position="after">
+                <a t-if="reset_password_enabled" class="btn btn-link btn-sm order-first ms-auto" tabindex="0" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
             </xpath>
         </template>
 
