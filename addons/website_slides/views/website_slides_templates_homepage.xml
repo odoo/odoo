@@ -188,15 +188,16 @@
                     <t t-foreach="tag_groups" t-as="tag_group">
                         <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>
                         <li class="dropdown" t-if="group_frontend_tags">
-                            <a t-att-class="'btn btn-light dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
-                                href="/slides"
-                                t-att-data-bs-target="'#navToogleTagGroup%s' % tag_group.id"
-                                role="button" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"
+                            <button type="button" t-att-class="'btn btn-light dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
+                                t-att-id="'navToggleTagGroup%s' % tag_group.id"
+                                t-att-data-bs-target="'#navMenuTagGroup%s' % tag_group.id"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" t-att-aria-controls="'navMenuTagGroup%s' % tag_group.id"
+                                t-att-aria-label="'Filter by %s' % tag_group.name"
                                 t-out="tag_group.name"/>
-                            <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
+                            <div class="dropdown-menu" t-att-id="'navMenuTagGroup%s' % tag_group.id" role="menu" t-att-aria-labelledby="'navToggleTagGroup%s' % tag_group.id">
                                 <t t-foreach="group_frontend_tags" t-as="tag">
-                                    <button type="button" t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
+                                    <button type="button" role="menuitemcheckbox" t-att-aria-checked="'true' if tag in search_tags else 'false'" t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
                                         t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                         t-out="tag.name"/>
                                 </t>
