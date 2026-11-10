@@ -21,6 +21,11 @@
                         			<field name="replenish_on_order"/>
                     			</setting>
 				</block>
+				<block title="Transport" name="freight_setting_container">
+					<setting string="Freight Product" help="Product of the requests for quotation sent to carriers from deliveries (Request Freight Quotation)" company_dependent="1">
+						<field name="freight_product_id" options="{'no_create': True}"/>
+					</setting>
+				</block>
 			</xpath>
 		</field>
 	</record>

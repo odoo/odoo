@@ -3,7 +3,10 @@
 from collections import defaultdict
 from dateutil import relativedelta
 
+from markupsafe import Markup
+
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 
 
@@ -73,6 +76,84 @@ class StockPicking(models.Model):
             )
         return super()._log_less_quantities_than_expected(moves)
 
+
+    def _get_freight_description(self):
+        """ Description of the transfer for the carriers: what to deliver where and when, and the load. """
+        self.ensure_one()
+        summary = self._get_load_summary()
+        weight_uom = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+        volume_uom = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+        length_uom = self.env['product.template']._get_length_uom_name_from_ir_config_parameter()
+        lines = [
+            f"{self.name} - {self.partner_id.commercial_partner_id.name or ''}",
+            _("Delivery address: %s", self.partner_id._display_address(without_name=False).replace('\n', ', ') if self.partner_id else ''),
+            _("Scheduled date: %s", fields.Date.to_string(fields.Datetime.to_datetime(self.scheduled_date).date()) if self.scheduled_date else ''),
+            _("Load:"),
+        ]
+        for uom, quantity in summary['quantities'].items():
+            lines.append(_("- Quantity: %(quantity)s %(uom)s", quantity=f"{uom.round(quantity):g}", uom=uom.name))
+        for packaging, count in summary['packagings'].items():
+            lines.append(_("- Packagings: %(count)s x %(packaging)s", count=f"{packaging.round(count):g}", packaging=packaging.name))
+        for group in summary['packages']:
+            package_type = group['package_type']
+            details = []
+            if package_type.packaging_length and package_type.width and package_type.height:
+                details.append(f"{package_type.packaging_length:g} x {package_type.width:g} x {package_type.height:g} {length_uom}")
+            if package_type.max_weight:
+                details.append(_("max. %(weight)s %(uom)s", weight=f"{package_type.max_weight:g}", uom=weight_uom))
+            if package_type and not package_type.stackable:
+                details.append(_("not stackable"))
+            line = _("- Packages: %(count)s x %(type)s", count=group['count'], type=package_type.name or _("Package"))
+            if details:
+                line += f" ({', '.join(details)})"
+            if group['shipping_weights']:
+                line += _(", gross weights: %s", ', '.join(f"{weight:g} {weight_uom}" for weight in group['shipping_weights']))
+            lines.append(line)
+        lines.append(_("- Weight: %(weight)s %(weight_uom)s, Volume: %(volume)s %(volume_uom)s",
+                       weight=f"{summary['weight']:g}", weight_uom=weight_uom, volume=f"{summary['volume']:g}", volume_uom=volume_uom))
+        return '\n'.join(lines)
+
+    def action_request_freight_quotation(self):
+        """ Open a new request for quotation for the transport of the deliveries, with one line per delivery, so that
+        it can be sent to carriers and compared with alternatives. """
+        if len(self.company_id) > 1:
+            raise UserError(_("Request a freight quotation for the deliveries of one company at a time."))
+        company = self.company_id or self.env.company
+        product = company._get_freight_product()
+        summaries = [picking._get_load_summary() for picking in self]
+        package_counts = defaultdict(int)
+        for summary in summaries:
+            for group in summary['packages']:
+                package_counts[group['package_type'].name or _("Package")] += group['count']
+        weight_uom = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+        volume_uom = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+        pickup = self.picking_type_id.warehouse_id.partner_id[:1] or company.partner_id
+        note_lines = [
+            _("Pickup address: %s", pickup._display_address().replace('\n', ', ')),
+            _("Total weight: %(weight)s %(uom)s", weight=f"{sum(s['weight'] for s in summaries):g}", uom=weight_uom),
+            _("Total volume: %(volume)s %(uom)s", volume=f"{sum(s['volume'] for s in summaries):g}", uom=volume_uom),
+        ]
+        if package_counts:
+            note_lines.append(_("Packages: %s", ', '.join(f"{count} x {name}" for name, count in package_counts.items())))
+            note_lines.append(_("Floor area of the packages: %s", f"{sum(s['floor_area'] for s in summaries):.2f}"))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Request for Freight Quotation"),
+            'res_model': 'purchase.order',
+            'views': [(False, 'form')],
+            'target': 'current',
+            'context': {
+                'default_company_id': company.id,
+                'default_origin': ', '.join(self.mapped('name')),
+                'default_note': Markup('<br/>').join(note_lines),
+                'default_order_line': [Command.create({
+                    'product_id': product.id,
+                    'product_qty': 1,
+                    'uom_id': product.uom_id.id,
+                    'name': f"{product.display_name}\n{picking._get_freight_description()}",
+                }) for picking in self],
+            },
+        }
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
