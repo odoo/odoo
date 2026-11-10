@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from ast import literal_eval
 from uuid import uuid4
 
@@ -22,13 +23,17 @@ class SmsComposer(models.TransientModel):
         scheduled_message_id = result.get('mail_scheduled_message_id') or self.env.context.get('default_mail_scheduled_message_id')
         if scheduled_message_id:
             scheduled_message = self.env['mail.scheduled.message'].browse(scheduled_message_id)
+            notification_parameters = json.loads(scheduled_message.notification_parameters or '{}')
             values = {
                 'composition_mode': 'comment',
                 'mail_scheduled_message_id': scheduled_message.id,
                 'res_id': scheduled_message.res_id,
                 'res_model': scheduled_message.model,
                 'scheduled_date': scheduled_message.scheduled_date,
+                'number_field_name': notification_parameters.get('number_field'),
             }
+            if sms_numbers := notification_parameters.get('sms_numbers'):
+                values['recipient_single_number_itf'] = sms_numbers[0]
         else:
             values = {
                 'res_model': result.get('res_model') or self.env.context.get('active_model'),
@@ -288,12 +293,18 @@ class SmsComposer(models.TransientModel):
             'composition_comment_option': False,
             'is_note': False,
             'model': self.res_model,
-            'notification_parameters': '{}',
+            'notification_parameters': json.dumps(self._prepare_schedule_message_notification_parameters()),
             'partner_ids': [],
             'res_id': self.res_id,
             'scheduled_date': self.scheduled_date,
             'send_method': 'sms',
         }
+
+    def _prepare_schedule_message_notification_parameters(self):
+        self.ensure_one()
+        if self.recipient_single_number_itf and self.recipient_single_number_itf != self.recipient_single_number:
+            return {'sms_numbers': [self.recipient_single_number_itf]}
+        return {'number_field': self.number_field_name}
 
     def _action_schedule_message(self):
         self.ensure_one()
