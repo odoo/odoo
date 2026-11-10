@@ -1,11 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import secrets
+from threading import Event
+from unittest.mock import patch
 
 from freezegun import freeze_time
+from psycopg2 import OperationalError
 
+from odoo.addons.bus import bus_dispatcher
+from odoo.addons.bus.bus_dispatcher import BusDispatcher, ChannelTopic, DispatchState, dispatch
 from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.bus.bus_dispatcher import ChannelTopic
 
 
 class TestWebsocketDispatching(WebsocketCase):
@@ -73,3 +78,46 @@ class TestWebsocketDispatching(WebsocketCase):
         notifications = json.loads(client.recv())
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0]["message"]["type"], "channel_b_notification_NEW")
+
+    def test_recv_notification_while_listener_is_down(self):
+        channel = f"channel_{secrets.token_hex(4)}"
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, [channel], last=self.env["bus.bus"]._bus_last_id())
+        original_notify_topic = dispatch._notify_topic
+        crashed = Event()
+
+        def _crash_once(topic):
+            if crashed.is_set() or topic._channel[1] != channel:
+                return original_notify_topic(topic)
+            crashed.set()
+            raise OperationalError("connection lost")
+
+        with (
+            self.assertLogs("odoo.addons.bus.bus_dispatcher", "ERROR"),
+            patch.object(bus_dispatcher, "ERROR_RETRY_DELAY", 0),
+            patch.object(bus_dispatcher, "ERROR_RETRY_JITTER", 0),
+            patch.object(dispatch, "_notify_topic", _crash_once),
+        ):
+            self.env["bus.bus"]._sendone(channel, "missed_notification", None)
+            # The listener crashes handling this NOTIFY, which is therefore lost.
+            self.trigger_notification_dispatching()
+            notifications = json.loads(websocket.recv())
+        self.assertTrue(crashed.is_set())
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(notifications[0]["message"]["type"], "missed_notification")
+
+    def test_notify_all_topics_ignores_dropped_topics(self):
+        dispatcher = BusDispatcher()
+        topic = ChannelTopic((self.env.cr.dbname, "channel_A"), 0)
+        dispatcher._topic_by_channel[topic._channel] = topic
+        lock_for_db = dispatcher._lock_for_db
+
+        def _drop_then_lock(dbname):
+            # The topic is dropped between the listing and the lock acquisition.
+            dispatcher._topic_by_channel.pop(topic._channel, None)
+            return lock_for_db(dbname)
+
+        dispatcher._lock_for_db = _drop_then_lock
+        dispatcher._notify_all_topics()
+        self.assertFalse(dispatcher._pending_topics_by_db)
+        self.assertIs(topic._state, DispatchState.IDLE)
