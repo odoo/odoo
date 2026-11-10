@@ -8,6 +8,18 @@ from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 class TestSaleQtyInvoiced(L10nInTestInvoicingCommon):
     _test_user_groups = None  # FIXME list needed groups
 
+    def test_invoice_report_buyer_order_reference(self):
+        order = self._get_confirmed_invoiced_order()
+        invoice = order.invoice_ids
+        invoice.with_context(skip_readonly_check=True).ref = order.name
+        values = invoice._l10n_in_get_invoice_report_header_values()
+        self.assertEqual(values['supplier_reference'], order.name)
+        self.assertFalse(values['buyer_order_no'])
+        order.client_order_ref = 'CUSTOMER-PO-42'
+        values = invoice._l10n_in_get_invoice_report_header_values()
+        self.assertEqual(values['buyer_order_no'], 'CUSTOMER-PO-42')
+        self.assertFalse(values['buyer_order_date'])
+
     def _get_confirmed_invoiced_order(self):
         order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,

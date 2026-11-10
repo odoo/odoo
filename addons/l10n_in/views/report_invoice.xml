@@ -1,6 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
+        <!-- Replace the layout's supplier header with the compact Indian document header below. -->
+        <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
+            <attribute name="address">False</attribute>
+            <attribute name="information_block">False</attribute>
+            <attribute name="l10n_in_invoice_header">True</attribute>
+            <attribute name="custom_document_header">True</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="custom_document_header" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="l10n_in_invoice" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="before">
+            <style>
+                .l10n_in_invoice { font-size: 12px; }
+                .l10n_in_invoice .l10n_in_header_design { position: relative; overflow: hidden; margin-bottom: 16px; }
+                .l10n_in_invoice .l10n_in_header_art { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+                .l10n_in_invoice .l10n_in_document_header { position: relative; margin-bottom: 0 !important; }
+                .l10n_in_invoice .l10n_in_document_header { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+                .l10n_in_invoice .l10n_in_document_header > tbody > tr > td { vertical-align: top; padding: 0; width: 50%; }
+                .l10n_in_invoice .l10n_in_document_header > tbody > tr > td:first-child { padding-right: 16px; }
+                .l10n_in_invoice .l10n_in_parties { table-layout: fixed; margin-bottom: 0; }
+                .l10n_in_invoice .l10n_in_parties td { padding: 10px 12px; vertical-align: top; }
+                .l10n_in_invoice .l10n_in_supplier { padding: 10px 12px; line-height: 1.45; }
+                .l10n_in_invoice .l10n_in_supplier_logo { max-width: 140px; max-height: 48px; margin-bottom: 8px; }
+                .l10n_in_invoice .l10n_in_supplier_name { font-size: 18px; font-weight: bold; line-height: 1.25; margin-bottom: 5px; }
+                .l10n_in_invoice .l10n_in_document_title { padding: 10px; font-size: 18px; line-height: 1.3; margin: 0; }
+                .l10n_in_invoice .l10n_in_supplier ul { margin: 0; }
+                .l10n_in_invoice .l10n_in_parties address { line-height: 1.45; }
+                .l10n_in_invoice .l10n_in_party_heading { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+                .l10n_in_invoice #informations { display: block !important; overflow: hidden; margin: 0; }
+                .l10n_in_invoice #informations > .col { float: left; width: 25%; max-width: 25%; padding: 5px 10px; border-bottom: 1px solid #dee2e6; overflow-wrap: break-word; }
+                .l10n_in_invoice #informations > .col:nth-child(4n+1) { clear: both; }
+                .l10n_in_invoice #informations > .col > strong { display: block; font-size: 10px; line-height: 1.3; margin-bottom: 3px; }
+                .l10n_in_invoice #informations > .col > div { display: block; font-size: 11px; line-height: 1.35; }
+                .l10n_in_invoice .l10n_in_reference_card { border: 1px solid #dee2e6; overflow: hidden; background: white; }
+                .l10n_in_invoice .l10n_in_header_bubble { border-radius: 22px; padding: 12px; }
+                .l10n_in_invoice .l10n_in_header_bubble .l10n_in_supplier { padding: 14px; }
+                .l10n_in_invoice .l10n_in_header_bubble .l10n_in_reference_card { border-radius: 12px; }
+                .l10n_in_invoice .l10n_in_header_wave { padding: 14px 12px 24px; }
+                .l10n_in_invoice .l10n_in_header_wave .l10n_in_reference_card { border-radius: 12px 0 12px 0; }
+                .l10n_in_invoice .l10n_in_header_folder { padding: 12px; }
+                .l10n_in_invoice .l10n_in_header_folder .l10n_in_reference_card { border-radius: 0 12px 0 0; }
+                .l10n_in_invoice .l10n_in_header_dual { padding: 16px 12px 8px 24px; }
+                .l10n_in_invoice .l10n_in_header_lines { padding: 12px; }
+                .l10n_in_invoice .l10n_in_header_lines .l10n_in_supplier { padding-left: 40px; }
+                .l10n_in_invoice .l10n_in_header_center .l10n_in_supplier { text-align: center; }
+                .l10n_in_invoice .l10n_in_header_center .l10n_in_document_title { text-align: center; }
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_supplier { padding: 6px 8px; font-size: 11px; }
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_supplier_name,
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_document_title { font-size: 15px; }
+                .l10n_in_invoice .l10n_in_reference_table { table-layout: fixed; }
+                .l10n_in_invoice .l10n_in_reference_table td { width: 50%; padding: 3px 6px; border: 1px solid #dee2e6; vertical-align: top; font-size: 11px; line-height: 1.3; overflow-wrap: break-word; }
+                .l10n_in_invoice .l10n_in_reference_table strong { display: block; font-size: 10px; margin-bottom: 1px; }
+                .l10n_in_invoice .l10n_in_reference_value { min-height: 12px; }
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_reference_table td { padding: 4px 6px; font-size: 10px; }
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_reference_table strong { font-size: 9px; }
+                .l10n_in_invoice .l10n_in_additional_information { margin-bottom: 12px; }
+                .l10n_in_invoice .o_main_table th,
+                .l10n_in_invoice .l10n_in_hsn_table th { background-color: #f3f4f5; padding: 8px 6px; }
+                .l10n_in_invoice .o_main_table td,
+                .l10n_in_invoice .l10n_in_hsn_table td { padding: 7px 6px; border-bottom: 1px solid #dee2e6; }
+                .l10n_in_invoice .o_main_table th,
+                .l10n_in_invoice .o_main_table td { border-right: 1px solid #dee2e6; }
+                .l10n_in_invoice .o_main_table th:last-child,
+                .l10n_in_invoice .o_main_table td:last-child { border-right: 0; }
+                .l10n_in_invoice .l10n_in_hsn_table { font-size: 11px; }
+                .l10n_in_invoice .l10n_in_hsn_table tr { page-break-inside: avoid; }
+                .l10n_in_invoice .l10n_in_hsn_table thead { display: table-header-group; }
+                .l10n_in_invoice #right-elements { min-width: 45%; margin-top: 12px; }
+                .l10n_in_invoice #right-elements > .mb-2 { page-break-inside: avoid; }
+                .l10n_in_invoice #payment_term { font-size: 11px; }
+            </style>
+            <div t-if="l10n_in_report_title" class="text-end text-muted small mb-2" name="l10n_in_copy_title">
+                <t t-out="l10n_in_report_title"/>
+            </div>
+            <t t-set="l10n_in_layout" t-value="(o.company_id.external_report_layout_id.key or 'web.external_layout_standard').split('external_layout_')[-1]"/>
+            <div t-attf-class="l10n_in_header_design l10n_in_header_{{l10n_in_layout}}" name="l10n_in_header_design">
+                <t t-call="l10n_in.invoice_header_art"/>
+            <table class="table table-borderless w-100 l10n_in_document_header" name="l10n_in_document_header">
+                <tbody>
+                    <tr>
+                        <td>
+                            <t t-call="l10n_in.invoice_supplier"/>
+                        </td>
+                        <td name="l10n_in_header_references">
+                            <div class="l10n_in_reference_card" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746')">
+                                <h2 class="l10n_in_document_title" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')" t-out="layout_document_title"/>
+                                <t t-call="l10n_in.invoice_reference_table"/>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            <table class="table table-bordered w-100 l10n_in_parties mb-3" name="l10n_in_party_details">
+                <tbody>
+                    <tr>
+                        <td t-att-style="'width: 50%;' if information_block else ''"><t t-out="address"/></td>
+                        <td t-if="information_block" style="width: 50%;"><t t-out="information_block"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="l10n_in_additional_information" name="l10n_in_additional_information"/>
+        </xpath>
+        <xpath expr="//div[@name='l10n_in_additional_information']" position="inside">
+            <xpath expr="//div[@id='informations']" position="move"/>
+        </xpath>
+        <!-- Preserve extension hooks, but keep Odoo-specific information outside the commercial grid. -->
+        <xpath expr="//div[@id='informations']/div[@name='invoice_date']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='origin']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='reference']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='incoterm_id']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
         <xpath expr="//t[@t-set='layout_document_title']" position="before">
             <t t-set="custom_in_footer">
                 <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.move_type in ['out_invoice', 'out_refund', 'out_receipt']
@@ -15,6 +137,10 @@
             <div t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type and o.partner_shipping_id.has_vat">
                 GSTIN: <span t-field="o.partner_shipping_id.vat"/>
             </div>
+            <t t-call="l10n_in.partner_state" partner="o.partner_shipping_id"/>
+        </xpath>
+        <xpath expr="//div[@name='shipping_address_block']/strong" position="replace">
+            <strong class="d-block mb-2 l10n_in_party_heading">Ship To (Consignee)</strong>
         </xpath>
         <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="attributes">
             <attribute name="t-if" add="o.company_id.l10n_in_gst_registration_type" separator="and"/>
@@ -26,39 +152,92 @@
             <attribute name="t-if" add="o.company_id.l10n_in_gst_registration_type" separator="and"/>
         </xpath>
         <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="before">
-            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
-            <t t-call="l10n_in.place_of_supply"/>
+            <t t-call="l10n_in.billing_heading"/>
         </xpath>
         <xpath expr="//t[@name='address_same_as_shipping']/address" position="before">
-            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
-            <t t-call="l10n_in.place_of_supply"/>
+            <t t-call="l10n_in.billing_heading"/>
         </xpath>
         <xpath expr="//t[@name='no_shipping']/address" position="before">
-            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
-            <t t-call="l10n_in.place_of_supply"/>
+            <t t-call="l10n_in.billing_heading"/>
+        </xpath>
+        <xpath expr="//t[@t-set='address']" position="inside">
+            <t t-call="l10n_in.partner_state" partner="o.partner_id"/>
         </xpath>
 
         <xpath expr="//div[@id='informations']" position="inside">
+            <div class="col" t-if="o.company_id.l10n_in_gst_registration_type and o.l10n_in_state_id" name="l10n_in_place_of_supply">
+                <strong>Place of Supply</strong>
+                <div><span t-field="o.l10n_in_state_id.name"/> <span t-if="o.l10n_in_state_id.l10n_in_tin">(<span t-field="o.l10n_in_state_id.l10n_in_tin"/>)</span></div>
+            </div>
+            <div class="col" t-if="o.company_id.l10n_in_gst_registration_type" name="l10n_in_reverse_charge">
+                <strong>Reverse Charge</strong>
+                <div>
+                    <span t-if="o.l10n_in_is_self_invoice or any(tax.l10n_in_reverse_charge for tax in o.invoice_line_ids.tax_ids)">Yes</span>
+                    <span t-else="">No</span>
+                </div>
+            </div>
+            <div class="col" t-if="o.reversed_entry_id" name="l10n_in_original_invoice">
+                <strong>Original Invoice</strong>
+                <div><span t-field="o.reversed_entry_id.name"/><t t-if="o.reversed_entry_id.invoice_date"> / <span t-field="o.reversed_entry_id.invoice_date"/></t></div>
+            </div>
+            <div class="col" t-if="o.l10n_in_shipping_bill_number" name="l10n_in_shipping_bill">
+                <strong>Shipping Bill</strong>
+                <div><span t-field="o.l10n_in_shipping_bill_number"/><t t-if="o.l10n_in_shipping_bill_date"> / <span t-field="o.l10n_in_shipping_bill_date"/></t></div>
+            </div>
             <div class="col" t-if="o.l10n_in_adjustment_type and o.l10n_in_adjustment_type != 'standard'" name="l10n_in_adjustment_type">
                 <strong>Adjustment Type</strong>
                 <div t-field="o.l10n_in_adjustment_type">Price Adjustment</div>
             </div>
         </xpath>
+        <xpath expr="//div[@id='informations']" position="attributes">
+            <attribute name="t-if">True</attribute>
+        </xpath>
 
         <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
-                <th>HSN/SAC</th>
+                <th name="th_l10n_in_hsn">HSN/SAC</th>
             </t>
         </xpath>
 
-        <xpath expr="//t[@name='account_invoice_line_accountable']/td[1]" position="after">
+        <xpath expr="//th[@name='th_description']" position="before">
+            <th name="th_l10n_in_serial" class="text-end text-nowrap">Sl. No.</th>
+        </xpath>
+        <xpath expr="//t[@t-set='current_section'][@t-value='None']" position="before">
+            <t t-set="l10n_in_line_number" t-value="0"/>
+        </xpath>
+        <xpath expr="//t[@name='account_invoice_line_accountable']/td[1]" position="before">
+            <td class="text-end" name="td_l10n_in_serial">
+                <t t-set="l10n_in_line_number" t-value="l10n_in_line_number + 1"/>
+                <span t-out="l10n_in_line_number"/>
+            </td>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name_grouped_desktop']" position="before">
+            <td class="text-end" name="td_l10n_in_serial_grouped">
+                <t t-if="hide_details or grouped_line['display_type'] == 'product'">
+                    <t t-set="l10n_in_line_number" t-value="l10n_in_line_number + 1"/>
+                    <span t-out="l10n_in_line_number"/>
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[@name='account_invoice_line_name']" position="after">
             <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
               <span t-if="line.l10n_in_hsn_code" t-field="line.l10n_in_hsn_code"></span>
             </td>
         </xpath>
 
-        <xpath expr="//t[@name='account_invoice_line_section']/td[1]" position="after">
-            <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type"></td>
+        <!-- Sections absorb the HSN column; notes already span the entire table. -->
+        <xpath expr="//t[@t-set='line_colspan'][contains(@t-value, '3 +')]" position="attributes">
+            <attribute name="t-value" add="(1 if o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type else 0) + (0 if hide_details or hide_prices else 1)" separator=" + "/>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name_grouped']" position="after">
+            <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type and (hide_details or grouped_line['display_type'] == 'product')"/>
+        </xpath>
+        <xpath expr="//t[@name='account_invoice_line_section']/td[@colspan='2']" position="attributes">
+            <attribute name="t-att-colspan">3 + (1 if o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type else 0)</attribute>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name_grouped']" position="attributes">
+            <attribute name="t-att-colspan">(2 if grouped_line['display_type'] != 'product' else 1) + (1 if not hide_details and grouped_line['display_type'] != 'product' and o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type else 0)</attribute>
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="attributes">
@@ -66,19 +245,14 @@
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="after">
-            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id and qr_code_url">
                 <div style="display:-webkit-flex;" class="flex-column">
-                    <strong>PAYMENT QR CODE</strong>
+                    <strong>Pay by UPI</strong>
                     <div class="mt-1 mb-1">
                         <p class="mb-0">UPI ID:</p>
                         <span class="mb-0" t-field="o.company_id.l10n_in_upi_id"/>
                     </div>
-                    <div class="d-flex flex-row" t-attf-style="#{'-webkit-transform:translateX(-0.5rem);' if report_type != 'html' else '-webkit-transform:translate(-0.5rem,-0.8rem);'}">
-                        <img src="/l10n_in/static/src/img/PhonePe-Logo.svg" style="width:4.5rem;"/>
-                        <img src="/l10n_in/static/src/img/Google_Pay-Logo.svg" style="width:3.5rem;"/>
-                        <img src="/l10n_in/static/src/img/Paytm-Logo.svg" style="width:4rem;"/>
-                        <img src="/l10n_in/static/src/img/Upi-logo.svg" t-attf-style="#{'' if report_type != 'html' else 'padding:0.5rem;'} width:4rem;"/>
-                    </div>
+                    <small class="text-muted">Scan with any UPI app</small>
                 </div>
             </t>
         </xpath>
@@ -136,10 +310,11 @@
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
                 <t t-set="hsn_summary" t-value="o._l10n_in_get_hsn_summary_table()"/>
                 <t t-if="hsn_summary">
-                    <div name="l10n_in_hsn_summary" class="mt-3" style="page-break-inside: avoid;">
-                        <h4>HSN Summary</h4>
-                        <table class="table table-sm table-borderless col-6">
+                    <div name="l10n_in_hsn_summary" class="mt-3 mb-3">
+                        <h6 class="mb-2">HSN/SAC Tax Summary</h6>
+                        <table class="table table-sm table-borderless w-100 l10n_in_hsn_table">
                             <thead>
+                                <tr>
                                 <th>HSN/SAC</th>
                                 <th class="text-end">Quantity</th>
                                 <th class="text-end">Rate %</th>
@@ -148,7 +323,9 @@
                                 <th class="text-end" t-if="hsn_summary['has_gst']">CGST</th>
                                 <th class="text-end" t-if="hsn_summary['has_igst']">IGST</th>
                                 <th class="text-end" t-if="hsn_summary['has_cess']">CESS</th>
+                                </tr>
                             </thead>
+                            <tbody>
                             <tr t-foreach="hsn_summary['items']" t-as="item">
                                 <td t-out="item['l10n_in_hsn_code']"/>
                                 <td class="text-end">
@@ -177,22 +354,239 @@
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                             </tr>
+                            </tbody>
                         </table>
                     </div>
                 </t>
             </t>
         </xpath>
 
-        <xpath expr="//div[hasclass('row')]" position="after">
-            <div t-if="l10n_in_report_title" style="position:absolute;left:0;right:0;opacity:0.15;font-size:3em;color:#666666;width:100%;text-align:center;z-index:1000;-webkit-transform:rotate(-45deg);">
-                <t t-out="l10n_in_report_title"/>
-            </div>
+        <xpath expr="//div[@id='right-elements']" position="before">
+            <xpath expr="//div[@name='l10n_in_hsn_summary']/../.." position="move"/>
         </xpath>
 
     </template>
 
+    <template id="invoice_supplier">
+        <div name="l10n_in_supplier" class="l10n_in_supplier" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746') if l10n_in_layout in ('standard', 'compact', 'center') else ''">
+            <img t-if="o.company_id.logo" class="l10n_in_supplier_logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Company logo"/>
+            <div class="l10n_in_supplier_name" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')" t-field="o.company_id.name"/>
+            <div t-if="o.company_id.report_header" class="text-muted small mb-2" t-field="o.company_id.report_header"/>
+            <div t-field="o.company_id.partner_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
+            <div t-if="o.fiscal_position_id.foreign_vat or o.company_id.vat">
+                <strong>GSTIN:</strong> <span t-out="o.fiscal_position_id.foreign_vat or o.company_id.vat"/>
+            </div>
+            <t t-call="l10n_in.partner_state" partner="o.company_id.partner_id"/>
+            <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
+            <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
+            <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+        </div>
+    </template>
+
+    <!-- Fixed cells deliberately remain visible when empty: missing data must not move later references. -->
+    <template id="invoice_reference_table">
+        <t t-set="header_values" t-value="o._l10n_in_get_invoice_report_header_values()"/>
+        <table class="table table-sm mb-0 l10n_in_reference_table" name="l10n_in_reference_table">
+            <tbody>
+                <tr name="l10n_in_invoice_reference_row">
+                    <td>
+                        <div t-att-style="'float: left; width: 50%; padding-right: 4px;' if header_values['ewaybill_number'] else ''" name="l10n_in_document_number">
+                            <strong>Invoice No.</strong>
+                            <div class="l10n_in_reference_value"><span t-if="o.name and o.name != '/'" t-field="o.name"/><span t-else="">Draft</span></div>
+                        </div>
+                        <div t-if="header_values['ewaybill_number']" style="float: left; width: 50%;" name="l10n_in_header_ewaybill">
+                            <strong>e-Way Bill No.</strong>
+                            <div class="l10n_in_reference_value" t-out="header_values['ewaybill_number']"/>
+                        </div>
+                    </td>
+                    <td name="invoice_date">
+                        <strong>Dated</strong>
+                        <div class="l10n_in_reference_value"><span t-field="o.invoice_date" t-options="{'format': 'dd-MMM-yyyy'}"/></div>
+                    </td>
+                </tr>
+                <tr name="l10n_in_delivery_payment_row">
+                    <td name="l10n_in_delivery_note">
+                        <strong>Delivery Note</strong>
+                        <div class="l10n_in_reference_value">
+                            <t t-foreach="header_values['delivery_notes']" t-as="delivery_note"><div t-out="delivery_note"/></t>
+                        </div>
+                    </td>
+                    <td name="l10n_in_payment_terms">
+                        <strong>Mode/Terms of Payment</strong>
+                        <div class="l10n_in_reference_value"><span t-field="o.invoice_payment_term_id.name"/></div>
+                    </td>
+                </tr>
+                <tr name="l10n_in_supplier_reference_row">
+                    <td name="l10n_in_supplier_reference">
+                        <strong>Supplier's Ref.</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['supplier_reference']"/>
+                    </td>
+                    <td name="l10n_in_other_references">
+                        <strong>Other Reference(s)</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['other_references']"/>
+                    </td>
+                </tr>
+                <tr name="l10n_in_buyer_order_row">
+                    <td name="l10n_in_buyer_order">
+                        <strong>Buyer's Order No.</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['buyer_order_no']"/>
+                    </td>
+                    <td name="l10n_in_buyer_order_date">
+                        <strong>Dated</strong>
+                        <div class="l10n_in_reference_value"><span t-if="header_values['buyer_order_date']" t-out="header_values['buyer_order_date']" t-options="{'widget': 'date', 'format': 'dd-MMM-yyyy'}"/></div>
+                    </td>
+                </tr>
+                <tr name="l10n_in_dispatch_reference_row">
+                    <td name="l10n_in_dispatch_document">
+                        <strong>Despatch Document No.</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['dispatch_document_no']"/>
+                    </td>
+                    <td name="l10n_in_delivery_note_date">
+                        <strong>Delivery Note Date</strong>
+                        <div class="l10n_in_reference_value">
+                            <t t-foreach="header_values['delivery_note_dates']" t-as="delivery_note_date"><div t-out="delivery_note_date" t-options="{'widget': 'date', 'format': 'dd-MMM-yyyy'}"/></t>
+                        </div>
+                    </td>
+                </tr>
+                <tr name="l10n_in_dispatch_destination_row">
+                    <td name="l10n_in_dispatched_through">
+                        <strong>Despatched through</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['dispatched_through']"/>
+                    </td>
+                    <td name="l10n_in_destination">
+                        <strong>Destination</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['destination']"/>
+                    </td>
+                </tr>
+                <tr t-if="header_values['transport_document_no'] or header_values['vehicle_no']" name="l10n_in_transport_row">
+                    <td>
+                        <strong>Bill of Lading/LR-RR No.</strong>
+                        <div class="l10n_in_reference_value">
+                            <span t-out="header_values['transport_document_no']"/>
+                            <t t-if="header_values['transport_document_date']"> / <span t-out="header_values['transport_document_date']" t-options="{'widget': 'date', 'format': 'dd-MMM-yyyy'}"/></t>
+                        </div>
+                    </td>
+                    <td>
+                        <strong>Motor Vehicle No.</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['vehicle_no']"/>
+                    </td>
+                </tr>
+                <tr name="l10n_in_delivery_terms_row">
+                    <td colspan="2">
+                        <strong>Terms of Delivery</strong>
+                        <div class="l10n_in_reference_value" t-out="header_values['terms_of_delivery']"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <!-- Carry the selected layout's visual language into the compact header itself. -->
+    <template id="invoice_header_art">
+        <svg t-if="l10n_in_layout == 'bubble'" class="l10n_in_header_art" name="l10n_in_art_bubble" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <ellipse cx="220" cy="30" rx="390" ry="360" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".12"/>
+            <circle cx="920" cy="330" r="100" t-att-fill="o.company_id.secondary_color or '#48776F'" fill-opacity=".12"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'wave'" class="l10n_in_header_art" name="l10n_in_art_wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <path d="M0 0H1000V285C780 355 680 245 470 300C280 350 150 280 0 315Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".10"/>
+            <path d="M0 315C230 260 330 345 520 305C720 260 830 345 1000 300V320C800 365 700 285 510 325C300 365 180 290 0 335Z" t-att-fill="o.company_id.secondary_color or '#48776F'" fill-opacity=".16"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'folder'" class="l10n_in_header_art" name="l10n_in_art_folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <path d="M0 0H440L495 50V295L450 340H0Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".10"/>
+            <path d="M0 0H440L460 18H0Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".35"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'dual'" class="l10n_in_header_art" name="l10n_in_art_dual" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <path d="M0 0H1000V12L0 50Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".16"/>
+            <path d="M0 0H20L0 340Z" t-att-fill="o.company_id.secondary_color or '#48776F'" fill-opacity=".35"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'lines'" class="l10n_in_header_art" name="l10n_in_art_lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none" fill="none" t-att-stroke="o.company_id.primary_color or '#243746'" stroke-opacity=".22" stroke-width="2">
+            <path d="M0 0C0 70 24 80 24 170S24 300 0 340"/>
+            <path d="M5 0C5 70 29 80 29 170S29 300 5 340"/>
+            <path d="M10 0C10 70 34 80 34 170S34 300 10 340"/>
+            <path d="M15 0C15 70 39 80 39 170S39 300 15 340"/>
+            <path d="M20 0C20 70 44 80 44 170S44 300 20 340"/>
+        </svg>
+    </template>
+
+    <!-- Like the Latin American reports, replace each standard supplier header only for this report. -->
+    <template id="external_layout_legacy_invoice" inherit_id="account.external_layout_legacy">
+        <xpath expr="//style" position="inside">
+                .o_legacy_document .l10n_in_header_design { border: 1px solid #333; margin-bottom: 0; }
+                .o_legacy_document .l10n_in_document_header > tbody > tr > td:first-child { padding-right: 0; border-right: 1px solid #333; }
+                .o_legacy_document .l10n_in_reference_card { border-top: 0 !important; }
+                .o_legacy_document .l10n_in_document_title { color: #111 !important; }
+                .o_legacy_document .l10n_in_supplier_name { font-size: 15px; }
+                .o_legacy_document .l10n_in_reference_table td, .o_legacy_document .l10n_in_parties td { border-color: #333 !important; }
+        </xpath>
+    </template>
+
+    <template id="external_layout_standard_invoice" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_bubble_invoice" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='customized_address_layout']" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_wave_invoice" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_folder_invoice" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='customized_address_layout']" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_center_invoice" inherit_id="web.external_layout_center">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_dual_invoice" inherit_id="web.external_layout_dual">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_lines_invoice" inherit_id="web.external_layout_lines">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_compact_invoice" inherit_id="web.external_layout_compact">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_body_invoice" inherit_id="web.external_layout_body">
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if" add="not l10n_in_invoice_header" separator=" and "/>
+        </xpath>
+    </template>
+
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
     <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr="//t[@t-call='web.html_container']" position="attributes">
+            <attribute name="data_report_margin_top">12 if docs and all(doc._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit' for doc in docs) else data_report_margin_top</attribute>
+            <attribute name="data_report_header_spacing">0 if docs and all(doc._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit' for doc in docs) else data_report_header_spacing</attribute>
+        </xpath>
         <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
             <t t-elif="o._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit'"
                t-call="l10n_in.l10n_in_report_invoice_document_inherit"
@@ -206,6 +600,20 @@
         </div>
     </template>
 
+    <template id="billing_heading">
+        <strong class="d-block mb-2 l10n_in_party_heading">
+            <t t-if="o.l10n_in_is_self_invoice or o.move_type in ('in_invoice', 'in_refund')">Bill From (Supplier)</t>
+            <t t-else="">Bill To (Buyer)</t>
+        </strong>
+    </template>
+
+    <template id="partner_state">
+        <div t-if="partner.country_id.code == 'IN' and partner.state_id">
+            State: <span t-field="partner.state_id.name"/>
+            <t t-if="partner.state_id.l10n_in_tin">, Code: <span t-field="partner.state_id.l10n_in_tin"/></t>
+        </div>
+    </template>
+
     <template id="l10n_in_invoice_document_duplicate">
         <t t-call="l10n_in.document_renderer" copies_to_print="['ORIGINAL FOR RECIPIENT', 'DUPLICATE FOR SUPPLIER']"/>
     </template>
@@ -215,7 +623,7 @@
     </template>
 
     <template id="document_renderer">
-        <t t-call="web.html_container">
+        <t t-call="web.html_container" data_report_margin_top="12" data_report_header_spacing="0">
             <t t-foreach="docs" t-as="o">
                 <t t-foreach="copies_to_print" t-as="l10n_in_report_title">
                     <t t-set="lang" t-value="o.partner_id.lang"/>

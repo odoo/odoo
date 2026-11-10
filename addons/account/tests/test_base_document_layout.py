@@ -1,3 +1,5 @@
+from lxml import html
+
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 
@@ -8,6 +10,28 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestAccountBaseDocumentLayout(AccountTestInvoicingCommon):
 
     _test_user_groups = None
+
+    def test_legacy_layout_invoice_and_preview(self):
+        company = self.company_data['company']
+        layout = self.env.ref('account.report_layout_legacy')
+        company.external_report_layout_id = layout.view_id
+        invoice = self.init_invoice('out_invoice', amounts=[100, 200])
+        invoice.ref = 'Buyer PO 42'
+        for view in (layout.view_id, self.env.ref('web.external_layout_standard')):
+            company.external_report_layout_id = view
+            content = self.env['ir.ui.view']._render_template('account.report_invoice_document', {
+                'o': invoice, 'lang': 'en_US', 'report_type': 'html',
+            })
+            tree = html.fromstring(content)
+            self.assertEqual(len(tree.xpath('//div[@id="informations"]')), 1)
+            self.assertEqual(len(tree.xpath('//table[@name="invoice_line_table"]')), 1)
+            self.assertIn('Buyer PO 42', tree.text_content())
+            self.assertEqual(bool(tree.xpath('//table[@name="legacy_document_header"]')), view == layout.view_id)
+        company.external_report_layout_id = layout.view_id
+        wizard = self.env['base.document.layout'].create({
+            'company_id': company.id, 'report_layout_id': layout.id,
+        })
+        self.assertIn('o_legacy_document', str(wizard.preview))
 
     @classmethod
     def setUpClass(cls):
