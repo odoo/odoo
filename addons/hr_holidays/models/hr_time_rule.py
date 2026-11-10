@@ -13,15 +13,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _on_sources_collected(self, sources):
         """Reverse prior allocation credits before the batch is re-evaluated.
 
-        - child outputs and sources are reversed so the pipeline can recompute from scratch.
-        - in-place outputs (time_rule_id set, no source pointer) keep their credit
-          because the evaluation will not reclassify them.
-
         :param sources: records of the source model
         """
         reversed_ids = self.env.context.get('time_rule_reversed_ids')
-        source_field = sources._time_rule_source_field
-        to_reverse = set(sources.filtered(lambda s: not s.time_rule_id or s[source_field]).ids)
+        to_reverse = set(sources.ids)
         if reversed_ids is not None:
             to_reverse -= reversed_ids
             reversed_ids |= to_reverse
@@ -125,10 +120,10 @@ class HrTimeRule(models.Model):
             if rule.leave_compensation_rate > 0 and rule.allocation_type_id:
                 dt = source[source._time_rule_span_start_field]
                 emps_by_date[dt.date() if hasattr(dt, 'date') else dt] |= employee
-        hours_per_day_cache = {}
+        hpd_cache = {}
         for source_date, employees in emps_by_date.items():
-            for emp_id, hours_per_day in employees._get_hours_per_day_batch(source_date).items():
-                hours_per_day_cache[emp_id, source_date] = hours_per_day or 8.0
+            for emp_id, hpd in employees._get_hours_per_day_batch(source_date).items():
+                hpd_cache[emp_id, source_date] = hpd or 8.0
 
         excess_by_key = defaultdict(float)
         log_by_source = defaultdict(float)
@@ -139,7 +134,7 @@ class HrTimeRule(models.Model):
                 continue
             dt = source[source._time_rule_span_start_field]
             source_date = dt.date() if hasattr(dt, 'date') else dt
-            hours_per_day = hours_per_day_cache[employee.id, source_date]
+            hours_per_day = hpd_cache[employee.id, source_date]
             alloc_days = excess_hours * rule.leave_compensation_rate / hours_per_day
             if alloc_days > 0:
                 key = (employee, rule.allocation_type_id)
@@ -154,7 +149,7 @@ class HrTimeRule(models.Model):
                 continue
             dt = source[source._time_rule_span_start_field]
             source_date = dt.date() if hasattr(dt, 'date') else dt
-            hours_per_day = hours_per_day_cache[employee.id, source_date]
+            hours_per_day = hpd_cache[employee.id, source_date]
             deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
             if deduct > 0:
                 key = (employee, rule.allocation_type_id)
@@ -252,7 +247,10 @@ class HrTimeRule(models.Model):
         :param dict active_iv: ``{employee: {source: Intervals}}``
         """
         new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
-        self._apply_allocation_credits(excess_alloc, deficit_alloc)
+        self._apply_allocation_credits(
+            excess_alloc, deficit_alloc,
+            approve_ctx={'leave_skip_state_check': True},
+        )
         if all_source_ids:
             Leave = self.env['hr.leave'].sudo()
             sources = Leave.with_context(active_test=False).browse(list(all_source_ids))
