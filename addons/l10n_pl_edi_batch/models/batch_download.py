@@ -313,14 +313,14 @@ class BatchDownload(models.Model):
                 data = Service(company).download_batch_status(batch.name)
                 old_date_to = batch.date_to
                 package = data['content'].get('package') or {}
-                if is_truncated := (batch.kind == 'historic' and package.get('isTruncated')):
+                if is_truncated := package.get('isTruncated'):
                     data['date_to'] = parse(package['lastInvoicingDate']).astimezone(timezone.utc).replace(tzinfo=None)
 
                 batch.update(data)
                 if batch.state == 'downloading':
                     batch.retry_count = 0  # the download counts its own retries
                     self.env.ref(CRON_DOWNLOAD)._trigger()
-                    # A truncated historic export: this batch now ends where KSeF stopped, request the rest
+                    # A truncated export: this batch now ends where KSeF stopped, request the rest
                     if is_truncated:
                         self._create_batch_download(company, batch.date_to, old_date_to)
                 elif batch.state == 'done' and batch.kind == 'historic':
