@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.addons.pos_online_payment.controllers.payment_portal import PaymentPortal
 
@@ -11,6 +12,14 @@ class PaymentPortalSelfOrder(PaymentPortal):
         pos_order = request.env['pos.order'].sudo().browse(pos_order_id)
         pos_order._send_notification_online_payment_status('progress')
         return super().pos_order_pay(pos_order_id, access_token=access_token, exit_route=exit_route)
+
+    def _check_additional_payment_guards(self, pos_order_sudo):
+        super()._check_additional_payment_guards(pos_order_sudo)
+        try:
+            pos_order_sudo._check_preset_slot_availability()
+        except ValidationError:
+            pos_order_sudo._send_notification_online_payment_status('fail')
+            raise
 
     @http.route()
     def pos_order_pay_confirmation(self, pos_order_id, tx_id=None, access_token=None, exit_route=None, **kwargs):

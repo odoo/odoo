@@ -257,6 +257,7 @@ export class PresetInfoPopup extends Component {
             }
         }
         this.selfOrder.currentOrder.setPreset(preset);
+        this.selfOrder.currentOrder.uiState.forceNextSync = true;
         this.state.selectedSlot = null;
         this.state.validationError = null;
         await this.selfOrder.syncPresetSlotAvaibility(preset);
