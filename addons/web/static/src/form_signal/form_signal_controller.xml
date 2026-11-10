@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormSignalController">
+        <div t-att-class="this.props.className">
+            <Layout display="this.props.display">
+                <t t-set-slot="control-panel-buttons">
+                    <button t-if="this.model.isDirty()" type="button" class="btn btn-primary o_form_button_save" t-on-click="() => this.model.save()">Save</button>
+                </t>
+                <t t-component="this.props.Renderer"
+                   record="this.model.record()"
+                   fields="this.props.fields"
+                   fieldNames="this.props.fieldNames"/>
+            </Layout>
+        </div>
+    </t>
+
+</templates>
