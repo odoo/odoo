@@ -2,12 +2,12 @@ import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { Component, computed, onPatched, useEffect, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { toCommands } from "@web/model/store/commands";
-import { fields } from "@web/model/store/fields";
-import { Model } from "@web/model/store/model";
-import { RecordStore } from "@web/model/store/store";
+import { toCommands } from "@web/form_signal/model/commands";
+import { fields } from "@web/form_signal/model/fields";
+import { Model } from "@web/form_signal/model/model";
+import { RecordStore } from "@web/form_signal/model/store";
 
-/** @import { Many2many, Many2one, One2many } from "@web/model/store/fields" */
+/** @import { Many2many, Many2one, One2many } from "@web/form_signal/model/fields" */
 
 describe.current.tags("headless");
 
