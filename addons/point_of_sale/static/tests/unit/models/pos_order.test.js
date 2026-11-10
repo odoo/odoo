@@ -536,6 +536,63 @@ test("priceDoesntChangeWhenChangingPresetMultipleQuantity", async () => {
     );
 });
 
+test("comboLineSplitFollowsChoicesSequence", async () => {
+    const store = await setupPosEnv();
+    store.models["pos.preset"].get(1).pricelist_id = false;
+    store.models["product.product"].get(7).lst_price = 100;
+    const chairsCombo = store.models["product.combo"].get(1);
+    const desksCombo = store.models["product.combo"].get(2);
+    chairsCombo.qty_free = 2;
+    chairsCombo.qty_max = 2;
+    const template = store.models["product.template"].get(7);
+    // The chairs choice is displayed last but comes first in the configurator payload (by id)
+    template.combo_ids = [desksCombo.id, chairsCombo.id];
+    const chair = store.models["product.combo.item"].get(1);
+    const desk = store.models["product.combo.item"].get(3);
+
+    const checkComboLines = async (basePrice, expectedLines) => {
+        chairsCombo.base_price = basePrice;
+        desksCombo.base_price = basePrice;
+        const order = store.addNewOrder();
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: template,
+                payload: [
+                    [
+                        { combo_item_id: chair, qty: 2 },
+                        { combo_item_id: desk, qty: 1 },
+                    ],
+                ],
+                qty: 1,
+            },
+            order
+        );
+        const getComboLines = () =>
+            order.lines[0].combo_line_ids.map((line) => [
+                line.combo_item_id.id,
+                line.qty,
+                Math.round(line.price_unit * 100) / 100,
+            ]);
+        expect(getComboLines()).toEqual(expectedLines);
+        // The prices are recomputed when the pricelist is set
+        order.setPricelist(order.pricelist_id);
+        expect(getComboLines()).toEqual(expectedLines);
+    };
+
+    // The last chair absorbs the rounding difference
+    await checkComboLines(10, [
+        [desk.id, 1, 33.33],
+        [chair.id, 1, 33.33],
+        [chair.id, 1, 33.34],
+    ]);
+    // Choices with a free product have a 0 base price: the last chair gets the combo price
+    await checkComboLines(0, [
+        [desk.id, 1, 0],
+        [chair.id, 1, 0],
+        [chair.id, 1, 100],
+    ]);
+});
+
 test("Ignore attribute always extra price with combo", async () => {
     const store = await setupPosEnv();
     store.models["pos.preset"].get(1).pricelist_id = false;
