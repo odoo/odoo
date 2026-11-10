@@ -155,12 +155,18 @@ function computePosition(
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
-    const contBox = container.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
+<<<<<<< 4123f65598fbb48126c31d442883df3c1f2fd8fb
     const containerIsInIframe =
         shouldAccountForIFrame && target.ownerDocument === container.ownerDocument;
+||||||| f7babde9d5e27a82c05a4fc293f8b14b178bcf43
+=======
+    const contBox = containerIsHTMLNode
+        ? { top: 0, left: 0, right: container.clientWidth, bottom: container.clientHeight }
+        : container.getBoundingClientRect();
+>>>>>>> 28c6f43ed8234bd6618fb36d71d0599eb44e02cf
 
     // Compute positioning data
     const directionsData = {
@@ -192,6 +198,7 @@ function computePosition(
             ? [iframeBox.left, iframeBox.top]
             : [0, 0];
 
+<<<<<<< 4123f65598fbb48126c31d442883df3c1f2fd8fb
         const [directionSize, variantSize] = vertical
             ? [popBox.height, popBox.width]
             : [popBox.width, popBox.height];
@@ -201,7 +208,31 @@ function computePosition(
         let [variantMin, variantMax] = vertical
             ? [contBox.left + leftCompensation, contBox.right + leftCompensation]
             : [contBox.top + topCompensation, contBox.bottom + topCompensation];
+||||||| f7babde9d5e27a82c05a4fc293f8b14b178bcf43
+        if (containerRestricted) {
+            const [directionSize, variantSize] = vertical
+                ? [popBox.height, popBox.width]
+                : [popBox.width, popBox.height];
+            let [directionMin, directionMax] = vertical
+                ? [contBox.top, contBox.bottom]
+                : [contBox.left, contBox.right];
+            let [variantMin, variantMax] = vertical
+                ? [contBox.left, contBox.right]
+                : [contBox.top, contBox.bottom];
+=======
+        if (containerRestricted) {
+            const [directionSize, variantSize] = vertical
+                ? [popBox.height, popBox.width]
+                : [popBox.width, popBox.height];
+            const [directionMin, directionMax] = vertical
+                ? [contBox.top, contBox.bottom]
+                : [contBox.left, contBox.right];
+            const [variantMin, variantMax] = vertical
+                ? [contBox.left, contBox.right]
+                : [contBox.top, contBox.bottom];
+>>>>>>> 28c6f43ed8234bd6618fb36d71d0599eb44e02cf
 
+<<<<<<< 4123f65598fbb48126c31d442883df3c1f2fd8fb
         if (containerIsHTMLNode) {
             if (vertical) {
                 directionMin += container.scrollTop;
@@ -210,6 +241,63 @@ function computePosition(
                 variantMin += container.scrollTop;
                 variantMax += container.scrollTop;
             }
+||||||| f7babde9d5e27a82c05a4fc293f8b14b178bcf43
+            if (containerIsHTMLNode) {
+                if (vertical) {
+                    directionMin += container.scrollTop;
+                    directionMax += container.scrollTop;
+                } else {
+                    variantMin += container.scrollTop;
+                    variantMax += container.scrollTop;
+                }
+            }
+
+            // Compute overflows
+            let directionOverflow = 0;
+            if (Math.floor(directionValue) < Math.ceil(directionMin)) {
+                directionOverflow = Math.floor(directionValue) - Math.ceil(directionMin);
+            } else if (Math.ceil(directionValue + directionSize) > Math.floor(directionMax)) {
+                directionOverflow =
+                    Math.ceil(directionValue + directionSize) - Math.floor(directionMax);
+            }
+            let variantOverflow = 0;
+            if (Math.floor(variantValue) < Math.ceil(variantMin)) {
+                variantOverflow = Math.floor(variantValue) - Math.ceil(variantMin);
+            } else if (Math.ceil(variantValue + variantSize) > Math.floor(variantMax)) {
+                variantOverflow = Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
+            }
+
+            // All non zero values of variantOverflow lead to the
+            // same malus value since it can be corrected by shifting
+            malus = Math.abs(directionOverflow) + (variantOverflow && 1);
+
+            // Apply variant offset
+            variantValue -= variantOverflow;
+            result.variantOffset = -variantOverflow;
+=======
+            // Compute overflows
+            let directionOverflow = 0;
+            if (Math.floor(directionValue) < Math.ceil(directionMin)) {
+                directionOverflow = Math.floor(directionValue) - Math.ceil(directionMin);
+            } else if (Math.ceil(directionValue + directionSize) > Math.floor(directionMax)) {
+                directionOverflow =
+                    Math.ceil(directionValue + directionSize) - Math.floor(directionMax);
+            }
+            let variantOverflow = 0;
+            if (Math.floor(variantValue) < Math.ceil(variantMin)) {
+                variantOverflow = Math.floor(variantValue) - Math.ceil(variantMin);
+            } else if (Math.ceil(variantValue + variantSize) > Math.floor(variantMax)) {
+                variantOverflow = Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
+            }
+
+            // All non zero values of variantOverflow lead to the
+            // same malus value since it can be corrected by shifting
+            malus = Math.abs(directionOverflow) + (variantOverflow && 1);
+
+            // Apply variant offset
+            variantValue -= variantOverflow;
+            result.variantOffset = -variantOverflow;
+>>>>>>> 28c6f43ed8234bd6618fb36d71d0599eb44e02cf
         }
 
         // Compute overflows
