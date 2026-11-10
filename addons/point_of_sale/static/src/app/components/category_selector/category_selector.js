@@ -14,9 +14,9 @@ export class CategorySelector extends Component {
     getCategoriesList(list, allParents, depth) {
         const categoriesList = [...list];
         list.forEach((item) => {
-            if (item.id === allParents[depth]?.id && item.child_ids?.length) {
+            if (item.id === allParents[depth]?.id) {
                 categoriesList.push(
-                    ...this.getCategoriesList(item.child_ids, allParents, depth + 1)
+                    ...this.getCategoriesList(item.children, allParents, depth + 1)
                 );
             }
         });
@@ -24,13 +24,9 @@ export class CategorySelector extends Component {
     }
 
     getCategoriesAndSub() {
-        const rootCategories = [...this.pos.rootCategories].sort(
-            (a, b) => a.sequence - b.sequence || a.name.localeCompare(b.name)
-        );
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
-        return this.getCategoriesList(rootCategories, allParents, 0)
-            .flat(Infinity)
+        return this.getCategoriesList(this.pos.rootCategories, allParents, 0)
             .filter((c) => c.hasProductsToShow)
             .map(this.getChildCategoriesInfo, this);
     }
@@ -55,7 +51,7 @@ export class CategorySelector extends Component {
     }
 
     getChildCategories(selectedCategory) {
-        return selectedCategory ? [...selectedCategory.child_ids] : this.pos.rootCategories;
+        return selectedCategory ? selectedCategory.children : this.pos.rootCategories;
     }
 
     hasParent() {

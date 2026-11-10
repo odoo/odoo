@@ -22,6 +22,7 @@ import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { SnoozeTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { InfoPopup } from "@pos_self_order/app/components/info_popup/info_popup";
 import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestion";
+import { compareCategories } from "@point_of_sale/app/models/pos_category";
 import { session } from "@web/session";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
@@ -244,7 +245,7 @@ export class SelfOrder {
                     (p) => p.self_order_available
                 )
             )
-            .sort((a, b) => a.sequence - b.sequence);
+            .sort(compareCategories);
         return availableCategories.filter((c) => {
             const hourStart = c.hour_after;
             const hourUntil = c.hour_until;
@@ -281,7 +282,7 @@ export class SelfOrder {
                 topCategories.push(topCategory);
             }
         }
-        return topCategories.sort((a, b) => a.sequence - b.sequence);
+        return topCategories.sort(compareCategories);
     }
 
     isCategoryAvailable(categId) {
