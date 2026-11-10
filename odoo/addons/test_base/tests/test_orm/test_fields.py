@@ -3,6 +3,7 @@ import io
 from collections import OrderedDict
 from contextlib import contextmanager
 from datetime import date, datetime
+from decimal import Decimal
 from unittest.mock import patch
 
 import psycopg2
@@ -12,7 +13,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, new_test_user, tagged, users
-from odoo.tools import BinaryBytes, float_repr, mute_logger, sql
+from odoo.tools import BinaryBytes, mute_logger, sql
 from odoo.tools.image import binary_to_image, image_data_uri
 
 from .test_domain_expression import TransactionExpressionCase
@@ -1043,29 +1044,25 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def check_monetary(self, record, amount, currency, msg=None):
         # determine the possible roundings of amount
-        if currency:
-            ramount = currency.round(amount)
-            samount = float(float_repr(ramount, currency.decimal_places))
-        else:
-            ramount = samount = amount
+        ramount = currency.round(amount) if currency else amount
 
         # check the currency on record
         self.assertEqual(record.currency_id, currency)
 
         # check the value on the record
-        self.assertIn(record.monetary, [ramount, samount], msg)
+        self.assertEqual(Decimal(str(record.monetary)), ramount, msg)
 
         # check the value in the database
         self.env.flush_all()
         self.cr.execute('SELECT monetary FROM test_orm_mixed WHERE id=%s', [record.id])
         value = self.cr.fetchone()[0]
-        self.assertEqual(value, samount, msg)
+        self.assertEqual(value, ramount, msg)
 
     def test_20_monetary(self):
         """ test monetary fields """
         model = self.env['test_orm.mixed']
         currency = self.env['res.currency'].with_context(active_test=False)
-        amount = 14.70126
+        amount = Decimal('14.70126')
 
         for rounding in [0.01, 0.0001, 1.0, 0]:
             # first retrieve a currency corresponding to rounding
@@ -1117,7 +1114,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             monetary_related.ids,
         )
         [total] = self.env.cr.fetchone()
-        self.assertEqual(total, .33)
+        self.assertEqual(total, Decimal('.33'))
 
     def test_20_like(self):
         """ test filtered_domain() on char fields. """

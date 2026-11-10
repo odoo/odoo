@@ -2202,7 +2202,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
 
         with self.assertQueries(["""
             SELECT
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
+                SUM(CAST("test_read_group_aggregate_monetary"."total_in_currency_id" AS FLOAT)),
                 ARRAY_AGG(
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
@@ -2289,7 +2289,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.MonetaryAgg.formatted_read_group([], [], aggregates)
         with self.assertQueries(["""
             SELECT
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
+                SUM(CAST("test_read_group_aggregate_monetary"."total_in_currency_id" AS FLOAT)),
                 ARRAY_AGG(
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"

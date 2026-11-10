@@ -59,6 +59,7 @@ scriptsafe = JSON()
 
 
 def json_default(obj):
+    from decimal import Decimal  # noqa: PLC0415
     from odoo import fields  # noqa: PLC0415
     if isinstance(obj, datetime):
         return fields.Datetime.to_string(obj)
@@ -82,6 +83,8 @@ def json_default(obj):
         return res
     if isinstance(obj, fields.Domain):
         return list(obj)
+    if isinstance(obj, Decimal):
+        return float(obj)
     if (as_dict_func := getattr(obj, 'as_dict', None)) and callable(as_dict_func):
         return as_dict_func()
     return str(obj)
