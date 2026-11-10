@@ -183,7 +183,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                 </div>
 
                 <div class="mb-3 field-login">
-                    <label for="login" class="form-label d-flex justify-content-between">Email</label>
+                    <label for="login" class="form-label">Email</label>
                     <input type="text" placeholder="Enter your email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
                 </div>
 
@@ -193,7 +193,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                     </div>
                     <div class="input-group mb-1">
                         <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
-                        <button type="button" class="btn btn-sm border border-start-0 o_show_password" aria-label="Show password">
+                        <button type="button" class="btn btn-sm border border-start-0 o_show_password" aria-label="Show password" tabindex="0">
                             <i class="oi" data-icon="visibility" aria-hidden="true"/>
                         </button>
                     </div>
@@ -207,7 +207,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                 </p>
 
                 <div class="oe_login_buttons text-center d-grid mb-1 pt-3">
-                    <button type="submit" class="btn btn-primary">Log in</button>
+                    <button type="submit" class="btn btn-primary" tabindex="0">Log in</button>
                     <t t-if="debug">
                         <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm">Log in as superuser</button>
                     </t>
@@ -219,6 +219,14 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
             </form>
             <div class="oe_structure" id="oe_structure_login_bottom"/>
         </t>
+    </template>
+
+    <!-- "Choose a user" is added through an inheriting template, so that the login
+    pages edited with the website builder get it too -->
+    <template id="web.login_user_switch_slot" inherit_id="web.login" name="Login: user switch slot">
+        <xpath expr="//div[hasclass('oe_login_buttons')]/button" position="after">
+            <div class="o_login_user_switch d-grid"/>
+        </xpath>
     </template>
 
     <template id="web.login_successful" name="Login successful">
