@@ -16,7 +16,7 @@ patch(PaymentPage.prototype, {
 
     get frameLanguage() {
         const lang = this.selfOrder.currentLanguage?.code?.split("_")?.[0];
-        return ["fr", "nl"].includes(lang) ? lang : "fr";
+        return ["en", "fr", "nl", "de"].includes(lang) ? lang : "en";
     },
 
     async startPayment() {
