@@ -50,7 +50,7 @@
                             <div t-if="not group.is_closed" class="o_mg_subscribe_form d-flex justify-content-end" t-att-data-is-member="force_unsubscribe or is_member">
                                 <button href="#" t-attf-class="{{ 'd-none' if not (force_unsubscribe or is_member) else '' }} btn btn-outline-primary o_mg_subscribe_btn o_mg_unsubscribe_btn">Unsubscribe</button>
                                 <div t-attf-class="{{ 'd-none' if force_unsubscribe or is_member else '' }} {{ 'input-group' if not int(bool(email)) else '' }} o_mg_email_input_group">
-                                    <input type="email" name="email" t-attf-class="o_mg_subscribe_email form-control {{ 'd-none' if int(bool(email)) else '' }}" t-att-value="email" placeholder="your email..." t-att-readonly="int(bool(email))"/>
+                                    <input type="email" name="email" autocomplete="email" t-attf-class="o_mg_subscribe_email form-control {{ 'd-none' if int(bool(email)) else '' }}" t-att-value="email" placeholder="your email..." t-att-readonly="int(bool(email))"/>
                                     <button href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
                                 </div>
                             </div>
