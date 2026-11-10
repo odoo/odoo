@@ -491,6 +491,7 @@ class MrpWorkorder(models.Model):
         values = vals
         new_workcenter = False
         if 'qty_produced' in values:
+            values['qty_produced'] = float(values['qty_produced'])
             for wo in self:
                 if wo.uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))

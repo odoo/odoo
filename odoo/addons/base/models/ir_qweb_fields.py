@@ -2,6 +2,7 @@ from datetime import time
 import logging
 import math
 import re
+from decimal import Decimal
 
 import babel.dates
 from markupsafe import Markup, escape, escape_silent
@@ -525,6 +526,9 @@ class IrQwebFieldMonetary(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         display_currency = options['display_currency']
+
+        if isinstance(value, Decimal):
+            value = float(value)
 
         if not isinstance(value, (int, float)):
             raise ValueError(_("The value send to monetary field is not a number."))

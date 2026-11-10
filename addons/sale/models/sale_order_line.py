@@ -1887,7 +1887,7 @@ class SaleOrderLine(models.Model):
                 lambda r: (
                     r.state == "sale"
                     and float_compare(
-                        r.product_uom_qty, values["product_uom_qty"], precision_digits=precision
+                        r.product_uom_qty, float(values["product_uom_qty"]), precision_digits=precision
                     )
                     != 0
                 )
