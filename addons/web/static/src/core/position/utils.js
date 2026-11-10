@@ -105,10 +105,12 @@ function computePosition(popper, target, { container, margin, position }) {
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
-    const contBox = container.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
+    const contBox = containerIsHTMLNode
+        ? { top: 0, left: 0, right: container.clientWidth, bottom: container.clientHeight }
+        : container.getBoundingClientRect();
 
     // Compute positioning data
     const directionsData = {
@@ -140,22 +142,12 @@ function computePosition(popper, target, { container, margin, position }) {
             const [directionSize, variantSize] = vertical
                 ? [popBox.height, popBox.width]
                 : [popBox.width, popBox.height];
-            let [directionMin, directionMax] = vertical
+            const [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
-            let [variantMin, variantMax] = vertical
+            const [variantMin, variantMax] = vertical
                 ? [contBox.left, contBox.right]
                 : [contBox.top, contBox.bottom];
-
-            if (containerIsHTMLNode) {
-                if (vertical) {
-                    directionMin += container.scrollTop;
-                    directionMax += container.scrollTop;
-                } else {
-                    variantMin += container.scrollTop;
-                    variantMax += container.scrollTop;
-                }
-            }
 
             // Compute overflows
             let directionOverflow = 0;
