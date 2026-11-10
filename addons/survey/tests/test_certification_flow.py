@@ -17,6 +17,8 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
 
     @freeze_time("2020-02-15 18:00")
     def test_flow_certification(self):
+        self._warm_ir_cache()
+
         # Step: survey user creates the certification
         # --------------------------------------------------
         with self.with_user('survey_user'):

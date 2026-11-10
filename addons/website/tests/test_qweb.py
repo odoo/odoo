@@ -582,13 +582,13 @@ class TestQwebDataSnippet(TransactionCase):
         t_call_snippets = 2  # number of nested t-calls (t-call > view > t-call > other views...)
 
         # website_blog/event/sale add snippets calling s_dynamic_snippet_template
-        # with nested preview data t-calls, which adds 2 levels of nesting.
+        # with nested preview data t-calls, which adds 1 level of nesting.
         installed_modules = self.env['ir.module.module']._installed()
         if any(
             module in installed_modules
             for module in ('website_blog', 'website_event', 'website_sale')
         ):
-            t_call_snippets += 2
+            t_call_snippets += 1
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
         ir_cache = 1 + t_call_snippets  # compiled code read from ir.cache, in batch for each level of t-calls
 
