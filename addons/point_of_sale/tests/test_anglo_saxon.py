@@ -306,8 +306,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         closing_move = self.env['account.move'].browse(
             self.company.action_close_stock_valuation(auto_post=True)['res_id'])
         self.assertRecordValues(closing_move.line_ids.sorted(lambda line: line.debit), [
-            {'account_id': valuation_account.id, 'debit': 0,   'credit': 100},
-            {'account_id': variation_account.id, 'debit': 100, 'credit': 0},
+            {'account_id': variation_account.id, 'debit': 0,   'credit': 100},
+            {'account_id': valuation_account.id, 'debit': 100, 'credit': 0},
         ])
 
         # deliver one unit and backorder the rest
