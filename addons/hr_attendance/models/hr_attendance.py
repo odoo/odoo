@@ -667,11 +667,23 @@ class HrAttendance(models.Model):
             return
 
         today = yesterday + relativedelta(days=1)
-        checked_in_employees = self.env['hr.attendance'].search([
+        # Attendances are in UTC but yesterday is the employee's local day: search a window
+        # covering every timezone, then keep the attendances within the employee's own day.
+        attendances = self.env['hr.attendance'].search([
             '|',
-                '&', ('check_in', '>=', yesterday), ('check_in', '<=', today),
-                '&', ('check_out', '>=', yesterday), ('check_out', '<=', today),
-        ]).employee_id
+                '&', ('check_in', '>=', yesterday - relativedelta(days=1)), ('check_in', '<=', today + relativedelta(days=1)),
+                '&', ('check_out', '>=', yesterday - relativedelta(days=1)), ('check_out', '<=', today + relativedelta(days=1)),
+        ])
+        tz_by_employee = attendances.employee_id._get_tz_batch()
+
+        def is_yesterday(attendance):
+            tz = pytz.timezone(tz_by_employee[attendance.employee_id.id])
+            day_start = tz.localize(yesterday).astimezone(pytz.utc).replace(tzinfo=None)
+            day_stop = tz.localize(today).astimezone(pytz.utc).replace(tzinfo=None)
+            return day_start <= attendance.check_in <= day_stop or (
+                attendance.check_out and day_start <= attendance.check_out <= day_stop)
+
+        checked_in_employees = attendances.filtered(is_yesterday).employee_id
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([

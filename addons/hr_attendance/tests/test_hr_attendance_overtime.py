@@ -2095,3 +2095,35 @@ class TestHrAttendanceOvertime(HttpCase):
             self.env['hr.attendance']._cron_absence_detection()
         overtimes = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id)])
         self.assertEqual(overtimes.mapped('status'), ['approved'])
+
+    def test_absence_detection_rerun_east_of_utc(self):
+        """ The absence detection runs several times a day. For an employee east
+        of UTC, the absence created by the first run starts before midnight UTC:
+        the next runs must still find it and not create it again. """
+        self.company.absence_management = True
+        weekly_ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset weekly schedule quantity',
+            'company_id': self.company.id,
+            'rule_ids': [Command.create({
+                'name': 'Rule weekly schedule quantity',
+                'base_off': 'quantity',
+                'expected_hours_from_contract': True,
+                'quantity_period': 'week',
+            })],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Brussels Worker',
+            'company_id': self.company.id,
+            'tz': 'Europe/Brussels',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'ruleset_id': weekly_ruleset.id,
+        })
+        # Monday 10 August 2026 is scheduled but not worked
+        for now in ('2026-08-11 02:00:00', '2026-08-11 06:00:00'):
+            with freeze_time(now):
+                self.env['hr.attendance']._cron_absence_detection()
+        absence = self.env['hr.attendance'].search([('employee_id', '=', employee.id), ('in_mode', '=', 'technical')])
+        self.assertEqual(len(absence), 1)
+        self.assertEqual(absence.check_in, datetime(2026, 8, 9, 22, 0))
