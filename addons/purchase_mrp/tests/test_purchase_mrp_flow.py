@@ -1499,6 +1499,35 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             {'product_id': components[1].id, 'value': 5.0},
         ])
 
+    def test_mo_purchase_orders_mts_else_mto(self):
+        """ A component without stock and with a 'take from stock, if unavailable,
+        trigger another rule' route is bought for the MO: the MO and the PO must
+        show each other in their smart buttons. """
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.warehouse.buy_pull_id.route_id
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "mts_else_mto"
+        self.component_a.write({
+            'seller_ids': [Command.create({'partner_id': self.partner_a.id})],
+            'route_ids': [Command.link(route_buy.id), Command.link(route_mto.id)],
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.component_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 2.0})],
+        })
+        production = self.env['mrp.production'].create({
+            'product_id': self.component_b.id,
+            'bom_id': bom.id,
+            'product_qty': 3,
+        })
+        production.action_confirm()
+
+        purchase = self.env['purchase.order.line'].search([('product_id', '=', self.component_a.id)]).order_id
+        self.assertEqual(len(purchase), 1)
+        self.assertEqual(production.purchase_order_count, 1)
+        self.assertEqual(purchase.mrp_production_count, 1)
+
     def test_mto_component_quantity_reduction_propagation(self):
         '''
         Create a MO for a product with a component with MTO & Buy routes.
