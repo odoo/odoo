@@ -145,6 +145,11 @@ class ProductTemplateAttributeValue(models.Model):
                         product=ptav.product_tmpl_id.display_name,
                     ))
         res = super().write(values)
+        if 'price_extra' in values:
+            # reset the manual sales price of the variants
+            variants = self.ptav_product_variant_ids.sudo()
+            for company in self.env['res.company'].sudo().search([]):
+                variants.with_company(company).specific_lst_price = 0.0
         if 'excluded_value_ids' in values:
             self.product_tmpl_id._create_variant_ids()
         return res

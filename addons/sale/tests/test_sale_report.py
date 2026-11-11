@@ -145,7 +145,7 @@ class TestSaleReportCurrencyRate(SaleCommon):
                         .env["res.currency.rate"]
                         .search([
                             ("name", "=", eff_date),
-                            ("currency_id", "=", self.product.currency_id.id),
+                            ("currency_id", "=", self.product.with_company(company).currency_id.id),
                             ("company_id", "=", company.id),
                         ])
                         .rate

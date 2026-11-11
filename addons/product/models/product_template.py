@@ -120,21 +120,19 @@ class ProductTemplate(models.Model):
         compute_sudo=True,
     )
 
+    # list_price: catalog price, user defined
     list_price = fields.Float(
-        'Sales Price',
-        help="Price at which the product is sold to customers.",
-        min_display_digits='Product Price',
+        'Sales Price', default=1.0,
         compute='_compute_list_price',
         compute_sql='_compute_sql_list_price',
         compute_sudo=True,
         inverse='_inverse_list_price',
+        min_display_digits='Product Price',
+        copy=True,
         tracking=True,
+        help="Price at which the product is sold to customers.",
     )
-    specific_list_price = fields.Float(
-        string="Specific Sales Price",
-        default=1.0,
-        company_dependent=True,
-    )
+    specific_list_price = fields.Float(company_dependent=True)
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
@@ -420,9 +418,7 @@ class ProductTemplate(models.Model):
 
     def _compute_sql_currency_id(self, table):
         return SQL(
-            "COALESCE(%s, %s)",
-            table.company_id.currency_id,
-            self.env.company.currency_id.id,
+            "COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id,
         )
 
     @api.depends('company_id')
@@ -435,59 +431,31 @@ class ProductTemplate(models.Model):
     def _compute_sql_cost_currency_id(self, table):
         return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
-    def _list_price_candidate_company_ids(self):
-        # self, then ancestors, then the main company (same as POS taxes)
-        candidate_ids = [str(cid) for cid in reversed(self.env.company.parent_ids.ids)]
-        main_company_id = str(self.env['res.company']._get_main_company().id)
-        if main_company_id not in candidate_ids:
-            candidate_ids.append(main_company_id)
-        return candidate_ids
+    def _get_list_price_companies(self):
+        """Return the companies to take the sales price from: the company, its parents, then the
+        main company."""
+        return self.env.company.parent_ids[::-1] | self.env['res.company']._get_main_company()
 
-    @api.depends('specific_list_price', 'company_id')
+    @api.depends('specific_list_price')
     @api.depends_context('company')
     def _compute_list_price(self):
-        candidate_ids = self._list_price_candidate_company_ids()
-        unresolved = self.browse()
+        companies = self._get_list_price_companies()
         for template in self:
-            value = 0.0
-            for company_id in candidate_ids:
-                specific_value = template.with_company(int(company_id)).specific_list_price
-                if specific_value:
-                    value = specific_value
-                    break
-            else:
-                unresolved += template
-            template.list_price = value
-        if unresolved:
-            # Last resort: any company with a price, instead of 0.0
-            unresolved.flush_recordset(['specific_list_price'])
-            self.env.cr.execute(
-                SQL(
-                    "SELECT id, (SELECT value FROM jsonb_each(specific_list_price) LIMIT 1)"
-                    " FROM %s WHERE id = ANY(%s)",
-                    SQL.identifier(self._table), unresolved.ids,
-                )
-            )
-            for template_id, value in self.env.cr.fetchall():
-                if value is not None:
-                    unresolved.browse(template_id).list_price = float(value)
+            prices = (template.with_company(company).specific_list_price for company in companies)
+            template.list_price = next((price for price in prices if price), 0.0)
+
+    def _compute_sql_list_price(self, table):
+        prices = SQL(", ").join(
+            SQL("NULLIF(%s, 0)", table._with_model(self.with_company(company)).specific_list_price)
+            for company in self._get_list_price_companies()
+        )
+        return SQL("COALESCE(%s, 0)", prices)
 
     def _inverse_list_price(self):
         for template in self:
             template.specific_list_price = template.list_price
-
-    def _compute_sql_list_price(self, table):
-        # NULLIF treats an explicit 0.0 as unset, like _compute_list_price
-        # to_flush so pending writes are flushed before aggregates like _read_group
-        raw_column = SQL.identifier(
-            table._alias, 'specific_list_price', to_flush=self._fields['specific_list_price'],
-        )
-        candidates = [
-            SQL("NULLIF((%s ->> %s)::float8, 0.0)", raw_column, cid)
-            for cid in self._list_price_candidate_company_ids()
-        ]
-        candidates.append(SQL("0.0::float8"))
-        return SQL("COALESCE(%s)", SQL(", ").join(candidates))
+        # other companies may use this price
+        self.invalidate_recordset(['list_price'], flush=False)
 
     def _compute_template_field_from_variant_field(self, fname, default=False, multi_variant=False):
         """Set the value of the given field based on the template variant values.
@@ -831,8 +799,8 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.base_unit_count and price / self.base_unit_count
 
-    @api.depends_context('company')
     @api.depends('list_price', 'base_unit_count')
+    @api.depends_context('company')
     def _compute_base_unit_price(self):
         for template in self:
             template.base_unit_price = template._get_base_unit_price(template.list_price)
@@ -1192,12 +1160,9 @@ class ProductTemplate(models.Model):
             single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
             if single_value_lines:
                 for variant in all_variants:
-                    combination = (
-                        variant.product_template_attribute_value_ids
-                        | single_value_lines.product_template_value_ids._only_active()
-                    )
+                    combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
                     # Do not add single value if the resulting combination would
-                    # be invalid anyway
+                    # be invalid anyway.
                     if (
                         len(combination) == len(lines_without_no_variants)
                         and combination.attribute_line_id == lines_without_no_variants

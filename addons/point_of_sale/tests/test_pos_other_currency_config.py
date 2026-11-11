@@ -101,11 +101,8 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted
 
     def test_pos_data_shared_product_cost_currency(self):
-        """ A shared product (company_id = False) takes its sale price and cost
-        currency from the active company. standard_price has no cross-company
-        fallback, so it must be set explicitly per company. When POS runs in a
-        company with a different currency, that explicit price must load as-is,
-        not get converted again - it's already in the POS currency.
+        """ A shared product (company_id = False) uses the currency of the active company
+        for its sales price and cost.
         """
         main_company = self.env['res.company']._get_main_company()
         self.assertNotEqual(main_company.currency_id, self.other_currency)
@@ -130,11 +127,12 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'taxes_id': [(5, 0, 0)],
             'company_id': False,
         }).with_company(other_company)
-        # Set the price in the company's own currency, not via inheritance
-        shared_product.lst_price = 100.0
+        # standard_price is company-dependent: set it for the active company, where it
+        # is therefore expressed in that company's currency (the "other" currency).
         shared_product.standard_price = 100.0
+        shared_product.lst_price = 100.0
 
-        self.assertEqual(shared_product.currency_id, other_company.currency_id)
+        self.assertEqual(shared_product.currency_id, self.other_currency)
         self.assertEqual(shared_product.cost_currency_id, self.other_currency)
 
         self.assertEqual(self.other_currency_config.currency_id, self.other_currency)

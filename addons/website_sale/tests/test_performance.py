@@ -113,7 +113,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_attribute_value": 2,
             "product_document": 2,
             "product_image": 2,
-            "product_product": 2,
+            "product_product": 3,
             "product_public_category": 2,
             "product_ribbon": 1,
             "product_tag": 2,
@@ -146,7 +146,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
     @warmup
     def test_get_combination_info_route(self):
-        no_product_change_query_count = 32
+        no_product_change_query_count = 30
         if "website_sale_stock" in self.installed_modules:
             no_product_change_query_count += 1
         with self.assertQueryCount(no_product_change_query_count):
@@ -163,7 +163,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
         # When a new combination matches another product, additional templates and values are sent
         # to the client (tags, images, ...)
-        product_change_query_count = 44
+        product_change_query_count = 42
         if "website_sale_stock" in self.installed_modules:
             product_change_query_count += 1
         with self.assertQueryCount(product_change_query_count):
@@ -254,8 +254,8 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
         if "website_sale_subscription" not in self.installed_modules:
             # FIXME VFE magic comeback when sub is installed makes no **** sense
             # Seems to come from the `website_sale` template, not the sub override strangely
-            # All variants have a fixed price rule, so list_price is never read here
             del res["account_account"]
+        res["product_product"] -= 1
         return res
 
     def test_product_page_generation(self):
@@ -389,7 +389,6 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
             res["stock_move"] += 2
             res["stock_quant"] += 1
         else:
-            res["product_product"] += 1
             res["sale_order_line"] += 1
 
         if "website_sale_mrp" in self.installed_modules:

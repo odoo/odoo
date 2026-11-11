@@ -3370,6 +3370,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
         product.with_company(self.company_data_2['company']).write({
+            'lst_price': 1000.0,
             'property_account_income_id': self.company_data_2['default_account_revenue'].id,
         })
 
