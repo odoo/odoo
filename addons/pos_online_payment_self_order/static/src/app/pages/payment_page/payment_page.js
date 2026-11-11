@@ -16,6 +16,16 @@ patch(PaymentPage.prototype, {
         }
         return super.paymentMethods;
     },
+    getPaymentMethodDisplay(paymentMethod) {
+        if (paymentMethod.type !== "online") {
+            return super.getPaymentMethodDisplay(paymentMethod);
+        }
+        const isKiosk = this.selfOrder.config.self_ordering_mode === "kiosk";
+        return {
+            icon: "smartphone",
+            hint: isKiosk ? _t("Scan the QR code with your phone") : "",
+        };
+    },
     async startPayment() {
         let order = this.selfOrder.currentOrder;
         const pm = this.selectedPaymentMethod;
