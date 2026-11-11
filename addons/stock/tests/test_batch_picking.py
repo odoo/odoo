@@ -676,6 +676,13 @@ class TestBatchPicking(TestStockBatchCommon):
         self.assertEqual(delivery.state, 'assigned')
         self.assertTrue(delivery.batch_id)
 
+        delivery.batch_id.action_cancel()
+        warehouse.out_type_id.batch_max_pickings = 1
+        delivery_2 = delivery.copy()
+        delivery_2.action_confirm()
+        delivery_2.move_ids.quantity = 1
+        self.assertEqual(len(delivery_2.batch_id.picking_ids), 1)
+
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
             Check that the batch is canceled when all transfers are deleted
