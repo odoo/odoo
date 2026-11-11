@@ -274,3 +274,39 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(self.bo_requisition.state, 'cancel')
         self.assertEqual(po_draft.state, 'cancel')
         self.assertEqual(po_confirmed.state, 'purchase')
+
+    def test_keep_description_of_purchase_agreement_in_purchase_order(self):
+        blanket_order = self.env['purchase.requisition'].create({
+            'vendor_id': self.res_partner_1.id,
+        })
+        line1, line2 = self.env['purchase.requisition.line'].create([
+            {
+                'requisition_id': blanket_order.id,
+                'product_id': self.product_13.id,
+                'product_qty': 100,
+                'price_unit': 10,
+            }, {
+                'requisition_id': blanket_order.id,
+                'product_id': self.product_13.id,
+                'product_qty': 5,
+                'price_unit': 500,
+            },
+        ])
+        line2.name = '[VIP Request]: drop from helicopter onto yacht'
+        blanket_order.action_confirm()
+        purchase_order = Form(self.env['purchase.order'].with_context(default_requisition_id=blanket_order.id)).save()
+        self.assertEqual(len(purchase_order.order_line), 2)
+        self.assertEqual(purchase_order.order_line[0].name, '')
+        self.assertEqual(purchase_order.order_line[1].name, line2.name)
+        self.assertEqual(purchase_order.order_line[0].price_unit, line1.price_unit)
+        self.assertEqual(purchase_order.order_line[1].price_unit, line2.price_unit)
+        self.assertEqual(line1.qty_ordered, 0)
+        self.assertEqual(line2.qty_ordered, 0)
+
+        purchase_order.order_line[0].product_qty = 50
+        purchase_order.order_line[1].product_qty = 3
+        purchase_order.button_confirm()
+        self.assertEqual(purchase_order.order_line[0].product_qty, 50)
+        self.assertEqual(purchase_order.order_line[1].product_qty, 3)
+        self.assertEqual(line1.qty_ordered, 50)
+        self.assertEqual(line2.qty_ordered, 3)
