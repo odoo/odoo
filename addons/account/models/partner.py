@@ -758,6 +758,21 @@ class ResPartner(models.Model):
                     vals['supplier_rank'] = 1
         return super().create(vals_list)
 
+    def _load_records_write(self, values):
+        values = {
+            fname: value
+            for fname, value in values.items()
+            if not self._is_loaded_value_unchanged(fname, value)
+        }
+        if values:
+            super()._load_records_write(values)
+
+    def _is_loaded_value_unchanged(self, fname, value):
+        field = self._fields.get(fname)
+        if not field or not field.column_type or field.translate:
+            return False
+        return field.convert_to_cache(value, self) == field.convert_to_cache(self[fname], self)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_if_partner_in_account_move(self):
         """

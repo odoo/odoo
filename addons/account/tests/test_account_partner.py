@@ -78,3 +78,35 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             'partner_id': partner.id,
             'partner_bank_id': bank_account.id,
         })
+
+    def test_invoice_partner_display_name_unchanged_data_reload(self):
+        partner = self._load_partner_data({'name': 'Walk-in Customer', 'email': 'walk-in@example.com'})
+        invoice = self.init_invoice('out_invoice', partner, amounts=[100])
+        self._mark_invoice_partner_display_name_stale(invoice)
+
+        self._load_partner_data({'name': 'Walk-in Customer', 'email': 'walk-in@example.com'}, update=True)
+        self.assertEqual(invoice.invoice_partner_display_name, 'stale',
+                         "Reloading unchanged partner data must not recompute the partner's moves")
+
+    def test_invoice_partner_display_name_changed_data_reload(self):
+        partner = self._load_partner_data({'name': 'Walk-in Customer', 'email': 'walk-in@example.com'})
+        invoice = self.init_invoice('out_invoice', partner, amounts=[100])
+        self._mark_invoice_partner_display_name_stale(invoice)
+
+        self._load_partner_data({'name': 'Final Consumer', 'email': 'walk-in@example.com'}, update=True)
+        self.assertEqual(invoice.invoice_partner_display_name, 'Final Consumer',
+                         "Reloading a renamed partner must recompute the partner's moves")
+
+    def _load_partner_data(self, values, update=False):
+        return self.env['res.partner']._load_records(
+            [{'xml_id': 'account.test_walk_in_customer', 'values': values}],
+            update=update,
+        )
+
+    def _mark_invoice_partner_display_name_stale(self, invoice):
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE account_move SET invoice_partner_display_name = 'stale' WHERE id = %s",
+            [invoice.id],
+        )
+        invoice.invalidate_recordset(['invoice_partner_display_name'])
