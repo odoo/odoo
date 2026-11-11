@@ -350,15 +350,14 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
         if self._has_demo_data():
             queries['account_tax'] += 1
-            queries['account_account_tag'] = 1
+            queries['account_account_tag'] = 2
             queries['res_users'] = 1
             queries['res_partner'] = 1
             queries['ir_attachment'] += -1
-            queries['product_ribbon'] += -1
             queries['product_template_attribute_value'] += 2
+            queries['product_ribbon'] += -1
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
-
 
 @tagged('post_install', '-at_install')
 class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
@@ -367,17 +366,17 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         # To increase the query count you must ask the permission to al
         queries = self._get_queries_shop()
 
-        queries['account_tax'] += 1
-        queries['account_account_tag'] = 2
-        queries['res_users'] = 1
-        queries['res_partner'] = 1
-
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
             queries['uom_uom'] += 1
 
         if self._has_demo_data():
             queries['ir_attachment'] += -1
             queries['product_template_attribute_value'] += 2
+            queries['product_ribbon'] += -1
+            queries['account_tax'] += 1
+            queries['account_account_tag'] = 2
+            queries['res_users'] = 1
+            queries['res_partner'] = 1
 
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
 
@@ -393,10 +392,6 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         self.env.ref('website_sale.products_categories').active = True
 
         queries = self._get_queries_shop()
-        queries['account_tax'] += 1
-        queries['account_account_tag'] = 2
-        queries['res_users'] = 1
-        queries['res_partner'] = 1
         queries['product_public_category'] += 2
         queries['ir_attachment'] += -1
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
@@ -404,4 +399,11 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
         if self._has_demo_data():
             queries['product_template_attribute_value'] += 2
+            queries['product_ribbon'] = 1
+            queries['account_tax'] += 1
+            queries['account_account_tag'] = 2
+            queries['res_users'] = 1
+            queries['res_partner'] = 1
+            queries['ir_attachment'] += -1
+
         self._check_url_hot_query('/shop', sum(queries.values()), queries)
