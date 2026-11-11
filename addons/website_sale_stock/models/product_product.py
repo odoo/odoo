@@ -58,7 +58,7 @@ class ProductProduct(models.Model):
             product = self.env['product.product'].browse(product_id)
             product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
             product_price = product.product_tmpl_id._apply_taxes_to_price(
-                product.list_price,
+                product.lst_price,
                 product.currency_id,
                 product_taxes,
                 product_taxes,
