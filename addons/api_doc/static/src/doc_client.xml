@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <templates>
 <t t-name="api_doc.DocClient">
-    <div class="o-doc-client-root" t-att-class="{ 'o-doc-small': this.ui.isSmall, 'o-doc-medium': this.ui.isMedium }">
+    <div class="o-doc-client-root scrollbar-width-thin" t-att-class="{ 'o-doc-small': this.ui.isSmall, 'o-doc-medium': this.ui.isMedium }">
         <header class="position-fixed bg-1 d-flex flex-nowrap gap-1 align-items-center justify-content-between w-100">
             <div class="d-flex flex-nowrap align-items-center gap-2">
                 <button class="btn" t-on-click="() => this.state.showSidebar = !this.state.showSidebar" title="Toggle Left Sidebar" data-hotkey="l">
