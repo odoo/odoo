@@ -1057,7 +1057,7 @@ class HrLeave(models.Model):
 
             # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
             # sudo as is_flexible is on version model and employee does not have access to it.
-            elif calendar._is_flexible() and leave.request_date_to == leave.request_date_from:
+            elif calendar._is_fully_flexible() or (calendar._is_flexible() and leave.request_date_to == leave.request_date_from):
                 # Only subtract public holidays if the leave type does NOT include public holidays in duration.
                 # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                 # the leave should count the full day even if it falls on a public holiday.
@@ -1066,8 +1066,27 @@ class HrLeave(models.Model):
                     h.company_id == leave.company_id
                 ) if not leave.work_entry_type_id.include_public_holidays_in_duration else self.env['resource.calendar.leaves']
                 hours = leave._subtract_public_holidays(filtered_public_holidays)
-                if leave.work_entry_type_request_unit != 'hour' and not public_holidays:
-                    days = 1 if leave.work_entry_type_request_unit != 'half_day' or leave.request_date_from_period != leave.request_date_to_period else 0.5
+                if leave.work_entry_type_request_unit != 'hour':
+                    # days of the request that are not public holidays, in the timezone of the employee
+                    tz = ZoneInfo(leave.employee_id.sudo()._get_tz())
+                    off_dates = {
+                        leave.request_date_from + timedelta(days=day)
+                        for day in range((leave.request_date_to - leave.request_date_from).days + 1)
+                    }
+                    for ph in filtered_public_holidays:
+                        ph_start = ph.date_from.replace(tzinfo=UTC).astimezone(tz).date()
+                        ph_end = ph.date_to.replace(tzinfo=UTC).astimezone(tz).date()
+                        off_dates.difference_update(
+                            ph_start + timedelta(days=day) for day in range((ph_end - ph_start).days + 1)
+                        )
+                    days = len(off_dates)
+                    # a half day bound is only off half a day, unless it is a public holiday (not counted at all)
+                    if leave.work_entry_type_request_unit == 'half_day':
+                        if leave.request_date_from_period == 'pm' and leave.request_date_from in off_dates:
+                            days -= 0.5
+                        if leave.request_date_to_period == 'am' and leave.request_date_to in off_dates:
+                            days -= 0.5
+                    days = max(0, days)
                 else:
                     days = hours / 24
             elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
