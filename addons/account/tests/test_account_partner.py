@@ -97,6 +97,32 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.assertEqual(invoice.invoice_partner_display_name, 'Final Consumer',
                          "Reloading a renamed partner must recompute the partner's moves")
 
+    def test_invoice_partner_display_name_partner_edit_without_rename(self):
+        partner = self.env['res.partner'].create({'name': 'Walk-in Customer'})
+        invoice = self.init_invoice('out_invoice', partner, amounts=[100])
+        self._mark_invoice_partner_display_name_stale(invoice)
+
+        partner.write({
+            'email': 'walk-in@example.com',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_5').id,
+        })
+        self.assertEqual(invoice.invoice_partner_display_name, 'stale',
+                         "Editing partner fields that do not change its name must not recompute its moves")
+
+    def test_invoice_partner_display_name_parent_rename(self):
+        company = self.env['res.partner'].create({'name': 'Customer Company', 'is_company': True})
+        invoice_address = self.env['res.partner'].create({
+            'name': 'Invoice Address',
+            'type': 'invoice',
+            'parent_id': company.id,
+        })
+        invoice = self.init_invoice('out_invoice', invoice_address, amounts=[100])
+
+        company.name = 'Renamed Company'
+        self.assertEqual(invoice.invoice_partner_display_name, 'Renamed Company, Invoice Address',
+                         "Renaming the parent company must recompute the moves of its contacts")
+
     def _load_partner_data(self, values, update=False):
         return self.env['res.partner']._load_records(
             [{'xml_id': 'account.test_walk_in_customer', 'values': values}],
