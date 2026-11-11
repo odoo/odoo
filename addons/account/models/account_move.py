@@ -1951,12 +1951,18 @@ class AccountMove(models.Model):
         for move in self:
             move.need_cancel_request = move._need_cancel_request()
 
+<<<<<<< e747532ea8f271f6cfda0870b76193252cf2ed00
     @api.depends('state', 'move_type')
     def _compute_show_invoice_vendor_bill(self):
         for move in self:
             move.show_invoice_vendor_bill = move.state == 'draft' and move.move_type in ('in_invoice', 'in_refund')
 
     @api.depends('partner_id', 'invoice_source_email', 'partner_id.display_name')
+||||||| e5138bc3cbcc7ee6cd9c026766e9b37cec1f5d5f
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.display_name')
+=======
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.complete_name')
+>>>>>>> aadf1049e44b01f11249e8a71d9a9f642f0f08bf
     def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.with_context({'lang': self.env.lang}).display_name
