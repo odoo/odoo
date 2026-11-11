@@ -3,6 +3,10 @@
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale_wishlist.controllers.main import WebsiteSaleWishlist
+
 
 @tagged('-at_install', 'post_install')
 class TestWishlistProcess(HttpCase):
@@ -87,3 +91,18 @@ class TestWishlistProcess(HttpCase):
             ],
         })
         self.start_tour("/", 'shop_wishlist_admin', login="admin")
+
+
+@tagged('-at_install', 'post_install')
+class TestWishlist(WebsiteSaleCommon):
+
+    def test_add_to_wishlist_on_several_websites(self):
+        """A user sharing their account between websites must be able to wishlist the same product
+        on each of them."""
+        website_2 = self.env['website'].create({'name': 'Website 2'})
+        portal_env = self.env(user=self._create_new_portal_user())
+        for website in (self.website, website_2):
+            with MockRequest(portal_env, website=website.with_env(portal_env)):
+                WebsiteSaleWishlist().add_to_wishlist(self.product.id)
+                wishes = portal_env['product.wishlist'].current()
+                self.assertEqual(wishes.product_id, self.product)
