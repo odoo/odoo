@@ -126,6 +126,8 @@ class TestAutoComplete(TransactionCase):
             "Will there be many results",
             "Welcome to our many friends next week-end",
             "This should only be approximately matched",
+            "blue tshirt",
+            "red t-shirt"
         ]
         for text in texts:
             cls._create_page(text, text, f"/{text.lower().replace(' ', '-')}")
@@ -246,10 +248,16 @@ class TestAutoComplete(TransactionCase):
         self.assertTrue(suggestions['fuzzy_search'], "Expects an fuzzy match")
 
     def test_09_hyphen(self):
-        """ Ensures that hyphen is considered part of word """
+        """ Ensures that hyphenated and unhyphenated terms match interchangeably without fuzzy fallback """
         suggestions = self._autocomplete("weekend")
         self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'weekend'")
-        self.assertEqual('week-end', suggestions['fuzzy_search'], "Expects a fuzzy match")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
         suggestions = self._autocomplete("week-end")
         self.assertEqual(1, len(suggestions['results']), "All results must be present")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
+        suggestions = self._autocomplete("t-shirt")
+        self.assertEqual(2, suggestions['results_count'], "Text data contains two pages, one with 'tshirt' and another with 't-shirt'")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
+        suggestions = self._autocomplete("tshirt")
+        self.assertEqual(2, suggestions['results_count'], "Text data contains two pages, one with 'tshirt' and another with 't-shirt'")
         self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")

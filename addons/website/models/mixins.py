@@ -10,7 +10,7 @@ from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import AccessError
-from odoo.tools import escape_psql
+from odoo.tools import escape_psql, SQL
 from odoo.tools.json import scriptsafe as json_safe
 
 logger = logging.getLogger(__name__)
@@ -323,10 +323,32 @@ class WebsiteSearchableMixin(models.AbstractModel):
         """
         domains = domain_list.copy()
         if search:
+            unaccent = self.env.registry.unaccent
+            use_sql = not self.env.context.get('_search_no_sql_domain')
             for search_term in search.split(' '):
                 subdomains = [[(field, 'ilike', escape_psql(search_term))] for field in fields]
+                clean_term = search_term.replace('-', '')
+                if clean_term:
+                    if clean_term != search_term:
+                        subdomains.extend([[(field, 'ilike', escape_psql(clean_term))] for field in fields])
+                    if use_sql:
+                        pattern = unaccent(SQL("%s", f"%{escape_psql(clean_term)}%"))
+                        sql_conds = []
+                        for field_name in fields:
+                            field = self._fields.get(field_name)
+                            if field and field.store and field.type in ('char', 'text', 'html'):
+                                col = unaccent(self._field_to_sql(self._table, field_name))
+                                sql_conds.append(SQL("REPLACE(%s, '-', '') ILIKE %s", col, pattern))
+                        if sql_conds:
+                            subdomains.append([('id', 'in', SQL(
+                                "(SELECT id FROM %s WHERE %s)",
+                                SQL.identifier(self._table),
+                                SQL(" OR ").join(sql_conds),
+                            ))])
                 if extra:
                     subdomains.append(extra(self.env, search_term))
+                    if clean_term and clean_term != search_term:
+                        subdomains.append(extra(self.env, clean_term))
                 domains.append(expression.OR(subdomains))
         return expression.AND(domains)
 
