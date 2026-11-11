@@ -102,6 +102,13 @@ test("getRelativeDateDomain > last_12_months (last 12 months)", async function (
     assertDateDomainEqual("field", "2021-05-01", "2022-04-30", domain);
 });
 
+test("getRelativeDateDomain > last_12_months (last 12 months) on the last day of the month", async function () {
+    const now = DateTime.fromISO("2022-05-31");
+    const domain = getRelativeDateDomain(now, 0, "last_12_months", "field", "date");
+    expect(getDateDomainDurationInDays(domain)).toBe(365);
+    assertDateDomainEqual("field", "2021-05-01", "2022-04-30", domain);
+});
+
 test("getRelativeDateDomain > simple date time", async function () {
     const now = DateTime.fromISO("2022-05-16T00:00:00+00:00", { zone: "utc" });
     const domain = getRelativeDateDomain(now, 0, "last_7_days", "field", "datetime");
