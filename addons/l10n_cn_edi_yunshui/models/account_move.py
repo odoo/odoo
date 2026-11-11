@@ -79,7 +79,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_cn_buyer_bank_id',
         store=True,
         readonly=False,
-        domain="[('partner_id', '=', commercial_partner_id)]",
+        ui_domain="[('partner_id', '=', commercial_partner_id)]",
         help="The customer's bank account to be printed on the e-Fapiao.",
     )
     l10n_cn_edi_red_form_uuid = fields.Char(
