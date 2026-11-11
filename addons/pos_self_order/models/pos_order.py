@@ -199,6 +199,7 @@ class PosOrder(models.Model):
                 'order_id': existing_order.id if existing_order.exists() else None,
                 'combo_parent_id': line_data.get('combo_parent_id'),
                 'combo_item_id': line_data.get('combo_item_id'),
+                'product_uom_id': line_data.get('product_uom_id'),
                 'combo_line_ids': [id for id in line_data.get('combo_line_ids', []) if isinstance(id, int)],
             }]
         return []
@@ -435,7 +436,8 @@ class PosOrder(models.Model):
         pricelist = self.pricelist_id
         selected_attributes = line.attribute_value_ids
         product = line.product_id.with_context(line.product_id._get_product_price_context(selected_attributes))
-        price = price or pricelist._get_product_price(product, 1.0, currency=self.currency_id)
+        factor = line.product_uom_id._compute_quantity(1.0, line.product_id.uom_id, round=False)
+        price = price or pricelist._get_product_price(product, line.qty * factor, currency=self.currency_id) * factor
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         self._compute_line_subtotals(line)

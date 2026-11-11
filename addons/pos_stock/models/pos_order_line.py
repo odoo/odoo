@@ -8,6 +8,7 @@ class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
+    move_ids = fields.Many2many('stock.move', string="Stock Moves")
 
     def _get_qty_to_move(self):
         """Return the quantity that this line must actually move in stock.
@@ -16,7 +17,7 @@ class PosOrderLine(models.Model):
         another document, e.g. the delivery of a settled sale order. See `pos_sale_stock`.
         """
         self.ensure_one()
-        return self.qty
+        return self._get_qty_in_product_uom()
 
     def write(self, vals):
         if vals.get('pack_lot_line_ids'):
@@ -100,6 +101,8 @@ class PosOrderLine(models.Model):
             'partner_id': self.order_id.partner_id.id,
             'company_id': self.order_id.company_id,
             'reference_ids': self.order_id.stock_reference_ids,
+            'pos_order_line_ids': self.ids,
+            'never_product_template_attribute_value_ids': self.attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant')
         }
 
     def _launch_stock_rule_from_pos_order_lines(self):
@@ -119,10 +122,8 @@ class PosOrderLine(models.Model):
                 line.order_id.stock_reference_ids = [Command.set(reference_ids.ids)]
 
             values = line._prepare_procurement_values()
-
-            procurement_uom = line.product_id.uom_id
             procurements.append(self.env['stock.rule'].Procurement(
-                line.product_id, product_qty, procurement_uom,
+                line.product_id, product_qty, line.product_id.uom_id,
                 line.order_id.partner_id.property_stock_customer,
                 line.name, line.order_id.name, line.order_id.company_id, values))
         if procurements:

@@ -91,10 +91,17 @@ export class PosOrderline extends PosOrderlineAccounting {
             }
 
             if (product_packaging_by_barcode[code.code]) {
-                this.setQuantity(
-                    uom_by_id[product_packaging_by_barcode[code.code].uom_id.id].factor /
-                        this.product_id.product_tmpl_id.uom_id.factor
-                );
+                const uom = uom_by_id[product_packaging_by_barcode[code.code].uom_id.id];
+                this.product_uom_id = uom;
+                this.price_unit =
+                    this.product_id.getPrice(
+                        this.order_id.pricelist_id,
+                        this.qty,
+                        this.price_extra,
+                        false,
+                        this.product_id
+                    ) * (uom.relative_factor || 1);
+                this.price_type = "manual";
             }
         }
 
@@ -269,7 +276,7 @@ export class PosOrderline extends PosOrderlineAccounting {
                 this.getPriceExtra(),
                 false,
                 this.product_id
-            )
+            ) * productTemplate.getUomPriceFactor(this.product_uom_id)
         );
     }
 
@@ -279,13 +286,14 @@ export class PosOrderline extends PosOrderlineAccounting {
         );
         const price = ProductPrice.round(this.price_unit || 0);
         const product = orderline.getProduct();
-        const order_line_price = product.getPrice(
-            orderline.order_id.pricelist_id,
-            this.getQuantity(),
-            0,
-            false,
-            product
-        );
+        const order_line_price =
+            product.getPrice(
+                orderline.order_id.pricelist_id,
+                this.getQuantity(),
+                0,
+                false,
+                product
+            ) * product.getUomPriceFactor(orderline.product_uom_id);
 
         const isSameCustomerNote =
             (Boolean(orderline.getCustomerNote()) === false &&
@@ -307,7 +315,8 @@ export class PosOrderline extends PosOrderlineAccounting {
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
             !this.refunded_orderline_id &&
-            !orderline.isPartOfCombo()
+            !orderline.isPartOfCombo() &&
+            this.product_uom_id?.id === orderline.product_uom_id?.id
         );
     }
 

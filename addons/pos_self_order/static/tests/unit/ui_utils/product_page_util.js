@@ -30,6 +30,10 @@ export async function selectAttributeValue(value) {
     await animationFrame();
 }
 
+export async function selectUomOption(uomName) {
+    await contains(`.uom-selection-value:contains("${uomName}")`).click();
+}
+
 export async function selectNthAttributeValue(n, attributeName) {
     const scope = attributeName ? `h2:contains(${attributeName}) + ` : "";
     await contains(`${scope}.self_order_attribute_selection div:nth-child(${n}) button`).click();

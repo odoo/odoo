@@ -113,10 +113,12 @@ class StockPicking(models.Model):
     def _prepare_stock_move_vals(self, first_line, order_lines):
         return {
             'uom_id': first_line.product_id.uom_id.id,
+            'packaging_uom_id': first_line.product_uom_id.id,
             'picking_id': self.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': first_line.product_id.id,
             'product_uom_qty': abs(sum(line._get_qty_to_move() for line in order_lines)),
+            'pos_order_line_ids': order_lines.ids,
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
@@ -127,7 +129,7 @@ class StockPicking(models.Model):
         self.ensure_one()
 
         def get_grouping_key(line):
-            return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
+            return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)), line.product_uom_id.id)
 
         move_vals = [
             self._prepare_stock_move_vals(order_lines[0], order_lines)

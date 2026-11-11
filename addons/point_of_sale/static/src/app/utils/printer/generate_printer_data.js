@@ -188,7 +188,7 @@ export class GeneratePrinterData {
             return {
                 ...line.raw,
                 product_data: productData,
-                product_uom_name: line.product_id.uom_id?.name || "",
+                product_uom_name: line.product_uom_id?.name || "",
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
