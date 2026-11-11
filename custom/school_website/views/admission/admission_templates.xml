@@ -4,12 +4,34 @@
     <template id="admission_apply_template" name="Apply for Admission">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
-                <!-- Banner -->
-                <section class="py-5 text-white" style="background: linear-gradient(135deg, #A51C30 0%, #101c30 100%);">
-                    <div class="container py-3">
-                        <span class="text-uppercase fw-bold text-white-50 small">Admissions Office</span>
-                        <h1 class="display-5 fw-bold mb-2">Undergraduate &amp; Graduate Application</h1>
-                        <p class="lead text-white-50 mb-0">Join our academic community. Fill out the application form below.</p>
+                <!-- Header Hero Banner with Campus Backdrop (Matching Contact Us) -->
+                <section class="harvard-about-hero" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-about-hero-overlay"></div>
+                    <div class="container harvard-about-hero-content text-center py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page">Apply Online</li>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-3 shadow-sm">
+                            Admissions Office
+                        </span>
+                        <h1 class="display-3 fw-bold mb-3 text-white">Undergraduate &amp; Graduate Application</h1>
+                        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 760px; line-height: 1.8;">
+                            Join our academic community. Fill out the application form below.
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-white-50 small">
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-pencil-square-o text-danger me-1"/> Online Application
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-calendar text-danger me-1"/> Fall 2026 Admissions
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-clock-o text-danger me-1"/> Review in 2–3 Weeks
+                            </span>
+                        </div>
                     </div>
                 </section>
 

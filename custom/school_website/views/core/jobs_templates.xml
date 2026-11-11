@@ -4,11 +4,34 @@
     <template id="jobs_page_template" name="Careers &amp; Opportunities">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
-                <section class="py-5 text-white" style="background: linear-gradient(135deg, #101c30 0%, #A51C30 100%);">
-                    <div class="container py-3">
-                        <span class="text-uppercase fw-bold text-danger small">Join Our Faculty &amp; Staff</span>
-                        <h1 class="display-5 fw-bold mb-2">Careers at Harvard University</h1>
-                        <p class="lead text-white-50 mb-0">Discover teaching, research, and administrative opportunities across our academic departments.</p>
+                <!-- Header Hero Banner with Campus Backdrop (Matching Contact Us) -->
+                <section class="harvard-about-hero" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-about-hero-overlay"></div>
+                    <div class="container harvard-about-hero-content text-center py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page">Careers</li>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-3 shadow-sm">
+                            Join Our Faculty &amp; Staff
+                        </span>
+                        <h1 class="display-3 fw-bold mb-3 text-white">Careers at Harvard University</h1>
+                        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 760px; line-height: 1.8;">
+                            Discover teaching, research, and administrative opportunities across our academic departments.
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-white-50 small">
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-map-marker text-danger me-1"/> Cambridge, Massachusetts
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-briefcase text-danger me-1"/> Academic &amp; Research Positions
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-heart text-danger me-1"/> Comprehensive Benefits
+                            </span>
+                        </div>
                     </div>
                 </section>
 

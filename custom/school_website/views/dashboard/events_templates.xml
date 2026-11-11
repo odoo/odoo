@@ -4,12 +4,34 @@
     <template id="events_list_template" name="Events &amp; Campus Notices">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
-                <!-- Header Banner -->
-                <section class="py-5 text-white" style="background: linear-gradient(135deg, #101c30 0%, #A51C30 100%);">
-                    <div class="container py-3">
-                        <span class="text-uppercase fw-bold text-danger small">Campus Community</span>
-                        <h1 class="display-5 fw-bold mb-2">Events &amp; Announcements</h1>
-                        <p class="lead text-white-50 mb-0">Upcoming seminars, conferences, and notices from Harvard University.</p>
+                <!-- Header Hero Banner with Campus Backdrop (Matching Contact Us) -->
+                <section class="harvard-about-hero" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-about-hero-overlay"></div>
+                    <div class="container harvard-about-hero-content text-center py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page">Events</li>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-3 shadow-sm">
+                            Campus Community
+                        </span>
+                        <h1 class="display-3 fw-bold mb-3 text-white">Events &amp; Announcements</h1>
+                        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 760px; line-height: 1.8;">
+                            Upcoming seminars, conferences, and notices from Harvard University.
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-white-50 small">
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-map-marker text-danger me-1"/> Cambridge, Massachusetts
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-calendar-check-o text-danger me-1"/> Campus Events &amp; Summits
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-bullhorn text-danger me-1"/> Official Announcements
+                            </span>
+                        </div>
                     </div>
                 </section>
 
