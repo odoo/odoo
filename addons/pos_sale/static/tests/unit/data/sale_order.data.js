@@ -21,6 +21,7 @@ export class SaleOrder extends models.ServerModel {
             "partner_invoice_id",
             "date_order",
             "write_date",
+            "document_tax_mode",
         ];
     }
 
@@ -68,6 +69,25 @@ export class SaleOrder extends models.ServerModel {
             amount_total: 650,
             amount_untaxed: 500,
             amount_unpaid: 650,
+            partner_shipping_id: 3,
+            partner_invoice_id: 3,
+            date_order: "2025-07-03 17:04:14",
+            write_date: "2025-07-03 17:04:14",
+        },
+        {
+            // Order in "Tax Incl." document mode while its line uses a tax-excluded
+            // tax (id 1). Settling it in POS must keep the tax-included total (256).
+            id: 5,
+            name: "S00005",
+            state: "sale",
+            order_line: [8],
+            partner_id: 3,
+            pricelist_id: 1,
+            fiscal_position_id: false,
+            document_tax_mode: "tax_included",
+            amount_total: 256,
+            amount_untaxed: 222.61,
+            amount_unpaid: 256,
             partner_shipping_id: 3,
             partner_invoice_id: 3,
             date_order: "2025-07-03 17:04:14",
