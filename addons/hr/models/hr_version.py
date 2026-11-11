@@ -203,7 +203,7 @@ class HrVersion(models.Model):
             if version.employee_id:
                 version.company_id = version.employee_id.company_id
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'address_id')
     def _compute_work_location_id(self):
         for version in self:
             if version.work_location_id and version.work_location_id.company_id in version.company_id.parent_ids:
@@ -213,7 +213,8 @@ class HrVersion(models.Model):
                 work_locations = self.env['hr.work.location'].search([
                     ('company_id', 'in', version.company_id.parent_ids.ids),
                     ('location_type', '=', 'office'),
-                ])
+                    ('address_id', '=', version.address_id.id),
+                ], limit=2)
             version.work_location_id = work_locations if len(work_locations) == 1 else False
 
     @api.depends('job_id.name')

@@ -1044,3 +1044,22 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(version_1.date_end, date(2023, 12, 31))
         self.assertEqual(version_2.date_start, date(2024, 1, 1))
         self.assertFalse(version_2.date_end)
+
+    def test_compute_work_location_matches_work_address(self):
+        """ The office work location is only set by default if it is at the work address of the version. """
+        company = self.env['res.company'].create({'name': 'Company With One Office'})
+        office = self.env['hr.work.location'].create({
+            'name': 'Office',
+            'location_type': 'office',
+            'company_id': company.id,
+            'address_id': company.partner_id.id,
+        })
+        other_address = self.env['res.partner'].create({'name': 'Other Address'})
+        Employee = self.env['hr.employee'].with_company(company)
+
+        employee = Employee.create({'name': 'At the company address'})
+        self.assertEqual(employee.address_id, company.partner_id)
+        self.assertEqual(employee.work_location_id, office)
+
+        employee = Employee.create({'name': 'At another address', 'address_id': other_address.id})
+        self.assertFalse(employee.work_location_id)
