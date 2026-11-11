@@ -822,6 +822,15 @@ class ResPartner(models.Model):
                 moves.line_ids.with_context(bypass_lock_check=BYPASS_LOCK_CHECK).partner_id = partner.commercial_partner_id
                 moves.with_context(bypass_lock_check=BYPASS_LOCK_CHECK).commercial_partner_id = partner.commercial_partner_id
                 partner._message_log(body=_("The commercial partner has been updated for all related accounting entries."))
+
+        if 'lang' in vals:
+            Move = self.env['account.move']
+            draft_invoices = Move.sudo().search([
+                ('partner_id', 'in', self.ids),
+                ('state', '=', 'draft'),
+                ('move_type', 'in', Move.get_sale_types(include_receipts=True)),
+            ])
+            self.env.add_to_compute(Move._fields['narration'], draft_invoices)
         return res
 
     @api.model_create_multi
