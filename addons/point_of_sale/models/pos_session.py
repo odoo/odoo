@@ -516,6 +516,7 @@ class PosSession(models.Model):
         ])
         future_orders.session_id = False
 
+        self._prepare_session_closing()
         self.with_company(self.company_id)._validate_session_accounting()
         self._handle_bank_payment_method_difference(payment_method_closing)
         self._handle_cash_statement_entries(payment_method_closing)
@@ -544,6 +545,10 @@ class PosSession(models.Model):
         self._get_closed_orders().write({'state': 'done'})
         self.env.flush_all()  # ensure sale.report is up to date
         return {'status': True}
+
+    def _prepare_session_closing(self):
+        """ Hook called when closing the session, before its closing entries are created """
+        return
 
     def post_close_register_message(self):
         self.message_post(body=_('Closed Register'), author_id=self._get_message_author().id)
