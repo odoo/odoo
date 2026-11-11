@@ -323,7 +323,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
         """
         domains = domain_list.copy()
         if search:
-            for search_term in search.split(' '):
+            for search_term in search.replace('-', ' ').split(' '):
                 subdomains = [[(field, 'ilike', escape_psql(search_term))] for field in fields]
                 if extra:
                     subdomains.append(extra(self.env, search_term))
