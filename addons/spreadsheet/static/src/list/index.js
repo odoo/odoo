@@ -9,6 +9,7 @@ import { ListCoreViewPlugin } from "@spreadsheet/list/plugins/list_core_view_plu
 import { ListUIPlugin } from "@spreadsheet/list/plugins/list_ui_plugin";
 
 import { SEE_RECORD_LIST, SEE_RECORD_LIST_VISIBLE } from "./list_actions";
+import { getListStaticFormula } from "./list_helpers";
 const { registerCommand } = spreadsheet;
 
 registerCommand("INSERT_ODOO_LIST", { category: "core", invalidatesEvaluation: true });
@@ -26,7 +27,7 @@ registerCommand("RE_INSERT_ODOO_LIST_WITH_TABLE", { category: "local" });
 registerCommand("INSERT_NEW_ODOO_LIST", { category: "local" });
 registerCommand("DUPLICATE_ODOO_LIST_IN_NEW_SHEET", { category: "local" });
 
-const { cellMenuRegistry } = spreadsheet.registries;
+const { cellMenuRegistry, dynamicToStaticFormulaRegistry } = spreadsheet.registries;
 
 cellMenuRegistry.add(
     "list_see_record",
@@ -44,5 +45,10 @@ cellMenuRegistry.add(
         icon: "o-spreadsheet-Icon.SEE_RECORDS",
     })
 );
+
+dynamicToStaticFormulaRegistry.add("list", {
+    condition: (position, getters) => getters.isDynamicList(position),
+    getStaticFormula: getListStaticFormula,
+});
 
 export { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin };
