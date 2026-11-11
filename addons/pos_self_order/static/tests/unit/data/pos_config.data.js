@@ -58,6 +58,8 @@ patch(PosConfig.prototype, {
             "pos.prep.line",
             "ir.ui.view",
             "pos.snooze",
+            "pos.course",
+            "restaurant.order.course",
         ];
     },
     getModelsToLoadSelf() {

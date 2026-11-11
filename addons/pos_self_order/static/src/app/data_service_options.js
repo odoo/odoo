@@ -20,6 +20,24 @@ patch(DataServiceOptions.prototype, {
                 key: "id",
                 condition: (record) => false,
             },
+            "restaurant.order.course": {
+                key: "uuid",
+                condition: (record) => false,
+            },
+            "pos.prep.order": {
+                key: "uuid",
+                condition: (record) => false,
+            },
+            "pos.prep.line": {
+                key: "uuid",
+                condition: (record) => false,
+            },
         };
+    },
+    get cascadeDeleteModels() {
+        return [...super.cascadeDeleteModels, "restaurant.order.course"];
+    },
+    get dynamicModels() {
+        return [...super.dynamicModels, "restaurant.order.course"];
     },
 });
