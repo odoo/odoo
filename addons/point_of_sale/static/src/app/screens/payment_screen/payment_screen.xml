@@ -135,7 +135,6 @@
                     <span>
                         <i class="oi me-2" data-icon="article"/> Invoice
                     </span>
-                    <i class="oi me-2" t-attf-class="{{ this.currentOrder.isToInvoice() or this.isForcedToInvoice ? 'oi-filled text-action' : '' }} {{ this.currentOrder.isToInvoice() ? 'check_box' : 'square' }}"/>
                 </button>
             </div>
             <div name="tip-order" t-if="this.shouldShowTipOrder" class="d-flex flex-column gap-1 w-100">
