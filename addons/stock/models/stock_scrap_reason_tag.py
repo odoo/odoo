@@ -8,7 +8,7 @@ class StockScrapReasonTag(models.Model):
 
     name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(default=10)
-    color = fields.Integer(string="Color", default=0x3C3C3C)
+    color = fields.Integer(string="Color")
 
     _name_uniq = models.Constraint(
         'unique (name)',
