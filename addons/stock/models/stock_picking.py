@@ -2113,12 +2113,12 @@ class StockPicking(models.Model):
             'description': self._get_auto_batch_description(),
             'user_id': self.user_id.id,
         }
+        new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
         possible_pickings = self.env['stock.picking'].search(self._get_possible_pickings_domain())
         for picking in possible_pickings:
-            if self._is_auto_batchable(picking):
-                # Add the picking to the new batch
-                new_batch_data['picking_ids'].append(Command.link(picking.id))
-        new_batch = self.env['stock.picking.batch'].sudo().create(new_batch_data)
+            # Add the compatible pickings to the new batch as long as it respects the batch limits
+            if self._is_auto_batchable(picking) and new_batch._is_picking_auto_mergeable(picking):
+                new_batch.picking_ids |= picking
         if self.picking_type_id.batch_auto_confirm:
             new_batch.action_confirm()
         return new_batch
