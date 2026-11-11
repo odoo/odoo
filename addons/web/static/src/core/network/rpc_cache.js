@@ -168,8 +168,21 @@ export class RPCCache {
                             this.indexedDB.write(table, key, encryptedResult).catch((e) => {
                                 if (e instanceof IDBQuotaExceededError) {
                                     this.indexedDB.deleteDatabase();
-                                } else {
-                                    throw e;
+                                } else if (e.name !== "InvalidStateError") {
+                                    // Writing to the disk cache is a best-effort side effect:
+                                    // this chain is fire-and-forget (the request has already
+                                    // been resolved above), so re-throwing produces a rejection
+                                    // nothing can handle, which surfaces to the user as an
+                                    // "Oops!" error dialog. A failed cache write must never
+                                    // break the request it was caching.
+                                    //
+                                    // InvalidStateError is skipped on purpose: it means the
+                                    // connection was closing (the browser reclaims the idle
+                                    // IndexedDB connection when the tab is in the background),
+                                    // which is expected and transient - the entry is simply not
+                                    // cached. Logging it would emit one warning per pending RPC
+                                    // on every return to the tab.
+                                    console.warn("RPCCache: could not write to the disk cache", e);
                                 }
                             });
                         });
