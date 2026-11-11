@@ -446,9 +446,12 @@ class YunshuiClient:
             self.platform_code,
             self.tax_no,
         )
+        # TODO DROP before merge: lets a runbot build reach the IP-whitelisted sandbox through our Shenzhen proxy.
+        proxy = self.company.env['ir.config_parameter'].sudo().get_str('l10n_cn_edi_yunshui.proxy')
         try:
             with requests.post(
                 f"{HOSTS[self.gateway]}/{H5_PASS_THROUGH if h5 else interface_code}",
+                **({'proxies': {'https': proxy}} if proxy else {}),
                 data=json.dumps(request_body, ensure_ascii=False).encode('utf-8'),
                 headers={'Content-Type': 'application/json', **({'X-KPY-YHM': self.username} if h5 else {})},
                 timeout=TIMEOUT,
