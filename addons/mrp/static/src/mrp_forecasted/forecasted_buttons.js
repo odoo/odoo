@@ -1,10 +1,12 @@
 import { ForecastedButtons } from "@stock/stock_forecasted/forecasted_buttons";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { onWillStart } from "@odoo/owl";
 
 patch(ForecastedButtons.prototype, {
     setup() {
         super.setup();
+        this.orm = useService("orm");
         onWillStart(async () =>{
             const fields = this.resModel === "product.template" ? ['bom_ids'] : ['bom_ids', 'variant_bom_ids'];
             const res = (await this.orm.call(this.resModel, 'read', [this.productId], { fields }))[0];
