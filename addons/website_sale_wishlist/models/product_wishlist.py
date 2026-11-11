@@ -9,7 +9,7 @@ class ProductWishlist(models.Model):
     _description = 'Product Wishlist'
     _sql_constraints = [
         ("product_unique_partner_id",
-         "UNIQUE(product_id, partner_id)",
+         "UNIQUE(product_id, partner_id, website_id)",
          "Duplicated wishlisted product for this partner."),
     ]
 
