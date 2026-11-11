@@ -1357,7 +1357,9 @@
                                             <t t-set="combination" t-value="combination_info['combination']"/>
                                         </t>
                                     </t>
-                                    <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
+                                    <div data-nosnippet="true">
+                                        <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
+                                    </div>
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
                                         <t t-set="hasQuantities" t-value="false"/>
                                         <t t-set="hasBuyNow" t-value="false"/>
@@ -1748,7 +1750,7 @@
                 <t t-out="combination_info['tax_disclaimer']"/>
             </small>
         </div>
-        <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
+        <div id="product_unavailable" data-nosnippet="true" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
             <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
         </div>
     </template>
