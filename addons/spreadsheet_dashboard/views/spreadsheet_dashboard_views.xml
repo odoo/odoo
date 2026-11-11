@@ -60,7 +60,7 @@
                         <field name="allowed_user_ids" widget="many2many_avatar_user"/>
                         <field name="company_ids" string="Companies" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
                         <field name="is_published" widget="boolean_toggle"/>
-                        <field name="spreadsheet_binary_data" string="Spreadsheet file" invisible="not id" widget="binary_spreadsheet" class="w-50"/>
+                        <field name="spreadsheet_binary_data_computed" string="Spreadsheet file" invisible="not id" widget="binary_spreadsheet" class="w-50"/>
                     </group>
                 </sheet>
             </form>
