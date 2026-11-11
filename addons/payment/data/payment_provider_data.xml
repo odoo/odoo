@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <record id="payment_provider_aba_payway" model="payment.provider">
+        <field name="name">ABA PayWay</field>
+        <field name="image_128" type="bytes" file="payment_aba_payway/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_aba_payway"/>
+    </record>
+
     <record id="payment_provider_adyen" model="payment.provider">
         <field name="name">Adyen</field>
         <field name="image_128" type="bytes" file="payment_adyen/static/description/icon.png"/>
