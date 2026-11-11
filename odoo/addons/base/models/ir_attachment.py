@@ -1097,9 +1097,8 @@ class IrAttachment(models.Model):
                     file_upload.write(chunk)
             if file_upload:
                 file_upload.flush()
-            else:
-                # reset the position to the beginning to save the data
-                file.seek(0)
+            # reset the position to the beginning to save the data
+            (file_upload or file).seek(0)
             computed_fields['checksum'] = sha.hexdigest()
             computed_fields['store_fname'] = self._file_fname(computed_fields['checksum'])
             if 'mimetype' not in create_vals:

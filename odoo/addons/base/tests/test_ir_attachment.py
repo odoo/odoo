@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import contextlib
+import errno
 import hashlib
 import io
 import os
@@ -297,6 +298,23 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                 {'name': 'base.pot'},
             )
             self.assertTrue(a.raw.size, "No bytes written")
+
+    def test_16_upload_stream_without_hardlink(self):
+        """ A stream without a path is copied to the filestore when the file-system doesn't
+        support hardlinks: the copy must have the content of the stream, not be empty. """
+        data = b'\xff\xd8\xff' + b'a' * 4096
+        with (
+            patch(
+                "odoo.addons.base.models.ir_attachment.IrAttachment._index",
+                new=lambda *args, **kwargs: None,
+            ),
+            patch(
+                "odoo.addons.base.models.ir_attachment.os.link",
+                side_effect=OSError(errno.ENOTSUP, "no hardlinks"),
+            ),
+        ):
+            attachment = self.env['ir.attachment']._upload_file(io.BytesIO(data), {'name': 'stream.bin'})
+        self.assertEqual(attachment.raw.content, data)
 
     def test_16_create_unique_only_reuses_writable_attachments(self):
         """ create_unique() must not return an attachment the current user cannot write, as
