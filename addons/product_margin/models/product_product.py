@@ -150,10 +150,7 @@ class ProductProduct(models.Model):
             company_id = self.env.company.id
         self.env['account.move.line'].flush_model(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
         self.env['account.move'].flush_model(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
-        # list_price is company_dependent, so it can't be read as a plain column in raw SQL
-        list_price_by_product = dict(
-            zip(self.ids, self.with_company(company_id).mapped('list_price'))
-        )
+        self.env['product.template'].flush_model(['list_price'])
 
         def make_query(invoice_types):
             return SQL("""
@@ -165,11 +162,12 @@ class ProductProduct(models.Model):
                         (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)
                     ) / NULLIF(SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)), 0) AS avg_unit_price,
                     SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
-                    SUM(CASE WHEN i.move_type = 'out_invoice' THEN -l.balance
-                             WHEN i.move_type = 'in_invoice' THEN l.balance
-                             ELSE -ABS(l.balance) END) AS total
+                    SUM(CASE WHEN i.move_type = 'out_invoice' THEN -l.balance WHEN i.move_type = 'in_invoice' THEN l.balance ELSE -ABS(l.balance) END) AS total,
+                    SUM(l.quantity * %s * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)
+                LEFT JOIN product_product product ON (product.id=l.product_id)
+                LEFT JOIN product_template pt ON (pt.id = product.product_tmpl_id)
                 left join currency_rate cr on
                 (cr.currency_id = i.currency_id and
                  cr.company_id = i.company_id and
@@ -185,6 +183,7 @@ class ProductProduct(models.Model):
                 GROUP BY l.product_id
                 """,
                 self.env['res.currency']._select_companies_rates(),
+                self.env['product.template'].with_company(company_id)._field_to_sql('pt', 'list_price'),
                 tuple(self.ids),
                 states,
                 payment_states,
@@ -194,13 +193,11 @@ class ProductProduct(models.Model):
                 company_id,
             )
         self.env.cr.execute(make_query(invoice_types=('out_invoice', 'out_refund')))
-        for product_id, avg, qty, total in self.env.cr.fetchall():
+        for product_id, avg, qty, total, sale in self.env.cr.fetchall():
             res[product_id]['sale_avg_price'] = avg and avg or 0.0
             res[product_id]['sale_num_invoiced'] = qty and qty or 0.0
             res[product_id]['turnover'] = total and total or 0.0
-            res[product_id]['sale_expected'] = (
-                list_price_by_product.get(product_id, 0.0) * (qty or 0.0)
-            )
+            res[product_id]['sale_expected'] = sale and sale or 0.0
             res[product_id]['sales_gap'] = res[product_id]['sale_expected'] - res[product_id]['turnover']
             res[product_id]['total_margin'] = res[product_id]['turnover']
             res[product_id]['expected_margin'] = res[product_id]['sale_expected']
@@ -208,7 +205,7 @@ class ProductProduct(models.Model):
             res[product_id]['expected_margin_rate'] = res[product_id]['sale_expected'] and res[product_id]['expected_margin'] * 100 / res[product_id]['sale_expected'] or 0.0
 
         self.env.cr.execute(make_query(invoice_types=('in_invoice', 'in_refund')))
-        for product_id, avg, qty, total in self.env.cr.fetchall():
+        for product_id, avg, qty, total, _dummy in self.env.cr.fetchall():
             res[product_id]['purchase_avg_price'] = avg and avg or 0.0
             res[product_id]['purchase_num_invoiced'] = qty and qty or 0.0
             res[product_id]['total_cost'] = total and total or 0.0

@@ -13,6 +13,7 @@ from . import (
     test_product_document,
     test_product_pricelist,
     test_product_rounding,
+    test_sales_price_multi_company,
     test_seller,
     test_update_pav_wizard,
     test_variants,
