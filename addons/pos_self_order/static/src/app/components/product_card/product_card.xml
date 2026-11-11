@@ -19,9 +19,11 @@
                 <div class="self_order_product_name d-inline-block">
                     <span t-out="this.formatProductName(product)" class="align-middle fs-4 fw-bold text-break"/>
                     <div t-if="product.public_description or product.product_tag_ids.length > 0"
-                            class="product_info_icon d-inline-flex justify-content-center align-items-center align-middle text-center"
-                            t-on-click.stop="()=>this.displayProductInfo()">
-                        <i class="oi" data-icon="info"/>
+                        class="product_info_icon d-inline-flex align-items-center ms-1"
+                        t-on-click.stop="() => this.displayProductInfo()">
+                        <span class="badge text-dark bg-warning d-inline-flex align-items-center gap-1 p-1">
+                            <i class="oi" data-icon="info"/><t t-out="this.selfOrder.config.module_pos_restaurant ? 'Allergens' : 'Info'"/>
+                        </span>
                     </div>
                 </div>
                 <t t-call-slot="default"/>
