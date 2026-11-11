@@ -20,7 +20,7 @@
                                             t-att-style="this.ui.isSmall
                                                 ? 'width:80px;height:80px;object-fit:cover;'
                                                 : 'width:110px;height:110px;object-fit:cover;'"
-                                            t-att-src="'/web/image/product.product/' + combo.product.id + '/image_128'"
+                                            t-att-src="combo.product.productImageUrl()"
                                             loading="lazy"
                                         />
 
