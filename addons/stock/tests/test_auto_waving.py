@@ -422,3 +422,46 @@ class TestAutoWaving(TransactionCase):
         self.assertEqual(len(new_wave.move_line_ids), 2)
         new_wave.action_assign()
         self.assertEqual(new_wave.move_line_ids.mapped('quantity'), [1, 2])
+
+    def test_group_by_date(self):
+        """ Grouping by date must compare the dates as the user sees them (in their timezone),
+        and grouping by week must compare ISO weeks, including across a year boundary. """
+        self.picking_type_out.write({
+            'auto_batch': True,
+            'batch_group_by_destination': False,
+            'batch_group_by_partner': False,
+            'batch_group_by_src_loc': False,
+            'batch_group_by_dest_loc': False,
+            'wave_group_by_category': False,
+            'wave_group_by_location': False,
+            'wave_group_by_product': False,
+            'wave_group_by_date': True,
+            'wave_date_granularity': 'day',
+        })
+        self.env.user.tz = 'Asia/Tokyo'
+
+        def create_deliveries(dates):
+            return self.env['stock.picking'].create([{
+                'location_id': self.stock_location.id,
+                'picking_type_id': self.picking_type_out.id,
+                'scheduled_date': date,
+                'move_ids': [Command.create({
+                    'product_id': self.product_1.id,
+                    'product_uom_qty': 1,
+                    'location_id': self.stock_location.id,
+                    'date': date,
+                })],
+            } for date in dates])
+
+        # 2026-11-12 08:00 and 10:00 in Tokyo, i.e. on two different days in UTC
+        deliveries = create_deliveries(['2026-11-11 23:00:00', '2026-11-12 01:00:00'])
+        deliveries.action_assign()
+        self.assertTrue(all(line.batch_id.is_wave for line in deliveries.move_line_ids))
+        self.assertEqual(len(deliveries.move_line_ids.batch_id), 1, "Both transfers are scheduled on the same day")
+
+        # Monday 2025-12-29 and Friday 2026-01-02 are both in ISO week 1 of 2026
+        self.picking_type_out.wave_date_granularity = 'week'
+        deliveries = create_deliveries(['2025-12-29 06:00:00', '2026-01-02 06:00:00'])
+        deliveries.action_assign()
+        self.assertTrue(all(line.batch_id.is_wave for line in deliveries.move_line_ids))
+        self.assertEqual(len(deliveries.move_line_ids.batch_id), 1, "Both transfers are scheduled in the same week")
