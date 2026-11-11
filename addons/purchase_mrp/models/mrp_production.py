@@ -47,6 +47,12 @@ class MrpProduction(models.Model):
         self.ensure_one()
         moves = self.move_raw_ids | self.move_raw_ids.move_orig_ids
         purchase_lines = moves.mapped('created_purchase_line_ids') | moves.mapped('purchase_line_id')
+        # MTSO: the PO line only shares the references, no move chain reaches it
+        purchase_lines |= self.reference_ids.purchase_ids.order_line.filtered(
+            lambda line: line.state != 'cancel'
+            and line.product_id in self.move_raw_ids.product_id
+            and not (line.move_dest_ids | line.move_ids.move_dest_ids).raw_material_production_id
+        )
         return purchase_lines.mapped('order_id')
 
     def _prepare_merge_orig_links(self):
