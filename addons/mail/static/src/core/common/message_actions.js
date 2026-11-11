@@ -50,12 +50,12 @@ registerMessageAction("reaction", {
             el: owner.root?.el?.querySelector(`[name="${this.id}"]`),
         });
     },
-    setup: ({ message, owner, thread }) =>
+    setup: ({ message, owner }) =>
         (owner.reactionPicker = useEmojiPicker(undefined, {
             onSelect: (emoji) => {
                 const reaction = message.reactions.find(
                     ({ content, personas }) =>
-                        content === emoji && thread.effectiveSelf.in(personas)
+                        content === emoji && message.effectiveSelf.in(personas)
                 );
                 if (!reaction) {
                     message.react(emoji);

@@ -225,6 +225,32 @@ test("Can add reaction to a message on an ipad", async () => {
     await contains(".o-mail-MessageReaction:contains('😀 1')");
 });
 
+test("Can join an existing reaction of a message (mobile)", async () => {
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    pyEnv["mail.message.reaction"].create({
+        content: "👍",
+        message_id: messageId,
+        partner_id: pyEnv["res.partner"].create({ name: "Demo" }),
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageReaction:contains('👍 1')");
+    await click(".o-mail-MessageReactions button[title='Add a Reaction']");
+    await click(".o-EmojiPicker-content .o-Emoji:contains('👍')");
+    await contains(".o-mail-MessageReaction:contains('👍 2')");
+});
+
 test("Editing message keeps the mentioned channels", async () => {
     const pyEnv = await startServer();
     const channelId1 = pyEnv["discuss.channel"].create({
