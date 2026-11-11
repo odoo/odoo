@@ -8,7 +8,7 @@ class ProductWishlist(models.Model):
     _name = 'product.wishlist'
     _description = 'Product Wishlist'
     _product_unique_partner_id = models.Constraint(
-        'UNIQUE(product_id, partner_id)',
+        'UNIQUE(product_id, partner_id, website_id)',
         'Duplicated wishlisted product for this partner.',
     )
 
