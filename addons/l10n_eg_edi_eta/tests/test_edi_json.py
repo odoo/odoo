@@ -906,3 +906,140 @@ class TestEdiJson(TestEGEdiCommon):
 
         self.assertEqual(invoice._generate_l10n_eg_edi_json(is_demo=True)['documentType'], 'i')
         self.assertEqual(debit_note._generate_l10n_eg_edi_json(is_demo=True)['documentType'], 'd')
+
+    def _post_sign_and_send_invoice_eg(self, partner, price_unit, currency=None):
+        invoice = self._create_invoice_eg(
+            currency_id=(currency or self.env.company.currency_id).id,
+            partner_id=partner.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': price_unit,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+        with freeze_time(self.frozen_today), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
+            new=mocked_action_sign_invoices,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.get_access_token',
+            new=mocked_get_access_token,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.lib.eta_client.ETAClient.submit_invoices',
+            new=mocked_submit_invoices,
+        ):
+            invoice.action_post_sign_invoices()
+            self.create_send_and_print(invoice, default=True).action_send_and_print()
+        return invoice
+
+    def _get_receiver(self, invoice):
+        return json.loads(invoice.l10n_eg_eta_json_doc_file.content)['request']['receiver']
+
+    def test_13_individual_below_invoicing_threshold(self):
+        """An individual buyer below the invoicing threshold is sent with its type only, without any check."""
+        individual = self.env['res.partner'].create({
+            'name': 'Individual',
+            'country_id': self.env.ref('base.eg').id,
+        })
+        invoice = self._post_sign_and_send_invoice_eg(individual, 100.0)
+        self.assertEqual(self._get_receiver(invoice), {'type': 'P'})
+
+        # A complete address is still sent
+        individual.write({
+            'city': 'Iswan',
+            'state_id': self.env.ref('base.state_eg_c').id,
+            'l10n_eg_building_no': '12',
+            'street': '12th dec. street',
+        })
+        invoice = self._post_sign_and_send_invoice_eg(individual, 100.0)
+        self.assertEqual(
+            self._get_receiver(invoice),
+            {
+                'address': {
+                    'country': 'EG',
+                    'governate': 'Cairo',
+                    'regionCity': 'Iswan',
+                    'street': '12th dec. street',
+                    'buildingNumber': '12',
+                    'postalCode': '',
+                },
+                'type': 'P',
+            },
+        )
+
+    def test_14_individual_above_invoicing_threshold(self):
+        """An individual buyer above the invoicing threshold, converted in EGP, needs a valid National ID and a full address."""
+        individual = self.env['res.partner'].create({
+            'name': 'Individual',
+            'country_id': self.env.ref('base.eg').id,
+        })
+        # 131,578.95 + 14% tax is exactly the threshold
+        with self.assertRaisesRegex(UserError, "equal to or above 150,000.00 LE"):
+            self._post_sign_and_send_invoice_eg(individual, 131578.95)
+
+        individual.write({
+            'city': 'Iswan',
+            'street': '12th dec. street',
+        })
+        individual._set_additional_identifier('EG_NIN', '29001011234567')
+        with self.assertRaisesRegex(UserError, "Please fill in the address details"):
+            self._post_sign_and_send_invoice_eg(individual, 150000.0)
+
+        individual.write({
+            'state_id': self.env.ref('base.state_eg_c').id,
+            'l10n_eg_building_no': '12',
+        })
+        individual._set_additional_identifier('EG_NIN', '12345')
+        with self.assertRaisesRegex(UserError, "National ID of the following partners must be 14 digits"):
+            self._post_sign_and_send_invoice_eg(individual, 150000.0)
+
+        individual._set_additional_identifier('EG_NIN', '29001011234567')
+        # 30,000 AED + 14% tax is above the threshold once converted in EGP
+        invoice = self._post_sign_and_send_invoice_eg(individual, 30000.0, currency=self.currency_aed_id)
+        self.assertEqual(
+            self._get_receiver(invoice),
+            {
+                'address': {
+                    'country': 'EG',
+                    'governate': 'Cairo',
+                    'regionCity': 'Iswan',
+                    'street': '12th dec. street',
+                    'buildingNumber': '12',
+                    'postalCode': '',
+                },
+                'name': 'Individual',
+                'type': 'P',
+                'id': '29001011234567',
+            },
+        )
+
+        # An unnamed invoice address uses the person's name and its own National ID, which is not synced
+        invoice_address = self.env['res.partner'].create({
+            'type': 'invoice',
+            'parent_id': individual.id,
+            'country_id': self.env.ref('base.eg').id,
+            'city': 'Giza',
+            'state_id': self.env.ref('base.state_eg_gz').id,
+            'street': 'Pyramids street',
+        })
+        invoice_address._set_additional_identifier('EG_NIN', '29001011234568')
+        invoice = self._post_sign_and_send_invoice_eg(invoice_address, 150000.0)
+        self.assertEqual(
+            self._get_receiver(invoice),
+            {
+                'address': {
+                    'country': 'EG',
+                    'governate': 'Giza',
+                    'regionCity': 'Giza',
+                    'street': 'Pyramids street',
+                    'buildingNumber': '12',
+                    'postalCode': '',
+                },
+                'name': 'Individual',
+                'type': 'P',
+                'id': '29001011234568',
+            },
+        )
