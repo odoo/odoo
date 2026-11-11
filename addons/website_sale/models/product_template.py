@@ -564,10 +564,7 @@ class ProductTemplate(models.Model):
         # Return the list of tuples (main_pt_id, recommended_pt_id)
         # for any product.template sharing the conditions:
         # - same order, dated from less than 5 years
-        # - active product, not a combo item, not himself
-        # "cheaper than the main product" is filtered in Python instead, since
-        # list_price is company_dependent and can't be compared in raw SQL
-        candidate_pool_size = max(max_products * 5, 20)
+        # - active product, cheaper than the main product, not a combo item, not himself
         result = self.env.execute_query(
             SQL(
                 """
@@ -591,36 +588,21 @@ class ProductTemplate(models.Model):
                            AND pt2.active    = TRUE
                            AND pt2.sale_ok   = TRUE
                            AND pt2.is_published = TRUE
+                           AND %(pt2_list_price)s < %(pt_list_price)s
                            AND sol2.combo_item_id IS NULL
                            AND pt2.id        != pt.id
                          GROUP BY pt.id, pt2.id) ranked
-                 WHERE rn <= %(candidate_pool_size)s
+                 WHERE rn <= %(max_products)s
                 """,
                 pt_ids=list(self.ids),
-                candidate_pool_size=candidate_pool_size,
+                pt2_list_price=self._field_to_sql("pt2", "list_price"),
+                pt_list_price=self._field_to_sql("pt", "list_price"),
+                max_products=max_products,
             )
         )
-        candidates_by_main = defaultdict(list)
-        recommended_ids = set()
-        for main_id, recommended_id in result:
-            candidates_by_main[main_id].append(recommended_id)
-            recommended_ids.add(recommended_id)
-
-        list_price_by_template = {
-            template.id: template.list_price
-            for template in self.env["product.template"].browse(
-                set(candidates_by_main) | recommended_ids
-            )
-        }
         products_by_sales = defaultdict(list)
-        for main_id, candidate_ids in candidates_by_main.items():
-            main_price = list_price_by_template.get(main_id, 0.0)
-            cheaper_ids = [
-                recommended_id
-                for recommended_id in candidate_ids
-                if list_price_by_template.get(recommended_id, 0.0) < main_price
-            ]
-            products_by_sales[main_id] = cheaper_ids[:max_products]
+        for main_id, recommended_id in result:
+            products_by_sales[main_id].append(recommended_id)
 
         return products_by_sales
 

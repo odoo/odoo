@@ -45,10 +45,11 @@ class ProductProduct(models.Model):
     lst_price = fields.Float(
         'Sales Price',
         compute='_compute_product_lst_price',
+        compute_sudo=True,
         inverse='_inverse_product_lst_price',
         min_display_digits='Product Price',
-        readonly=False,
         help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
+    specific_lst_price = fields.Float(company_dependent=True)
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -462,18 +463,37 @@ class ProductProduct(models.Model):
         for product in self:
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
 
+    @api.depends('list_price', 'price_extra', 'specific_lst_price')
     @api.depends_context('company')
-    @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
         for product in self:
-            product.lst_price = product.list_price + product.price_extra
+            product.lst_price = product.specific_lst_price or product._get_fallback_lst_price()
+
+    def _get_fallback_lst_price(self):
+        """Return the sales price of the variant when the company has no manual price: the manual
+        price of a parent or main company, unless a company before it has a sales price on the
+        template; otherwise the template sales price plus the extra price."""
+        self.ensure_one()
+        for company in self.env['product.template']._get_list_price_companies():
+            product = self.with_company(company)
+            if company != self.env.company and product.specific_lst_price:
+                return product.specific_lst_price
+            if product.product_tmpl_id.specific_list_price:
+                break
+        return self.product_tmpl_id.list_price + self.price_extra
 
     def _inverse_product_lst_price(self):
         for product in self:
+            lst_price = product.lst_price
             template = product.product_tmpl_id
             if len(template.with_context(active_test=False).product_variant_ids) == 1 and not template.has_configurable_attributes:
-                template.list_price = product.lst_price
+                template.list_price = lst_price
                 product.invalidate_recordset(['list_price'])
+            # only keep a manual price when it differs from the price the variant gets without it
+            fallback_price = product.sudo()._get_fallback_lst_price()
+            product.specific_lst_price = lst_price if lst_price != fallback_price else 0.0
+        # other companies may use this price
+        self.invalidate_recordset(['lst_price'], flush=False)
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
@@ -642,6 +662,7 @@ class ProductProduct(models.Model):
         return self.base_unit_count and price / self.base_unit_count
 
     @api.depends('lst_price', 'base_unit_count')
+    @api.depends_context('company')
     def _compute_base_unit_price(self):
         for product in self:
             if not product.id:
@@ -898,6 +919,8 @@ class ProductProduct(models.Model):
         )
         # Make sure the `create_product_product` context is not kept, unless it was already set.
         products = products.with_env(self.env)
+        # writes made during the create may have cached the prices as 0
+        products.invalidate_recordset(['list_price', 'lst_price'], flush=False)
         if any('barcode' in vals or 'company_id' in vals for vals in vals_list):
             products._check_barcode_uniqueness()
         return products
