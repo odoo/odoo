@@ -1169,7 +1169,8 @@ class PosOrder(models.Model):
             })
             attachments += [(4, basic_receipt.id)]
 
-        if self.mapped('account_move'):
+        # The account_move of an order that is not invoiced is the closing entry of its session
+        if self.is_singly_invoiced:
             report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
             invoice = self.env['ir.attachment'].create({
                 'name': name + '.pdf',
