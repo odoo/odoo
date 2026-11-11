@@ -449,6 +449,18 @@ class AccountMove(models.Model):
             self.company_id._get_invoicing_threshold(),
         ) >= 0
 
+    def _l10n_eg_get_invoice_title(self):
+        self.ensure_one()
+        if (
+            self.country_code != 'EG'
+            # debit_origin_id comes from account_debit_note, which l10n_eg_edi_eta does not depend on
+            or ('debit_origin_id' in self._fields and self.debit_origin_id)  # noqa: OLS03028
+        ):
+            return False
+        if self.commercial_partner_id.vat:
+            return self.env._("Tax Invoice")
+        return self.env._("Simplified Tax Invoice")
+
     def _l10n_eg_edi_is_receiver_exempt(self):
         """An individual buyer (no VAT) below the invoicing threshold does not need to be identified."""
         self.ensure_one()

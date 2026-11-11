@@ -1043,3 +1043,42 @@ class TestEdiJson(TestEGEdiCommon):
                 'id': '29001011234568',
             },
         )
+
+    def test_15_invoice_title_and_not_legal_banner(self):
+        """The title depends on the buyer having a VAT; only an invoice accepted by ETA drops the not legal banner."""
+        individual = self.env['res.partner'].create({
+            'name': 'Individual',
+            'country_id': self.env.ref('base.eg').id,
+        })
+        accepted_invoice = self._post_sign_and_send_invoice_eg(self.partner_a, 100.0)
+        self.assertEqual(accepted_invoice.l10n_eg_edi_submission_state, 'accepted')
+        not_sent_invoice = self._create_invoice_eg(
+            partner_id=individual.id,
+            invoice_line_ids=[{'product_id': self.product_a.id, 'price_unit': 100.0, 'tax_ids': []}],
+        )
+        not_sent_invoice.action_post()
+
+        for invoice, expected_texts, unexpected_texts in (
+            (
+                not_sent_invoice,
+                ('Simplified Tax Invoice', 'THIS IS NOT A LEGAL DOCUMENT', 'هذا المستند ليس مستندا قانونيا'),
+                (),
+            ),
+            (
+                accepted_invoice,
+                ('Tax Invoice',),
+                ('Simplified Tax Invoice', 'THIS IS NOT A LEGAL DOCUMENT'),
+            ),
+        ):
+            with self.subTest(invoice=invoice.name):
+                html = self.env['ir.actions.report']._render_qweb_html('account.account_invoices', invoice.ids)[0].decode()
+                for text in expected_texts:
+                    self.assertIn(text, html)
+                for text in unexpected_texts:
+                    self.assertNotIn(text, html)
+
+        # A debit note keeps its own title
+        debit_note = self._create_debit_note(accepted_invoice, post=True, reason='Price correction')
+        html = self.env['ir.actions.report']._render_qweb_html('account.account_invoices', debit_note.ids)[0].decode()
+        self.assertIn('Debit Note', html)
+        self.assertNotIn('Tax Invoice', html)
