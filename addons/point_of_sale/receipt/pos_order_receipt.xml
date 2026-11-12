@@ -33,6 +33,7 @@
                                     <tr name="taxes_line">
                                         <td class="text-start w-70">
                                             <span><t t-out="tax['name']" /></span>
+                                            <span t-if="tax.get('label')" class="tax-group-label">(<t t-out="tax['label']" />)</span>
                                         </td>
                                         <td class="text-end w-30 text-break">
                                             <span class="font-monospace"><t t-out="tax['amount']" /></span>
@@ -159,7 +160,10 @@
                 <td class="text-start w-60 top">
                     <t t-call="point_of_sale.pos_orderline_receipt_information" />
                 </td>
-                <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-large top price-incl font-monospace" t-out="line['price_subtotal_incl']" />
+                <td t-if="not conditions['basic_receipt']" class="text-end w-30 text-large top price-incl font-monospace">
+                    <t t-out="line['price_subtotal_incl']" />
+                    <span t-if="line.get('tax_group_labels')" class="tax-group" t-out="line['tax_group_labels']" />
+                </td>
             </tr>
             <tr t-else="" name="combo-child-line" class="lines">
                 <td class="text-start w-5 top"/>
