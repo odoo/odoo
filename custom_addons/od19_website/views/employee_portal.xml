@@ -14,8 +14,8 @@
                     <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div class="d-flex align-items-center">
                             <div class="od19-avatar">
-                                <t t-if="user.partner_id.avatar_128">
-                                    <img t-att-src="image_data_uri(user.partner_id.avatar_128)" alt=""/>
+                                <t t-if="user.partner_id.image_128">
+                                    <img t-att-src="image_data_uri(user.partner_id.image_128)" alt=""/>
                                 </t>
                                 <t t-else="">
                                     <span t-esc="initials"/>
