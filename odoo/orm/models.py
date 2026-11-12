@@ -4801,9 +4801,47 @@ class BaseModel(metaclass=MetaModel):
                 imd.browse(d_id).unlink()
                 to_create.append(data)
 
+        def must_update(rec, fname, val):
+            """ Determine whether ``rec[fname]`` must be updated with ``val``. """
+            field = rec._fields.get(fname)
+            if field is None or field.type == 'properties':
+                return True
+            if field.type in ('many2many', 'one2many'):
+                if not isinstance(val, list):
+                    return True
+                if not val:
+                    # nothing changes
+                    return False
+                if len(val) != 1 or 'active_test' in field.context:
+                    # multiple commands are complex to analyze, so we only
+                    # optimize some cases of single command updates
+                    return True
+                [command] = val
+                if not isinstance(command, (list, tuple)):
+                    # val is a list of ids, i.e. an implicit SET command
+                    return True
+                if command[0] == Command.LINK:
+                    return command[1] not in rec.with_context(active_test=False)[fname]._ids
+                if command[0] == Command.UNLINK:
+                    # UNLINK removes inactive records from one2many fields,
+                    # but only active records from many2many fields
+                    if field.type == 'one2many':
+                        rec = rec.with_context(active_test=False)
+                    return command[1] in rec[fname]._ids
+                if command[0] == Command.CLEAR:
+                    # CLEAR only removes active records
+                    return bool(rec[fname])
+                return True
+            return field.convert_to_cache(rec[fname], rec) != field.convert_to_cache(val, rec)
+
         # update existing records
         for data in to_update:
-            data['record']._load_records_write(data['values'])
+            # Avoid writes that are *sure* to not change anything, since they
+            # may trigger expensive recomputations. Note that not being sure
+            # doesn't mean there is a change: the check aims to be fast, and
+            # falls back on writing in any non-trivial case.
+            if any(must_update(data['record'], fname, val) for fname, val in data['values'].items()):
+                data['record']._load_records_write(data['values'])
 
         # check for records to create with an XMLID from another module
         module = self.env.context.get('install_module')
