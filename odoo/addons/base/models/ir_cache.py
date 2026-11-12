@@ -3,8 +3,12 @@ import hmac as hmac_lib
 import importlib.util
 import json
 import logging
+import shutil
 import sys
+import time
 from collections.abc import Collection, Buffer
+from datetime import datetime, timezone
+from pathlib import Path
 
 from odoo import api, fields, models, release
 from odoo.tools import SQL, config
@@ -28,17 +32,25 @@ def _get_ir_cache_secret(env: api.Environment) -> bytes:
     return hkdf_expand(hashlib.sha256, config.server_secret, info, 32)
 
 
+def _get_ir_cache_filename(kind: str, create_date: datetime, signature: bytes) -> str:
+    """ Return the name of the file of the value of an entry: its signature
+    identifies the value, two entries with the same file have the same value. """
+    return f"{kind}-{create_date.strftime('%Y%m%d%H%M%S%f')}-{signature.hex()}"
+
+
 class IrCache(models.Model):
     """ Persistent cache of data derived from the database, like the compiled
     code of the QWeb templates, shared by the workers and the restarts.
 
     The values are bytes, that the caller may load as executable code (e.g.
     the QWeb code objects stored with :mod:`marshal`), and anybody may write
-    in the table (ORM, server action, SQL injection, psql...): an entry is
-    used only if its signature is valid, see :meth:`_get`. The signature is
-    computed with a key that only lives in the memory of the server
-    (see :func:`_get_ir_cache_secret`), so a valid entry can only be produced
-    by :meth:`_set__`.
+    in the table (ORM, server action, SQL injection, psql...) or in the
+    files of the values (next to the filestore, see
+    :meth:`~odoo.tools.config.configmanager.cache_dir`): an entry is used
+    only if its file exists and its signature is valid, see :meth:`_get`.
+    The signature is computed with a key that only lives in the memory of
+    the server (see :func:`_get_ir_cache_secret`), so a valid entry can only
+    be produced by :meth:`_set__`.
 
     The entries are never updated nor invalidated: a new entry is added for
     the same ``(kind, key)`` and the last one is used if it still matches
@@ -50,7 +62,7 @@ class IrCache(models.Model):
     Odoo or python), all the entries are deleted at once instead of being
     rejected one by one, see :meth:`_check_secret` and :meth:`_gc_cache`.
 
-    The entries older than ``_cache_max_hours`` are deleted by
+    The entries and the files older than ``_cache_max_hours`` are deleted by
     :meth:`_gc_cache` (daily cron): the code producing them (e.g. the QWeb
     compiler) may be fixed without changing the version of Odoo, a fix
     applies to the cached data after that delay plus one day at most.
@@ -67,7 +79,6 @@ class IrCache(models.Model):
     key = fields.Char(string="Cache Key", required=True, help="Cache Key, e.g. 'website.layout'")
     control = fields.Json(string="Validation data identifying", required=True, help="Data identifying the source of the entry, e.g. view ids")
     hash = fields.Char(string="Validation Hash", required=True, help="Hash of the source (computed from the control) when the entry was created")
-    data = fields.Binary(attachment=False, required=True)
     signature = fields.Binary(attachment=False, required=True)
 
     _kind_key_idx = models.UniqueIndex('(kind, key, id DESC)')
@@ -106,8 +117,10 @@ class IrCache(models.Model):
         """ Return the value of the last entry of each key, if its signature
         is valid and if its source did not change: its ``hash`` is equal to
         ``hash``, or to the expression ``hash`` computed from its ``control``.
-        Nothing else is trustworthy: an entry with an invalid signature is
-        ignored, and the canary is checked (see :meth:`_check_secret`). The age of the entries is not checked,
+        Nothing else is trustworthy: an entry whose file is missing is a miss,
+        an entry with an invalid signature is ignored, and the canary is
+        checked (see :meth:`_check_secret`). The age of the entries is not
+        checked,
         see :meth:`_gc_cache`.
 
         :param str kind: the type of the entries, e.g. ``'qweb'``
@@ -124,7 +137,7 @@ class IrCache(models.Model):
         secret = _get_ir_cache_secret(self.env)
 
         rows = self.env.execute_query(SQL("""
-            SELECT key, control, hash, data, signature
+            SELECT key, control, hash, create_date, signature
               FROM (
                 SELECT DISTINCT ON (key) * FROM ir_cache
                  WHERE kind = %s AND key = ANY(%s)
@@ -135,23 +148,28 @@ class IrCache(models.Model):
 
         # the entries added by this transaction with a read-only cursor (see `_set__`)
         pending = self.env.cr.postcommit.data.get('ir.cache.pending', ())
-        pending_rows = {row[1]: row[2:] for row in pending if row[0] == kind and row[1] in keys}
+        pending_rows = {row[2]: (*row[3:5], row[0], row[5]) for row in pending if row[1] == kind and row[2] in keys}
         if pending_rows:
             rows.extend(self.env.execute_query(SQL("""
-                SELECT key, control, hash, data, signature
-                FROM (VALUES %s) AS pending (key, control, hash, data, signature)
+                SELECT key, control, hash, create_date, signature
+                FROM (VALUES %s) AS pending (key, control, hash, create_date, signature)
                 WHERE pending.hash = %s
             """, SQL(", ").join(
-                SQL("(%s, %s::jsonb, %s, %s::bytea, %s::bytea)", key, control, hash_, data, signature)
-                for key, (control, hash_, data, signature) in pending_rows.items()
+                SQL("(%s, %s::jsonb, %s, %s::timestamp, %s::bytea)", key, control, hash_, create_date, signature)
+                for key, (control, hash_, create_date, signature) in pending_rows.items()
             ), hash)))
 
+        directory = Path(config.cache_dir(self.env.cr.dbname))
         result = {}
         invalid = []
-        for key, control, hash_, data, signature in rows:
-            data = bytes(data)
+        for key, control, hash_, create_date, signature in rows:
+            signature = bytes(signature)
+            try:
+                data = (directory / _get_ir_cache_filename(kind, create_date, signature)).read_bytes()
+            except OSError:
+                continue  # e.g. deleted by the GC, or another server without the cache
             message = b'\0'.join([kind.encode(), key.encode(), json.dumps(control, sort_keys=True).encode(), hash_.encode(), data])  # canonical, jsonb does not keep the formatting
-            if not hmac_lib.compare_digest(bytes(signature), hmac_lib.digest(secret, message, 'sha256')):
+            if not hmac_lib.compare_digest(signature, hmac_lib.digest(secret, message, 'sha256')):
                 invalid.append(key)
             else:
                 result[key] = data
@@ -162,10 +180,11 @@ class IrCache(models.Model):
     @api.model
     def _set__(self, kind: str, key: str, value: Buffer, control: list | tuple | dict | None = None, hash: SQL | str = ''):
         """ Add a signed entry for ``value``, with ``hash``, or the hash
-        computed by the expression ``hash`` from ``control``. This must be
-        done in the transaction that produced ``value``: when the transaction
-        is rolled back, the entry is either rolled back too, or does not match
-        its source anymore. With a read-only cursor, the entry is stored by a
+        computed by the expression ``hash`` from ``control``. The value is
+        written in a file, the entry is added only if the file is written.
+        This must be done in the transaction that produced ``value``: when the
+        transaction is rolled back, the entry is either rolled back too, or
+        does not match its source anymore. With a read-only cursor, the entry is stored by a
         new cursor after the commit, and :meth:`_get` returns it until then.
 
         :param str kind: the type of the entry, e.g. ``'qweb'``
@@ -194,13 +213,27 @@ class IrCache(models.Model):
         data = bytes(value)
         message = b'\0'.join([kind.encode(), key.encode(), control_json.encode(), hash_value.encode(), data])  # same as in `_get`
 
-        row = (kind, key, control_json, hash_value, data, hmac_lib.digest(secret, message, 'sha256'))
+        signature = hmac_lib.digest(secret, message, 'sha256')
+        create_date = datetime.now(timezone.utc).replace(tzinfo=None)
+
+        # The name of the file is unique, and its entry is visible only after
+        # the commit: nobody reads the file while it is written. If the
+        # transaction is rolled back, the file expires like the others.
+        directory = Path(config.cache_dir(self.env.cr.dbname))
+        try:
+            directory.mkdir(parents=True, exist_ok=True)
+            (directory / _get_ir_cache_filename(kind, create_date, signature)).write_bytes(data)
+        except OSError as e:
+            _logger.info("ir.cache: failed to write the %s entry %r: %s", kind, key, e)
+            return
+
+        row = (create_date, kind, key, control_json, hash_value, signature)
 
         if not self.env.cr.readonly:
             self.env.cr.execute(
                 SQL("""
-                INSERT INTO ir_cache (create_date, kind, key, control, hash, data, signature)
-                VALUES (NOW() AT TIME ZONE 'UTC', %s, %s, %s, %s, %s, %s)
+                INSERT INTO ir_cache (create_date, kind, key, control, hash, signature)
+                VALUES (%s, %s, %s, %s, %s, %s)
             """, *row)
             )
             return
@@ -219,8 +252,8 @@ class IrCache(models.Model):
                 try:
                     with registry.cursor() as cr:
                         cr.execute(SQL(
-                            "INSERT INTO ir_cache (create_date, kind, key, control, hash, data, signature) VALUES %s",
-                            SQL(", ").join(SQL("(NOW() AT TIME ZONE 'UTC', %s, %s, %s, %s, %s, %s)", *row) for row in rows),
+                            "INSERT INTO ir_cache (create_date, kind, key, control, hash, signature) VALUES %s",
+                            SQL(", ").join(SQL("(%s, %s, %s, %s, %s, %s)", *row) for row in rows),
                         ))
                 except Exception as e:  # noqa: BLE001
                     # the response is already computed, the entries are only a cache
@@ -233,19 +266,33 @@ class IrCache(models.Model):
         """ Called by the cron ``base.ir_cron_ir_cache_gc``, daily and when
         :meth:`_register_hook` finds an invalid canary. When the canary is
         missing or signed with another key, delete all the entries (they may
-        be signed with that key too) and add a new canary. Otherwise delete
-        the entries older than ``_cache_max_hours``, except the canary (a
-        deleted entry is simply produced again).
+        be signed with that key too) and their files, and add a new canary. Otherwise delete the entries older than
+        ``_cache_max_hours``, except the canary (a deleted entry is simply
+        produced again). Then delete the files older than
+        ``_cache_max_hours``, except the file of the canary: the files of the
+        deleted entries, and the files without entry (e.g. rolled back).
         """
+        directory = Path(config.cache_dir(self.env.cr.dbname))
         if not self._check_secret():
             self.env.cr.execute("TRUNCATE ir_cache")
+            shutil.rmtree(directory, ignore_errors=True)
             _logger.info("ir.cache: all entries deleted")
             self._set__('ir.cache', 'ir.cache', b'0')
-            return
+        else:
+            self.env.cr.execute(SQL("""
+                DELETE FROM ir_cache c
+                 WHERE c.create_date < NOW() AT TIME ZONE 'UTC' - make_interval(hours => %s)
+                    AND kind != 'ir.cache'
+            """, self._cache_max_hours))
+            _logger.info("ir.cache: %s entries deleted", self.env.cr.rowcount)
 
-        self.env.cr.execute(SQL("""
-            DELETE FROM ir_cache c
-             WHERE c.create_date < NOW() AT TIME ZONE 'UTC' - make_interval(hours => %s)
-                AND kind != 'ir.cache'
-        """, self._cache_max_hours))
-        _logger.info("ir.cache: %s entries deleted", self.env.cr.rowcount)
+        limit_time = time.time() - self._cache_max_hours * 3600
+        count = 0
+        for path in directory.iterdir():
+            try:
+                if not path.name.startswith('ir.cache-') and path.stat().st_mtime < limit_time:
+                    path.unlink()
+                    count += 1
+            except OSError:
+                pass  # deleted by another GC
+        _logger.info("ir.cache: %s files deleted", count)

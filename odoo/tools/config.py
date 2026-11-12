@@ -1143,6 +1143,10 @@ class configmanager:
     def filestore(self, dbname):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
+    def cache_dir(self, dbname):
+        """ Directory of the values of ``ir.cache``, next to the filestore. """
+        return os.path.join(self['data_dir'], 'cache', dbname)
+
     def set_admin_password(self, new_password):
         self.options['admin_passwd'] = crypt_context.hash(new_password)
 

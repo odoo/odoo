@@ -4,6 +4,11 @@ import itertools
 import json
 import marshal
 import markupsafe
+import os
+import tempfile
+import time
+from datetime import timedelta
+from pathlib import Path
 
 from lxml import etree
 from unittest.mock import patch
@@ -11,6 +16,7 @@ from unittest.mock import patch
 from odoo.tests import tagged
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.models.ir_cache import _get_ir_cache_filename
 from odoo.addons.base.models.ir_qweb import QWebError, render as mock_render
 from odoo.tools import SQL, file_open, misc, mute_logger, config
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -2746,6 +2752,11 @@ class TestQWebCodeCache(TransactionCase):
             'name': 'caller', 'type': 'qweb', 'key': 'base.test_code_cache_caller',
             'arch': '<div><t t-call="base.test_code_cache_callee"/></div>',
         })
+        # the rows are rolled back, not the files: not the directory of the
+        # database (the GC deletes it when the canary of the database is
+        # invalid, e.g. the cron did not run yet)
+        cls.directory = os.path.join(cls.enterClassContext(tempfile.TemporaryDirectory()), 'db')
+        cls.classPatch(config, 'cache_dir', lambda dbname: cls.directory)
         # no cron worker in the tests: add the canary like the cron triggered
         # by `_register_hook` (the invalid signatures are only reported with
         # a valid canary)
@@ -2771,15 +2782,26 @@ class TestQWebCodeCache(TransactionCase):
     def rows(self, template):
         # no ORM on `ir.cache` (`browse` is forbidden)
         return self.env.execute_query_dict(SQL(
-            "SELECT id, key, control FROM ir_cache WHERE kind = 'qweb' AND key LIKE %s ORDER BY id",
+            "SELECT id, key, control, create_date, signature FROM ir_cache WHERE kind = 'qweb' AND key LIKE %s ORDER BY id",
             f'({template.id}, %',
         ))
+
+    def path(self, row):
+        """ Path of the file of the value of the row. """
+        return os.path.join(self.directory, _get_ir_cache_filename('qweb', row['create_date'], bytes(row['signature'])))
 
     def test_reuse(self):
         self.render(self.caller, '<div><span>callee</span></div>', generated=self.caller + self.callee)
         self.assertEqual(len(self.rows(self.caller)), 1)
         self.render(self.caller, '<div><span>callee</span></div>', generated=[])
         self.assertEqual(len(self.rows(self.caller)), 1, "the valid row is used, no new row")
+
+        # the value is in a file: without the file, the row is a miss
+        os.unlink(self.path(self.rows(self.callee)[0]))
+        with self.assertNoLogs('odoo.addons.base.models.ir_cache', 'INFO'):
+            self.render(self.caller, '<div><span>callee</span></div>', generated=self.callee)
+        self.assertEqual(len(self.rows(self.callee)), 2)
+        self.render(self.caller, '<div><span>callee</span></div>', generated=[])
 
     def test_readonly(self):
         """ A read-only cursor inserts the rows after the commit, and reads
@@ -2794,8 +2816,8 @@ class TestQWebCodeCache(TransactionCase):
         self.assertEqual(len(pending), 2, "generated once")
         self.env.cr.postcommit.clear()
         self.env.cr.execute(SQL(
-            "INSERT INTO ir_cache (create_date, kind, key, control, hash, data, signature) VALUES %s",
-            SQL(", ").join(SQL("(NOW() AT TIME ZONE 'UTC', %s, %s, %s, %s, %s, %s)", *row) for row in pending),
+            "INSERT INTO ir_cache (create_date, kind, key, control, hash, signature) VALUES %s",
+            SQL(", ").join(SQL("(%s, %s, %s, %s, %s, %s)", *row) for row in pending),
         ))
         self.render(self.caller, '<div><span>callee</span></div>', generated=[])
         self.callee.arch = '<span>callee 2</span>'
@@ -2839,10 +2861,24 @@ class TestQWebCodeCache(TransactionCase):
         self.assertEqual(len(self.rows(self.callee)), 4)
         self.env['ir.cache']._gc_cache()
         self.assertEqual(len(self.rows(self.callee)), 4)
-        self.env.cr.execute(SQL("UPDATE ir_cache SET create_date = create_date - interval '8 days' WHERE id = ANY(%s)", [r['id'] for r in self.rows(self.callee)]))
+        old_rows = self.rows(self.callee)
+        self.env.cr.execute(SQL("UPDATE ir_cache SET create_date = create_date - interval '8 days' WHERE id = ANY(%s)", [r['id'] for r in old_rows]))
         self.env['ir.cache']._gc_cache()
         self.assertFalse(self.rows(self.callee))
         self.render(self.caller, '<div><span>callee</span></div>', generated=self.callee)
+
+        # the files expire like the rows (whether their row was deleted or
+        # not, e.g. rolled back), except the canary
+        old_paths = [self.path(row) for row in old_rows]
+        self.assertTrue(all(map(os.path.exists, old_paths)))
+        canaries = [os.path.join(self.directory, name) for name in os.listdir(self.directory) if name.startswith('ir.cache-')]
+        for path in old_paths + canaries:
+            os.utime(path, (time.time() - 8 * 24 * 3600,) * 2)
+        self.env['ir.cache']._gc_cache()
+        self.assertFalse(any(map(os.path.exists, old_paths)))
+        self.assertTrue(all(map(os.path.exists, map(self.path, self.rows(self.caller) + self.rows(self.callee)))))
+        self.assertTrue(self.env['ir.cache']._check_secret(), "the canary does not expire")
+        self.render(self.caller, '<div><span>callee</span></div>', generated=[])
 
     def test_signature(self):
         """ The bytecode of the table is executed: whoever writes in the table,
@@ -2852,8 +2888,12 @@ class TestQWebCodeCache(TransactionCase):
         evil = marshal.dumps(('', {}, 'evil', compile('raise Exception("evil")', '<evil>', 'exec')))
 
         def forge(**values):
-            """ Copy the row of the callee with ``values`` (as the last row). """
-            columns = ['create_date', 'kind', 'key', 'control', 'hash', 'data', 'signature']
+            """ Copy the row of the callee with ``values`` (as the last row),
+            with a file containing ``data``. """
+            if 'data' in values:
+                values['create_date'] = row['create_date'] + timedelta(seconds=1)
+                Path(self.path({**row, **values})).write_bytes(values.pop('data'))
+            columns = ['create_date', 'kind', 'key', 'control', 'hash', 'signature']
             self.env.cr.execute(SQL(
                 "INSERT INTO ir_cache (%s) SELECT %s FROM ir_cache WHERE id = %s",
                 SQL(', ').join(map(SQL.identifier, columns)),
@@ -2894,6 +2934,11 @@ class TestQWebCodeCache(TransactionCase):
         deleted at once by the cron. """
         IrCache = self.env['ir.cache']
         cron = self.env.ref('base.ir_cron_ir_cache_gc')
+        # the files are deleted with the rows: not those of the class (the
+        # canary of the class would lose its file)
+        directory = os.path.join(self.enterContext(tempfile.TemporaryDirectory()), 'db')
+        self.patch(config, 'cache_dir', lambda dbname: directory)
+        IrCache._gc_cache()  # the canary in this directory
         self.render(self.caller, '<div><span>callee</span></div>', generated=self.caller + self.callee)
 
         def canaries():
@@ -2921,10 +2966,15 @@ class TestQWebCodeCache(TransactionCase):
             self.assertIn("the key of the signatures changed", logs.output[0])
             self.assertEqual(triggers(), 1)
 
-            # the cron deletes all the rows and adds a new canary
+            # the cron deletes all the rows and their files, and adds a new
+            # canary
+            old_files = os.listdir(directory)
             IrCache._gc_cache()
             self.assertFalse(self.rows(self.caller))
             self.assertEqual(len(canaries()), 1)
+            [canary_file] = os.listdir(directory)
+            self.assertNotIn(canary_file, old_files)
+            self.assertTrue(IrCache._check_secret())
             with self.assertNoLogs('odoo.addons.base.models.ir_cache', 'WARNING'):
                 self.render(self.caller, '<div><span>callee</span></div>', generated=self.caller + self.callee)
                 self.render(self.caller, '<div><span>callee</span></div>', generated=[])
