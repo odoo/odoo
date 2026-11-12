@@ -22,8 +22,8 @@
             </div>
             <t t-set-slot="footer">
                 <div class="qr-code-popup-footer d-flex align-items-center justify-content-center w-100">
-                    <button t-if="this.props.confirm" class="btn btn-primary btn-lg confirm-button mx-2" t-on-click="this.confirm" t-out="this.props.confirmLabel" />
-                    <button t-if="this.props.close" class="btn btn-secondary btn-lg cancel-button mx-2" t-on-click="this.props.close" t-out="this.props.cancelLabel" />
+                    <button class="btn btn-primary btn-lg confirm-button mx-2" t-on-click="this.confirm" t-att-disabled="this.state.loading">Confirm</button>
+                    <button class="btn btn-secondary btn-lg cancel-button mx-2" t-on-click="this.props.close" t-att-disabled="this.state.loading">Discard</button>
                 </div>
             </t>
         </Dialog>

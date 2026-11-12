@@ -16,7 +16,6 @@ function getOnlinePaymentMethod(store, customerRequired) {
     return store.models["pos.payment.method"].create({
         name: "Online payment",
         type: "online",
-        payment_method_type: "none",
         sequence: 3,
         _customer_required: true,
     });
