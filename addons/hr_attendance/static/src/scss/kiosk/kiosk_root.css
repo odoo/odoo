@@ -1,0 +1,24 @@
+:root {
+    @media (min-width: 992px) {
+        /* Allow to handle root font size whether or not the website is installed */
+        --bs-root-font-size: var(--o-attendance-font-size-root-lg);
+        --root-font-size: var(--o-attendance-font-size-root-lg);
+    }
+
+    @media (min-width: 1400px) {
+        --bs-root-font-size: var(--o-attendance-font-size-root-xxl);
+        --root-font-size: var(--o-attendance-font-size-root-xxl);
+    }
+
+    /* UW */
+    @media (min-width: 2560px) {
+        --bs-root-font-size: var(--o-attendance-font-size-root-uw);
+        --root-font-size: var(--o-attendance-font-size-root-uw);
+    }
+
+    /* 4K */
+    @media screen and (min-width: 3839px), (min-height: 3839px) {
+        --bs-root-font-size: var(--o-attendance-font-size-root-4k);
+        --root-font-size: var(--o-attendance-font-size-root-4k);
+    }
+}

@@ -49,6 +49,24 @@ actions(Check in/Check out) performed by them.
         'web.assets_tests': [
             'hr_attendance/static/tests/tours/**/*',
         ],
+        'hr_attendance._base_public_kiosk_assets': [
+            "hr_attendance/static/src/public_kiosk/**/*",
+            "hr_attendance/static/src/components/attendance_video_stream/**/*",
+            "hr_attendance/static/src/components/break_duration_dialog/**/*",
+            "hr_attendance/static/src/components/card_layout/**/*",
+            "hr_attendance/static/src/components/confirmation/**/*",
+            "hr_attendance/static/src/components/greetings/**/*",
+            "hr_attendance/static/src/components/hooks/use_camera.js",
+            "hr_attendance/static/src/components/kiosk_barcode/**/*",
+            "hr_attendance/static/src/components/manual_selection/**/*",
+            "hr_attendance/static/src/components/new_employee_dialog/**/*",
+            "hr_attendance/static/src/components/pin_code/**/*",
+            'hr_attendance/static/src/scss/kiosk/hr_attendance.css',
+            "barcodes/static/src/components/barcode_scanner.js",
+            "barcodes/static/src/components/barcode_scanner.xml",
+            "barcodes/static/src/components/barcode_scanner.css",
+            "barcodes/static/src/barcode_plugin.js",
+        ],
         'hr_attendance.assets_public_attendance': [
             # Define attendance variables (takes priority)
             'hr_attendance/static/src/scss/kiosk/primary_variables.scss',
@@ -70,20 +88,8 @@ actions(Check in/Check out) performed by them.
             ('include', 'web.icons_fonts'),
             ('include', 'web._assets_core'),
 
-            # Public Kiosk app and its components
-            "hr_attendance/static/src/public_kiosk/**/*",
-            "hr_attendance/static/src/components/attendance_video_stream/**/*",
-            "hr_attendance/static/src/components/break_duration_dialog/**/*",
-            "hr_attendance/static/src/components/card_layout/**/*",
-            "hr_attendance/static/src/components/confirmation/**/*",
-            "hr_attendance/static/src/components/greetings/**/*",
-            "hr_attendance/static/src/components/hooks/use_camera.js",
-            "hr_attendance/static/src/components/kiosk_barcode/**/*",
-            "hr_attendance/static/src/components/manual_selection/**/*",
-            "hr_attendance/static/src/components/new_employee_dialog/**/*",
-            "hr_attendance/static/src/components/pin_code/**/*",
-
-            'hr_attendance/static/src/scss/kiosk/hr_attendance.css',
+            'hr_attendance/static/src/scss/kiosk/kiosk_root.css',
+            ('include', 'hr_attendance._base_public_kiosk_assets'),
             "web/static/src/views/fields/formatters.js",
 
             # document link
@@ -91,11 +97,6 @@ actions(Check in/Check out) performed by them.
             "web/static/src/views/widgets/standard_widget_props.js",
             "web/static/src/views/widgets/documentation_link/*",
 
-            # Barcode reader utils
-            "barcodes/static/src/components/barcode_scanner.js",
-            "barcodes/static/src/components/barcode_scanner.xml",
-            "barcodes/static/src/components/barcode_scanner.css",
-            "barcodes/static/src/barcode_plugin.js",
             ('after', 'hr_attendance/static/src/scss/kiosk/primary_variables.scss', 'hr_attendance/static/src/scss/css_variables.scss'),
 
         ],
