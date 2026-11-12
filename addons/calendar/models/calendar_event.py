@@ -926,6 +926,9 @@ class CalendarEvent(models.Model):
             partners = self.env['res.partner'].browse(partner_ids).with_prefetch(partner_ids)
 
             for vals, vals_partner_ids in zip(vals_list, vals_partner_list):
+                organizer = organizers.browse(vals.get('user_id', False))
+                if len(vals_partner_ids) == 1 and organizer.partner_id.id in vals_partner_ids:
+                    continue
                 contact_description = self._get_contact_details_description(
                     organizers.browse(vals.get('user_id', False)),
                     partners.browse(vals_partner_ids),
