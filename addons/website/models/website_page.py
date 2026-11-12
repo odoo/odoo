@@ -205,6 +205,9 @@ class WebsitePage(models.Model):
                     vals['group_ids'] = False
         # write on page == write on view
         # the view will invalidate the 'templates' cache
+        # except for `is_published`, which is stored on the page
+        if 'is_published' in vals:
+            self.env.registry.clear_cache('templates')
         return super().write(vals)
 
     def get_website_meta(self):
