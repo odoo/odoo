@@ -8,6 +8,7 @@ export const calendarView = {
     type: "calendar",
 
     searchMenuTypes: ["filter", "favorite"],
+    hideDateSearchItems: true,
 
     ArchParser: CalendarArchParser,
     Controller: CalendarController,

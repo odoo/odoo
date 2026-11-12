@@ -217,6 +217,8 @@ const FACET_TYPES = {
     relativeFilter: "relative",
 };
 
+const DATE_SEARCH_ITEM_TYPES = ["dateFilter", "dateGroupBy", "relativeFilter"];
+
 export class SearchModel extends EventBus {
     query = proxy([]);
     searchItems = proxy({});
@@ -267,6 +269,7 @@ export class SearchModel extends EventBus {
      * @param {Array} [config.dynamicFilters=[]]
      * @param {string[]} [config.groupBy=[]]
      * @param {boolean} [config.loadIrFilters=false]
+     * @param {boolean} [config.hideDateSearchItems=false]
      * @param {boolean} [config.display.searchPanel=true]
      * @param {OrderTerm[]} [config.orderBy=[]]
      * @param {string[]} [config.searchMenuTypes=["filter", "groupBy", "favorite"]]
@@ -282,13 +285,15 @@ export class SearchModel extends EventBus {
         // used to avoid useless recomputations
         this._reset();
 
-        const { context, domain, groupBy, hideCustomGroupBy, orderBy } = config;
+        const { context, domain, groupBy, hideCustomGroupBy, hideDateSearchItems, orderBy } =
+            config;
 
         this.globalContext = toRaw(Object.assign({}, context));
         this.globalDomain = domain || [];
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
         this.hideCustomGroupBy = hideCustomGroupBy;
+        this.hideDateSearchItems = hideDateSearchItems || false;
 
         this.searchMenuTypes = new Set(config.searchMenuTypes || ["filter", "groupBy", "favorite"]);
         this.canOrderByCount = config.canOrderByCount;
@@ -730,7 +735,10 @@ export class SearchModel extends EventBus {
             this._notify();
             return;
         }
-        this._filterQuery((item) => this.searchItems[item.searchItemId].groupId !== groupId);
+        this._filterQuery((item) => {
+            const searchItem = this.searchItems[item.searchItemId];
+            return searchItem.groupId !== groupId || this.#isHidden(searchItem);
+        });
         this._checkOrderByCountStatus();
         this._notify();
     }
@@ -786,6 +794,9 @@ export class SearchModel extends EventBus {
     getSearchItems(predicate) {
         const searchItems = [];
         for (const searchItem of Object.values(this.searchItems)) {
+            if (this.#isHidden(searchItem)) {
+                continue;
+            }
             const enrichedSearchitem = this._enrichItem(searchItem);
             if (enrichedSearchitem) {
                 const isInvisible =
@@ -2416,7 +2427,11 @@ export class SearchModel extends EventBus {
         const preGroups = [];
         for (const queryElem of this.query) {
             const { searchItemId } = queryElem;
-            const { groupId } = this.searchItems[searchItemId];
+            const searchItem = this.searchItems[searchItemId];
+            if (this.#isHidden(searchItem)) {
+                continue;
+            }
+            const { groupId } = searchItem;
             let preGroup = preGroups.find((group) => group.id === groupId);
             if (!preGroup) {
                 preGroup = { id: groupId, queryElements: [] };
@@ -2472,6 +2487,14 @@ export class SearchModel extends EventBus {
             groups.push({ id, activeItems });
         }
         return groups;
+    }
+
+    /**
+     * Date search items are kept in the query of views that hide them, so that
+     * they apply again once the user switches to another view.
+     */
+    #isHidden(searchItem) {
+        return this.hideDateSearchItems && DATE_SEARCH_ITEM_TYPES.includes(searchItem.type);
     }
 
     _getIntervalOptions(searchItem) {
