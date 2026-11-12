@@ -191,7 +191,8 @@ class WebsitePage(models.Model):
                 if vals['visibility'] != 'restricted_group':
                     vals['group_ids'] = False
 
-        if 'url' in vals or 'visibility' in vals or 'group_ids' in vals:
+        cache_invalidating_fields = ('url', 'visibility', 'group_ids', 'is_published', 'date_publish')
+        if any(field in vals for field in cache_invalidating_fields):
             self.env.registry.clear_cache('templates')   # Clear cache because the response depends on the path and the rendering of the view changes.
 
         return super().write(vals)
