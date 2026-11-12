@@ -1,4 +1,4 @@
-import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
+import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_plugin";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";

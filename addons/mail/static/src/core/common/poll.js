@@ -1,4 +1,4 @@
-import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { computedUntilStale } from "@mail/utils/common/signal";
 
@@ -26,7 +26,7 @@ export class Poll extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            messageSearch: types.instanceOf(MessageSearchState).optional(),
+            messageSearch: types.instanceOf(MessageSearchPlugin).optional(),
             poll: types.instanceOf(this.store["mail.poll"]),
         });
         /** @type {import("@odoo/owl").Signal<Element>} */

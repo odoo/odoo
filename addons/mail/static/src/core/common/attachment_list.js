@@ -1,7 +1,7 @@
 import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dialog";
 import { Gif } from "@mail/core/common/gif";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { propStatic, useMaybePlugin, usePropsPlus } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
@@ -61,7 +61,7 @@ export class AttachmentList extends Component {
                 })
             ),
             isSelecting: t.boolean().optional(false),
-            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messageSearch: t.instanceOf(MessageSearchPlugin).optional(),
             onToggleSelected: t.function([t.instanceOf(this.store["ir.attachment"])]).optional(),
             selectedAttachments: t.array(t.instanceOf(this.store["ir.attachment"])).optional(),
             thread: propStatic(

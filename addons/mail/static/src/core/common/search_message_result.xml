@@ -6,13 +6,13 @@
                 <t t-out="this.MESSAGE_FOUND" />
             </p>
             <MessageCardList
-                messages="this.props.messageSearch.messages"
+                messages="this.props.messageSearch.messages()"
                 thread="this.props.thread"
                 mode="'search'"
                 messageSearch="this.props.messageSearch"
-                showEmpty="this.props.messageSearch.messages.length === 0 and this.props.messageSearch.searched"
+                showEmpty="this.props.messageSearch.messages().length === 0 and this.props.messageSearch.searched()"
                 onClickJump="() => this.props.onClickJump?.()"
-                loadMore="this.props.messageSearch.hasMore"
+                loadMore="this.props.messageSearch.hasMore()"
                 onLoadMoreVisible.bind="this.onLoadMoreVisible"
             />
         </div>
