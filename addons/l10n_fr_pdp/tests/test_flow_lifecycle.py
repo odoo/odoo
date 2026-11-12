@@ -1,5 +1,5 @@
 from collections import Counter
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from lxml import etree
 
@@ -482,6 +482,9 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         expected_xml = self._load_expected_report_xml(
             'FFE1025A_PPF262_PPF2621025000000000000290.xml',
         )
+        # The reserve example has billing periods, but these invoices have no deferred dates.
+        for period in expected_xml.findall('./TransactionsReport/Invoice/InvoicePeriod'):
+            period.getparent().remove(period)
         self._assert_identification_nodes(actual_xml, expected_xml)
         self.assertXmlTreeEqual(
             self._ignore_runtime_report_values(actual_xml),
@@ -803,6 +806,72 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(len(transactions), 0)
         self.assertEqual(invoices[0].findtext('ID'), invoice.name)
         self.assertEqual(invoices[0].findtext('CurrencyCode'), invoice.currency_id.name)
+
+    def test_b2bi_invoice_without_billing_period(self):
+        """Do not use the reporting period or payment deadline as a billing period."""
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-02-05',
+            invoice_date_due='2025-04-30',
+        )
+        flow = invoice.l10n_fr_pdp_last_flow_id
+        xml = self._build_flow_xml(flow)
+        self.assertEqual(xml.findtext('./TransactionsReport/ReportPeriod/StartDate'), '20250201')
+        self.assertEqual(xml.findtext('./TransactionsReport/ReportPeriod/EndDate'), '20250210')
+        self.assertFalse(xml.findall('./TransactionsReport/Invoice/InvoicePeriod'))
+        self.assertFalse(xml.findall('./TransactionsReport/Invoice/Line/InvoicePeriod'))
+
+    def test_b2bi_invoice_billing_periods(self):
+        """Export valid line periods and infer the header only when every product line is dated."""
+        invoice = self._create_reporting_invoice_with_lines(
+            partner=self.b2bi_customer,
+            lines=[{'price_unit': 100.0}, {'price_unit': 200.0}],
+        )
+        # Simulate the optional Enterprise dates without adding fields or requiring that module.
+        periods_by_line = {}
+        get_line_invoice_period = self.env['pdp.flow.10.xml.builder']._get_line_invoice_period
+
+        def get_period_with_dates(line):
+            start_date, end_date = periods_by_line[line.id]
+            return get_line_invoice_period(Mock(
+                _fields={'deferred_start_date': True, 'deferred_end_date': True},
+                deferred_start_date=fields.Date.to_date(start_date),
+                deferred_end_date=fields.Date.to_date(end_date),
+            ))
+
+        cases = [
+            ('different_periods', [('2025-01-01', '2025-03-31'), ('2025-02-01', '2025-04-30')],
+             [('20250101', '20250331'), ('20250201', '20250430')], ('20250101', '20250430')),
+            ('no_dates', [(False, False), (False, False)], [], None),
+            ('one_undated_line', [('2025-01-01', '2025-03-31'), (False, False)],
+             [('20250101', '20250331')], None),
+            ('missing_end', [('2025-01-01', False), (False, False)], [], None),
+            ('missing_start', [(False, '2025-03-31'), (False, False)], [], None),
+            ('reversed_dates', [('2025-03-31', '2025-01-01'), (False, False)], [], None),
+            ('same_day', [('2025-02-05', '2025-02-05'), ('2025-02-05', '2025-02-05')],
+             [('20250205', '20250205'), ('20250205', '20250205')], ('20250205', '20250205')),
+        ]
+        with patch.object(
+            self.env.registry['pdp.flow.10.xml.builder'], '_get_line_invoice_period',
+            side_effect=get_period_with_dates,
+        ):
+            for name, periods, expected_lines, expected_header in cases:
+                with self.subTest(name=name):
+                    periods_by_line.update(zip(invoice.invoice_line_ids.ids, periods))
+                    xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+                    invoice_node = xml.find('./TransactionsReport/Invoice')
+                    self.assertEqual([
+                        (period.findtext('StartDate'), period.findtext('EndDate'))
+                        for period in invoice_node.findall('./Line/InvoicePeriod')
+                    ], expected_lines)
+                    header = invoice_node.find('InvoicePeriod')
+                    if expected_header:
+                        self.assertIsNotNone(header)
+                        self.assertEqual(
+                            (header.findtext('StartDate'), header.findtext('EndDate')), expected_header,
+                        )
+                    else:
+                        self.assertIsNone(header)
 
     def test_non_eu_vendor_without_vat_uses_country_and_name_identifier(self):
         us_vendor = self.env['res.partner'].create({
