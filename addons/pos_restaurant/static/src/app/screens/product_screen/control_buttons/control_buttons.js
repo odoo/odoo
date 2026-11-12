@@ -14,6 +14,12 @@ patch(ControlButtons.prototype, {
         this.dialog.closeAll();
         this.pos.startTransferOrder();
     },
+    isSplitLineCountable(line) {
+        if (!this.pos.config.module_pos_restaurant) {
+            return super.isSplitLineCountable(...arguments);
+        }
+        return line.isGlobalDiscountApplicable();
+    },
     get showAddCourse() {
         return (
             this.pos.config.module_pos_restaurant &&
@@ -28,11 +34,6 @@ patch(ControlButtons.prototype, {
             return false;
         }
         return order.getSelectedCourse() || order.getSelectedOrderline();
-    },
-    openSplitPage() {
-        this.pos.navigate("SplitBillScreen", {
-            orderUuid: this.currentOrder.uuid,
-        });
     },
     async clickTransferCourse() {
         this.dialog.closeAll();

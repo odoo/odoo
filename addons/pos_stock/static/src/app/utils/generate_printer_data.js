@@ -13,10 +13,10 @@ patch(GeneratePrinterData.prototype, {
     },
     generateReceiptData() {
         const receiptData = super.generateReceiptData();
-        receiptData.extra_data.formated_shipping_date = this.order.formatDateOrTime(
-            "shipping_date",
-            "date"
-        );
+        receiptData.extra_data.formated_shipping_date = this.order.shipping_date
+            ? this.order.formatDateOrTime("shipping_date", "date")
+            : false;
+        receiptData.extra_data.pickup_later = Boolean(this.order.pickup_later);
         return receiptData;
     },
 });

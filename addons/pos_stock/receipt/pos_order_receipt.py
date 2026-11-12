@@ -18,7 +18,11 @@ class PosOrderReceipt(models.AbstractModel):
 
     def order_receipt_generate_data(self, basic_receipt=False):
         receipt_data = super().order_receipt_generate_data(basic_receipt)
-        receipt_data['extra_data']['formated_shipping_date'] = format_date(self.env, self.shipping_date) if self.shipping_date else False
+        receipt_data['extra_data']['formated_shipping_date'] = (
+            format_date(self.env, self.shipping_date)
+            if self.shipping_date else False
+        )
+        receipt_data['extra_data']['pickup_later'] = self.pickup_later
         return receipt_data
 
     def _generate_preparation_output_data(self, line, quantity):

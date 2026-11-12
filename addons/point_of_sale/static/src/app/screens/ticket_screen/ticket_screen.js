@@ -609,10 +609,15 @@ export class TicketScreen extends Component {
             sortedOrders = sortOrders(orders, true);
         }
 
+        sortedOrders.sort((a, b) => this.getOrderSortPriority(b) - this.getOrderSortPriority(a));
+
         return sortedOrders.slice(
             (this.state.page - 1) * this.state.nbrByPage,
             this.state.page * this.state.nbrByPage
         );
+    }
+    getOrderSortPriority(_order) {
+        return 0;
     }
     get buttonClasses() {
         return this.getHasItemsToRefund() ? "btn-primary" : "btn-secondary disabled";
