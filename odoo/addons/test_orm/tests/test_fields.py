@@ -1080,6 +1080,23 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for record in records:
                 self.check_monetary(record, amount, currency, 'multi write(amount)')
 
+    def test_20_monetary_in_company_search(self):
+        """ Test that .in_company property correctly converts and sorts monetary fields using _search """
+        Model = self.env['test_orm.mixed']
+        curr_1 = self.env['res.currency'].create({'name': 'C1', 'symbol': 'C1'})
+        curr_2 = self.env['res.currency'].create({'name': 'C2', 'symbol': 'C2'})
+        self.env['res.currency.rate'].create([
+            {'name': '2026-01-01', 'rate': 1.0, 'currency_id': curr_1.id, 'company_id': self.env.company.id},
+            {'name': '2026-01-01', 'rate': 0.5, 'currency_id': curr_2.id, 'company_id': self.env.company.id},
+        ])
+        rec1 = Model.create({'currency_id': curr_1.id, 'amount': 100})
+        rec2 = Model.create({'currency_id': curr_2.id, 'amount': 60})
+        records = Model.search(
+            [('id', 'in', (rec1 + rec2).ids)],
+            order='amount.in_company ASC'
+        )
+        self.assertEqual(records.ids, [rec1.id, rec2.id])
+
     def test_20_monetary_opw_2223134(self):
         """ test monetary fields with cache override """
         model = self.env['test_orm.monetary_order']
