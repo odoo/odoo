@@ -243,10 +243,40 @@ test("Alt+F should move focus to the first toolbar button when focus is not on t
     await waitFor(".o-we-toolbar");
     expect(el).toBeFocused();
 
-    // Alter + F should move focus to first toolbar button
+    // Alt + F should move focus to first toolbar button
     await press(["alt", "f"]);
     const toolbarBtns = queryAll(".o-we-toolbar button");
     expect(toolbarBtns[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("Alt+F10 should move focus to the first toolbar button as an alias of Alt+F", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(el).toBeFocused();
+
+    await press(["alt", "f10"]);
+    expect(queryAll(".o-we-toolbar button")[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("pressing Alt should display the toolbar shortcut overlay", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await keyDown("alt");
+    expect(".o-we-toolbar .o_web_hotkey_overlay").toHaveCount(1);
+    expect(".o-we-toolbar .o_web_hotkey_overlay").toHaveText("F");
+    await keyUp("alt");
+    expect(".o_web_hotkey_overlay").toHaveCount(0);
+
+    // No overlay once the focus is in the toolbar, as the shortcut is not
+    // available there
+    await press(["alt", "f"]);
+    expect(".o-we-toolbar button[name='font_type']").toBeFocused();
+    await keyDown("alt");
+    expect(".o_web_hotkey_overlay").toHaveCount(0);
+    await keyUp("alt");
 });
 
 test.tags("desktop");
