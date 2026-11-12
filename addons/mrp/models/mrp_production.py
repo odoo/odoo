@@ -1248,15 +1248,33 @@ class MrpProduction(models.Model):
 
     def _update_raw_moves(self, factor):
         self.ensure_one()
-        update_info = []
+        # Pre-compute all target quantities before writing so that move fields
+        # (product_uom_qty, product_uom.rounding) are read in one prefetch pass.
+        pending = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
             new_qty = float_round(old_qty * factor, precision_rounding=move.product_uom.rounding, rounding_method='UP')
             if new_qty > 0:
-                # procurement and assigning is now run in write
-                move.write({'product_uom_qty': new_qty})
-                update_info.append((move, old_qty, new_qty))
-        return update_info
+                pending.append((move, old_qty, new_qty))
+        # Group moves that end up with the same new quantity and write each
+        # group as a single recordset. The ORM will issue one UPDATE and one
+        # round of compute-invalidation per unique quantity value, which is
+        # significantly fewer than one UPDATE per move when several components
+        # share the same old_qty (e.g. multiple moves with qty 1.0 -> 2.0).
+        groups = {}
+        for move, old_qty, new_qty in pending:
+            groups.setdefault(new_qty, []).append((move, old_qty))
+        # Defer only the automatic MRP procurement hook until all move demands
+        # are updated so the MTO graph expansion runs once on final quantities.
+        moves_to_procure = self.env['stock.move']
+        old_demand = {}
+        for new_qty, moves_old in groups.items():
+            batch = self.env['stock.move'].browse([m.id for m, _ in moves_old])
+            batch.with_context(no_procurement=True).write({'product_uom_qty': new_qty})
+            moves_to_procure |= batch
+            old_demand.update({move.id: old_qty for move, old_qty in moves_old})
+        moves_to_procure.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
+        return pending
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
