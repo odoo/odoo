@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="nemhandel_registration_form" model="ir.ui.view">
+        <field name="name">nemhandel.registration.form.inherit.mitid</field>
+        <field name="model">nemhandel.registration</field>
+        <field name="inherit_id" ref="l10n_dk_nemhandel.nemhandel_registration_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">mitid_status_listener</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert" invisible="mitid_kyc_status != 'processing'">
+                    <i class="fa fa-warning me-2"/>Authentication in progress. Clicking "Cancel" will abort the process.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='identifier_type']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status in ('processing', 'success')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='identifier_value']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status in ('processing', 'success')</attribute>
+            </xpath>
+            <xpath expr="//group[@name='nemhandel_registration']/div[hasclass('text-muted')]" position="after">
+                <div colspan="2" class="text-muted mb-3"
+                     invisible="l10n_dk_nemhandel_proxy_state not in ('not_registered', 'in_verification') or mitid_kyc_status == 'success'">
+                    Before registering, a person authorized to sign on behalf of the company must authenticate it with MitID Erhverv.
+                </div>
+            </xpath>
+            <!-- Companies registered before the KYB was required must authenticate too -->
+            <xpath expr="//group[@name='nemhandel_registration']" position="after">
+                <div class="text-muted mb-3"
+                     invisible="l10n_dk_nemhandel_proxy_state != 'receiver' or mitid_kyc_status == 'success'">
+                    Your company is already registered on Nemhandel, but has not been authenticated yet.
+                    A person authorized to sign on behalf of the company must authenticate it with MitID Erhverv.
+                </div>
+            </xpath>
+            <!-- The registration is only available once the company is authenticated -->
+            <xpath expr="//div[@name='nemhandel_send_code']" position="attributes">
+                <attribute name="invisible">l10n_dk_nemhandel_proxy_state != 'not_registered' or mitid_kyc_status != 'success'</attribute>
+            </xpath>
+            <!-- After the SMS code confirmation, so "Confirm" keeps its hotkey for the participants in verification -->
+            <xpath expr="//div[@name='nemhandel_check_code']" position="after">
+                <div name="mitid_authentication" invisible="l10n_dk_nemhandel_proxy_state == 'rejected' or mitid_kyc_status == 'success'">
+                    <button name="button_trigger_authentication"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"
+                            string="Authenticate"
+                            invisible="mitid_kyc_status == 'processing'"/>
+                    <button name="button_refresh_authentication"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="r"
+                            string="Refresh"
+                            invisible="mitid_kyc_status != 'processing'"/>
+                    <button name="button_cancel_authentication"
+                            type="object"
+                            class="btn-secondary"
+                            string="Cancel"
+                            invisible="mitid_kyc_status != 'processing'"/>
+                    <button name="button_open_authentication_link"
+                            type="object"
+                            class="btn-primary"
+                            string="Open link"
+                            invisible="mitid_kyc_status != 'processing'"/>
+                </div>
+            </xpath>
+            <!-- Would delete the registration of the participants authenticating after their registration -->
+            <xpath expr="//footer/button[@name='button_deregister_nemhandel_participant']" position="attributes">
+                <attribute name="invisible">l10n_dk_nemhandel_proxy_state == 'receiver'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
