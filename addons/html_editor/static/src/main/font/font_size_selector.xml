@@ -3,10 +3,11 @@
         <Dropdown state="this.dropdown" menuClass="'o_font_size_selector_menu'" menuRef="this.menuRef" focusToggleOnClosed="false" onStateChanged.bind="this.onDropdownStateChanged">
             <button t-ref="this.fontSizeSelector" class="btn btn-light" t-att-title="this.props.title" t-att-aria-label="this.ariaLabel" name="font_size" t-att-disabled="this.props.isDisabled">
                 <IframeInput
+                    title="this.props.title"
                     iframeRef="this.iframeContentRef"
                     inputRef="this.fontSizeInputRef"
                     value="this.state.displayName"
-                    inputAttrs="{ name: 'font_size_input', type: 'number', min: 0, max: this.props.maxFontSize, 'aria-label': this.props.title }"
+                    inputAttrs="{ name: 'font_size_input', type: 'number', min: 0, max: this.props.maxFontSize }"
                     iframeClass="'o_font_size_selector_iframe'"
                     inputStyle="`font-family: ${this.fontFamily};`"
                     onBlur.bind="this.props.onBlur"

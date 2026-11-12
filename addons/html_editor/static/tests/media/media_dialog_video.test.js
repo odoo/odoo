@@ -130,7 +130,7 @@ describe("media dialog video", () => {
                 `<p>ab</p><div data-platform="youtube" data-base-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" data-embed-url="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&rel=0" data-video-id="dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false">
                 <div class="css_editable_mode_display"></div>
                 <div class="media_iframe_video_size" contenteditable="false"></div>
-            <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&rel=0"></iframe></div><p>[]cd</p>`
+            <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&rel=0" title="Video player"></iframe></div><p>[]cd</p>`
             );
         });
         test("Should insert an instagram video verticaly", async () => {
