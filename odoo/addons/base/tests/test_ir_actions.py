@@ -660,6 +660,21 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertEqual(self.action._eval_value()[self.action.id], 20.99)
 
 
+class TestActionWindows(common.TransactionCase):
+    def test_read_passes_empty_help_string(self):
+        action = self.env['ir.actions.act_window'].create({
+            'name': 'Test Action',
+            'res_model': 'res.partner',
+            'help': False,
+        })
+
+        with patch.object(self.env.registry['res.partner'], 'get_empty_list_help') as get_empty_list_help:
+            action.read(['help', 'res_model'])
+
+        get_empty_list_help.assert_called_once()
+        self.assertEqual(get_empty_list_help.call_args.args[0], '')  # help should be neutralized to an empty string
+
+
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
