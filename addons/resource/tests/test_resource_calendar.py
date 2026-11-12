@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pytz
-from datetime import datetime
+from datetime import date, datetime
+
+from freezegun import freeze_time
 
 from odoo.tests import Form, TransactionCase
 
@@ -126,3 +128,31 @@ class TestResourceCalendar(TransactionCase):
             form.company_id = self.env.company
 
         self.assertEqual(work_schedule.attendance_ids, attendance_1)
+
+    @freeze_time('2025-03-01')
+    def test_hours_per_day_dated_attendances(self):
+        """ A calendar whose attendances all have a start and an end date
+        still has an average number of hours per day, the one of the
+        current period. """
+        def attendances(hour_to, date_from, date_to):
+            return [(0, 0, {
+                'name': 'Attendance %s' % day,
+                'dayofweek': str(day),
+                'hour_from': 8,
+                'hour_to': hour_to,
+                'date_from': date_from,
+                'date_to': date_to,
+            }) for day in range(5)]
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Dated calendar',
+            'attendance_ids': attendances(16, date(2025, 1, 1), date(2025, 12, 31)),
+        })
+        self.assertEqual(calendar.hours_per_day, 8)
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Two periods calendar',
+            'attendance_ids': attendances(16, date(2025, 1, 1), date(2025, 6, 30))
+                + attendances(14, date(2025, 7, 1), date(2025, 12, 31)),
+        })
+        self.assertEqual(calendar.hours_per_day, 8)

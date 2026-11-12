@@ -108,7 +108,7 @@ class ResourceCalendar(models.Model):
                                     help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
     full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
 
-    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
+    @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'attendance_ids.date_from', 'attendance_ids.date_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
         for calendar in self:
             if calendar.flexible_hours:
@@ -167,10 +167,18 @@ class ResourceCalendar(models.Model):
         )
 
     def _get_global_attendances(self):
-        return self.attendance_ids.filtered(lambda attendance:
+        attendances = self.attendance_ids.filtered(lambda attendance:
             attendance.day_period != 'lunch'
-            and not attendance.date_from and not attendance.date_to
             and not attendance.resource_id and not attendance.display_type)
+        undated_attendances = attendances.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
+        if undated_attendances:
+            return undated_attendances
+        # every line has a start or an end date: use the ones of the current
+        # period, e.g. not both periods of a calendar changing in the year
+        today = fields.Date.context_today(self)
+        return attendances.filtered(lambda attendance:
+            (not attendance.date_from or attendance.date_from <= today)
+            and (not attendance.date_to or attendance.date_to >= today)) or attendances
 
     def _get_hours_per_day(self, attendances):
         """
