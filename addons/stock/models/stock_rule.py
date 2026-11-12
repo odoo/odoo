@@ -64,7 +64,7 @@ class StockRule(models.Model):
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True, index=True)
     location_dest_from_rule = fields.Boolean(
         "Destination location origin from rule", default=False,
-        help="When set to True the destination location of the stock.move will be the rule."
+        help="When set to True the destination location of the stock.move will be the rule. "
         "Otherwise, it takes it from the picking type.")
     route_id = fields.Many2one('stock.route', 'Route', required=True, ondelete='cascade', index=True)
     route_company_id = fields.Many2one(related='route_id.company_id', string='Route Company')
@@ -74,8 +74,8 @@ class StockRule(models.Model):
         ('mts_else_mto', 'Take From Stock, if unavailable, Trigger Another Rule')], string='Supply Method', default='make_to_stock', required=True,
         help="Take From Stock: the products will be taken from the available stock of the source location.\n"
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
-             "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
-             "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
+             "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location. "
+             "If there is no stock available, the system will try to find a rule to bring the products in the source location.")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -96,7 +96,7 @@ class StockRule(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', check_company=True, index=True)
     propagate_warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse to Propagate',
-        help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
+        help="The warehouse to propagate on the created move/procurement, which can be different from the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
     auto = fields.Selection([
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',

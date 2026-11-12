@@ -61,8 +61,8 @@ class StockMove(models.Model):
         'Demand',
         digits='Product Unit of Measure',
         default=0, required=True,
-        help="This is the quantity of product that is planned to be moved."
-             "Lowering this quantity does not generate a backorder."
+        help="This is the quantity of product that is planned to be moved. "
+             "Lowering this quantity does not generate a backorder. "
              "Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
     product_uom = fields.Many2one(
@@ -82,12 +82,12 @@ class StockMove(models.Model):
         check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'Intermediate Location', required=True,
-        help='The operations brings product to this location', readonly=False,
+        help='The operation brings product to this location', readonly=False,
         index=True, store=True, compute='_compute_location_dest_id', precompute=True, inverse='_set_location_dest_id')
     location_final_id = fields.Many2one(
         'stock.location', 'Final Location',
         readonly=False, store=True,
-        help="The operation brings the products to the intermediate location."
+        help="The operation brings the products to the intermediate location. "
         "But this operation is part of a chain of operations targeting the final location.",
         auto_join=True, index=True, check_company=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
@@ -108,7 +108,7 @@ class StockMove(models.Model):
     picking_id = fields.Many2one('stock.picking', 'Transfer', index=True, check_company=True)
     state = fields.Selection([
         ('draft', 'New'),
-        ('waiting', 'Waiting Another Move'),
+        ('waiting', 'Awaiting Another Move'),
         ('confirmed', 'Waiting Availability'),
         ('partially_available', 'Partially Available'),
         ('assigned', 'Available'),
@@ -116,7 +116,7 @@ class StockMove(models.Model):
         ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', index=True, readonly=True,
         help="* New: The stock move is created but not confirmed.\n"
-             "* Waiting Another Move: A linked stock move should be done before this one.\n"
+             "* Awaiting Another Move: A linked stock move should be done before this one.\n"
              "* Waiting Availability: The stock move is confirmed but the product can't be reserved.\n"
              "* Available: The product of the stock move is reserved.\n"
              "* Done: The product has been transferred and the transfer has been confirmed.")
@@ -2108,7 +2108,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             if len(result_package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0.0, precision_rounding=q.product_uom_id.rounding) > 0).mapped('location_id')) > 1:
                 error_msg = _(
                     'You cannot move the same package content more than once in the same transfer'
-                    ' or split the same package into two location.'
+                    ' or split the same package into two locations.'
                 )
                 package_msg = _("\nPackage: %s", result_package.name)
                 raise UserError(error_msg + package_msg)

@@ -160,7 +160,7 @@
                                 <div class="row mt-2" invisible="not group_stock_production_lot or not group_stock_tracking_lot">
                                     <span class="o_form_label">Scannable Package Contents</span>
                                     <div class="col-12">
-                                        <div class="text-muted">If a separator is defined, a QR code containing all serial numbers contained in package will be generated, using the defined character(s) to separate each numbers</div>
+                                        <div class="text-muted">If a separator is defined, a QR code containing all serial numbers contained in package will be generated, using the defined character(s) to separate each number</div>
                                     </div>
                                     <div class="col">
                                         <label for="barcode_separator"/>
@@ -202,7 +202,7 @@
                             <div id="purchase_po_lead"/>
                         </block>
                         <block title="Logistics" name="request_vendor_setting_container">
-                            <setting title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse." help="Request your vendors to deliver to your customers"
+                            <setting title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order is confirmed. This is an on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse." help="Request your vendors to deliver to your customers"
                             documentation="/applications/inventory_and_mrp/inventory/management/delivery/dropshipping.html">
                                 <field name="module_stock_dropshipping"/>
                             </setting>

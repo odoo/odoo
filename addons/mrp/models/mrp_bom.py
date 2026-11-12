@@ -58,7 +58,7 @@ class MrpBom(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation')]",
         check_company=True,
-        help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
+        help="When a procurement has a ‘produce’ route with an operation type set, it will try to create "
              "a Manufacturing Order for that product using a BoM of the same operation type. That allows "
              "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
@@ -839,7 +839,7 @@ class MrpByProduct(models.Model):
     sequence = fields.Integer("Sequence")
     cost_share = fields.Float(
         "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
-        help="The percentage of the final production cost for this by-product line (divided between the quantity produced)."
+        help="The percentage of the final production cost for this by-product line (divided between the quantity produced). "
              "The total of all by-products' cost share must be less than or equal to 100.")
 
     @api.depends('product_id')

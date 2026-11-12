@@ -50,7 +50,7 @@ class Repair(models.Model):
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
              "* The \'Under Repair\' status is used when the repair is ongoing.\n"
              "* The \'Repaired\' status is set when repairing is completed.\n"
-             "* The \'Cancelled\' status is used when user cancel repair order.")
+             "* The \'Cancelled\' status is used when a user cancels the repair order.")
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
@@ -115,7 +115,7 @@ class Repair(models.Model):
         compute="_compute_location_id",
         store=True, readonly=False, required=True, precompute=True,
         index=True, check_company=True,
-        help="This is the location where the components of product to repair is located.")
+        help="This is the location where the components of product to repair are located.")
     product_location_src_id = fields.Many2one(
         'stock.location', 'Product Source Location',
         compute="_compute_product_location_src_id",
@@ -168,10 +168,10 @@ class Repair(models.Model):
     # Sale Order Binding
     sale_order_id = fields.Many2one(
         'sale.order', 'Sale Order', check_company=True, readonly=True,
-        copy=False, help="Sale Order from which the Repair Order comes from.")
+        copy=False, help="Sale Order from which the Repair Order comes.")
     sale_order_line_id = fields.Many2one(
         'sale.order.line', check_company=True, readonly=True,
-        copy=False, help="Sale Order Line from which the Repair Order comes from.")
+        copy=False, help="Sale Order Line from which the Repair Order comes.")
     repair_request = fields.Text(
         related='sale_order_line_id.name',
         string='Repair Request',
@@ -181,7 +181,7 @@ class Repair(models.Model):
     picking_id = fields.Many2one(
         'stock.picking', 'Return', check_company=True,
         domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
-        copy=False, help="Return Order from which the product to be repaired comes from.")
+        copy=False, help="Return Order from which the product to be repaired comes.")
     is_returned = fields.Boolean(
         "Returned", compute='_compute_is_returned',
         help="True if this repair is linked to a Return Order and the order is 'Done'. False otherwise.")

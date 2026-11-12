@@ -982,7 +982,7 @@ class StockQuant(models.Model):
             warning = {
                 'title': _('You cannot modify inventory loss quantity'),
                 'message': _(
-                    'Editing quantities in an Inventory Adjustment location is forbidden,'
+                    'Editing quantities in an Inventory Adjustment location is forbidden, '
                     'those locations are used as counterpart when correcting the quantities.'
                 )
             }

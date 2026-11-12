@@ -153,7 +153,7 @@ class PurchaseBillMatch(models.Model):
         if not self.aml_id:  # select POL(s) without AML -> create a draft bill with the POL(s)
             return self._action_create_bill_from_po_lines(self.partner_id, self.pol_id)
         if len(self.aml_id.move_id) > 1:  # for purchase matching, disallow matching multiple bills at the same time
-            raise UserError(_("You can't select lines from multiple Vendor Bill to do the matching."))
+            raise UserError(_("You can't select lines from multiple Vendor Bills to do the matching."))
 
         pol_by_product = self.pol_id.grouped('product_id')
         aml_by_product = self.aml_id.grouped('product_id')

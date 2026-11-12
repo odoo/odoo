@@ -114,7 +114,7 @@ class PurchaseOrder(models.Model):
             if alternative_po_ids:
                 view = self.env.ref('purchase_requisition.purchase_requisition_alternative_warning_form')
                 return {
-                    'name': _("What about the alternative Requests for Quotations?"),
+                    'name': _("What about the alternative Requests for Quotation?"),
                     'type': 'ir.actions.act_window',
                     'view_mode': 'form',
                     'res_model': 'purchase.requisition.alternative.warning',
@@ -308,7 +308,7 @@ class PurchaseOrderLine(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'title': _("Some not cleared"),
-                    'message': _("Some quantities were not cleared because their status is not a RFQ status."),
+                    'message': _("Some quantities were not cleared because their status is not an RFQ status."),
                     'sticky': False,
                 }
             }

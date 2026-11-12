@@ -78,7 +78,7 @@ class DeliveryCarrier(models.Model):
     carrier_description = fields.Text(
         'Carrier Description', translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
-             "E.g. instructions for customers to follow.")
+             " E.g. instructions for customers to follow.")
 
     margin = fields.Float(help='This percentage will be added to the shipping price.')
     fixed_margin = fields.Float(help='This fixed amount will be added to the shipping price.')

@@ -58,7 +58,7 @@ class StockWarehouseOrderpoint(models.Model):
         'Min Quantity', digits='Product Unit of Measure', required=True, default=0.0,
         compute='_compute_product_min_qty', readonly=False, store=True,
         help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
-             "a procurement to bring the forecasted quantity above of this Min Quantity.")
+             "a procurement to bring the forecasted quantity above this Min Quantity.")
     product_max_qty = fields.Float(
         'Max Quantity', digits='Product Unit of Measure', required=True, default=0.0,
         compute='_compute_product_max_qty', readonly=False, store=True,
@@ -86,7 +86,7 @@ class StockWarehouseOrderpoint(models.Model):
     qty_to_order_computed = fields.Float('To Order Computed', compute='_compute_qty_to_order_computed', digits='Product Unit of Measure')
     qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit of Measure')
 
-    days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
+    days_to_order = fields.Float(compute='_compute_days_to_order', help="Number of days in advance that replenishment demands are created.")
     visibility_days = fields.Float(
         compute='_compute_visibility_days', inverse='_set_visibility_days', readonly=False,
         help="Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"

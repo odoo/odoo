@@ -165,7 +165,7 @@ class ProductReplenish(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _('The following replenishment order have been generated'),
+                'title': _('The following replenishment order has been generated'),
                 'message': '%s',
                 'links': link,
                 'sticky': False,
