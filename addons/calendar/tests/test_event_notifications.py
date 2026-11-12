@@ -88,6 +88,30 @@ class TestCalendarMail(CalendarMailCommon):
         self.assertEqual(self.event.partner_ids, self.user_employee_2.partner_id + self.customers)
         self.assertEqual(self.event.user_id, self.user_root)
 
+    def test_event_date_updated_attendee_timezone(self):
+        """The "Date updated" email shows the new time of the meeting in the
+        timezone of the attendee, not in the one of the user who moved it."""
+        self.user_admin.tz = 'Europe/Brussels'
+        customer = self.customers[0]
+        customer.tz = 'America/New_York'
+        with freeze_time('2022-07-01 10:00:00'), self.mock_mail_gateway(mail_unlink_sent=False):
+            event = self.env['calendar.event'].with_user(self.user_admin).create({
+                'name': 'Late call',
+                'start': datetime(2022, 7, 6, 14, 0),
+                'stop': datetime(2022, 7, 6, 15, 0),
+                'partner_ids': [(4, customer.id)],
+            })
+            # 02:00 UTC: 10:00 PM on July 6th in New York, 04:00 AM on July 7th in Brussels
+            event.write({
+                'start': datetime(2022, 7, 7, 2, 0),
+                'stop': datetime(2022, 7, 7, 3, 0),
+            })
+        mail = self._new_mails.filtered(
+            lambda m: m.subject == 'Late call: Date updated' and m.recipient_ids == customer,
+        )
+        self.assertEqual(len(mail), 1)
+        self.assertIn('07/06/2022 at (10:00 PM To 11:00 PM) (America/New_York)', mail.body_html)
+
     def test_event_get_default_recipients(self):
         event = self.event.with_user(self.user_employee)
         defaults = event._message_get_default_recipients()
