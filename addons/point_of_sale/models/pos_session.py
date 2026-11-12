@@ -1038,10 +1038,14 @@ class PosSession(models.Model):
                     pos_order = move.picking_id.pos_order_id
                     if pos_order and pos_order.fiscal_position_id:
                         exp_key = pos_order.fiscal_position_id.map_account(exp_key)
-                    signed_product_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False)
-                    if move._is_in():
-                        signed_product_qty *= -1
-                    amount = signed_product_qty * move._get_price_unit()
+                    if move.state not in ('draft', 'done', 'cancel') and move.location_dest_id.usage == 'customer':
+                        product_qty = move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, round=False)
+                        amount = product_qty * move.product_id.standard_price
+                    else:
+                        signed_product_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False)
+                        if move._is_in():
+                            signed_product_qty *= -1
+                        amount = signed_product_qty * move._get_price_unit()
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
                     if move._is_in():
                         stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
