@@ -64,6 +64,13 @@ export const start = exposeMethod(runner, "start");
 export const stop = exposeMethod(runner, "stop");
 
 export { makeExpect } from "./core/expect";
+<<<<<<< 9ec2ac077e7c5180b9102b878ecdc42d8303c9ef
+||||||| aee4d7882425b42f56da28f60b2cb2aea3f73dae
+export { destroy } from "./core/fixture";
+=======
+export { destroy } from "./core/fixture";
+export { trackObject } from "./core/gc";
+>>>>>>> 790614ff68a81d1baf842759fc50bbb9f7483e97
 export { defineTags } from "./core/tag";
 
 // Constants
