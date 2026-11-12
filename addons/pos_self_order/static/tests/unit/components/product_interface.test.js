@@ -60,7 +60,7 @@ test("renders header, content, scroll-end and footer slots around the product", 
 
     // Name and image are provided by the layout itself, not by the page.
     expect(".o_self_product_interface h1").toHaveText(productTemplate.name);
-    expect(".o_self_product_image img").toHaveCount(1);
+    expect("img.o_self_product_image").toHaveCount(1);
 });
 
 test("puts the content slots inside the scroll area and the footer outside of it", async () => {
