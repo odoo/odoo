@@ -34,14 +34,6 @@
                                 <small class="text-muted text-nowrap align-self-center" t-out="this.todayDateLabel"/>
                             </b>
                         </div>
-                        <div t-if="this.showVideoStream" class="d-flex justify-content-center p-3">
-                            <AttendanceVideoStream
-                                height="200"
-                                width="240"
-                                exposeCameraCapture.bind="this.setCameraCapture"
-                                onStreamStateChange.bind="this.setStreamAvailable"
-                            />
-                        </div>
                     </div>
 
                     <div class="o_att_today_wrap px-2">

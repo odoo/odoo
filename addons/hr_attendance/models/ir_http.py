@@ -18,7 +18,6 @@ class IrHttp(models.AbstractModel):
                 'attendance_state': employee.attendance_state,
                 'attendance_check_in_ability': employee._has_attendance_check_in_ability(),
                 'attendance_device_tracking': company.attendance_device_tracking,
-                'attendance_capture_check_in': company.attendance_capture_check_in,
                 'attendance_break_management': company.attendance_break_management,
             })
         return res
