@@ -1201,12 +1201,6 @@ class AccountMove(models.Model):
                 invoice.direction_sign = -1
 
     @api.depends(
-        'line_ids.matched_debit_ids.debit_move_id.move_id.origin_payment_id.is_matched',
-        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual',
-        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual_currency',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.origin_payment_id.is_matched',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual_currency',
         'line_ids.balance',
         'line_ids.currency_id',
         'line_ids.amount_currency',
@@ -2519,7 +2513,6 @@ class AccountMove(models.Model):
     def _compute_reconciled_payment_ids(self):
         ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
         self.env['account.payment'].flush_model(fnames=['move_id'])
-        self.env['account.move'].flush_model(fnames=['move_type'])
         self.env['account.move.line'].flush_model(fnames=['move_id', 'account_id'])
         self.env['account.partial.reconcile'].flush_model(fnames=['debit_move_id', 'credit_move_id'])
         self.env['account.account'].flush_model(fnames=['account_type'])
@@ -2545,7 +2538,7 @@ class AccountMove(models.Model):
             WHERE account.account_type IN ('asset_receivable', 'liability_payable')
                 AND invoice.id IN %(invoice_ids)s
                 AND line.id != counterpart_line.id
-            GROUP BY invoice.id, invoice.move_type
+            GROUP BY invoice.id
             """,
             invoice_ids=tuple(self.ids),
         ))) if self.ids else {}
@@ -2684,8 +2677,8 @@ class AccountMove(models.Model):
     def _search_reconciled_payment_ids(self, operator, value):
         if operator not in ('in', '='):
             return NotImplemented
-        payment_ids = self.env['account.payment'].browse(value).reconciled_invoice_ids.ids
-        return [('id', 'in', payment_ids)]
+        payments = self.env['account.payment'].browse(value)
+        return [('id', 'in', (payments.reconciled_invoice_ids | payments.reconciled_bill_ids).ids)]
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
@@ -4227,6 +4220,12 @@ class AccountMove(models.Model):
             _logger.info(logger_message)
         return res
 
+    def _flush(self):
+        if self._fields['move_type'] in self.env._field_dirty:
+            # `_flush` writes every dirty `move_type`, `_check_document_tax_mode_set` needs their tax mode computed first
+            self._recompute_model(['document_tax_mode'])
+        return super()._flush()
+
     @api.depends('partner_id', 'date', 'state', 'move_type')
     @api.depends_context('input_full_display_name')
     def _compute_display_name(self):
@@ -5746,9 +5745,10 @@ class AccountMove(models.Model):
         ])
         self.env['account.move.line'].flush_model(['move_id', 'company_currency_id'])
 
-        rows = self.env.execute_query_dict(
-            SQL(" UNION ALL ").join(queries)
-        )
+        rows = self.env.execute_query_dict(SQL(
+            "%s ORDER BY aml_id, partial_id",
+            SQL(" UNION ALL ").join(queries),
+        ))
 
         aml_ids = set()
         currency_ids = set()
