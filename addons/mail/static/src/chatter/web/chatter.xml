@@ -35,7 +35,7 @@
                 <button t-if="this.hasPinnedMessages" class="btn btn-hover-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
                     <i class="oi oi-fw" data-icon="push_pin" aria-hidden="true"/>
                 </button>
-                <button t-if="this.showsAttachmentPopout" class="btn btn-hover-action px-1" t-on-click="this.popoutAttachment">
+                <button aria-label="Pop out Attachments" t-if="this.showsAttachmentPopout" class="btn btn-hover-action px-1" t-on-click="this.popoutAttachment">
                     <i class="oi oi-fw" data-icon="fullscreen_exit" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
                 <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" showUploadingText="false" multiUpload="true" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">

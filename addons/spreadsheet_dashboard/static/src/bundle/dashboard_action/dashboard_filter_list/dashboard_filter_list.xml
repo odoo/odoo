@@ -24,7 +24,7 @@
                                 globalFilterValue="item.value"
                                 setGlobalFilterValue="(_, value) => this.updateValue(item, value)" />
                 <div class="o-filter-clear">
-                    <button t-if="this.filterHasClearButton(item)"
+                    <button aria-label="Clear filter" t-if="this.filterHasClearButton(item)"
                         class="btn btn-hover-danger px-2 fs-4"
                         t-on-click="() => this.clearFilter(item)">
                         <i class="oi" data-icon="close"></i>

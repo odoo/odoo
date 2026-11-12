@@ -33,7 +33,7 @@
                                             <t t-out="step.trigger"/>
                                             <span t-if="step.run and step.run != 'click'" class="fst-italic fw-lighter"><br/>(run: <t t-out="step.run"/>) </span>
                                         </td>
-                                        <td><button class="o_button_delete_step btn btn-hover-danger oi oi-filled mx-1" data-icon="delete" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
+                                        <td><button aria-label="Delete step" class="o_button_delete_step btn btn-hover-danger oi oi-filled mx-1" data-icon="delete" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
                                     </tr>
                                 </t>
                             </tbody>
@@ -42,7 +42,7 @@
                 </t>
             </Dropdown>
             <Dropdown t-if="this.state.steps.length" position="'top-end'">
-                <button class="o_button_save btn btn-primary px-2 rounded-0" data-tooltip="Save">
+                <button aria-label="Save" class="o_button_save btn btn-primary px-2 rounded-0" data-tooltip="Save">
                     <i class="oi" data-icon="cloud_upload"></i>
                 </button>
                 <t t-set-slot="content">
@@ -75,7 +75,7 @@
                     </div>
                 </t>
             </Dropdown>
-            <button class="btn btn-primary o_tour_recorder_close_button" t-on-click.prevent.stop="this.openCloseRecorderDialog" data-tooltip="Close"><i class="oi" data-icon="close"></i></button>
+            <button aria-label="Close" class="btn btn-primary o_tour_recorder_close_button" t-on-click.prevent.stop="this.openCloseRecorderDialog" data-tooltip="Close"><i class="oi" data-icon="close"></i></button>
         </div>
     </div>
 </t>

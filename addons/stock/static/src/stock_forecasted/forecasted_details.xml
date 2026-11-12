@@ -67,7 +67,7 @@
                         </t>
                         <td name="quantity_cell" class="text-end"><t t-out="this._formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
                         <td class="border-end-0 o_forecasted_details_line_button" t-attf-class="#{(!line.replenishment_filled and 'table-danger') or (line.is_matched and 'table-info') or ''}" name="usedby_cell">
-                            <button t-if="line.move_out and line.move_out.picking_id"
+                            <button aria-label="Priority" t-if="line.move_out and line.move_out.picking_id"
                                 class="o_priority o_priority_star oi me-1"
                                 t-att-class="{'oi-filled': line.move_out.picking_id.priority=='1'}"
                                 data-icon="star"

@@ -7,7 +7,7 @@
                     <li class="d-flex align-items-center bg-200 p-1 ps-3 my-2">
                         <span t-out="attachment.name" class="flex-grow-1 text-truncate"/>
 
-                        <button class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(attachment.id)">
+                        <button aria-label="Remove attachment" class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(attachment.id)">
                             <i class="oi oi-fw" data-icon="close"/>
                         </button>
 

@@ -14,10 +14,10 @@
                 />
             </t>
         </Dropdown>
-        <button class="btn btn-secondary ms-1 btn-previous-date" t-on-click="this.selectPrevious" t-att-disabled="this.props.value === undefined">
+        <button aria-label="Previous period" class="btn btn-secondary ms-1 btn-previous-date" t-on-click="this.selectPrevious" t-att-disabled="this.props.value === undefined">
             <i class="oi" data-icon="arrow_left"/>
         </button>
-        <button class="btn btn-secondary ms-1 btn-next-date" t-on-click="this.selectNext" t-att-disabled="this.props.value === undefined">
+        <button aria-label="Next period" class="btn btn-secondary ms-1 btn-next-date" t-on-click="this.selectNext" t-att-disabled="this.props.value === undefined">
             <i class="oi" data-icon="arrow_right"/>
         </button>
     </t>

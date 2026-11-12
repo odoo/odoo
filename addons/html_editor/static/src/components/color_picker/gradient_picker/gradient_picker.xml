@@ -144,7 +144,7 @@
                 </div>
                 <div class="gradient-color-bin position-relative">
                     <t t-if="this.colors.length > 2">
-                        <a t-on-click="() => this.removeColor(this.state.currentColorIndex)"
+                        <a aria-label="Remove color" t-on-click="() => this.removeColor(this.state.currentColorIndex)"
                            t-attf-style="left: #{this.colors[this.state.currentColorIndex].percentage}%"
                            type="button" class="btn btn-sm btn-light position-absolute">
                            <i class="oi oi-fw oi-filled" data-icon="delete" role="img"/>

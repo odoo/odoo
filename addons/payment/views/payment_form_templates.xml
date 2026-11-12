@@ -139,7 +139,7 @@
         <t t-set="inline_form_xml_id" t-value="provider_sudo.token_inline_form_view_id.xml_id"/>
         <div class="d-flex gap-3 align-items-start align-items-md-center">
             <!-- === Delete button === -->
-            <button t-if="allow_token_deletion"
+            <button aria-label="Delete" t-if="allow_token_deletion"
                     name="o_payment_delete_token"
                     t-att-class="'btn btn-link px-2 py-0 lh-lg z-1'
                                  + (' d-none' if mode != 'validation' else '')"
@@ -505,7 +505,7 @@
     </template>
 
     <template id="payment.availability_report_button">
-        <a
+        <a aria-label="Availability report"
             t-if="env.user._is_system() and availability_report"
             role="button"
             data-bs-toggle="collapse"

@@ -40,7 +40,7 @@
                 </t>
                 <t t-else="">
                     <div class="d-flex">
-                        <a t-if="this.props.isFoldable and this.state.isValid" t-on-click="this.fold">
+                        <a aria-label="Fold" t-if="this.props.isFoldable and this.state.isValid" t-on-click="this.fold">
                             <i class="oi oi-lg pe-2" data-icon="arrow_drop_down"></i>
                         </a>
                         <DomainSelector

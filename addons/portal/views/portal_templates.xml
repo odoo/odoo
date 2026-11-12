@@ -429,7 +429,7 @@
                             </div>
                         </t>
                         <input type="search" class="form-control border-0 bg-light" placeholder="Search" t-att-value='search' name="search"/>
-                        <button class="btn btn-light" type="submit">
+                        <button aria-label="Search" class="btn btn-light" type="submit">
                             <span class="oi" data-icon="search"/>
                         </button>
                     </div>
@@ -562,7 +562,7 @@
             <section t-if="debug and allow_api_keys">
                 <h4>
                 Developer API Keys
-                    <a href="https://www.odoo.com/documentation/latest/developer/reference/external_api.html#api-key" target="_blank">
+                    <a aria-label="Documentation" href="https://www.odoo.com/documentation/latest/developer/reference/external_api.html#api-key" target="_blank">
                         <i title="Documentation" class="oi oi-fw o_button_icon" data-icon="info"></i>
                     </a>
                 </h4>

@@ -26,10 +26,10 @@
                 <span t-if="this.currentOrder.preset_id?.name" t-out="this.currentOrder.preset_id?.name" />
                 <span t-else="">Preset</span>
             </button>
-            <button t-if="!this.pos.isSmallProductScreen" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
+            <button aria-label="Save order" t-if="!this.pos.isSmallProductScreen" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
                 <i class="oi" data-icon="upload" aria-hidden="true"/>
             </button>
-            <button t-if="!this.pos.isSmallProductScreen and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickMore">
+            <button aria-label="More options" t-if="!this.pos.isSmallProductScreen and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickMore">
                 <i class="oi oi-fw" data-icon="more_vert" aria-hidden="true" />
             </button>
         </t>

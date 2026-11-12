@@ -45,7 +45,7 @@
                         <div class="d-flex flex-wrap gap-1">
                             <div class="m-auto"/>
                             <div class="dropdown" id="o_wprofile_forum_activity_filter" role="tablist">
-                                <button class="btn btn-light dropdown-toggle" type="button" id="o_wprofile_forum_activity_filter_button"
+                                <button aria-label="Filter" class="btn btn-light dropdown-toggle" type="button" id="o_wprofile_forum_activity_filter_button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="oi oi-filled" data-icon="filter_alt" role="img" aria-hidden="true"/><span class="o_wprofile_forum_activity_filter_label ms-2"/>
                                 </button>
@@ -198,7 +198,7 @@
             <span class="d-inline-flex align-items-center gap-2 rounded py-1 ps-2 pe-0 bg-200 small">
                 <i class="oi oi-filled text-muted" data-icon="filter_alt" role="img" aria-hidden="true"/>
                 <t t-out="forum_filtered"/>
-                <a t-attf-href="/profile/user/#{user.id}" class="oi btn m-n1 text-muted" data-icon="close_small"/>
+                <a aria-label="Clear filter" t-attf-href="/profile/user/#{user.id}" class="oi btn m-n1 text-muted" data-icon="close_small"/>
             </span>
         </t>
     </template>

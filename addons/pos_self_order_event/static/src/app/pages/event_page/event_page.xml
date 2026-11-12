@@ -92,7 +92,7 @@
                                             </div>
                                             <div class="mt-auto w-100 d-flex justify-content-center">
                                                 <div class="btn-group me-3" t-if="this.seatAvailability(ticket)">
-                                                    <button type="button"
+                                                    <button aria-label="Decrease quantity" type="button"
                                                             class="btn btn-secondary py-1 px-2"
                                                             t-on-click="() => this.changeQuantity(ticket.id, false)"
                                                             t-att-disabled="(this.state.ticketQuantities[ticket.id] || 0) &lt;= 0">
@@ -101,7 +101,7 @@
                                                     <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder">
                                                         <t t-out="this.state.ticketQuantities[ticket.id] || 0"/>
                                                     </div>
-                                                    <button type="button"
+                                                    <button aria-label="Increase quantity" type="button"
                                                             class="btn btn-secondary py-1 px-2"
                                                             t-on-click="() => this.changeQuantity(ticket.id, true)"
                                                             >

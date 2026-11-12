@@ -13,7 +13,7 @@
                     t-on-click="(ev) => this.toggleAddon(ev, addon.name)"
                     role="button"
                 >
-                    <div class="icon-btn ps-2 pt-2" role="button" t-att-class="{ o_collapsed: this.isCollapsed(addon.name)}">
+                    <div class="icon-btn ps-2 pt-2" t-att-class="{ o_collapsed: this.isCollapsed(addon.name)}">
                         <i class="oi" data-icon="keyboard_arrow_right" aria-hidden="true"></i>
                     </div>
                     <h4 class="ms-2" t-out="addon.name"></h4>

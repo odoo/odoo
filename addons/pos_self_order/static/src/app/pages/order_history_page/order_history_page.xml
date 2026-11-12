@@ -14,7 +14,7 @@
                                     <span class="text-muted">#<t t-out="order.tracking_number" /> - <t t-out="order.date_order.toFormat('dd/MM/yyyy')" /></span>
                                 </div>
                                 <div class="d-flex justify-content-around gap-1 align-items-center">
-                                    <div t-if="this.selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" role="button" t-on-click="() => this.selfOrder.downloadReceipt(order)">
+                                    <div aria-label="Download receipt" t-if="this.selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" role="button" t-on-click="() => this.selfOrder.downloadReceipt(order)">
                                         <i class="oi" data-icon="download" aria-hidden="true" />
                                     </div>
                                     <span class="badge py-2 rounded-pill text-capitalize"

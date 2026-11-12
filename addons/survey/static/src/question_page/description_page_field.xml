@@ -8,7 +8,7 @@
             </button>
         </xpath>
         <xpath expr="//span[@t-out='this.formattedValue']" position="after">
-            <button class="btn btn-sm btn-link p-0" t-if="this.props.record.data.is_page">
+            <button aria-label="Edit" class="btn btn-sm btn-link p-0" t-if="this.props.record.data.is_page">
                 <i class="oi oi-filled" data-icon="edit"/>
             </button>
         </xpath>

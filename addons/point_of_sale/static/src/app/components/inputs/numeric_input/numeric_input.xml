@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.NumericInput">
         <div t-attf-class="{{this.props.class}} d-flex input-group" >
-            <button class="btn btn-secondary border" t-on-click="() => this.setValue(this.getValue() - 1)" t-att-disabled="this.getValue() lte this.props.min">
+            <button aria-label="Decrease" class="btn btn-secondary border" t-on-click="() => this.setValue(this.getValue() - 1)" t-att-disabled="this.getValue() lte this.props.min">
                 <i class="oi center" data-icon="remove"/>
             </button>
             <div class="form-control border-top border-bottom">
@@ -12,7 +12,7 @@
                     t-att-min="this.props.min"
                     t-on-input="(event) => this.setValue(this.parseInt(event.target.value))" />
             </div>
-            <button class="btn btn-secondary border" t-on-click="() => this.setValue(this.getValue() + 1)">
+            <button aria-label="Increase" class="btn btn-secondary border" t-on-click="() => this.setValue(this.getValue() + 1)">
                 <i class="oi" data-icon="add"/>
             </button>
         </div>

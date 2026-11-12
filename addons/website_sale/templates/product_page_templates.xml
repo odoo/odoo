@@ -1348,7 +1348,7 @@
                             <span t-out="product.sudo()[field.name]" t-options="{'widget': field.field_id.ttype}"/>
                         </t>
                         <t t-else=''>
-                            <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
+                            <a aria-label="Download" target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
                                 <i class='oi oi-filled' data-icon='description' role='img'></i>
                             </a>
                         </t>

@@ -613,6 +613,24 @@ export class SearchBar extends Component {
         };
     }
 
+    /**
+     * Name of a facet's label, which shows the facet type as an icon.
+     */
+    getFacetLabel(facet) {
+        if (facet.title) {
+            return facet.title;
+        }
+        switch (facet.type) {
+            case "filter":
+            case "relative":
+                return _t("Filter");
+            case "groupBy":
+                return _t("Group By");
+            case "favorite":
+                return _t("Favorite");
+        }
+    }
+
     //---------------------------------------------------------------------
     // Handlers
     //---------------------------------------------------------------------

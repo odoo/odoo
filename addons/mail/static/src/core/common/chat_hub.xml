@@ -35,7 +35,7 @@
             <div t-if="this.compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="this.compactCounter"/>
             </div>
-            <button class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="this.expand" data-available-offline="">
+            <button aria-label="Show conversations" class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="this.expand" data-available-offline="">
                 <i class="oi o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle" data-icon="forum"/>
             </button>
         </div>
@@ -61,7 +61,7 @@
                         <div t-if="chatWindow.channel.importantCounter > 0" class="o-mail-ChatHub-hiddenCounter badge rounded-pill fw-bold o-discuss-badge" style="padding: 3px 6px">
                             <t t-out="chatWindow.channel.importantCounter"/>
                         </div>
-                        <button class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded" t-on-click.stop="() => chatWindow.close()">
+                        <button aria-label="Close" class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded" t-on-click.stop="() => chatWindow.close()">
                             <i class="oi" data-icon="close_small"/>
                         </button>
                     </li>
