@@ -121,6 +121,29 @@ test("can color cells", async () => {
     expect(cells[2]).not.toHaveStyle({ "background-color": "rgba(107, 173, 222, 0.6)" });
 });
 
+test("solid color tab should be opened by default if selected cell has color from solid tab", async () => {
+    await setupEditor(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td>[<br></td>
+                    <td><br>]</td>
+                </tr>
+            </tbody>
+        </table>`);
+
+    await expandToolbar();
+    await click(".o-select-color-background");
+    await animationFrame();
+    await click(".o_color_button[data-color='#FF0000']");
+    await animationFrame();
+
+    await click(".o-select-color-background");
+    await animationFrame();
+    expect(".o_font_color_selector .solid-tab").toHaveClass("active");
+    expect(".o_font_color_selector .o_color_button[data-color='#FF0000']").toHaveClass("selected");
+});
+
 test("remove text from single selected cell", async () => {
     const { editor } = await setupEditor(`
         <table class="table table-bordered o_table">
@@ -171,7 +194,7 @@ describe("selected cell color in toolbar", () => {
         await expandToolbar();
         expect(".fa-paint-brush").toHaveCount(1);
         expect(".fa-paint-brush").toHaveStyle({
-            "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
+            "border-bottom": "2px solid rgb(255, 0, 0)",
         });
     });
     test("cell's selected color should be shown in toolbar (2)", async () => {
@@ -209,7 +232,7 @@ describe("selected cell color in toolbar", () => {
         await expandToolbar();
         expect(".fa-paint-brush").toHaveCount(1);
         expect(".fa-paint-brush").toHaveStyle({
-            "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
+            "border-bottom": "2px solid rgb(255, 0, 0)",
         });
         const nonStyledCellOne = queryFirst(".non_styled_1");
         const nonStyledCellTwo = queryFirst(".non_styled_2");
@@ -268,7 +291,7 @@ describe("selected cell color in toolbar", () => {
         await expandToolbar();
         expect(".fa-paint-brush").toHaveCount(1);
         expect(".fa-paint-brush").toHaveStyle({
-            "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
+            "border-bottom": "2px solid rgb(255, 0, 0)",
         });
     });
 
@@ -309,7 +332,7 @@ describe("selected cell color in toolbar", () => {
         await expandToolbar();
         expect(".fa-paint-brush").toHaveCount(1);
         expect(".fa-paint-brush").toHaveStyle({
-            "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
+            "border-bottom": "2px solid rgb(255, 0, 0)",
         });
     });
 });
