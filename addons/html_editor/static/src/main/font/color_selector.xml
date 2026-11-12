@@ -8,6 +8,7 @@
         t-att-disabled="this.props.isDisabled"
         aria-haspopup="dialog"
         t-att-aria-expanded="this.colorSelectorState.isOpen ? 'true' : 'false'"
+        t-att-aria-controls="this.colorSelectorState.isOpen ? this.colorPickerId : false"
     >
         <t t-if="this.props.type === 'foreground'">
             <i class="oi oi-fw py-1" data-icon="A" aria-hidden="true" t-attf-style="--icon-font-family: Arial, sans-serif; {{this.getSelectedColorStyle()}}"/>
