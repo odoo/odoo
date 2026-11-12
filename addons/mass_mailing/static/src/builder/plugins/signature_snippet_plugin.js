@@ -27,11 +27,6 @@ export class MassMailingSignatureSnippetPlugin extends Plugin {
                     }
                 },
             },
-            {
-                onClose: () => {
-                    snippetEl.remove();
-                },
-            }
         );
     }
 }
