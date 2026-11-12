@@ -239,6 +239,9 @@ class WebsiteSnippetFilter(models.Model):
         values = []
         model = self.env[self.model_name]
         Website = self.env['website']
+        if isinstance(records, models.BaseModel):
+            # Records may have been searched in the website default language.
+            records = records.with_context(lang=self.env.lang)
         for record in records:
             data = {}
             for field_name, field_widget in meta_data.items():
