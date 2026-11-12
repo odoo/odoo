@@ -6,6 +6,7 @@ import {
     queryOne,
     hover,
     manuallyDispatchProgrammaticEvent,
+    queryAll,
 } from "@odoo/hoot-dom";
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -401,5 +402,55 @@ test("mobile tab selector hides its icon", async () => {
     expect(".o_font_color_selector .oi[data-icon='arrow_drop_down']").toHaveAttribute(
         "aria-hidden",
         "true"
+    );
+});
+
+test.tags("desktop");
+test("every button of the color picker has the button type", async () => {
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#FF0000",
+                defaultTab: "solid",
+            },
+            applyColor() {},
+            enabledTabs: ["solid", "custom", "gradient"],
+        },
+    });
+    const expectButtonType = () => {
+        for (const el of queryAll(".o_font_color_selector button")) {
+            expect(el).toHaveAttribute("type", "button", {
+                message: `"${el.className}" should have the button type`,
+            });
+        }
+    };
+    expectButtonType();
+    await click("button.custom-tab");
+    await animationFrame();
+    expectButtonType();
+    await click("button.gradient-tab");
+    await animationFrame();
+    await click(".o_custom_gradient_button");
+    await animationFrame();
+    await click(".o_type_row button:contains('Radial')");
+    await animationFrame();
+    expect(".o_radial_size_row button").toHaveCount(4);
+    expectButtonType();
+});
+
+test("mobile tab selector has the button type", async () => {
+    mockUserAgent("android");
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "",
+                defaultTab: "",
+            },
+            applyColor() {},
+        },
+    });
+    expect(".o_font_color_selector button:has(.oi[data-icon='arrow_drop_down'])").toHaveAttribute(
+        "type",
+        "button"
     );
 });
