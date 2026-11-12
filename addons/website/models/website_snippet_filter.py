@@ -105,6 +105,7 @@ class WebsiteSnippetFilter(models.Model):
         max_limit = max(self.limit, 16)
         limit = limit and min(limit, max_limit) or max_limit
         single_record_filter = limit == 1 and model_name and res_id
+        website = self.env.website
 
         # Either a multi-record filter is provided, or a single record is specified.
         if self.filter_id or single_record_filter:
@@ -112,20 +113,23 @@ class WebsiteSnippetFilter(models.Model):
                 filter_sudo = self.filter_id.sudo()
                 domain = Domain(filter_sudo._get_eval_domain())
                 if 'website_id' in self.env[model_name]:
-                    domain &= self.env.website.website_domain()
+                    domain &= website.website_domain()
                 if 'company_id' in self.env[model_name]:
-                    domain &= Domain('company_id', 'in', [False, self.env.website.company_id.id])
+                    domain &= Domain('company_id', 'in', [False, website.company_id.id])
                 if 'is_published' in self.env[model_name]:
                     domain &= Domain('is_published', '=', True)
                 if search_domain:
                     search_domain = Domain(search_domain)
                     domain &= search_domain
             try:
-                records = self.env[model_name].sudo(False).with_context(**literal_eval(filter_sudo.context)).search(
-                    domain,
-                    order=','.join(literal_eval(filter_sudo.sort)) or None,
-                    limit=limit
-                ) if not single_record_filter else self.env[model_name].sudo(False).search([('id', '=', res_id)], limit=1)
+                records = self.env[model_name].sudo(False).with_context(
+                    **literal_eval(filter_sudo.context),
+                    lang=website.default_lang_id.code,
+                ).search(
+                        domain,
+                        order=','.join(literal_eval(filter_sudo.sort)) or None,
+                        limit=limit,
+                    ) if not single_record_filter else self.env[model_name].sudo(False).search([('id', '=', res_id)], limit=1)
                 return self._filter_records_to_values(records.sudo(), res_model=model_name)
             except MissingError:
                 if not single_record_filter:
@@ -137,6 +141,7 @@ class WebsiteSnippetFilter(models.Model):
                     dynamic_filter=self,
                     limit=limit,
                     search_domain=search_domain,
+                    lang=website.default_lang_id.code,
                 ).sudo().run() or []
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
@@ -263,6 +268,9 @@ class WebsiteSnippetFilter(models.Model):
 
         values = []
         Website = self.env['website']
+        if isinstance(records, models.BaseModel):
+            # Records may have been searched in the website default language.
+            records = records.with_context(lang=self.env.lang)
         for record in records:
             data = {}
             for field_name, field_widget in meta_data.items():
