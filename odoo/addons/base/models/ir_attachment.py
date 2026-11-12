@@ -638,8 +638,6 @@ class IrAttachment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        record_tuple_set = set()
-
         # remove computed field depending of datas
         vals_list = [{
             **vals,
@@ -659,18 +657,17 @@ class IrAttachment(models.Model):
                     raw or base64.b64decode(datas or b''),
                     values['mimetype']
                 ))
-
-            # 'check()' only uses res_model and res_id from values, and make an exists.
-            # We can group the values by model, res_id to make only one query when
-            # creating multiple attachments on a single record.
-            record_tuple = (values.get('res_model'), values.get('res_id'))
-            record_tuple_set.add(record_tuple)
-
-        # don't use possible contextual recordset for check, see commit for details
-        Attachments = self.browse()
-        for res_model, res_id in record_tuple_set:
-            Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super().create(vals_list)
+
+    def _prepare_create_values(self, vals_list):
+        vals_list = super()._prepare_create_values(vals_list)
+        # 'check()' only uses res_model and res_id from values, and make an exists.
+        # We can group the values by model, res_id to make only one query when
+        # creating multiple attachments on a single record.
+        record_tuple_set = {(values.get("res_model"), values.get("res_id")) for values in vals_list}
+        for res_model, res_id in record_tuple_set:
+            self.check("create", values={"res_model": res_model, "res_id": res_id})
+        return vals_list
 
     def _post_add_create(self):
         pass
