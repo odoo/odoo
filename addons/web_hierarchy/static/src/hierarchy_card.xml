@@ -4,7 +4,7 @@
     <t t-name="web_hierarchy.HierarchyCard">
         <div class="o_hierarchy_node_container d-flex flex-column" t-att-class="this.classNames" t-att-data-node-id="this.props.node.id">
             <div class="o_hierarchy_node_button_container w-100 d-flex justify-content-end">
-                <button t-if="this.props.node.canShowParentNode"
+                <button aria-label="Show the parent" t-if="this.props.node.canShowParentNode"
                         name="hierarchy_search_parent_node"
                         class="btn p-0"
                         t-on-click.synthetic="this.onClickArrowUp"

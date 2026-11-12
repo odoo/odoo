@@ -11,7 +11,7 @@
                 <t t-if="!this.props.isSingleItem" t-foreach="this.state.values" t-as="v" t-key="v.id">
                     <div class="lot-item input-group mb-2">
                         <span class="form-control" t-out="v.text"/>
-                        <button class="btn btn-danger" t-on-click="() => this.removeItem(v.id)">
+                        <button aria-label="Delete" class="btn btn-danger" t-on-click="() => this.removeItem(v.id)">
                             <i class="oi" data-icon="delete"></i>
                         </button>
                     </div>

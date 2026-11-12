@@ -38,6 +38,7 @@
     <t t-name="web.SearchBar.NormalFacetIcon">
         <div class="o_searchview_facet_label d-flex align-items-center position-relative rounded-2 p-1 small"
             t-att-role="facet.domain ? 'button' : 'img'"
+            t-att-aria-label="this.getFacetLabel(facet)"
             t-att-class="{
                 'o_facet_groupby': facet.type == 'groupBy',
                 'bg-primary-subtle text-primary': facet.type == 'field' || facet.type == 'filter',

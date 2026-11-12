@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="col-2 px-0">
-                <button t-if="this.props.allocatedQuantity()"
+                <button aria-label="Print labels" t-if="this.props.allocatedQuantity()"
                         class="btn btn-secondary oi" data-icon="print"
                         t-on-click.prevent="() => this.onPrintLabels()"/>
                 <button t-else="" class="btn btn-secondary opacity-0"/>

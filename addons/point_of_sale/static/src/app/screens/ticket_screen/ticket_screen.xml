@@ -101,12 +101,12 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle text-end info-column" name="info-column">
-                                                <button t-on-click.stop="() => this._onInfoOrder(order)" class="btn btn-hover-info p-0 lh-1">
+                                                <button aria-label="Order details" t-on-click.stop="() => this._onInfoOrder(order)" class="btn btn-hover-info p-0 lh-1">
                                                     <i class="oi oi-lg oi-filled align-middle" data-icon="info" aria-hidden="true"/>
                                                 </button>
                                             </td>
                                             <td class="align-middle text-end delete-column" name="delete-column">
-                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" t-on-dblclick.stop="() => {}" class="btn btn-hover-danger btn-lg">
+                                                <button aria-label="Delete order" t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" t-on-dblclick.stop="() => {}" class="btn btn-hover-danger btn-lg">
                                                     <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                                 </button>
                                                 <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
@@ -140,7 +140,7 @@
                                     </div>
                                     <CenteredIcon icon="'info'" iconClass="'fs-2 oi-filled'" class="'info-column'" t-on-click="() => this._onInfoOrder(order)"/>
                                     <div class="mx-2" name="delete-column">
-                                        <div t-if="!this.shouldHideDeleteButton(order)" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                        <div aria-label="Delete order" t-if="!this.shouldHideDeleteButton(order)" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                             </div>
@@ -226,7 +226,7 @@
                             </t>
                             <div t-else="" class="pads d-flex gap-2 m-2 mt-0" >
                                 <BackButton t-if="this.ui.isSmall" onClick="() => this.pos.onClickBackButton()"/>
-                                <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                                <button aria-label="Reprint preparation tickets" class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
                                     t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.prep_order_ids.length">
                                     <i class="oi" data-icon="restaurant" aria-hidden="true"/>

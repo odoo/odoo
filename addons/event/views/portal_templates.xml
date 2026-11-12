@@ -60,7 +60,7 @@
                             </span>
                         </td>
                         <td class="text-end">
-                            <a t-if="not registration.state in ['draft', 'cancel']" type="button" class="btn btn-primary oi" data-icon="download"
+                            <a aria-label="Download tickets" t-if="not registration.state in ['draft', 'cancel']" type="button" class="btn btn-primary oi" data-icon="download"
                                 t-attf-href="/event/{{ registration.event_id.id }}/my_tickets?registration_ids={{ registration.ids }}&amp;tickets_hash={{ registration.event_id._get_tickets_access_hash(registration.ids) }}"/>
                         </td>
                     </tr>

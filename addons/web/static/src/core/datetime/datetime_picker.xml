@@ -133,7 +133,7 @@
             t-attf-style="--DateTimePicker__Day-template-columns: {{ this.props.showWeekNumbers ? 8 : 7 }}"
         >
             <nav class="o_datetime_picker_header d-flex">
-                <button
+                <button t-att-aria-label="this.activePrecisionLevel.prevTitle"
                     class="o_previous btn btn-sm opacity-75 opacity-100-hover"
                     t-on-click="this.previous"
                     tabindex="-1"
@@ -141,7 +141,7 @@
                 >
                     <i class="oi" data-icon="chevron_backward" t-att-title="this.activePrecisionLevel.prevTitle" />
                 </button>
-                <button
+                <button t-att-aria-label="this.activePrecisionLevel.nextTitle"
                     class="o_next btn btn-sm opacity-75 opacity-100-hover"
                     t-on-click="this.next"
                     tabindex="-1"

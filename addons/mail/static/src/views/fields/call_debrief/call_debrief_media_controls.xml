@@ -3,13 +3,13 @@
     <t t-name="mail.CallDebriefMediaControls">
         <div class="o-CallDebriefMediaControls d-flex justify-content-between column-gap-1 row-gap-3 flex-wrap">
             <div class="d-flex align-items-center gap-1">
-                <button t-on-click="this.props.onTogglePlay" class="btn btn-primary rounded-pill p-1" t-att-class="{ 'active': this.props.isPlaying }" t-att-data-tooltip="this.playPauseTooltip">
+                <button t-att-aria-label="this.playPauseTooltip" t-on-click="this.props.onTogglePlay" class="btn btn-primary rounded-pill p-1" t-att-class="{ 'active': this.props.isPlaying }" t-att-data-tooltip="this.playPauseTooltip">
                     <i class="oi oi-stack oi-filled" t-att-data-icon="this.props.isPlaying ? 'pause' : 'play_arrow'"/>
                 </button>
-                <button t-on-click="() => this.props.onSeek(-5)" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.skipBackwardTooltip" t-att-disabled="this.props.currentTime === 0" data-control-feedback="skip-backward">
+                <button t-att-aria-label="this.skipBackwardTooltip" t-on-click="() => this.props.onSeek(-5)" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.skipBackwardTooltip" t-att-disabled="this.props.currentTime === 0" data-control-feedback="skip-backward">
                     <i class="oi oi-stack oi-filled" data-icon="fast_rewind"/>
                 </button>
-                <button t-on-click="() => this.props.onSeek(5)" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.skipForwardTooltip" t-att-disabled="this.props.currentTime === this.props.totalDuration" data-control-feedback="skip-forward">
+                <button t-att-aria-label="this.skipForwardTooltip" t-on-click="() => this.props.onSeek(5)" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.skipForwardTooltip" t-att-disabled="this.props.currentTime === this.props.totalDuration" data-control-feedback="skip-forward">
                     <i class="oi oi-stack oi-filled" data-icon="fast_forward"/>
                 </button>
             </div>
@@ -20,7 +20,7 @@
             </div>
             <div class="d-flex align-items-center gap-1">
                 <div class="o-CallDebriefMediaControls-volumeWrapper position-relative d-flex align-items-center">
-                    <button t-on-click="this.props.onToggleMute" data-control-feedback="mute" class="o-CallDebrief-control o-CallDebrief-muteBtn btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.muteTooltip">
+                    <button t-att-aria-label="this.muteTooltip" t-on-click="this.props.onToggleMute" data-control-feedback="mute" class="o-CallDebrief-control o-CallDebrief-muteBtn btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.muteTooltip">
                         <i class="oi oi-stack oi-filled" t-att-data-icon="this.volumeIcon"/>
                     </button>
                     <input t-if="!this.isMobileOS"
@@ -40,10 +40,10 @@
                         </option>
                     </t>
                 </select>
-                <button t-if="this.props.hasVideo" t-on-click="this.props.onToggleFullscreen" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.fullscreenTooltip" data-control-feedback="fullscreen">
+                <button t-att-aria-label="this.fullscreenTooltip" t-if="this.props.hasVideo" t-on-click="this.props.onToggleFullscreen" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.fullscreenTooltip" data-control-feedback="fullscreen">
                     <i class="oi oi-stack" t-att-data-icon="this.props.isFullscreen ? 'close_fullscreen' : 'expand_content'"/>
                 </button>
-                <button class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.downloadTooltip" t-if="this.props.mediaUrl" t-on-click="() => this.downloadMedia()">
+                <button t-att-aria-label="this.downloadTooltip" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.downloadTooltip" t-if="this.props.mediaUrl" t-on-click="() => this.downloadMedia()">
                     <i class="oi oi-stack" data-icon="download"/>
                 </button>
             </div>
