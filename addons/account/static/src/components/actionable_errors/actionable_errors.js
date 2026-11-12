@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 
@@ -25,6 +25,10 @@ export class ActionableErrors extends Component {
             // view_mode is not handled JS side
             errorData.action['views'] = errorData.action.view_mode.split(',').map(mode => [false, mode]);
             delete errorData.action['view_mode'];
+        }
+        if (errorData.action?.help) {
+            // the help loses its HTML status when serialized through a Json field
+            errorData.action.help = markup(errorData.action.help);
         }
         this.env.model.action.doAction(errorData.action);
     }
