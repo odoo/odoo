@@ -122,6 +122,7 @@ class AccountMove(models.Model):
         index='trigram',
     )
     name_placeholder = fields.Char(compute='_compute_name_placeholder')
+    has_name = fields.Boolean(compute='_compute_has_name')
     ref = fields.Char(
         string='Reference',
         copy=False,
@@ -993,15 +994,20 @@ class AccountMove(models.Model):
 
         self._inverse_name()
 
-    @api.depends('date', 'journal_id', 'move_type', 'name', 'posted_before', 'sequence_number', 'sequence_prefix', 'state')
+    @api.depends('date', 'journal_id', 'move_type', 'has_name', 'posted_before', 'sequence_number', 'sequence_prefix', 'state')
     def _compute_name_placeholder(self):
         for move in self:
-            if (not move.name or move.name == '/') and move.date and not move._get_last_sequence():
+            if not move.has_name and move.date and not move._get_last_sequence():
                 sequence_format_string, sequence_format_values = move._get_next_sequence_format()
                 sequence_format_values['seq'] = sequence_format_values['seq'] + 1
                 move.name_placeholder = sequence_format_string.format(**sequence_format_values)
             else:
                 move.name_placeholder = False
+
+    @api.depends('name')
+    def _compute_has_name(self):
+        for move in self:
+            move.has_name = move.name and move.name != '/'
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
@@ -2759,7 +2765,7 @@ class AccountMove(models.Model):
 
     def _inverse_name(self):
         self._conditional_add_to_compute('payment_reference', lambda move: (
-            move.name and move.name != '/'
+            move.has_name
         ))
         self._update_sequence_made_gap()
 
@@ -2803,9 +2809,9 @@ class AccountMove(models.Model):
                 msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-    @api.onchange('name', 'highest_name')
+    @api.onchange('name', 'has_name', 'highest_name')
     def _onchange_name_warning(self):
-        if self.name and self.name != '/' and self.name <= (self.highest_name or '') and not self.document_sequence_editable:
+        if self.has_name and self.name <= (self.highest_name or '') and not self.document_sequence_editable:
             self.show_name_warning = True
         else:
             self.show_name_warning = False
@@ -2814,7 +2820,7 @@ class AccountMove(models.Model):
         if not origin_name or origin_name == '/':
             origin_name = self.highest_name
         if (
-            self.name and self.name != '/'
+            self.has_name
             and origin_name and origin_name != '/'
             and self.date == self._origin.date
             and self.journal_id == self._origin.journal_id
@@ -4015,7 +4021,7 @@ class AccountMove(models.Model):
             if (
                     move.posted_before
                     and 'journal_id' in vals and move.journal_id.id != vals['journal_id']
-                    and not (move.name == '/' or not move.name or ('name' in vals and (vals['name'] == '/' or not vals['name'])))
+                    and not (not move.has_name or ('name' in vals and (vals['name'] == '/' or not vals['name'])))
             ):
                 raise UserError(_('You cannot edit the journal of a journal entry if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'))
             if (
@@ -6413,7 +6419,7 @@ class AccountMove(models.Model):
         (e.g. '/'), which some localizations treat as an unexpected format.
         """
         self.ensure_one()
-        if not self.name or self.name == '/':
+        if not self.has_name:
             return ''
         return self._get_sequence_format_param(self.name)[1].get('suffix', '')
 
@@ -6442,7 +6448,7 @@ class AccountMove(models.Model):
 
         def is_computed_with_mixin(move):
             # if computed with the mixin we are guaranteed to not have gaps, need to bypass to avoid concurrency issues
-            if not move.name or move.name == '/':
+            if not move.has_name:
                 return False
             format_string, format_values = move._get_sequence_format_param(move.name)
             format_values.pop('seq')
