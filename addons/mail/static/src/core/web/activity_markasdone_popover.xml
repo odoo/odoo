@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityMarkAsDone">
-        <PopoverCard class="'o-mail-ActivityMarkAsDone'" darkerInDarkTheme="true" hasHeader="this.hasHeader">
+        <PopoverCard class="'o-mail-ActivityMarkAsDone'" darkerInDarkTheme="true" hasHeader="this.props.hasHeader">
             <t t-set-slot="header">
                 <h6 class="fw-bolder">Mark Done</h6>
             </t>
@@ -13,7 +13,7 @@
                 <button type="button" class="btn btn-sm btn-primary" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
                     Done
                 </button>
-                <button type="button" class="btn btn-sm btn-link" t-on-click="this.close">
+                <button type="button" class="btn btn-sm btn-link" t-on-click="this.props.close">
                     Discard
                 </button>
             </div>

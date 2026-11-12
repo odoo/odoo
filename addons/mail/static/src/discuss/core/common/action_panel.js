@@ -1,6 +1,7 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
+import { Component, signal, t, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
@@ -21,9 +22,13 @@ export class ActionPanel extends Component {
             },
             inDiscussCallTheme: false,
         });
-        this.props = useProps({
+        this.props = usePropsPlus({
             close: t.function([panelCloseOptionsSchema.optional()]).optional(),
             contentPadding: t.boolean().optional(true),
+            /** Content element, either owned by the parent (`contentRef` prop) or local. */
+            contentRef: propStatic(
+                t.signal(t.instanceOf(HTMLDivElement)).optional(() => signal.ref())
+            ),
             icon: t.string().optional(),
             iconClass: t.string().optional(),
             initialWidth: t.number().optional(),
@@ -31,11 +36,6 @@ export class ActionPanel extends Component {
             resizable: t.boolean().optional(true),
             title: t.string().optional(),
         });
-        /** Content element, either owned by the parent (`contentRef` prop) or local. */
-        this.contentRef = useProps.static(
-            "contentRef",
-            t.signal(t.instanceOf(HTMLDivElement)).optional(() => signal.ref())
-        );
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
         useBackButton(

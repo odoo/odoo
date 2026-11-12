@@ -68,7 +68,7 @@ export class Thread extends Component {
         });
         this.escape = escape;
         this.onWheel = this.onWheel.bind(this);
-        // bound once so `onParentMessageClick` is a stable (useProps.static) handler
+        // bound once so `onParentMessageClick` is a stable (static prop) handler
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
         this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();

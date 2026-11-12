@@ -1,4 +1,4 @@
-import { propComputed } from "@mail/utils/common/hooks";
+import { propComputed, usePropsPlus } from "@mail/utils/common/hooks";
 
 import { Component, types } from "@odoo/owl";
 
@@ -8,10 +8,12 @@ export class InvitationSentDate extends Component {
 
     setup() {
         super.setup();
-        this.datetime = propComputed("datetime", types.instanceOf(luxon.DateTime));
+        this.props = usePropsPlus({
+            datetime: propComputed(types.instanceOf(luxon.DateTime)),
+        });
     }
 
     get relativeTime() {
-        return this.datetime().toRelative({ style: "narrow" });
+        return this.props.datetime().toRelative({ style: "narrow" });
     }
 }

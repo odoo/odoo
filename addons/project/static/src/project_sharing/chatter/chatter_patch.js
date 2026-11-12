@@ -1,4 +1,5 @@
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { mergeProps } from "@mail/utils/common/hooks";
 import { t, usePlugin, useProps } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
@@ -6,12 +7,15 @@ import { patch } from "@web/core/utils/patch";
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
-        this.projectSharingProps = useProps({
-            displayFollowButton: t.boolean(),
-            isFollower: t.boolean(),
-        });
+        mergeProps(
+            this.props,
+            useProps({
+                displayFollowButton: t.boolean(),
+                isFollower: t.boolean(),
+            })
+        );
         Object.assign(this.state, {
-            isFollower: this.projectSharingProps.isFollower,
+            isFollower: this.props.isFollower,
         });
         this.orm = usePlugin(ORM);
     },
