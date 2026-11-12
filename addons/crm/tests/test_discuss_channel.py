@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import HttpCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-class TestDiscussChannelAccess(HttpCase):
+class TestDiscussChannel(TransactionCase):
     def test_access_channel_from_lead(self):
         test_cases = [
             # user_grp - has_lead - expected_result
@@ -25,7 +26,7 @@ class TestDiscussChannelAccess(HttpCase):
             channel = self.env["discuss.channel"].create(
                 {
                     "name": f"channel_{idx}",
-                    "channel_type": "livechat",
+                    "channel_type": "group",
                     "lead_ids": crm_lead.ids,
                 }
             )
@@ -42,8 +43,8 @@ class TestDiscussChannelAccess(HttpCase):
             self.env["discuss.channel"]
             .create(
                 {
-                    "name": f"Visitor #11",
-                    "channel_type": "livechat",
+                    "name": "Private conversation",
+                    "channel_type": "group",
                 }
             )
             .with_user(user)
@@ -71,3 +72,20 @@ class TestDiscussChannelAccess(HttpCase):
             msg="You cannot update a lead and link it to a channel you don't have access to.",
         ):
             lead.write({"origin_channel_id": channel.id})
+
+    def test_create_lead_when_channel_has_deleted_message(self):
+        user = new_test_user(self.env, login="bob_user", groups="sales_team.group_sale_salesman")
+        channel = self.env["discuss.channel"].create({
+            "name": "Customer conversation",
+            "channel_type": "group",
+            "channel_partner_ids": [Command.link(user.partner_id.id)],
+        })
+        message = channel.message_post(
+            author_id=user.partner_id.id, body="Hello, how can I help you?", message_type="comment",
+        )
+        channel._message_update_content(message, body="")
+        self.env.invalidate_all()
+        self.assertFalse(channel.lead_ids)
+        channel.with_user(user).execute_command_lead(body="/lead BobLead")
+        self.assertEqual(channel.lead_ids.name, "BobLead")
+        self.assertFalse(channel.lead_ids.description)
