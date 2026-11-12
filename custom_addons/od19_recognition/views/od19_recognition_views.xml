@@ -43,6 +43,7 @@
         <field name="name">Kudos</field>
         <field name="res_model">od19.recognition</field>
         <field name="view_mode">list,form</field>
+        <field name="group_ids" eval="[(4, ref('od19_recognition.group_recognition_manager'))]"/>
     </record>
 
     <record id="view_od19_recognition_badge_tree" model="ir.ui.view">
@@ -63,5 +64,6 @@
         <field name="name">Badges</field>
         <field name="res_model">od19.recognition.badge</field>
         <field name="view_mode">list,form</field>
+        <field name="group_ids" eval="[(4, ref('od19_recognition.group_recognition_manager'))]"/>
     </record>
 </odoo>

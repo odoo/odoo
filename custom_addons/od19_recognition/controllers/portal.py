@@ -1,4 +1,3 @@
-import datetime
 import time
 from urllib.parse import quote as url_quote
 
@@ -133,7 +132,6 @@ class Od19RecognitionPortal(http.Controller):
                 order="name",
             ),
             "badges": request.env["od19.recognition.badge"].sudo().search([]),
-            "datetime": datetime,
         }
 
     def _od19_feed(self, limit=5):
