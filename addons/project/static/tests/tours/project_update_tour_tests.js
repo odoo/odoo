@@ -197,7 +197,11 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: "span.o-dropdown-item:contains('Top Menu')",
     run: "click",
 }, {
-    trigger: ".o-dropdown-item div span:contains('Updates')",
+    trigger: ".o_embedded_actions button[name='openEmbeddedActions']",
+    content: "Open the embedded action picker",
+    run: "click",
+}, {
+    trigger: ".o_embedded_actions_dropdown_menu .o-dropdown-item:contains('Updates')",
     content: "Put Updates in the embedded actions",
     run: "click",
 }, {

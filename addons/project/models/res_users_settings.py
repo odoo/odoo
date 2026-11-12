@@ -11,6 +11,23 @@ class ResUsersSettings(models.Model):
         if not (res_model == 'project.project' and res_id):
             return embedded_actions_settings_dict
 
+        if self.user_id.has_group('project.group_project_manager'):
+            action = self.env.ref('project.act_project_project_2_project_task_all')
+            config_key = f'{action.id}+{res_id}'
+
+            if config_key not in embedded_actions_settings_dict:
+                overview = self.env.ref('project.project_embedded_action_project_overview')
+                config = {
+                    'embedded_actions_visibility': [False, overview.id],
+                    'embedded_actions_order': [],
+                    'embedded_visibility': True,
+                }
+                self.set_embedded_actions_setting(action.id, res_id, {
+                    'res_model': res_model,
+                    **config,
+                })
+                embedded_actions_settings_dict[config_key] = config
+
         project_manager = self.env['project.project'].browse(res_id).user_id
         if self.user_id == project_manager:
             return embedded_actions_settings_dict

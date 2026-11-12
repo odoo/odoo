@@ -7,14 +7,17 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     run: "click",
 }, {
     content: 'Open "Burndown Chart Test" project menu',
-            trigger: ".o_kanban_record:contains(Burndown Chart Test)",
-    run: `hover && click .o_kanban_record:contains(Burndown Chart Test) .o_dropdown_kanban .dropdown-toggle`,
+    trigger: ".o_kanban_record:contains(Burndown Chart Test)",
+    run: "hover && click .o_kanban_record:contains(Burndown Chart Test) .o_dropdown_kanban .dropdown-toggle",
 }, {
-    content: `Open "Burndown Chart Test" project's "Burndown Chart" view`,
-    trigger: '.o_kanban_manage_reporting div[role="menuitem"] a:contains("Burndown Chart")',
+    content: 'Open the project settings',
+    trigger: '.o-dropdown--kanban-record-menu .dropdown-item:contains("Settings")',
     run: "click",
-},
-{
+}, stepUtils.autoExpandMoreButtons(), {
+    content: 'Open the project Burndown Chart',
+    trigger: '.o-form-buttonbox button[name="action_project_task_burndown_chart_report"]',
+    run: "click",
+}, {
     trigger: ".o_graph_renderer",
 },
 {
