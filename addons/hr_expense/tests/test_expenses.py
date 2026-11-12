@@ -760,13 +760,13 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertEqual(expense.state, 'posted')
         expense_data = self.env['hr.expense'].with_user(self.expense_user_employee).get_expense_dashboard()
-        self.assertEqual(expense_data['approved']['amount'], 1000.00)
+        self.assertEqual(expense_data['to_pay']['amount'], 1000.00)
 
         self.get_new_payment(expense, 1000.00)
 
         self.assertIn(expense.state, ('in_payment', 'paid'))
         expense_data = self.env['hr.expense'].with_user(self.expense_user_employee).get_expense_dashboard()
-        self.assertEqual(expense_data['approved']['amount'], 0.00)
+        self.assertEqual(expense_data['to_pay']['amount'], 0.00)
 
     def test_update_expense_price_on_product_standard_price(self):
         """

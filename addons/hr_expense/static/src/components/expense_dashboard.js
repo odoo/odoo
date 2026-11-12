@@ -30,9 +30,9 @@ export class ExpenseDashboard extends Component {
     }
 
     async fetchExpenseDashboardData() {
-        const expense_states = await this.orm.call("hr.expense", 'get_expense_dashboard', []);
+        const expense_filters = await this.orm.call("hr.expense", 'get_expense_dashboard', []);
 
-        this.state.expenses = expense_states;
+        this.state.expenses = expense_filters;
     }
 
     async applyFilter(filterName) {
@@ -64,7 +64,7 @@ export class ExpenseDashboard extends Component {
         if (myExpenses && !myExpenses.isActive) {
             searchModel.toggleSearchItem(myExpenses.id);
         }
-        // Toggle the filter corresponding to the current state
+        // Toggle the filter corresponding to the current filter
         const searchItem = Object.values(searchModel.searchItems).find(
             (searchItem) => searchItem.name === filterName
         );
