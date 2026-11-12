@@ -1,6 +1,6 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe } from "@odoo/hoot";
-import { animationFrame, clear, click, fill, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, clear, click, fill, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -15,8 +15,8 @@ const websiteContent = `
                 <i class="fa fa-star"></i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
             </span>
         </div>
     </div>`;
@@ -45,18 +45,35 @@ test("change rating score", async () => {
                 </i>
             </span>
             <span class="s_rating_inactive_icons">
-                <i class="fa fa-star-o" contenteditable="false">
+                <i class="fa fa-star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="fa fa-star-o" contenteditable="false">
+                <i class="fa fa-star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
-                <i class="fa fa-star-o" contenteditable="false">
+                <i class="fa fa-star" contenteditable="false">
                     &ZeroWidthSpace;
                 </i>
             </span>
         </div>`
     );
+});
+test("changing the rating keeps the inactive icons' glyph", async () => {
+    await setupHTMLBuilder(websiteContent);
+    // Remember the glyph the inactive icons have before any re-render.
+    const inactiveClass = queryFirst(":iframe .s_rating_inactive_icons i").className;
+    // Change the rating, which re-renders all the icons.
+    await contains(":iframe .s_rating").click();
+    await contains(".options-container [data-action-id='activeIconsNumber'] input").click();
+    await clear();
+    await fill("1");
+    await animationFrame();
+    // All inactive icons (old ones and new ones) still have that glyph.
+    const inactiveIconEls = queryAll(":iframe .s_rating_inactive_icons i");
+    expect(inactiveIconEls).toHaveLength(4);
+    for (const iconEl of inactiveIconEls) {
+        expect(iconEl).toHaveAttribute("class", inactiveClass);
+    }
 });
 test("Ensure order of operations when clicking very fast on two options", async () => {
     await setupHTMLBuilder(websiteContent);

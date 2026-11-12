@@ -143,21 +143,21 @@ function getInactiveCustomIcons(editingElement) {
 function getInactiveIcons(editingElement) {
     return editingElement.querySelectorAll(".s_rating_inactive_icons  > i");
 }
-function renderIcons(editingElement) {
+function getIcons(editingElement, isActive) {
+    return isActive ? getActiveIcons(editingElement) : getInactiveIcons(editingElement);
+}
+function getIconClass(editingElement, isActive) {
     const iconType = getIconType(editingElement);
-    const icons = {
-        "fa-star": "fa-star-o",
-        "fa-thumbs-up": "fa-thumbs-o-up",
-        "fa-circle": "fa-circle-o",
-        "fa-square": "fa-square-o",
-        "fa-heart": "fa-heart-o",
-    };
-    const faClassActiveIcons =
-        iconType === "custom" ? getActiveCustomIcons(editingElement) : "fa " + iconType;
-    const faClassInactiveIcons =
-        iconType === "custom" ? getInactiveCustomIcons(editingElement) : "fa " + icons[iconType];
-    const activeIconEls = getActiveIcons(editingElement);
-    const inactiveIconEls = getInactiveIcons(editingElement);
-    activeIconEls.forEach((activeIconEl) => (activeIconEl.className = faClassActiveIcons));
-    inactiveIconEls.forEach((inactiveIconEl) => (inactiveIconEl.className = faClassInactiveIcons));
+    if (iconType === "custom") {
+        return isActive
+            ? getActiveCustomIcons(editingElement)
+            : getInactiveCustomIcons(editingElement);
+    }
+    return "fa " + iconType;
+}
+function renderIcons(editingElement) {
+    for (const isActive of [true, false]) {
+        const iconClass = getIconClass(editingElement, isActive);
+        getIcons(editingElement, isActive).forEach((iconEl) => (iconEl.className = iconClass));
+    }
 }
