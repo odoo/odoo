@@ -480,7 +480,7 @@ class AccountMove(models.Model):
             'sellerTaxCode': self.company_id.vat,
             'sellerAddressLine': seller_address,
             'sellerPhoneNumber': company_phone or '',
-            'sellerEmail': self.company_id.email,
+            'sellerEmail': self.company_id.email or '',
             'sellerDistrictName': self.company_id.state_id.name,
             'sellerCountryCode': self.company_id.country_id.code,
             'sellerWebsite': self.company_id.website,
