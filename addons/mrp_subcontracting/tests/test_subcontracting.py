@@ -1182,6 +1182,52 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         cmp1_consumed_qty = sum(productions.move_raw_ids.filtered(lambda m: m.state == 'done').mapped("quantity_done"))
         self.assertEqual(cmp1_consumed_qty, 2)
 
+    def test_subcontracting_serial_mass_produce(self):
+        """
+        Test that Mass Produce on a subcontracting MO with serial-tracked finished
+        products properly records subcontracted components and syncs serials to receipt.
+        """
+        self.finished.tracking = 'serial'
+        subcontract_location = self.subcontractor_partner1.property_stock_subcontractor
+        self.env['stock.quant']._update_available_quantity(
+            self.comp1, subcontract_location, 2
+        )
+        self.env['stock.quant']._update_available_quantity(
+            self.comp2, subcontract_location, 2
+        )
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 2
+        receipt = picking_form.save()
+        receipt.action_confirm()
+        production = receipt.move_ids.move_orig_ids.production_id
+        production.action_assign()
+        action = production.action_serial_mass_produce_wizard()
+        wizard = Form(self.env['stock.assign.serial'].with_context(**action['context']))
+        wizard.next_serial_number = 'SN0001'
+        wizard.next_serial_count = 2
+        action = wizard.save().generate_serial_numbers_production()
+        wizard = Form(self.env['stock.assign.serial'].browse(action['res_id']))
+        wizard.save().apply()
+        productions = receipt.move_ids.move_orig_ids.production_id.sorted('id')
+        self.assertEqual(len(productions), 2)
+        self.assertEqual(
+            productions.mapped('subcontracting_has_been_recorded'), [True, True],
+            "Mass Produce should have recorded subcontracted components for both MOs"
+        )
+        self.assertEqual(
+            productions.mapped('lot_producing_id.name'), ['SN0001', 'SN0002'],
+            "Serial numbers should be assigned to split productions"
+        )
+        self.assertEqual(
+            sorted(receipt.move_line_ids.mapped('lot_id.name')),
+            ['SN0001', 'SN0002'],
+            "Serial numbers should be synced to receipt move lines"
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
