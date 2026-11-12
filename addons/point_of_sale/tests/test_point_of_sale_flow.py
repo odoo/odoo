@@ -220,6 +220,44 @@ class TestPointOfSaleFlow(CommonPosTest):
                 with self.assertRaises(ValidationError, msg="You cannot refund more than the original order."):
                     line.qty = -3
 
+    def test_backend_refund_edit_qty_keeps_refund_sign(self):
+        """ Editing the quantity of a backend refund line must keep the refund
+        amounts positive, like the lines created by refund(), so that the margin
+        of the refund stays negative."""
+        self.pos_config_usd.open_ui()
+        self.ten_dollars_with_10_incl.standard_price = 5
+        self.twenty_dollars_with_15_incl.standard_price = 10
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id, 'qty': 6},
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id, 'qty': 2},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 100},
+            ]
+        })
+
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                line.qty = -1
+        refund = refund_form.save()
+
+        edited_line, untouched_line = refund.lines
+        self.assertAlmostEqual(edited_line.price_subtotal_incl, 10.0)
+        self.assertAlmostEqual(edited_line.price_subtotal, 9.09)
+        self.assertAlmostEqual(untouched_line.price_subtotal_incl, 40.0)
+        self.assertAlmostEqual(untouched_line.price_subtotal, 34.78)
+        self.assertAlmostEqual(refund.amount_total, -50.0)
+
+        refund._compute_total_cost_in_real_time()
+        self.assertAlmostEqual(edited_line.margin, -4.09)
+        self.assertAlmostEqual(untouched_line.margin, -14.78)
+        self.assertAlmostEqual(refund.margin, -18.87)
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders

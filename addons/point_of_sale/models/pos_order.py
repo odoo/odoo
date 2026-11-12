@@ -1829,10 +1829,12 @@ class PosOrderLine(models.Model):
             if abs(self.refunded_orderline_id.qty) - total_refunded_qty < 0:
                 raise ValidationError(_("You cannot refund more than the outstanding quantity for this product."))
         if self.product_id:
+            # refund lines store positive amounts, see _compute_amount_line_all
+            qty = -self.qty if self.order_id.is_refund else self.qty
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-            self.price_subtotal = self.price_subtotal_incl = price * self.qty
+            self.price_subtotal = self.price_subtotal_incl = price * qty
             if (self.tax_ids):
-                taxes = self.tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False)
+                taxes = self.tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, qty, product=self.product_id, partner=False)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
