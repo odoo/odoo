@@ -481,3 +481,43 @@ class TestReportSession(TestPoSCommon):
             report['cash_rounding_total'], 11.45 - 11.46, places=2,
             msg="Cash rounding total should equal sum of (amount_paid - amount_total) across orders"
         )
+
+    def test_report_sale_details_without_accounting_rights(self):
+        pos_user = self.env['res.users'].create({
+            'name': 'A simple PoS man!',
+            'login': 'pos_user',
+            'password': 'pos_user',
+            'groups_id': [
+                (4, self.env.ref('base.group_user').id),
+                (4, self.env.ref('point_of_sale.group_pos_user').id),
+            ],
+        })
+
+        product = self.create_product('Product Access Rights', self.categ_basic, 10)
+
+        self.config.open_ui()
+        session = self.config.current_session_id
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 10,
+                'qty': 1,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 10,
+            'amount_total': 10,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+        self.make_payment(order, self.cash_pm1, 10)
+        session.action_pos_session_closing_control()
+
+        self.env['report.point_of_sale.report_saledetails'].with_user(pos_user).get_sale_details(session_ids=session.ids)

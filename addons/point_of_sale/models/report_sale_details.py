@@ -162,7 +162,7 @@ class ReportSaleDetails(models.AbstractModel):
                 cash_counted = session.cash_register_balance_end_real
             is_cash_method = False
             for payment in payments:
-                account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
+                account_payments = self.env['account.payment'].sudo().search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
                         payment_method = self.env['pos.payment.method'].browse(payment['id'])
