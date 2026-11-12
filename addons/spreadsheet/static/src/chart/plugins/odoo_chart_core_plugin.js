@@ -28,6 +28,7 @@ const CHART_PLACEHOLDER_DISPLAY_NAME = {
     scatter: _t("Odoo Scatter Chart"),
     combo: _t("Odoo Combo Chart"),
     funnel: _t("Odoo Funnel Chart"),
+    calendar: _t("Odoo Calendar Chart"),
 };
 
 export class OdooChartCorePlugin extends OdooCorePlugin {
