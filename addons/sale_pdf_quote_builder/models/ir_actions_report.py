@@ -24,14 +24,10 @@ class IrActionsReport(models.Model):
         if self._get_report(report_ref).report_name != "sale.report_saleorder":
             return result
 
-        ICP = self.env["ir.config_parameter"].sudo()
-        always_include = ICP.get_bool("sale.always_include_selected_documents")
         orders = self.env["sale.order"].browse(res_ids)
 
         for order in orders:
-            if (order.state != "sale" or always_include) and (
-                initial_stream := result.get(order.id, {}).get("stream")
-            ):
+            if initial_stream := result.get(order.id, {}).get("stream"):
                 quotation_documents = order.quotation_document_ids
                 headers, footers = quotation_documents.partitioned(lambda doc: doc.document_type == "header")
                 product_documents_before_quote = []
