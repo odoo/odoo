@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import RedirectWarning
 from odoo.fields import Domain
 
 
@@ -31,3 +32,20 @@ class ProjectTask(models.Model):
             return NotImplemented
 
         return Domain('id', 'in', self.env.companies.leave_timesheet_task_id.ids)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_timeoff_task(self):
+        timeoff_tasks = self.env['res.company'].sudo().search([
+            ('leave_timesheet_task_id', 'in', self.ids),
+            ('internal_project_id', '!=', False),
+        ]).leave_timesheet_task_id
+        if timeoff_tasks:
+            raise RedirectWarning(
+                self.env._(
+                    "The following tasks are used to generate time off timesheets and cannot be deleted: %(tasks)s. "
+                    "Set another Time Off Task in the Timesheets settings first.",
+                    tasks=timeoff_tasks.mapped('display_name'),
+                ),
+                self.env.ref('hr_timesheet.hr_timesheet_config_settings_action').id,
+                self.env._("Go to Settings"),
+            )
