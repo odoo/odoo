@@ -366,6 +366,20 @@ _BUBBLEUP_EXCEPTIONS = (
 )
 
 
+@functools.lru_cache(maxsize=2048)
+def _checked_codeobj(expr, filename, mode):
+    """Compile ``expr`` and check its bytecode and names, once for each expression.
+
+    The result depends on the text of the expression, the file name and the mode only (the
+    allowed opcodes are fixed for the life of the process), and a code object does not change:
+    the same code object can run again with any other context. A failure raises and is not
+    kept, so a refused expression is refused every time.
+    """
+    c = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    return c
+
+
 def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     """System-restricted Python expression evaluation
 
@@ -401,8 +415,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
 
     globals_dict = dict(context or {}, __builtins__=dict(_BUILTINS))
 
-    c = compile_codeobj(expr, filename=filename, mode=mode)
-    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    c = _checked_codeobj(expr, filename, mode)
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)

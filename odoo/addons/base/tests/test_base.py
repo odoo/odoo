@@ -2,12 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import uuid
 
 from textwrap import dedent
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
+from odoo.tools import safe_eval as safe_eval_module
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 
 
@@ -83,6 +86,35 @@ class TestSafeEval(BaseCase):
         """)
         safe_eval(expr, mode="exec")
         safe_eval(expr, context={}, mode="exec")
+
+    def test_safe_eval_same_expression_other_context(self):
+        # the checked code object is kept for the expression, not for its context
+        for _ in range(3):
+            self.assertEqual(safe_eval("a + b", {"a": 1, "b": 2}), 3)
+            self.assertEqual(safe_eval("a + b", {"a": 10, "b": 20}), 30)
+        context = {"x": 1}
+        self.assertIsNone(safe_eval("y = x + 1", context, mode="exec"))
+        self.assertEqual(context["y"], 2)
+        self.assertIsNone(safe_eval("y = x + 1", {"x": 5}, mode="exec"))
+        self.assertEqual(context["y"], 2)  # the first context is not shared with the second run
+
+    def test_safe_eval_refused_expression_is_refused_every_time(self):
+        for _ in range(3):
+            with self.assertRaises(NameError):
+                safe_eval("__import__('os')")
+            with self.assertRaises(NameError):
+                safe_eval("[].__class__.__mro__")
+
+    def test_safe_eval_checks_the_expression_once(self):
+        expression = f"40 + 2  # {uuid.uuid4().hex}"  # never seen by the cache before
+        with patch.object(
+            safe_eval_module,
+            "assert_valid_codeobj",
+            wraps=safe_eval_module.assert_valid_codeobj,
+        ) as checker:
+            for _ in range(5):
+                self.assertEqual(safe_eval(expression), 42)
+        self.assertEqual(checker.call_count, 1)
 
     def test_safe_eval_ctx_mutation(self):
         # simple eval also has side-effect on context
