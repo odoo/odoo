@@ -370,6 +370,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_exception_code_values(cls, exception):
         code, values = super()._get_exception_code_values(exception)
+        values['is_error_page'] = True
         if isinstance(exception, werkzeug.exceptions.NotFound) and request.env.user.has_group('website.group_website_designer'):
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]

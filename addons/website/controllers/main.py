@@ -250,7 +250,7 @@ class Website(Home):
         template = f"http_routing.{status_code}"
         if not request.env.user.has_group('website.group_website_designer') or not request.env.ref(template, raise_if_not_found=False):
             template = "http_routing.404"
-        return request.render(template)
+        return request.render(template, {'is_error_page': True})
 
     @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, replica=True)
     def website_force(self, website_id, path='/', isredir=False, **kw):

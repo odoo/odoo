@@ -89,6 +89,7 @@
             'data-tracking-enabled': website._is_tracking_enabled(main_object) if main_object else None,
         }"/>
         <t t-if="not env.user._is_public()" t-set="nothing" t-value="html_data.update({
+            'data-is-error-page': is_error_page,
             'data-is-published': 'website_published' in main_object._fields and main_object.sudo().website_published,
             'data-publish-on': 'publish_on' in main_object._fields and (main_object.sudo().publish_on or ''),
             'data-can-optimize-seo': 'website_meta_description' in main_object._fields,
@@ -3022,6 +3023,7 @@
 
 <!-- PAGE 404 -->
 <template id="page_404" name="Page Not Found">
+    <t t-set="is_error_page" t-value="True"/>
     <t t-call="http_routing.404"/>
 </template>
 
