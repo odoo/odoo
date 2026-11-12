@@ -419,7 +419,7 @@ class FleetVehicle(models.Model):
                     ("driver_id", "=", vehicle.driver_id.id),
                 ], order="write_date desc", limit="1")
                 if not driver_assignation.date_end:
-                    driver_assignation.date_end = datetime.today().date()
+                    driver_assignation.date_end = fields.Date.context_today(vehicle)
                 vehicle.create_driver_history(vals)
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
