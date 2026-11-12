@@ -1,6 +1,7 @@
 import { isHootReady, start } from "@odoo/hoot";
 
 import "./core/expect.test.js";
+import "./core/gc.test.js";
 import "./core/runner.test.js";
 import "./core/suite.test.js";
 import "./core/test.test.js";
