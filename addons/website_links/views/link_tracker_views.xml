@@ -17,6 +17,7 @@
         <field name="arch" type="xml">
             <list action="action_visit_page_statistics" type="object" default_order="create_date desc">
                 <field name="create_date" string="Create Date"/>
+                <field name="label" string="Name"/>
                 <field name="short_url" string="Link Tracker" optional="show"/>
                 <field name="short_url" string="Copy" widget="CopyClipboardButton" options="{'btn_class': 'link'}"/>
                 <field name="count" string="Clicks"/>
@@ -47,10 +48,10 @@
                 </div>
                 <group class="mt-4">
                     <group name="utm" colspan="8">
-                        <field name="campaign_id" options="{'create_name_field': 'title'}" placeholder="e.g. June Sale, Paris Roadshow, ..."/>
-                        <field name="medium_id" placeholder="e.g. Email, Social, ..."/>
-                        <field name="source_id" placeholder="e.g. Google, Facebook, ..."/>
                         <field name="label" string="Name" placeholder="e.g. &quot;Black Friday Mailing Campaign&quot;"/>
+                        <field name="campaign_id" options="{'create_name_field': 'title', 'no_open': True}" placeholder="e.g. June Sale, Paris Roadshow, ..."/>
+                        <field name="medium_id" placeholder="e.g. Email, Social, ..." options="{'no_open': True}"/>
+                        <field name="source_id" placeholder="e.g. Google, Facebook, ..." options="{'no_open': True}"/>
                     </group>
                 </group>
             </form>
