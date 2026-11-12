@@ -39,7 +39,7 @@ class HrAttendance(http.Controller):
         :param bool include_attendance_details: also read ``break_duration``, ``can_edit``,
             ``in_location`` and ``out_location`` of today's attendances
         :param bool include_attendance_settings: add the company settings
-            (``display_systray``, ``device_tracking_enabled``, ``capture_check_in_image``,
+            (``display_systray``, ``device_tracking_enabled``,
             ``has_attendance_check_in_ability``)
         :return: ``{}`` without employee, else ``id``, ``name``, ``hours_today``,
             ``hours_previously_today``, ``today_attendance_ids`` (list of dicts),
@@ -71,7 +71,6 @@ class HrAttendance(http.Controller):
                 response.update({
                     'display_systray': employee.company_id.attendance_from_systray,
                     'device_tracking_enabled': employee.company_id.attendance_device_tracking,
-                    'capture_check_in_image': employee.company_id.attendance_capture_check_in,
                     'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
                 })
         return response
@@ -472,7 +471,7 @@ class HrAttendance(http.Controller):
         return []
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
-    def systray_attendance(self, latitude=False, longitude=False, check_in_image=None):
+    def systray_attendance(self, latitude=False, longitude=False):
         """Check the current user's employee in or out from the systray (``systray`` mode).
 
         :return: :meth:`_get_attendance_action_response` updated with
@@ -485,8 +484,7 @@ class HrAttendance(http.Controller):
                                                   latitude=latitude,
                                                   longitude=longitude,
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
-        check_in_image_data = self._get_validated_check_in_image_and_type(check_in_image, employee.company_id.attendance_capture_check_in)
-        notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
+        notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response)
         response = self._get_attendance_action_response(employee, notification)
         response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
         return response

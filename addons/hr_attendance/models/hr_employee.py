@@ -324,7 +324,7 @@ class HrEmployee(models.Model):
         :param dict check_in_image_data: ``{'image': bytes, 'type': str}``, stored in
             ``in_image`` and posted on the attendance at check-in
         :return: ``False``, or a notification ``{'type': 'warning', 'message': str}`` when the
-            company requires a check-in picture and none was given
+            company requires a check-in picture and none was given (kiosk only)
         :raise UserError: if no open attendance is found to check out, or on a check-out from
             the systray (context ``is_from_systray_check_in_out``) with ``single_check_in``
         """
@@ -357,7 +357,7 @@ class HrEmployee(models.Model):
                     attendance.message_post(**message_vals)
                 else:
                     attendance.with_user(SUPERUSER_ID).message_post(**message_vals)
-            elif self.company_id.attendance_capture_check_in:
+            elif self.company_id.attendance_capture_check_in and not self.env.context.get('is_from_systray_check_in_out'):
                 notification = {
                     'type': 'warning',
                     'message': self.env._("Check-in is recorded, but picture could not be captured"),
