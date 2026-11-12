@@ -90,6 +90,8 @@ class PosVivaComController(http.Controller):
                 'transaction_id': transaction_id,
                 'payment_status': 'done',
             })
+            # amount_paid only counts done payments, so it missed this line until now
+            pos_order.amount_paid = pos_order._compute_amount_paid()
             if pos_order.amount_difference == 0 and all(p.payment_status == 'done' for p in pos_order.payment_ids):
                 pos_order.write({'state': 'paid'})
 
