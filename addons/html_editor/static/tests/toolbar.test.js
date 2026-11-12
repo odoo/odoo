@@ -231,6 +231,13 @@ test("Home and End should move the focus to the first and last toolbar buttons",
     expect(toolbarBtns[0]).toBeFocused();
 });
 
+test("toolbar should have the toolbar role and a label", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("role", "toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("aria-label", "HTML editor toolbar");
+});
+
 test.tags("desktop");
 test("focus should be trap in toolbar on arrow left/right keys", async () => {
     await setupEditor("<p>[test]</p>");
