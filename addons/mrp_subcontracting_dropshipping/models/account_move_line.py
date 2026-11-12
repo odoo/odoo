@@ -9,6 +9,9 @@ class AccountMoveLine(models.Model):
         eligible_for_resupply_dropship = bool(
             self.product_id.is_storable
             and dropshipped_moves
-            and all(m._is_resupply_dropship() for m in dropshipped_moves)
+            and all(
+                m._is_resupply_dropship() and not m._is_resupply_dropship_of_dropshipped_production()
+                for m in dropshipped_moves
+            )
         )
         return super()._use_inventory_valuation() or eligible_for_resupply_dropship
