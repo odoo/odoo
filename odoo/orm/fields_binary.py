@@ -12,7 +12,7 @@ from odoo.tools import SQL
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
 from .fields import Field
-from .utils import parse_field_expr
+from .utils import parse_field_expr, setup_warning
 
 if typing.TYPE_CHECKING:
     from .environments import Environment
@@ -304,7 +304,7 @@ class Image(Binary):
     def _setup(self, model):
         super()._setup(model)
         if not model._abstract and not model._log_access:
-            self._setup_warning("image requires the model to have _log_access = True")
+            setup_warning(self, "image requires the model to have _log_access = True")
 
     def create(self, record_values):
         new_record_values = [

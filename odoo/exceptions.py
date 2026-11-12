@@ -115,3 +115,8 @@ class ConcurrencyError(Exception):
     This exception is low-level and has very few use cases, it should
     only be used if all alternatives are deemed worse.
     """
+
+
+class RegistryError(RuntimeError):
+    """Signal that the registry of a database cannot be loaded or used."""
+    http_status = 500

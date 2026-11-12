@@ -34,7 +34,7 @@ except ImportError:
 
 import odoo.modules.db
 from odoo.api import Environment
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, RegistryError, UserError
 from odoo.modules.module import (
     Manifest,
     initialize_sys_path,
@@ -150,10 +150,6 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
         return dispatch(method, params)
     finally:
         request_var.reset(request_reset)
-
-
-class RegistryError(RuntimeError):
-    pass
 
 
 class Application:
@@ -392,7 +388,7 @@ def serve_db(request: Request) -> Response:
 
             request.registry = request.env.registry
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
-            raise RegistryError(f"Cannot get registry {request.db}") from e
+            raise RegistryError(request.db, "cannot get registry") from e
 
         # find the controller endpoint to use
         try:

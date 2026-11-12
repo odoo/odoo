@@ -10,6 +10,7 @@ from .fields import Field
 from .fields_numeric import Integer
 from .fields_selection import Selection
 from .models import BaseModel
+from .utils import RegistrySetupError, setup_warning
 
 if typing.TYPE_CHECKING:
     from .fields_relational import OnDelete
@@ -107,15 +108,15 @@ class Many2oneReference(Integer):
         super()._setup(model)
         model_field = model._fields.get(self.model_field)
         if model_field is None:
-            raise Exception(f"Field {self} with unknown model_field {self.model_field!r}")
+            raise RegistrySetupError(f"Field {self} with unknown model_field {self.model_field!r}")
         if not self.store:
             if self.ondelete:
-                self._setup_warning("unexpected ondelete on non-stored field")
+                setup_warning(self, "unexpected ondelete on non-stored field")
             return
         if not self.ondelete:
             self.ondelete = 'restrict' if self.required else 'set null'
         if self.ondelete not in ('restrict', 'set null', 'cascade', 'ignore') and not callable(self.ondelete):
-            raise ValueError(f'Field {self}.ondelete value is invalid: {self.ondelete!r}')
+            raise RegistrySetupError(f'Field {self}.ondelete value is invalid: {self.ondelete!r}')
         if self.ondelete in ('restrict', 'set null', 'cascade') and model_field.type == 'selection':
             # if the model_field is a selection, apply the ondelete only on selectable models
             ondelete_action = self.ondelete
