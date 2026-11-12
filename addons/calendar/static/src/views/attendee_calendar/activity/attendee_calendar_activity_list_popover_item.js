@@ -1,4 +1,5 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
+import { mergeProps } from "@mail/utils/common/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
@@ -24,12 +25,15 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
 
     setup() {
         super.setup(...arguments);
-        // bound once so `onClickDone` is a stable (props.static) handler
+        // bound once so `onClickDone` is a stable (static prop) handler
         this.onClickDone = this.onClickDone.bind(this);
-        this.calendarProps = useProps({
-            onRemoveActivityItem: types.function([types.number()]),
-            onViewMeeting: onViewMeetingType(this.store),
-        });
+        mergeProps(
+            this.props,
+            useProps({
+                onRemoveActivityItem: types.function([types.number()]),
+                onViewMeeting: onViewMeetingType(this.store),
+            })
+        );
         this.orm = useService("orm");
         const today = DateTime.now().startOf("day");
         this.targetDays = {
@@ -63,15 +67,15 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
     }
 
     get hasViewMeetingButton() {
-        return this.activity().calendar_event_id;
+        return this.props.activity().calendar_event_id;
     }
 
     /**
      * Remove the activity from the list when marking it as done.
      */
     onClickDone() {
-        this.activity().remove();
-        this.calendarProps.onRemoveActivityItem(this.activity().id);
+        this.props.activity().remove();
+        this.props.onRemoveActivityItem(this.props.activity().id);
     }
 
     /**
@@ -81,7 +85,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      */
     async onClickOpenRelatedRecord(ev, isMiddleClick) {
         const action = await this.orm.call("mail.activity", "action_open_document", [
-            this.activity().id,
+            this.props.activity().id,
         ]);
         this.action.doAction(action, {
             newWindow: isMiddleClick,
@@ -93,10 +97,10 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      * (i.e. when an activity of type Document is marked as done).
      */
     async onFileUploaded(data) {
-        const activity = this.activity();
+        const activity = this.props.activity();
         await super.onFileUploaded(data);
         activity.remove();
-        this.calendarProps.onRemoveActivityItem(activity.id);
+        this.props.onRemoveActivityItem(activity.id);
     }
 
     /**
@@ -105,10 +109,10 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      */
     onRescheduleActivity(targetDay) {
         // Do nothing if rescheduled on same date.
-        if (targetDay.day.hasSame(this.activity().date_deadline, "day")) {
+        if (targetDay.day.hasSame(this.props.activity().date_deadline, "day")) {
             return;
         }
-        const activity = this.activity();
+        const activity = this.props.activity();
         this.action.doActionButton({
             type: "object",
             name: targetDay.actionName,
@@ -116,8 +120,8 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
             resId: activity.id,
             onClose: () => {
                 activity.remove();
-                this.calendarProps.onRemoveActivityItem(activity.id);
-                this.onActivityChanged?.();
+                this.props.onRemoveActivityItem(activity.id);
+                this.props.onActivityChanged?.();
             },
         });
     }

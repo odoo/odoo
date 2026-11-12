@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityAssignPopover">
-        <PopoverCard class="'o-mail-ActivityAssignPopover'" darkerInDarkTheme="true" hasHeader="this.hasHeader">
+        <PopoverCard class="'o-mail-ActivityAssignPopover'" darkerInDarkTheme="true" hasHeader="this.props.hasHeader">
             <t t-set-slot="header">
                 <h6>Assign</h6>
             </t>
@@ -37,7 +37,7 @@
                 <button type="button" class="btn btn-sm btn-primary" aria-label="Assign" t-on-click="this.onClickAssign" t-att-disabled="this.disableAssignButton()">
                     Assign
                 </button>
-                <button type="button" class="btn btn-sm btn-secondary mx-2" aria-label="Discard" t-on-click="this.close">
+                <button type="button" class="btn btn-sm btn-secondary mx-2" aria-label="Discard" t-on-click="this.props.close">
                     Discard
                 </button>
             </div>
