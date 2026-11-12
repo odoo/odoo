@@ -106,6 +106,9 @@ export const DISABLED_NAMESPACE = "disabled";
 /**
  * @typedef {ToolbarGroup[]} toolbar_groups
  * @typedef {ToolbarNamespace[]} toolbar_namespaces
+ *
+ * Whether the toolbar can target a node. Defaults to the node's editability.
+ * @typedef {((node: Node) => boolean | undefined)[]} targetable_node_predicates
  */
 
 /**
@@ -416,7 +419,7 @@ export class ToolbarPlugin extends Plugin {
         }
         // Prevent toolbar to open if the selection is only non-editable nodes.
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        if (targetedNodes.every((node) => !this.dependencies.selection.isNodeEditable(node))) {
+        if (targetedNodes.every((node) => !this.isNodeTargetable(node))) {
             this.closeToolbar();
             return;
         }
@@ -452,11 +455,25 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
+    /**
+     * A node can be targeted by the toolbar if plugins say so, or by default
+     * if it is editable.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    isNodeTargetable(node) {
+        return (
+            this.checkPredicates("targetable_node_predicates", node) ??
+            this.dependencies.selection.isNodeEditable(node)
+        );
+    }
+
     getFilteredTargetedNodes(targetedNodes) {
         return targetedNodes
             .filter(
                 (node) =>
-                    this.dependencies.selection.isNodeEditable(node) &&
+                    this.isNodeTargetable(node) &&
                     (node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node)))
             )
             .filter((node) => {

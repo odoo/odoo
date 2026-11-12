@@ -154,7 +154,7 @@ export class FormatPlugin extends Plugin {
                 id: "bold",
                 description: _t("Bold (Ctrl + B)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 commandId: "formatBold",
                 isActive: () =>
                     this.activeFormats["bold"]?.applyStyle ?? this.isFormatActive("bold"),
@@ -163,7 +163,7 @@ export class FormatPlugin extends Plugin {
                 id: "italic",
                 description: _t("Italic (Ctrl + I)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 commandId: "formatItalic",
                 isActive: () =>
                     this.activeFormats["italic"]?.applyStyle ?? this.isFormatActive("italic"),
@@ -172,7 +172,7 @@ export class FormatPlugin extends Plugin {
                 id: "underline",
                 description: _t("Underline (Ctrl + U)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 commandId: "formatUnderline",
                 isActive: () =>
                     this.activeFormats["underline"]?.applyStyle ?? this.isFormatActive("underline"),
@@ -271,6 +271,25 @@ export class FormatPlugin extends Plugin {
                 return false;
             }
         },
+        targetable_node_predicates: (node) => {
+            if (this.checkPredicates("is_formattable_node_predicates", node)) {
+                return true;
+            }
+        },
+        // Non-editable nodes are only formattable when a plugin declares them
+        // so: open the toolbar for those.
+        toolbar_namespace_providers: withSequence(101, (targetedNodes) => {
+            if (
+                targetedNodes.some(
+                    (node) =>
+                        !isContentEditable(node) &&
+                        this.dependencies.selection.isNodeEditable(node.parentElement) &&
+                        this.checkPredicates("is_formattable_node_predicates", node)
+                )
+            ) {
+                return "text";
+            }
+        }),
     };
 
     setup() {
@@ -542,7 +561,11 @@ export class FormatPlugin extends Plugin {
         ];
 
         for (const node of unformattedNodes) {
-            if (isTextNode(node) || node.nodeName === "BR") {
+            if (
+                isTextNode(node) ||
+                node.nodeName === "BR" ||
+                !this.dependencies.selection.isNodeEditable(node)
+            ) {
                 const { inlineAncestor, parentNode } = this.splitInlineAncestors(node, {
                     formatName,
                     formatProps,

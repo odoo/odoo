@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, describe } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import {
@@ -31,6 +31,24 @@ test("should change the font size the qweb tag", async () => {
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setFontSize("36px"),
         contentAfter: `<div>[<p t-out="'Test'" style="font-size: 36px;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should wrap a qweb `t` node in a `span` to change its font size", async () => {
+    await testEditor({
+        contentBefore: `<p>[<t t-out="'Test'">Test</t>]</p>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<p><span style="font-size: 36px;">[<t t-out="'Test'">Test</t></span>]</p>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should change the font size of an inline qweb field", async () => {
+    await testEditor({
+        contentBefore: `<p>[<span t-field="record.name">Test</span>]</p>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<p>[<span t-field="record.name" style="font-size: 36px;">Test</span>]</p>`,
         config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
@@ -348,4 +366,46 @@ test("should update toolbar font size when applying and removing it on a collaps
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     expect(fontSizeInputEl).toHaveValue(21);
+});
+
+describe("Format non editable", () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".target")) {
+                    return true;
+                }
+            },
+            is_node_editable_predicates: (node) => {
+                if (node?.matches?.(".target")) {
+                    return false;
+                }
+            },
+        };
+    }
+    test("should wrap non editable in `font` element (1)", async () => {
+        await testEditor({
+            contentBefore: `<p>[<span contenteditable="false" class="target">b</span>]</p>`,
+            stepFunction: setFontSize("36px"),
+            contentAfter: `<p><span style="font-size: 36px;">[<span contenteditable="false" class="target">b</span></span>]</p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should not wrap non editable without formattable class in `span` element", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span contenteditable="false">b</span>c]</p>`,
+            stepFunction: setFontSize("36px"),
+            contentAfter: `<p><span style="font-size: 36px;">[a</span><span contenteditable="false">b</span><span style="font-size: 36px;">c]</span></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should wrap non editable in `font` element (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span contenteditable="false" class="target">b</span>c]</p>`,
+            stepFunction: setFontSize("36px"),
+            contentAfter: `<p><span style="font-size: 36px;">[a<span contenteditable="false" class="target">b</span>c]</span></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
 });
