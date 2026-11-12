@@ -9,15 +9,15 @@
                     aria-label="Saturation and brightness color picker."
                     aria-roledescription="Use up and down arrow keys to adapt the brightness. Use left and right arrow keys to adapt the saturation. Press the Control or Command key at the same time to have finer control."
                     aria-activedescendant="picker_pointer"
-                    class="o_color_pick_area position-relative w-75"
+                    class="o_color_pick_area o_forced_colors_preserve position-relative w-75"
                     t-att-style="this.props.noTransparency ? 'width: 89%;' : None"
                     t-on-pointerdown="this.onPointerDownPicker">
                 <div t-ref="this.colorPickerPointerRef" id="picker_pointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="0" t-on-keydown="this.onPickerKeydown"/>
             </div>
-            <div t-ref="this.colorSliderRef" class="o_color_slider position-relative" t-on-pointerdown="this.onPointerDownSlider">
+            <div t-ref="this.colorSliderRef" class="o_color_slider o_forced_colors_preserve position-relative" t-on-pointerdown="this.onPointerDownSlider">
                 <div t-ref="this.colorSliderPointerRef" class="o_slider_pointer" tabindex="0" t-on-keydown="this.onSliderKeydown" role="slider" aria-label="Hue" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="360"/>
             </div>
-            <div t-ref="this.opacitySliderRef" class="o_preview_alpha_background o_opacity_slider position-relative" t-if="!this.props.noTransparency" t-on-pointerdown="this.onPointerDownOpacitySlider">
+            <div t-ref="this.opacitySliderRef" class="o_preview_alpha_background o_opacity_slider o_forced_colors_preserve position-relative" t-if="!this.props.noTransparency" t-on-pointerdown="this.onPointerDownOpacitySlider">
                 <div t-ref="this.opacitySliderPointerRef" class="o_opacity_pointer" tabindex="0" t-on-keydown="this.onOpacitySliderKeydown" role="slider" aria-label="Opacity" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100"/>
             </div>
         </div>

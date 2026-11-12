@@ -62,7 +62,7 @@ according to the enabled options.
                     <t t-set="blog_post" t-value="posts[0]"/>
                     <article t-attf-class="o_wblog_post o_wblog_split_grid_sticky o_sticky_reactive position-static position-xl-sticky sticky-xl-top" name="blog_post">
                         <t t-if="opt_posts_loop_show_cover">
-                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="stretched-link"/>
+                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="stretched-link" tabindex="-1" aria-hidden="true"/>
                             <t t-call="website.record_cover"
                                 _record="blog_post"
                                 additionnal_classes.f="o_wblog_post_cover justify-content-end p-5 text-white overflow-hidden">
@@ -306,7 +306,7 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="o_blog_post_title text-reset #{_link_classes}">
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="o_blog_post_title d-block text-reset #{_link_classes}">
         <h2 t-field="blog_post.name" t-attf-class="text-wrap-pretty #{_heading_classes or 'h5'} #{posts_list_show_parent_blog and 'mt-1'}">
             Untitled Post
         </h2>
@@ -325,7 +325,7 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Cover  ====================== -->
 <template id="post_cover_image">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}">
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}" tabindex="-1" aria-hidden="true">
         <t t-call="website.record_cover"
             _record="blog_post"
             display_opt_name.translate="Blog Post Cover"

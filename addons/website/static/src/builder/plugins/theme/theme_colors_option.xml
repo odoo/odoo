@@ -4,7 +4,7 @@
             <BuilderRow label.translate="Colors">
                 <BuilderSlidingPanel
                     label.translate="Colors"
-                    extraClasses="'btn-secondary p-0 d-flex o_hb_theme_color_slider_btn'"
+                    extraClasses="'btn-secondary p-0 d-flex o_hb_theme_color_slider_btn o_forced_colors_preserve'"
                     darkBackground="true"
                     openByDefault="!!this.colorPresetToShow"
                     onClose="() => this.closeThemeColorsPreviewDialog?.()">
@@ -78,7 +78,7 @@
                                                     </t>
                                                     <t t-foreach="this.palettes" t-as="palette" t-key="palette.name">
                                                         <BuilderSelectItem actionValue="`'${palette.name}'`">
-                                                            <div class="o_hb_color_palette_card d-flex flex-row border rounded overflow-hidden p-2 align-items-center"
+                                                            <div class="o_hb_color_palette_card o_forced_colors_preserve d-flex flex-row border rounded overflow-hidden p-2 align-items-center"
                                                                 t-attf-style="background-color: {{palette.backgroundColor}};">
                                                                 <span class="w-100 me-1" t-attf-style="color: {{palette.textColor}};">Text</span>
                                                                 <span class="w-100 h-100 rounded" t-attf-style="background-color: {{palette.swatchColors[0]}};"></span>
@@ -97,7 +97,7 @@
                                     <BuilderRow t-slot-scope="row" initialExpandAnim="this.colorPresetToShow === preset.id">
                                         <div class="o_cc_preview_wrapper w-100" t-on-click="row.toggleCollapseContent">
                                             <div inert="" t-att-class="`o_cc${preset.id}`"
-                                                class="p-2 d-flex justify-content-between align-items-center ms-3 o_preview_alpha_background o_cc_preview">
+                                                class="o_preview_alpha_background o_cc_preview o_forced_colors_preserve p-2 d-flex justify-content-between align-items-center ms-3">
                                                 <h1 class="m-0 fs-4">
                                                     Title
                                                 </h1>
@@ -204,7 +204,7 @@
                                     />
                                 </BuilderRow>
                                 <BuilderRow label.translate="Grays" fullRowToggler="true">
-                                    <div class="o_we_gray_preview d-flex w-100">
+                                    <div class="o_we_gray_preview o_forced_colors_preserve d-flex w-100">
                                         <t t-foreach="[0,1,2,3,4,5,6,7,8]" t-as="i" t-key="i">
                                             <t t-set="grayCode" t-value="(9 - i) * 100"/>
                                             <span t-att-title="this.getGrayTitle(grayCode)"
@@ -218,6 +218,7 @@
                                         <BuilderRow label.translate="Hue" level="1">
                                             <div class="o_we_slider_tint">
                                                 <BuilderRange action="'customizeGray'" actionParam="'gray-hue'"
+                                                    rangeClass="'o_forced_colors_preserve'"
                                                     min="0" max="359.9" step="0.1"
                                                 />
                                             </div>

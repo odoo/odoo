@@ -11,6 +11,11 @@
 
         &.active {
             z-index: 2;
+
+            @media (forced-colors: active) {
+                background-color: Highlight;
+                color: HighlightText;
+            }
         }
     }
 

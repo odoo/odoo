@@ -348,7 +348,7 @@
                                 <label
                                     name="o_wsale_attribute_color_selector"
                                     t-attf-style="#{img_style or color_style}"
-                                    t-attf-class="css_attribute_color cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                    t-attf-class="css_attribute_color o_forced_colors_preserve cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                                 >
                                       <input type="radio"
                                         t-attf-class="js_variant_change cursor-pointer #{attribute.create_variant}"
