@@ -9,17 +9,29 @@
             <t t-set="no_footer" t-value="True"/>
             <div id="wrap" class="oe_structure">
 
-                <!-- Welcome Hero -->
+                <!-- [A] Welcome Hero — time-aware, personal -->
                 <section class="od19-portal-hero">
-                    <div class="container d-flex justify-content-between align-items-center">
-                        <div>
-                            <h2>
-                                <i class="fa fa-user-circle me-2"/>
-                                สวัสดีค่ะ <span t-esc="user.name"/>
-                            </h2>
-                            <p class="mb-0" style="opacity:0.85;">
-                                ยินดีต้อนรับสู่ Employee Portal ของ The Auto-Info
-                            </p>
+                    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="od19-avatar">
+                                <t t-if="user.partner_id.avatar_128">
+                                    <img t-att-src="image_data_uri(user.partner_id.avatar_128)" alt=""/>
+                                </t>
+                                <t t-else="">
+                                    <span t-esc="initials"/>
+                                </t>
+                            </div>
+                            <div class="ms-3">
+                                <h2 class="mb-1">
+                                    <span t-esc="greeting"/>, <span t-esc="user.name"/>
+                                </h2>
+                                <p class="mb-0" style="opacity:0.85;">
+                                    <t t-if="job_title"><span t-esc="job_title"/></t>
+                                    <t t-if="job_title and department_name"> · </t>
+                                    <t t-if="department_name"><span t-esc="department_name"/></t>
+                                    <t t-if="not job_title and not department_name">ยินดีต้อนรับสู่ Employee Portal ของ The Auto-Info</t>
+                                </p>
+                            </div>
                         </div>
                         <div class="text-end">
                             <small class="d-block mb-2" style="opacity:0.7;" t-esc="datetime.datetime.now().strftime('%A, %d %B %Y')"/>

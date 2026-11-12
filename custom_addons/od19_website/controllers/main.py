@@ -85,6 +85,11 @@ class AutoInfoWebsite(http.Controller):
         return request.render(
             "od19_website.od19_employee_portal",
             {
+                "greeting": self._od19_greeting(),
+                "initials": self._od19_initials(request.env.user.name),
+                "job_title": request.env.user.job_title or "",
+                "department_name": request.env.user.employee_id.department_id.name
+                or "",
                 "user": request.env.user,
                 "datetime": datetime,
                 "announcements": announcements,
@@ -348,6 +353,29 @@ class AutoInfoWebsite(http.Controller):
                 )
         items.sort(key=lambda item: item["date"])
         return items[:10]
+
+    # ------------------------------------------------------------------
+    # Employee portal — hero helpers
+    # ------------------------------------------------------------------
+    def _od19_greeting(self, hour=None):
+        """Thai greeting keyed to the user's local time of day."""
+        if hour is None:
+            tz = pytz.timezone(request.env.user.tz or "UTC")
+            hour = datetime.datetime.now(pytz.utc).astimezone(tz).hour
+        if 5 <= hour < 12:
+            return "สวัสดีตอนเช้า"
+        if 12 <= hour < 17:
+            return "สวัสดีตอนบ่าย"
+        return "สวัสดีตอนเย็น"
+
+    def _od19_initials(self, name):
+        """Two-letter monogram used when the user has no picture."""
+        parts = [part for part in (name or "").split() if part]
+        if not parts:
+            return "?"
+        if len(parts) == 1:
+            return parts[0][:2].upper()
+        return (parts[0][:1] + parts[-1][:1]).upper()
 
     def _od19_approval_data(self):
         """Aggregate every active source into 2 tabs x 4 groups."""
