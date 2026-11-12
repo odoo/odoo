@@ -19,6 +19,7 @@ import warnings
 from contextlib import contextmanager, nullcontext
 from datetime import datetime, timedelta
 from inspect import currentframe
+from itertools import chain
 
 import psycopg2
 import psycopg2.errorcodes  # noqa: F401
@@ -261,6 +262,7 @@ class Cursor(_CursorProtocol):
         self.postrollback = Callbacks()
         self._now: datetime | None = None
         self.cache: dict[typing.Any, typing.Any] = {}
+        self.query_hooks = []  # SQL observers scoped to this cursor, across threads.
 
         # By default a cursor has no transaction object.  A transaction object
         # for managing environments is instantiated by registry.cursor().  It
@@ -409,7 +411,7 @@ class Cursor(_CursorProtocol):
         start = real_time()
         update_query_endtime_functions = []
         current_thread = threading.current_thread()
-        for hook in getattr(current_thread, 'query_hooks', ()):
+        for hook in chain(getattr(current_thread, 'query_hooks', ()), self.query_hooks):
             func = hook(self, query, params, start, 10)
             if func and callable(func):
                 update_query_endtime_functions.append(func)
