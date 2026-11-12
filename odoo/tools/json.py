@@ -69,9 +69,17 @@ def json_default(obj):
     if isinstance(obj, Mapping):
         return dict(obj)
     if isinstance(obj, bytes):
-        return BinaryBytes(obj).to_base64()
+        obj = BinaryBytes(obj)
     if isinstance(obj, BinaryValue):
-        return obj.to_base64()
+        # aligned to fields.Binary.convert_to_read
+        res = {
+            'filename': obj.filename,
+            'content': obj.to_base64(),
+            'size': obj.size,
+        }
+        if not res['filename']:  # remove empty name
+            res.pop('filename')
+        return res
     if isinstance(obj, fields.Domain):
         return list(obj)
     if (as_dict_func := getattr(obj, 'as_dict', None)) and callable(as_dict_func):

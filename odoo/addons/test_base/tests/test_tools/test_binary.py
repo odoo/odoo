@@ -35,6 +35,6 @@ class TestBinaryValue(TransactionCase):
 
     def test_json_default_binary(self):
         pdf_data = b'%PDF-1.4\n1 0 obj\n<<\n/Title (\xfe\xff)'
-        self.assertEqual(json_default(BinaryBytes(pdf_data)), BinaryBytes(pdf_data).to_base64())
-        self.assertEqual(json_default(pdf_data), BinaryBytes(pdf_data).to_base64())
-        self.assertEqual(json_default(b'hello'), BinaryBytes(b'hello').to_base64())
+        expected = {'content': b64encode(pdf_data).decode(), 'size': len(pdf_data)}
+        self.assertEqual(json_default(BinaryBytes(pdf_data)), expected)
+        self.assertEqual(json_default(pdf_data), expected)
