@@ -1225,6 +1225,93 @@ test("See records when clicking on a geo chart country", async () => {
     expect.verifySteps(["do-action"]);
 });
 
+function getHeatmapChartDefinition() {
+    return {
+        type: "heatmap",
+        dataSource: {
+            type: "odoo",
+            metaData: {
+                groupBy: ["product_id", "bar"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+        },
+        title: { text: "Partners" },
+        dataSourceId: "42",
+        id: "42",
+    };
+}
+
+test("Odoo heatmap chart has one row per value of the second groupBy", async () => {
+    Partner._records = [
+        { id: 1, product_id: 37, bar: true, probability: 10 },
+        { id: 2, product_id: 41, bar: true, probability: 2 },
+        { id: 3, product_id: 41, bar: false, probability: 3 },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "heatmap",
+        definition: getHeatmapChartDefinition(),
+    });
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    await waitForDataLoaded(model);
+    const { data } = model.getters.getChartRuntime(chartId).chartJsConfig;
+    expect(data.labels).toEqual(["xphone", "xpad"]);
+    expect(data.datasets.map((ds) => ds.label)).toEqual(["false", "true"]);
+    expect(data.datasets.map((ds) => ds.values)).toEqual([
+        [undefined, 3],
+        [10, 2],
+    ]);
+});
+
+test("See records when clicking on a heatmap chart cell", async () => {
+    Partner._records = [
+        { id: 1, product_id: 37, bar: true, probability: 10 },
+        { id: 2, product_id: 41, bar: true, probability: 2 },
+        { id: 3, product_id: 41, bar: false, probability: 3 },
+    ];
+    mockService("action", {
+        doAction: async (request) => {
+            if (request.type === "ir.actions.act_window") {
+                expect.step("do-action");
+                expect(request.res_model).toBe("partner");
+                expect(request.name).toBe("xpad / false");
+                expect(request.domain).toEqual([
+                    "&",
+                    ["bar", "=", false],
+                    ["product_id", "=", 41],
+                ]);
+            }
+        },
+    });
+    const { model } = await createSpreadsheetWithChart({
+        type: "heatmap",
+        definition: getHeatmapChartDefinition(),
+    });
+    const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+    const chartJSChart = { data: runtime.chartJsConfig.data };
+
+    // first row of the heatmap is the last data set of the data source
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(
+        event,
+        [{ datasetIndex: 0, index: 1 }],
+        chartJSChart
+    );
+    expect.verifySteps(["do-action"]);
+
+    // missing value: no partner with xphone and bar=false
+    await runtime.chartJsConfig.options.onClick(
+        event,
+        [{ datasetIndex: 0, index: 0 }],
+        chartJSChart
+    );
+    expect.verifySteps([]);
+});
+
 test("See records when clicking on a sunburst chart slice", async () => {
     let lastActionCalled = undefined;
     const fakeActionService = {

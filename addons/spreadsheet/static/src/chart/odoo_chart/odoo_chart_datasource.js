@@ -2,6 +2,7 @@ import { registries, constants } from "@odoo/o-spreadsheet";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import {
     onGeoOdooChartItemClick,
+    onHeatmapOdooChartItemClick,
     onOdooChartItemClick,
     onSunburstOdooChartItemClick,
     onTreemapOdooChartItemClick,
@@ -12,7 +13,7 @@ const { chartDataSourceRegistry } = registries;
 const { CHART_TYPES } = constants;
 
 // Types not supported by odoo charts (at least for now)
-const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "calendar", "bubble", "heatmap"];
+const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "calendar", "bubble"];
 
 function generateDataSetId(dataSource, dataSet) {
     const identifiers = JSON.parse([...dataSet.identifiers][0] ?? "[]");
@@ -87,6 +88,15 @@ chartDataSourceRegistry.add("odoo", {
                 }
                 break;
             }
+            case "heatmap": {
+                const values = chartJSChart.data.datasets[item.datasetIndex].values;
+                if (values[item.index] !== undefined) {
+                    event.native.target.style.cursor = "pointer";
+                } else {
+                    event.native.target.style.cursor = "";
+                }
+                break;
+            }
             default: {
                 if (items.length > 0) {
                     event.native.target.style.cursor = "pointer";
@@ -100,6 +110,8 @@ chartDataSourceRegistry.add("odoo", {
         switch (chartType) {
             case "geo":
                 return onGeoOdooChartItemClick(getters, chartId)(event, items, chartJSChart);
+            case "heatmap":
+                return onHeatmapOdooChartItemClick(getters, chartId)(event, items, chartJSChart);
             case "sunburst":
                 return onSunburstOdooChartItemClick(getters, chartId)(event, items, chartJSChart);
             case "treemap":
