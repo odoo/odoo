@@ -1,0 +1,589 @@
+import { computed, proxy, signal } from "@odoo/owl";
+import {
+    serializeGloryXml,
+    parseGloryXml,
+    makeGloryHeader,
+    parseGloryResult,
+    parseVerificationInfo,
+} from "@pos_payment_method_glory/utils/glory_xml";
+import {
+    GLORY_STATUS,
+    GLORY_CURRENCY_STATUS,
+    WEBSOCKET_REQUESTS,
+    XML_REQUESTS,
+    GLORY_DEVICE_STATUS,
+} from "@pos_payment_method_glory/utils/constants";
+import { SocketIoService } from "@pos_payment_method_glory/utils/socket_io";
+import { sortBy } from "@web/core/utils/arrays";
+import { location } from "@web/core/browser/browser";
+import { Logger } from "@bus/workers/bus_worker_utils";
+
+const { DateTime } = luxon;
+
+const WEBSOCKET_URL = "/socket.io/?transport=websocket&EIO=3";
+
+const convertObjectValuesToInt = (object) =>
+    Object.fromEntries(Object.entries(object).map(([key, value]) => [key, parseInt(value)]));
+
+export class GloryService {
+    /**
+     * @param {(status: string) => void} onStatusChange
+     */
+    constructor(onStatusChange) {
+        this.setup(...arguments);
+    }
+
+    /**
+     * @param {(status: string) => void} onStatusChange
+     */
+    setup(onStatusChange) {
+        this.logger = new Logger("pos_glory_cash");
+        this.eventHandlers = {
+            StatusChangeEvent: this._statusChangeHandler.bind(this),
+            InventoryResponse: this._inventoryChangeHandler.bind(this),
+            SpecialDeviceError: this._deviceErrorHandler.bind(this),
+            GlyCashierEvent: this._cashierEventHandler.bind(this),
+        };
+        this.onStatusChange = onStatusChange;
+        this.socketIo = new SocketIoService({
+            onConnect: () => this._onConnect(),
+            onClose: () => {
+                this.status = "DISCONNECTED";
+            },
+            onEvent: ([responseType, data]) => {
+                if (this.resolvers[responseType]) {
+                    this.resolvers[responseType].resolve(data);
+                }
+            },
+            onBinaryEvent: (data) =>
+                parseGloryXml(data).then((response) => {
+                    for (const element of response) {
+                        this._logXml("RECV", element);
+                        const message = element.firstChild;
+                        if (this.resolvers[message.tagName]) {
+                            this.resolvers[message.tagName].resolve(message);
+                        } else if (this.eventHandlers[message.tagName]) {
+                            this.eventHandlers[message.tagName](message);
+                        }
+                    }
+                }),
+        });
+        this._resetState();
+    }
+
+    /**
+     * @param {string} ip
+     * @param {string} [username]
+     * @param {string} [password]
+     * @param {boolean} [forceHttp]
+     */
+    connect(ip, username, password, forceHttp = false) {
+        this._resetState();
+        this.username = username;
+        this.password = password;
+        const protocol = location.protocol === "https:" && !forceHttp ? "wss:" : "ws:";
+        const port = protocol === "wss:" ? 3001 : 3000;
+
+        const websocketEndpoint = `${protocol}//${ip}:${port}${WEBSOCKET_URL}`;
+        this.socketIo.connect(websocketEndpoint);
+    }
+
+    async reset(verify = false) {
+        if (this.settings.OccupyEnable && !this.occupied) {
+            await this._occupy();
+        }
+
+        await this._sendXmlRequest(XML_REQUESTS.reset);
+        if (verify) {
+            await this._checkStatusAndVerifyIfNeeded(true);
+        }
+
+        if (this.occupied) {
+            await this._release();
+        }
+    }
+
+    /**
+     * @param {number} amountInCents
+     * @param {string} sequenceNumber
+     */
+    async startPayment(amountInCents, sequenceNumber) {
+        if (
+            [
+                "DISCONNECTED",
+                "BAD_CREDENTIALS",
+                "ERROR",
+                "WAITING_ERROR_RECOVERY",
+                "WAITING_REPLENISHMENT",
+                "COLLECTING",
+                "WAITING_CASH_IN_REMOVE",
+                "WAITING_CASH_OUT_REMOVE",
+                "WAITING_INVENTORY",
+            ].includes(this.status)
+        ) {
+            return {
+                status: this.status,
+                specialDeviceError: this.state.specialDeviceError,
+                billDeviceStatus: this.state.billDeviceStatus,
+                coinDeviceStatus: this.state.coinDeviceStatus,
+            };
+        }
+
+        if (this.settings.OccupyEnable) {
+            await this._occupy();
+        }
+
+        this.state.amountInserted = 0;
+        this.paymentInProgress = true;
+        this.sequenceNumber = sequenceNumber;
+
+        this._sendXmlRequest(XML_REQUESTS.startPayment, [
+            {
+                name: "Amount",
+                children: [amountInCents.toString()],
+            },
+            {
+                // Option Type 1 = Enable cancellation when there is insufficient change
+                name: "Option",
+                attributes: { type: "1" },
+            },
+        ]);
+
+        return { status: "SUCCESS" };
+    }
+
+    /** @param {string} sequenceNumber */
+    async waitForPaymentResponse(sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+        const xmlResponse = await this._waitForResponseWithType(
+            XML_REQUESTS.startPayment.responseName
+        );
+        return await this._handlePaymentResponse(xmlResponse);
+    }
+
+    async initiatePaymentCancel() {
+        if (this.status === "DISCONNECTED") {
+            return this.status;
+        }
+
+        if (this.settings.OccupyEnable && !this.occupied) {
+            const occupyResult = await this._occupy();
+            if (occupyResult !== "SUCCESS") {
+                return occupyResult;
+            }
+        }
+
+        const { statusCode } = await this._sendXmlRequest(XML_REQUESTS.cancelPayment);
+
+        if (this.occupied && !this.paymentInProgress) {
+            await this._release();
+        }
+
+        return statusCode;
+    }
+
+    get status() {
+        return this.state.status;
+    }
+    set status(newStatus) {
+        if (newStatus === this.state.status) {
+            return;
+        }
+        this.state.status = newStatus;
+        this.onStatusChange(newStatus);
+    }
+
+    _resetState() {
+        /**
+         * @type {import("models").GlorySettings}
+         */
+        this.settings = null;
+        /**
+         * @type {import("models").GloryUser}
+         */
+        this.gloryUser = null;
+        this.username = null;
+        this.password = null;
+        this.sequenceNumber = 0;
+        this.sessionId = null;
+        this.occupied = false;
+        this.paymentInProgress = false;
+
+        /** @type {import("models".GloryState)} */
+        this.state = proxy({
+            status: "DISCONNECTED",
+            amountInserted: 0,
+            lastDeviceError: null,
+            errorCode: "",
+            errorGif: "",
+        });
+        this.inventory = signal([]);
+        this.emptyDenominations = computed(() =>
+            this.inventory().filter((denomination) => denomination.status === "EMPTY")
+        );
+        this.nearEmptyDenominations = computed(() =>
+            this.inventory().filter((denomination) => denomination.status === "NEAR_EMPTY")
+        );
+        this.nearFullDenominations = computed(() =>
+            this.inventory().filter((denomination) => denomination.status === "NEAR_FULL")
+        );
+        this.fullDenominations = computed(() =>
+            this.inventory().filter((denomination) => denomination.status === "FULL")
+        );
+
+        this.resolvers = {};
+    }
+
+    async _onConnect() {
+        await this._login();
+
+        if (!this.settings) {
+            const settings = await this._sendWebsocketRequest(WEBSOCKET_REQUESTS.getSettings);
+            this.settings = convertObjectValuesToInt(settings.FunctionSetting);
+        }
+
+        if (this.settings.SessionEnable) {
+            await this._refreshSession();
+        }
+
+        if (this.settings.OccupyEnable) {
+            await this._occupy();
+        }
+
+        await this._setDateAndTime();
+        await this._checkStatusAndVerifyIfNeeded();
+
+        const { xmlResponse } = await this._sendXmlRequest(XML_REQUESTS.getInventory, [
+            // Option Type 2 = 'Payable' inventory, see p76 of the IF Specification document
+            { name: "Option", attributes: { type: "2" } },
+        ]);
+        this._inventoryChangeHandler(xmlResponse);
+
+        if (this.occupied) {
+            await this._release();
+        }
+    }
+
+    async _login() {
+        if (this.username) {
+            const response = await this._sendWebsocketRequest(
+                WEBSOCKET_REQUESTS.login,
+                this.username,
+                this.password
+            );
+            if (response.ret === 0) {
+                this.gloryUser = response;
+            }
+        }
+
+        // If access control is enabled and we don't have a valid user/pass, we receive this 'credential ng' message
+        this._waitForResponseWithType("credential ng").then(() => {
+            this.status = "BAD_CREDENTIALS";
+        });
+        await this._sendWebsocketRequest(
+            WEBSOCKET_REQUESTS.checkCredentials,
+            this.gloryUser?.session_id
+        );
+    }
+
+    async _refreshSession() {
+        const data = await this._sendWebsocketRequest(WEBSOCKET_REQUESTS.openSession);
+        this.sessionId = data.SessionID;
+    }
+
+    async _setDateAndTime() {
+        const now = DateTime.now();
+        await this._sendXmlRequest(XML_REQUESTS.setDateAndTime, [
+            {
+                name: "Date",
+                attributes: {
+                    year: now.year.toString(),
+                    month: now.month.toString(),
+                    day: now.day.toString(),
+                },
+            },
+            {
+                name: "Time",
+                attributes: {
+                    hour: now.hour.toString(),
+                    minute: now.minute.toString(),
+                    second: now.second.toString(),
+                },
+            },
+        ]);
+    }
+
+    async _checkStatusAndVerifyIfNeeded(forceVerify = false) {
+        const firstConnection = this.state.inventory.length === 0;
+        const { xmlResponse } = await this._sendXmlRequest(XML_REQUESTS.getStatus, [
+            { name: "RequireVerification", attributes: { type: "1" } },
+        ]);
+        this._statusChangeHandler(xmlResponse);
+
+        const requireVerifyType = parseVerificationInfo(xmlResponse);
+        if ((!firstConnection && !forceVerify) || !requireVerifyType) {
+            return;
+        }
+
+        this._newSequenceNumber();
+        const { statusCode } = await this._sendXmlRequest(XML_REQUESTS.collect, [
+            { name: "RequireVerification", attributes: { type: requireVerifyType.toString() } },
+        ]);
+
+        return statusCode;
+    }
+
+    /**
+     * @param {Element} statusResponse
+     */
+    _statusChangeHandler(statusResponse) {
+        const statusCodeElement =
+            statusResponse.getElementsByTagName("Code")[0] ??
+            statusResponse.getElementsByTagName("Status")[0];
+
+        if (!statusCodeElement) {
+            return;
+        }
+
+        this.status = GLORY_STATUS[statusCodeElement.textContent];
+
+        if (!["ERROR", "WAITING_ERROR_RECOVERY"].includes(this.status)) {
+            this.state.lastDeviceError = null;
+            this.state.errorCode = "";
+            this.state.errorGif = "";
+        }
+
+        const deviceStatusElements = [...statusResponse.getElementsByTagName("DevStatus")];
+        const billStatusElement = deviceStatusElements.find(
+            (dev) => dev.getAttribute("devid") === "1"
+        );
+        const coinStatusElement = deviceStatusElements.find(
+            (dev) => dev.getAttribute("devid") === "2"
+        );
+        if (billStatusElement) {
+            this.state.billDeviceStatus = GLORY_DEVICE_STATUS[billStatusElement.getAttribute("st")];
+        }
+        if (coinStatusElement) {
+            this.state.coinDeviceStatus = GLORY_DEVICE_STATUS[coinStatusElement.getAttribute("st")];
+        }
+
+        if (this.status === "COUNTING") {
+            const amount = statusResponse.getElementsByTagName("Amount")[0]?.textContent;
+            if (amount) {
+                this.state.amountInserted = parseInt(amount);
+            }
+        }
+    }
+
+    /**
+     * @param {Element} inventoryResponse
+     */
+    _inventoryChangeHandler(inventoryResponse) {
+        const cashElements = Array.from(inventoryResponse.getElementsByTagName("Cash"));
+        const dispensableCash = cashElements.find(
+            (cashElement) => cashElement.getAttribute("type") === "4"
+        );
+        if (!dispensableCash) {
+            return;
+        }
+
+        const denominations = this._parseGloryCashElement(dispensableCash);
+        this.inventory.set(sortBy(denominations, "value"));
+    }
+
+    /**
+     * @param {Element} deviceErrorResponse
+     */
+    _deviceErrorHandler(deviceErrorResponse) {
+        const errorMessageElement = deviceErrorResponse.getElementsByTagName("ErrorMessage")[0];
+        this.state.specialDeviceError = errorMessageElement.textContent;
+    }
+
+    /**
+     * @param {Element} cashierEventResponse
+     */
+    _cashierEventHandler(cashierEventResponse) {
+        const eventElement = cashierEventResponse.firstElementChild;
+        if (eventElement.tagName === "eventError") {
+            this.state.errorCode = eventElement.getElementsByTagName("ErrorCode")[0].textContent;
+            const errorGif = eventElement.getElementsByTagName("RecoveryURL")[0].textContent;
+            this.state.errorGif = errorGif.replace("https://", "http://");
+        }
+    }
+
+    /**
+     * @param {Element} cashElement
+     */
+    _parseGloryCashElement(cashElement) {
+        const denominationElements = Array.from(cashElement.getElementsByTagName("Denomination"));
+        return denominationElements.map((denomination) => ({
+            value: parseInt(denomination.getAttribute("fv")),
+            amount: parseInt(denomination.getElementsByTagName("Piece")[0].textContent),
+            status: GLORY_CURRENCY_STATUS[
+                denomination.getElementsByTagName("Status")[0].textContent
+            ],
+        }));
+    }
+
+    /**
+     * @param {Element} cashElement
+     * @returns {number}
+     */
+    _getTotalFromGloryCashElement(cashElement) {
+        const denominations = this._parseGloryCashElement(cashElement);
+        return denominations.reduce((total, next) => total + next.amount * next.value, 0);
+    }
+
+    /**
+     * @param {Element} paymentResponse
+     * @returns {Promise<{ status: string, cashGiven?: number, cashReturned?: number, transactionId?: string }>}
+     */
+    async _handlePaymentResponse(paymentResponse) {
+        if (this.occupied) {
+            await this._release();
+        }
+        this.paymentInProgress = false;
+
+        const baseResponse = {
+            status: parseGloryResult(paymentResponse),
+        };
+        if (
+            ["SUCCESS", "CHANGE_SHORTAGE", "CANCEL_CHANGE_SHORTAGE", "DEVICE_ERROR"].includes(
+                baseResponse.status
+            )
+        ) {
+            return {
+                ...baseResponse,
+                ...this._getTransactionInfo(paymentResponse),
+            };
+        }
+
+        return baseResponse;
+    }
+
+    /**
+     * @param {Element} paymentResponse
+     */
+    _getTransactionInfo(paymentResponse) {
+        const cashElements = Array.from(paymentResponse.getElementsByTagName("Cash"));
+        const cashGivenElement = cashElements.find(
+            (cashElement) => cashElement.getAttribute("type") === "1"
+        );
+        const cashReturnedElement = cashElements.find(
+            (cashElement) => cashElement.getAttribute("type") === "2"
+        );
+        const cashGiven = this._getTotalFromGloryCashElement(cashGivenElement);
+        const cashReturned = this._getTotalFromGloryCashElement(cashReturnedElement);
+        const transactionId = paymentResponse.getElementsByTagName("TransactionId")[0].textContent;
+
+        return {
+            cashGiven,
+            cashReturned,
+            transactionId,
+        };
+    }
+
+    async waitForIncompleteTransactionAndReturnInventoryDifference() {
+        const response = await this._waitForResponseWithType("IncompleteTransaction");
+        const committed = response.getElementsByTagName("Committed")[0].firstElementChild;
+        const current = response.getElementsByTagName("Current")[0].firstElementChild;
+        const committedTotal = this._getTotalFromGloryCashElement(committed);
+        const currentTotal = this._getTotalFromGloryCashElement(current);
+        const difference = currentTotal - committedTotal;
+        return difference;
+    }
+
+    async _occupy() {
+        const { statusCode } = await this._sendXmlRequest(XML_REQUESTS.occupy);
+        if (["SUCCESS", "OCCUPIED_BY_SELF"].includes(statusCode)) {
+            this.occupied = true;
+            return "SUCCESS";
+        }
+        return statusCode;
+    }
+
+    async _release() {
+        await this._sendXmlRequest(XML_REQUESTS.release);
+        this.occupied = false;
+    }
+
+    /**
+     * @param {import("models").GloryRequestInfo} request
+     * @param {any[]} params
+     */
+    _sendWebsocketRequest(request, ...params) {
+        const resultPromise = this._waitForResponseWithType(request.responseName);
+        this.socketIo.sendMessage([request.requestName, ...params]);
+        return resultPromise;
+    }
+
+    /**
+     * @param {import("models").GloryRequestInfo} request
+     * @param {import("models").GloryXmlElement[]?} children
+     * @returns {Promise<{ statusCode: string, xmlResponse: Element }>}
+     */
+    async _sendXmlRequest(request, children, secondAttempt = false) {
+        const xmlElement = {
+            name: request.requestName,
+            children: [
+                ...makeGloryHeader(this.sequenceNumber, this.sessionId),
+                ...(children ?? []),
+            ],
+        };
+        const xmlString = serializeGloryXml(xmlElement);
+        this._logXml("SEND", xmlString);
+        this.socketIo.sendMessage(["xml send", xmlString]);
+
+        const xmlResponse = await this._waitForResponseWithType(request.responseName);
+        const statusCode = parseGloryResult(xmlResponse);
+
+        if (
+            !secondAttempt &&
+            (statusCode === "SESSION_TIMEOUT" || statusCode === "INVALID_SESSION")
+        ) {
+            await this._refreshSession();
+            return this._sendXmlRequest(request, children, true);
+        }
+
+        if (statusCode === "NOT_OCCUPIED") {
+            this.occupied = false;
+        }
+
+        return { statusCode, xmlResponse };
+    }
+
+    /**
+     * @param {string} type
+     * @returns {Promise<Element>}
+     */
+    async _waitForResponseWithType(type) {
+        const responsePromise = new Promise((resolve) => {
+            this.resolvers[type] = resolve;
+        });
+        const requestSequenceNumber = this.sequenceNumber;
+        const result = await responsePromise;
+        this.resolvers[type] = null;
+
+        if (requestSequenceNumber && result instanceof Element) {
+            const sequenceNumber = result.getElementsByTagName("SeqNo")[0]?.textContent;
+            if (sequenceNumber && sequenceNumber !== requestSequenceNumber) {
+                // This response was intended for a different POS, wait for the next one
+                return this._waitForResponseWithType(type);
+            }
+        }
+
+        return result;
+    }
+
+    _logXml(message, xml) {
+        if (typeof xml === "string") {
+            xml = xml.replace("\0", "");
+        } else {
+            xml = new XMLSerializer().serializeToString(xml);
+        }
+
+        this.logger.log(
+            `${luxon.DateTime.now().toFormat("yyyy-LL-dd HH:mm:ss")} ${message}: ${xml}`
+        );
+    }
+}
