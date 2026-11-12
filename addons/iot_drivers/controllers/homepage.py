@@ -8,7 +8,6 @@ import threading
 import time
 
 from itertools import groupby
-from pathlib import Path
 
 from odoo import http
 from odoo.addons.iot_drivers.tools import certificate, helpers, route, upgrade, wifi
@@ -71,8 +70,7 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/iot_drivers/iot_logs', type='http', cors='*')
     def get_iot_logs(self):
-        logs_path = "/var/log/odoo/odoo-server.log" if IS_RPI else Path().absolute().parent.joinpath('odoo.log')
-        with open(logs_path, encoding="utf-8") as file:
+        with open(helpers.get_log_path(), encoding="utf-8", errors="replace") as file:
             return json.dumps({
                 'status': 'success',
                 'logs': file.read(),
