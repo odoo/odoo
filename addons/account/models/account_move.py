@@ -6659,6 +6659,8 @@ class AccountMove(models.Model):
         for line in self.invoice_line_ids:
             if line.display_type in ('line_section', 'line_note'):
                 continue
+            if not line.product_id and line.account_id:
+                line.account_id = line.move_id.fiscal_position_id.map_account(line.account_id)
             if not line.price_unit:
                 lines_to_recompute |= line
                 continue
