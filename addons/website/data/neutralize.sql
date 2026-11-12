@@ -14,3 +14,9 @@ UPDATE website
 -- Update robots.txt to disallow all crawling
 UPDATE website
    SET robots_txt = E'User-agent: *\nDisallow: /';
+
+-- disable web analytics
+UPDATE website
+   SET google_analytics_key = NULL,
+       plausible_shared_key = NULL,
+       plausible_site = NULL;
