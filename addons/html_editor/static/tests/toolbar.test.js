@@ -238,6 +238,19 @@ test("toolbar should have the toolbar role and a label", async () => {
     expect(".o-we-toolbar").toHaveAttribute("aria-label", "HTML editor toolbar");
 });
 
+test("toolbar separators between button groups should have the separator role", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const separators = queryAll(".o-we-toolbar > .o-we-toolbar-vertical-separator");
+    expect(separators.length).toBeGreaterThan(1);
+    // The first one is hidden, as it precedes the first button group
+    expect(separators[0]).not.toHaveAttribute("role");
+    for (const separator of separators.slice(1)) {
+        expect(separator).toHaveAttribute("role", "separator");
+        expect(separator).toHaveAttribute("aria-orientation", "vertical");
+    }
+});
+
 test.tags("desktop");
 test("focus should be trap in toolbar on arrow left/right keys", async () => {
     await setupEditor("<p>[test]</p>");
