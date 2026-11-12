@@ -204,31 +204,6 @@ class PosOrder(models.Model):
         return []
 
     @api.model
-    def _check_pos_order_payment(self, device_type, order, payment):
-        if device_type != "kiosk" or not payment or len(payment) != 1 or len(payment[0]) != 3:
-            return []
-
-        command, payment_id = payment[0][0:2]
-        if command != Command.CREATE or payment_id != 0:
-            return []
-
-        payment_line = payment[0][2]
-        if "amount" not in payment_line or payment_line["amount"] != order.get("amount_total", 0):
-            return []
-
-        safe_fields = [
-            "payment_method_id", "card_type", "card_brand", "card_no", "cardholder_name",
-            "payment_ref_no", "payment_method_authcode", "payment_method_issuer_bank",
-            "payment_method_payment_mode", "qr_code", "transaction_id", "ticket", "uuid",
-        ] + self.env["pos.payment"]._get_additional_payment_fields()
-
-        return [[Command.CREATE, 0, {
-            'amount': order.get('amount_total'),
-            'payment_status': 'done',
-            **{field: payment_line.get(field) for field in safe_fields}
-        }]]
-
-    @api.model
     def _get_self_order_floating_name(self, pos_config, order, device_type, table, tracking_number, prefix=""):
         if device_type == 'kiosk':
             return f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else f"Kiosk Order {tracking_number}"
@@ -271,8 +246,6 @@ class PosOrder(models.Model):
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
-        payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
-        payment_lines = [line for line in payment_lines if len(line)]
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
 
         if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
@@ -314,7 +287,6 @@ class PosOrder(models.Model):
             'uuid': order.get('uuid'),
             'has_deleted_line': order.get('has_deleted_line'),
             'lines': lines,
-            'payment_ids': payment_lines,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 

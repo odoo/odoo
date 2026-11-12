@@ -239,6 +239,8 @@ export const getFilledSelfOrder = async (store) => {
     await store.addToCart(product2, 2);
 
     store.currentOrder.access_token = uuidv4();
+    store.currentOrder.currency_id = 1;
+    store.currentOrder.amount_total = 500;
     return store.currentOrder;
 };
 
