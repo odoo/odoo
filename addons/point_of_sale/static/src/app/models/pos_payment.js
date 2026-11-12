@@ -1,6 +1,8 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
+import { sortBy } from "@web/core/utils/arrays";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 const { DateTime } = luxon;
 
 export class PosPayment extends Base {
@@ -45,6 +47,7 @@ export class PosPayment extends Base {
 
     /**
      * Kept in snake_case for consistency with existing model fields.
+     * @returns {import("@pos_payment_method/payment_method").PaymentMethod}
      */
     get payment_interface() {
         return this.payment_method_id.payment_interface;
@@ -61,12 +64,12 @@ export class PosPayment extends Base {
         return this.payment_method_id.useTerminal;
     }
 
-    get useQr() {
-        return this.payment_method_id.useQr;
+    get useCashMachine() {
+        return this.payment_method_id.useCashMachine;
     }
 
-    get useBankQrCode() {
-        return this.payment_method_id.useBankQrCode;
+    get useQr() {
+        return this.payment_method_id.useQr;
     }
 
     get displayName() {
@@ -130,16 +133,150 @@ export class PosPayment extends Base {
         return Boolean(this.getPaymentStatus());
     }
 
+    getRefundedOrder() {
+        if (this.amount > 0) {
+            return null;
+        }
+        return this.pos_order_id.refunded_order_id ?? null;
+    }
+
+    getRefundedPayment() {
+        const refundedOrder = this.getRefundedOrder();
+        if (!refundedOrder) {
+            return null;
+        }
+        const eligiblePayments = refundedOrder.payment_ids.filter(
+            (payment) =>
+                payment.payment_provider === this.payment_provider &&
+                payment.amount <= Math.abs(this.amount)
+        );
+        const sortedPayments = sortBy(eligiblePayments, "amount", "desc");
+        return sortedPayments.length ? sortedPayments[0] : null;
+    }
+
+    _getPaymentCallback() {
+        const { promise, resolve, reject } = Promise.withResolvers();
+        const callback = (response) => {
+            if (response.status === "paid") {
+                const fieldsToUpdate = [
+                    "card_no",
+                    "card_brand",
+                    "card_type",
+                    "cardholder_name",
+                    "payment_method_authcode",
+                    "payment_method_metadata",
+                    "payment_ref_no",
+                ];
+                for (const field of fieldsToUpdate) {
+                    this[field] = response[field] ?? this[field];
+                }
+                this.transaction_id = response.final_transaction_id ?? this.transaction_id;
+                if (response.final_amount) {
+                    this.setAmount(response.final_amount);
+                }
+                this.handlePaymentResponse(true);
+                resolve(response);
+            } else if (response.status === "failed") {
+                this.handlePaymentResponse(false);
+                if (response.error) {
+                    reject(new Error(response.error));
+                } else {
+                    resolve(false);
+                }
+            }
+        };
+
+        return { callback, promise };
+    }
+
+    async _startElectronicPayment(completionCallback) {
+        const tippingEnabled = Boolean(
+            this.config.iface_tipproduct &&
+                this.config.tip_product_id &&
+                !this.config.set_tip_after_payment
+        );
+        const extraArgs = {
+            partner_id: this.pos_order_id.partner_id?.id,
+            order_number: this.pos_order_id.tracking_number,
+            allow_tips: tippingEnabled && !this.config.set_tip_after_payment,
+            allow_adjustments:
+                (tippingEnabled && this.config.set_tip_after_payment) ||
+                this.config.module_pos_restaurant,
+        };
+        if (this.amount < 0) {
+            const paymentToRefund = this.getRefundedPayment();
+            if (paymentToRefund && this.payment_interface.supportsReversals()) {
+                extraArgs.original_payment_timestamp = paymentToRefund.create_date.toUTC().toISO();
+                return await this.payment_interface.startReversal(
+                    Math.abs(this.amount),
+                    this.currency.id,
+                    paymentToRefund.transaction_id,
+                    extraArgs,
+                    completionCallback
+                );
+            } else {
+                return await this.payment_interface.startRefund(
+                    Math.abs(this.amount),
+                    this.currency.id,
+                    extraArgs,
+                    completionCallback
+                );
+            }
+        } else {
+            return await this.payment_interface.startPayment(
+                this.amount,
+                this.currency.id,
+                extraArgs,
+                completionCallback
+            );
+        }
+    }
+
     // ----- Payment Request -----
     async pay() {
         this.setPaymentStatus("waiting");
+
         try {
-            const success = await this.payment_interface.sendPaymentRequest(this);
-            return this.handlePaymentResponse(success);
+            const { callback, promise } = this._getPaymentCallback();
+            const response = await this._startElectronicPayment(callback);
+            this.transaction_id = response.transaction_id;
+
+            if (response.status === "pending") {
+                if (this.useQr) {
+                    this.setPaymentStatus("waitingScan");
+                } else if (this.useTerminal || this.useCashMachine) {
+                    this.setPaymentStatus("waitingCard");
+                }
+            }
+
+            if (response.qr_code) {
+                this.qr_code = generateQRCodeDataUrl(response.qr_code, { useThemeQr: true });
+                return true;
+            }
+
+            return promise;
         } catch (error) {
             this.handlePaymentResponse(false);
             throw error;
         }
+    }
+
+    async resumePayment() {
+        const { callback, promise } = this._getPaymentCallback();
+        this.payment_interface.startListening(this.transaction_id, callback);
+        return promise;
+    }
+
+    async capturePayment() {
+        const { callback, promise } = this._getPaymentCallback();
+        await this.payment_interface.capturePayment(
+            this.amount,
+            this.currency.id,
+            this.transaction_id,
+            { metadata: this.payment_method_metadata },
+            callback
+        );
+        return promise;
     }
 
     handlePaymentResponse(isPaymentSuccessful) {
@@ -152,8 +289,11 @@ export class PosPayment extends Base {
     async cancelPayment() {
         this.setPaymentStatus("waitingCancel");
         try {
-            const success = await this.payment_interface.sendPaymentCancel(this);
-            return this.handlePaymentCancelResponse(success);
+            const result = await this.payment_interface.cancelTransaction(this.transaction_id);
+            if (result.error) {
+                throw new Error(result.error);
+            }
+            return this.handlePaymentCancelResponse(result.success ?? true);
         } catch (error) {
             this.handlePaymentCancelResponse(false);
             throw error;
@@ -162,8 +302,9 @@ export class PosPayment extends Base {
 
     handlePaymentCancelResponse(isCancelSuccessful) {
         if (isCancelSuccessful) {
-            this.setPaymentStatus("retry");
-        } else if (this.useTerminal) {
+            return true;
+        }
+        if (this.useTerminal || this.useCashMachine) {
             this.setPaymentStatus("waitingCard");
         } else if (this.useQr) {
             this.setPaymentStatus("waitingScan");
@@ -171,36 +312,54 @@ export class PosPayment extends Base {
             this.setPaymentStatus("waiting");
         }
 
-        return isCancelSuccessful;
+        return false;
     }
 
     // ----- Payment Force State -----
     forceDone() {
+        this.payment_interface?.stopListening(this.transaction_id);
         this.setPaymentStatus("done");
     }
 
     forceCancel() {
+        this.payment_interface?.stopListening(this.transaction_id);
         this.setPaymentStatus("retry");
     }
 
-    /**
-     * @param {object} - refundedPaymentLine
-     * Override in dependent modules to update the refund payment line with the refunded payment line
-     */
-    updateRefundPaymentLine(refundedPaymentLine) {}
-
     canBeAdjusted() {
         if (this.payment_interface) {
-            return this.payment_interface.canBeAdjusted(this.uuid);
+            return Boolean(this.payment_method_metadata?.can_be_adjusted);
         }
-        return this.payment_method_id.type !== "cash" && !this.useBankQrCode;
+        return this.payment_method_id.type !== "cash";
+    }
+
+    requiresCapture() {
+        if (this.payment_interface) {
+            return this.canBeAdjusted() || Boolean(this.payment_method_metadata?.requires_capture);
+        }
+        return false;
     }
 
     async adjustAmount(amount) {
-        if (this.payment_interface) {
-            this.amount += amount;
-            await this.payment_interface.sendPaymentAdjust(this.uuid);
+        if (!this.payment_interface) {
+            return;
         }
+
+        const { promise, callback } = this._getPaymentCallback();
+        await this.payment_interface.adjustPayment(
+            this.amount + amount,
+            this.currency.id,
+            this.transaction_id,
+            { metadata: this.payment_method_metadata },
+            callback
+        );
+
+        return promise.then((result) => {
+            if (result.status === "paid") {
+                this.setAmount(this.amount + amount);
+            }
+            return result;
+        });
     }
 }
 

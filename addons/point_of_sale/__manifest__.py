@@ -17,6 +17,7 @@
         'google_address_autocomplete',
         'base_report_wkhtmltox',
         'iot_webserial',
+        'pos_payment_method',
     ],
     'data': [
         'security/point_of_sale_security.xml',
@@ -107,7 +108,6 @@
             'point_of_sale/static/src/backend/pos_kanban_view/*',
             ('remove', 'point_of_sale/static/src/backend/pos_kanban_view/*.dark.css'),
             'point_of_sale/static/src/backend/lna_checklist/*',
-            'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
             'point_of_sale/static/src/backend/views/**/*',
@@ -177,11 +177,6 @@
             'bus/static/src/multi_tab_shared_worker_plugin.js',
             'bus/static/src/multi_tab_fallback_plugin.js',
             'bus/static/src/workers/*',
-        ],
-
-        # Payment terminal assets, also loaded by pos_self_order
-        'point_of_sale.payment_terminals': [
-            'point_of_sale/static/src/app/utils/payment/payment_interface.js',
         ],
 
         # Main PoS assets, they are loaded in the PoS UI

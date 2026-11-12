@@ -9,7 +9,6 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
                     <field name="type" invisible="1"/> <!-- drives invisible/required of the journal and account fields and of the blocks added by pos_online_payment and pos_sale_planning -->
-                    <field name="all_providers_installed" invisible="1"/> <!-- drives invisible of the pos_payment_provider_cards widget -->
                     <div class="d-flex justify-content-between">
                         <div class="oe_title">
                             <label for="name"/>
@@ -37,12 +36,8 @@
                         </group>
                         <div>
                             <group>
-                                <field name="hide_qr_code_method" invisible="1"/> <!-- drives invisible of qr_code_method -->
-                                <field name="payment_method_type" invisible="not available_payment_method_types" widget="filterable_selection" options="{'whitelist_fname': 'available_payment_method_types'}" />
-                                <field name="payment_provider" string="Integrate with" invisible="not available_payment_providers" widget="filterable_selection" options="{'whitelist_fname': 'available_payment_providers'}" placeholder="None"/>
-                                <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'bank_qr_code'"/>
+                                <field name="electronic_payment_id"/>
                             </group>
-                            <widget name="pos_payment_provider_cards" invisible="all_providers_installed or payment_provider or payment_method_type not in ['terminal', 'external_qr', 'cash_machine']" />
                         </div>
                     </group>
                 </sheet>
@@ -152,6 +147,7 @@
     </record>
 
     <menuitem id="menu_pos_payment_method" parent="menu_point_config_product" action="action_pos_payment_method_form" sequence="3" groups="group_pos_manager,group_pos_user"/>
+    <menuitem id="menu_pos_electronic_payment" parent="menu_point_config_product" action="pos_payment_method.action_pos_electronic_payment_list" sequence="3" groups="group_pos_manager,group_pos_user"/>
 
     <record id="action_payment_methods_tree" model="ir.actions.act_window">
         <field name="context">{}</field>

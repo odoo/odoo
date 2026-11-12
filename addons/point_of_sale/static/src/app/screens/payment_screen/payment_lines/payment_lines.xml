@@ -46,10 +46,10 @@
                                 <i class="oi" t-att-class="state.iconClass" t-att-data-icon="state.icon" role="img" />
                             </t>
                         </div>
-                        <div t-if="state.id == 'waiting' and line.payment_method_id.payment_interface?.amountInserted != null"
+                        <div t-if="state.id == 'waiting' and line.payment_interface?.amountInserted != null"
                             class="d-flex align-items-center justify-content-between pb-3 px-4 fs-4">
                             <span>Cash inserted</span>
-                            <span t-out="this.pos.formatCurrency(line.payment_method_id.payment_interface.amountInserted)"/>
+                            <span t-out="this.pos.formatCurrency(line.payment_interface.amountInserted)"/>
                         </div>
                         <div class="paymentline_status_actions btn-group d-flex w-100" role="group">
                             <button t-foreach="state.actions" t-as="button" t-key="button.id"
@@ -60,6 +60,16 @@
                                     t-out="button.label" />
                         </div>
                     </t>
+                </div>
+
+                <div t-if="line.isSelected() and line.payment_method_id.payment_interface" class="d-flex flex-column gap-3">
+                    <div t-if="line.payment_method_id.payment_interface.status()" class="d-flex gap-2 mt-3 fs-4">
+                        <strong>
+                            <t t-if="line.useCashMachine">Cash machine status:</t>
+                            <t t-if="line.useTerminal">Payment terminal status:</t>
+                        </strong>
+                        <t t-out="line.payment_method_id.payment_interface.status()"/>
+                    </div>
                 </div>
             </t>
         </div>

@@ -105,8 +105,8 @@ export class PaymentScreen extends Component {
             (paymentMethod.type !== "pay_later" || this.pos.accessRight.canAccessPaymentMethod) &&
             (!this.isRefundOrder ||
                 !paymentMethod.payment_interface ||
-                paymentMethod.payment_interface.supports_refunds ||
-                false)
+                paymentMethod.payment_interface.supportsRefunds() ||
+                paymentMethod.payment_interface.supportsReversals())
         );
     }
 
@@ -207,10 +207,6 @@ export class PaymentScreen extends Component {
         const result = this.currentOrder.addPaymentline(paymentMethod, args);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
-            if (!this.isRefundOrder && paymentMethod.useBankQrCode) {
-                const newPaymentLine = this.paymentLines.at(-1);
-                this.sendPaymentRequest(newPaymentLine);
-            }
             return true;
         } else {
             this.dialog.add(AlertDialog, {
@@ -339,30 +335,16 @@ export class PaymentScreen extends Component {
     }
     deletePaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
-        if (line.payment_method_id.useBankQrCode) {
-            this.currentOrder.removePaymentline(line);
-            this.numberBuffer.reset();
-            return;
-        }
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
-        const finalizeDeletion = () => {
-            this.currentOrder.removePaymentline(line);
-            this.numberBuffer.reset();
-        };
         const status = line.getPaymentStatus();
         const cancelableStatuses = ["waiting", "waitingCard", "waitingScan", "timeout"];
         if (cancelableStatuses.includes(status)) {
-            line.cancelPayment(this.currentOrder).then((success) => {
-                if (success) {
-                    finalizeDeletion();
-                } else {
-                    line.setPaymentStatus(status);
-                }
-            });
+            this.sendPaymentCancel(line);
         } else if (status !== "waitingCancel") {
-            finalizeDeletion();
+            this.currentOrder.removePaymentline(line);
+            this.numberBuffer.reset();
         }
     }
     selectPaymentLine(uuid) {
@@ -399,23 +381,18 @@ export class PaymentScreen extends Component {
         }
 
         this.numberBuffer.capture();
-        let isPaymentSuccessful = false;
-        if (line.payment_method_id.useBankQrCode) {
-            const resp = await this.pos.showQR(line);
-            isPaymentSuccessful = line.handlePaymentResponse(resp);
-        } else {
-            isPaymentSuccessful = await line.pay();
-        }
-
-        // Automatically validate the order when after an electronic payment,
-        // the current order is fully paid and due is zero.
-        if (isPaymentSuccessful) {
-            await this.pos.autoValidateOrder();
-        }
+        await this.pos.processPayment(line);
     }
 
     async sendPaymentCancel(line) {
-        await line.cancelPayment(this.currentOrder);
+        try {
+            await line.cancelPayment(this.currentOrder);
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t("%s cancellation failed", line.payment_method_id.name),
+                body: error?.data?.message ?? error?.message ?? error,
+            });
+        }
     }
 
     async sendForceDone(line) {

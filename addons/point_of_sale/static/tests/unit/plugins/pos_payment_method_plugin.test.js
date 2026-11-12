@@ -2,8 +2,8 @@ import { test, expect } from "@odoo/hoot";
 import { patch } from "@web/core/utils/patch";
 import { setupPosEnv, addTestTerminals } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
-import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { SelectDefaultPaymentMethodPopup } from "@point_of_sale/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup";
+import { PaymentMethod } from "@pos_payment_method/payment_method";
 
 definePosModels();
 
@@ -27,7 +27,7 @@ test("computeDefaultGroups", async () => {
         type: "bank",
         sequence: 5,
     });
-    terminal2.payment_interface = new PaymentInterface(store, terminal2);
+    terminal2.payment_interface = new PaymentMethod(terminal2.id);
     store.config.payment_method_ids = [...store.config.payment_method_ids, terminal2];
     plugin.initDefaults();
     expect(Object.keys(plugin.defaultGroups)).toEqual(["test_terminal"]);
