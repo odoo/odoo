@@ -209,3 +209,18 @@ class TestWorkEntryType(TransactionCase):
 
         self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', work_entry_us_copy.code)]), 1)
         self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', work_entry_be_copy.code)]), 1)
+
+    def test_time_rule_without_country_offers_active_company_types(self):
+        country_be = self.env.ref('base.be')
+        self.env.company.country_id = country_be
+        generic_type = self.env['hr.work.entry.type'].create({'code': 'GENTEST', 'name': "Generic"})
+        be_type = self.env['hr.work.entry.type'].create({'code': 'BETEST', 'name': "Belgian", 'country_id': country_be.id})
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Shared rule',
+            'company_id': False,
+            'country_id': False,
+            'condition_work_entry_type_ids': [(4, generic_type.id)],
+        })
+        self.assertFalse(rule.country_id)
+        self.assertIn(be_type, rule.country_work_entry_type_ids,
+            "A rule without company nor country should offer the time types of the active company's country")
