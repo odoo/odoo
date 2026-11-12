@@ -40,6 +40,7 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
+from odoo.orm.utils import RegistrySetupError
 from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
@@ -391,7 +392,7 @@ def serve_db(request: Request) -> Response:
             request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
 
             request.registry = request.env.registry
-        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
+        except (AttributeError, RegistrySetupError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {request.db}") from e
 
         # find the controller endpoint to use

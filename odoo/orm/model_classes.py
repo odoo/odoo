@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 import typing
-import warnings
 import weakref
 
 from collections import defaultdict
@@ -12,7 +11,7 @@ from types import MappingProxyType
 
 from . import models
 from . import fields  # must be imported after models
-from .utils import check_pg_name
+from .utils import RegistrySetupError, check_pg_name, setup_warning
 from odoo.exceptions import ValidationError
 from odoo.tools import (
     OrderedSet,
@@ -171,10 +170,10 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
     assert is_model_definition(model_def)
 
     if hasattr(model_def, '_constraints'):
-        warnings.warn(f"{model_def}: model attribute '_constraints' is no longer supported, "
+        setup_warning(model_def, "model attribute '_constraints' is no longer supported, "
                       "please use @api.constrains on methods instead.")
     if hasattr(model_def, '_sql_constraints'):
-        warnings.warn(f"{model_def}: model attribute '_sql_constraints' is no longer supported, "
+        setup_warning(model_def, "model attribute '_sql_constraints' is no longer supported, "
                       "please define models.Constraint on the model.")
 
     # all models except 'base' implicitly inherit from 'base'
@@ -186,7 +185,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
     # create or retrieve the model's class
     if name in parent_names:
         if name not in registry:
-            raise TypeError(f"Model {name!r} does not exist in registry.")
+            raise RegistrySetupError(f"Model {name!r} does not exist in registry.")
         model_cls = registry[name]
         _check_model_extension(model_cls, model_def)
     else:
@@ -208,7 +207,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
     bases = LastOrderedSet([model_def])
     for parent_name in parent_names:
         if parent_name not in registry:
-            raise TypeError(f"Model {name!r} inherits from non-existing model {parent_name!r}.")
+            raise RegistrySetupError(f"Model {name!r} inherits from non-existing model {parent_name!r}.")
         parent_cls = registry[parent_name]
         if parent_name == name:
             for base in parent_cls._base_classes__:
@@ -230,8 +229,8 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
 
     # Transience
     if model_cls._transient and not model_cls._log_access:
-        raise TypeError(
-            "TransientModels must have log_access turned on, "
+        raise RegistrySetupError(
+            f"{model_cls._name}: TransientModels must have log_access turned on, "
             "in order to implement their vacuum policy"
         )
 
@@ -249,23 +248,23 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
 def _check_model_extension(model_cls: type[BaseModel], model_def: type[BaseModel]):
     """ Check whether ``model_cls`` can be extended with ``model_def``. """
     if model_def._table:
-        raise TypeError(
+        raise RegistrySetupError(
             f"{model_def} cannot redefine _table while extending model {model_cls._name!r}. "
             "That class should either remove '_table', or set a different '_name'."
         )
     if model_cls._abstract and not model_def._abstract:
-        raise TypeError(
+        raise RegistrySetupError(
             f"{model_def} transforms the abstract model {model_cls._name!r} into a non-abstract model. "
             "That class should either inherit from AbstractModel, or set a different '_name'."
         )
     if model_cls._transient != model_def._transient:
         if model_cls._transient:
-            raise TypeError(
+            raise RegistrySetupError(
                 f"{model_def} transforms the transient model {model_cls._name!r} into a non-transient model. "
                 "That class should either inherit from TransientModel, or set a different '_name'."
             )
         else:
-            raise TypeError(
+            raise RegistrySetupError(
                 f"{model_def} transforms the model {model_cls._name!r} into a transient model. "
                 "That class should either inherit from Model, or set a different '_name'."
             )
@@ -274,7 +273,7 @@ def _check_model_extension(model_cls: type[BaseModel], model_def: type[BaseModel
 def _check_model_parent_extension(model_cls: type[BaseModel], model_def: type[BaseModel], parent_cls: type[BaseModel]):
     """ Check whether ``model_cls`` can inherit from ``parent_cls``. """
     if model_cls._abstract and not parent_cls._abstract:
-        raise TypeError(
+        raise RegistrySetupError(
             f"In {model_def}, abstract model {model_cls._name!r} cannot inherit from non-abstract model {parent_cls._name!r}."
         )
 
@@ -293,7 +292,7 @@ def _init_model_class_attributes(model_cls: type[BaseModel]):
         if is_model_definition(base):
             # the following attributes are not taken from registry classes
             if model_cls._name not in base._inherit and not base._description:
-                warnings.warn(f"The model {model_cls._name} has no _description")
+                setup_warning(model_cls._name, "model has no _description")
             model_cls._description = base._description or model_cls._description
             model_cls._table = base._table or model_cls._table
             model_cls._log_access = getattr(base, '_log_access', model_cls._log_access)
@@ -467,7 +466,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
     # 5. determine and validate rec_name
     if model_cls._rec_name:
         if model_cls._rec_name not in model_cls._fields:
-            raise ValueError(f"Invalid _rec_name={model_cls._rec_name!r} for model {model_cls._name!r}")
+            raise RegistrySetupError(f"Invalid _rec_name={model_cls._rec_name!r} for model {model_cls._name!r}")
     elif 'name' in model_cls._fields:
         model_cls._rec_name = 'name'
     elif model_cls._custom and 'x_name' in model_cls._fields:
@@ -477,7 +476,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
     if model_cls._active_name:
         if not (model_cls._active_name in model_cls._fields
                 and model_cls._active_name in ('active', 'x_active')):
-            raise ValueError(
+            raise RegistrySetupError(
                 f"Invalid _active_name={model_cls._active_name!r} for model {model_cls._name!r}; "
                 "only 'active' and 'x_active' are supported and the field must be present on the model"
             )
@@ -500,12 +499,12 @@ def _check_inherits(model_cls: type[BaseModel]):
     for comodel_name, field_name in model_cls._inherits.items():
         field = model_cls._fields.get(field_name)
         if not field or field.type != 'many2one':
-            raise TypeError(
+            raise RegistrySetupError(
                 f"Missing many2one field definition for _inherits reference {field_name!r} in model {model_cls._name!r}. "
                 f"Add a field like: {field_name} = fields.Many2one({comodel_name!r}, required=True, ondelete='cascade')"
             )
         if not (field.delegate and field.required and (field.ondelete or "").lower() in ("cascade", "restrict")):
-            raise TypeError(
+            raise RegistrySetupError(
                 f"Field definition for _inherits reference {field_name!r} in {model_cls._name!r} "
                 "must be marked as 'delegate', 'required' with ondelete='cascade' or 'restrict'"
             )
@@ -645,7 +644,7 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field, shareable: bo
         raise ValidationError("You can only add `fields.Field` objects to a model fields")  # pylint: disable=missing-gettext
 
     if not isinstance(getattr(model_cls, name, field), fields.Field):
-        warnings.warn(f"In model {model_cls._name!r}, field {name} overriding existing value", stacklevel=2)
+        setup_warning(f"{model_cls._name}.{name}", "field overriding existing value")
     setattr(model_cls, name, field)
     if field._shareable != shareable:
         field._shareable = shareable

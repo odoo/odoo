@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import re
+import warnings
 from collections.abc import Reversible
 from collections.abc import Set as AbstractSet
 
@@ -68,6 +69,15 @@ SQL_OPERATORS = {
     "not =like": SQL(" NOT LIKE "),
     "not =ilike": SQL(" NOT ILIKE "),
 }
+
+
+class RegistrySetupError(Exception):
+    """Signal an invalid definition of models or fields, detected while
+    setting up the registry."""
+
+
+def setup_warning(obj, message: str, stacklevel: int = 1):
+    warnings.warn(f"{obj}: {message}", stacklevel=stacklevel + 1)
 
 
 def check_object_name(name):

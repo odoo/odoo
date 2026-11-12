@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
 
 from .fields import Field, determine, resolve_mro
+from .utils import RegistrySetupError, setup_warning
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -76,7 +77,7 @@ class Selection(Field[str | typing.Literal[False], str]):
         super()._setup(model)
         if not self.related:
             if self.selection is None:
-                raise Exception(f"{self}.selection is missing")
+                raise RegistrySetupError(f"{self}.selection is missing")
         else:
             # selection must be computed on related field
             field = self.related_field
@@ -104,12 +105,12 @@ class Selection(Field[str | typing.Literal[False], str]):
             # because those attributes are overridden by ``_setup_attrs__``.
             if 'selection' in field._args__:
                 if self.related:
-                    self._setup_warning("selection attribute will be ignored as the field is related")
+                    setup_warning(self, "selection attribute will be ignored as the field is related")
                     continue
                 selection = field._args__['selection']
                 if isinstance(selection, (list, tuple)):
                     if values is not None and list(values) != [kv[0] for kv in selection]:
-                        self._setup_warning(f"selection={selection!r} overrides existing selection; use selection_add instead")
+                        setup_warning(self, f"selection={selection!r} overrides existing selection; use selection_add instead")
                     values = dict(selection)
                     self.ondelete = {}
                 elif callable(selection) or isinstance(selection, str):
@@ -117,17 +118,17 @@ class Selection(Field[str | typing.Literal[False], str]):
                     self.selection = selection
                     values = None
                 else:
-                    raise ValueError(f"{self}: selection={selection!r} should be a list, a callable or a method name")
+                    raise RegistrySetupError(f"{self}: selection={selection!r} should be a list, a callable or a method name")
 
             if self._base_fields__ and 'selection_add' in field._args__:
                 if self.related:
-                    self._setup_warning("selection_add attribute will be ignored as the field is related")
+                    setup_warning(self, "selection_add attribute will be ignored as the field is related")
                     continue
                 selection_add = field._args__['selection_add']
                 if not isinstance(selection_add, (list, tuple)):
-                    raise TypeError(f"{self}: selection_add={selection_add!r} must be a list or tuple")
+                    raise RegistrySetupError(f"{self}: selection_add={selection_add!r} must be a list or tuple")
                 if values is None:
-                    raise TypeError(f"{self}: selection_add={selection_add!r} on non-list selection {self.selection}")
+                    raise RegistrySetupError(f"{self}: selection_add={selection_add!r} on non-list selection {self.selection}")
 
                 values_add = {kv[0]: (kv[1] if len(kv) > 1 else values[kv[0]]) for kv in selection_add}
                 ondelete = field._args__.get('ondelete') or {}
@@ -135,7 +136,7 @@ class Selection(Field[str | typing.Literal[False], str]):
                 for key in new_values:
                     ondelete.setdefault(key, 'set null')
                 if self.required and new_values and 'set null' in ondelete.values():
-                    raise ValueError(
+                    raise RegistrySetupError(
                         "%r: required selection fields must define an ondelete policy that "
                         "implements the proper cleanup of the corresponding records upon "
                         "module uninstallation. Please use one or more of the following "
@@ -151,7 +152,7 @@ class Selection(Field[str | typing.Literal[False], str]):
                     if val == 'set default':
                         if self.default is not None:
                             continue
-                        raise Exception(
+                        raise RegistrySetupError(
                             "%r: ondelete policy of type 'set default' is invalid for this field "
                             "as it does not define a default! Either define one in the base "
                             "field, or change the chosen ondelete policy" % self
@@ -159,12 +160,12 @@ class Selection(Field[str | typing.Literal[False], str]):
                     if val.startswith('set '):
                         if val[4:] in values:
                             continue
-                        raise Exception((
+                        raise RegistrySetupError((
                             "%s: ondelete policy of type 'set %%' must be either 'set null', "
                             "'set default', or 'set value' where value is a valid selection value."
                         ) % self)
                     else:
-                        raise ValueError(
+                        raise RegistrySetupError(
                             "%r: ondelete policy %r for selection value %r is not a valid ondelete"
                             " policy, please choose one of 'set null', 'set default', "
                             "'set [value]', 'cascade' or a callable" % (self, val, key)
@@ -179,7 +180,7 @@ class Selection(Field[str | typing.Literal[False], str]):
         if values is not None:
             self.selection = tuple(values.items())
             if not all(isinstance(key, str) and isinstance(val, str) for key, val in values.items()):
-                raise TypeError(f"{self} with non-str key or value in selection")
+                raise RegistrySetupError(f"{self} with non-str key or value in selection")
 
         self._selection = values
 
