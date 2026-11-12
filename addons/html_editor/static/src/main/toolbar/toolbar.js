@@ -85,17 +85,56 @@ export class Toolbar extends Component {
         if (isDropdownOpen) {
             return;
         }
-        // Loop through toolbar buttons
-        if (["Tab", "ArrowLeft", "ArrowRight"].includes(ev.key)) {
+        if (["ArrowLeft", "ArrowRight", "Home", "End", "Tab"].includes(ev.key)) {
             ev.preventDefault();
             ev.stopPropagation();
-            const toolbarButtons = this.toolbarEl().querySelectorAll("button");
-            const isBackward = ev.key === "ArrowLeft" || (ev.key === "Tab" && ev.shiftKey);
-            trapFocus(toolbarButtons, isBackward);
+        }
+        // Arrows move between buttons, Home and End to the first and last
+        // ones, and Tab between button groups, as a toolbar is navigated
+        // with arrows rather than with Tab.
+        if (ev.key === "ArrowLeft" || ev.key === "ArrowRight") {
+            trapFocus(this.getFocusableButtons(this.toolbarEl()), ev.key === "ArrowLeft");
+        } else if (ev.key === "Home" || ev.key === "End") {
+            const buttons = this.getFocusableButtons(this.toolbarEl());
+            buttons.at(ev.key === "Home" ? 0 : -1)?.focus();
+        } else if (ev.key === "Tab") {
+            this.focusAdjacentButtonGroup(ev.shiftKey);
         } else if (ev.key === "Escape") {
             ev.stopPropagation();
             this.props.focusEditable();
         }
+    }
+
+    /**
+     * @param {HTMLElement} el
+     * @returns {HTMLButtonElement[]}
+     */
+    getFocusableButtons(el) {
+        return [...el.querySelectorAll("button:not([disabled])")];
+    }
+
+    /**
+     * Moves the focus to the first button of the next (or previous) button
+     * group, cycling through the groups and skipping the ones without any
+     * enabled button.
+     *
+     * @param {boolean} backward
+     */
+    focusAdjacentButtonGroup(backward) {
+        const groups = [...this.toolbarEl().querySelectorAll(":scope > .btn-group")].filter(
+            (group) => this.getFocusableButtons(group).length
+        );
+        if (!groups.length) {
+            return;
+        }
+        const currentIndex = groups.findIndex((group) => group.contains(document.activeElement));
+        const nextIndex =
+            currentIndex === -1
+                ? backward
+                    ? groups.length - 1
+                    : 0
+                : (currentIndex + (backward ? -1 : 1) + groups.length) % groups.length;
+        this.getFocusableButtons(groups[nextIndex])[0].focus();
     }
 
     onButtonClick(button) {
