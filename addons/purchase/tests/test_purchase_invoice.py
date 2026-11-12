@@ -1238,6 +1238,45 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(po.order_line[-1:].product_id, self.product_order_other_price)
         self.assertListEqual(po.order_line.mapped('price_total'), (bill + bill_2).invoice_line_ids.mapped('price_total'))
 
+    def test_add_foreign_currency_bill_to_po(self):
+        """ Adding the lines of a bill in a foreign currency to a purchase order
+        must keep the billed amounts, whether a new PO is created or the lines are
+        added to an existing PO in another currency. """
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order],
+                                 currency=self.other_currency, post=True)
+        bill_line = bill.invoice_line_ids
+        self.env['account.move.line'].flush_model()
+
+        # Create a new PO from the bill line
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        action = match_lines.action_add_to_po()
+        wizard = self.env['bill.to.po.wizard'].with_context({**action['context'], 'active_ids': match_lines.ids}).create({})
+        po = self.env['purchase.order'].browse(wizard.action_add_to_po()['res_id'])
+        self.assertEqual(bill_line.purchase_line_id, po.order_line)
+        self.assertAlmostEqual(
+            po.currency_id._convert(po.order_line.price_unit, bill.currency_id, po.company_id, po.date_order.date()),
+            bill_line.price_unit,
+        )
+
+        # Add a bill line to an existing PO in the company currency
+        bill_2 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_other_price],
+                                   currency=self.other_currency, post=True)
+        po_2 = self.init_purchase(partner=self.partner_a, products=[self.service_order], confirm=True)
+        self.assertEqual(po_2.currency_id, self.env.company.currency_id)
+        self.env['account.move.line'].flush_model()
+        match_lines = self.env['purchase.bill.line.match'].search([('aml_id', '=', bill_2.invoice_line_ids.id)])
+        wizard = self.env['bill.to.po.wizard'].with_context({
+            'default_purchase_order_id': po_2.id,
+            'active_ids': match_lines.ids,
+        }).create({})
+        wizard.action_add_to_po()
+        new_line = bill_2.invoice_line_ids.purchase_line_id
+        self.assertEqual(new_line.order_id, po_2)
+        self.assertAlmostEqual(
+            po_2.currency_id._convert(new_line.price_unit, bill_2.currency_id, po_2.company_id, po_2.date_order.date()),
+            bill_2.invoice_line_ids.price_unit,
+        )
+
     def test_onchange_partner_currency(self):
         """
         Test that the currency of the Bill is correctly set when the partner is changed
