@@ -1060,7 +1060,9 @@ function isIconFilled(beforeStyle, content) {
 function fontToImg(element) {
     for (const font of element.querySelectorAll(".oi")) {
         const beforeStyle = getComputedStyle(font, "::before");
-        const content = beforeStyle["content"].trim().replace(/['"]/g, "");
+        // The content is `"name" / ""`: the icon's name, then an empty
+        // alternative text for screen readers.
+        const content = beforeStyle["content"].split("/")[0].trim().replace(/['"]/g, "");
         const icon = content.replace(/_f$/, "");
         const fill = isIconFilled(beforeStyle, content) ? 1 : 0;
 
