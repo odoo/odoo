@@ -27,10 +27,11 @@ class NewId:
         return self.__hash
 
     def __lt__(self, other):
+        # expected order: 1, NewId(1), 2, NewId(2), NewId()
         if isinstance(other, NewId):
             other = other.origin
             if other is None:
-                return other > self.origin if self.origin else False
+                return bool(self.origin)
         if isinstance(other, int):
             return bool(self.origin) and self.origin < other
         return NotImplemented
