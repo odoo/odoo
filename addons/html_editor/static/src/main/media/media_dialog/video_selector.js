@@ -465,9 +465,14 @@ export class VideoSelector extends Component {
                 <div class="css_editable_mode_display"></div>
                 <div class="${sizeClass}" contenteditable="false"></div>
             `;
-            div.append(
-                VIDEO_PROVIDERS[videoData.platform].createPlayerElement(videoData, document)
+            const playerEl = VIDEO_PROVIDERS[videoData.platform].createPlayerElement(
+                videoData,
+                document
             );
+            if (playerEl.tagName === "IFRAME") {
+                playerEl.title = _t("Video player");
+            }
+            div.append(playerEl);
             return div;
         });
     }

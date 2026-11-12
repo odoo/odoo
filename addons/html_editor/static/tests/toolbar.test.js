@@ -2984,6 +2984,8 @@ function expectConsistentAriaStates(editor) {
  *   readers do not read it twice (as the name, then as the description),
  * - it contains the button's visible text, if any,
  * - the button's icons are hidden from screen readers.
+ * Every iframe of the toolbar (e.g. the font size input) must also have a
+ * `title`, which names the input it contains.
  */
 function expectAccessibleLabels() {
     const buttons = queryAll(".o-we-toolbar .btn");
@@ -3002,6 +3004,17 @@ function expectAccessibleLabels() {
         for (const icon of el.querySelectorAll(".oi, svg")) {
             expect(icon).toHaveAttribute("aria-hidden", "true", {
                 message: `"${label}" icon should be hidden from screen readers`,
+            });
+        }
+    }
+    for (const iframe of queryAll(".o-we-toolbar iframe")) {
+        const label = iframe.className;
+        const title = iframe.getAttribute("title");
+        expect(!!title).toBe(true, { message: `"${label}" iframe should have a title` });
+        const input = iframe.contentDocument.querySelector("input");
+        if (input) {
+            expect(input).toHaveAttribute("aria-label", title, {
+                message: `"${label}" iframe input should be named after its title`,
             });
         }
     }
