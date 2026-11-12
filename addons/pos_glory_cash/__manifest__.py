@@ -1,28 +1,12 @@
 {
-    'name': 'POS Glory Cash Machines',
+    'name': 'PoS Glory bridge',
     'category': 'Sales/Point of Sale',
-    'summary': 'Integrate your POS with a Glory automatic cash payment device',
-    'depends': ['point_of_sale'],
-    'data': [
-        'views/pos_payment_method_views.xml',
-    ],
+    'summary': 'UI integration in the PoS for Glory cash machines',
+    'depends': ['point_of_sale', 'pos_payment_method_glory'],
+    'auto_install': True,
     'assets': {
-        'web.assets_backend': [
-            'pos_glory_cash/static/src/**/*',
-            ('remove', 'pos_glory_cash/static/src/app/**/*'),
-        ],
-        'point_of_sale.payment_terminals': [
-            'pos_glory_cash/static/src/**/*',
-            ('remove', 'pos_glory_cash/static/src/backend/**/*'),
-            ('remove', 'pos_glory_cash/static/src/app/screens/**/*'),
-        ],
         'point_of_sale._assets_pos': [
             'pos_glory_cash/static/src/**/*',
-            ('remove', 'pos_glory_cash/static/src/backend/**/*'),
-        ],
-        'web.assets_unit_tests': [
-            'pos_glory_cash/static/tests/**/*',
-            'pos_glory_cash/static/src/utils/*.js',
         ],
     },
     'author': 'Odoo S.A.',
