@@ -180,6 +180,9 @@ export class SearchBarMenu extends Component {
      */
     validateField(fieldName, field) {
         const { groupable, type } = field;
+        if (this.env.searchModel.hideDateSearchItems && ["date", "datetime"].includes(type)) {
+            return false;
+        }
         return groupable && fieldName !== "id" && GROUPABLE_TYPES.includes(type);
     }
 

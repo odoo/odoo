@@ -30,6 +30,7 @@ import {
     defineActions,
     defineModels,
     defineWebModels,
+    editFavoriteName,
     editSearch,
     fields,
     getFacetTexts,
@@ -41,11 +42,13 @@ import {
     onRpc,
     patchWithCleanup,
     removeFacet,
+    saveFavorite,
     selectGroup,
     serverState,
     switchView,
     toggleMenuItem,
     toggleMenuItemOption,
+    toggleSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
@@ -2258,6 +2261,119 @@ test("navigation: a fixed range stays fixed and a variable period stays variable
     const variableSearchBar = await mountRestored(variableState);
     expect(variableSearchBar.env.searchModel.facets.map((f) => f.values)).toEqual([
         ["Birthday: April"],
+    ]);
+});
+
+test.tags("desktop");
+test("date filters and group bys are hidden in views hiding date search items", async () => {
+    mockDate("2017-03-22T01:00:00");
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter", "groupBy"],
+        searchViewArch: `
+            <search>
+                <filter string="Yop" name="yop" domain="[('foo', '=', 'yop')]"/>
+                <filter string="Birthday" name="date_filter" date="birthday"/>
+                <filter string="Birth Day" name="date_group_by" context="{'group_by': 'birthday:day'}"/>
+            </search>
+        `,
+        context: {
+            search_default_yop: 1,
+            search_default_date_filter: 1,
+            search_default_date_group_by: 1,
+        },
+        hideDateSearchItems: true,
+    });
+    expect(getFacetTexts()).toEqual(["Yop"]);
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "=", "yop"]]);
+    expect(searchBar.env.searchModel.groupBy).toEqual([]);
+
+    await toggleSearchBarMenu();
+    expect(queryAllTexts`.o_filter_menu .o_menu_item`).not.toInclude("Birthday");
+    expect(queryAllTexts`.o_group_by_menu .o_menu_item`).not.toInclude("Birth Day");
+    expect(queryAllTexts`.o_add_custom_group_menu option:not([disabled])`).not.toInclude(
+        "Birthday"
+    );
+
+    await removeFacet("Yop");
+    expect(getFacetTexts()).toEqual([]);
+
+    const restoredSearchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter", "groupBy"],
+        searchViewArch: `<search/>`,
+        globalState: { searchModel: JSON.stringify(searchBar.env.searchModel.exportState()) },
+    });
+    expect(restoredSearchBar.env.searchModel.facets.map((f) => f.values)).toEqual([
+        ["Birthday: March 2017"],
+        ["Birth Day: Day"],
+    ]);
+    expect(restoredSearchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["birthday", ">=", "2017-03-01"],
+        ["birthday", "<=", "2017-03-31"],
+    ]);
+    expect(restoredSearchBar.env.searchModel.groupBy).toEqual(["birthday:day"]);
+});
+
+test.tags("desktop");
+test("hidden date search items are kept when favorites replace the query", async () => {
+    mockDate("2017-03-22T01:00:00");
+    onRpc("create_filter", ({ args }) => {
+        expect.step(args[0].domain);
+        return [7];
+    });
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter", "favorite"],
+        searchViewArch: `
+            <search>
+                <filter string="Yop" name="yop" domain="[('foo', '=', 'yop')]"/>
+                <filter string="Birthday" name="date_filter" date="birthday"/>
+            </search>
+        `,
+        irFilters: [
+            {
+                context: "{}",
+                domain: "[('bar', '=', True)]",
+                id: 1,
+                is_default: false,
+                name: "My favorite",
+                sort: "[]",
+                user_ids: [2],
+            },
+        ],
+        context: { search_default_yop: 1, search_default_date_filter: 1 },
+        hideDateSearchItems: true,
+    });
+    expect(getFacetTexts()).toEqual(["Yop"]);
+
+    await toggleSearchBarMenu();
+    await toggleSaveFavorite();
+    await editFavoriteName("Saved");
+    await saveFavorite();
+    expect.verifySteps([`[("foo", "=", "yop")]`]);
+    expect(getFacetTexts()).toEqual(["Saved"]);
+
+    await toggleMenuItem("My favorite");
+    expect(getFacetTexts()).toEqual(["My favorite"]);
+
+    searchBar.env.searchModel.clearQuery();
+    await animationFrame();
+    expect(getFacetTexts()).toEqual([]);
+
+    const restoredSearchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `<search/>`,
+        globalState: { searchModel: JSON.stringify(searchBar.env.searchModel.exportState()) },
+    });
+    expect(restoredSearchBar.env.searchModel.facets.map((f) => f.values)).toEqual([
+        ["Birthday: March 2017"],
     ]);
 });
 
