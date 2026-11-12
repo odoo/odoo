@@ -17,6 +17,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
+import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { useLayoutEffect } from "@web/owl2/utils";
@@ -111,6 +112,7 @@ export class Dropdown extends Component {
 
     setup() {
         this.state = this.props.state || useDropdownState();
+        this.menuId = uniqueId("o-dropdown-menu-");
         this.nesting = useDropdownNesting(this.state);
         this.group = useDropdownGroup(this.state);
 
@@ -283,6 +285,9 @@ export class Dropdown extends Component {
         }
 
         target.ariaExpanded = false;
+        if (!target.hasAttribute("aria-haspopup")) {
+            target.ariaHasPopup = "menu";
+        }
         const optionalClasses = [];
         const requiredClasses = [];
         optionalClasses.push("o-dropdown");
@@ -385,6 +390,8 @@ export class Dropdown extends Component {
 
         const menuEl = this.menuRef();
         if (menuEl) {
+            menuEl.id ||= this.menuId;
+            this.target?.setAttribute("aria-controls", menuEl.id);
             this.observer = new MutationObserver(() => this.navigation.update());
             this.observer.observe(menuEl, {
                 childList: true,
@@ -401,6 +408,7 @@ export class Dropdown extends Component {
 
         if (this.target) {
             this.target.ariaExpanded = false;
+            this.target.removeAttribute("aria-controls");
             this.target.classList.remove("show");
             this.setTargetDirectionClass(this.defaultDirection);
         }
