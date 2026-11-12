@@ -1918,6 +1918,7 @@ class SaleOrder(models.Model):
             "fiscal_position_id",
             "invoice_incoterm_id",
             "incoterm_location",
+            "document_tax_mode",
         ]
 
     def _nothing_to_invoice_error_message(self):
