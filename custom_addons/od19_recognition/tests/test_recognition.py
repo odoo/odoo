@@ -2,6 +2,8 @@ from odoo import Command, http
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, TransactionCase, tagged
 
+from odoo.addons.od19_recognition.controllers.portal import RECOGNITION_SUMMARY_CACHE
+
 
 @tagged("post_install", "-at_install")
 class TestRecognitionRules(TransactionCase):
@@ -205,6 +207,11 @@ class TestRecognitionRules(TransactionCase):
 class TestRecognitionPortal(HttpCase):
     def setUp(self):
         super().setUp()
+        RECOGNITION_SUMMARY_CACHE.clear()
+        self.company_b = self.env["res.company"].create({"name": "Kudos Company B"})
+        self.emp_company_b = self.env["hr.employee"].create(
+            {"name": "Other Company Employee", "company_id": self.company_b.id}
+        )
         self.giver = self.env["res.users"].create(
             {
                 "name": "Feed Giver",
@@ -262,3 +269,52 @@ class TestRecognitionPortal(HttpCase):
         )
         self.assertTrue(created)
         self.assertEqual(created.author_id, self.emp_giver)
+
+    def test_give_rejects_cross_company_recipient(self):
+        self.authenticate("feed_giver", "feed_giver")
+        response = self.url_open(
+            "/my/recognition/give",
+            data={
+                "recipient_id": self.emp_company_b.id,
+                "message": "Cross-company attempt",
+                "csrf_token": http.Request.csrf_token(self),
+            },
+            allow_redirects=False,
+        )
+        self.assertEqual(response.status_code, 303)
+        created = self.env["od19.recognition"].search(
+            [("recipient_id", "=", self.emp_company_b.id)]
+        )
+        self.assertFalse(created)
+
+    def test_give_missing_recipient_no_server_error(self):
+        self.authenticate("feed_giver", "feed_giver")
+        response = self.url_open(
+            "/my/recognition/give",
+            data={
+                "recipient_id": 999999,
+                "message": "Ghost recipient",
+                "csrf_token": http.Request.csrf_token(self),
+            },
+            allow_redirects=False,
+        )
+        self.assertNotEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 303)
+        created = self.env["od19.recognition"].search([("recipient_id", "=", 999999)])
+        self.assertFalse(created)
+
+    def test_feed_excludes_other_company_kudos(self):
+        cross = self.env["od19.recognition"].create(
+            {
+                "author_id": self.emp_giver.id,
+                "recipient_id": self.emp_company_b.id,
+                "message": "Other company shout-out",
+                "company_id": self.company_b.id,
+                "is_public": True,
+            }
+        )
+        self.authenticate("feed_giver", "feed_giver")
+        response = self.url_open("/my/recognition/summary")
+        self.assertEqual(response.status_code, 200)
+        feed_ids = [item["id"] for item in response.json()["feed"]]
+        self.assertNotIn(cross.id, feed_ids)

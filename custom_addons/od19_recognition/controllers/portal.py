@@ -60,11 +60,33 @@ class Od19RecognitionPortal(http.Controller):
             raise ValueError("Recipient is required.")
         if not text:
             raise ValueError("Message is required.")
+        # ``sudo()`` bypasses ir.rule, so scope the recipient to the current
+        # companies ourselves and reject ids that do not resolve to an employee.
+        recipient_record = (
+            request.env["hr.employee"]
+            .sudo()
+            .search(
+                [
+                    ("id", "=", recipient),
+                    ("company_id", "in", request.env.companies.ids),
+                ],
+                limit=1,
+            )
+        )
+        if not recipient_record:
+            raise ValueError("Recipient not found.")
+        badge_record = False
+        if badge:
+            badge_record = (
+                request.env["od19.recognition.badge"]
+                .sudo()
+                .search([("id", "=", badge)], limit=1)
+            )
         request.env["od19.recognition"].sudo().create(
             {
                 "author_id": employee.id,
-                "recipient_id": recipient,
-                "badge_id": badge,
+                "recipient_id": recipient_record.id,
+                "badge_id": badge_record.id if badge_record else False,
                 "message": text,
                 "company_id": request.env.company.id,
                 "is_public": True,
@@ -103,7 +125,13 @@ class Od19RecognitionPortal(http.Controller):
             "celebrations": self._od19_celebrations(),
             "employees": request.env["hr.employee"]
             .sudo()
-            .search([("user_id", "!=", False)], order="name"),
+            .search(
+                [
+                    ("user_id", "!=", False),
+                    ("company_id", "in", request.env.companies.ids),
+                ],
+                order="name",
+            ),
             "badges": request.env["od19.recognition.badge"].sudo().search([]),
             "datetime": datetime,
         }
@@ -112,7 +140,14 @@ class Od19RecognitionPortal(http.Controller):
         records = (
             request.env["od19.recognition"]
             .sudo()
-            .search([("is_public", "=", True)], order="published_date desc, id desc", limit=limit)
+            .search(
+                [
+                    ("is_public", "=", True),
+                    ("company_id", "in", request.env.companies.ids),
+                ],
+                order="published_date desc, id desc",
+                limit=limit,
+            )
         )
         return [
             {
