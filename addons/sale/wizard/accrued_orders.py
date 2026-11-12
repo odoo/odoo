@@ -15,7 +15,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         Negative: invoiced more than delivered ("Invoiced Not Delivered").
         """
         qty_to_invoice = order_line.qty_delivered_at_date - order_line.qty_invoiced_at_date
-        price_unit = order_line.price_unit
+        price_unit = order_line.price_unit * (1 - order_line.discount / 100)
         if qty_to_invoice > 0:
             amount_currency = order_line.amount_to_invoice_at_date
             amount = order_line.order_id.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
