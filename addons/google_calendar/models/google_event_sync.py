@@ -64,8 +64,13 @@ class GoogleEventSync(models.AbstractModel):
                         record._google_values(),
                         timeout=3
                     )
-                elif vals.get('is_draft') is False:
-                    record.with_user(record._get_event_owner())._google_insert(google_service, record._google_values(), timeout=3)
+                elif vals.get('is_draft') is False and record._should_be_synced():
+                    record.with_user(record._get_event_owner())._google_insert(
+                        google_service,
+                        record._get_google_calendar_path(),
+                        record._google_values(),
+                        timeout=3,
+                    )
 
         return result
 
@@ -164,7 +169,8 @@ class GoogleEventSync(models.AbstractModel):
         cancelled_records = self - records_to_sync
 
         updated_records = records_to_sync.filtered('google_id')
-        new_records = records_to_sync - updated_records
+        # draft events are inserted once confirmed
+        new_records = (records_to_sync - updated_records).filtered(lambda record: not record._is_draft())
         for record in cancelled_records:
             if record.google_id and record.need_sync:
                 record.with_user(record._get_event_user())._google_delete(google_service, record._get_google_calendar_path(), record.google_id)

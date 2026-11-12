@@ -464,6 +464,9 @@ class CalendarEvent(models.Model):
 
     def _should_be_synced(self):
         self.ensure_one()
+        # draft events (attendees not invited yet) are only synced once confirmed
+        if self._is_draft() and not self.google_id:
+            return False
         if self.calendar_id:
             # Only sync if the current user or the calendar owner has sync enabled
             user_calendar_sync_enabled = self.calendar_id.has_access('read') and self.calendar_id.calendar_user_id.google_sync_enabled
