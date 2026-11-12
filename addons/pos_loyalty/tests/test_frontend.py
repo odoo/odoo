@@ -3555,3 +3555,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosLoyaltyPartnerListAfterCouponRemoval')
+
+    def test_delete_order_with_actions_popup_open(self):
+        """The Actions popup must not render while the deleted order is not
+        replaced yet.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosLoyaltyDeleteOrderActionsPopup')
