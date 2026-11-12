@@ -229,10 +229,16 @@ export const textHighlightFactory = {
  * @param {String} highlightID
  */
 export function makeHighlightSvgs(highlightEl, highlightID) {
+    return withoutAnimationTransforms(highlightEl, () =>
+        makeUntransformedHighlightSvgs(highlightEl, highlightID)
+    );
+}
+
+function makeUntransformedHighlightSvgs(highlightEl, highlightID) {
     const style = window.getComputedStyle(highlightEl);
     if (!style.getPropertyValue("--text-highlight-width")) {
         // The default value for `--text-highlight-width` is 0.1em.
-        highlightEl.style.setProperty(
+        (highlightEl.closest(".o_text_highlight") || highlightEl).style.setProperty(
             "--text-highlight-width",
             `${Math.round(parseFloat(style.fontSize) * 0.1)}px`
         );
@@ -252,10 +258,10 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const numberOfCharPerWidth = memoize((width) => Math.round(width / sizePerChar()));
 
     const containerRect = highlightEl.getBoundingClientRect();
-    // Note: We cannot use `getClientRects()` as we want to be able to draw
-    // text highlights in the snippet/page dialogs where iframe is scaled.
     const inPreviewIframe =
         highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
+    // offsetWidth is unscaled; containerRect.width includes the preview scale.
+    // Their ratio converts viewport measurements to local SVG coordinates.
     const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
     const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
     const firstRect = highlightEl.getClientRects()[0];
@@ -280,11 +286,23 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     }
     return svgs;
 }
+/**
+ * Keep a fully highlighted phrase inside its text animation.
+ */
+export function getTextHighlightContainer(highlightEl) {
+    return (
+        [...highlightEl.querySelectorAll(".o_animated_text")].findLast(
+            (el) => el.textContent.trim() === highlightEl.textContent.trim()
+        ) || highlightEl
+    );
+}
+
 export function applyTextHighlight(highlightEl, highlightID) {
-    const svgs = makeHighlightSvgs(highlightEl, highlightID);
+    const container = getTextHighlightContainer(highlightEl);
+    const svgs = makeHighlightSvgs(container, highlightID);
     for (const svg of svgs.toReversed()) {
-        highlightEl.insertAdjacentElement("afterbegin", svg);
-        adaptHighlightPosition(highlightEl, svg);
+        container.insertAdjacentElement("afterbegin", svg);
+        adaptHighlightPosition(container, svg);
     }
 }
 
@@ -298,8 +316,12 @@ export function adaptHighlightPosition(highlightEl, svg) {
     // Reposition element in RTL to what was intended because
     // safari positionning work differently than other browsers
     if ("rtlIntendedRightPosition" in svg.dataset) {
-        const rightPositionDelta = svg.getBoundingClientRect().right - parseFloat(svg.dataset.rtlIntendedRightPosition);
-        svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
+        withoutAnimationTransforms(highlightEl, () => {
+            const rightPositionDelta =
+                svg.getBoundingClientRect().right -
+                parseFloat(svg.dataset.rtlIntendedRightPosition);
+            svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
+        });
     }
 }
 
@@ -497,4 +519,26 @@ export function closestToObserve(el, topEl = el.ownerDocument.body) {
 export function getObservedEls(el) {
     const closestToObserveEl = closestToObserve(el);
     return closestToObserveEl ? [closestToObserveEl, el] : [el];
+}
+
+/**
+ * Measure layout without animation transforms, preserving inline styles and
+ * animation timing. Restore the transforms before the browser paints.
+ */
+function withoutAnimationTransforms(el, callback) {
+    const selector = ".o_animate.o_animating, .o_animate.o_animate_in_dropdown";
+    if (!el.closest(selector) && !el.querySelector(selector)) {
+        return callback();
+    }
+    const wrapper = el.closest("#wrapwrap") || el.ownerDocument.body;
+    const className = "o_wanim_no_transform";
+    if (wrapper.classList.contains(className)) {
+        return callback();
+    }
+    wrapper.classList.add(className);
+    try {
+        return callback();
+    } finally {
+        wrapper.classList.remove(className);
+    }
 }
