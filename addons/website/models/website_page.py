@@ -206,7 +206,10 @@ class WebsitePage(models.Model):
 
         # write on page == write on view
         # the view will invalidate the 'templates' cache
+        # except for `is_published`, which is stored on the page
         res = super().write(vals)
+        if 'is_published' in vals:
+            self.env.registry.clear_cache('templates')
 
         if url_in_vals:
             for page in self:
