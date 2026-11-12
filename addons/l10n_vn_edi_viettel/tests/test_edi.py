@@ -229,6 +229,13 @@ class TestVNEDI(AccountTestInvoicingCommon):
         )
 
     @freeze_time('2024-01-01')
+    def test_json_data_company_without_email(self):
+        """ SInvoice rejects False as seller email, even though the email is optional. """
+        self.env.company.email = False
+        invoice = self.init_invoice('out_invoice', products=self.product_a, taxes=self.tax_sale_a, post=True)
+        self.assertEqual(invoice._l10n_vn_edi_generate_invoice_json()['sellerInfo']['sellerEmail'], '')
+
+    @freeze_time('2024-01-01')
     def test_adjustment_invoice(self):
         """
         Create an invoice, then create an adjustment invoice from it. Ensure that when generating the data dict,
