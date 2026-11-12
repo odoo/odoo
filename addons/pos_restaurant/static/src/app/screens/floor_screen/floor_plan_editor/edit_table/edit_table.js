@@ -32,7 +32,7 @@ export class EditTableProperties extends Component {
 
     incrNumberOfSeats(value) {
         const newNumber = this.table.seats + value;
-        if (newNumber >= 0) {
+        if (newNumber >= 1) {
             this.updateTable({ seats: newNumber });
         }
     }
