@@ -15,6 +15,9 @@ class WebsiteHrRecruitmentPageOption extends Plugin {
     static id = "websiteHrRecruitmentPageOption";
     resources = {
         builder_options: [JobsPageOption],
+        // The job description's ratings use the same color for active and
+        // inactive icons: only the hollow glyph tells them apart.
+        hollow_rating_selectors: ".s_rating:has(.s_rating_inactive_icons.text-primary)",
     };
 }
 

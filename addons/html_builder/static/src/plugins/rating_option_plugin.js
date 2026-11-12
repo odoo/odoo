@@ -3,6 +3,11 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef {CSSSelector[]} hollow_rating_selectors
+ */
+
 export class RatingOption extends BaseOptionComponent {
     static template = "html_builder.RatingOption";
     static selector = ".s_rating";
@@ -29,7 +34,10 @@ export class SetIconsAction extends BuilderAction {
     static id = "setIcons";
     apply({ editingElement, params: { mainParam: iconParam } }) {
         editingElement.dataset.icon = iconParam;
-        renderIcons(editingElement);
+        renderIcons(
+            editingElement,
+            isHollowRating(editingElement, this.getResource("hollow_rating_selectors"))
+        );
         delete editingElement.dataset.activeCustomIcon;
         delete editingElement.dataset.inactiveCustomIcon;
     }
@@ -89,6 +97,7 @@ export class ActiveIconsNumberAction extends BuilderAction {
             editingElement: editingElement,
             nbActiveIcons: nbActiveIcons,
             nbTotalIcons: nbTotalIcons,
+            isHollow: isHollowRating(editingElement, this.getResource("hollow_rating_selectors")),
         });
     }
     getValue({ editingElement }) {
@@ -104,6 +113,7 @@ export class TotalIconsNumberAction extends BuilderAction {
             editingElement: editingElement,
             nbActiveIcons: nbActiveIcons,
             nbTotalIcons: nbTotalIcons,
+            isHollow: isHollowRating(editingElement, this.getResource("hollow_rating_selectors")),
         });
     }
     getValue({ editingElement }) {
@@ -113,7 +123,18 @@ export class TotalIconsNumberAction extends BuilderAction {
 
 registry.category("builder-plugins").add(RatingOptionPlugin.id, RatingOptionPlugin);
 
-function createIcons({ editingElement, nbActiveIcons, nbTotalIcons }) {
+/**
+ * Whether the rating's inactive icons are hollow by design (they are filled
+ * otherwise, like in most snippets).
+ *
+ * @param {HTMLElement} ratingEl
+ * @param {CSSSelector[]} hollowRatingSelectors
+ */
+function isHollowRating(ratingEl, hollowRatingSelectors) {
+    const selector = hollowRatingSelectors.join(", ");
+    return !!selector && ratingEl.matches(selector);
+}
+function createIcons({ editingElement, nbActiveIcons, nbTotalIcons, isHollow = false }) {
     const activeIconEl = editingElement.querySelector(".s_rating_active_icons");
     const inactiveIconEl = editingElement.querySelector(".s_rating_inactive_icons");
     const iconEls = getAllIcons(editingElement);
@@ -123,7 +144,7 @@ function createIcons({ editingElement, nbActiveIcons, nbTotalIcons }) {
         targetEl.appendChild(document.createElement("i"));
         targetEl.appendChild(document.createTextNode(" "));
     }
-    renderIcons(editingElement);
+    renderIcons(editingElement, isHollow);
 }
 function getActiveCustomIcons(editingElement) {
     return editingElement.dataset.activeCustomIcon || "";
@@ -143,9 +164,9 @@ function getInactiveCustomIcons(editingElement) {
 function getInactiveIcons(editingElement) {
     return editingElement.querySelectorAll(".s_rating_inactive_icons  > i");
 }
-function renderIcons(editingElement) {
+function renderIcons(editingElement, isHollow = false) {
     const iconType = getIconType(editingElement);
-    const icons = {
+    const hollowIcons = {
         "fa-star": "fa-star-o",
         "fa-thumbs-up": "fa-thumbs-o-up",
         "fa-circle": "fa-circle-o",
@@ -155,7 +176,9 @@ function renderIcons(editingElement) {
     const faClassActiveIcons =
         iconType === "custom" ? getActiveCustomIcons(editingElement) : "fa " + iconType;
     const faClassInactiveIcons =
-        iconType === "custom" ? getInactiveCustomIcons(editingElement) : "fa " + icons[iconType];
+        iconType === "custom"
+            ? getInactiveCustomIcons(editingElement)
+            : "fa " + (isHollow ? hollowIcons[iconType] : iconType);
     const activeIconEls = getActiveIcons(editingElement);
     const inactiveIconEls = getInactiveIcons(editingElement);
     activeIconEls.forEach((activeIconEl) => (activeIconEl.className = faClassActiveIcons));

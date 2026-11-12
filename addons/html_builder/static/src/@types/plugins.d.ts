@@ -32,6 +32,7 @@ declare module "plugins" {
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style } from "@html_builder/core/core_builder_action_plugin";
+    import { hollow_rating_selectors } from "@html_builder/plugins/rating_option_plugin";
 
     interface SharedMethods {
         // Main
@@ -139,6 +140,7 @@ declare module "plugins" {
         fontCssVariables: fontCssVariables;
         get_overlay_buttons: get_overlay_buttons;
         has_overlay_options: has_overlay_options;
+        hollow_rating_selectors: hollow_rating_selectors;
         is_movable_selector: is_movable_selector;
         is_unremovable_selector: is_unremovable_selector;
         lower_panel_entries: lower_panel_entries;
