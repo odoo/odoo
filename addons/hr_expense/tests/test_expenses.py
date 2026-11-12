@@ -1362,6 +1362,44 @@ class TestExpenses(TestExpenseCommon):
         (bank_line_to_reconcile + payment_line_to_reconcile).reconcile()
         self.assertEqual(expense.state, 'paid')
 
+    def test_expense_paid_by_employee_with_linked_bill_reset_and_refuse(self):
+        """ Resetting or refusing an approved expense paid by the employee whose bill is sent separately must cancel its
+        debt transfer entry, else the vendor and the employee keep an open balance and approving it again doubles it
+        """
+        vendor = self.env['res.partner'].create({'name': 'test partner'})
+        employee_partner = self.expense_employee.user_id.partner_id
+        expense_to_reset, expense_to_refuse = [self.create_expenses({
+            'name': name,
+            'payment_mode': 'own_account',
+            'total_amount_currency': amount,
+            'has_existing_bill': True,
+            'vendor_id': vendor.id,
+        }) for name, amount in (('Expense to reset', 100.0), ('Expense to refuse', 200.0))]
+        expenses = expense_to_reset + expense_to_refuse
+        expenses.action_submit()
+        expenses.action_approve()
+        self.assertRecordValues(expenses, [{'state': 'approved'}] * 2)
+
+        expense_to_reset.action_reset()
+        expense_to_refuse._do_refuse('Wrong expense')
+        self.assertRecordValues(expenses, [{'state': 'draft'}, {'state': 'refused'}])
+
+        def get_payable_balance(partner):
+            return sum(self.env['account.move.line'].search([
+                ('partner_id', '=', partner.id),
+                ('account_id.account_type', '=', 'liability_payable'),
+                ('parent_state', '=', 'posted'),
+            ]).mapped('balance'))
+
+        self.assertEqual(get_payable_balance(vendor), 0.0, "The vendor should have no outstanding debit left")
+        self.assertEqual(get_payable_balance(employee_partner), 0.0, "Nothing should be owed to the employee anymore")
+
+        # Approving the expense again only transfers its debt once
+        expense_to_reset.action_submit()
+        expense_to_reset.action_approve()
+        self.assertEqual(get_payable_balance(vendor), 100.0)
+        self.assertEqual(get_payable_balance(employee_partner), -100.0, "The expense is owed to the employee until its payment is posted")
+
     def test_expense_team_approver_refuse_mixed_selection(self):
         """
         - Set up a team approver and a subordinate, creating one submitted expense for each.
