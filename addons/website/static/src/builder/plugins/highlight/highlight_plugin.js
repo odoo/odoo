@@ -293,7 +293,7 @@ class HighlightToolbarButton extends Component {
         getSelection: t.function(),
     });
     static template = xml`
-        <button t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title" t-att-aria-label="this.props.title"
+        <button type="button" t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title" t-att-aria-label="this.props.title"
                 aria-haspopup="dialog" t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'">
             <i class="oi oi-fw py-1" data-icon="stylus_laser_pointer" role="img" aria-hidden="true"/>
         </button>

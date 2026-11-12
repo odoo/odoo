@@ -2905,7 +2905,8 @@ function expectConsistentAriaStates(editor) {
  * - it contains the button's visible text, if any,
  * - the button's icons are hidden from screen readers.
  * Every iframe of the toolbar (e.g. the font size input) must also have a
- * `title`, which names the input it contains.
+ * `title`, which names the input it contains, and every button of the
+ * toolbar and of its open dropdowns must have the `button` type.
  */
 function expectAccessibleLabels() {
     const buttons = queryAll(".o-we-toolbar .btn");
@@ -2927,6 +2928,11 @@ function expectAccessibleLabels() {
                 message: `"${label}" icon should be hidden from screen readers`,
             });
         }
+    }
+    for (const el of queryAll(".o-we-toolbar button, .o-we-toolbar-dropdown button")) {
+        expect(el).toHaveAttribute("type", "button", {
+            message: `"${el.getAttribute("name") || el.className}" should have the button type`,
+        });
     }
     for (const iframe of queryAll(".o-we-toolbar iframe")) {
         const label = iframe.className;
