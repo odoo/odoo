@@ -2471,3 +2471,31 @@ class TestPosAccounting(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(UserError, "A customer is required on the order to create an invoice."):
             order.action_pos_order_invoice()
+
+    def test_receipt_email_does_not_attach_closing_entry(self):
+        """ After the session closing, the account_move of an order that was not invoiced is the
+        closing entry of the session: it must not be sent to the customer as its invoice. """
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+            extra_data={'partner_id': self.partner_1.id},
+        )
+        invoiced_order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+            extra_data={'partner_id': self.partner_2.id, 'to_invoice': True},
+        )
+        session = self.close_session()
+        self.assertEqual(order.account_move, session.sale_move_ids)
+
+        with patch.object(self.env.registry['pos.order'], 'order_receipt_generate_image', return_value=b'Receipt'):
+            for pos_order in (order, invoiced_order):
+                pos_order.action_send_receipt('customer@example.com')
+
+        def sent_attachments(pos_order):
+            mail = self.env['mail.mail'].search([('model', '=', 'pos.order'), ('res_id', '=', pos_order.id)])
+            return mail.attachment_ids.mapped('mimetype')
+
+        self.assertEqual(sent_attachments(order), ['image/jpeg'])
+        self.assertEqual(sorted(sent_attachments(invoiced_order)), ['application/pdf', 'image/jpeg'])
