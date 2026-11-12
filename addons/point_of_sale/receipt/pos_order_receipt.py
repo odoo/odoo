@@ -144,7 +144,8 @@ class PosOrderReceipt(models.AbstractModel):
             product_data = product_by_id[data['product_id']]
             data['product_data'] = {**product_data, 'display_name': line.full_product_name or product_data['display_name']}
             data['product_uom_name'] = line.product_id.uom_id.name
-            display_price = data['price_subtotal_incl'] if display_price_incl else data['price_subtotal']
+            field = 'price_subtotal_incl' if display_price_incl else 'price_subtotal'
+            display_price = sum((line | line.combo_line_ids).mapped(field))
             data['price_subtotal_incl'] = self._order_receipt_format_currency(display_price)
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
 
