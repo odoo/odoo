@@ -110,13 +110,15 @@
 <!-- Slide: sidebar training mode -->
 <template id="slide_aside_training" name="Slide: Sidebar in Training">
     <div class="o_wslides_lesson_aside_list position-relative bg-white border-bottom mt-4">
-        <div class="bg-100 text-1000 h6 my-0 text-decoration-none border-bottom d-flex align-items-center justify-content-between">
+        <button data-bs-target="#collapse_slide_aside" data-bs-toggle="collapse"
+                class="o_btn_reset collapsed w-100 bg-100 text-1000 h6 my-0 border-bottom d-flex align-items-center justify-content-between"
+                t-attf-aria-label="Show / Hide course content"
+                aria-controls="collapse_slide_aside" aria-expanded="false">
             <span class="p-2">Course content</span>
-            <a href="#collapse_slide_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wslides_lesson_aside_collapse"
-                t-attf-aria-label="Show / Hide course content">
+            <div class="d-lg-none p-2 o_wslides_lesson_aside_collapse">
                 <i class="oi d-lg-none" data-icon="keyboard_arrow_down" role="img" aria-hidden="true"/>
-            </a>
-        </div>
+            </div>
+        </button>
         <ul id="collapse_slide_aside" class="list-unstyled my-0 pb-3 collapse d-lg-block">
             <t t-set="i" t-value="0"/>
             <t t-if="category.get('slides')" t-foreach="category_data" t-as="category">
@@ -131,9 +133,9 @@
     <t t-set="category_collapsed" t-value="category and category.get('is_collapsed')"/>
     <t t-if="category" t-set="category" t-value="category.get('category')"/>
     <li class="o_wslides_fs_sidebar_section mt-2">
-        <a t-attf-href="#collapse-#{category.id if category else 0}" t-attf-id="category-collapse-#{category.id if category else 0}"
-            data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
-            class="o_wslides_lesson_aside_list_link ps-2 text-600 text-uppercase text-decoration-none p-1 small d-flex"
+        <button t-attf-data-bs-target="#collapse-#{category.id if category else 0}" t-attf-id="category-collapse-#{category.id if category else 0}"
+            data-bs-toggle="collapse" type="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
+            class="o_wslides_lesson_aside_list_link o_btn_reset w-100 ps-2 text-600 text-uppercase text-decoration-none p-1 small d-flex"
             t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
             <t t-if="category">
                 <b t-field="category.name"/>
@@ -144,7 +146,7 @@
             <div class="flex-grow-1"/>
             <i class="oi oi-fw" data-icon="arrow_left" role="img" aria-hidden="true"/>
             <i class="oi oi-fw" data-icon="arrow_drop_down" role="img" aria-hidden="true"/>
-        </a>
+        </button>
         <ul t-attf-class="collapse #{'show' if category_collapsed else ''} p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
             <t t-set="is_member" t-value="slide.channel_id.is_member"/>
             <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
