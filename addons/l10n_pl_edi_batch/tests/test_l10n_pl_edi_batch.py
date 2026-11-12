@@ -738,13 +738,11 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         now = fields.Datetime.now().replace(microsecond=0)
         requested_batch = self._create_batch('requested')
         requested_batch.retry_count = 9
-        triggers_before = self._search_triggers_by_cron('check_status')
 
-        # After the last quick retry, the count starts again, and the next run asks again
+        # Still 100 after the last retry: the batch fails
         with freeze_time(now), self._mock_ksef({'status': {'code': 100}}):
             self.Batch._cron_check_status()
-        self.assertRecordValues(requested_batch, [{'state': 'requested', 'retry_count': 0}])
-        self.assertEqual(self._search_triggers_by_cron('check_status'), triggers_before)
+        self.assertRecordValues(requested_batch, [{'state': 'failed', 'retry_count': 10}])
 
     def test_cron_check_status_ksef_error(self):
         now = fields.Datetime.now().replace(microsecond=0)

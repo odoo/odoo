@@ -328,7 +328,7 @@ class BatchDownload(models.Model):
     def _cron_check_status(self):
         """ Ask KSeF for the status of the latest requested batch of each company.
             Still 100: count a retry, and check again after 10 * 2**retry_count seconds;
-            after the last retry, reset the count, and the next run asks again.
+            after the last retry, the batch fails.
         """
 
         def check_status(company):
@@ -351,11 +351,9 @@ class BatchDownload(models.Model):
                     # empty window: request the next one
                     self._trigger_delayed(CRON_REQUEST_HISTORIC, HISTORIC_REQUEST_DELAY)
                 elif batch.state == 'requested':
-                    if batch.retry_count < MAX_RETRIES:
+                    if batch.retry_count <= MAX_RETRIES:
                         batch.retry_count += 1
                         self._trigger_delayed(CRON_CHECK_STATUS, delay=exp_backoff_delay(batch.retry_count))
-                    else:
-                        batch.retry_count = 0  # stop the quick retries, the next run asks again
                 elif batch.state == 'failed' and batch.kind == 'historic':
                     # request the same window again
                     self._trigger_delayed(CRON_REQUEST_HISTORIC, HISTORIC_REQUEST_DELAY)
