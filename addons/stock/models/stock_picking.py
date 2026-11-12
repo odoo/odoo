@@ -809,7 +809,7 @@ class StockPicking(models.Model):
         # run scheduler for moves forecasted to not have enough in stock
         self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
 
-        if self.env.user.has_group('stock.group_stock_picking_batch'):
+        if self._is_batch_feature_enabled():
             for picking in self:
                 picking._find_auto_batch()
         return True
@@ -1111,7 +1111,7 @@ class StockPicking(models.Model):
 
     def _is_single_transfer(self):
         # Overriden for batches.
-        if self.env.user.has_group('stock.group_stock_picking_batch'):
+        if self._is_batch_feature_enabled():
             return len(self) == 1 or len(self.batch_id) == 1
         return len(self) == 1
 
@@ -1259,7 +1259,7 @@ class StockPicking(models.Model):
                 to_assign_ids.update(picking.backorder_ids.ids)
 
             # If batch setting is enabled, auto-batch done pickings' backorders.
-            if self.env.user.has_group('stock.group_stock_picking_batch'):
+            if self._is_batch_feature_enabled():
                 # To avoid inconsistencies, all incorrect pickings must be removed before assigning backorder pickings
                 assignable_pickings = self.env['stock.picking'].browse(to_assign_ids)
                 for picking in assignable_pickings:
@@ -2079,6 +2079,15 @@ class StockPicking(models.Model):
         if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
             description_items.append(self.location_dest_id.display_name)
         return ', '.join(description_items)
+
+    @api.model
+    def _is_batch_feature_enabled(self):
+        """ Whether the batch/wave feature is enabled. Transfers can be created
+        or reserved on behalf of users who never get the setting's group (e.g.
+        portal or public users confirming an order), so don't only rely on the
+        current user. """
+        return self.env.user.has_group('stock.group_stock_picking_batch') or\
+            self.env['res.groups']._is_feature_enabled('stock.group_stock_picking_batch')
 
     def _find_auto_batch(self):
         self.ensure_one()
