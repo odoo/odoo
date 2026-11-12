@@ -72,6 +72,7 @@ class IrCache(models.Model):
 
     _kind_key_idx = models.UniqueIndex('(kind, key, id DESC)')
 
+    @api.private
     def browse(self, ids=()):
         if not ids:
             return super().browse()
@@ -170,9 +171,9 @@ class IrCache(models.Model):
         :param str kind: the type of the entry, e.g. ``'qweb'``
         :param str key: the key of the entry
         :param value: the bytes to store, e.g. code objects dumped with
-            :mod:`marshal`
+            ``marshal``
         :param control: the data identifying the source of the entry, any
-            value supported by :mod:`json`, e.g. view ids; the expression
+            value supported by ``json``, e.g. view ids; the expression
             ``hash`` computes the hash from it, so it requires ``hash`` as
             ``SQL``
         :param hash: either the SQL expression computing the hash of the

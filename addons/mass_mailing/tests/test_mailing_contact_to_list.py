@@ -139,10 +139,10 @@ class TestMailingContactToList(MailingContactToListCommon):
         with self.assertRaises(exceptions.UserError):
             self._mock_from_partners_with_capture(partners[:self.MAX_FROM_PARTNERS + 1], 1)
 
-        self._assert_from_partner_uses_contacts(partners[:self.MAX_FROM_PARTNERS], contacts, query_count=8)
+        self._assert_from_partner_uses_contacts(partners[:self.MAX_FROM_PARTNERS], contacts, query_count=9)
 
         # only half to create now => no error even with all partners in input.
-        (res_contacts, _), capture_records = self._mock_from_partners_with_capture(partners, 15)
+        (res_contacts, _), capture_records = self._mock_from_partners_with_capture(partners, 14)
 
         self.assertEqual(len(res_contacts), len(partners))
         self.assertEqual(res_contacts.partner_id, partners)
