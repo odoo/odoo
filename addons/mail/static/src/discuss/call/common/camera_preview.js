@@ -4,6 +4,7 @@ import {
     Component,
     onMounted,
     onWillDestroy,
+    onWillUnmount,
     signal,
     types,
     useOnChange,
@@ -37,6 +38,15 @@ export class CameraPreview extends Component {
             this.acquirePreview();
             if (this.state.videoStream) {
                 this.props.onCameraStateChange(true);
+            }
+        });
+        onWillUnmount(() => {
+            // A media element with an active srcObject is kept alive by the
+            // browser once detached, retaining this component through it.
+            const videoEl = this.videoRef();
+            if (videoEl) {
+                videoEl.srcObject = null;
+                videoEl.load();
             }
         });
         onWillDestroy(() => this.releasePreview());
