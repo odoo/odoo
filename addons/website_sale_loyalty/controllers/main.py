@@ -20,16 +20,19 @@ class WebsiteSale(main.WebsiteSale):
             request.session["error_promo_code"] = coupon_status["error"]
         elif "error" not in coupon_status:
             reward_successfully_applied = True
+            has_reward_choice = False
             if len(coupon_status) == 1:
                 coupon, rewards = next(iter(coupon_status.items()))
                 if len(rewards) == 1:
                     reward = rewards
                 else:
                     reward = reward_id in rewards.ids and rewards.browse(reward_id)
+                    # The rewards are grouped under the code, which identifies it already.
+                    has_reward_choice = not reward
                 if reward and (not reward.multi_product or self.env.context.get("product_id")):
                     reward_successfully_applied = self._apply_reward(order_sudo, reward, coupon)
 
-            if reward_successfully_applied:
+            if reward_successfully_applied and not has_reward_choice:
                 request.session["successful_code"] = promo
         return request.redirect(post.get("r", "/shop/cart"))
 
