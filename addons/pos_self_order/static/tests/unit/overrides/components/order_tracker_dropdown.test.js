@@ -1,0 +1,43 @@
+import { expect, test } from "@odoo/hoot";
+import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { contains } from "@web/../tests/web_test_helpers";
+import { getFilledOrder } from "@point_of_sale/../tests/unit/utils";
+import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
+import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { setupPoSEnvForSelfOrder } from "@pos_self_order/../tests/unit/utils";
+import * as Utils from "@point_of_sale/../tests/unit/ui_utils";
+
+definePosModels();
+
+test("check order tracker dropdown for self order", async () => {
+    const store = await setupPoSEnvForSelfOrder();
+    Object.assign(store.config, { use_presets: false, self_ordering_mode: "mobile" });
+    store.session.state = "opened";
+    await mountPosApp(store);
+    const order = await getFilledOrder(store);
+    order.source = "mobile";
+    await contains(".screen-login .btn.open-register-btn").click();
+    await animationFrame();
+    await contains(".order_tracker").click();
+    await animationFrame();
+    waitFor(".button-hover:has(div:contains(0)):has(div:contains(Done))");
+    await contains(".button-hover:has(div:contains(1)):has(div:contains(Ongoing))").click();
+    await animationFrame();
+    await contains(".ticket-screen .order-row:contains(001)").click();
+    await Utils.loadSelectedOrder();
+    await animationFrame();
+    await Utils.clickPayButton();
+    await waitFor(".payment-screen");
+    await Utils.clickPaymentMethod("Cash");
+    expect(order.payment_ids[0].amount).toBe(595);
+    await Utils.clickValidatePayment();
+    await waitFor(".feedback-screen");
+    await Utils.clickNextOrder();
+    expect(order.source).toBe("mobile");
+    await contains(".order_tracker").click();
+    await animationFrame();
+    waitFor(".button-hover:has(div:contains(0)):has(div:contains(Ongoing))");
+    await contains(".button-hover:has(div:contains(1)):has(div:contains(Done))").click();
+    await animationFrame();
+    waitFor(".ticket-screen .order-row:has(td:contains(001)):has(td:contains(Paid))");
+});

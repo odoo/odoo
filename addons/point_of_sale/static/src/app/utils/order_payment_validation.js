@@ -152,9 +152,10 @@ export default class OrderPaymentValidation {
 
         this.pos.customerDisplay.send({ processingValidation: true });
         try {
-            // 1. Ensure pos is set as the source when paid from the PoS.
-            // If the order came from Self Order and was paid from the PoS.
-            this.order.source = "pos";
+            // 1. Set the source to pos for orders created and paid in PoS.
+            // Preserve the original source for self-order transactions paid in PoS so
+            // the order's creation origin remains identifiable.
+            this.order.source = this.order.source || "pos";
             const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
             if (!syncOrderResult) {
                 return false;
