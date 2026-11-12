@@ -43,6 +43,16 @@ class HrVersion(models.Model):
         """Split overlapping intervals and pick the winner by work_entry_type.sequence."""
         return resolve_intervals_by_sequence(intervals)
 
+    def _get_working_time_leaves(self, start_dt, end_dt):
+        """Return the approved working time leaves of the employees that overlap the aware UTC period."""
+        return self.env['hr.leave'].sudo().search([
+            ('work_entry_type_id.count_as', '=', 'working_time'),
+            ('employee_id', 'in', self.employee_id.ids),
+            ('date_from', '<=', end_dt.replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.replace(tzinfo=None)),
+            ('state', '=', 'validate'),
+        ])
+
     def _get_version_work_entries_values(self, date_start, date_stop):
         """Add the raw values of the validated, closed attendances of the period.
 
@@ -65,14 +75,7 @@ class HrVersion(models.Model):
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
 
-        # working-time leaves from the leave pipeline
-        working_time_leaves = self.env['hr.leave'].sudo().search([
-            ('work_entry_type_id.count_as', '=', 'working_time'),
-            ('employee_id', 'in', self.employee_id.ids),
-            ('date_from', '<=', end_dt.replace(tzinfo=None)),
-            ('date_to', '>=', start_dt.replace(tzinfo=None)),
-            ('state', '=', 'validate'),
-        ])
+        working_time_leaves = self._get_working_time_leaves(start_dt, end_dt)
 
         attendances = self.env['hr.attendance'].sudo().search([
             ('employee_id', 'in', self.employee_id.ids),
