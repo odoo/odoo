@@ -6,6 +6,7 @@ class AccountDebitNote(models.TransientModel):
     _inherit = 'account.debit.note'
 
     l10n_sa_reason = fields.Selection(string="ZATCA Reason", selection=ADJUSTMENT_REASONS)
+    l10n_sa_invoice_type = fields.Selection(related='move_ids.l10n_sa_invoice_type')
 
     def _prepare_default_values(self, move):
         return {
