@@ -92,3 +92,76 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
                 'VivaComKioskTour',
                 login="accountman",
             )
+
+    def test_viva_app_to_app_callback_amount_paid(self):
+        """The order paid by the app-to-app callback must count the Viva payment
+        in its amount_paid, otherwise closing with cash rounding books the whole
+        payment as a rounding loss."""
+        rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding 0.05',
+            'rounding': 0.05,
+            'rounding_method': 'HALF-UP',
+        })
+        self.main_pos_config.write({
+            'cash_rounding': True,
+            'rounding_method': rounding.id,
+            'only_round_cash_method': True,
+        })
+        self.main_pos_config.open_ui()
+        session = self.main_pos_config.current_session_id
+        viva_pm = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.payment_provider == 'viva_com')
+        product = self.desk_pad.product_variant_id
+        viva_session_id = 'viva-session-1'
+
+        # The order is synced as draft while the terminal still waits for the card
+        self.env['pos.order'].sync_from_ui([{
+            'amount_paid': 0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 1.98,
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'session_id': session.id,
+            'state': 'draft',
+            'uuid': 'viva-order-uuid',
+            'user_id': self.env.uid,
+            'lines': [Command.create({
+                'product_id': product.id,
+                'price_unit': 1.98,
+                'price_subtotal': 1.98,
+                'price_subtotal_incl': 1.98,
+                'qty': 1,
+                'tax_ids': [],
+            })],
+            'payment_ids': [Command.create({
+                'amount': 1.98,
+                'payment_method_id': viva_pm.id,
+                'payment_status': 'waiting',
+                'viva_com_session_id': viva_session_id,
+            })],
+        }])
+        order = self.env['pos.order'].search([('uuid', '=', 'viva-order-uuid')])
+        self.assertEqual(order.state, 'draft')
+
+        def mocked_get_transactions(self, transaction_id):
+            return [{
+                'StatusId': 'F',
+                'MerchantTrns': f'{viva_session_id}/{self.env.company.id}',
+                'Amount': 1.98,
+                'CurrencyCode': self.env.company.currency_id.iso_numeric,
+            }]
+
+        with patch.object(PosPaymentMethod, '_viva_com_get_transactions', mocked_get_transactions):
+            self.url_open(
+                f'/pos_viva_com/{self.main_pos_config.id}/payment/viva-order-uuid'
+                f'?status=success&transactionId=tx-1&clientTransactionId={viva_session_id}',
+                allow_redirects=False,
+            )
+
+        order.invalidate_recordset()
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.payment_ids.payment_status, 'done')
+        self.assertAlmostEqual(order.amount_paid, 1.98)
+
+        session.action_pos_session_closing_control()
+        self.assertEqual(session.state, 'closed')
+        self.assertFalse(session.move_id.line_ids.filtered(lambda l: l.name == 'Rounding line'))
