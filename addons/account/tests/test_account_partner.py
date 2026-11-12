@@ -165,3 +165,44 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.env.user.group_ids -= self.env.ref('account.group_validate_bank_account')
         with self.assertRaisesRegex(UserError, "You do not have the rights to trust"), self.cr.savepoint():
             account.write({'allow_out_payment': True})
+
+    def test_res_partner_converted_total_invoiced(self):
+        """Test that each amount invoiced to a partner is converted using the active exchange rate when
+        its invoice was created to obtain the total invoiced to this partner converted in the currency
+        of the current company."""
+        self.setup_other_currency('USD', rates=[('2025-01-01', 0.5), ('2026-01-01', 2)])
+
+        # To check that the active exchange rate at the time of invoice's creation is used to convert the
+        # total invoiced.
+        with freeze_time('2025-01-05'):
+            move = self.env['account.move'].create({
+                'invoice_line_ids': [Command.create({
+                    'price_unit': 100,
+                })],
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+            })
+            move.action_post()
+            self.assertEqual(
+                self.partner_a.sudo().with_company(self.env.ref('base.main_company')).total_invoiced,
+                50,
+                'The converted invoiced total must be equal to 100 * 0.5.'
+            )
+            self.env.invalidate_all()  # Remove the cache to allow again the computation of the "total_invoiced" field.
+
+        with freeze_time('2026-01-05'):
+            move = self.env['account.move'].create({
+                'invoice_line_ids': [Command.create({
+                    'price_unit': 100,
+                })],
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+            })
+            move.action_post()
+            # Check that each invoiced amount has been converted according the active exchange rate
+            # at the time of the invoice's creation to get the total invoice for a partner.
+            self.assertEqual(
+                self.partner_a.sudo().with_company(self.env.ref('base.main_company')).total_invoiced,
+                250,
+                'The converted invoiced total must be equal to 100 * (0.5 + 2).'
+            )
