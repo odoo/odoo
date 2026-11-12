@@ -1,6 +1,6 @@
-from odoo import Command
+from odoo import Command, http
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import HttpCase, TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
@@ -199,3 +199,66 @@ class TestRecognitionRules(TransactionCase):
         )
         self.assertIn(public.id, visible)
         self.assertNotIn(private.id, visible)
+
+
+@tagged("post_install", "-at_install")
+class TestRecognitionPortal(HttpCase):
+    def setUp(self):
+        super().setUp()
+        self.giver = self.env["res.users"].create(
+            {
+                "name": "Feed Giver",
+                "login": "feed_giver",
+                "password": "feed_giver",
+                "group_ids": [
+                    Command.link(self.env.ref("base.group_user").id),
+                    Command.link(
+                        self.env.ref("od19_recognition.group_recognition_user").id
+                    ),
+                ],
+            }
+        )
+        self.receiver = self.env["res.users"].create(
+            {
+                "name": "Feed Receiver",
+                "login": "feed_receiver",
+                "password": "feed_receiver",
+                "group_ids": [
+                    Command.link(self.env.ref("base.group_user").id),
+                    Command.link(
+                        self.env.ref("od19_recognition.group_recognition_user").id
+                    ),
+                ],
+            }
+        )
+        self.emp_giver = self.env["hr.employee"].create(
+            {"name": "Feed Giver", "user_id": self.giver.id}
+        )
+        self.emp_receiver = self.env["hr.employee"].create(
+            {"name": "Feed Receiver", "user_id": self.receiver.id}
+        )
+
+    def test_summary_route_returns_json(self):
+        self.authenticate("feed_giver", "feed_giver")
+        response = self.url_open("/my/recognition/summary")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertIn("feed", payload)
+        self.assertIn("celebrations", payload)
+
+    def test_give_route_creates_kudos_and_forces_author(self):
+        self.authenticate("feed_giver", "feed_giver")
+        self.url_open(
+            "/my/recognition/give",
+            data={
+                "recipient_id": self.emp_receiver.id,
+                "message": "Great work today",
+                "csrf_token": http.Request.csrf_token(self),
+            },
+            allow_redirects=False,
+        )
+        created = self.env["od19.recognition"].search(
+            [("recipient_id", "=", self.emp_receiver.id)], limit=1
+        )
+        self.assertTrue(created)
+        self.assertEqual(created.author_id, self.emp_giver)
