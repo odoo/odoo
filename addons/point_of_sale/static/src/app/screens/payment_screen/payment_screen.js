@@ -276,7 +276,9 @@ export class PaymentScreen extends Component {
             startingValue:
                 tip.type === "percent"
                     ? String(tip.value || 0)
-                    : this.pos.formatCurrency(tip.amount || amount || 0),
+                    : this.pos.formatCurrency(tip.amount || amount || 0, undefined, {
+                          noSymbol: true,
+                      }),
             startingType: tip.type || "fixed",
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
