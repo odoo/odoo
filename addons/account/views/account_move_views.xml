@@ -485,7 +485,7 @@
             <field name="arch" type="xml">
                 <graph string="Invoices Analysis" type="line" sample="1">
                     <field name="invoice_date" interval="month"/>
-                    <field name="amount_untaxed" type="measure"/>
+                    <field name="amount_untaxed_signed" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -496,7 +496,7 @@
             <field name="arch" type="xml">
                 <pivot string="Invoices Analysis" sample="1">
                     <field name="invoice_date" type="row"/>
-                    <field name="amount_untaxed" type="measure"/>
+                    <field name="amount_untaxed_signed" type="measure"/>
                 </pivot>
             </field>
         </record>
