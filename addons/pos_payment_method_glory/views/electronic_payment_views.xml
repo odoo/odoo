@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_electronic_payment_view_form_glory" model="ir.ui.view">
+        <field name="name">pos.electronic.payment.form.inherit.glory</field>
+        <field name="model">pos.electronic.payment</field>
+        <field name="inherit_id" ref="pos_payment_method.pos_electronic_payment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'glory'">
+                    <page name="settings" string="Glory">
+                        <group>
+                            <field name="glory_websocket_address" invisible="payment_provider != 'glory'" required="payment_provider == 'glory'"/>
+                            <field name="glory_username" invisible="payment_provider != 'glory'"/>
+                            <field name="glory_password" password="True" invisible="payment_provider != 'glory'"/>
+                            <field name="glory_use_lna" invisible="payment_provider != 'glory'"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
