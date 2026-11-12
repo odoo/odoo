@@ -45,6 +45,12 @@ MAX_DOCUMENTS = 5
 APPROVAL_SUMMARY_CACHE = {}
 APPROVAL_SUMMARY_TTL = 60
 
+# Short-lived per-user cache for the "My Day" summary. Same trade-off as the
+# approval badge: a 60s staleness window beats re-scanning attendance, leaves
+# and announcements on every portal load.
+ME_SUMMARY_CACHE = {}
+ME_SUMMARY_TTL = 60
+
 
 class AutoInfoWebsite(http.Controller):
     """Controllers for the Auto-Info corporate website and employee portal."""
@@ -136,6 +142,212 @@ class AutoInfoWebsite(http.Controller):
         payload = sources._od19_approval_summary()
         APPROVAL_SUMMARY_CACHE[user_id] = (now, payload)
         return request.make_json_response(payload)
+
+    # ------------------------------------------------------------------
+    # Employee portal — "My Day" summary (lazy JSON)
+    # ------------------------------------------------------------------
+    @http.route(
+        ["/employee-portal/me-summary"],
+        type="http",
+        auth="user",
+        website=True,
+        sitemap=False,
+    )
+    def od19_employee_me_summary(self, **kwargs):
+        """Light "my day" KPI payload for the portal strip (lazy, cached).
+
+        Kept out of the portal page render so the page stays fast; the strip
+        fetches it afterwards and fills placeholders in place.
+        """
+        user_id = request.env.user.id
+        mono = time.monotonic()
+        cached = ME_SUMMARY_CACHE.get(user_id)
+        if cached and mono - cached[0] < ME_SUMMARY_TTL:
+            return request.make_json_response(cached[1])
+        payload = self._od19_me_summary_data()
+        ME_SUMMARY_CACHE[user_id] = (mono, payload)
+        return request.make_json_response(payload)
+
+    def _od19_me_summary_data(self):
+        """Aggregate the employee's own day, defensive against missing modules."""
+        employee = request.env.user.employee_id
+        today = datetime.date.today()
+        upcoming = self._od19_my_upcoming_bookings()
+        return {
+            "attendance": self._od19_today_attendance(employee, today),
+            "approvals": self._od19_approvals_kpi(),
+            "next_booking": upcoming[0] if upcoming else None,
+            "leave": self._od19_leave_remaining(employee),
+            "unread_announcements": self._od19_unread_announcements(today),
+            "schedule": self._od19_my_schedule(),
+        }
+
+    def _od19_today_attendance(self, employee, today):
+        """Today's check-in / check-out / worked hours for the current employee."""
+        if not employee or "hr.attendance" not in request.env:
+            return {"available": False}
+        tz = pytz.timezone(request.env.user.tz or "UTC")
+        day_start = (
+            tz.localize(datetime.datetime.combine(today, datetime.time.min))
+            .astimezone(pytz.utc)
+            .replace(tzinfo=None)
+        )
+        day_end = (
+            tz.localize(datetime.datetime.combine(today, datetime.time.max))
+            .astimezone(pytz.utc)
+            .replace(tzinfo=None)
+        )
+        records = (
+            request.env["hr.attendance"]
+            .sudo()
+            .search(
+                [
+                    ("employee_id", "=", employee.id),
+                    ("check_in", ">=", day_start),
+                    ("check_in", "<=", day_end),
+                ],
+                order="check_in asc",
+            )
+        )
+        if not records:
+            return {
+                "available": True,
+                "state": "none",
+                "check_in": None,
+                "check_out": None,
+                "worked_hours": 0.0,
+            }
+        last = records[-1]
+        return {
+            "available": True,
+            "state": "in" if not last.check_out else "out",
+            "check_in": self._od19_local(records[0].check_in, "%H:%M"),
+            "check_out": self._od19_local(last.check_out, "%H:%M")
+            if last.check_out
+            else None,
+            "worked_hours": round(sum(records.mapped("worked_hours")), 2),
+        }
+
+    def _od19_approvals_kpi(self):
+        """Reuse the existing approval KPI; never recompute the sources here."""
+        if "od19.approval.source" not in request.env:
+            return {"pending_count": 0, "max_age_days": 0, "over_sla_count": 0}
+        sources = (
+            request.env["od19.approval.source"].sudo().search([("active", "=", True)])
+        )
+        return sources._od19_approval_summary()
+
+    def _od19_leave_remaining(self, employee):
+        """Remaining time off, only when the field exists and is shareable."""
+        if not employee or "allocation_remaining_display" not in employee._fields:
+            return {"available": False}
+        if "show_leaves" in employee._fields and not employee.show_leaves:
+            return {"available": False}
+        return {
+            "available": True,
+            "remaining_display": employee.allocation_remaining_display or "0",
+        }
+
+    def _od19_unread_announcements(self, today):
+        """Announcements still live that the user has not opened yet."""
+        if "announcement" not in request.env:
+            return 0
+        Announcement = request.env["announcement"].sudo()
+        live = Announcement.search(
+            [
+                ("published", "=", True),
+                "|",
+                ("expiry_date", "=", False),
+                ("expiry_date", ">=", today),
+            ]
+        )
+        if not live:
+            return 0
+        if "announcement.read" not in request.env:
+            return len(live)
+        read = (
+            request.env["announcement.read"]
+            .sudo()
+            .search(
+                [
+                    ("user_id", "=", request.env.user.id),
+                    ("announcement_id", "in", live.ids),
+                ]
+            )
+            .mapped("announcement_id")
+        )
+        return len(live - read)
+
+    def _od19_my_schedule(self, days=7):
+        """Merged upcoming timeline (bookings + approved leaves) for the strip."""
+        env = request.env
+        user = env.user
+        now = fields.Datetime.now()
+        until = datetime.datetime.now() + datetime.timedelta(days=days)
+        items = []
+        if "od19.meeting.room.booking" in env:
+            bookings = (
+                env["od19.meeting.room.booking"]
+                .sudo()
+                .search(
+                    [
+                        ("organizer_id", "=", user.id),
+                        ("state", "in", ("booked", "in_use")),
+                        ("start_datetime", ">=", now),
+                        ("start_datetime", "<=", until),
+                    ],
+                    order="start_datetime asc",
+                    limit=20,
+                )
+            )
+            for booking in bookings:
+                items.append(
+                    {
+                        "date": self._od19_local(booking.start_datetime, "%Y-%m-%d"),
+                        "time": "%s–%s"
+                        % (
+                            self._od19_local(booking.start_datetime, "%H:%M"),
+                            self._od19_local(booking.end_datetime, "%H:%M"),
+                        ),
+                        "kind": "booking",
+                        "label": booking.name,
+                        "detail": booking.room_id.name,
+                        "url": "/web#action=od19_meeting_room_booking.action_meeting_room_booking&id=%s"
+                        % booking.id,
+                    }
+                )
+        if "hr.leave" in env and user.employee_id:
+            leaves = (
+                env["hr.leave"]
+                .sudo()
+                .search(
+                    [
+                        ("employee_id", "=", user.employee_id.id),
+                        ("state", "=", "validate"),
+                        ("date_to", ">=", now),
+                        ("date_from", "<=", until),
+                    ],
+                    order="date_from asc",
+                    limit=20,
+                )
+            )
+            for leave in leaves:
+                items.append(
+                    {
+                        "date": self._od19_local(leave.date_from, "%Y-%m-%d"),
+                        "time": "%s–%s"
+                        % (
+                            self._od19_local(leave.date_from, "%d/%m"),
+                            self._od19_local(leave.date_to, "%d/%m"),
+                        ),
+                        "kind": "leave",
+                        "label": leave.name or leave.holiday_status_id.name,
+                        "detail": leave.holiday_status_id.name,
+                        "url": "/web#action=hr_holidays.hr_leave_action_my",
+                    }
+                )
+        items.sort(key=lambda item: item["date"])
+        return items[:10]
 
     def _od19_approval_data(self):
         """Aggregate every active source into 2 tabs x 4 groups."""
