@@ -2961,6 +2961,45 @@ test("select a value by pressing TAB on a many2one with onchange", async () => {
     expect(".modal").toHaveCount(0);
 });
 
+test("clear a many2one after selecting a value with the keyboard", async () => {
+    Partner._onChanges = {
+        trululu: () => {},
+    };
+    onRpc("onchange", ({ args }) => {
+        expect.step(`onchange: ${args[1].trululu}`);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="trululu" />
+                <field name="name" readonly="trululu" />
+            </form>`,
+    });
+    expect(".o_field_widget[name=name] input").toHaveCount(0);
+
+    await contains(".o_field_many2one input").clear({ confirm: "blur" });
+    expect.verifySteps(["onchange: false"]);
+    expect(".o_field_widget[name=name] input").toHaveCount(1);
+
+    await contains(".o_field_many2one input").edit("first", { confirm: false });
+    await runAllTimers();
+    await press("Enter");
+    await animationFrame();
+    expect(".o_field_many2one input").toHaveValue("first record");
+    expect.verifySteps(["onchange: 1"]);
+    expect(".o_field_widget[name=name] input").toHaveCount(0);
+
+    // clear it again without leaving the input in between
+    await contains(".o_field_many2one input").clear({ confirm: "blur" });
+    expect(".o_field_many2one input").toHaveValue("");
+    expect.verifySteps(["onchange: false"]);
+    expect(".o_field_widget[name=name] input").toHaveCount(1);
+});
+
 test("leaving a many2one by pressing tab", async () => {
     await mountView({
         type: "form",

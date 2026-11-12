@@ -444,7 +444,25 @@ export class Many2XAutocomplete extends Component {
 
     onChange({ inputValue }) {
         if (!inputValue.length) {
-            this.props.update(false);
+            this.clearValue();
+        }
+    }
+
+    onBlur({ inputValue }) {
+        // The browser doesn't trigger "change" when the input is emptied back to the
+        // value it had when the user started typing, even if a record has been selected
+        // in the meantime (e.g. with the keyboard), so also clear the value on blur.
+        if (!inputValue.length && this.props.value) {
+            this.clearValue();
+        }
+    }
+
+    clearValue() {
+        // "change" and "blur" can both occur when leaving the input: only clear once
+        if (!this.clearPromise) {
+            this.clearPromise = Promise.resolve(this.props.update(false)).finally(() => {
+                this.clearPromise = null;
+            });
         }
     }
 }
