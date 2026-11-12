@@ -238,6 +238,18 @@ test("toolbar should have the toolbar role and a label", async () => {
     expect(".o-we-toolbar").toHaveAttribute("aria-label", "HTML editor toolbar");
 });
 
+test("toolbar button groups should have the group role", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const groups = queryAll(".o-we-toolbar > .btn-group");
+    expect(groups.length).toBeGreaterThan(1);
+    for (const group of groups) {
+        expect(group).toHaveAttribute("role", "group");
+        expect(group).toHaveAttribute("data-group-id");
+        expect(group).not.toHaveAttribute("name");
+    }
+});
+
 test("toolbar separators between button groups should have the separator role", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
@@ -1735,9 +1747,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
         `<div class="test_namespace">[<section><p>abc</p></section><div>d]ef</div></div>`,
         { config: { includePlugins: [TestPlugin] } }
     );
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
+    await expectElementCount(".o-we-toolbar .btn-group[data-group-id='test_group']", 1);
     setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
+    await expectElementCount(".o-we-toolbar .btn-group[data-group-id='test_group']", 0);
 });
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
@@ -1955,8 +1967,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(1);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(1);
+    expect(".o-we-toolbar .btn-group[data-group-id='font']").toHaveCount(1);
+    expect(".o-we-toolbar .btn-group[data-group-id='decoration']").toHaveCount(1);
     setContent(
         el,
         `<p>[
@@ -1965,8 +1977,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     );
     await waitFor(".o-we-toolbar[data-namespace='image']");
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "image");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(0);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(0);
+    expect(".o-we-toolbar .btn-group[data-group-id='font']").toHaveCount(0);
+    expect(".o-we-toolbar .btn-group[data-group-id='decoration']").toHaveCount(0);
 });
 
 test.tags("desktop");
