@@ -1619,11 +1619,18 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             css_content,
             '''
+            @import url("https://www.example.com/?a=0;b");
+            @import url("https://www.example.com/?a=1;b");
+            @import url('https://www.example.com/?a=2;b');
+            @import url(https://www.example.com/?a=3);
+            @import "https://www.example.com/?a=4;b";
+            @import 'https://www.example.com/?a=5;b' screen;
+
             /* /test_assetsbundle/static/src/css/test_cssfile3.css */
             .rule4{color: green;}
 
             /* /test_assetsbundle/static/src/css/test_cssfile1.css */
-            .rule1{color: black;}.rule2{color: yellow;}.rule3{color: red;}
+              .rule0{background:url("/test_assetsbundle/static/src/css/i.png")}    .rule1{color: black;}.rule2{color: yellow;}.rule3{color: red;}
 
             /* /test_assetsbundle/static/src/css/test_cssfile2.css */
             .rule4{color: blue;}
