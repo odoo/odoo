@@ -10,7 +10,8 @@
                 <xpath expr="//field[@name='auto_delete_keep_log']" position="after">
                     <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
                         invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
-                    <field name="mass_mailing_name"
+                    <field name="mass_mailing_name" invisible="1"/>
+                    <field name="mass_mailing_name" groups="mass_mailing.group_mass_mailing_user"
                         invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
                 </xpath>
                 <xpath expr="//button[@name='action_send_mail'][not(hasclass('o_mail_send'))]" position="attributes">
