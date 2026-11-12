@@ -477,6 +477,31 @@ class TestMailTemplate(MailCommon):
         self.assertEqual(original_attachments.mapped('res_id'), self.mail_template.ids * 2)
         self.assertEqual(original_attachments.mapped('res_model'), [self.mail_template._name] * 2)
 
+    @users('employee')
+    def test_mail_template_order_user_priority(self):
+        """ Templates restricted to the user or to one of their roles come
+        first, then generic ones, then the ones restricted to others; notably
+        in many2one suggestions. """
+        role_other = self.env['res.role'].sudo().create({'name': 'Other Role'})
+        # defined in expected order; created in reverse order and named so that
+        # neither id nor name ordering gives the expected order
+        templates = self.env['mail.template'].sudo().create([
+            {'name': 'Owned', 'user_id': self.user_employee.id},
+            {'name': 'Role, Other Owner', 'user_id': self.user_employee_2.id, 'role_ids': [(4, self.role_employee.id)]},
+            {'name': 'Role', 'role_ids': [(4, self.role_employee.id)]},
+            {'name': 'Generic'},
+            {'name': 'Other Owner', 'user_id': self.user_employee_2.id},
+            {'name': 'Other Role', 'role_ids': [(4, role_other.id)]},
+        ][::-1])[::-1].with_env(self.env)
+        self.assertEqual(templates.mapped('user_priority'), ['owner', 'role', 'role', 'generic', 'other', 'other'])
+        # owned, then role (other owner before no owner), then generic, then others
+        self.assertEqual(
+            [name for _id, name in templates.name_search('', [('id', 'in', templates.ids)])],
+            templates.mapped('name'),
+        )
+        for user_priority, expected in [('role', templates[1:3]), ('generic', templates[3]), ('other', templates[4:])]:
+            self.assertEqual(templates.search([('id', 'in', templates.ids), ('user_priority', '=', user_priority)]), expected)
+
     def test_mail_template_parse_partner_list_ids(self):
         for partner_list_ids, expected in [
             ('1', [1]),

@@ -19,6 +19,10 @@ class TestMailFullComposer(MailCommon, HttpCase):
             'model_id': self.env['ir.model']._get_id('res.partner'),
             'name': 'Test template for my role',
             'role_ids': [(4, self.role_employee.id)],
+        }, {
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'Test template for other role',
+            'role_ids': [(4, self.env['res.role'].create({'name': 'Other Role'}).id)],
         }])
 
         automation = self.env['base.automation'].create({

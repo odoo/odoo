@@ -32,33 +32,12 @@ export class MailComposerTemplateSelector extends Component {
     }
 
     async fetchTemplates() {
-        const fields = ["display_name"];
-        const templates = await this.orm.searchRead(
+        this.state.templates = await this.orm.searchRead(
             "mail.template",
-            [
-                ["model", "=", this.props.record.data.render_model],
-                "|",
-                ["user_id", "=", user.userId],
-                ["role_ids.user_ids", "in", [user.userId]],
-            ],
-            fields,
+            [["model", "=", this.props.record.data.render_model]],
+            ["display_name"],
             { limit: this.limit }
         );
-        if (templates.length < this.limit) {
-            templates.push(
-                ...(await this.orm.searchRead(
-                    "mail.template",
-                    [
-                        ["model", "=", this.props.record.data.render_model],
-                        ["user_id", "=", false],
-                        ["role_ids", "=", false],
-                    ],
-                    fields,
-                    { limit: this.limit - templates.length }
-                ))
-            );
-        }
-        this.state.templates = templates;
     }
 
     /**
