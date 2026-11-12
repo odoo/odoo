@@ -368,7 +368,7 @@ class TestL10nPlEdi(TestL10nPlEdiCommon):
                 'product_id': self.product_a.id,
                 'quantity': 1,
                 'price_unit': 1000.0,
-                'tax_ids': [],
+                'tax_ids': [self.env['account.chart.template'].ref('vs_kraj_0').id],
             })],
         })
         invoice.action_post()
@@ -1439,3 +1439,30 @@ class TestL10nPlEdi(TestL10nPlEdiCommon):
 
         self.assertEqual(invoices_data[invoice]['error']['errors'], ['KSeF API Error: timeout'])
         self.assertFalse(invoice.l10n_pl_edi_status)
+
+    def test_export_error_with_no_tax(self):
+        """
+        Test that the export raises an error if an invoice line does not have a tax.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.PLN').id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 1000.0,
+                    'tax_ids': []
+                }),
+                Command.create({
+                    'display_type': 'line_note',
+                    'name': 'note line 1'
+                })
+            ],
+        })
+        invoice.action_post()
+
+        wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
+        self.assertEqual(set(wizard.alerts), {'tax_missing'})

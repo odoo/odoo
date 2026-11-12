@@ -38,6 +38,17 @@ class AccountMoveSend(models.AbstractModel):
 
         return alerts
 
+    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+        if 'pl_ksef' not in invoice_data.get('extra_edis', ()) or invoice.l10n_pl_edi_status:
+            return
+        if errors := invoice._l10n_pl_edi_check_mandatory_fields():
+            invoice_data['error'] = {
+                'error_title': self.env._("Errors occurred while creating the e-invoice file:"),
+                'errors': [error['message'] for error in errors.values()],
+            }
+
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
