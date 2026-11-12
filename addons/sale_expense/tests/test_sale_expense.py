@@ -246,3 +246,44 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             {'name': new_attachments[1].name, 'checksum': new_attachments[1].checksum},
         ])
         self.assertFalse((attachments + new_attachments) & linked_attachments)
+
+    def test_team_approver_approves_expense_reinvoiced_to_sale_order(self):
+        """A team approver, without any sales or accounting rights, can approve an
+        expense reinvoiced to a sales order that has no analytic distribution."""
+        approver = self.env['res.users'].sudo().create({
+            'name': 'Team Approver',
+            'login': 'team_approver_so',
+            'email': 'team_approver_so@example.com',
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('hr_expense.group_hr_expense_team_approver').id,
+            ])],
+            'company_ids': [Command.set(self.env.companies.ids)],
+        })
+        self.expense_employee.sudo().expense_manager_id = approver
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_delivery_no'].id,
+                'product_uom_qty': 2,
+            })],
+        })
+        so.action_confirm()
+
+        expense = self.create_expenses({
+            'product_id': self.company_data['product_delivery_cost'].id,
+            'quantity': 2,
+            'sale_order_id': so.id,
+        })
+        self.assertFalse(expense.analytic_distribution)
+        expense.with_user(self.expense_user_employee).action_submit()
+
+        expense.with_user(approver).action_approve()
+        self.assertEqual(expense.approval_state, 'approved')
+        analytic_account = self.env['account.analytic.account'].sudo().browse(
+            int(next(iter(expense.analytic_distribution))))
+        self.assertEqual(analytic_account.name, so.name)
+        self.assertEqual(
+            expense.sudo().account_move_id.line_ids.filtered('expense_id').analytic_distribution,
+            expense.analytic_distribution,
+        )
