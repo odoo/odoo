@@ -45,6 +45,7 @@ export class Toolbar extends Component {
     });
 
     toolbarEl = signal.ref();
+    ariaLabel = _t("HTML editor toolbar");
 
     setup() {
         this.state = proxy(this.props.state);
