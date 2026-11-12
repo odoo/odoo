@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.HtmlViewer">
         <t t-if="this.showIframe">
-            <iframe t-ref="this.iframeRef"
+            <iframe t-ref="this.iframeRef" title="HTML content"
                 t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}"
                 t-att-sandbox="this.props.config.hasFullHtml ? 'allow-same-origin allow-popups allow-popups-to-escape-sandbox' : false"/>
         </t>

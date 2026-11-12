@@ -32,6 +32,7 @@ test("media video: iframe replaced in edition if not present", async () => {
     expect("iframe").toHaveCount(0);
     await switchToEditMode(core);
     expect("iframe").toHaveCount(1);
+    expect("iframe").toHaveAttribute("title", "Media video");
 });
 
 test("media video: video file rebuilt in edition if not present", async () => {

@@ -65,6 +65,7 @@
                         </div>
                         <div class="o_color_gradient_input d-flex align-items-center">
                             <IframeInput
+                                title.translate="Angle"
                                 value="this.state.angle"
                                 inputAttrs="{ name: 'angle_input', type: 'number', min: -360, max: 360 }"
                                 iframeClass="'o_angle_iframe'"
@@ -83,6 +84,7 @@
                         <div class="d-flex">
                             <span class="o_color_gradient_input">
                                 <IframeInput
+                                    title.translate="Position X"
                                     value="this.positions['x']"
                                     inputAttrs="{ name: 'position_x_input', type: 'number', min: -100, max: 200 }"
                                     iframeClass="'o_position_x_iframe'"
@@ -98,6 +100,7 @@
                         <div class="d-flex">
                             <span class="o_color_gradient_input">
                                 <IframeInput
+                                    title.translate="Position Y"
                                     value="this.positions['y']"
                                     inputAttrs="{ name: 'position_y_input', type: 'number', min: -100, max: 200 }"
                                     iframeClass="'o_position_y_iframe'"
