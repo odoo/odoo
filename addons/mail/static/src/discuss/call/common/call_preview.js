@@ -17,6 +17,7 @@ import {
     Component,
     computed,
     onWillDestroy,
+    onWillUnmount,
     proxy,
     signal,
     types,
@@ -110,6 +111,15 @@ export class CallPreview extends Component {
                 },
                 { initialRun: false }
             );
+            onWillUnmount(() => {
+                // A media element with an active srcObject is kept alive by the
+                // browser once detached, retaining this component through it.
+                const audioEl = this.audioRef();
+                if (audioEl) {
+                    audioEl.srcObject = null;
+                    audioEl.load();
+                }
+            });
             onWillDestroy(() => {
                 closeStream(this.state.audioStream);
             });
