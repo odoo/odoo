@@ -48,7 +48,7 @@ export class CalendarEventQuickCreateFormController extends CalendarEventFormCon
         }
         return context;
     }
-
+    
     goToFullEvent() {
         return this.actionService.doAction(
             {
