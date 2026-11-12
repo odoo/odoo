@@ -1,7 +1,5 @@
 from odoo import api, models
 
-from odoo.addons.l10n_pl_edi_batch.models.batch_download import CRON_REQUEST_TODAY
-
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -11,8 +9,8 @@ class AccountMove(models.Model):
         self.env['l10n_pl_edi_batch.download']._cron_request_today()
 
     def action_l10n_pl_edi_import_from_ksef(self):
-        # Request the latest bills: the batch crons then import them, and fill the half-fetched ones
-        self.env.ref(CRON_REQUEST_TODAY).sudo()._trigger()
+        # Request the latest bills of this company: the batch crons then import them, and fill the half-fetched ones
+        self.env['l10n_pl_edi_batch.download'].sudo()._request_today(self.env.company)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',

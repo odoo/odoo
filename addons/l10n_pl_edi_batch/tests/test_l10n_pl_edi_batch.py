@@ -15,7 +15,7 @@ from odoo.tools import file_open, mute_logger
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
-from odoo.addons.l10n_pl_edi_batch.models.batch_download import CRON_REQUEST_TODAY, ksef_midnight
+from odoo.addons.l10n_pl_edi_batch.models.batch_download import ksef_midnight
 from odoo.addons.l10n_pl_edi_batch.tools.ksef_api_service import KsefApiServiceBatch
 
 
@@ -1003,10 +1003,12 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         company.l10n_pl_edi_access_token = 'refreshed token'
         self.assertEqual(company.l10n_pl_edi_batch_historic_date, date(2026, 2, 10))
 
-    def test_import_from_ksef_triggers_today_request(self):
-        today_cron = self.env.ref(CRON_REQUEST_TODAY)
+    def test_import_from_ksef_requests_today_batch(self):
+        other_company = self.setup_other_company()['company']
+        other_company.l10n_pl_edi_access_token = 'other token'
 
-        # An accountant asks for the latest bills: the today cron is triggered, the batch crons do the rest
-        self.env['account.move'].with_user(self.simple_accountman).with_company(self.company).action_l10n_pl_edi_import_from_ksef()
-        self.assertTrue(self.env['ir.cron.trigger'].search([('cron_id', '=', today_cron.id)]))
-        self.assertFalse(self._company_batches(self.company))
+        # An accountant asks for the latest bills: a today batch for their company only, the batch crons do the rest
+        with self._mock_batch_requests():
+            self.env['account.move'].with_user(self.simple_accountman).with_company(self.company).action_l10n_pl_edi_import_from_ksef()
+        self.assertRecordValues(self._company_batches(self.company), [{'kind': 'today', 'state': 'requested'}])
+        self.assertFalse(self._company_batches(other_company))
