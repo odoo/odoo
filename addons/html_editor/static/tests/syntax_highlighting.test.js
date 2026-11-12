@@ -1419,7 +1419,7 @@ test("should convert selected text to heading", async () => {
         editor
     );
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [data-group-id='font'] .dropdown-toggle").click();
     await contains(".o_font_type_selector_menu .dropdown-item:contains('Header 2')").click();
     await animationFrame();
     expect(getContent(editor.editable)).toBe(`<h2>[a</h2><h2>b</h2><h2>c]</h2>`);
@@ -1436,7 +1436,7 @@ test("should convert selected text to syntax highlighting", async () => {
         editor
     );
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [data-group-id='font'] .dropdown-toggle").click();
     await contains(".o_font_type_selector_menu .dropdown-item:contains('Code')").click();
     await animationFrame();
     await compareHighlightedContent(
@@ -1463,7 +1463,7 @@ test("should convert selected text to quote", async () => {
         editor
     );
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [data-group-id='font'] .dropdown-toggle").click();
     await contains(".o_font_type_selector_menu .dropdown-item:contains('Quote')").click();
     await animationFrame();
 
@@ -1489,7 +1489,7 @@ test("should convert complex selected text to quote", async () => {
         editor
     );
     await expectElementCount(".o-we-toolbar", 1);
-    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [data-group-id='font'] .dropdown-toggle").click();
     await contains(".o_font_type_selector_menu .dropdown-item:contains('Quote')").click();
     await animationFrame();
     expect(getContent(editor.editable)).toBe(
