@@ -6,7 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.tools.misc import clean_context
 
 
@@ -85,6 +85,10 @@ class MrpBom(models.Model):
     show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
     batch_size = fields.Float('Batch Size Value', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
     enable_batch_size = fields.Boolean('Batch Size', default=False)
+    produce_whole_units = fields.Boolean(
+        'Whole Units', default=False,
+        help="Round the quantity of the automatically generated manufacturing orders up to whole units of the bill "
+             "of materials, e.g. 3 x 20 kg for a demand of 50 kg.")
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     note = fields.Html(string="Additional Notes", help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
     continuous = fields.Boolean('Continuous Production', default=False,
@@ -399,6 +403,12 @@ class MrpBom(models.Model):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
 
     @api.model
+    def _get_whole_units(self, quantity):
+        """ The quantity to manufacture, rounded up to whole units of the bill of materials if it asks for it. """
+        if len(self) == 1 and self.produce_whole_units:
+            return float_round(quantity, precision_rounding=1.0, rounding_method='UP')
+        return quantity
+
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
         domain = (
             Domain('product_id', 'in', products.ids) | (
