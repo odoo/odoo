@@ -1,11 +1,13 @@
-import { Component, computed, onWillStart, signal, useProps } from "@odoo/owl";
+import { Component, computed, onWillStart, signal, useProps, usePlugin } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { useBus } from "@web/core/utils/hooks";
+import { ActionPlugin, standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 import { ProductLine } from "./product_line/product_line";
+import { ORM } from "@web/core/orm_plugin";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 export class AllocationReport extends Component {
     static template = "stock.AllocationReport";
@@ -34,9 +36,9 @@ export class AllocationReport extends Component {
     })
 
     setup() {
-        this.actionService = useService("action");
-        this.ormService = useService("orm");
-        this.ui = useService("ui");
+        this.actionPlugin = usePlugin(ActionPlugin);
+        this.ormPlugin = usePlugin(ORM);
+        this.ui = usePlugin(UIPlugin);
         this.context = this.props.action.context;
         this.mutex = new Mutex();
         this._onGoingJob = false;
@@ -156,7 +158,7 @@ export class AllocationReport extends Component {
             if (!quantityToReserve) {
                 return; // Avoid useless RPC if nothing to reserve.
             }
-            const updatedData = await this.ormService.call(
+            const updatedData = await this.ormPlugin.call(
                 "stock.allocation.report",
                 "action_assign",
                 [productLine.sourceIds, outIds, quantityToReserve],
@@ -169,7 +171,7 @@ export class AllocationReport extends Component {
             const quantityToFree = outLine.quantityToAllocate() || outLine.moves.reduce(
                 (qtySum, move) => qtySum + (move.is_reserved ? move.quantity : 0), 0
             );
-            const updatedData = await this.ormService.call(
+            const updatedData = await this.ormPlugin.call(
                 "stock.allocation.report",
                 "action_unassign",
                 [productLine.sourceIds, outIds, quantityToFree],
@@ -247,7 +249,7 @@ export class AllocationReport extends Component {
                 context.active_model = idAndModel[1];
             }
         }
-        return this.ormService.call(
+        return this.ormPlugin.call(
             "stock.allocation.report",
             "get_report_data",
             args,
@@ -276,7 +278,7 @@ export class AllocationReport extends Component {
     }
 
     openRecord(record) {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             type: "ir.actions.act_window",
             res_model: record.res_model,
             res_id: record.id,
@@ -298,11 +300,11 @@ export class AllocationReport extends Component {
         const context = { active_ids: docids };
         if (!this.reportAction) {
             // Fetch report data only once and only if needed.
-            this.reportAction = (await this.ormService.searchRead("ir.actions.report", [
+            this.reportAction = (await this.ormPlugin.searchRead("ir.actions.report", [
                 ["report_name", "=", "stock.report_reception_report_label"],
             ]))[0];
         }
-        return this.actionService.doAction({ ...this.reportAction, context, data });
+        return this.actionPlugin.doAction({ ...this.reportAction, context, data });
     }
 
     onClickAssignAll() {
@@ -322,7 +324,7 @@ export class AllocationReport extends Component {
             allocationsData.push(allocionData);
         }
         this._onGoingJob = this.mutex.exec(async () => {
-            const updatedData = await this.ormService.call(
+            const updatedData = await this.ormPlugin.call(
                 "stock.allocation.report",
                 "action_assign_all",
                 [allocationsData],
@@ -349,8 +351,8 @@ export class AllocationReport extends Component {
 
     async onClickPrint() {
         const { res_model, id } = this.doc;
-        const printAction = await this.ormService.call(res_model, "do_print_picking", [id]);
-        return this.actionService.doAction(printAction);
+        const printAction = await this.ormPlugin.call(res_model, "do_print_picking", [id]);
+        return this.actionPlugin.doAction(printAction);
     }
 
     async onClickPrintLabels() {

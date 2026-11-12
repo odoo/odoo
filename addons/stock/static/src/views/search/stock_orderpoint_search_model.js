@@ -1,6 +1,7 @@
-import { useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 import { debounce } from "@web/core/utils/timing";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { usePlugin } from "@odoo/owl";
 
 
 export class StockOrderpointSearchModel extends SearchModel {
@@ -8,7 +9,7 @@ export class StockOrderpointSearchModel extends SearchModel {
 
     setup(services) {
         super.setup(services);
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.applyGlobalHorizonDays = debounce(
             this.applyGlobalHorizonDays.bind(this),
             StockOrderpointSearchModel.DEBOUNCE_DELAY

@@ -13,7 +13,7 @@ patch(ForecastedButtons.prototype, {
     },
 
     async _onClickBom(){
-        return this.actionService.doAction("mrp.action_report_mrp_bom", {
+        return this.actionPlugin.doAction("mrp.action_report_mrp_bom", {
             additionalContext: {
                 active_id: this.bomId,
                 active_product_id: this.productId,

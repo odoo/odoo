@@ -1,4 +1,3 @@
-import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { View } from "@web/views/view";
@@ -8,8 +7,9 @@ import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
 import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
-import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { Component, onWillStart, proxy, useProps, usePlugin } from "@odoo/owl";
+import { ActionPlugin, standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 export class StockForecasted extends Component {
     static template = "stock.Forecasted";
@@ -23,8 +23,8 @@ export class StockForecasted extends Component {
     };
     props = useProps(standardActionServiceProps);
     setup() {
-        this.orm = useService("orm");
-        this.action = useService("action");
+        this.orm = usePlugin(ORM);
+        this.action = usePlugin(ActionPlugin);
 
         this.context = proxy(this.props.action.context);
         this.productId = this.context.active_id;

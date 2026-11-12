@@ -1,7 +1,7 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, t, useProps, usePlugin } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
 
 export class ForecastedWarehouseFilter extends Component {
     static template = "stock.ForecastedWarehouseFilter";
@@ -13,7 +13,7 @@ export class ForecastedWarehouseFilter extends Component {
     });
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.context = this.props.action.context;
         this.warehouses = this.props.warehouses;
         onWillStart(this.onWillStart)

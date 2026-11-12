@@ -1,13 +1,14 @@
 import { cookie } from "@web/core/browser/cookie";
 import { getColor, getCustomColor } from "@web/core/colors/colors";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { JournalDashboardGraphField } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { usePlugin } from "@odoo/owl";
 
 export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
     setup() {
         super.setup();
-        this.actionService = useService("action");
+        this.actionPlugin = usePlugin(ActionPlugin);
     }
     getBarChartConfig() {
         // Only bar chart is available for picking types
@@ -67,7 +68,7 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
                     };
                     // Add a filter for the given date category
                     additionalContext["search_default_".concat(dateCategory)] = true;
-                    this.actionService.doAction("stock.click_dashboard_graph", {
+                    this.actionPlugin.doAction("stock.click_dashboard_graph", {
                         additionalContext: additionalContext
                     });
                 },
