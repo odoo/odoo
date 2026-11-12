@@ -42,7 +42,7 @@ def log(logger, level, prefix, msg, depth=None):
 class WatchedFileHandler(logging.handlers.WatchedFileHandler):
     def __init__(self, filename):
         self.errors = None  # py38
-        super().__init__(filename)
+        super().__init__(filename, encoding='utf-8')
         # Unfix bpo-26789, in case the fix is present
         self._builtin_open = None
 
@@ -277,7 +277,7 @@ def init_logger():
             if os.name == 'posix':
                 handler = WatchedFileHandler(logf)
             else:
-                handler = logging.FileHandler(logf)
+                handler = logging.FileHandler(logf, encoding='utf-8')
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 
