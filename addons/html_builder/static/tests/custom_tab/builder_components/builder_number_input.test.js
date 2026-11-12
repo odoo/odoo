@@ -1090,6 +1090,106 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue(3.3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
+<<<<<<< 746d42e4dbde5fc42a94e7aff5286046f2823682
+||||||| 60fcf766ac2e4f9ee7267db8cc1f4e9d86d705b2
+    for (const [name, initialValue, valueReturnedByInput] of [
+        ["minus (-)", "-3", ""],
+        ["decimal point (.)", "3.3", "3"],
+    ]) {
+        test(`do not rewrite a transient ${name} while editing`, async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+            });
+            await setupHTMLBuilder(`
+                <div class="test-options-target" data-number="${initialValue}">Test</div>
+            `);
+            await contains(":iframe .test-options-target").click();
+            const input = queryFirst(".options-container input");
+            expect(input).toHaveValue(Number(initialValue));
+            let valueWrites = 0;
+            // A number input can display a transient value such as "-" or "3."
+            // while exposing "" or "3" through its value property. There is no
+            // DOM API to read that editing buffer, and assigning the transient
+            // value in a test sanitizes it immediately. Override the property
+            // to reproduce the exposed value and detect any write that would
+            // erase the browser's transient display.
+            Object.defineProperty(input, "value", {
+                configurable: true,
+                get: () => valueReturnedByInput,
+                set: () => {
+                    valueWrites++;
+                },
+            });
+            input.dispatchEvent(
+                new InputEvent("input", { bubbles: true, inputType: "deleteContentBackward" })
+            );
+            await animationFrame();
+
+            // Rewriting the exposed value would erase the browser's transient
+            // editing buffer.
+            expect(valueWrites).toBe(0);
+        });
+    }
+=======
+    for (const [name, initialValue, valueReturnedByInput] of [
+        ["minus (-)", "-3", ""],
+        ["decimal point (.)", "3.3", "3"],
+    ]) {
+        test(`do not rewrite a transient ${name} while editing`, async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+            });
+            await setupHTMLBuilder(`
+                <div class="test-options-target" data-number="${initialValue}">Test</div>
+            `);
+            await contains(":iframe .test-options-target").click();
+            const input = queryFirst(".options-container input");
+            expect(input).toHaveValue(Number(initialValue));
+            let valueWrites = 0;
+            // A number input can display a transient value such as "-" or "3."
+            // while exposing "" or "3" through its value property. There is no
+            // DOM API to read that editing buffer, and assigning the transient
+            // value in a test sanitizes it immediately. Override the property
+            // to reproduce the exposed value and detect any write that would
+            // erase the browser's transient display.
+            Object.defineProperty(input, "value", {
+                configurable: true,
+                get: () => valueReturnedByInput,
+                set: () => {
+                    valueWrites++;
+                },
+            });
+            input.dispatchEvent(
+                new InputEvent("input", { bubbles: true, inputType: "deleteContentBackward" })
+            );
+            await animationFrame();
+
+            // Rewriting the exposed value would erase the browser's transient
+            // editing buffer.
+            expect(valueWrites).toBe(0);
+        });
+    }
+    test("use step 'any' to avoid tooltip when no step is defined", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+        });
+        await setupHTMLBuilder(`
+            <div class="test-options-target" data-number="10">Test</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit("3.3", { instantly: true });
+        // Avoid the browser's implicit step=1, which considers decimal values
+        // invalid. A valid input with no validation message does not show the
+        // native tooltip.
+        const input = queryFirst(".options-container input");
+        expect(input).toHaveAttribute("step", "any");
+        expect(input.checkValidity()).toBe(true);
+        expect(input.validationMessage).toBe("");
+    });
+>>>>>>> e45c896dd2bc8af8adaeefc5061b3567d5dcd543
     test("BuilderNumberInput transforms , into . (composable)", async () => {
         addBuilderOption({
             selector: ".test-options-target",
