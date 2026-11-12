@@ -33,7 +33,7 @@
                         <img class="rounded-3" t-attf-src="/web/image/hr.employee.public/{{employee.id}}/avatar_128"/>
                     </div>
                     <div class="d-flex flex-column">
-                        <span class="fs-4 fw-bold" t-out="employee.name"/>
+                        <span class="employee-name fs-4 fw-bold" t-out="employee.name"/>
                         <span t-if="employee.subtitle" class="employee-subtitle fs-6 text-muted">
                             <t t-out="employee.subtitle"/>
                         </span>

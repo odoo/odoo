@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr_attendance.AttendanceKiosk" t-inherit="hr_attendance.public_kiosk_app" t-inherit-mode="primary">
+        <xpath expr="//MainComponentsContainer" position="replace"/>
+    </t>
+
+    <t t-name="pos_hr_attendance.KioskBarcodeScanner" t-inherit="hr_attendance.KioskBarcodeScanner" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_hr_attendance_kiosk')]" position="attributes">
+            <attribute name="t-att-class"/>
+        </xpath>
+        <xpath expr="//button[hasclass('o_mobile_barcode')]" position="attributes">
+            <attribute name="t-att-class"/>
+        </xpath>
+        <xpath expr="//a[hasclass('o_hr_attendance_install_btn')]" position="replace"/>
+    </t>
+
+    <t t-name="pos_hr_attendance.KioskManualSelection" t-inherit="hr_attendance.public_kiosk_manual_selection" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('position-absolute')]" position="attributes">
+            <attribute name="class" add="d-flex flex-column" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('bg-white')]" position="attributes">
+            <attribute name="class" add="flex-shrink-0" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('flex-md-row')]" position="attributes">
+            <attribute name="class" add="o_pos_kiosk_body flex-grow-1" remove="h-100" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_hr_kiosk_manual_selection')]" position="attributes">
+            <attribute name="class" add="flex-grow-1" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="pos_hr_attendance.AttendanceScreen">
+        <div class="attendance-screen position-relative d-flex flex-column flex-grow-1 h-100 overflow-auto">
+            <PosAttendanceKiosk t-if="this.state.kioskInfo" t-props="this.state.kioskInfo"/>
+            <div t-else="" class="attendance-screen-error d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted">
+                <i class="oi oi-3x mb-3" data-icon="warning"/>
+                <span>The attendance kiosk could not be loaded. Check your connection and try again.</span>
+            </div>
+        </div>
+    </t>
+
+</templates>
