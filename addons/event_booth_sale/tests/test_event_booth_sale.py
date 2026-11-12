@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo import Command, fields
+from odoo.exceptions import ValidationError
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -154,6 +155,62 @@ class TestEventBoothSale(TestEventBoothSaleWData):
         self.assertEqual(sale_order.order_line.event_booth_registration_ids.event_booth_id.ids,
                          (self.booth_2 + self.booth_3).ids,
                          "Booths not correctly linked with event_booth_registration.")
+
+    @users('user_sales_salesman')
+    def test_event_booth_release_on_sale_order_cancel(self):
+        """ Cancelling an order frees its booth, confirming it again re-books it. """
+        def booth_order():
+            return self.env['sale.order'].create({
+                'partner_id': self.event_customer.id,
+                'pricelist_id': self.test_pricelist.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.event_booth_product.id,
+                        'event_id': self.event_0.id,
+                        'event_booth_category_id': self.event_booth_category_1.id,
+                        'event_booth_pending_ids': self.booth_1.ids,
+                    }),
+                ],
+            })
+
+        sale_order = booth_order()
+        sale_order.action_confirm()
+        self.assertEqual(self.booth_1.state, 'unavailable')
+        registrations = sale_order.order_line.event_booth_registration_ids
+
+        sale_order._action_cancel()
+        self.assertEqual(self.booth_1.state, 'available', "Cancelling the order should free its booth.")
+        self.assertFalse(self.booth_1.partner_id, "Freed booth should not keep the ex-customer.")
+        self.assertFalse(self.booth_1.contact_name)
+        self.assertFalse(self.booth_1.contact_email)
+        self.assertFalse(self.booth_1.contact_phone)
+        self.assertFalse(self.booth_1.sale_order_line_id, "Freed booth should no longer be linked to the order.")
+        self.assertFalse(self.booth_1.is_paid, "Freed booth should lose its paid ribbon.")
+        self.assertEqual(sale_order.event_booth_count, 0)
+        self.assertEqual(
+            self.booth_1.event_booth_registration_ids, registrations,
+            "Registrations should be kept, so that confirming the order again re-books the same booth.")
+
+        self.assertEqual(
+            len(self.event_0.message_ids.filtered(
+                lambda message: message.subtype_id == self.env.ref('event_booth.mt_event_booth_unbooked'))),
+            1, "The freed booth should be tracked on the event.")
+
+        # Nobody took it in the meantime: the very same booth is booked again.
+        sale_order.action_draft()
+        sale_order.action_confirm()
+        self.assertEqual(self.booth_1.state, 'unavailable')
+        self.assertEqual(self.booth_1.sale_order_id, sale_order)
+
+        # It is taken while the order sits cancelled.
+        sale_order._action_cancel()
+        poacher = booth_order()
+        poacher.action_confirm()
+        self.assertEqual(self.booth_1.sale_order_id, poacher)
+
+        sale_order.action_draft()
+        with self.assertRaises(ValidationError):
+            sale_order.action_confirm()
 
 @tagged('post_install', '-at_install')
 class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWData):
