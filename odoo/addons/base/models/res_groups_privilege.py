@@ -5,6 +5,8 @@ class ResGroupsPrivilege(models.Model):
     _name = 'res.groups.privilege'
     _description = "Privilege"
     _order = 'sequence, name, id'
+    _clear_cache_name = 'groups'
+    _clear_cache_on_fields = {'name', 'sequence', 'category_id', 'description', 'placeholder', 'group_ids'}
 
     name = fields.Char(string='Name', required=True, translate=True)
     description = fields.Text(string='Description', translate=True)

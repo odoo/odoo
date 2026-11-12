@@ -1,5 +1,5 @@
-from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, TransactionCase
+from odoo.exceptions import AccessError, ValidationError
+from odoo.tests.common import new_test_user, tagged, TransactionCase
 from odoo.modules.module import Manifest
 from odoo.tools import mute_logger
 
@@ -97,3 +97,17 @@ class TestModuleCategory(TransactionCase):
             category_a.write({'parent_id': category_c.id})
         with self.assertRaises(ValidationError):
             category_b.write({'parent_id': category_b.id})
+
+    def test_access_rights_manager_can_manage_categories(self):
+        manager = new_test_user(self.env, login='access_manager', groups='base.group_erp_manager')
+        category = self.env['ir.module.category'].with_user(manager).create({'name': 'Category'})
+        category.write({'name': 'Renamed Category'})
+        self.assertEqual(category.name, 'Renamed Category')
+        with self.assertRaises(AccessError):
+            category.unlink()
+
+        user = new_test_user(self.env, login='internal_user', groups='base.group_user')
+        with self.assertRaises(AccessError):
+            self.env['ir.module.category'].with_user(user).create({'name': 'Category'})
+        with self.assertRaises(AccessError):
+            category.with_user(user).write({'name': 'Category'})

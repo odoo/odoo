@@ -5,6 +5,7 @@ import {
     defineModels,
     editSelectMenu,
     isSmall,
+    MockServer,
     mountView,
     onRpc,
     serverState,
@@ -832,4 +833,144 @@ test("privileges with placeholder", async () => {
         "Project Manager",
         "Project Administrator",
     ]);
+});
+
+test("rendering is updated when the group hierarchy changes", async () => {
+    // e.g. the form is first rendered from the RPC cache, then updated with fresh data
+    onRpc("reload_hierarchy", () => false);
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <header>
+                    <button name="reload_hierarchy" type="object" string="Reload"/>
+                </header>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+    expect(queryAllTexts(".o_field_widget[name=group_ids] .o_form_label")).toEqual([
+        "Administration",
+        "Project?",
+        "Helpdesk",
+    ]);
+
+    const [{ view_group_hierarchy }] = MockServer.env["res.users"].browse(1);
+    MockServer.env["res.users"].write(1, {
+        view_group_hierarchy: {
+            ...view_group_hierarchy,
+            categories: [
+                view_group_hierarchy.categories[0],
+                { id: 221, name: "Services (category)", privilege_ids: [223, 222] },
+            ],
+        },
+    });
+    // clicking on a button reloads the record once the action is done
+    await contains("button[name=reload_hierarchy]").click();
+    expect(queryAllTexts(".o_field_widget[name=group_ids] .o_horizontal_separator")).toEqual([
+        "ADMINISTRATION (CATEGORY)",
+        "SERVICES (CATEGORY)",
+    ]);
+    expect(queryAllTexts(".o_field_widget[name=group_ids] .o_form_label")).toEqual([
+        "Administration",
+        "Helpdesk",
+        "Project?",
+    ]);
+    expect(
+        queryAllValues(".o_field_widget[name=group_ids] .o_inner_group:eq(1) .o_wrap_input input")
+    ).toEqual(["", "Project User"]);
+});
+
+test("rendering is kept when the record is reloaded with the same group hierarchy", async () => {
+    onRpc("reload_hierarchy", () => false);
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <header>
+                    <button name="reload_hierarchy" type="object" string="Reload"/>
+                </header>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+    const innerGroup = queryFirst(".o_field_widget[name=group_ids] .o_inner_group");
+
+    await contains("button[name=reload_hierarchy]").click();
+    expect(queryFirst(".o_field_widget[name=group_ids] .o_inner_group")).toBe(innerGroup);
+});
+
+test("privileges without category are sorted by sequence", async () => {
+    Object.assign(ResUsers._records[0].view_group_hierarchy.privileges, {
+        600: {
+            id: 600,
+            name: "Second other privilege",
+            sequence: 20,
+            group_ids: [693],
+            category_id: false,
+        },
+        601: {
+            id: 601,
+            name: "First other privilege",
+            sequence: 10,
+            group_ids: [694],
+            category_id: false,
+        },
+        602: {
+            id: 602,
+            name: "Privilege without groups",
+            sequence: 5,
+            group_ids: [],
+            category_id: false,
+        },
+    });
+    Object.assign(ResUsers._records[0].view_group_hierarchy.groups, {
+        693: {
+            id: 693,
+            name: "Group in second privilege",
+            all_implied_by_ids: [693],
+            all_implied_ids: [693],
+            comment: false,
+            disjoint_ids: [],
+            implied_ids: [],
+            privilege_id: 600,
+        },
+        694: {
+            id: 694,
+            name: "Group in first privilege",
+            all_implied_by_ids: [694],
+            all_implied_ids: [694],
+            comment: false,
+            disjoint_ids: [],
+            implied_ids: [],
+            privilege_id: 601,
+        },
+    });
+    ResGroups._records.push({ id: 693, name: "Group in second privilege" });
+    ResGroups._records.push({ id: 694, name: "Group in first privilege" });
+
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(2) .o_horizontal_separator").toHaveText(
+        "OTHER"
+    );
+    expect(
+        queryAllTexts(".o_field_widget[name=group_ids] .o_inner_group:eq(2) .o_form_label")
+    ).toEqual(["First other privilege", "Second other privilege"]);
 });
