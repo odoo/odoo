@@ -291,7 +291,7 @@
                                     </span>
                                     <span class="text-truncate" t-att-title="record.name.value" invisible="name == '/'"><field name="name" class="fst-italic"/></span>
                                 </div>
-                                <div class="o_ts_kanban_card_amount d-flex ms-auto align-self-end" name="ts_footer">
+                                <div class="o_ts_kanban_card_amount d-flex gap-2 ms-auto align-self-end" name="ts_footer">
                                     <field name="employee_id" widget="many2one_avatar_employee" class="align-self-end"/>
                                     <strong class="align-self-end"><field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" decoration-muted="unit_amount == 0" class="min-w-fit"/></strong>
                                 </div>
