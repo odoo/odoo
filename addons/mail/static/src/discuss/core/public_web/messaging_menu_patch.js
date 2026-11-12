@@ -53,7 +53,6 @@ const messagingMenuPatch = {
     },
     /** @param {import("models").DiscussChannel} channel */
     async onClickChannel(channel) {
-        this.onOpenConversation();
         this.channelToOpen = channel;
         const prefetchingOrTimeout = channel.thread?.prefetchingOrTimeout;
         if (prefetchingOrTimeout) {
