@@ -427,7 +427,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
 
 
-@tagged('attendance_process')
+@tagged('attendance_process', 'post_install', '-at_install')
 class TestAbsenceDetectionCron(TransactionCase):
 
     @classmethod
@@ -482,7 +482,7 @@ class TestAbsenceDetectionCron(TransactionCase):
 
         self.env['hr.attendance']._cron_absence_detection()
 
-        tech_atts = self.env['hr.attendance'].search([
+        tech_atts = self.env['hr.attendance'].with_context(active_test=False).search([
             ('employee_id', '=', self.absent_employee.id),
             ('in_mode', '=', 'technical'),
         ])
@@ -518,11 +518,12 @@ class TestAbsenceDetectionCron(TransactionCase):
             'check_out': datetime(2024, 1, 1, 12, 0),
             'state': 'refused',
         })
-        self.env['hr.attendance'].create({
+        att = self.env['hr.attendance'].create({
             'employee_id': self.absent_employee.id,
             'check_in': datetime(2024, 1, 1, 13, 0),
             'check_out': datetime(2024, 1, 1, 14, 0),
         })
+        att._trigger_time_rules(include_deficit=True)
         outputs = self.env['hr.attendance'].search([
             ('employee_id', '=', self.absent_employee.id),
             ('time_rule_id', '=', rule.id),

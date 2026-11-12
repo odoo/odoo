@@ -447,8 +447,7 @@
                                         <i class="oi" data-icon="east" aria-label="to" title="To"/>
                                         <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
-                                    <field name="is_time_rule_trimmed" invisible="1"/> <!-- read by _compute_date_from_to, which preserves the sub-day end written by the time rule instead of snapping it back to the schedule boundary -->
-                                    <!-- trimmed source / output: show exact time range set by the rule engine -->
+                                    <!-- output / remainder: show exact time range set by the rule engine -->
                                     <field name="time_rule_time_range" nolabel="1" readonly="1" class="text-muted"
                                            invisible="not time_rule_time_range"/>
                                     <div class="d-flex gap-2" invisible="work_entry_type_request_unit == 'half_day' and not last_several_days">
@@ -769,6 +768,11 @@
                         icon="close"
                         class="btn btn-outline-danger"
                         data-hotkey="x"
+                    />
+                    <button type="object"
+                        name="action_reprocess_time_rules"
+                        string="Reprocess Time Rules"
+                        groups="hr_holidays.group_hr_holidays_user"
                     />
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />

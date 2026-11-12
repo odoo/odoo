@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
 
@@ -57,6 +57,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _time_rule_span_end_field = ''         # span end field name
     _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
 
+    active = fields.Boolean(default=True)
+    time_rule_id = fields.Many2one('hr.time.rule', index=True)
+
+    @api.model
+    def _time_rule_wizard_extra_domain(self):
+        """Extra domain applied when searching this model in the reprocess wizard."""
+        return []
+
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         """Write the pipeline result on the records; must be implemented.
 
@@ -105,6 +113,52 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         """
         return []
 
+    def _undo_time_rules(self):
+        """Delete all engine outputs and restore the original (archived) source records.
+
+        walks the full descendant tree so multi-level chains (daily-OT output
+        used as a source for weekly-OT) are fully removed before the root is unarchived.
+        """
+        all_outputs = self.browse()
+        frontier = self.with_context(active_test=False)
+        while frontier:
+            children = self.with_context(active_test=False).sudo().search(
+                [(self._time_rule_source_field, 'in', frontier.ids)]
+            )
+            all_outputs |= children
+            frontier = children - all_outputs  # avoid infinite loops on unexpected cycles
+        all_outputs.with_context(skip_time_rules=True).unlink()
+        to_restore = self.with_context(active_test=False).filtered(lambda r: not r.active)
+        if to_restore:
+            to_restore.write({'active': True})
+            to_restore._on_time_rule_undo_restored()
+
+    def _on_time_rule_undo_restored(self):
+        """Hook called after archived sources are reactivated by _undo_time_rules."""
+
+    def _get_orphaned_sources_on_unlink(self):
+        """returns archived source records that have no other outputs than self"""
+        if not self._time_rule_source_field:
+            return self.browse()
+        children = self.with_context(active_test=False).filtered(
+            lambda r: r[self._time_rule_source_field]
+        )
+        if not children:
+            return self.browse()
+        sources = children.with_context(active_test=False).mapped(self._time_rule_source_field)
+        sources = sources.filtered(lambda s: not s.active)
+        if not sources:
+            return self.browse()
+        deleting_ids = set(self.ids)
+        orphaned = self.browse()
+        for source in sources:
+            siblings = self.with_context(active_test=False).search(
+                [(self._time_rule_source_field, '=', source.id)]
+            )
+            if all(c.id in deleting_ids for c in siblings):
+                orphaned |= source
+        return orphaned
+
     def _get_write_source_extra_source_fields(self):
         """Return the fields, besides the employee and the span, whose write triggers the rules.
 
@@ -118,17 +172,6 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :rtype: float
         """
         return 0.0
-
-    def _get_time_rule_end_write_vals(self, end_utc, stop_local):
-        """Return the values to write to move the end of the record.
-
-        ``hr.leave`` also writes ``request_date_to`` and the request hours.
-
-        :param datetime end_utc: new end, naive UTC
-        :param datetime stop_local: the same instant, naive in the employee's timezone
-        :rtype: dict
-        """
-        return {self._time_rule_span_end_field: end_utc}
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
         """Return the time already occupied by records of the employee; must be implemented.
@@ -201,14 +244,6 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         raise NotImplementedError
 
     def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False):
-        """Return the source records (as superuser) overlapping a period.
-
-        :param datetime start_dt: period start, UTC (tzinfo is dropped)
-        :param datetime end_dt: period end, UTC (tzinfo is dropped), excluded for the overlapping records
-        :param employees: restrict to these ``hr.employee``
-        :param bool check_end: select the records ending in the period instead of overlapping it
-        :rtype: recordset of this model
-        """
         domain = [
             (self._time_rule_span_end_field, '>=', start_dt.replace(tzinfo=None)),
             (self._time_rule_span_end_field, '!=', False),
@@ -268,6 +303,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             start_dt = datetime.combine(date_from, time.min)
             end_dt = datetime.combine(date_to + timedelta(days=1), time.min)
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
+
             sources = self.sudo().browse()
             for tz, tz_employees in employee_rs.grouped(lambda e: e.sudo()._get_tz()).items():
                 tzinfo = ZoneInfo(tz)
@@ -280,7 +316,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                 continue
 
             self._on_sources_collected(sources)
-            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, datetime.combine(date_to, time.min))
+            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
 
             for emp, by_src in excess.items():
                 for src, items in by_src.items():
@@ -406,18 +442,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         merged_active_iv = self._merge_active_iv(day_active_iv, week_active_iv)
         self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
 
-    def _trigger_time_rules(self):
-        """Run the rules for the records of ``self`` that are valid sources.
-
-        Called on create and on write of a trigger field. Records without span or not matching
-        :meth:`_get_source_extra_fields_domain` are ignored. See
-        :meth:`_trigger_time_rules_for_affected` for which rules run.
-        """
+    def _trigger_time_rules(self, include_deficit=False):
+        """Apply the full day/week, past/current, exceed/undertime split for validated source record."""
         domain = [
             (self._time_rule_span_start_field, '!=', False),
             (self._time_rule_span_end_field, '!=', False),
         ]
         domain.extend(self._get_source_extra_fields_domain())
+        domain.append(('time_rule_id', '=', False))
         validated = self.filtered_domain(domain)
         if not validated:
             return
@@ -429,22 +461,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             time_rule_trigger_model=self._name,
             time_rule_trigger_desc=', '.join(names),
         )._trigger_time_rules_for_affected(
-            [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated]
+            [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated],
+            include_deficit=include_deficit,
         )
 
-    def _trigger_time_rules_for_affected(self, affected):
-        """Run the rules that can already be decided for the given periods.
-
-        - periods ending before today: all daily rules;
-        - periods ending today or later: daily ``exceed`` rules only;
-        - periods ending before the current week (started on the earliest ``week_start`` of the
-          active weekly rules): weekly ``exceed`` rules.
-
-        Weekly undertime only runs from :meth:`_cron_process_week_time_rules`. The end of a
-        period is its date in the employee's timezone; today is the server's (UTC) date, as
-        for the crons.
-
-        :param list affected: ``(employee, date_from, date_to)`` tuples
+    def _trigger_time_rules_for_affected(self, affected, include_deficit=False):
+        """
+        include_deficit: when True also evaluates less_than (undertime) day rules, which are
+        normally cron-only.
         """
         if not affected:
             return
@@ -466,15 +490,15 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         else:
             latest_week_start = today - timedelta(days=today.weekday())
 
-        end_dates = [_to_local_date(e, dt) for e, _df, dt in affected]
-        past_day = [a for a, end in zip(affected, end_dates) if end < today]
-        today_list = [a for a, end in zip(affected, end_dates) if end >= today]
-        past_week = [a for a, end in zip(affected, end_dates) if end < latest_week_start]
-        self._process_time_rules_for(past_day, rule_period='day')
-        self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
-        # weekly undertime is cron-only: triggering it on every record write would create
-        # spurious outputs while the user is still entering a past week's data.
-        self._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
+        past_day = [(e, df, dt) for e, df, dt in affected if _to_local_date(e, dt) < today]
+        today_list = [(e, df, dt) for e, df, dt in affected if _to_local_date(e, dt) >= today]
+        past_week = [(e, df, dt) for e, df, dt in affected if _to_local_date(e, dt) < latest_week_start]
+        ctx = self.with_context(time_rule_reversed_ids=set())
+        ctx._process_time_rules_for(past_day, rule_period='day', rule_operator='exceed')
+        if include_deficit:
+            ctx._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
+        ctx._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
+        ctx._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
 
     def write(self, vals):
         assert 'employee_id' in self._fields

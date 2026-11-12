@@ -6,3 +6,7 @@ hr_attendance_rule_attendance_own,Attendance own user: create/edit his own atten
 hr_attendance_rule_employee_company,Employee multi company rule,hr.attendance,,crud,"['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]"
 access_hr_time_rule_attendance_admin,hr.time.rule.attendance.admin,hr.time.rule,hr_attendance.group_hr_attendance_user,crud,
 access_hr_work_entry_type_attendance_reader,access_hr_work_entry_type_attendance_reader,hr.work.entry.type,hr_attendance.group_hr_attendance_own_reader,r,
+access_hr_time_rule_regenerate_wizard_att,hr.time.rule.regenerate.wizard,hr.time.rule.regenerate.wizard,hr_attendance.group_hr_attendance_user,crud,
+access_hr_time_rule_regenerate_wizard_line_att,hr.time.rule.regenerate.wizard.line,hr.time.rule.regenerate.wizard.line,hr_attendance.group_hr_attendance_user,crud,
+access_hr_time_rule_regenerate_wizard_error_att,hr.time.rule.regenerate.wizard.error,hr.time.rule.regenerate.wizard.error,hr_attendance.group_hr_attendance_user,crud,
+access_hr_time_rule_regenerate_wizard_removed_att,hr.time.rule.regenerate.wizard.removed,hr.time.rule.regenerate.wizard.removed,hr_attendance.group_hr_attendance_user,crud,
