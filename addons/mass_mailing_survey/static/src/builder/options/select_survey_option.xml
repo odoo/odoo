@@ -1,0 +1,17 @@
+<templates>
+    <t t-name="mass_mailing.SelectSurveyOption">
+        <BuilderRow label.translate="Survey" extraLabelClass="'align-self-end'">
+            <BuilderMany2One
+                action="'selectSurveyAction'"
+                model="'survey.survey'"
+                fields="['title', 'access_token']"
+                allowUnselect="false"
+                defaultMessage.translate="Select a survey"/>
+        </BuilderRow>
+    </t>
+    <t t-inherit="mass_mailing.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//div[@id='builder_options']" position="inside">
+            <select_survey_option selector=".o_snippet_take_survey"/>
+        </xpath>
+    </t>
+</templates>
