@@ -9,7 +9,14 @@ import {
     queryAllTexts,
     test,
 } from "@odoo/hoot";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     foo = fields.Char({ string: "Foo" });
@@ -514,4 +521,41 @@ test("PriorityField readonly tooltip", async () => {
     const spans = queryAll(".o_field_widget .o_priority span.o_priority_star");
     expect(spans[0]).toHaveAttribute("data-tooltip", "Blocked");
     expect(spans[1]).toHaveAttribute("data-tooltip", "Blocked");
+});
+
+test("PriorityField marks only the star clicked, until its animations end", async () => {
+    let animations;
+    patchWithCleanup(Element.prototype, {
+        getAnimations(options) {
+            if (animations && this.matches(".o_priority")) {
+                return [{ finished: animations.promise }];
+            }
+            return super.getAnimations(options);
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="selection" widget="priority"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+    });
+    expect(".o-starFill").toHaveCount(0, { message: "a star already set is not marked" });
+
+    animations = Promise.withResolvers();
+    await click(".o_priority_star[aria-label=Done]");
+    await animationFrame();
+    expect(".o_priority_star.o-starFill").toHaveCount(1);
+    expect(".o_priority_star.o-starFill").toHaveAttribute("aria-label", "Done");
+
+    animations.resolve();
+    await animationFrame();
+    expect(".o-starFill").toHaveCount(0);
 });

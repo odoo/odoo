@@ -1,4 +1,4 @@
-import { expect, resize, test, waitFor } from "@odoo/hoot";
+import { after, expect, getFixture, resize, test, waitFor } from "@odoo/hoot";
 import {
     click,
     edit,
@@ -103,6 +103,42 @@ class Users extends models.Model {
 }
 
 defineModels([Partner, Product, Users]);
+
+/**
+ * Steps each time the highlighter stops or starts travelling, and whether it
+ * then covers the selected step.
+ */
+function watchHighlighter() {
+    const coversSelectedStep = () => {
+        const highlight = queryFirst(".o_statusbar_highlighter").getBoundingClientRect();
+        const current = queryFirst(".o_arrow_button_current").getBoundingClientRect();
+        return ["left", "top", "width", "height"].every(
+            (side) => Math.abs(highlight[side] - current[side]) < 1
+        );
+    };
+    const observer = new MutationObserver((records) => {
+        for (const { target, oldValue } of records) {
+            if (!target.matches(".o_statusbar_status")) {
+                continue;
+            }
+            const wasAnimated = oldValue.split(" ").includes("o-statusbar-animated");
+            const isAnimated = target.classList.contains("o-statusbar-animated");
+            if (isAnimated && !wasAnimated) {
+                const from = coversSelectedStep() ? "the selected step" : "elsewhere";
+                expect.step(`travels from ${from}`);
+            } else if (wasAnimated && !isAnimated) {
+                expect.step("placed");
+            }
+        }
+    });
+    observer.observe(getFixture(), {
+        subtree: true,
+        attributeFilter: ["class"],
+        attributeOldValue: true,
+    });
+    after(() => observer.disconnect());
+    return { coversSelectedStep };
+}
 
 test("static statusbar widget on many2one field", async () => {
     Partner._fields.trululu = fields.Many2one({
@@ -1374,4 +1410,84 @@ test("correctly rerenders when rpc comes back after a while", async () => {
     await animationFrame();
     const statuses = queryAll(".o_field_statusbar[name='trululu'] .o_arrow_button_wrap");
     expect([...statuses].map((el) => el.textContent)).toEqual(["22", "21"]);
+});
+
+test.tags("desktop");
+test("statusbar highlight is placed, not moved, when the record changes", async () => {
+    watchHighlighter();
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
+                </header>
+            </form>
+        `,
+    });
+    await animationFrame();
+    expect.verifySteps(["travels from the selected step"]);
+
+    await pagerNext();
+    await animationFrame();
+    expect(".o_statusbar_status button[data-value='1']").toHaveClass("o_arrow_button_current");
+    expect.verifySteps(["placed", "travels from the selected step"]);
+});
+
+test.tags("desktop");
+test("statusbar highlight travels to the status picked", async () => {
+    const { coversSelectedStep } = watchHighlighter();
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
+                </header>
+            </form>
+        `,
+    });
+    await animationFrame();
+    expect.verifySteps(["travels from the selected step"]);
+
+    await click(".o_statusbar_status button[data-value='1']");
+    await animationFrame();
+    expect(".o_statusbar_status button[data-value='1']").toHaveClass("o_arrow_button_current");
+    expect(coversSelectedStep()).toBe(true);
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test("statusbar highlight travels to a status set by an action button", async () => {
+    onRpc("partner", "action_confirm", function ({ args }) {
+        this.env["partner"].write(args[0], { trululu: 1 });
+        return true;
+    });
+    const { coversSelectedStep } = watchHighlighter();
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object"/>
+                    <field name="trululu" widget="statusbar" />
+                </header>
+            </form>
+        `,
+    });
+    await animationFrame();
+    expect.verifySteps(["travels from the selected step"]);
+
+    await contains("button[name=action_confirm]").click();
+    await animationFrame();
+    expect(".o_statusbar_status button[data-value='1']").toHaveClass("o_arrow_button_current");
+    expect(coversSelectedStep()).toBe(true);
+    expect.verifySteps([]);
 });

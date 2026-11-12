@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import { queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
@@ -7,6 +7,7 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
 class User extends models.Model {
@@ -240,4 +241,42 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
         message: "should remain favorite",
     });
     expect.verifySteps([]);
+});
+
+test("FavoriteField marks the star set by a click until its animations end", async () => {
+    let animations;
+    patchWithCleanup(Element.prototype, {
+        getAnimations(options) {
+            if (animations && this.matches(".o_favorite_star")) {
+                return [{ finished: animations.promise }];
+            }
+            return super.getAnimations(options);
+        },
+    });
+    await mountView({
+        resModel: "partner",
+        domain: [["id", "=", 1]],
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="bar" widget="boolean_favorite"/>
+                    </t>
+                </templates>
+            </kanban>
+        `,
+    });
+    expect(".o-starFill").toHaveCount(0, { message: "a star already set is not marked" });
+
+    await contains(".o_field_widget .o_favorite").click();
+    expect(".o-starFill").toHaveCount(0, { message: "emptying the star marks nothing" });
+
+    animations = Promise.withResolvers();
+    await contains(".o_field_widget .o_favorite").click();
+    expect(".o_favorite_star.oi-filled.o-starFill").toHaveCount(1);
+
+    animations.resolve();
+    await animationFrame();
+    expect(".o-starFill").toHaveCount(0);
 });

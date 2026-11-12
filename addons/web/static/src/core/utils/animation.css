@@ -1,0 +1,54 @@
+/* Shared by the favourite and the priority fields: both fill the same star and
+   should acknowledge it the same way. */
+@keyframes o-star-pop {
+    0% { transform: scale(1); }
+    11% { transform: scale(.8); }
+    44% { transform: scale(1.25); }
+    78% { transform: scale(.95); }
+    100% { transform: scale(1); }
+}
+
+/* The ring every mark sends off as it is set (a filled star, a ticked
+   checkmark). Sized in `em`, so it follows the glyph it belongs to, and the only
+   tuning left to the caller is where it starts: out of the middle of the mark,
+   or off its edge. */
+@keyframes o-ringBurst {
+    0%, 12.5% { opacity: 0; transform: scale(var(--ringBurst-scaleFrom, .3)); }
+    20% { opacity: 1; }
+    37.5% { opacity: .4; }
+    75% { opacity: .1; }
+    100% { opacity: 0; transform: scale(1.3); }
+}
+
+/* Set by the template along with the mark, and tuned through custom
+   properties. The ring rides `::after`: `.oi` already spends its `::before` on
+   the glyph itself. */
+.o-ringBurst {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1.5em;
+        height: 1.5em;
+        margin: -.75em 0 0 -.75em;
+        border: .15em solid var(--ringBurst-color, currentColor);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+
+        @media (prefers-reduced-motion: no-preference) {
+            animation: o-ringBurst var(--ringBurst-duration, .4s) ease-out var(--ringBurst-delay, 0s) both;
+        }
+    }
+}
+
+.o-starFill {
+    --ringBurst-color: var(--o-main-favorite-color);
+
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o-star-pop .45s ease-out;
+    }
+}
