@@ -352,7 +352,7 @@ class Cart(PaymentPortal):
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
         payment_form_values = CustomerPortal._get_payment_values(
-            self, order, website_id=self.env.website.id, is_express_checkout=True
+            self, order, is_express_checkout=True
         )
         payment_form_values.update({
             "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.

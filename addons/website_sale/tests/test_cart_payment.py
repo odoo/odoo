@@ -70,6 +70,45 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):
             self.make_jsonrpc_request(url, route_kwargs)
 
+    def _shop_transaction(self, payment_method_id):
+        """Make a direct payment of `self.cart` through `/shop/payment/transaction/<id>`."""
+        self.cart.partner_id.write(self.dummy_partner_address_values.copy())
+        self.cart._set_delivery_method(self.free_delivery)
+        route_values = self._prepare_transaction_values(payment_method_id, None, "direct")
+        for key in ("amount", "currency_id", "partner_id", "reference_prefix"):
+            route_values.pop(key)  # The route takes these values from the order
+        route_values["access_token"] = self.cart._portal_ensure_token()
+        return self._portal_transaction(
+            tx_route=f"/shop/payment/transaction/{self.cart.id}", **route_values
+        )
+
+    @mute_logger("odoo.http")
+    def test_shop_transaction_rejects_unavailable_payment_method(self):
+        self.payment_method.active = False
+        with self.assertRaisesRegex(JsonRpcException, "ValidationError"):
+            self._shop_transaction(self.payment_method_id)
+
+    def test_shop_transaction_accepts_unknown_payment_method_for_express_checkout(self):
+        self.provider.allow_express_checkout = True
+        unknown_pm = self.env["payment.method"].create({
+            "name": "Unknown",
+            "code": "unknown",
+            "provider_id": self.provider.id,
+        })
+        with mute_logger("odoo.addons.payment.models.payment_transaction"):
+            processing_values = self._shop_transaction(unknown_pm.id)
+        self.assertTrue(self._get_tx(processing_values["reference"]))
+
+    @mute_logger("odoo.http")
+    def test_shop_transaction_rejects_express_checkout_of_provider_without_express_checkout(self):
+        unknown_pm = self.env["payment.method"].create({
+            "name": "Unknown",
+            "code": "unknown",
+            "provider_id": self.provider.id,
+        })
+        with self.assertRaisesRegex(JsonRpcException, "ValidationError"):
+            self._shop_transaction(unknown_pm.id)
+
     def test_payment_confirmation_mail(self):
         """Check that a salesperson gets assigned when sending payment confirmation mails."""
         self._disable_post_process_patcher()

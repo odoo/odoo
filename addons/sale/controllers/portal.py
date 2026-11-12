@@ -292,8 +292,6 @@ class CustomerPortal(payment_portal.PaymentPortal):
         :rtype: dict
         """
         company = order_sudo.company_id
-        logged_in = not self.env.user._is_public()
-        partner_sudo = self.env.user.partner_id if logged_in else order_sudo.partner_id
         currency = order_sudo.currency_id
 
         if is_down_payment:
@@ -307,6 +305,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
             amount = order_sudo.amount_total
         else:
             amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
+        payment_options_context = CustomerPortal._get_order_payment_options_context(
+            self, order_sudo, amount
+        )
+        partner_sudo = self.env["res.partner"].sudo().browse(payment_options_context["partner_id"])
 
         # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
@@ -320,12 +322,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         # Prepare the payment form values
         payment_form_values = self._prepare_payment_form_values(
-            company.id,
-            partner_sudo.id,
-            amount,
-            currency_id=currency.id,
-            sale_order_id=order_sudo.id,
-            **kwargs,
+            **(kwargs | payment_options_context)
         )
         payment_form_values["show_amount_input"] = not payment_amount and not prepayment_available
 
@@ -342,6 +339,31 @@ class CustomerPortal(payment_portal.PaymentPortal):
             **payment_form_values,
             **payment_context,
             **self._get_extra_payment_form_values(**kwargs),
+        }
+
+    def _get_order_payment_options_context(self, order_sudo, amount):
+        """Return the payment context from which the available payment options of an order are
+        computed.
+
+        The order pages and the order transaction routes use this context, so the transaction
+        routes accept the same payment options that the pages show.
+
+        Like `_get_payment_values`, call this method unbound: the `website_sale` controllers that
+        use it do not inherit from `CustomerPortal`. To add a filter, override
+        `_get_payment_options_context` or `payment.provider._find_available_providers`.
+
+        :param sale.order order_sudo: The sales order to pay.
+        :param float amount: The amount to pay.
+        :return: The kwargs of `_get_available_payment_options`.
+        :rtype: dict
+        """
+        logged_in = not self.env.user._is_public()
+        partner_sudo = self.env.user.partner_id if logged_in else order_sudo.partner_id
+        return {
+            **self._get_payment_options_context(
+                order_sudo.company_id.id, partner_sudo.id, amount, order_sudo.currency_id.id
+            ),
+            "sale_order_id": order_sudo.id,
         }
 
     @http.route(["/my/orders/<int:order_id>/accept"], type="jsonrpc", auth="public", website=True)
@@ -532,6 +554,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
             "currency_id": order_sudo.currency_id.id,
             "sale_order_id": order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
+        payment_options_context = CustomerPortal._get_order_payment_options_context(
+            self, order_sudo, kwargs.get("amount")
+        )
+        self._check_payment_option(payment_options_context, **kwargs)
         tx_sudo = self._create_transaction(
             custom_create_values={"sale_order_ids": [Command.set([order_id])]}, **kwargs
         )

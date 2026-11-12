@@ -2,7 +2,6 @@
 
 from odoo.http import request, route
 
-from odoo.addons.account_payment.controllers import portal as account_payment_portal
 from odoo.addons.payment.controllers import portal as payment_portal
 
 
@@ -62,9 +61,3 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return request.make_json_response(
             supported_pms, headers=[('Cache-Control', cache_control)],
         )
-
-
-class PortalAccount(account_payment_portal.PortalAccount):
-    def _invoice_get_page_view_values(self, *args, **kwargs):
-        """Override of `account_payment` to make the providers filtering website-aware."""
-        return super()._invoice_get_page_view_values(*args, website_id=self.env.website.id, **kwargs)

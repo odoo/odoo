@@ -30,10 +30,22 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
-        logged_in = not request.env.user._is_public()
-        partner_sudo = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
         self._validate_transaction_kwargs(kwargs, additional_allowed_keys={'name_next_installment'})
-        return self._process_transaction(partner_sudo.id, invoice_sudo.currency_id.id, [invoice_id], False, **kwargs)
+
+        payment_options_context = self._get_invoice_payment_options_context(
+            invoice_sudo.partner_id,
+            invoice_sudo.company_id,
+            kwargs.get('amount'),
+            invoice_sudo.currency_id,
+        )
+        self._check_payment_option(payment_options_context, **kwargs)
+        return self._process_transaction(
+            payment_options_context['partner_id'],
+            payment_options_context['currency_id'],
+            [invoice_id],
+            False,
+            **kwargs,
+        )
 
     @route('/invoice/transaction/overdue', type='jsonrpc', auth='public')
     def overdue_invoices_transaction(self, payment_reference, **kwargs):
@@ -54,6 +66,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not all(currency == currencies[0] for currency in currencies):
             raise ValidationError(_("Impossible to pay all the overdue invoices if they don't share the same currency."))
         self._validate_transaction_kwargs(kwargs)
+        payment_options_context = self._get_invoice_payment_options_context(
+            partner, overdue_invoices[:1].company_id, kwargs.get('amount'), currencies[:1]
+        )
+        self._check_payment_option(payment_options_context, **kwargs)
         return self._process_transaction(partner.id, currencies[0].id, overdue_invoices.ids, payment_reference, **kwargs)
 
     def _process_transaction(self, partner_id, currency_id, invoice_ids, payment_reference, **kwargs):

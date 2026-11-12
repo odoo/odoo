@@ -59,12 +59,18 @@ class PaymentProvider(models.Model):
             return self.custom_mode
         return res
 
-    def _find_available_providers(self, *args, is_invoice=False, report=None, **kwargs):
-        """Override of `payment` to exclude pay_on_invoice providers for invoices."""
+    def _find_available_providers(
+        self, *args, is_invoice=False, invoice_id=None, report=None, **kwargs
+    ):
+        """Override of `payment` to exclude pay_on_invoice providers for invoices.
+
+        :param bool is_invoice: Whether the payment is for invoices.
+        :param int invoice_id: The invoice to pay, if any, as an `account.move` id.
+        """
         providers = super()._find_available_providers(
-            *args, is_invoice=is_invoice, report=report, **kwargs
+            *args, is_invoice=is_invoice, invoice_id=invoice_id, report=report, **kwargs
         )
-        if is_invoice:
+        if is_invoice or invoice_id:
             unfiltered_providers = providers
             providers = providers.filtered(lambda p: p.custom_mode != "pay_on_invoice")
             payment_utils.add_to_report(

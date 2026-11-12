@@ -322,6 +322,56 @@ class TestFlows(PaymentHttpCommon):
         ):
             self._portal_transaction(**route_values)
 
+    @mute_logger("odoo.http")
+    def test_transaction_rejects_payment_method_of_another_provider(self):
+        provider_b = self.provider.copy({"is_published": True})
+        pm_b = provider_b.payment_method_ids[:1]
+        with self.assertRaises(JsonRpcException):
+            self._portal_transaction(**self._prepare_transaction_values(pm_b.id, None, "direct"))
+
+    @mute_logger("odoo.http")
+    def test_transaction_rejects_archived_payment_method(self):
+        self.payment_method.active = False
+        with self.assertRaises(JsonRpcException):
+            self._portal_transaction(
+                **self._prepare_transaction_values(self.payment_method_id, None, "direct")
+            )
+
+    @mute_logger("odoo.http")
+    def test_transaction_rejects_token_of_another_provider(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        provider_b = self.provider.copy({"is_published": True})
+        token_b = self._create_token(
+            provider_id=provider_b.id, payment_method_id=provider_b.payment_method_ids[:1].id
+        )
+        with self.assertRaises(JsonRpcException):
+            self._portal_transaction(**self._prepare_transaction_values(None, token_b.id, "token"))
+
+    @mute_logger("odoo.http")
+    def test_transaction_rejects_unavailable_provider(self):
+        self.provider.available_currency_ids = self.currency_usd  # The transaction is in EUR
+        with self.assertRaisesRegex(JsonRpcException, "ValidationError"):
+            self._portal_transaction(
+                **self._prepare_transaction_values(self.payment_method_id, None, "direct")
+            )
+
+    def test_transaction_accepts_payment_method_hidden_by_deduplication(self):
+        provider_b = self.provider.copy({"is_published": True})
+        for payment_method in self.payment_method + provider_b.payment_method_ids[:1]:
+            route_values = self._prepare_transaction_values(payment_method.id, None, "direct")
+            route_values["provider_id"] = payment_method.provider_id.id
+            with mute_logger("odoo.addons.payment.models.payment_transaction"):
+                processing_values = self._portal_transaction(**route_values)
+            self.assertTrue(self._get_tx(processing_values["reference"]))
+
+    def test_transaction_ignores_validation_flag_of_client(self):
+        route_values = self._prepare_transaction_values(self.payment_method_id, None, "direct")
+        route_values["is_validation"] = True  # The access token is for a payment
+        with mute_logger("odoo.addons.payment.models.payment_transaction"):
+            processing_values = self._portal_transaction(**route_values)
+        self.assertEqual(self._get_tx(processing_values["reference"]).operation, "online_direct")
+
     def test_access_providers_tokens(self):
         self.partner = self.portal_partner
 

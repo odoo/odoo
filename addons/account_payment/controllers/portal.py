@@ -108,13 +108,38 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         values |= common_view_values
         return values
 
+    def _get_invoice_payment_options_context(self, invoice_partner, company, amount, currency):
+        """Return the payment context from which the available payment options of invoices are
+        computed.
+
+        The invoice portal page and the invoice transaction route both use this context, so the
+        transaction route accepts the same payment options that the page shows. Override this
+        method to add a filter to the payment options of invoices.
+
+        :param res.partner invoice_partner: The partner of the invoices.
+        :param res.company company: The company of the invoices.
+        :param float amount: The amount to pay.
+        :param res.currency currency: The currency of the invoices.
+        :return: The kwargs of `_get_available_payment_options`.
+        :rtype: dict
+        """
+        logged_in = not self.env.user._is_public()
+        partner_sudo = self.env.user.partner_id if logged_in else invoice_partner
+        return self._get_payment_options_context(
+            (company or self.env.company).id, partner_sudo.id, amount, currency.id
+        )
+
     def _get_common_page_view_values(self, invoices_data, access_token=None, **kwargs):
-        logged_in = not request.env.user._is_public()
-        # We set partner_id to the partner id of the current user if logged in, otherwise we set it
-        # to the invoice partner id. We do this to ensure that payment tokens are assigned to the
-        # correct partner and to avoid linking tokens to the public user.
-        partner_sudo = request.env.user.partner_id if logged_in else invoices_data['partner']
-        invoice_company = invoices_data['company'] or request.env.company
+        payment_options_context = self._get_invoice_payment_options_context(
+            invoices_data['partner'],
+            invoices_data['company'],
+            invoices_data['total_amount'],
+            invoices_data['currency'],
+        )
+        partner_id = payment_options_context['partner_id']
+        company_id = payment_options_context['company_id']
+        partner_sudo = self.env['res.partner'].sudo().browse(partner_id)
+        invoice_company = self.env['res.company'].sudo().browse(company_id)
 
         # Prepare the portal page values
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(
@@ -127,11 +152,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
 
         # Prepare the payment form values
         payment_form_values = self._prepare_payment_form_values(
-            invoice_company.id,
-            partner_sudo.id,
-            invoices_data['total_amount'],
-            currency_id=invoices_data['currency'].id,
-            **kwargs,
+            **(kwargs | payment_options_context)
         )
 
         # Prepare the payment context

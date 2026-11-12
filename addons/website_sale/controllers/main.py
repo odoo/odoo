@@ -1630,9 +1630,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ),
         }
         payment_form_values = {
-            **sale_portal.CustomerPortal._get_payment_values(
-                self, order, website_id=self.env.website.id
-            ),
+            **sale_portal.CustomerPortal._get_payment_values(self, order),
             "display_submit_button": False,  # The submit button is re-added outside the form.
             "transaction_route": f"/shop/payment/transaction/{order.id}",
             "landing_route": "/shop/payment/validate",
