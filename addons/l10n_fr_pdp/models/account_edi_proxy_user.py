@@ -614,6 +614,20 @@ class AccountEdiProxyClientUser(models.Model):
         response_code = info['response_code']
         issue_date = info['issue_date']
         status_infos = info['status_infos']
+
+        if (
+            response_code == 'RE'
+            and flow_number == '2'
+            and content.get('origin_send_timed_out')
+            and status_infos
+            and all(status['reason_code'] == 'DOUBLON' for status in status_infos)
+        ):
+            _logger.info(
+                'The French e-invoicing response with UUID %s is ignored: it rejects as duplicate the retry of a timed out sending (journal entry %s).',
+                uuid, origin_move.id,
+            )
+            return response
+
         origin_ref_status_code = content.get("origin_ref_status_code")
         origin_peppol_lifecycle_uuid = content.get("origin_peppol_lifecycle_uuid")
         origin_ref_status = PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(origin_ref_status_code)

@@ -525,6 +525,56 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertIn('[TRANSAC_INC] Unknown transaction', body)
         self.assertIn('Lifecycle note', body)
 
+    def _import_pdp_duplicate_rejection(self, move, origin_send_timed_out):
+        response_info = {
+            'response_code': 'RE',
+            'issue_date': self.fakenow,
+            'status_infos': [{
+                'reason_code': 'DOUBLON',
+                'reason': 'Facture en doublon (déjà émise / reçue)',
+                'note': '',
+            }],
+        }
+        proxy_model = self.env.registry[self.proxy_user._name]
+        with (
+            patch.object(proxy_model, '_peppol_get_decoded_document', return_value=b''),
+            patch.object(proxy_model, '_pdp_extract_response_info', return_value=response_info),
+        ):
+            self.proxy_user._pdp_import_incoming_response(FAKE_UUID[1], {
+                'flow_number': '2',
+                'origin_ref_status_code': None,
+                'origin_peppol_lifecycle_uuid': None,
+                'origin_send_timed_out': origin_send_timed_out,
+                'state': 'done',
+            }, move)
+
+    def test_pdp_duplicate_rejection_after_timed_out_sending_is_ignored(self):
+        move = self._create_french_invoice()
+        move.action_post()
+        move.peppol_message_uuid = FAKE_UUID[0]
+        move.peppol_move_state = 'done'
+        message_count = len(move.message_ids)
+
+        self._import_pdp_duplicate_rejection(move, origin_send_timed_out=True)
+
+        self.assertFalse(move.peppol_response_ids)
+        self.assertEqual(move.peppol_move_state, 'done')
+        self.assertEqual(len(move.message_ids), message_count)
+
+    def test_pdp_duplicate_rejection_without_timed_out_sending_is_error(self):
+        move = self._create_french_invoice()
+        move.action_post()
+        move.peppol_message_uuid = FAKE_UUID[0]
+        move.peppol_move_state = 'done'
+
+        self._import_pdp_duplicate_rejection(move, origin_send_timed_out=False)
+
+        self.assertEqual(move.peppol_response_ids.response_code, 'RE')
+        self.assertEqual(move.peppol_move_state, 'RE')
+        body = move.message_ids[0].body
+        self.assertIn('Errors from PA Lifecycle:', body)
+        self.assertIn('[DOUBLON]', body)
+
     def test_pdp_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via pdp
         self.env.company.account_peppol_proxy_state = 'rejected'
