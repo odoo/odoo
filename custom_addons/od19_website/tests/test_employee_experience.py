@@ -75,3 +75,23 @@ class TestPortalMyDayHtml(HttpCase):
         assets = self.env["ir.qweb"]._get_asset_content("web.assets_frontend")[0]
         urls = [asset["url"] for asset in assets]
         self.assertIn("/od19_website/static/src/js/od19_my_day.js", urls)
+
+
+@tagged("post_install", "-at_install")
+class TestPortalQuickAccessGroups(HttpCase):
+    def setUp(self):
+        super().setUp()
+        self.tester = self.env["res.users"].create(
+            {
+                "name": "QA Tester",
+                "login": "qa_tester",
+                "password": "qa_tester",
+                "group_ids": [Command.link(self.env.ref("base.group_user").id)],
+            }
+        )
+
+    def test_quick_access_grouped_and_keeps_cards(self):
+        self.authenticate("qa_tester", "qa_tester")
+        html = self.url_open("/employee-portal").text
+        self.assertEqual(html.count("od19-portal-group-title"), 3)
+        self.assertGreaterEqual(html.count("od19-portal-card"), 11)
