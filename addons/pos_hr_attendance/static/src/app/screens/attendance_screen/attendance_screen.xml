@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr_attendance.AttendanceKiosk" t-inherit="hr_attendance.public_kiosk_app" t-inherit-mode="primary">
+        <xpath expr="//MainComponentsContainer" position="replace"/>
+    </t>
+
+    <t t-name="pos_hr_attendance.KioskManualSelection" t-inherit="hr_attendance.public_kiosk_manual_selection" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('position-absolute')]" position="attributes">
+            <attribute name="class" add="d-flex flex-column" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('bg-white')]" position="attributes">
+            <attribute name="class" add="flex-shrink-0" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('flex-md-row')]" position="attributes">
+            <attribute name="class" add="o_pos_kiosk_body flex-grow-1" remove="h-100" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_hr_kiosk_manual_selection')]" position="attributes">
+            <attribute name="class" add="flex-grow-1" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="pos_hr_attendance.AttendanceScreen">
+        <div class="attendance-screen position-relative d-flex flex-column flex-grow-1 h-100 overflow-auto">
+            <PosAttendanceKiosk t-props="this.pos.attendanceKioskInfo"/>
+        </div>
+    </t>
+
+</templates>

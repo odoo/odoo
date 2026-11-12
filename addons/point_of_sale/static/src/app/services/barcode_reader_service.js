@@ -33,9 +33,9 @@ export class BarcodeReader {
             this.cbMaps.add(cbMap);
         }
         return () => {
-            if (exclusive) {
+            if (exclusive && this.exclusiveCbMap === cbMap) {
                 this.exclusiveCbMap = null;
-            } else {
+            } else if (!exclusive) {
                 this.cbMaps.delete(cbMap);
             }
         };
