@@ -33,7 +33,12 @@ export class ReplaceListIconAction extends BuilderAction {
         // Temporarily add the icon to the DOM to read its unicode.
         savedIconEl.style.display = "none";
         editingElement.appendChild(savedIconEl);
-        const iconContent = getComputedStyle(savedIconEl, "::before").content;
+        // Without the empty alternative text of the icon rule (`"name" / ""`):
+        // the list adds its own.
+        const iconContent = getComputedStyle(savedIconEl, "::before").content.replace(
+            /\s*\/\s*(""|'')\s*$/,
+            ""
+        );
         editingElement.removeChild(savedIconEl);
         editingElement.style.setProperty("--icon-list-icon-content", iconContent);
     }
