@@ -163,13 +163,14 @@ export class PaymentScreenPaymentLines extends Component {
 
         // --- Waiting customer action
         else if (["waitingCard", "waitingScan"].includes(status)) {
-            const titles = {
-                waitingCard: _t("Waiting for card"),
-                waitingScan: _t("Waiting for the customer to scan the QR Code"),
-            };
+            const title = line.useQr
+                ? _t("Waiting for the customer to scan the QR Code")
+                : line.useCashMachine
+                ? _t("Waiting for cash to be inserted")
+                : _t("Waiting for card");
 
             state.id = isRefund ? "waiting_refund" : camelToSnakeCase(status);
-            state.title = isRefund ? _t("Refund in process") : titles[status];
+            state.title = isRefund ? _t("Refund in process") : title;
             state.icon = SPINNER_ICON;
             state.iconClass = SPINNER_ICON_CLASS;
             state.actions = [ACTIONS.forceDone, ACTIONS.cancel];

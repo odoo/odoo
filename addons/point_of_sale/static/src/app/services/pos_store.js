@@ -9,7 +9,6 @@ import {
     Counter,
     orderUsageUTCtoLocalUtil,
     getTimeUtil,
-    generateQRCodeDataUrl,
     getColorScheme,
 } from "@point_of_sale/utils";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
@@ -168,6 +167,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.debounceUpdateCustomerDisplay = debounce(() => this.sendOrderToCustomerDisplay(), 100);
 
         this.syncingOrders = new Set();
+
         await this.initServerData();
 
         this.closeOtherTabs();
@@ -184,8 +184,6 @@ export class PosStore extends WithLazyGetterTrap {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
-
-        this.handleQRPaymentLines();
 
         this.debouncedRecomputeServiceFees = debounce((order = this.getOrder()) => {
             order.recomputeServiceFees();
@@ -281,22 +279,6 @@ export class PosStore extends WithLazyGetterTrap {
         return formatFloat(qty, {
             digits: [true, productUnit.digits],
             trailingZeros: trailingZeros,
-        });
-    }
-    handleQRPaymentLines() {
-        // Ensure that all Bank QR payments in the 'waiting' status are automatically set to 'retry'
-        // when the POS session is started or restarted.
-        const order = this.getOrder();
-        if (!order) {
-            return;
-        }
-        order.payment_ids?.forEach((payment) => {
-            if (
-                payment.payment_method_id.useBankQrCode &&
-                payment.getPaymentStatus() === "waiting"
-            ) {
-                payment.setPaymentStatus("retry");
-            }
         });
     }
 
@@ -621,7 +603,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.checkPreviousLoggedCashier();
 
         // Add Payment Interface to Payment Method
-        this.paymentMethods.init(this);
+        this.paymentMethods.init();
 
         // Add Scale
         for (const ScaleInterface of registry.category("electronic_scales").getAll()) {
@@ -938,6 +920,20 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
+        const currentOrder = this.getOrder();
+        if (currentOrder?.raw?.refunded_order_id && !currentOrder?.refunded_order_id) {
+            // Load the order that the current order is refunding
+            await this.data.loadServerOrders([["id", "=", currentOrder?.raw.refunded_order_id]]);
+        }
+
+        for (const order of openOrders) {
+            for (const payment of order.payment_ids) {
+                if (payment.getPaymentStatus().includes("waiting")) {
+                    this.processPayment(payment, true);
+                }
+            }
+        }
+
         await this.deviceSync.readDataFromServer();
     }
 
@@ -1052,44 +1048,82 @@ export class PosStore extends WithLazyGetterTrap {
         line.setDiscount(val);
     }
 
-    async setTip(tip, type = "fixed", value = false) {
-        const currentOrder = this.getOrder();
+    async processPayment(line, isResume = false) {
+        let paymentResult = false;
+        try {
+            paymentResult = isResume ? await line.resumePayment() : await line.pay();
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t("%s transaction failed", line.payment_method_id.name),
+                body: error?.data?.message ?? error?.message ?? error,
+            });
+        }
+        if (line.qr_code) {
+            paymentResult = await this.showPaymentQrCode(line);
+        }
+
+        const order = line.pos_order_id;
+        if (paymentResult.tip_amount) {
+            const totalTip = this.currency.round(
+                this.getTip(order).amount + paymentResult.tip_amount
+            );
+            const newAmount = this.currency.round(line.amount + paymentResult.tip_amount);
+            await this.setTip(totalTip, "fixed", false, order);
+            line.setAmount(newAmount);
+        }
+
+        // Automatically validate the order when after an electronic payment,
+        // the current order is fully paid and due is zero.
+        if (paymentResult && order.uuid === this.selectedOrderUuid) {
+            await this.autoValidateOrder();
+        }
+    }
+
+    async showPaymentQrCode(line) {
+        const isPaymentSuccessful = await ask(this.dialog, line.getQrPopupProps(), {}, QRPopup);
+        line.qr_code = false;
+        line.handlePaymentResponse(isPaymentSuccessful);
+        return isPaymentSuccessful;
+    }
+
+    async setTip(tip, type = "fixed", value = false, order = null) {
+        order ??= this.getOrder();
         const tipProduct = this.config.tip_product_id;
-        let line = currentOrder.lines.find((line) => line.product_id.id === tipProduct.id);
+        let line = order.lines.find((line) => line.product_id.id === tipProduct.id);
 
         // Delete tip
         if (line && !tip) {
             line.delete();
-            currentOrder.setTip(false);
+            order.setTip(false);
         }
 
         // Update tip
         else if (line) {
             line.setUnitPrice(tip);
-            currentOrder.setTip(tip, type, value);
+            order.setTip(tip, type, value);
         }
 
         // Add tip
         else if (tip) {
-            line = await this.addLineToCurrentOrder(
+            line = await this.addLineToOrder(
                 {
                     product_id: tipProduct,
                     price_unit: tip,
                     product_tmpl_id: tipProduct.product_tmpl_id,
                 },
-                {}
+                order
             );
-            currentOrder.setTip(tip, type, value);
+            order.setTip(tip, type, value);
         }
         return line;
     }
 
-    getTip() {
-        const currentOrder = this.getOrder();
+    getTip(order = null) {
+        order ??= this.getOrder();
         return {
-            amount: currentOrder.tip_amount || 0,
-            type: currentOrder.uiState.tip.type || "fixed",
-            value: currentOrder.uiState.tip.value || 0,
+            amount: order.tip_amount || 0,
+            type: order.uiState.tip.type || "fixed",
+            value: order.uiState.tip.value || 0,
         };
     }
 
@@ -2499,49 +2533,6 @@ export class PosStore extends WithLazyGetterTrap {
             return this.ui.isSmall ? this.mobile_pane === "right" : true;
         }
         return false;
-    }
-
-    async showQR(payment) {
-        if (this.currency.isZero(payment.amount)) {
-            this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
-            return false;
-        }
-        payment.setPaymentStatus("waiting");
-        let qrCodeValue;
-        try {
-            qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
-                [payment.payment_method_id.id],
-                payment.amount,
-                payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
-                "",
-                this.currency.id,
-                payment.pos_order_id.partner_id?.id,
-            ]);
-        } catch (error) {
-            qrCodeValue = payment.payment_method_id.default_qr;
-            if (!qrCodeValue) {
-                let message;
-                if (error instanceof ConnectionLostError) {
-                    message = _t(
-                        "Connection to the server has been lost. Please check your internet connection."
-                    );
-                } else {
-                    message = error.data.message;
-                }
-                this.env.services.dialog.add(AlertDialog, {
-                    title: _t("Failure to generate Payment QR Code"),
-                    body: message,
-                });
-                return false;
-            }
-        }
-        payment.qr_code = generateQRCodeDataUrl(qrCodeValue, { useThemeQr: true });
-        return await ask(this.env.services.dialog, payment.getQrPopupProps(), {}, QRPopup).then(
-            (result) => {
-                payment.qr_code = false;
-                return result;
-            }
-        );
     }
 
     displayQrCode(paymentline) {

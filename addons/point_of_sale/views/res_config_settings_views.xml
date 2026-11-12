@@ -451,22 +451,6 @@
                             </block>
 
                             <block title="Payment Terminals" help="Those settings are common to all PoS." id="pos_payment_terminals_section">
-                                <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
-                                        documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
-                                    <field name="module_pos_adyen"/>
-                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'adyen', 'config_ids': [pos_config_id], 'provider_name': 'Adyen'}" invisible="not module_pos_adyen" />
-                                </setting>
-                                <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
-                                    <field name="module_pos_stripe"/>
-                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'stripe', 'config_ids': [pos_config_id], 'provider_name': 'Stripe'}" invisible="not module_pos_stripe" />
-                                </setting>
-                                <setting title="The transactions are processed by Viva.com on terminal or tap on phone." string="Viva.com" help="Accept payments with Viva.com on a terminal or tap on phone" documentation="/applications/sales/point_of_sale/payment_methods/terminals/viva_com.html">
-                                    <field name="module_pos_viva_com"/>
-                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'viva_com', 'config_ids': [pos_config_id], 'provider_name': 'Viva.com'}" invisible="not module_pos_viva_com" />
-                                </setting>
                                 <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/razorpay.html">
                                     <field name="module_pos_razorpay"/>
                                     <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
@@ -491,11 +475,6 @@
                                     <field name="module_pos_dpopay"/>
                                     <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'dpopay', 'config_ids': [pos_config_id], 'provider_name': 'DPO Pay'}" invisible="not module_pos_dpopay" />
-                                </setting>
-                                <setting title="The transactions are processed by SumUp on the terminal." string="SumUp" help="Accept payments with a SumUp payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/sumup.html">
-                                    <field name="module_pos_sumup"/>
-                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'sumup', 'config_ids': [pos_config_id], 'provider_name': 'SumUp'}" invisible="not module_pos_sumup" />
                                 </setting>
                             </block>
 

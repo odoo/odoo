@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_electronic_payment_view_form" model="ir.ui.view">
+        <field name="name">pos.electronic.payment.form</field>
+        <field name="model">pos.electronic.payment</field>
+        <field name="arch" type="xml">
+            <form string="Electronic Payment Methods">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" invisible="not payment_provider"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="integration_type" />
+                        <field name="payment_provider" string="Provider" placeholder="None" invisible="not payment_provider"/>
+                    </group>
+                    <widget name="pos_payment_provider_cards" invisible="not integration_type or payment_provider" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_electronic_payment_view_list" model="ir.ui.view">
+        <field name="name">pos.electronic.payment.list</field>
+        <field name="model">pos.electronic.payment</field>
+        <field name="arch" type="xml">
+            <list string="Electronic Payment Methods">
+                <field name="name" />
+                <field name="integration_type" />
+                <field name="payment_provider" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_electronic_payment_list" model="ir.actions.act_window">
+        <field name="name">Electronic Payment Methods</field>
+        <field name="res_model">pos.electronic.payment</field>
+        <field name="view_id" ref="pos_electronic_payment_view_list"/>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

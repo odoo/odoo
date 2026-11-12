@@ -17,6 +17,7 @@
         'google_address_autocomplete',
         'base_report_wkhtmltox',
         'iot_webserial',
+        'pos_payment_method',
     ],
     'data': [
         'security/point_of_sale_security.xml',
@@ -107,7 +108,6 @@
             'point_of_sale/static/src/backend/pos_kanban_view/*',
             ('remove', 'point_of_sale/static/src/backend/pos_kanban_view/*.dark.css'),
             'point_of_sale/static/src/backend/lna_checklist/*',
-            'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
             'point_of_sale/static/src/backend/views/**/*',
