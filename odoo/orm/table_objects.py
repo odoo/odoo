@@ -42,8 +42,10 @@ class TableObject:
         # database objects should be private member fo the class:
         # first of all, you should not need to access them from any model
         # and this avoid having them in the middle of the fields when listing members
-        assert name.startswith('_'), "Names of SQL objects in a model must start with '_'"
-        assert not name.startswith(f"_{owner.__name__}__"), "Names of SQL objects must not be mangled"
+        if not name.startswith('_'):
+            raise ValueError(f"{owner.__name__}.{name}: names of SQL objects in a model must start with '_'")
+        if name.startswith(f"_{owner.__name__}__"):
+            raise ValueError(f"{owner.__name__}.{name}: names of SQL objects must not be mangled")
         self.name = name[1:]
         if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
             # only for fields on definition classes, not registry classes

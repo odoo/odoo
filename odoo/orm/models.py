@@ -255,8 +255,8 @@ class MetaModel(type):
             # determine '_module'
             if '_module' not in attrs:
                 module = attrs['__module__']
-                assert module.startswith('odoo.addons.'), \
-                    f"Invalid import of {module}.{name}, it should start with 'odoo.addons'."
+                if not module.startswith('odoo.addons.'):
+                    raise TypeError(f"Invalid import of {module}.{name}, it should start with 'odoo.addons'.")
                 attrs['_module'] = module.split('.')[2]
 
             _inherit = attrs.get('_inherit')
@@ -267,7 +267,7 @@ class MetaModel(type):
             if not attrs.get('_name'):
                 # add '.' before every uppercase letter preceded by any non-underscore char
                 attrs['_name'] = re.sub(r"(?<=[^_])([A-Z])", r".\1", name).lower()
-                _logger.warning("Class %s has no _name, please make it explicit: _name = %r", name, attrs['_name'])
+                warnings.warn(f"Class {name} has no _name, please make it explicit: _name = {attrs['_name']!r}", stacklevel=2)
 
             assert attrs.get('_name')
 
@@ -280,7 +280,7 @@ class MetaModel(type):
         super().__init__(name, bases, attrs)
 
         if '__init__' in attrs and len(inspect.signature(attrs['__init__']).parameters) != 4:
-            _logger.warning("The method %s.__init__ doesn't match the new signature in module %s", name, attrs.get('__module__'))
+            warnings.warn(f"The method {name}.__init__ doesn't match the new signature in module {attrs.get('__module__')}", stacklevel=2)
 
         if not attrs.get('_register', True):
             return
@@ -568,9 +568,9 @@ class BaseModel(metaclass=MetaModel):
             for name in func._constrains:
                 field = cls._fields.get(name)
                 if not field:
-                    _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
+                    warnings.warn(f"method {cls._name}.{attr}: @constrains parameter {name!r} is not a field name")
                 elif not (field.store or field.inverse or field.inherited):
-                    _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
+                    warnings.warn(f"method {cls._name}.{attr}: @constrains parameter {name!r} is not writeable")
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed
@@ -598,16 +598,16 @@ class BaseModel(metaclass=MetaModel):
         # collect onchange methods on the model's class
         cls = self.env.registry[self._name]
         methods = defaultdict(list)
-        for _attr, func in getmembers(cls, is_onchange):
+        for attr, func in getmembers(cls, is_onchange):
             missing = []
             for name in func._onchange:
                 if name not in cls._fields:
                     missing.append(name)
                 methods[name].append(func)
             if missing:
-                _logger.warning(
-                    "@api.onchange%r parameters must be field names -> not valid: %s",
-                    func._onchange, missing
+                warnings.warn(
+                    f"method {cls._name}.{attr}: @api.onchange{func._onchange!r} "
+                    f"parameters must be field names -> not valid: {missing}",
                 )
 
         # add onchange methods to implement "change_default" on fields
@@ -2545,12 +2545,16 @@ class BaseModel(metaclass=MetaModel):
                         (self._table, self._table))
 
             if self._parent_store:
+                field = self._fields.get('parent_path')
+                if field is None:
+                    warnings.warn(f"add a field parent_path on model {self._name!r}: `parent_path = fields.Char(index=True)`.")
+                elif not field.index:
+                    warnings.warn(f"parent_path field on model {self._name!r} should be indexed! Add index=True to the field definition.")
                 if not sql.column_exists(cr, self._table, 'parent_path'):
                     sql.create_column(self.env.cr, self._table, 'parent_path', parent_path_type)
                     parent_path_compute = True
                 elif sql.column_collation(cr, self._table, 'parent_path') != 'C':
                     sql.convert_column(cr, self._table, 'parent_path', parent_path_type)
-                self._check_parent_path()
 
             if not must_create_table:
                 self._check_removed_columns(log=False)
@@ -2576,13 +2580,6 @@ class BaseModel(metaclass=MetaModel):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
         """
-
-    def _check_parent_path(self):
-        field = self._fields.get('parent_path')
-        if field is None:
-            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True)`.", self._name)
-        elif not field.index:
-            _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
 
     def _add_sql_constraints(self):
         """ Modify this model's database table objects so they match the one
