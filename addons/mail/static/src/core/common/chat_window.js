@@ -19,6 +19,7 @@ import {
     t,
     useProps,
     usePlugin,
+    useScope,
 } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -65,6 +66,9 @@ export class ChatWindow extends Component {
             jumpThreadPresent: 0,
         });
         this.ui = usePlugin(UIPlugin);
+        // By id, not by class: this file is also loaded in frontend bundles, which
+        // don't include the backend-only CommandPlugin, so its import would fail there.
+        this.command = useScope().pluginManager?.getPluginById("CommandPlugin");
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         this.quickActionsList = computed(() =>
@@ -201,7 +205,7 @@ export class ChatWindow extends Component {
                 break;
             }
             case "control+k":
-                this.store.env.services.command.openMainPalette({ searchValue: "@" });
+                this.command?.openMainPalette({ searchValue: "@" });
                 ev.preventDefault();
                 break;
         }

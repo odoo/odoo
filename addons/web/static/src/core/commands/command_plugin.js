@@ -282,18 +282,3 @@ export class CommandPlugin extends Plugin {
 }
 
 services.add(CommandPlugin);
-
-/**
- * -----------------------------------------------------------------------------
- * @todo owl3 migration
- * temporary - to remove when all use of the command service are removed
- * -----------------------------------------------------------------------------
- */
-export const commandService = {
-    dependencies: ["dialog", "hotkey", "ui"],
-    start() {
-        return usePlugin(CommandPlugin);
-    },
-};
-
-registry.category("services").add("command", commandService);
