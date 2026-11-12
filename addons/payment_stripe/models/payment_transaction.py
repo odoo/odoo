@@ -155,6 +155,7 @@ class PaymentTransaction(models.Model):
             mandate_options = {
                 f"{OPTION_PATH_PREFIX}[payment_schedule]": "sporadic",
                 f"{OPTION_PATH_PREFIX}[transaction_type]": "business",
+                "payment_method_options[acss_debit][currency]": self._stripe_get_currency_name(),
             }
             payment_intent_payload.update(mandate_options)
 
