@@ -6,7 +6,7 @@ RUNBOT = 25
 class WatchedFileHandler(logging.handlers.WatchedFileHandler):
     def __init__(self, filename):
         self.errors = None  # py38
-        super().__init__(filename)
+        super().__init__(filename, encoding='utf-8')
         # Unfix bpo-26789, in case the fix is present
         self._builtin_open = None
 

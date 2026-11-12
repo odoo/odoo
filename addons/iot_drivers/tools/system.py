@@ -14,7 +14,7 @@ from platform import release, system
 
 import netifaces
 
-from odoo import release as odoo_release
+from odoo import release as odoo_release, tools
 
 _logger = logging.getLogger(__name__)
 
@@ -319,6 +319,10 @@ def get_default_handlers() -> frozenset[str] | None:
         str(path_file("odoo", handler))
         for handler in tracked.splitlines()
     )
+
+
+def get_log_path():
+    return tools.config['logfile'] or ("/var/log/odoo/odoo-server.log" if IS_RPI else str(path_file('odoo.log')))
 
 
 IOT_IDENTIFIER = _get_identifier()

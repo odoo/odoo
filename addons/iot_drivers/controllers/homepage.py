@@ -7,7 +7,6 @@ import subprocess
 import threading
 import time
 from itertools import groupby
-from pathlib import Path
 
 import netifaces
 
@@ -28,7 +27,6 @@ from odoo.addons.iot_drivers.tools import (
 from odoo.addons.iot_drivers.tools.system import (
     IOT_IDENTIFIER,
     IOT_SYSTEM,
-    IS_RPI,
     ODOO_START_TIME,
     SYSTEM_START_TIME,
 )
@@ -100,11 +98,10 @@ class IotBoxOwlHomePage(Controller):
 
     @route.iot_route('/iot_drivers/iot_logs', type='http', cors='*')
     def get_iot_logs(self):
-        logs_path = "/var/log/odoo/odoo-server.log" if IS_RPI else Path().absolute().parent.joinpath('odoo.log')
         log_max_size_chars = 2000000
         log_max_size_lines = 10000
 
-        with open(logs_path, encoding="utf-8") as file:
+        with open(system.get_log_path(), encoding="utf-8", errors="replace") as file:
             file_length = file.seek(0, 2)
             starting_offset = max(file_length - log_max_size_chars, 0)
             file.seek(starting_offset)
