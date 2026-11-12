@@ -1,0 +1,45 @@
+/* Animation of the strips of the `Marquee` interaction, which adds the
+   `o_marquee_*` classes. Snippets set the custom properties from their options:
+   - `--marquee-animation`: `o-marquee-scroll-right`, or `none` for no motion;
+   - `--marquee-hover-play-state`, `--marquee-animation-hover-multiplier`: the
+     hover effect (pause, slowdown, swap direction);
+   - `--marquee-scroll-play-state`: `paused` for the parallax effect. */
+
+@keyframes o-marquee-scroll-left {
+    to {
+        transform: translateX(-100%);
+    }
+}
+@keyframes o-marquee-scroll-right {
+    from {
+        transform: translateX(-100%);
+    }
+}
+
+/* Only once ready, so that the strip and its clones start aligned. The second,
+   paused and reversed animation is what the "Swap Direction" hover resumes. */
+.o_marquee_ready .o_marquee_item {
+    --marquee-animation-time: calc((25s - var(--marquee-animation-speed) * 2) * var(--marquee-item-size) * .001);
+
+    animation-composition: add;
+    animation:
+        var(--marquee-animation, o-marquee-scroll-left) linear infinite var(--marquee-animation-time),
+        var(--marquee-animation, o-marquee-scroll-left) linear infinite calc(var(--marquee-animation-time) * var(--marquee-animation-hover-multiplier, 1)) reverse paused;
+}
+
+/* Hover effects, not while the page is scrolling under the pointer. */
+@media (hover: hover) {
+    .o_marquee_ready:where(:hover:not(.o_marquee_page_scrolling)) .o_marquee_item {
+        animation-play-state: var(--marquee-hover-play-state, running, paused);
+    }
+}
+
+.o_marquee_ready.o_marquee_page_scrolling .o_marquee_item {
+    animation-play-state: var(--marquee-scroll-play-state, running, paused);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .o_marquee_ready .o_marquee_item {
+        animation: none;
+    }
+}
