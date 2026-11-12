@@ -224,3 +224,24 @@ test("addTip default amount of a currency without decimals", async () => {
     });
     expect(tip).toBe(2405);
 });
+
+test("addTip fixed tip switched to percent shows no currency symbol", async () => {
+    const store = await setupPosEnv();
+    store.config.iface_tipproduct = true;
+    const order = await getFilledOrder(store);
+    patchWithCleanup(store, { getTip: () => ({ amount: 45, type: "fixed", value: "45" }) });
+
+    let props;
+    const screen = {
+        pos: store,
+        currentOrder: order,
+        dialog: { add: (_, p) => (props = p) },
+    };
+    await PaymentScreen.prototype.addTip.call(screen);
+    expect(props.formatDisplayedValue(props.startingValue, "percent")).toBe("45.00 %");
+    const tip = PaymentScreen.prototype.computeNewTip.call(screen, {
+        value: props.startingValue,
+        type: "fixed",
+    });
+    expect(tip).toBe(45);
+});
