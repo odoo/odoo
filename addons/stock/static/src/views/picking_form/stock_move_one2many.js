@@ -2,10 +2,12 @@ import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { user } from "@web/core/user";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { onWillStart } from "@odoo/owl";
+import { useOwnedDialogs } from "@web/core/utils/hooks";
+import { onWillStart, usePlugin } from "@odoo/owl";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { ORM } from "@web/core/orm_plugin";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export class MovesListRenderer extends ListRenderer {
     static createRowTemplate = "stock.AddPackageListRendererRow";
@@ -13,8 +15,8 @@ export class MovesListRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.addDialog = useOwnedDialogs();
-        this.orm = useService("orm");
-        this.actionService = useService("action");
+        this.orm = usePlugin(ORM);
+        this.actionService = usePlugin(ActionPlugin);
 
         onWillStart(async () => {
             this.hasPackageActive = await user.hasGroup("stock.group_tracking_lot");

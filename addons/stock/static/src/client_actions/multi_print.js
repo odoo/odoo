@@ -1,10 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { usePlugin } from "@odoo/owl";
 
 async function doMultiPrint(actionDescr) {
-    const action = useService("action");
-    const notification = useService("notification");
+    const action = usePlugin(ActionPlugin);
+    const notification = usePlugin(NotificationPlugin);
     for (const report of actionDescr.params.reports) {
         if (report.type != "ir.actions.report") {
             notification.add(

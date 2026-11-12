@@ -1,6 +1,7 @@
-import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
-import { Component, markup, t, useProps } from "@odoo/owl";
+import { Component, markup, t, useProps, usePlugin } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
@@ -10,8 +11,8 @@ export class ForecastedHeader extends Component {
     });
 
     setup(){
-        this.orm = useService("orm");
-        this.action = useService("action");
+        this.orm = usePlugin(ORM);
+        this.action = usePlugin(ActionPlugin);
 
         this._formatFloat = (num) => formatFloat(num, { digits: [0, this.props.docs.precision] });
     }

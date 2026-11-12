@@ -1,11 +1,11 @@
-import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps, usePlugin } from "@odoo/owl";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { ActionPlugin, standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 function processLine(line, lines=[], keepFolded=true) {
     return { ...line, lines: lines, isFolded: keepFolded };
@@ -45,8 +45,8 @@ export class TraceabilityReport extends Component {
     props = useProps(standardActionServiceProps);
 
     setup() {
-        this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.actionService = usePlugin(ActionPlugin);
+        this.orm = usePlugin(ORM);
 
         onWillStart(this.onWillStart);
         useSetupAction({

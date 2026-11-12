@@ -1,13 +1,14 @@
 import { cookie } from "@web/core/browser/cookie";
 import { getColor, getCustomColor } from "@web/core/colors/colors";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { JournalDashboardGraphField } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { usePlugin } from "@odoo/owl";
 
 export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
     setup() {
         super.setup();
-        this.actionService = useService("action");
+        this.actionService = usePlugin(ActionPlugin);
     }
     getBarChartConfig() {
         // Only bar chart is available for picking types

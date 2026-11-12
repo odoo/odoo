@@ -1,4 +1,4 @@
-import { computed, t, useProps } from "@odoo/owl";
+import { computed, t, useProps, usePlugin } from "@odoo/owl";
 import {
     PopoverComponent,
     PopoverWidgetField,
@@ -6,7 +6,7 @@ import {
     popoverWidgetField,
 } from "@stock/widgets/popover_widget";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export class StockRescheculingPopoverComponent extends PopoverComponent {
     props = useProps({
@@ -18,7 +18,7 @@ export class StockRescheculingPopoverComponent extends PopoverComponent {
     setup() {
         super.setup();
 
-        this.action = useService("action");
+        this.action = usePlugin(ActionPlugin);
     }
 
     openElement(ev) {

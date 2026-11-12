@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
-import { useService } from "@web/core/utils/hooks";
 
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -8,6 +7,8 @@ import {
     BooleanToggleField,
     booleanToggleField,
 } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { usePlugin } from "@odoo/owl";
 
 export class ConfirmCheckBox extends CheckBox {
     onClick(ev) {
@@ -26,7 +27,7 @@ export class BooleanToggleConfirm extends BooleanToggleField {
 
     setup() {
         super.setup();
-        this.dialogService = useService('dialog');
+        this.dialogService = usePlugin(DialogPlugin);
     }
 
     onChange(value) {

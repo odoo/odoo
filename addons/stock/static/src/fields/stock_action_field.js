@@ -1,4 +1,4 @@
-import { Component, useProps, t } from "@odoo/owl";
+import { Component, useProps, t, usePlugin } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -9,7 +9,8 @@ import {
     monetaryFieldProps,
 } from "@web/views/fields/monetary/monetary_field";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 const fieldRegistry = registry.category("fields");
 
@@ -30,8 +31,8 @@ class StockActionField extends Component {
 
     setup() {
         super.setup();
-        this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.actionService = usePlugin(ActionPlugin);
+        this.orm = usePlugin(ORM);
         this.fieldType = this.props.record.fields[this.props.name].type;
     }
     

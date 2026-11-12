@@ -1,13 +1,14 @@
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { useService } from "@web/core/utils/hooks";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
+import { ORM } from "@web/core/orm_plugin";
+import { usePlugin } from "@odoo/owl";
 
 
 class BatchToPickingMany2ManyField extends X2ManyField {
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         const selectCreate = useSelectCreate({
             resModel: "stock.picking",
             activeActions: this.activeActions,
