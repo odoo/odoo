@@ -106,11 +106,13 @@ export class WebsiteForum extends Interaction {
         }
 
         this.el.querySelectorAll(".o_wforum_bio_popover").forEach((authorBox) => {
+            const bioTemplate = authorBox.querySelector(".o_wforum_bio_template");
             this.bootstrap.getOrCreateInstance(window.Popover, authorBox, {
                 trigger: "hover",
                 offset: "10",
                 animation: false,
                 html: true,
+                content: () => bioTemplate.content.cloneNode(true),
                 customClass: "o_wforum_bio_popover_container shadow-sm",
             });
         });
