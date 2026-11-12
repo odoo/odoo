@@ -317,7 +317,7 @@
                 <label class="col-form-label label-optional" for="invoice_sending_method">
                     Receive invoices
                 </label>
-                <select name="invoice_sending_method" class="form-select">
+                <select name="invoice_sending_method" id="invoice_sending_method" class="form-select">
                     <option
                         t-foreach="invoice_sending_methods"
                         t-as="method"
@@ -331,7 +331,7 @@
                 <label class="col-form-label label-optional" for="invoice_edi_format">
                     Electronic format
                 </label>
-                <select name="invoice_edi_format" class="form-select">
+                <select name="invoice_edi_format" id="invoice_edi_format" class="form-select">
                     <option value=""/>
                     <option
                         t-foreach="invoice_edi_formats"
