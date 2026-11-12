@@ -676,6 +676,53 @@ class TestBatchPicking(TestStockBatchCommon):
         self.assertEqual(delivery.state, 'assigned')
         self.assertTrue(delivery.batch_id)
 
+    def test_auto_batch_group_by_destination_state(self):
+        """
+        Pickings going to different partners in the same state should be batched together,
+        while a picking to another state gets its own batch.
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        type_special_out = self.env['stock.picking.type'].create({
+            'name': 'Special Delivery',
+            'sequence_code': 'SPECOUT',
+            'code': 'outgoing',
+            'company_id': self.env.company.id,
+            'warehouse_id': warehouse.id,
+            'batch_creation_type': 'auto',
+            'batch_group_by_destination_state': True,
+        })
+        country = self.env.ref('base.us')
+        state1 = self.env.ref('base.state_us_1')
+        state2 = self.env.ref('base.state_us_2')
+        partner_1, partner_2, partner_3 = self.env['res.partner'].create([
+            {'name': 'Partner 1', 'country_id': country.id, 'state_id': state1.id},
+            {'name': 'Partner 2', 'country_id': country.id, 'state_id': state1.id},
+            {'name': 'Partner 3', 'country_id': country.id, 'state_id': state2.id},
+        ])
+        self.env['stock.quant']._update_available_quantity(self.productA, warehouse.lot_stock_id, 30)
+
+        deliveries = self.env['stock.picking'].create([{
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': type_special_out.id,
+            'partner_id': partner.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'uom_id': self.productA.uom_id.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        } for partner in (partner_1, partner_2, partner_3)])
+
+        picking_out_1, picking_out_2, picking_out_3 = deliveries
+
+        deliveries.action_confirm()
+        self.assertTrue(picking_out_1.batch_id)
+        self.assertEqual(picking_out_1.batch_id, picking_out_2.batch_id)
+        self.assertTrue(picking_out_3.batch_id)
+        self.assertNotEqual(picking_out_3.batch_id, picking_out_1.batch_id)
+
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
             Check that the batch is canceled when all transfers are deleted

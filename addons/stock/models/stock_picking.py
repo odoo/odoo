@@ -2037,6 +2037,8 @@ class StockPicking(models.Model):
             domain.append(('partner_id', '=', self.partner_id.id))
         if self.picking_type_id.batch_group_by_destination:
             domain.append(('partner_id.country_id', '=', self.partner_id.country_id.id))
+        if self.picking_type_id.batch_group_by_destination_state:
+            domain.append(('partner_id.state_id', '=', self.partner_id.state_id.id))
         if self.picking_type_id.batch_group_by_src_loc:
             domain.append(('location_id', '=', self.location_id.id))
         if self.picking_type_id.batch_group_by_dest_loc:
@@ -2056,6 +2058,8 @@ class StockPicking(models.Model):
             domain.append(('picking_ids.partner_id', '=', self.partner_id.id))
         if self.picking_type_id.batch_group_by_destination:
             domain.append(('picking_ids.partner_id.country_id', '=', self.partner_id.country_id.id))
+        if self.picking_type_id.batch_group_by_destination_state:
+            domain.append(('picking_ids.partner_id.state_id', '=', self.partner_id.state_id.id))
         if self.picking_type_id.batch_group_by_src_loc:
             domain.append(('picking_ids.location_id', '=', self.location_id.id))
         if self.picking_type_id.batch_group_by_dest_loc:
@@ -2073,6 +2077,8 @@ class StockPicking(models.Model):
             description_items.append(self.partner_id.name or '')
         if self.picking_type_id.batch_group_by_destination and self.partner_id.country_id:
             description_items.append(self.partner_id.country_id.name)
+        if self.picking_type_id.batch_group_by_destination_state and self.partner_id.state_id:
+            description_items.append(self.partner_id.state_id.name)
         if self.picking_type_id.batch_group_by_src_loc and self.location_id:
             description_items.append(self.location_id.display_name)
         if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
