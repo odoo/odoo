@@ -42,3 +42,17 @@ class Od19Recognition(models.Model):
                     _("Kudos message must be %s characters or fewer.")
                     % MESSAGE_MAX_LENGTH
                 )
+
+    @api.constrains("author_id")
+    def _check_author_is_current_user(self):
+        # Constraints are evaluated on a sudoed recordset, so ``self.env.su``
+        # is always True here. ``sudo()`` preserves the acting user, therefore
+        # the checks below rely on ``self.env.user`` and its groups.
+        if self.env.user.has_group("od19_recognition.group_recognition_manager"):
+            return
+        employee = self.env.user.employee_id
+        for record in self:
+            if record.author_id != employee:
+                raise ValidationError(
+                    _("You can only give a Kudos as yourself.")
+                )
