@@ -484,7 +484,11 @@ class IrMailServer(models.Model):
             local, at, domain = smtp_user.rpartition('@')
             if at:
                 smtp_user = local + at + idna.encode(domain).decode('ascii')
-            mail_server._smtp_login(connection, smtp_user, smtp_password or '')
+            try:
+                mail_server._smtp_login(connection, smtp_user, smtp_password or '')
+            except (smtplib.SMTPException, OSError, UserError):
+                connection.close()
+                raise
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
@@ -508,7 +512,18 @@ class IrMailServer(models.Model):
         :param smtp_user: The user to used for the authentication
         :param smtp_password: The password to used for the authentication
         """
-        connection.login(smtp_user, smtp_password)
+        if smtp_user.isascii() and smtp_password.isascii():
+            connection.login(smtp_user, smtp_password)
+            return
+        # smtplib only sends ASCII credentials, AUTH PLAIN is UTF-8 (RFC 4616)
+        connection.ehlo_or_helo_if_needed()
+        if 'plain' not in connection.esmtp_features.get('auth', '').lower().split():
+            raise UserError(_("This SMTP server does not support PLAIN authentication, "
+                              "required for non-ASCII usernames or passwords."))
+        auth = base64.b64encode(f'\0{smtp_user}\0{smtp_password}'.encode()).decode()
+        code, resp = connection.docmd('AUTH', f'PLAIN {auth}')
+        if code != 235:
+            raise smtplib.SMTPAuthenticationError(code, resp)
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
