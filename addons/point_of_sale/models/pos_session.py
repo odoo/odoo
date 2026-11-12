@@ -989,6 +989,7 @@ class PosSession(models.Model):
         sale_orders.account_move = sales_move
         refund_orders.account_move = refunds_move
         non_invoiced_orders.write({'state': 'done'})
+        non_invoiced_orders._update_closing_qty_available()
 
     def _prepare_session_closing_extra_line_commands(self, orders, refund, payments=[]):
         """ Inherited in pos_stock """
@@ -1113,7 +1114,7 @@ class PosSession(models.Model):
                     if payment_term_lines:
                         payment_term_lines[0].balance -= balance_diff
 
-        move_ctx.with_company(self.company_id)._post()
+        move_ctx.with_company(self.company_id).with_context(pos_closing_entry=True)._post()
         default_partner = self.config_id.default_partner_id
         receivable_account = self._get_receivable_account()
 

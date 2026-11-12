@@ -882,6 +882,46 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(refund.state, 'done')
         self.assertEqual(session.state, 'closed')
 
+    def test_qty_available_updated_at_closing_without_stock(self):
+        if not self.env['pos.order']._should_update_quantity_on_product():
+            self.skipTest("The quantity is handled by the stock module")
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 21.2}]],
+            products=[[self.product_6, {'qty': 2}]],
+            extra_data={'partner_id': self.partner_1.id},
+        )
+        refund = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': -10.6}]],
+            products=[[self.product_6, {'qty': -1}]],
+            extra_data={'partner_id': self.partner_1.id, 'is_refund': True, 'refunded_order_id': order.id},
+        )
+        self.assertEqual(self.product_6.qty_available, 100)
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+        )
+        self.assertEqual(self.product_6.qty_available, 99)  # moved by its invoice
+
+        self.close_session()
+        self.assertEqual(self.product_6.qty_available, 98)
+
+        # Invoicing after closing must not move it a second time
+        order.action_pos_order_invoice()
+        refund.action_pos_order_invoice()
+        self.assertEqual(self.product_6.qty_available, 98)
+
+        # Closing entry with product lines must not move it a second time either
+        self.pos_config.use_closing_entry_by_product = True
+        self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+        self.assertEqual(self.product_6.qty_available, 97)
+
     def test_pos_order_sale_and_refund_with_taxes_not_invoiced(self):
         """
         It will also check if cash_pm receivable account is correctly
