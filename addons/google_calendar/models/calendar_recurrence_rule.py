@@ -86,15 +86,15 @@ class CalendarRecurrence(models.Model):
 
     def _write_from_google(self, gevent, vals, calendar):
         current_rrule = self.rrule
-        current_tz = ZoneInfo(self.event_tz) if self.event_tz else None
+        current_tz = ZoneInfo(self.recurrence_tz) if self.recurrence_tz else None
         current_parsed_rrule = self._rrule_parse(current_rrule, self.dtstart, until_tz=current_tz)
-        # event_tz is written on event in Google but on recurrence in Odoo
-        vals['event_tz'] = gevent.start.get('timeZone')
+        # recurrence_tz is written on event in Google but on recurrence in Odoo
+        vals['recurrence_tz'] = gevent.start.get('timeZone')
         super()._write_from_google(gevent, vals, calendar)
 
         base_event_time_fields = ['start', 'stop', 'allday']
         new_event_values = self.env["calendar.event"]._odoo_values(gevent, calendar)
-        new_tz = ZoneInfo(self.event_tz) if self.event_tz else None
+        new_tz = ZoneInfo(self.recurrence_tz) if self.recurrence_tz else None
         new_parsed_rrule = self._rrule_parse(self.rrule, self.dtstart, until_tz=new_tz)
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
@@ -192,8 +192,8 @@ class CalendarRecurrence(models.Model):
                 base_event.write(dict(base_values, google_id=False))
             vals['base_event_id'] = base_event.id
             vals['calendar_event_ids'] = [(4, base_event.id)]
-            # event_tz is written on event in Google but on recurrence in Odoo
-            vals['event_tz'] = gevent.start.get('timeZone')
+            # recurrence_tz is written on event in Google but on recurrence in Odoo
+            vals['recurrence_tz'] = gevent.start.get('timeZone')
             attendee_values[base_event.id] = {'attendee_ids': base_values.get('attendee_ids')}
 
         recurrence = super(CalendarRecurrence, self.with_context(dont_notify=True))._create_from_google(gevents, calendar, vals_list)
@@ -226,8 +226,8 @@ class CalendarRecurrence(models.Model):
         values = event._google_values()
         values['id'] = self.google_id
         if not self._is_allday():
-            values['start']['timeZone'] = self.event_tz or 'Etc/UTC'
-            values['end']['timeZone'] = self.event_tz or 'Etc/UTC'
+            values['start']['timeZone'] = self.recurrence_tz or 'Etc/UTC'
+            values['end']['timeZone'] = self.recurrence_tz or 'Etc/UTC'
 
         # DTSTART is not allowed by Google Calendar API.
         # Event start and end times are specified in the start and end fields.

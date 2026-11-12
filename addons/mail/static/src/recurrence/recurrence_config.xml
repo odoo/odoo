@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.RecurrenceWeekDays">
+        <div class="o_recurrent_weekdays mb-2 d-flex">
+            <t t-foreach="this.weekdays" t-as="day" t-key="day">
+                <div t-attf-class="o_calendar_week_days_rounded {{this.data[day] ? 'text-bg-action' : 'btn-secondary'}}"
+                    t-on-click="this.props.readonly? () => {} : () => this.onChange(day)">
+                    <t t-out="this.props.record.fields[day].string[0]"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.RecurrenceConfig">
+        <div class="o_recurrence_config_widget w-100 o_inner_group grid m-0 p-0 border-0">
+            <div class="o_cell o_wrap_label text-break text-900">
+                <label class="o_form_label">Repeat</label>
+            </div>
+            <div class="o_cell o_wrap_input text-break mb-3 mb-md-0">
+                <Field record="this.record" name="'rrule_type_ui'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly"/>
+            </div>
+            <t t-if="this.data.rrule_type_ui === 'custom'">
+                <div class="o_cell o_wrap_label text-break text-900">
+                    <label class="o_form_label">Repeat Every</label>
+                </div>
+                <div class="o_cell o_wrap_input text-break mb-3 mb-md-0 d-flex gap-2 align-items-center">
+                    <Field record="this.record" name="'interval'" class="'m-0 p-0 o_input_5ch'" readonly="this.isReadonly"/>
+                    <Field record="this.record" name="'rrule_type'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly"/>
+                </div>
+            </t>
+            <t t-if="this.data.rrule_type_ui === 'weekly' or (this.data.rrule_type_ui === 'custom' and this.data.rrule_type === 'weekly')">
+                <div class="o_cell o_wrap_label text-break text-900">
+                    <label class="o_form_label">Repeat On</label>
+                </div>
+                <div class="o_cell o_wrap_input text-break mb-3 mb-md-0 d-flex align-items-center">
+                    <RecurrenceWeekDays record="this.record" readonly="this.isReadonly"/>
+                </div>
+            </t>
+            <t t-if="this.data.rrule_type_ui === 'monthly' or (this.data.rrule_type_ui === 'custom' and this.data.rrule_type === 'monthly')">
+                <div class="o_cell o_wrap_label text-break text-900">
+                    <label class="o_form_label">Day of Month</label>
+                </div>
+                <div class="o_cell o_wrap_input text-break mb-3 mb-md-0 d-flex gap-2 align-items-center">
+                    <Field record="this.record" name="'month_by'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly"/>
+                    <t t-if="this.data.month_by === 'date'">
+                        <Field record="this.record" name="'day'" class="'m-0 p-0 o_input_5ch'" readonly="this.isReadonly"/>
+                    </t>
+                    <t t-if="this.data.month_by === 'day'">
+                        <span class="text-nowrap">The</span>
+                        <Field record="this.record" name="'byday'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly"/>
+                        <Field record="this.record" name="'weekday'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly"/>
+                    </t>
+                </div>
+            </t>
+            <div class="o_cell o_wrap_label text-break text-900">
+                <label class="o_form_label">Until</label>
+            </div>
+            <div class="o_cell o_wrap_input text-break mb-3 mb-md-0 d-flex gap-2 align-items-center">
+                <Field record="this.record" name="'end_type'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly"/>
+                <t t-if="this.data.end_type === 'count'">
+                    <Field record="this.record" name="'count'" class="'m-0 p-0 o_input_5ch'" readonly="this.isReadonly"/>
+                </t>
+                <t t-if="this.data.end_type === 'end_date'">
+                    <Field record="this.record" name="'until'" class="'m-0 p-0 w-auto'" readonly="this.isReadonly" placeholder="'e.g: 12/31/2030'"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
