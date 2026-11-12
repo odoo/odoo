@@ -33,6 +33,16 @@ class HrAttendance(models.Model):
     def _default_employee(self):
         return self.env.user.employee_id
 
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        context = self.env.context
+        if context.get('isAllDay') and context.get('allDayDate') and res.get('employee_id'):
+            day = datetime.fromisoformat(context['allDayDate']).date()
+            employee = self.env['hr.employee'].browse(res['employee_id'])
+            res['check_in'], res['check_out'] = employee._get_default_attendance_slot(day)
+        return res
+
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
         ondelete='cascade', index=True)
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id",
@@ -84,6 +94,7 @@ class HrAttendance(models.Model):
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
+    employee_tz = fields.Char(compute='_compute_employee_tz', export_string_translation=False)
     # compute_sudo: the domain is computed for every user displaying the time
     # type (e.g. My Attendances), even without read access on the time types;
     # the dropdown itself still applies the user's access rights.
@@ -206,6 +217,16 @@ class HrAttendance(models.Model):
                 ) - attendance.break_duration
             else:
                 attendance.worked_hours = False
+
+    @api.depends('employee_id', 'check_in')
+    def _compute_employee_tz(self):
+        """Timezone of the employee on the check in day, for the form to warn when it differs from the browser's."""
+        for attendance in self:
+            if attendance.employee_id and attendance.check_in:
+                # sudo() is needed because attendance officers may not have access to employee versions.
+                attendance.employee_tz = attendance.employee_id.sudo()._get_version(attendance.check_in.date()).tz
+            else:
+                attendance.employee_tz = False
 
     @api.constrains('break_duration', 'check_in', 'check_out')
     def _check_break_duration(self):

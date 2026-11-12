@@ -441,3 +441,49 @@ class HrEmployee(models.Model):
             "tag": "employee_barcode_scanner",
             "name": "Badge Scanner"
         }
+
+    def _get_default_attendance_slot(self, day):
+        """Return the default ``(check_in, check_out)`` of an attendance on ``day``, as naive UTC.
+
+        This is the first slot planned that day in the employee's schedule, at its real hours (a
+        night shift lasts until its end on the next day). Without a planned slot, the average
+        hours per day are centered on noon; without them, the slot is empty and starts at 07:00.
+        The day, noon and 07:00 are in the employee's timezone on that day.
+
+        :param datetime.date day: the day, in the employee's timezone
+        :rtype: tuple[datetime.datetime, datetime.datetime]
+        """
+        self.ensure_one()
+
+        def to_utc(value):
+            # a slot ending at midnight stops at 23:59:59.999999
+            value = value.astimezone(datetime.UTC).replace(tzinfo=None)
+            return value + datetime.timedelta(microseconds=1) if value.microsecond == 999999 else value
+
+        version = self.sudo()._get_version(day)
+        calendar = version.resource_calendar_id
+        tz = ZoneInfo(version.tz or 'UTC')
+        day_start = datetime.datetime.combine(day, time.min, tz)
+        day_stop = datetime.datetime.combine(day + datetime.timedelta(days=1), time.min, tz)
+        if calendar and not calendar._is_fully_flexible():
+            # from the day before to the day after, to merge the night shifts split at midnight
+            intervals = self._get_expected_attendances(
+                date_from=datetime.datetime.combine(day - datetime.timedelta(days=1), time.min, tz),
+                date_to=datetime.datetime.combine(day + datetime.timedelta(days=2), time.min, tz),
+            )
+            slots = []
+            for start, stop, _attendance in intervals:
+                if slots and start - slots[-1][1] <= datetime.timedelta(seconds=1):
+                    slots[-1][1] = stop
+                else:
+                    slots.append([start, stop])
+            for start, stop in slots:
+                if day_start <= start < day_stop:
+                    return to_utc(start), to_utc(stop)
+
+        noon = datetime.datetime.combine(day, time(12), tz)
+        half_day = datetime.timedelta(hours=calendar.hours_per_day / 2)
+        if half_day:
+            return to_utc(noon - half_day), to_utc(noon + half_day)
+        start = datetime.datetime.combine(day, time(7), tz)
+        return to_utc(start), to_utc(start)

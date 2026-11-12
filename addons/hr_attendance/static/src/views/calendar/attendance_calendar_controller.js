@@ -34,6 +34,21 @@ export class AttendanceCalendarController extends CalendarController {
         return super.createRecord(record);
     }
 
+    editRecordInCreation(record) {
+        const isOneDay = !record.end || record.end.hasSame(record.start, "day");
+        if (!record.isAllDay || !isOneDay) {
+            return super.editRecordInCreation(record);
+        }
+        // a day was clicked: the server proposes the employee's schedule for that day
+        const rawRecord = this.model.buildRawRecord(record);
+        const context = {
+            ...this.model.makeContextDefaults(rawRecord),
+            isAllDay: true,
+            allDayDate: record.start.toISODate(),
+        };
+        return this.editRecord(record, context);
+    }
+
     get editRecordDefaultDisplayText() {
         return _t("New Attendance");
     }
