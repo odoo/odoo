@@ -33,7 +33,7 @@ class PurchaseOrder(models.Model):
 
     def _get_destination_location(self):
         self.ensure_one()
-        if self.default_location_dest_id_is_subcontracting_loc:
+        if self.default_location_dest_id_is_subcontracting_loc and self.dest_address_id:
             return self.dest_address_id.property_stock_subcontractor.id
         return super()._get_destination_location()
 
