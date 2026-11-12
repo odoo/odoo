@@ -218,6 +218,7 @@ class CalendarEvent(models.Model):
     is_organizer_alone = fields.Boolean(compute='_compute_is_organizer_alone', string="Is the Organizer Alone",
         help="""Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined
         the event (only if the organizer is not the only attendee)""")
+    is_personal_event = fields.Boolean(compute='_compute_is_personal_event', string="Is the Event Personnal")
     # filtering
     active = fields.Boolean(
         'Active', default=True,
@@ -498,6 +499,17 @@ class CalendarEvent(models.Model):
             organizer = event.attendee_ids.filtered(lambda a: a.partner_id == event.partner_id)
             all_declined = not any((event.attendee_ids - organizer).filtered(lambda a: a.state != 'declined'))
             event.is_organizer_alone = len(event.attendee_ids) > 1 and all_declined
+
+    @api.depends('partner_id', 'attendee_ids')
+    def _compute_is_personal_event(self):
+        """
+            Check if the organizer of the event is the only one attending the event.
+            It represents a personnal event.
+        """
+        for event in self:
+            event.is_personal_event = (
+                len(event.partner_ids) == 1 and event.partner_ids.id == event.partner_id.id
+            )
 
     def _compute_display_time(self):
         for meeting in self:
@@ -926,6 +938,9 @@ class CalendarEvent(models.Model):
             partners = self.env['res.partner'].browse(partner_ids).with_prefetch(partner_ids)
 
             for vals, vals_partner_ids in zip(vals_list, vals_partner_list):
+                organizer = organizers.browse(vals.get('user_id', False))
+                if len(vals_partner_ids) == 1 and organizer.partner_id.id in vals_partner_ids:
+                    continue
                 contact_description = self._get_contact_details_description(
                     organizers.browse(vals.get('user_id', False)),
                     partners.browse(vals_partner_ids),
