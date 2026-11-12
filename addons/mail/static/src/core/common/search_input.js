@@ -1,6 +1,7 @@
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
-import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
+import { Component, signal, t, useEffect } from "@odoo/owl";
 
 import { autofocusParamsType, useAutofocus } from "@web/core/utils/hooks";
 
@@ -22,23 +23,20 @@ export class SearchInput extends Component {
 
     setup() {
         super.setup();
-        this.props = useProps({
+        this.props = usePropsPlus({
             accesskey: t.string().optional(),
             /** @type {boolean | Parameters<typeof useAutofocus>[0]} */
             autofocus: t.or([t.boolean(), autofocusParamsType]).optional(false),
             classNames: t.string().optional(""),
             inputClassNames: t.string().optional(""),
+            /** Input element, either owned by the parent (`inputRef` prop) or local. */
+            inputRef: propStatic(t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref())),
             loadingDelay: t.number().optional(200),
             onClear: t.function([t.instanceOf(MouseEvent)]).optional(),
             onKeydown: t.function([t.instanceOf(KeyboardEvent)]).optional(),
             placeholder: t.string().optional(),
             search: t.instanceOf(SearchStatePlugin),
         });
-        /** Input element, either owned by the parent (`inputRef` prop) or local. */
-        this.inputRef = useProps.static(
-            "inputRef",
-            t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref())
-        );
         this.uniqueId = `mail.SearchInput.${nextId++}`;
         this.spinner = signal(false);
         useEffect(() => {
@@ -51,7 +49,7 @@ export class SearchInput extends Component {
         });
         if (this.props.autofocus) {
             const opts = typeof this.props.autofocus === "object" ? this.props.autofocus : {};
-            useAutofocus({ ...opts, ref: this.inputRef });
+            useAutofocus({ ...opts, ref: this.props.inputRef });
         }
     }
 }

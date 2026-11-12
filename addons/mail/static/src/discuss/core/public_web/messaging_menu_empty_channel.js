@@ -1,6 +1,7 @@
 import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messaging_menu_empty";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 
-import { Component, types, untrack, useEffect, usePlugin, useProps } from "@odoo/owl";
+import { Component, types, untrack, useEffect, usePlugin } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
@@ -12,8 +13,11 @@ export class MessagingMenuEmptyChannel extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = useProps({ title: types.string(), subtitle: types.string().optional() });
-        this.close = useProps.static("close", types.function().optional());
+        this.props = usePropsPlus({
+            close: propStatic(types.function().optional()),
+            subtitle: types.string().optional(),
+            title: types.string(),
+        });
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
         useEffect(() => {
@@ -31,7 +35,7 @@ export class MessagingMenuEmptyChannel extends Component {
 
     onClickFindMoreChannels() {
         this.env.services.action.doAction("mail.discuss_channel_action");
-        this.close?.();
+        this.props.close?.();
     }
 
     /** @param {import("models").DiscussChannel} channel */

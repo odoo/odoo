@@ -12,6 +12,7 @@ import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { Activity } from "@mail/core/web/activity";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { groupAttachments } from "@mail/utils/common/attachments";
+import { mergeProps } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
 import {
@@ -68,25 +69,28 @@ const chatterPatch = {
         // bind once so the references stay stable across renders
         this.onActivityChanged = this.onActivityChanged.bind(this);
         this.reloadParentView = this.reloadParentView.bind(this);
-        this.webChatterProps = useProps({
-            has_activities: t.boolean().optional(true),
-            hasAttachmentPreview: t.boolean().optional(false),
-            hasParentReloadOnActivityChanged: t.boolean().optional(false),
-            hasParentReloadOnAttachmentsChanged: t.boolean().optional(false),
-            hasParentReloadOnFollowersUpdate: t.boolean().optional(false),
-            hasParentReloadOnMessagePosted: t.boolean().optional(false),
-            isAttachmentBoxVisibleInitially: t.boolean().optional(false),
-            isChatterAside: t.boolean().optional(false),
-            record: t.instanceOf(Record).optional(),
-            saveRecord: t.function([]).optional(),
-        });
+        mergeProps(
+            this.props,
+            useProps({
+                has_activities: t.boolean().optional(true),
+                hasAttachmentPreview: t.boolean().optional(false),
+                hasParentReloadOnActivityChanged: t.boolean().optional(false),
+                hasParentReloadOnAttachmentsChanged: t.boolean().optional(false),
+                hasParentReloadOnFollowersUpdate: t.boolean().optional(false),
+                hasParentReloadOnMessagePosted: t.boolean().optional(false),
+                isAttachmentBoxVisibleInitially: t.boolean().optional(false),
+                isChatterAside: t.boolean().optional(false),
+                record: t.instanceOf(Record).optional(),
+                saveRecord: t.function([]).optional(),
+            })
+        );
         // When there's no highlight in the URL (e.g. the record was opened in a new
         // window from the messaging menu), fall back to the one carried by the action
         // context.
-        this.highlightMessage ??= this.webChatterProps.record?.context?.highlight_message_id;
+        this.highlightMessage ??= this.props.record?.context?.highlight_message_id;
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
         useEffect(() => {
-            const record = this.webChatterProps.record;
+            const record = this.props.record;
             // Track the record identity + all of its field changes.
             if (record?.data) {
                 Object.keys(record.data).forEach((field) => record.data[field]);
@@ -96,7 +100,7 @@ const chatterPatch = {
         this.attachmentPopout = usePopoutAttachment({ thread: this.thread });
         this.CHATTER_PANEL = CHATTER_PANEL;
         Object.assign(this.state, {
-            activePanel: this.webChatterProps.isAttachmentBoxVisibleInitially
+            activePanel: this.props.isAttachmentBoxVisibleInitially
                 ? CHATTER_PANEL.ATTACHMENT
                 : CHATTER_PANEL.NONE,
             composerType: false,
@@ -130,7 +134,7 @@ const chatterPatch = {
                     if (isDragSourceExternalFile(ev.dataTransfer)) {
                         const files = [...ev.dataTransfer.files];
                         if (!this.state.thread.id) {
-                            const saved = await this.webChatterProps.saveRecord?.();
+                            const saved = await this.props.saveRecord?.();
                             if (!saved) {
                                 return;
                             }
@@ -168,7 +172,7 @@ const chatterPatch = {
                     this.state.showAttachmentLoading = false;
                     if (
                         this.state.activePanel !== CHATTER_PANEL.ATTACHMENT &&
-                        this.webChatterProps.isAttachmentBoxVisibleInitially &&
+                        this.props.isAttachmentBoxVisibleInitially &&
                         this.attachments.length > 0
                     ) {
                         this.closeSearch();
@@ -281,7 +285,7 @@ const chatterPatch = {
 
     get chatterAncestor() {
         const res = super.chatterAncestor;
-        assignGetter(res, { aside: () => this.webChatterProps.isChatterAside });
+        assignGetter(res, { aside: () => this.props.isChatterAside });
         Object.assign(res, { toggleComposer: this.toggleComposer.bind(this) });
         return res;
     },
@@ -363,19 +367,19 @@ const chatterPatch = {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        this.updateRecipients(this.webChatterProps.record);
+        this.updateRecipients(this.props.record);
     },
 
     onActivityChanged(thread) {
         this.load(thread, this.initialRequestList);
-        if (this.webChatterProps.hasParentReloadOnActivityChanged) {
+        if (this.props.hasParentReloadOnActivityChanged) {
             this.reloadParentView();
         }
     },
 
     onAddFollowers() {
         this.load(this.state.thread, ["followers", "suggestedRecipients"]);
-        if (this.webChatterProps.hasParentReloadOnFollowersUpdate) {
+        if (this.props.hasParentReloadOnFollowersUpdate) {
             this.reloadParentView();
         }
     },
@@ -398,7 +402,7 @@ const chatterPatch = {
         if (this.state.thread.id) {
             return;
         }
-        const saved = await this.webChatterProps.saveRecord?.();
+        const saved = await this.props.saveRecord?.();
         if (!saved) {
             return false;
         }
@@ -500,11 +504,11 @@ const chatterPatch = {
         if (this.scope.isDestroyed()) {
             return;
         }
-        if (this.webChatterProps.saveRecord && !(await this.webChatterProps.saveRecord())) {
+        if (this.props.saveRecord && !(await this.props.saveRecord())) {
             return;
         }
-        if (this.webChatterProps.record) {
-            await this.webChatterProps.record.load();
+        if (this.props.record) {
+            await this.props.record.load();
         }
     },
 
@@ -513,7 +517,7 @@ const chatterPatch = {
         const schedule = async (thread) => {
             await this.store.scheduleActivity(thread.model, [thread.id]);
             this.load(thread, ["activities", "messages"]);
-            if (this.webChatterProps.hasParentReloadOnActivityChanged) {
+            if (this.props.hasParentReloadOnActivityChanged) {
                 await this.reloadParentView();
             }
         };
@@ -521,7 +525,7 @@ const chatterPatch = {
             schedule(this.state.thread);
         } else {
             this.onThreadCreated = schedule;
-            this.webChatterProps.saveRecord?.();
+            this.props.saveRecord?.();
         }
     },
 
@@ -544,7 +548,7 @@ const chatterPatch = {
                 this.state.composerType = false;
             } else {
                 if (mode === "message") {
-                    await this.updateRecipients(this.webChatterProps.record, mode);
+                    await this.updateRecipients(this.props.record, mode);
                 }
                 this.state.composerType = mode;
             }
@@ -553,7 +557,7 @@ const chatterPatch = {
             toggle();
         } else {
             this.onThreadCreated = toggle;
-            this.webChatterProps.saveRecord?.();
+            this.props.saveRecord?.();
         }
     },
 
@@ -572,7 +576,7 @@ const chatterPatch = {
     get showsAttachmentPopout() {
         return (
             !this.isMobileOS &&
-            this.webChatterProps.hasAttachmentPreview &&
+            this.props.hasAttachmentPreview &&
             Boolean(this.state.thread.attachmentsInWebClientView.length)
         );
     },
@@ -582,11 +586,11 @@ const chatterPatch = {
     },
 
     get hasParentReloadOnMessagePosted() {
-        return this.webChatterProps.hasParentReloadOnMessagePosted;
+        return this.props.hasParentReloadOnMessagePosted;
     },
 
     get hasParentReloadOnAttachmentsChanged() {
-        return this.webChatterProps.hasParentReloadOnAttachmentsChanged;
+        return this.props.hasParentReloadOnAttachmentsChanged;
     },
 };
 patch(Chatter.prototype, chatterPatch);

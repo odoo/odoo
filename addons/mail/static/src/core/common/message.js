@@ -27,7 +27,6 @@ import {
     t,
     useOnChange,
     usePlugin,
-    useProps,
 } from "@odoo/owl";
 import { MessageSearchPlugin, useSearchHighlight } from "@mail/core/common/message_search_plugin";
 
@@ -46,9 +45,11 @@ import { NotificationMessage } from "./notification_message";
 import {
     MessageSelectionState,
     propComputed,
+    propStatic,
     useForwardRefsToParent,
     useLongPress,
     useMaybePlugin,
+    usePropsPlus,
     useRightClickMenu,
 } from "@mail/utils/common/hooks";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
@@ -108,23 +109,20 @@ export class Message extends Component {
         });
         this.nbsp = nbsp;
         this.store = useService("mail.store");
-        this.props = useProps({
+        this.props = usePropsPlus({
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
+            isReadOnly: propComputed(t.boolean().optional()),
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
+            onParentMessageClick: propStatic(onParentMessageClickType(this.store).optional()),
             previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
-        this.isReadOnly = propComputed("isReadOnly", t.boolean().optional());
-        this.onParentMessageClick = useProps.static(
-            "onParentMessageClick",
-            onParentMessageClickType(this.store).optional()
-        );
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
             shouldRenderActions: false,
@@ -386,7 +384,7 @@ export class Message extends Component {
     }
 
     get isEditing() {
-        return !this.isReadOnly() && this.props.message.composer;
+        return !this.props.isReadOnly() && this.props.message.composer;
     }
 
     get message() {
