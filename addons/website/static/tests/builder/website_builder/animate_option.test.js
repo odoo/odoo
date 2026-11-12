@@ -1,6 +1,6 @@
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { describe, expect, press, test, waitFor, waitForNone } from "@odoo/hoot";
-import { queryFirst, queryOne } from "@odoo/hoot-dom";
+import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -447,6 +447,11 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(textNode, 1, textNode, 3);
 
         await expandToolbar();
+        for (const button of queryAll(".o-we-toolbar button")) {
+            expect(button).toHaveAttribute("type", "button", {
+                message: `"${button.title || button.className}" should have the button type`,
+            });
+        }
         expect("button[title='Animate Text']").toHaveAttribute("aria-haspopup", "dialog");
         expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "false");
         await contains("button[title='Animate Text']").click();

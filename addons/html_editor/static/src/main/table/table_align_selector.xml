@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableAlignSelector">
         <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
-            <button t-ref="this.tableAlignSelector" class="btn btn-light" t-att-title="this.props.title" t-att-aria-label="this.ariaLabel" name="vertical_align">
+            <button type="button" t-ref="this.tableAlignSelector" class="btn btn-light" t-att-title="this.props.title" t-att-aria-label="this.ariaLabel" name="vertical_align">
                 <t t-set="selectedItem" t-value="this.items.find(item => item.mode === this.state.displayName)" />
                 <t t-call="{{ selectedItem ? selectedItem.template : 'html_editor.VerticalAlignTop' }}" />
             </button>
@@ -10,7 +10,7 @@
                     <t t-foreach="this.items" t-as="item" t-key="item.mode">
                         <DropdownItem
                             tag="'button'"
-                            attrs="{ name: 'vertical_align_' + item.mode, title: item.title, 'aria-label': item.title }"
+                            attrs="{ type: 'button', name: 'vertical_align_' + item.mode, title: item.title, 'aria-label': item.title }"
                             class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.mode === this.state.displayName }"
                             t-on-pointerdown.prevent="() => {}"
                             onSelected="() => this.onSelected(item)"
