@@ -22,7 +22,7 @@
                             </t>
                         </t>
                     </button>
-                    <button
+                    <button aria-label="Reprint preparation tickets"
                             class="reprint-btn h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                             t-on-click="() => this.doReprintOrder.call()"
                             t-elif="this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.prep_order_ids.length"

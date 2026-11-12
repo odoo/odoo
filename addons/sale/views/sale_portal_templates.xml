@@ -1272,7 +1272,7 @@
                         <span class="badge text-bg-info">Delivery &amp; Billing</span>
                         <small
                             t-if="sale_order.partner_id == sale_order.partner_invoice_id == sale_order.env.user.partner_id">
-                            <a class="small"
+                            <a aria-label="Edit" class="small"
                                 t-attf-href="/my/account?redirect={{sale_order.get_portal_url()}}">
                                 <i class="oi oi-fw oi-filled" data-icon="edit"/>
                             </a>
@@ -1288,7 +1288,7 @@
                             <span class="badge text-bg-info">Billing</span>
                             <small
                                 t-if="sale_order.partner_id == sale_order.partner_invoice_id == sale_order.env.user.partner_id">
-                                <a class="small"
+                                <a aria-label="Edit" class="small"
                                     t-attf-href="/my/account?redirect={{sale_order.get_portal_url()}}">
                                     <i class="oi oi-fw oi-filled" data-icon="edit"/>
                                 </a>

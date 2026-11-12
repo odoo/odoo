@@ -5,7 +5,7 @@
             <attribute name="t-if">data.external_url &amp;&amp; !data.course_url</attribute>
         </xpath>
         <xpath expr="//a[@id='external_link']" position="after">
-            <a id="course_link" t-attf-href="#{data.course_url}" target="_blank" t-if="data.course_url"
+            <a aria-label="Open the course" id="course_link" t-attf-href="#{data.course_url}" target="_blank" t-if="data.course_url"
                 style="font-size: 1rem;" class="oi ms-2 btn-secondary" data-icon="open_in_new"/>
         </xpath>
     </t>

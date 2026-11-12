@@ -11,7 +11,7 @@
                 <div t-out="this.props.name"/>
                 <div class="fw-bold w-100">
                     <t t-out="this.props.totalQty"/> <t t-out="this.props.uom.display_name"/>
-                    <button class="btn btn-link oi" data-icon="area_chart"
+                    <button aria-label="Forecasted report" class="btn btn-link oi" data-icon="area_chart"
                             t-on-click="() => this.onClickForecast()"
                             name="forecasted_report_link"/>
                 </div>
@@ -38,7 +38,7 @@
             <td class="border-end py-4 fs-3" t-att-rowspan="this.rowSpan() or false">
                 <div class="mb-2 w-100 text-center">
                     <t t-out="this.props.name"/>
-                    <button class="oi btn btn-link" data-icon="area_chart"
+                    <button aria-label="Forecasted report" class="oi btn btn-link" data-icon="area_chart"
                             t-on-click="() => this.onClickForecast()"
                             name="forecasted_report_link"/>
                 </div>

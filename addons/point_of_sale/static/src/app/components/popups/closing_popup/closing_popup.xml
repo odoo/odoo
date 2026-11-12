@@ -28,7 +28,7 @@
                     onClick="(ev) => ev.target.scrollIntoView({ behavior: 'smooth' })"
                     onBlur="() => this.handlePaymentCountBlur(pm.id)"
                 />
-                <button
+                <button aria-label="Cash details"
                     t-if="pm.is_default_cash"
                     class="icon oi btn btn-secondary"
                     data-icon="payments"

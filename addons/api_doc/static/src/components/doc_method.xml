@@ -9,7 +9,7 @@
             t-att-class="{ ['border-bottom']: this.state.open, o_collapsed: !this.state.open }"
             role="button"
         >
-            <div class="icon-btn" role="button" t-att-class="{ o_collapsed: !this.state.open }">
+            <div class="icon-btn" t-att-class="{ o_collapsed: !this.state.open }">
                 <i class="oi" data-icon="keyboard_arrow_right" aria-hidden="true"></i>
             </div>
             <h4 class="ms-2 mb-0" t-out="this.method.name"></h4>

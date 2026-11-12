@@ -44,7 +44,7 @@
                                 <span class="o-mail-Message-date o-xsmaller">Published on <t t-out="this.message.rating_id.publisher_datetime"/></span>
                                 <div t-if="this.store.self.is_user_publisher" class="d-flex rounded-0">
                                     <Dropdown>
-                                        <button class="bg-transparent border-0">
+                                        <button aria-label="More options" class="bg-transparent border-0">
                                             <i class="btn px-1 py-0 oi" data-icon="more_vert"/>
                                         </button>
                                         <t t-set-slot="content">

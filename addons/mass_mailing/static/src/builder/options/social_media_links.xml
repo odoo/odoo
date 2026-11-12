@@ -12,7 +12,7 @@
     </BuilderRow>
     <div t-ref="this.rootRef">
         <BuilderRow t-foreach="this.medias" t-as="media" t-key="media">
-            <button class="btn o_drag_handle ps-1" t-att-data-sortable-platform="media">
+            <button aria-label="Drag to reorder" class="btn o_drag_handle ps-1" t-att-data-sortable-platform="media">
                 <i class="oi" data-icon="drag_indicator"/>
             </button>
             <BuilderTextInput action="'updateSocialMediaLinks'" actionParam="media" placeholder.translate="www.example.com"/>

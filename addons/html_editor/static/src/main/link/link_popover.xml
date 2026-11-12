@@ -23,7 +23,7 @@
                     <t t-if="this.state.showAdvancedOptions">
                         <div class="o_advance_option_panel">
                             <div class="o_advance_options_grid" style="width: 200px;">
-                                <button class="oi btn btn-secondary border-10" data-icon="keyboard_arrow_left" t-on-click="this.toggleAdvancedOptions"/>
+                                <button aria-label="Back" class="oi btn btn-secondary border-10" data-icon="keyboard_arrow_left" t-on-click="this.toggleAdvancedOptions"/>
                                 <t t-foreach="Object.values(this.state.advancedAttributeOptions)" t-as="opt" t-key="opt.label">
                                     <t t-if="!opt.requires or this.state.advancedAttributeOptions[opt.requires].isChecked">
                                         <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
@@ -63,7 +63,7 @@
                                 t-on-keydown="this.onKeydownEnter"
                                 t-on-input="this.onChange"/>
                             <span class="ms-1" t-if="this.props.canUpload">
-                                or <button class="btn btn-light btn-sm" t-on-click="this.uploadFile"><i class="oi" data-icon="upload"/></button>
+                                or <button aria-label="Upload a file" class="btn btn-light btn-sm" t-on-click="this.uploadFile"><i class="oi" data-icon="upload"/></button>
                             </span>
 
                         </div>
