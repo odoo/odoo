@@ -2133,6 +2133,12 @@ Please change the quantity done or the rounding precision in your settings.""",
         # pop key if the quantity available amount to 0
         return {k: v for k, v in available_move_lines.items() if self.product_id.uom_id.compare(v, 0) > 0}
 
+    def _get_previous_batch(self):
+        batches = self.move_orig_ids.picking_id.batch_id
+        if len(batches) == 1:
+            return batches
+        return self.env['stock.picking.batch']
+
     def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is

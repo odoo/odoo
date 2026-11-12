@@ -187,6 +187,10 @@
                                                 <label for="wave_group_by_date" string="Date if same"/>
                                                 <field name="wave_date_granularity" class="oe_inline" required="wave_group_by_date"/>
                                             </div>
+                                            <div name="batch_propagate" class="o_row" invisible="batch_creation_type == 'manual'" groups="stock.group_adv_location">
+                                                <field name="batch_group_propagate"/>
+                                                <label for="batch_group_propagate" string="Previous Operation Batch"/>
+                                            </div>
                                         </div>
                                     </group>
                                 </group>

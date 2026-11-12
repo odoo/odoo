@@ -676,6 +676,54 @@ class TestBatchPicking(TestStockBatchCommon):
         self.assertEqual(delivery.state, 'assigned')
         self.assertTrue(delivery.batch_id)
 
+    def test_batch_group_propagate(self):
+        """
+        Test the 'propagation' of automatic batches on multi-step route. The batch created on
+        picking should be carried on Quality Control and Storage steps.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse Propagate',
+            'code': 'WHP',
+            'company_id': self.env.company.id,
+            'reception_steps': 'three_steps',
+        })
+        (warehouse.qc_type_id | warehouse.store_type_id).write({
+            'batch_creation_type': 'auto',
+            'batch_group_propagate': True,
+        })
+        moves = self.env['stock.move'].create([{
+            'product_id': product.id,
+            'uom_id': product.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        } for product in [self.productA, self.productB]])
+        receive_pickings = self.env['stock.picking'].create([{
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'move_ids': [Command.set([move.id])],
+        } for move in moves])
+        receive_batch = self.env['stock.picking.batch'].create({
+            'picking_ids': receive_pickings,
+        })
+        receive_batch.action_confirm()
+        receive_batch.action_done()
+
+        qc_pickings = receive_pickings.move_ids.move_dest_ids.picking_id
+        qc_batch = self.env['stock.picking.batch'].search([('picking_type_id', '=', warehouse.qc_type_id.id)])
+        self.assertEqual(len(qc_batch), 1)
+        self.assertEqual(qc_batch.description, receive_batch.display_name)
+        self.assertEqual(qc_batch.picking_ids, qc_pickings)
+        qc_batch.action_confirm()
+        qc_batch.action_done()
+
+        store_pickings = qc_pickings.move_ids.move_dest_ids.picking_id
+        store_batch = self.env['stock.picking.batch'].search([('picking_type_id', '=', warehouse.store_type_id.id)])
+        self.assertEqual(len(store_batch), 1)
+        self.assertEqual(store_batch.description, qc_batch.display_name)
+        self.assertEqual(store_batch.picking_ids, store_pickings)
+
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
             Check that the batch is canceled when all transfers are deleted
