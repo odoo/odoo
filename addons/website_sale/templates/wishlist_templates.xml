@@ -186,11 +186,10 @@
             t-set="in_wish" t-value="templates_in_wishlist and product in templates_in_wishlist"
         />
         <t t-set="btnTitle">Add to wishlist</t>
-        <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
+        <t t-set="btnTitleActive">Remove from wishlist</t>
 
         <button
             t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
-            t-att-disabled="in_wish"
             t-att-data-product-id="product_variant.id"
             t-att-data-product-template-id="product.id"
             t-att-title="in_wish and btnTitleActive or btnTitle"

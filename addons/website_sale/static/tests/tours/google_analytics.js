@@ -209,7 +209,7 @@ registry.category("web_tour.tours").add("website_sale.google_analytics_add_to_wi
         },
         {
             content: "click add to wishlist",
-            trigger: "#product_detail .o_add_wishlist_dyn:not([disabled])",
+            trigger: "#product_detail .o_add_wishlist_dyn:not(.o_in_wishlist)",
             run: "click",
         },
         {
