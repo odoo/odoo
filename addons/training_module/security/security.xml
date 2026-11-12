@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="res_groups_privilege_training" model="res.groups.privilege">
+    <field name="name">Training</field>
+    <field name="sequence">10</field>
+    <field name="category_id" ref="base.module_category_customizations"/>
+  </record>
+
+  <record id="group_training_user" model="res.groups">
+    <field name="name">User</field>
+    <field name="sequence">10</field>
+    <field name="privilege_id" ref="res_groups_privilege_training"/>
+    <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+  </record>
+</odoo>
