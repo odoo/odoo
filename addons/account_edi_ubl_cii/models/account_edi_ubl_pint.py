@@ -82,11 +82,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         super()._ubl_add_invoice_delivery_nodes(vals)
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            document_node = vals['document_node']
-            if document_node['cac:Delivery']:
-                document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
-            else:
-                document_node['cac:Delivery'] = None
+            delivery_node = vals['document_node']['cac:Delivery']
+            if isinstance(delivery_node, list):
+                vals['document_node']['cac:Delivery'] = delivery_node[0] if delivery_node else None
 
     def _ubl_add_document_currency_code_node(self, vals):
         # The currency in which the invoice is issued and in which all monetary amounts are expressed.
@@ -137,12 +135,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                         'cbc:ID': {'_text': preceding_invoice_name},
                     }
                 })
-
-    def _ubl_get_partner_address_node(self, vals, partner):
-        node = super()._ubl_get_partner_address_node(vals, partner)
-        node['cbc:CountrySubentityCode'] = None
-        node['cac:Country']['cbc:Name'] = None
-        return node
 
     def _ubl_add_party_endpoint_id_node(self, vals):
         super()._ubl_add_party_endpoint_id_node(vals)
@@ -372,33 +364,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                 + vals['_ubl_values']['tax_withholding_amount'],
                 min_dp=currency.decimal_places,
             )
-
-    def _init_invoice_export_values(self, invoice):
-        vals = super()._init_invoice_export_values(invoice)
-        AccountTax = self.env['account.tax']
-        company = vals['company']
-
-        # Manage taxes for emptying.
-        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
-            base_lines=vals['base_lines'],
-            company=company,
-            vals=vals,
-        )
-
-        # Sub-dictionaries to store UBL-related values along the whole process.
-        vals['_ubl_values'] = {}
-        for base_line in vals['base_lines']:
-            base_line['_ubl_values'] = {}
-
-        # Global rounding of tax_details using 6 digits.
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-
-        return vals
 
     def _export_document_node_constraints(self, vals):
         """
