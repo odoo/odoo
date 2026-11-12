@@ -275,7 +275,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
     def _mock_part_downloads(self, error=None, content=b'slice'):
         """ Stands in for the storage of the parts: each one decrypts to `content`, unless the download fails. """
         return (
-            patch.object(type(self.Part), '_decrypt_stream', lambda part, response: iter([content])),
+            patch.object(self.env.registry['l10n_pl_edi_batch.part'], '_decrypt_stream', lambda part, response: iter([content])),
             patch('odoo.addons.l10n_pl_edi_batch.models.batch_part.request', side_effect=error),
         )
 
@@ -425,7 +425,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         ready_batch = self._create_batch('ready', {'status': {'code': 200}})
         self._add_zip_parts(ready_batch, zip_bytes)
 
-        AccountMove = type(self.env['account.move'])
+        AccountMove = self.env.registry['account.move']
         decode_fa3_ksef = AccountMove._decode_fa3_ksef
 
         def failing_decoder(move, invoice, file_data, new=False):
