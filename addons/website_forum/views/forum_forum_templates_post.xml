@@ -382,7 +382,7 @@
                     </t>
                     <div class="d-flex align-items-center ms-auto">
                         <t t-if="post_id == question">
-                            <t t-set="user_answer" t-value="uid and post_id.child_ids.filtered(lambda a: a.create_uid.id == uid)"/>
+                            <t t-set="user_answer" t-value="uid and post_id.child_ids.filtered(lambda a: a.create_uid.id == uid)[:1]"/>
                             <div t-if="not user_answer and uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto">
                                 <a t-attf-class="btn opacity-50 opacity-100-hover collapsed #{ 'karma_required text-muted' if not question.can_answer else '' }#{ 'disabled' if forum.has_pending_post else '' } text-decoration-none"
                                     t-att-data-karma="question.forum_id.karma_answer"
