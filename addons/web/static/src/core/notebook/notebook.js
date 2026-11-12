@@ -80,10 +80,15 @@ export class Notebook extends Component {
         useEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
-                this.activePane.el?.classList.add("show");
             },
             () => [this.state.currentPage]
         );
+        useEffect(() => {
+            // Executed after each render: the page may have been switched
+            // back to the rendered one before the render (e.g. fast clicks),
+            // in which case the dependencies above did not change.
+            this.activePane.el?.classList.add("show");
+        });
         onWillRender(() => {
             this.computeInvalidPages();
         });
