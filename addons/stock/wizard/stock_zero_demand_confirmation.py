@@ -16,4 +16,4 @@ class StockZeroDemandConfirmation(models.TransientModel):
 
     def process_without_zero_moves(self):
         self.picking_ids.move_ids.filtered(lambda m: m.product_uom_qty <= 0).unlink()
-        self.process()
+        return self.process()
