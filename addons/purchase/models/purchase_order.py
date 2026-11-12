@@ -403,7 +403,13 @@ class PurchaseOrder(models.Model):
                     seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
                 vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
             orders |= super(PurchaseOrder, self_comp).create(vals)
+        orders.filtered(lambda po: po.state == 'purchase')._check_approval_allowed()
         return orders
+
+    def write(self, vals):
+        if vals.get('state') == 'purchase':
+            self.filtered(lambda po: po.state != 'purchase')._check_approval_allowed()
+        return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_cancelled(self):
@@ -1258,6 +1264,10 @@ class PurchaseOrder(models.Model):
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
             or self.env.user.has_group('purchase.group_purchase_manager'))
+
+    def _check_approval_allowed(self):
+        if not self.env.su and not all(order._approval_allowed() for order in self):
+            raise UserError(_("Only a purchase manager can approve this purchase order."))
 
     def get_localized_date_planned(self, date_planned=False):
         """Returns the localized date planned in the timezone of the order's user or the
