@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("can_create_channel_from_form_view", {
             trigger: '.o-overlay-container .dropdown-menu a:contains("OdooBot")',
             run: "click",
         },
-        { trigger: ".o-mail-MessagingMenu-tab:has(:text('Channels'))", run: "click" },
+        { trigger: ".o-mail-MessagingMenu-tab.active:has(:text('Channels'))" },
         {
             trigger: ".o-mail-MessagingMenuItem:has(:text('Test channel'))",
         },

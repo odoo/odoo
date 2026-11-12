@@ -321,6 +321,21 @@ test("resizing the window adapts the panel", async () => {
     expect(queryOne(".o_resizable_panel").offsetWidth).toBe(200);
 });
 
+test("resizing the window keeps a panel that is not resizable", async () => {
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static template = xml`
+            <ResizablePanel resizable="false">
+                <p class="o_content_shown">A</p>
+            </ResizablePanel>
+        `;
+    }
+
+    await mountWithCleanup(Parent);
+    await resize();
+    expect(".o_content_shown").toHaveCount(1);
+});
+
 test("side panel stays within half the window when the window shrinks", async () => {
     class Parent extends Component {
         static components = { ResizablePanel };
@@ -447,6 +462,44 @@ test("side panel content folds it in place of the toggle button", async () => {
 
     await contains(".o_resizable_panel_folded").click();
     expect(".o_resizable_panel").toHaveCount(1);
+});
+
+test("side panel folding in place keeps its content", async () => {
+    class Content extends Component {
+        static template = xml`
+            <button class="o_fold" t-on-click="() => this.props.toggleFold()">fold</button>
+            <span t-if="!this.props.folded" class="o_full">full</span>
+        `;
+        props = useProps();
+
+        setup() {
+            expect.step("setup");
+        }
+    }
+    class Parent extends Component {
+        static components = { Content, ResizablePanel };
+        static template = xml`
+            <div class="d-flex" style="height: 100px;">
+                <ResizablePanel foldable="true" foldInPlace="true" hasToggle="false" t-slot-scope="panel">
+                    <Content toggleFold="panel.toggleFold" folded="panel.folded"/>
+                </ResizablePanel>
+            </div>
+        `;
+    }
+
+    await mountWithCleanup(Parent);
+    expect.verifySteps(["setup"]);
+    expect(".o_full").toHaveCount(1);
+
+    await contains(".o_fold").click();
+    expect(".o_resizable_panel_folded").toHaveCount(1);
+    expect(".o_resizable_panel").toHaveCount(0);
+    expect(".o_full").toHaveCount(0);
+
+    await contains(".o_fold").click();
+    expect(".o_resizable_panel").toHaveCount(1);
+    expect(".o_full").toHaveCount(1);
+    expect.verifySteps([]);
 });
 
 test("side panel folds and unfolds repeatedly in a single drag", async () => {

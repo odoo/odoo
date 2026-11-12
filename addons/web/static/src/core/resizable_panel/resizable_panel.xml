@@ -3,10 +3,20 @@
 
     <t t-name="web.ResizablePanel">
         <t t-if="!this.props.resizable" t-call-slot="default"/>
-        <div t-elif="!this.props.foldable" class="o_resizable_panel d-flex flex-column" t-att-class="this.class()" t-att-style="this.getStyle()" t-ref="this.containerRef">
-            <t t-call-slot="default"/>
-            <t t-call="web.ResizablePanel.Handle"/>
-        </div>
+        <t t-elif="!this.props.foldable or this.props.foldInPlace">
+            <t t-if="this.props.foldable">
+                <t t-if="this.props.handleSide === 'end'" t-call="web.ResizablePanel.Toggle"/>
+                <t t-else="" t-call="web.ResizablePanel.Handle"/>
+            </t>
+            <div t-att-class="this.containerClass()" t-att-style="this.isFolded() ? undefined : this.getStyle()" t-ref="this.containerRef">
+                <t t-call-slot="default" toggleFold="this.resizablePanel.toggleFold" folded="this.isFolded()"/>
+                <t t-if="!this.props.foldable" t-call="web.ResizablePanel.Handle"/>
+            </div>
+            <t t-if="this.props.foldable">
+                <t t-if="this.props.handleSide === 'end'" t-call="web.ResizablePanel.Handle"/>
+                <t t-else="" t-call="web.ResizablePanel.Toggle"/>
+            </t>
+        </t>
         <t t-else="">
             <t t-if="this.props.handleSide === 'end'" t-call="web.ResizablePanel.Toggle"/>
             <t t-else="" t-call="web.ResizablePanel.Handle"/>

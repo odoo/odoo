@@ -788,7 +788,6 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     expect.verifySteps([]);
     expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
     // Test Pinned Panel right-click doesn't show message actions
-    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
     await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName:value('General'):count(1)");
     await contains("button[title='Pinned Messages']:count(1)").click();

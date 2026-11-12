@@ -34,7 +34,7 @@ function getScrollbarWidth() {
     return scrollbarWidth;
 }
 
-function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }) {
+function useResizablePanel({ props, folded, isFolded, containerRef, handleRef, foldedRef }) {
     let isChangingSize = false;
     let grabOffset = 0;
     let docDirection;
@@ -44,7 +44,6 @@ function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }
     let sizeAnimation;
     let sizeAnimationFrom;
     const getSizeKeyframes = (to) => ({ width: [`${sizeAnimationFrom}px`, `${to}px`] });
-    const isFolded = computed(() => props.foldable && folded());
 
     function toggleFold() {
         sizeAnimationFrom = (containerRef() || foldedRef()).offsetWidth;
@@ -71,7 +70,9 @@ function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }
             duration: 125,
             easing: "ease-out",
         });
-        el.animate({ opacity: [0, 1] }, { duration: 200, easing: "ease-out" });
+        if (!props.foldInPlace) {
+            el.animate({ opacity: [0, 1] }, { duration: 200, easing: "ease-out" });
+        }
         el.style.setProperty("overflow", "hidden", "important");
         sizeAnimation.addEventListener("finish", () => el.style.removeProperty("overflow"));
     });
@@ -81,8 +82,11 @@ function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }
     useListener(document, "mousemove", (ev) => onMouseMove(ev));
 
     useListener(window, "resize", () => {
+        if (!props.resizable) {
+            return;
+        }
         const container = containerRef();
-        if (!container) {
+        if (isFolded()) {
             applyWidthBounds();
             return;
         }
@@ -101,7 +105,11 @@ function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }
     useListener(handleRef, "pointerenter", updateGripOnScrollbar);
 
     function getMaxWidth() {
-        return props.maxWidth ?? (props.foldable ? 0.5 * window.innerWidth : Infinity);
+        if (props.maxWidth !== undefined) {
+            return props.maxWidth;
+        }
+        const ratio = props.maxWidthRatio ?? (props.foldable ? 0.5 : Infinity);
+        return ratio * window.innerWidth;
     }
 
     /** Within the bounds that do not depend on its surroundings. */
@@ -160,10 +168,7 @@ function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }
         const newWidth = getPointerWidth(ev, el) + grabOffset;
         const minWidth = props.minWidth;
         if (isFolded()) {
-            const unfoldWidth = Math.max(
-                0.75 * minWidth,
-                foldedEl ? getContainerRect(foldedEl).width : 0
-            );
+            const unfoldWidth = Math.max(0.75 * minWidth, getContainerRect(el).width);
             if (newWidth >= unfoldWidth) {
                 toggleFold();
             }
@@ -276,7 +281,9 @@ function useResizablePanel({ props, folded, containerRef, handleRef, foldedRef }
  * toggle on its outer edge. Its content can fold it too, with the `toggleFold` of its slot scope,
  * in place of that toggle when `hasToggle` is false. It owns its fold state: it starts as
  * `initialFolded` and `onToggle` reports each change. The panel and its strip fade in as they
- * replace each other.
+ * replace each other. With `foldInPlace`, the content stays instead, and folds itself with the
+ * `folded` value of its slot scope: a prop, so that it renders along with the panel, before the
+ * folded width is measured.
  */
 export class ResizablePanel extends Component {
     static template = "web.ResizablePanel";
@@ -285,7 +292,10 @@ export class ResizablePanel extends Component {
         onResize: t.function().optional(() => () => {}),
         initialWidth: t.number().optional(),
         minWidth: t.number().optional(400),
+        /** In px. Takes precedence over `maxWidthRatio`. */
         maxWidth: t.number().optional(),
+        /** As a ratio of the window width, e.g. 0.3. */
+        maxWidthRatio: t.number().optional(),
         class: t.string().optional(""),
         handleSide: t.selection(["start", "end"]).optional("end"),
         resizable: t.boolean().optional(true),
@@ -294,10 +304,12 @@ export class ResizablePanel extends Component {
         onToggle: t.function().optional(() => () => {}),
         hasToggle: t.boolean().optional(true),
         foldedClass: t.string().optional("o_resizable_panel_folded_text px-3 pt-2 pb-5"),
+        foldInPlace: t.boolean().optional(false),
         slots: t.object().optional(),
     });
 
     folded = signal(this.props.initialFolded);
+    isFolded = computed(() => this.props.foldable && this.folded());
     containerRef = signal.ref();
     foldedRef = signal.ref();
     handleRef = signal.ref();
@@ -308,6 +320,13 @@ export class ResizablePanel extends Component {
             classes.push("position-relative");
         }
         return classes.join(" ");
+    });
+    containerClass = computed(() => {
+        if (this.isFolded()) {
+            return "o_resizable_panel_folded d-flex flex-shrink-0 h-100 d-print-none";
+        }
+        const shrink = this.props.foldable ? " flex-shrink-0" : "";
+        return `o_resizable_panel d-flex flex-column${shrink} ${this.class()}`;
     });
     edgeClass = computed(() => {
         const side = this.props.handleSide === "start" ? "start-0" : "end-0";
@@ -324,6 +343,7 @@ export class ResizablePanel extends Component {
         this.resizablePanel = useResizablePanel({
             props: this.props,
             folded: this.folded,
+            isFolded: this.isFolded,
             containerRef: this.containerRef,
             handleRef: this.handleRef,
             foldedRef: this.foldedRef,
