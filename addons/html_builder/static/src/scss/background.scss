@@ -97,6 +97,43 @@ section, .oe_img_bg, [data-oe-shape-data] {
                     if(map-get($style, 'repeat-x'), repeat, no-repeat)
                     if(map-get($style, 'repeat-y'), repeat, no-repeat);
 
+                /* This element covers its section and draws the shape as its
+                   background image. In Chrome, when the image is anchored at
+                   the bottom of the element and the element height is not a
+                   whole number of pixels, the image can stop a fraction of a
+                   pixel above the bottom of the element. This leaves a thin
+                   line above the next section. The code below avoids it at
+                   100% zoom by rounding up the element height to a whole
+                   number of pixels. */
+
+                /* Height of the image, i.e. the second value of the background
+                   size (e.g. "var(--ShapeMiscellaneous--size-big)" in
+                   "auto var(--ShapeMiscellaneous--size-big)"). */
+                $size: map-get($style, 'size');
+                $tile-height: nth($size, -1);
+                /* Only round when the image height does not depend on the
+                   element width: when it is the full element height (100%), a
+                   size variable or a rem value (e.g. "12rem"). Otherwise (e.g.
+                   "100% auto", or a single value meaning "<value> auto"),
+                   rounding the element height can add lines instead. */
+                @if length($size) == 2 and ($tile-height == 100% or str-index('#{$tile-height}', 'var(') == 1 or (type-of($tile-height) == 'number' and unit($tile-height) == 'rem')) {
+                    /* The image is anchored at the bottom when the flip option
+                       set a bottom background position inline... */
+                    $bottom-selector: '[style*="background-position: 0% 100%"], [style*="background-position: 50% 100%"], [style*="background-position: 100% 100%"]';
+                    /* ... or, without an inline background position, when its
+                       default position is at the bottom. */
+                    @if index(map-get($style, 'position'), bottom) {
+                        $bottom-selector: '#{$bottom-selector}, :not([style*="background-position"])';
+                    }
+                    &:is(#{$bottom-selector}) {
+                        /* Keep the bottom edge of the element in place and
+                           extend the element upward by less than 1px to reach
+                           a whole height. */
+                        top: auto;
+                        height: calc(round(up, 100%, 1px));
+                    }
+                }
+
                 @each $mapping-name, $mapping in $extra-mappings {
                     $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, $mapping or ());
                     $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
