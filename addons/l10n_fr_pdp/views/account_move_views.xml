@@ -63,6 +63,11 @@
             <filter name="peppol_move_state" position="attributes">
                 <attribute name="string">E-Invoicing Status</attribute>
             </filter>
+            <filter name="peppol_move_state" position="after">
+                <filter name="l10n_fr_pdp_status" string="E-Reporting Status"
+                        context="{'group_by': 'l10n_fr_pdp_status'}"
+                        invisible="not context.get('l10n_fr_pdp_flow_id')"/>
+            </filter>
         </field>
     </record>
 
@@ -94,6 +99,43 @@
         <field name="code">
             if records:
                 action = records.action_pdp_open_response_wizard()
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_list_view_move_ereporting" model="ir.ui.view">
+        <field name="name">account.move.list.l10n.fr.pdp.move.ereporting</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" expand="context.get('expand', False)">
+                <field name="made_sequence_hole" column_invisible="True"/>
+                <field name="name" decoration-bf="1" decoration-danger="made_sequence_hole"/>
+                <field name="partner_id" string="Partner" readonly="state != 'draft'"/>
+                <field name="invoice_date" optional="show" readonly="state != 'draft'" string="Invoice Date"/>
+                <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
+                <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                <field name="amount_total_signed" string="Total" sum="Total" optional="show" decoration-bf="1"/>
+                <field name="company_id" options="{'no_create': True}" optional="hide"/>
+                <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']"/>
+                <field name="company_currency_id" column_invisible="True"/>
+                <field name="move_type" column_invisible="True"/>
+                <field name="payment_state"
+                       string="Payment"
+                       widget="badge"
+                       decoration-danger="payment_state == 'not_paid'"
+                       decoration-warning="payment_state in ('partial', 'in_payment')"
+                       decoration-success="payment_state in ('paid', 'reversed')"
+                       invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
+                       optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+                <field name="l10n_fr_pdp_status"
+                       widget="badge"
+                       optional="show"
+                       decoration-danger="l10n_fr_pdp_status == 'error'"
+                       decoration-success="l10n_fr_pdp_status == 'sent'"
+                       decoration-info="l10n_fr_pdp_status == 'ready'"
+                       decoration-muted="l10n_fr_pdp_status in ['pending', 'out_of_scope']"
+                       invisible="not l10n_fr_pdp_status"/>
+            </tree>
         </field>
     </record>
 

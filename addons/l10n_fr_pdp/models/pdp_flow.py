@@ -573,9 +573,14 @@ class PdpFlow(models.Model):
 
     def action_view_moves(self):
         """Open list view of related invoices."""
-        return self._get_moves()._get_records_action(
+        ereporting_view = self.env.ref("l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting", raise_if_not_found=False)
+        view = ereporting_view.id if ereporting_view else False
+        moves = self._get_moves()
+        return moves._get_records_action(
             name=_("Related Invoices"),
-            context={'create': False, 'group_by': ['move_type']},
+            views=[(view, 'list'), (False, 'form')],
+            domain=[('id', 'in', moves.ids)],
+            context={'create': False, 'group_by': ['move_type'], 'expand': True, 'l10n_fr_pdp_flow_id': self.id},
         )
 
     def action_view_initial(self):
