@@ -174,27 +174,61 @@ test("toolbar closes when selection leaves editor", async () => {
 });
 
 test.tags("desktop");
-test("focus should be trap in toolbar on tab", async () => {
+test("Tab should move the focus between toolbar button groups", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await expandToolbar();
+    const firstButtons = queryAll(".o-we-toolbar > .btn-group")
+        .map((group) => group.querySelector("button:not([disabled])"))
+        .filter(Boolean);
+    expect(firstButtons.length).toBeGreaterThan(2);
+    // First button should be focused after expanding toolbar
+    expect(firstButtons[0]).toBeFocused();
+
+    for (let i = 1; i < firstButtons.length; i++) {
+        await press("Tab");
+        expect(firstButtons[i]).toBeFocused();
+    }
+
+    // Tab on last group should cycle back to first
+    await press("Tab");
+    expect(firstButtons[0]).toBeFocused();
+
+    // Shift+Tab on first group should cycle back to last
+    await press(["shift", "tab"]);
+    expect(firstButtons.at(-1)).toBeFocused();
+
+    // Shift+Tab from a button which is not the first of its group should go
+    // to the first button of the previous group
+    const secondGroupBtns = queryAll(".o-we-toolbar > .btn-group")
+        .find((group) => group.contains(firstButtons[1]))
+        .querySelectorAll("button:not([disabled])");
+    expect(secondGroupBtns.length).toBeGreaterThan(1);
+    await press("Tab");
+    await press("Tab");
+    expect(firstButtons[1]).toBeFocused();
+    await press("ArrowRight");
+    expect(secondGroupBtns[1]).toBeFocused();
+    await press(["shift", "tab"]);
+    expect(firstButtons[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("Home and End should move the focus to the first and last toolbar buttons", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
     await expandToolbar();
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    // First button should be focused after expanding toolbar
     expect(toolbarBtns[0]).toBeFocused();
 
-    for (let i = 1; i < toolbarBtns.length; i++) {
-        await press("Tab");
-        expect(toolbarBtns[i]).toBeFocused();
-    }
-
-    // Tab on last button should cycle back to first
-    await press("Tab");
+    await press("End");
+    expect(toolbarBtns.at(-1)).toBeFocused();
+    await press("ArrowLeft");
+    expect(toolbarBtns.at(-2)).toBeFocused();
+    await press("Home");
     expect(toolbarBtns[0]).toBeFocused();
-
-    // Shift+Tab on first button should cycle back to last
-    await press(["shift", "tab"]);
-    expect(toolbarBtns[toolbarBtns.length - 1]).toBeFocused();
 });
 
 test.tags("desktop");
