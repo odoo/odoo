@@ -158,6 +158,26 @@ test("create does not write the defaults into the given values", async () => {
     expect(values).toEqual({ name: "Jane Doe" });
 });
 
+test("read of a browsed record gives its many2one to the same model", async () => {
+    class ResPartner extends models.Model {
+        name = fields.Char();
+        parent_id = fields.Many2one({ relation: "res.partner" });
+
+        _records = [
+            { id: 1, name: "John Doe" },
+            { id: 2, name: "Jane Doe", parent_id: 1 },
+        ];
+    }
+
+    defineModels([ResPartner]);
+
+    const { env } = await makeMockServer();
+
+    expect(env["res.partner"].browse(2)._read_format(2, ["parent_id"])).toEqual([
+        { id: 2, parent_id: [1, "John Doe"] },
+    ]);
+});
+
 describe("level 1", () => {
     Oui._fields.age = fields.Integer();
     Oui._records[0].age = 42;

@@ -3417,11 +3417,11 @@ export class Model extends Array {
 
         // Mapping of model records used in the current read call.
         /** @type {Record<string, Record<number, ModelRecord>>} */
-        const modelMap = {
-            [this._name]: {},
-        };
+        const modelMap = {};
+        /** @type {Record<number, ModelRecord>} */
+        const recordById = {};
         for (const record of this) {
-            modelMap[this._name][record.id] = record;
+            recordById[record.id] = record;
         }
         for (const fieldName of fieldNames) {
             const field = this._fields[fieldName];
@@ -3448,7 +3448,7 @@ export class Model extends Array {
                     `Cannot read: falsy ID value would result in an access error on the actual server`
                 );
             }
-            const record = modelMap[this._name][id];
+            const record = recordById[id];
             if (!record) {
                 continue;
             }
