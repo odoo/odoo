@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_recognition" model="res.groups.privilege">
+        <field name="name">Recognition</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="sequence">42</field>
+    </record>
+
+    <record id="group_recognition_user" model="res.groups">
+        <field name="name">Recognition User</field>
+        <field name="comment">Give Kudos and view the recognition wall.</field>
+        <field name="privilege_id" ref="res_groups_privilege_recognition"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_recognition_manager" model="res.groups">
+        <field name="name">Recognition Manager</field>
+        <field name="comment">Moderate all Kudos and maintain the badge catalog.</field>
+        <field name="privilege_id" ref="res_groups_privilege_recognition"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_recognition_user'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_recognition_manager'))]"/>
+    </record>
+
+    <!-- Read-only: public Kudos, or my own, within my companies -->
+    <record id="recognition_rule_read" model="ir.rule">
+        <field name="name">Recognition: read public or mine</field>
+        <field name="model_id" ref="model_od19_recognition"/>
+        <field name="domain_force">[('company_id', 'in', company_ids), '|', ('is_public', '=', True), ('author_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_recognition_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Write/unlink: only the author keeps control of their own Kudos -->
+    <record id="recognition_rule_owner_write" model="ir.rule">
+        <field name="name">Recognition: only author can edit</field>
+        <field name="model_id" ref="model_od19_recognition"/>
+        <field name="domain_force">[('author_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('group_recognition_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Managers can moderate everything -->
+    <record id="recognition_rule_manager" model="ir.rule">
+        <field name="name">Recognition: managers can moderate all</field>
+        <field name="model_id" ref="model_od19_recognition"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_recognition_manager'))]"/>
+    </record>
+
+    <record id="recognition_badge_rule_manager" model="ir.rule">
+        <field name="name">Recognition badge: managers can maintain</field>
+        <field name="model_id" ref="model_od19_recognition_badge"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('group_recognition_manager'))]"/>
+    </record>
+</odoo>
