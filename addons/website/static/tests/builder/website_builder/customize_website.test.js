@@ -341,7 +341,7 @@ test("BuilderButton with action “previewableWebsiteConfig”", async () => {
     expect(":iframe .test-options-target").toHaveClass("test_class_2");
 
     await contains(".o-snippets-top-actions [data-action='save']").click();
-    expect.verifySteps(["websiteSave", "theme_customize_data"]);
+    expect.verifySteps(["theme_customize_data", "websiteSave"]);
 });
 
 test("Undo and redo “previewableWebsiteConfig” action", async () => {
@@ -397,7 +397,7 @@ test("Undo and redo “previewableWebsiteConfig” action", async () => {
     expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
 
     await contains(".o-snippets-top-actions [data-action='save']").click();
-    expect.verifySteps(["websiteSave", "theme_customize_data"]);
+    expect.verifySteps(["theme_customize_data", "websiteSave"]);
 });
 
 test("No rpc call if “previewableWebsiteConfig” action is undone", async () => {
