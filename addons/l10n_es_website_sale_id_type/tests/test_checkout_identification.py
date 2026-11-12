@@ -223,6 +223,60 @@ class TestCheckoutIdentification(BaseCommon, HttpCase):
             {'ES_RES_CERT': 'RC-1', 'ES_PASSPORT': 'PP-1'},
         )
 
+    def test_selector_changes_identifier_preserves_other_identifiers(self):
+        self.partner.sudo().additional_identifiers = {'ES_PASSPORT': 'PP-1', 'ES_RES_CERT': 'RC-1'}
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self._add_to_cart()
+        res = self._submit(country_id=self.es.id, l10n_es_id_type='ES_PASSPORT', ES_PASSPORT='PP-2')
+        self.assertIn('redirectUrl', res)
+        self.partner.invalidate_recordset(['additional_identifiers'])
+        self.assertEqual(
+            self.partner.additional_identifiers,
+            {'ES_PASSPORT': 'PP-2', 'ES_RES_CERT': 'RC-1'},
+        )
+
+    def test_selector_clears_last_identifier(self):
+        self.partner.sudo().additional_identifiers = {'ES_PASSPORT': 'PP-1'}
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self._add_to_cart()
+        res = self._submit(country_id=self.es.id, l10n_es_id_type='ES_PASSPORT', ES_PASSPORT='')
+        self.assertIn('redirectUrl', res)
+        self.partner.invalidate_recordset(['additional_identifiers'])
+        self.assertFalse(self.partner.additional_identifiers)
+
+    def test_selector_adds_identifier_with_confirmed_documents(self):
+        """Adding an unset identifier must preserve the unchanged identifiers portal filters out."""
+        self.partner.sudo().write({
+            'country_id': self.es.id,
+            'additional_identifiers': {'ES_RES_CERT': 'RC-1', 'DUNS': '372441183'},
+        })
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self._add_to_cart()
+        with patch.object(self.env.registry['res.partner'], '_has_confirmed_documents', return_value=True):
+            res = self._submit(country_id=self.es.id, l10n_es_id_type='ES_PASSPORT', ES_PASSPORT='PP-1')
+        self.assertIn('redirectUrl', res)
+        self.partner.invalidate_recordset(['additional_identifiers'])
+        self.assertEqual(
+            self.partner.additional_identifiers,
+            {'ES_RES_CERT': 'RC-1', 'DUNS': '372441183', 'ES_PASSPORT': 'PP-1'},
+        )
+
+    def test_selector_cannot_change_identifier_with_confirmed_documents(self):
+        self.partner.sudo().write({
+            'country_id': self.es.id,
+            'additional_identifiers': {'ES_PASSPORT': 'PP-1', 'ES_RES_CERT': 'RC-1'},
+        })
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self._add_to_cart()
+        with patch.object(self.env.registry['res.partner'], '_has_confirmed_documents', return_value=True):
+            res = self._submit(country_id=self.es.id, l10n_es_id_type='ES_PASSPORT', ES_PASSPORT='PP-2')
+        self._assert_blocked(res, invalid_field='ES_PASSPORT')
+        self.partner.invalidate_recordset(['additional_identifiers'])
+        self.assertEqual(
+            self.partner.additional_identifiers,
+            {'ES_PASSPORT': 'PP-1', 'ES_RES_CERT': 'RC-1'},
+        )
+
     def test_switching_id_type_keeps_previous_identifier(self):
         """ Switching the ID type saves the new identifier without clearing the previous one,
         and the form reopens on the first identifier stored in the selector's order. """
