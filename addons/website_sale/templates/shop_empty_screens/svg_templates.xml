@@ -7,11 +7,17 @@
                     animation: heartBeat 1.3s ease-in-out forwards;
                     animation-delay: 0.75s;
                     transform-origin: 80.5px 28.5px;
+                    @media (prefers-reduced-motion: reduce) {
+                        animation: none;
+                    }
                 }
                 .tilt {
                     animation: tilt 1s ease forwards;
                     animation-delay: 0.75s;
                     transform-origin: bottom left;
+                    @media (prefers-reduced-motion: reduce) {
+                        animation: none;
+                    }
                 }
                 @keyframes heartBeat {
                     0% {
