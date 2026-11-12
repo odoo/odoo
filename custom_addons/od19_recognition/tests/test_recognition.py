@@ -318,3 +318,34 @@ class TestRecognitionPortal(HttpCase):
         self.assertEqual(response.status_code, 200)
         feed_ids = [item["id"] for item in response.json()["feed"]]
         self.assertNotIn(cross.id, feed_ids)
+
+
+@tagged("post_install", "-at_install")
+class TestRecognitionInjection(HttpCase):
+    def setUp(self):
+        super().setUp()
+        self.tester = self.env["res.users"].create(
+            {
+                "name": "Wall Tester",
+                "login": "wall_tester",
+                "password": "wall_tester",
+                "group_ids": [
+                    Command.link(self.env.ref("base.group_user").id),
+                    Command.link(
+                        self.env.ref("od19_recognition.group_recognition_user").id
+                    ),
+                ],
+            }
+        )
+
+    def test_team_wall_injected_into_portal(self):
+        self.authenticate("wall_tester", "wall_tester")
+        html = self.url_open("/employee-portal").text
+        self.assertIn("od19-team-wall", html)
+        self.assertIn('data-od19-recognition-summary="/my/recognition/summary"', html)
+
+    def test_recognition_full_page_opens(self):
+        self.authenticate("wall_tester", "wall_tester")
+        response = self.url_open("/my/recognition")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("ให้ Kudos", response.text)

@@ -16,7 +16,16 @@
         "security/od19_recognition_security.xml",
         "security/ir.model.access.csv",
         "data/od19_recognition_badge_data.xml",
+        "views/portal_templates.xml",
+        "views/od19_recognition_views.xml",
+        "views/menus.xml",
     ],
+    "assets": {
+        "web.assets_frontend": [
+            "od19_recognition/static/src/css/od19_recognition.css",
+            "od19_recognition/static/src/js/od19_recognition_wall.js",
+        ],
+    },
     "installable": True,
     "application": False,
     "auto_install": False,

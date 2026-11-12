@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_od19_recognition_root"
+              name="Recognition"
+              parent="hr.menu_hr_root"
+              groups="od19_recognition.group_recognition_manager"
+              sequence="95"/>
+    <menuitem id="menu_od19_recognition_kudos"
+              name="Kudos"
+              parent="menu_od19_recognition_root"
+              action="action_od19_recognition"
+              sequence="10"/>
+    <menuitem id="menu_od19_recognition_badges"
+              name="Badges"
+              parent="menu_od19_recognition_root"
+              action="action_od19_recognition_badge"
+              sequence="20"/>
+</odoo>
