@@ -151,12 +151,17 @@ class TestSort(TransactionCase):
                 )
 
     def test_compare_new_id(self):
-        self.assertLess(5, NewId())
+        # expected order: 3, NewId(3), 4, NewId(4), 5, NewId(5), NewId()
         self.assertLess(3, NewId(4))
-        self.assertGreater(5, NewId(4))
-        self.assertGreaterEqual(5, NewId(4))
         self.assertLess(4, NewId(4))
-        self.assertGreater(NewId(5), NewId(4))
+        self.assertLess(NewId(4), 5)
+
+        self.assertLess(NewId(4), NewId(5))
+
+        nx, ny = NewId(), NewId()
+        self.assertLess(5, nx)
+        self.assertLess(NewId(5), nx)
+        self.assertFalse(nx < ny or ny < nx)  # no order
 
     def test_sorted_new_id(self):
         new_countries = self.env['test_orm.country'].concat(*[
