@@ -228,3 +228,35 @@ class TestAccruedSaleOrders(TestSaleCommon):
         """ When nothing has been delivered nor invoiced yet, both account
         types should be proposed by default. """
         self._assert_account_domain(self.sale_order, {'asset_current', 'liability_current'})
+
+    def test_amount_to_invoice_at_date_discount_and_included_tax(self):
+        """ The amount to accrue is the untaxed amount that will be invoiced: discount applied
+        and price-included taxes removed. """
+        tax_included = self.env['account.tax'].create({
+            'name': 'Tax 10% included',
+            'amount': 10.0,
+            'price_include_override': 'tax_included',
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'price_unit': 10.0,
+                    'discount': 10.0,
+                    'tax_ids': False,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'product_uom_qty': 10.0,
+                    'price_unit': 11.0,
+                    'tax_ids': [Command.set(tax_included.ids)],
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order.order_line.qty_delivered = 10
+        lines = sale_order.order_line.with_context(accrual_entry_date=fields.Date.today())
+        self.assertEqual(lines.mapped('price_subtotal'), [90.0, 100.0])
+        self.assertEqual(lines.mapped('amount_to_invoice_at_date'), [90.0, 100.0])
