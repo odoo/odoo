@@ -145,6 +145,16 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.l10n_ro_edi_document_ids.filtered(lambda d: d.state in ('invoice_sending', 'invoice_sending_failed'))
 
+    def _l10n_ro_edi_is_extern(self):
+        """ Whether the buyer is outside Romania, i.e. has a foreign address and no Romanian VAT number (CUI) """
+        self.ensure_one()
+        partner = self.partner_id.commercial_partner_id
+        return bool(
+            partner.country_code
+            and partner.country_code != 'RO'
+            and not (partner.vat or '').upper().startswith('RO')
+        )
+
     ################################################################################
     # Send Logics
     ################################################################################
@@ -184,8 +194,9 @@ class AccountMove(models.Model):
             return
 
         self.env['res.company']._with_locked_records(self)
+        is_b2b = self.partner_id.commercial_partner_id.is_company
         result = self.env['l10n_ro_edi.document']\
-                     .with_context(is_b2b=self.partner_id.commercial_partner_id.is_company)\
+                     .with_context(is_b2b=is_b2b, is_extern=is_b2b and self._l10n_ro_edi_is_extern())\
                      ._request_ciusro_send_invoice(
             company=self.company_id,
             xml_data=xml_data,
