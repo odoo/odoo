@@ -45,12 +45,9 @@ class AccountMove(models.Model):
                 for line in move.line_ids.filtered(lambda l: l.tax_ids):
                     if not line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.is_withholding_tax):
                         continue
-                    base_line = AccountTax._prepare_base_line_for_taxes_computation(
-                        line,
-                        price_unit=line.price_unit,
-                        quantity=line.quantity,
-                        currency_id=move.currency_id,
-                        calculate_withholding_taxes=True,
+                    base_line = AccountTax._prepare_withholding_base_line(
+                        move._prepare_product_base_line_for_taxes_computation(line),
+                        move.company_id,
                     )
 
                     AccountTax._add_tax_details_in_base_line(base_line, move.company_id)

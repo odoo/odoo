@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.tests import tagged
 
@@ -32,6 +34,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
             'account_type': 'asset_current'
         })
         cls.company_data['company'].tax_calculation_rounding_method = 'round_per_line'
+
+    def _patch_total_included_price(self):
+        """ Simulate documents whose price unit includes the regular taxes, such as expenses paid by an employee. """
+        AccountMove = self.env.registry['account.move']
+        prepare_product_base_line = AccountMove._prepare_product_base_line_for_taxes_computation
+
+        def prepare_total_included_product_base_line(move, product_line):
+            return {**prepare_product_base_line(move, product_line), 'special_mode': 'total_included'}
+
+        return patch.object(AccountMove, '_prepare_product_base_line_for_taxes_computation', prepare_total_included_product_base_line)
 
     def test_case_a(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
@@ -524,6 +536,90 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
             {'balance': -1150.00,    'tax_ids': wth_tax_affecting.ids},
             {'balance': 1000.00,     'tax_ids': []},
             {'balance': -1000.00,    'tax_ids': wth_tax_affected.ids},
+        ])
+
+    def test_case_o(self):
+        vat_tax = self.percent_tax(15)
+        wth_tax = self.percent_tax(-10, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+
+        with self._patch_total_included_price():
+            invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({
+                    'name': 'Product Line',
+                    'price_unit': 1150.0,
+                    'tax_ids': [Command.set((vat_tax | wth_tax).ids)],
+                })],
+            })
+            invoice.action_post()
+            self.assertRecordValues(invoice, [{
+                'amount_untaxed': 1000.00,
+                'amount_tax': 150.00,
+                'withholding_total_amount_currency': 100.00,
+            }])
+            wizard = self.env['account.payment.register']\
+                .with_context(active_model='account.move', active_ids=invoice.ids)\
+                .create({})
+            self.assertRecordValues(wizard.withholding_line_ids, [{
+                'original_base_amount': 1000.00,
+                'base_amount': 1000.00,
+                'amount': 100.00,
+            }])
+            self.assertRecordValues(wizard, [{'withholding_net_amount': 1050.00}])
+
+            payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{
+            'amount': 1150.00,
+        }])
+        self.assertRecordValues(payment.move_id.line_ids, [
+            {'balance': 1050.00,    'tax_ids': []},
+            {'balance': -1150.00,   'tax_ids': []},
+            {'balance': 100.00,     'tax_ids': []},
+            {'balance': 1000.00,    'tax_ids': []},
+            {'balance': -1000.00,   'tax_ids': wth_tax.ids},
+        ])
+
+    def test_case_p(self):
+        vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
+        wth_tax = self.percent_tax(-10, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+
+        with self._patch_total_included_price():
+            invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({
+                    'name': 'Product Line',
+                    'price_unit': 1150.0,
+                    'tax_ids': [Command.set((vat_tax_incl | wth_tax).ids)],
+                })],
+            })
+            invoice.action_post()
+            self.assertRecordValues(invoice, [{
+                'amount_untaxed': 1000.00,
+                'amount_tax': 150.00,
+                'withholding_total_amount_currency': 100.00,
+            }])
+            wizard = self.env['account.payment.register']\
+                .with_context(active_model='account.move', active_ids=invoice.ids)\
+                .create({})
+            self.assertRecordValues(wizard.withholding_line_ids, [{
+                'original_base_amount': 1000.00,
+                'base_amount': 1000.00,
+                'amount': 100.00,
+            }])
+            self.assertRecordValues(wizard, [{'withholding_net_amount': 1050.00}])
+
+            payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{
+            'amount': 1150.00,
+        }])
+        self.assertRecordValues(payment.move_id.line_ids, [
+            {'balance': 1050.00,    'tax_ids': []},
+            {'balance': -1150.00,   'tax_ids': []},
+            {'balance': 100.00,     'tax_ids': []},
+            {'balance': 1000.00,    'tax_ids': []},
+            {'balance': -1000.00,   'tax_ids': wth_tax.ids},
         ])
 
     def test_invoice_total_unaffected(self):
