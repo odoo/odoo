@@ -191,11 +191,6 @@ export class BusPlugin extends Plugin {
         return this.#workerService.send("BUS:REQUEST_LOGS");
     }
 
-    async forceUpdateChannels() {
-        await this.#ensureWorkerStarted();
-        this.#workerService.send("BUS:FORCE_UPDATE_CHANNELS");
-    }
-
     send(eventName, data) {
         return this.#workerService.send("BUS:SEND", { event_name: eventName, data });
     }

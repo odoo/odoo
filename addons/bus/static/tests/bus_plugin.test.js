@@ -511,7 +511,6 @@ test("subscribe message is sent first", async () => {
     // delay before the worker has queued anything.
     await getService(BusPlugin).send("some_event");
     await getService(BusPlugin).send("some_other_event");
-    await getService(BusPlugin).forceUpdateChannels();
     await runAllTimers();
     await expect.waitForSteps([]);
     startBusService();

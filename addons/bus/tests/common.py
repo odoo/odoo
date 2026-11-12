@@ -27,7 +27,7 @@ from odoo.tests.common import (
     _registry_test_lock,
 )
 
-from odoo.addons.bus.bus_dispatcher import BusDispatcher
+from odoo.addons.bus.bus_dispatcher import INTERNAL_CHANNEL, BusDispatcher
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
@@ -185,6 +185,7 @@ class BusResult:
 class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        self.env.cr.precommit.data.get("bus.bus.subscriptions", []).clear()
         self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextlib.contextmanager
@@ -216,7 +217,8 @@ class BusCase(BaseCase):
         :param notifications: expected notifications as :class:`BusResult`, list,
             or callable returning one of those forms.
 
-        Expected notifications must appear in order.
+        Expected notifications must appear in order. The internal notifications, applied by
+        the dispatcher instead of being sent, are left out.
         """
         self.maxDiff = None
         notifications = notifications() if callable(notifications) else notifications
@@ -236,9 +238,10 @@ class BusCase(BaseCase):
                     notif.payload,
                 ),
             )
+        internal_channel = json_dump(channel_with_db(self.cr.dbname, INTERNAL_CHANNEL))
         received_list = [
             BusResult(notif.channel, **json.loads(notif.message))
-            for notif in self.env["bus.bus"].sudo().search([])
+            for notif in self.env["bus.bus"].sudo().search([("channel", "!=", internal_channel)])
         ]
         for expected_notif, actual_notif in zip_longest(expected_list, received_list):
             if expected_notif is not None and actual_notif is not None:

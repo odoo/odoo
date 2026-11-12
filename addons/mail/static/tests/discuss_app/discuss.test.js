@@ -1,4 +1,3 @@
-import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
@@ -2433,9 +2432,6 @@ test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
-    const subscribePromise = waitUntilSubscribe();
-    getService("bus_service").forceUpdateChannels();
-    await subscribePromise;
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
             is_typing: true,
