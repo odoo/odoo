@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='product_details']" position="inside">
                 <group string="Invoicing">
-                    <field name="reinvoice_policy" widget="radio"/>
+                    <field name="reinvoice_policy"/>
                     <label for="expense_policy_tooltip" string=""/>
                     <div class="o_row">
                         <field name="expense_policy_tooltip" class="fst-italic text-muted"/>
@@ -16,6 +16,13 @@
                 </group>
             </xpath>
             <xpath expr="//label[@for='standard_price']" position="before">
+                <field
+                    name="percent_markup"
+                    class="w-auto o_input_6ch"
+                    widget="percentage"
+                    invisible="reinvoice_policy != 'cost_markup'"
+                    required="reinvoice_policy == 'cost_markup'"
+                />
                 <field name="list_price" invisible="reinvoice_policy != 'sales_price'"/>
             </xpath>
             <xpath expr="//field[@name='supplier_taxes_id']" position="after">

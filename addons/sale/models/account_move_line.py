@@ -271,6 +271,10 @@ class AccountMoveLine(models.Model):
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
             return 0.0
 
+        price_unit = abs(amount / unit_amount)
+        if self.product_id.reinvoice_policy == "cost_markup":
+            price_unit += price_unit * self.product_id.percent_markup
+
         # Prevent unnecessary currency conversion that could be impacted by exchange rate
         # fluctuations
         if (
@@ -278,9 +282,8 @@ class AccountMoveLine(models.Model):
             and amount
             and self.company_id.currency_id == order.currency_id
         ):
-            return self.company_id.currency_id.round(abs(amount / unit_amount))
+            return self.company_id.currency_id.round(price_unit)
 
-        price_unit = abs(amount / unit_amount)
         currency_id = self.company_id.currency_id
         if currency_id and currency_id != order.currency_id:
             price_unit = currency_id._convert(
