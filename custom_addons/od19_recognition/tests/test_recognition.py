@@ -349,3 +349,11 @@ class TestRecognitionInjection(HttpCase):
         response = self.url_open("/my/recognition")
         self.assertEqual(response.status_code, 200)
         self.assertIn("ให้ Kudos", response.text)
+
+    def test_recognition_assets_in_frontend_bundle(self):
+        assets = self.env["ir.qweb"]._get_asset_content("web.assets_frontend")[0]
+        urls = [asset["url"] for asset in assets]
+        self.assertIn(
+            "/od19_recognition/static/src/js/od19_recognition_wall.js", urls
+        )
+        self.assertIn("/od19_recognition/static/src/css/od19_recognition.css", urls)
