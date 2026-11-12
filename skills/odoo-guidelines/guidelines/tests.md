@@ -17,11 +17,21 @@
   `tests/__init__.py`; the test class must be *defined* in that file (a class
   merely imported into it is skipped); and inherited `test_*` methods are not
   collected: a subclass defining no tests of its own runs nothing unless it
-  sets `allow_inherited_tests_method = True`.
+  sets `allow_inherited_tests_method = True`. A `--test-tags` entry whose
+  `/module` is not installed, or not installed or updated by an `-i`/`-u`
+  run, or is not the module that defines the class
+  (`CrossModule` suites such as `WebSuite` excepted), selects nothing
+  without a warning. The run only warns when it ran no test at all, so
+  check that the final `... of N tests` line counts every test you meant
+  to run; a `WebSuite` run counts as one test there, so read Hoot's own
+  `Passed N tests` line for it.
 - `assertQueryCount` only when strictly necessary, and never inside a business
   test: it breaks on any unrelated ORM change. Keep it to dedicated
   performance tests, paired with `@warmup` (and `@users`); only *exceeding*
-  the budget fails; a lower count merely logs, so keep budgets exact.
+  the budget fails; a lower count merely logs, so keep budgets exact. A
+  change that moves a budget says in its commit message which queries were
+  added or removed and why: a bare new number lets in the regression the
+  test exists to catch.
 - Wrap expected-error and warning logs in `mute_logger(...)` so the expected
   ERROR or WARNING never reaches the runbot log.
 - Tours: a step that triggers a page unload must set `expectUnloadPage: true`,
