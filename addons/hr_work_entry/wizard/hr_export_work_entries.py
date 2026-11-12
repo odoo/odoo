@@ -111,7 +111,7 @@ class HrExportWorkEntries(models.TransientModel):
         args = {
             'date': date,
             'employee_id': employee_id,
-            'company': company,
+            'company': employee_id.company_id,
             'we_collection': we_collection
         }
         values = [col[1](args) for col in columns]
