@@ -88,6 +88,14 @@ class PdfWriter(_Writer):
             self._info = generic.DictionaryObject()
         super().add_metadata(infos)
 
+    def _resolve_links(self):
+        if hasattr(self, '_unresolved_links'):
+            self._unresolved_links = [
+                link for link in self._unresolved_links
+                if isinstance(link[1].find_referenced_page(), generic.IndirectObject)
+            ]
+        super()._resolve_links()
+
     def getPage(self, pageNumber):
         return self.pages[pageNumber]
 

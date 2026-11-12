@@ -188,3 +188,24 @@ class TestPdf(TransactionCase):
 
         pdf_writer.convert_to_pdfa()
         self.assertTrue(pdf_writer.is_pdfa)
+
+    def test_unhashable_link_destination(self):
+        """ Test writing a PDF containing link annotations with unhashable
+        dictionary destinations. """
+        page = self.minimal_pdf_reader.pages[0]
+        page[pdf.NameObject('/Annots')] = pdf.ArrayObject([
+            pdf.DictionaryObject({
+                pdf.NameObject('/Subtype'): pdf.NameObject('/Link'),
+                pdf.NameObject('/Dest'): pdf.ArrayObject([
+                    pdf.DictionaryObject({pdf.NameObject('/Type'): pdf.NameObject('/Page')}),
+                    pdf.NameObject('/Fit'),
+                ]),
+            })
+        ])
+        pdf_writer = pdf.PdfFileWriter()
+        pdf_writer.add_page(page)
+
+        with io.BytesIO() as out:
+            pdf_writer.write(out)
+            result_reader = pdf.PdfFileReader(io.BytesIO(out.getvalue()))
+            self.assertEqual(len(result_reader.pages), 1)
