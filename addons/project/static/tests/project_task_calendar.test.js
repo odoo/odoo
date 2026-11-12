@@ -1,6 +1,6 @@
 import { expect, test, beforeEach, describe } from "@odoo/hoot";
 import { mockDate, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, queryAll, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 
 import { contains, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -81,7 +81,7 @@ test("test Project Task Calendar Popover with task_stage_with_state_selection wi
     expect(queryOne(".o_field_task_stage_with_state_selection > div").childElementCount).toBe(2);
 });
 
-test("Display closed tasks as past event", async () => {
+test("closed tasks remain as readable as open tasks", async () => {
     ProjectTask._records.push({
         id: 2,
         name: "Task-2",
@@ -118,7 +118,10 @@ test("Display closed tasks as past event", async () => {
     });
     await mountView(calendarMountParams);
     expect(".o_event").toHaveCount(4);
-    expect(".o_event.o_past_event").toHaveCount(3);
+    expect(".o_event.o_past_event").toHaveCount(0);
+    for (const event of queryAll(".o_event")) {
+        expect(getComputedStyle(event, "::after").content).toBe("none");
+    }
 });
 
 test("tasks to schedule should not be visible in the sidebar if no default project set in the context", async () => {

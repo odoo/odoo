@@ -359,10 +359,6 @@ export class CalendarCommonRenderer extends Component {
             if (record.duration <= 0.25) {
                 classesToAdd.push("o_event_oneliner");
             }
-            if (DateTime.now() >= record.end) {
-                classesToAdd.push("o_past_event");
-            }
-
             if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {
                 classesToAdd.push("o_event_dot");
             } else if (record.isAllDay) {
