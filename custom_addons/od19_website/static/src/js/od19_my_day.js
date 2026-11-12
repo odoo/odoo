@@ -48,12 +48,14 @@
             setText(root, 'approvals', String(data.approvals.pending_count || 0) + ' รายการ');
         }
         if (data.next_booking) {
-            setText(root, 'next_booking', data.next_booking.start + ' · ' + data.next_booking.room);
+            setText(root, 'next_booking',
+                data.next_booking.start + ' · ' + (data.next_booking.room || ''));
         }
         if (data.leave && data.leave.available) {
             setText(root, 'leave', 'เหลือ ' + data.leave.remaining_display + ' วัน');
         }
-        renderSchedule(root, data.schedule);
+        // The schedule panel lives outside #od19-my-day, so resolve it from the document.
+        renderSchedule(document, data.schedule);
     }
 
     function load() {
