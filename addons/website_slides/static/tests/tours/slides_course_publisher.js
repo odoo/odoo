@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("course_publisher", {
             },
             {
                 content: "eLearning: select gardener tag",
-                trigger: ".modal .ui-autocomplete a:contains(Gardener)",
+                trigger: ".o-autocomplete--dropdown-menu a:contains(Gardener)",
                 run: "click",
             },
             {

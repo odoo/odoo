@@ -294,7 +294,7 @@ test("Can pass domain to search more", async () => {
     await click(".o-autocomplete input");
     await animationFrame();
 
-    await click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await click(".o_m2o_dropdown_option");
     await animationFrame();
 
     expect(".o_data_row").toHaveCount(8, { message: "should contain 8 records" });
@@ -329,7 +329,7 @@ test("Quick search dialog uses 1000 records limit when clicking search more", as
         message: "The name_search should have been called with a limit of 8",
     });
 
-    await click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await click(".o_m2o_dropdown_option");
     await animationFrame();
     expect.verifySteps(["name_search"]);
     expect(searchLimit).toBe(1000, {

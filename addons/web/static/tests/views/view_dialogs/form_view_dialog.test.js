@@ -631,7 +631,7 @@ test("display a dialog if onchange result is a warning from within a dialog", as
 
     await contains(".o_field_widget[name=instrument] input").edit("tralala", { confirm: false });
     await runAllTimers();
-    await contains(".o_field_widget[name=instrument] .o_m2o_dropdown_option_create_edit").click();
+    await contains(".o_m2o_dropdown_option_create_edit").click();
 
     await waitFor(".modal.o_inactive_modal");
     expect(".modal").toHaveCount(2);

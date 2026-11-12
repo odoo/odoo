@@ -92,7 +92,7 @@ test("Reference field displays right icons", async () => {
     await animationFrame();
     await click(".o_field_cell:eq(0) .o_field_many2one_selection input");
     await animationFrame();
-    await click(".o_field_cell:eq(0) .o-autocomplete--dropdown-item");
+    await click(".o-autocomplete--dropdown-item");
     // click out
     await click(".o_list_renderer");
     await animationFrame();
@@ -108,7 +108,7 @@ test("Reference field displays right icons", async () => {
     await animationFrame();
     await click(".o_field_cell:eq(0) .o_field_many2one_selection input");
     await animationFrame();
-    await click(".o_field_cell:eq(0) .o-autocomplete--dropdown-item");
+    await click(".o-autocomplete--dropdown-item");
     await click(".o_list_renderer");
     await animationFrame();
 

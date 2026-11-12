@@ -11,8 +11,8 @@
                 t-att-placeholder="this.props.placeholder"
                 t-att-title="this.props.title"
                 role="combobox"
-                t-att-aria-activedescendant="this.activeSourceOptionId"
                 t-att-aria-expanded="this.displayOptions ? 'true' : 'false'"
+                t-att-aria-controls="this.listId"
                 aria-autocomplete="list"
                 aria-haspopup="listbox"
                 t-model.proxy="this.state.value"
@@ -24,65 +24,57 @@
                 t-on-focus="this.onInputFocus"
                 t-ref="this.inputRef"
             />
-            <t t-if="this.displayOptions">
-                <ul
-                    role="menu"
-                    class="o-autocomplete--dropdown-menu o-dropdown--menu ui-widget show"
-                    t-att-class="this.ulDropdownClass"
-                    t-ref="this.listRef">
-                    <t t-foreach="this.sources" t-as="source" t-key="source.id">
-                        <t t-if="source.isLoading">
-                            <li class="ui-menu-item"
-                                t-att-class="{
-                                    'o-autocomplete--dropdown-item': this.props.dropdown,
-                                    'd-block': !this.props.dropdown
-                                }">
-                                <a
-                                    t-attf-id="{{this.props.id or 'autocomplete'}}_{{source_index}}_loading"
-                                    role="option"
-                                    href="#"
-                                    class="o_loading dropdown-item ui-menu-item-wrapper"
-                                    aria-selected="true"
-                                >
-                                    <i class="oi oi-spin" data-icon="autorenew" /> <t t-out="source.placeholder" />
-                                </a>
-                            </li>
-                        </t>
-                        <t t-else="">
-                            <t t-foreach="source.options" t-as="option" t-key="option.id">
-                                <li
-                                    class="o-autocomplete--dropdown-item ui-menu-item d-block"
-                                    t-att-class="option.cssClass"
-                                    t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
-                                    t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
-                                    t-on-click="() => this.onOptionClick(option)"
-                                    t-on-pointerdown="(ev) => this.onOptionPointerDown(option, ev)"
-                                >
-                                    <t t-tag="option.unselectable ? 'span' : 'a'"
-                                        class="dropdown-item ui-menu-item-wrapper text-truncate"
-                                        t-attf-id="{{this.props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
-                                        t-att-role="!option.unselectable and 'option'"
-                                        t-att-href="!option.unselectable and '#'"
-                                        t-att-class="{ 'ui-state-active': this.isActiveSourceOption([source_index, option_index]) }"
-                                        t-att-aria-selected="this.isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
-                                    >
-                                        <t t-call-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
-                                            <t t-if="!option.labelTermOrder" t-out="option.label"/>
-                                            <t t-else="">
-                                                <t t-foreach="option.labelTermOrder.labelBits" t-as="bit" t-key="bit.id">
-                                                    <t t-if="!option.labelTermOrder.searchTermIndexes.includes(bit.id)" t-out="bit.bit"/>
-                                                    <mark t-else="" class="o-autocomplete--mark" t-out="bit.bit"/>
-                                                </t>
-                                            </t>
-                                        </t>
+            <AutoCompleteDropdown t-if="this.props.dropdown"
+                state="this.dropdownState"
+                target="() => this.targetDropdown"
+                menuRef="this.menuRef"
+                menuClass="this.menuClass"
+                position="this.props.menuPosition"
+                manual="true"
+                noClasses="true"
+                bottomSheet="false"
+                focusToggleOnClosed="false"
+                navigationOptions="this.navigationOptions"
+            >
+                <t t-set-slot="content">
+                    <t t-call="{{ this.constructor.listTemplate }}"/>
+                </t>
+            </AutoCompleteDropdown>
+            <t t-else="" t-call="{{ this.constructor.listTemplate }}"/>
+        </div>
+    </t>
+
+    <t t-name="web.AutoComplete.list">
+        <ul t-att-id="this.listId" role="listbox" t-att-class="this.ulDropdownClass" t-ref="this.listRef" t-on-pointerdown="this.onListPointerDown" t-on-mousedown="this.onListMouseDown">
+            <t t-foreach="this.sources" t-as="source" t-key="source.id">
+                <li t-if="source.isLoading" class="o-autocomplete--dropdown-item ui-menu-item d-block">
+                    <a t-attf-id="{{this.props.id or 'autocomplete'}}_{{source_index}}_loading" role="option" class="o_loading dropdown-item ui-menu-item-wrapper">
+                        <i class="oi oi-spin" data-icon="autorenew" /> <t t-out="source.placeholder" />
+                    </a>
+                </li>
+                <t t-else="" t-foreach="source.options" t-as="option" t-key="option.id">
+                    <li class="o-autocomplete--dropdown-item ui-menu-item d-block" t-att-class="option.cssClass" t-on-click="() => this.onOptionSelected(option)">
+                        <t t-tag="option.unselectable ? 'span' : 'a'"
+                            t-attf-id="{{this.props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
+                            class="dropdown-item ui-menu-item-wrapper text-truncate"
+                            t-att-class="{ 'o-navigable cursor-pointer': !option.unselectable }"
+                            t-att-role="!option.unselectable and 'option'"
+                            t-att-data-option-id="option.id"
+                        >
+                            <t t-call-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
+                                <t t-if="!option.labelTermOrder" t-out="option.label"/>
+                                <t t-else="">
+                                    <t t-foreach="option.labelTermOrder.labelBits" t-as="bit" t-key="bit.id">
+                                        <t t-if="!option.labelTermOrder.searchTermIndexes.includes(bit.id)" t-out="bit.bit"/>
+                                        <mark t-else="" class="o-autocomplete--mark" t-out="bit.bit"/>
                                     </t>
-                                </li>
+                                </t>
                             </t>
                         </t>
-                    </t>
-                </ul>
+                    </li>
+                </t>
             </t>
-        </div>
+        </ul>
     </t>
 
 </templates>

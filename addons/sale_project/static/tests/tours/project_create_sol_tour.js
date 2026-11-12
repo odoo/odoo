@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: "Add the customer for this project",
         run: "click",
     }, {
-        trigger: ".ui-autocomplete > li > a:not(:has(i.oi))",
+        trigger: ".o-autocomplete--dropdown-menu li > a:not(:has(i.oi))",
         content: "Select the customer in the autocomplete dropdown",
         run: "click",
     },
@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: 'Add the Sales Order Item',
         run: "fill New Sale order line",
     }, {
-        trigger: ".o_field_widget[name=sale_line_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create a",
+        trigger: ".o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create a",
         content: "Create an Sales Order Item in the autocomplete dropdown.",
         run: "click",
     },

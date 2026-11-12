@@ -1396,7 +1396,7 @@ test(`doesn't autosave when a many2one create and edit dialog is open (visibilit
     await fieldInput("expertise").edit("HR");
     await contains("div[name=product_id] input").edit("abc", { confirm: false });
     await runAllTimers();
-    await contains("div[name=product_id] .o_m2o_dropdown_option_create_edit").click();
+    await contains(".o_m2o_dropdown_option_create_edit").click();
     expect(`.modal .o_form_view`).toHaveCount(1);
 
     await hideTab();

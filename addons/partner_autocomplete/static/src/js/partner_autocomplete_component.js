@@ -2,7 +2,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 
 export class PartnerAutoComplete extends AutoComplete {
-    static template = "partner_autocomplete.PartnerAutoComplete";
+    static listTemplate = "partner_autocomplete.PartnerAutoCompleteList";
 
     setup() {
         super.setup();

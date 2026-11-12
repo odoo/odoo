@@ -143,7 +143,7 @@ test("ReferenceField can quick create models", async () => {
     await click(".o_field_widget[name='reference'] .o-autocomplete--input");
     await edit("new partner");
     await runAllTimers();
-    await click(".o_field_widget[name='reference'] .o_m2o_dropdown_option_create");
+    await click(".o_m2o_dropdown_option_create");
     await animationFrame();
 
     await clickSave();
@@ -357,12 +357,9 @@ test("reference in form view", async () => {
 
     await click(".o_field_widget[name=reference] .o_select_menu input");
     await animationFrame();
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(
-        ["Partner", "Partner Type", "Product"],
-        {
-            message: "the options should be correctly set",
-        }
-    );
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Partner", "Partner Type", "Product"], {
+        message: "the options should be correctly set",
+    });
     await click(".o_select_menu_item:contains(Product)");
     await animationFrame();
 
@@ -387,7 +384,7 @@ test("reference in form view", async () => {
 
     await click(".o_field_widget[name=reference] .o-autocomplete--input");
     await animationFrame();
-    await click(".o_field_widget[name=reference] .ui-menu-item");
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item");
 
     await clickSave();
     expect(".o_field_widget[name=reference] .o-autocomplete--input").toHaveValue("gold", {
@@ -434,7 +431,7 @@ test("Many2One 'Search more...' updates on resModel change", async () => {
     // Opening the Search more... option
     await click("div.o_field_reference .o-autocomplete--input");
     await animationFrame();
-    await click("div.o_field_reference .o_m2o_dropdown_option_search_more");
+    await click(".o_m2o_dropdown_option_search_more");
     await animationFrame();
 
     expect(queryFirst("div.modal td.o_data_cell")).toHaveText("xphone", {
@@ -895,9 +892,7 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
     await click(".o_list_table .o_list_many2one input");
     await animationFrame();
     //Select the "Partner" option, different from original "Product"
-    await click(
-        ".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item:contains(Partner)"
-    );
+    await click(".o-autocomplete--dropdown-menu .dropdown-item:contains(Partner)");
     await runAllTimers();
     await animationFrame();
     expect(".reference_field input").toHaveValue("");

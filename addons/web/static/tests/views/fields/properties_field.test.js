@@ -847,13 +847,13 @@ test("properties: tags", async () => {
     await click(".o_property_field_value .o_input_dropdown input");
     await animationFrame();
     // Check that he newly created tags are available
-    const dropdownItemsSelector = ".o_property_field_value .o_input_dropdown .dropdown-item";
+    const dropdownItemsSelector = ".o-autocomplete--dropdown-menu .dropdown-item";
     expect(queryAllTexts(dropdownItemsSelector)).toEqual(["A", "B", "C"], {
         message: "Should be able to selected the created tags",
     });
 
     // Select one tag in the list
-    await click(".o_property_field_value .ui-menu-item:nth-child(2)");
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)");
     await animationFrame();
 
     expect(queryAllTexts(".o_property_field_value .o_tag")).toEqual(["B"], {
@@ -975,11 +975,11 @@ test("properties: many2one", async () => {
     // Choose the "User" model
     await click(".o_field_property_definition_model input", { root: popover });
     await animationFrame();
-    expect(queryAllTexts(".o_field_property_definition_model .ui-menu-item")).toEqual([
+    expect(queryAllTexts(".o-autocomplete--dropdown-menu .ui-menu-item")).toEqual([
         "Partner",
         "User",
     ]);
-    await click(".o_field_property_definition_model .ui-menu-item:nth-child(2)", { root: popover });
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)");
     await animationFrame();
     expect(".o_field_property_definition_model input").toHaveValue("User", {
         message: "Should have selected the User model",
@@ -988,7 +988,7 @@ test("properties: many2one", async () => {
     // Choose a many2one value
     await click(".o_field_property_definition_value input", { root: popover });
     await animationFrame();
-    await click(".o_field_property_definition_value .ui-menu-item:nth-child(3)", { root: popover });
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(3)");
     await animationFrame();
     expect(".o_field_property_definition_value input").toHaveValue("Eve", {
         message: "Should have selected the third user",
@@ -1001,7 +1001,7 @@ test("properties: many2one", async () => {
     await animationFrame();
     await edit("New User");
     await runAllTimers();
-    await click(".o_property_field:nth-child(2) .o_m2o_dropdown_option_create .dropdown-item");
+    await click(".o_m2o_dropdown_option_create .dropdown-item");
     await animationFrame();
     expect(".o_property_field:nth-child(2) .o_property_field_value input").toHaveValue(
         "Created:New User",
@@ -1051,9 +1051,7 @@ test("properties: a relational property with an unevaluable domain shows no reco
         // Selecting the model triggers the matching-records count, which fails here.
         await click(".o_field_property_definition_model input", { root: popover });
         await animationFrame();
-        await click(".o_field_property_definition_model .ui-menu-item:first-child", {
-            root: popover,
-        });
+        await click(".o-autocomplete--dropdown-menu .ui-menu-item:first-child");
         await animationFrame();
 
         expect(".o_property_field_popover").toHaveCount(1, {
@@ -1124,12 +1122,12 @@ test("properties: many2many", async () => {
     // Choose the "User" model
     await click(".o_field_property_definition_model input", { root: popover });
     await animationFrame();
-    expect(queryAllTexts(".o_field_property_definition_model .ui-menu-item")).toEqual([
+    expect(queryAllTexts(".o-autocomplete--dropdown-menu .ui-menu-item")).toEqual([
         "Partner",
         "User",
     ]);
 
-    await click(".o_field_property_definition_model .ui-menu-item:nth-child(2)", { root: popover });
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)");
     await animationFrame();
     expect(".o_field_property_definition_model input").toHaveValue("User", {
         message: "Should have selected the User model",
@@ -1140,14 +1138,14 @@ test("properties: many2many", async () => {
     // Add Eve in the list
     await click(".o_property_field:nth-child(2) input");
     await animationFrame();
-    await click(".o_property_field:nth-child(2) .ui-menu-item:nth-child(3)");
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(3)");
     await animationFrame();
     expect(getSelectedUsers()).toEqual(["Eve"], { message: "Should have selected the third user" });
 
     // Add Bob in the list
     await click(".o_property_field:nth-child(2) input");
     await animationFrame();
-    await click(".o_property_field:nth-child(2) .ui-menu-item:nth-child(2)");
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)");
     await animationFrame();
     expect(getSelectedUsers()).toEqual(["Eve", "Bob"], {
         message: "Should have selected the second user",
@@ -1159,7 +1157,7 @@ test("properties: many2many", async () => {
     await click(".o_property_field:nth-child(2) input");
     await edit("New User");
     await runAllTimers();
-    await click(".o_property_field:nth-child(2) .o_m2o_dropdown_option_create");
+    await click(".o_m2o_dropdown_option_create");
     await animationFrame();
     expect(getSelectedUsers()).toEqual(["Eve", "Bob", "Created:New User"], {
         message: "Should have created a new user",
@@ -1280,7 +1278,7 @@ test("properties: many2one 'Search more...' +  internal link save keeps data", a
     // Opening the "Search more..." modal
     await click(".o_field_property_definition_value input", { root: popover });
     await animationFrame();
-    await click(".o_m2o_dropdown_option_search_more", { root: popover });
+    await click(".o_m2o_dropdown_option_search_more");
     await animationFrame();
 
     // Checking the model loaded
@@ -1293,13 +1291,13 @@ test("properties: many2one 'Search more...' +  internal link save keeps data", a
     // Switching the co-model of the property field
     await click(".o_field_property_definition_model input", { root: popover });
     await animationFrame();
-    await click(".o_field_property_definition_model .ui-menu-item:nth-child(2)", { root: popover });
+    await click(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)");
     await animationFrame();
 
     // Opening the "Search more..." modal
     await click(".o_field_property_definition_value input", { root: popover });
     await animationFrame();
-    await click(".o_m2o_dropdown_option_search_more", { root: popover });
+    await click(".o_m2o_dropdown_option_search_more");
     await animationFrame();
     // Checking the model loaded
     expect.verifySteps(["res.users"]);
@@ -1457,7 +1455,7 @@ test("properties: name reset", async () => {
 
     // select the "User" model
     await click(".o_field_property_definition_model input");
-    await contains(".o_field_property_definition_model .ui-menu-item:nth-child(2)").click();
+    await contains(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)").click();
     await animationFrame();
     await addPropertyDefinition();
 
@@ -1480,7 +1478,7 @@ test("properties: name reset", async () => {
     await animationFrame();
     await changeType("many2one");
     await click(".o_field_property_definition_model input");
-    await contains(".o_field_property_definition_model .ui-menu-item:nth-child(2)").click();
+    await contains(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)").click();
     await animationFrame();
     const propertyName = queryAttribute(".o_property_field:nth-child(2)", "property-name");
     expect(propertyName.endsWith("_html")).toEqual(false);
@@ -1492,7 +1490,7 @@ test("properties: name reset", async () => {
     // restore the model "User", and check that the name has been restored
     await contains(".o_property_field:nth-child(2) .o_field_property_open_popover").click();
     await contains(".o_field_property_definition_model input").click();
-    await contains(".o_field_property_definition_model .ui-menu-item:nth-child(2)").click();
+    await contains(".o-autocomplete--dropdown-menu .ui-menu-item:nth-child(2)").click();
     await addPropertyDefinition();
     expect(".o_property_field:nth-child(2)").toHaveAttribute("property-name", propertyName);
 

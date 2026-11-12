@@ -399,7 +399,7 @@ test("Global filter with same id is not shared between dashboards", async functi
 
     await contains(".o-autocomplete--input.o_input").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
-    await contains(".dropdown-item:first").click();
+    await contains(".o-autocomplete--dropdown-item:first").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(1);
 
     await contains(".o-filter-values-footer .btn-primary").click();

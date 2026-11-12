@@ -282,7 +282,7 @@ test("project.task (form): check that the subtask of another project can be adde
     await animationFrame();
     await click(".o_field_project input");
     await animationFrame();
-    await click(".o_field_project li");
+    await click(".o-autocomplete--dropdown-menu li");
     await animationFrame();
     await click(".o_field_project input");
     await edit("aaa");

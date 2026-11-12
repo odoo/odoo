@@ -78,7 +78,7 @@ test("basic form view flow", async () => {
     ).toHaveCount(1);
 
     await clickFieldDropdown("user_id");
-    expect(".o_field_many2one_selection .o_avatar_many2x_autocomplete").toHaveCount(2);
+    expect(".o-autocomplete--dropdown-menu .o_avatar_many2x_autocomplete").toHaveCount(2);
     await clickFieldDropdownItem("user_id", "Christine");
 
     expect(

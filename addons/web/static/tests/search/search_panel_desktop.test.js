@@ -2274,7 +2274,7 @@ test("search panel is not instantiated in dialogs", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1, { viewType: "form" });
     await contains(`.o_field_widget[name="company_id"] .dropdown input`).click();
-    await contains(`.o_field_widget[name="company_id"] .o_m2o_dropdown_option_search_more`).click();
+    await contains(`.o_m2o_dropdown_option_search_more`).click();
     expect(`.modal .o_list_view`).toHaveCount(1);
     expect(`.modal .o_search_panel`).toHaveCount(0);
 });

@@ -152,7 +152,11 @@ export class LinkPopover extends Component {
                 return;
             }
             this.state.url ||= "#";
-            if (this.editingWrapper() && !this.editingWrapper().contains(ev.target)) {
+            if (
+                this.editingWrapper() &&
+                !this.editingWrapper().contains(ev.target) &&
+                !ev.target.closest(".o-autocomplete--dropdown-menu")
+            ) {
                 this.onClickApply();
             }
         };

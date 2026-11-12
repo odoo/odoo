@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { click, hover, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { click, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 import {
@@ -153,7 +153,7 @@ test("Many2ManyTagsField with and without color on desktop", async () => {
     // Add a tag to second field
     expect("[name=timmy] .o_tag").toHaveCount(0);
     await clickFieldDropdown("timmy");
-    expect("[name='timmy'] .o-autocomplete.dropdown li").toHaveCount(3, {
+    expect(".o-autocomplete--dropdown-menu li").toHaveCount(3, {
         message: "autocomplete dropdown should have 3 entries (2 values + 'Search more...')",
     });
     await clickFieldDropdownItem("timmy", "gold");
@@ -194,7 +194,7 @@ test("[Offline] Many2ManyTagsField", async () => {
     await contains(".o_field_many2many_selection input").click();
     await runAllTimers();
 
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
         "first record",
         "second record",
         "aaa",
@@ -215,7 +215,7 @@ test("[Offline] Many2ManyTagsField", async () => {
 
     await setOffline(true);
     await contains(".o_field_many2many_selection input").click();
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
         "first record",
         "second record",
         "aaa",
@@ -224,10 +224,13 @@ test("[Offline] Many2ManyTagsField", async () => {
     // search Offline
     await contains(".o_field_widget input").edit("record", { confirm: false });
     await runAllTimers();
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "second record"]);
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
+        "first record",
+        "second record",
+    ]);
 
     // select the first one
-    await contains(`.dropdown .dropdown-item:contains(first record)`).click();
+    await contains(`.o-autocomplete--dropdown-menu .dropdown-item:contains(first record)`).click();
     expect(".o_field_many2many_tags .badge").toHaveCount(1);
     expect(queryAllTexts(".o_field_many2many_tags .badge")).toEqual(["first record"]);
 
@@ -283,7 +286,7 @@ test("[Offline] Many2ManyTagsField autopopulated", async () => {
     await setOffline(true);
 
     await contains(".o_field_many2many_selection input").click();
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "aaa"]);
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual(["first record", "aaa"]);
 });
 
 test.tags("mobile");
@@ -647,7 +650,7 @@ test("Many2ManyTagsField in a new record on desktop", async () => {
     expect(".o_form_view .o_form_editable").toHaveCount(1);
 
     await clickFieldDropdown("timmy");
-    expect("[name='timmy'] .o-autocomplete.dropdown li").toHaveCount(3);
+    expect(".o-autocomplete--dropdown-menu li").toHaveCount(3);
     await clickFieldDropdownItem("timmy", "gold");
 
     expect(".o_field_many2many_tags .badge").toHaveCount(1);
@@ -1042,10 +1045,8 @@ test("input and remove text without selecting any tag or option on desktop", asy
     await contains(".o_field_many2many_tags input").edit("go", { confirm: false });
     await runAllTimers();
 
-    // ensure no selection
-    await hover(".o-autocomplete--dropdown-item:eq(0)");
-    await hover(".o_form_renderer");
-    await press("Tab");
+    // leave without selecting
+    await contains(".o_form_renderer").click();
 
     // ensure we're not adding any value
     expect(".modal").toHaveCount(0);
@@ -1055,9 +1056,7 @@ test("input and remove text without selecting any tag or option on desktop", asy
     await contains(".o_field_many2many_tags input").clear({ confirm: false });
     await runAllTimers();
 
-    await hover(".o-autocomplete--dropdown-item:eq(0)");
-    await hover(".o_form_renderer");
-    await press("Tab");
+    await contains(".o_form_renderer").click();
 
     expect(".modal").toHaveCount(0);
     expect(".o_field_many2many_tags .badge").toHaveCount(0);
@@ -1368,7 +1367,7 @@ test("Many2ManyTagsField: conditional create/delete attrs on desktop", async () 
     });
     await runAllTimers();
 
-    expect(queryAllTexts(`.o-autocomplete.dropdown li.o_m2o_dropdown_option`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li.o_m2o_dropdown_option`)).toEqual([
         'Create "Something that does not exist"',
         "Create and edit...",
     ]);
@@ -1384,9 +1383,9 @@ test("Many2ManyTagsField: conditional create/delete attrs on desktop", async () 
     await runAllTimers();
 
     // only Search more option should be available
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option").toHaveCount(1);
     expect(
-        ".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search more...)"
+        ".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option a:contains(Search more...)"
     ).toHaveCount(1);
 
     await clickFieldDropdownItem("partner_ids", "Search more...");
@@ -1400,10 +1399,10 @@ test("Many2ManyTagsField: conditional create/delete attrs on desktop", async () 
     await runAllTimers();
 
     // only Search more option should be available
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search more)").toHaveCount(
-        1
-    );
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option").toHaveCount(1);
+    expect(
+        ".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option a:contains(Search more)"
+    ).toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -1551,9 +1550,7 @@ test("Many2ManyTagsField supports 'create' props to be a Boolean on desktop", as
     });
 
     await contains(".o_field_many2many_tags input").click();
-    expect(".o_field_many2many_tags .o-autocomplete--dropdown-menu").toHaveText(
-        "gold\nsilver\nSearch more..."
-    );
+    expect(".o-autocomplete--dropdown-menu").toHaveText("gold\nsilver\nSearch more...");
 });
 
 test.tags("mobile");
@@ -1636,8 +1633,8 @@ test("Many2ManyTagsField with option 'no_quick_create' set to true on desktop", 
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveClass(
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option").toHaveClass(
         "o_m2o_dropdown_option_create_edit"
     );
     await clickFieldDropdownItem("timmy", "Create and edit...");
@@ -1691,7 +1688,7 @@ test("Many2ManyTagsField with option 'no_create' set to true on desktop", async 
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_no_result").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -1706,8 +1703,8 @@ test("Many2ManyTagsField with attribute 'can_create' set to false on desktop", a
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
-    expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_dropdown_option").toHaveCount(0);
+    expect(".o-autocomplete--dropdown-menu li.o_m2o_no_result").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -2136,7 +2133,7 @@ test("search typeahead", async () => {
     await contains(".o_field_widget[name=timmy] input").click();
     await runAllTimers();
     expect.verifySteps([]);
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
         "Start typing 3 characters",
         "Search more...",
     ]);
@@ -2144,7 +2141,7 @@ test("search typeahead", async () => {
     await contains(".o_field_widget[name=timmy] input").edit("g", { confirm: false });
     await runAllTimers();
     expect.verifySteps([]);
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
         "Start typing 3 characters",
         'Create "g"',
         "Create and edit...",
@@ -2154,7 +2151,7 @@ test("search typeahead", async () => {
     await contains(".o_field_widget[name=timmy] input").edit("go", { confirm: false });
     await runAllTimers();
     expect.verifySteps([]);
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
         "Start typing 3 characters",
         'Create "go"',
         "Create and edit...",
@@ -2164,7 +2161,7 @@ test("search typeahead", async () => {
     await contains(".o_field_widget[name=timmy] input").edit("gol", { confirm: false });
     await runAllTimers();
     expect.verifySteps(["web_name_search"]);
-    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+    expect(queryAllTexts(`.o-autocomplete--dropdown-menu li`)).toEqual([
         "gold",
         'Create "gol"',
         "Create and edit...",

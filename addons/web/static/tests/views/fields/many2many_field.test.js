@@ -2051,8 +2051,8 @@ test("highlight search in many2many", async () => {
     });
     await contains(".o_field_widget[name=p] input").edit("rec", { confirm: false });
     await runAllTimers();
-    expect(`.o-autocomplete.dropdown li a > span`).toHaveCount(2);
-    expect(`.o-autocomplete.dropdown li:eq(0) a > span`).toHaveInnerHTML(`
+    expect(`.o-autocomplete--dropdown-menu li a > span`).toHaveCount(2);
+    expect(`.o-autocomplete--dropdown-menu li:eq(0) a > span`).toHaveInnerHTML(`
     <span>
         first
         <span class="text-primary fw-bold">
@@ -2060,7 +2060,7 @@ test("highlight search in many2many", async () => {
         </span>
         ord
     </span>`);
-    expect(`.o-autocomplete.dropdown li:eq(1) a > span`).toHaveInnerHTML(`
+    expect(`.o-autocomplete--dropdown-menu li:eq(1) a > span`).toHaveInnerHTML(`
     <span>
         second
         <span class="text-primary fw-bold">

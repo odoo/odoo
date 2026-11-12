@@ -15,6 +15,7 @@ export class Many2OneAvatarLeaderUserField extends Many2OneAvatarUserField {
     get m2oProps() {
         return {
             ...super.m2oProps,
+            menuCssClass: "o_field_many2one_avatar_leader_user_menu",
             context: {
                 ...super.m2oProps.context,
                 crm_formatted_display_name_team: Number(this.props.record.data[this.props.teamField].id),

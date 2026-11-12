@@ -16,12 +16,12 @@
     border: none;
     background-color: var(--o-we-sidebar-content-field-dropdown-bg);
     box-shadow: var(--o-we-sidebar-content-field-dropdown-shadow);
-    > li {
+    li {
         border-bottom: var(--o-we-sidebar-content-field-border-width) solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
         background-color: var(--o-we-sidebar-content-field-clickable-bg);
         > .dropdown-item,
         > .dropdown-item:focus,
-        > .dropdown-item.ui-state-active {
+        > .dropdown-item.focus {
             color: var(--o-we-sidebar-content-field-clickable-color);
         }
         &.ui-menu-item {
@@ -30,7 +30,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 line-height: 20px;
-                &.ui-state-active {
+                &.focus {
                     border: var(--o-we-sidebar-content-field-dropdown-border-width) solid transparent;
                     background-color: var(--o-we-sidebar-content-field-dropdown-item-bg-hover);
                 }

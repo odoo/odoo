@@ -870,7 +870,7 @@ test("edit step on autocomplete input is not consumed by the first keystroke", a
     await animationFrame();
 
     await waitFor(".modal-content button.btn-primary");
-    expect(".o_tour_pointer_tip").toHaveCount(1);
+    await waitFor(".o_tour_pointer_tip");
 });
 
 test("Don't backward when action manager is busy", async () => {
@@ -1162,7 +1162,7 @@ test("edit step on autocomplete as last step can be validated by selecting an it
     await contains(".o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item:first-child").click();
     await waitUntil(() => tourConsumed.includes("last_autocomplete_tour"));
-    expect(".o_tour_pointer").toHaveCount(0);
+    await waitForNone(".o_tour_pointer");
 });
 
 test("finished tour is released and no longer listens to the bus", async () => {

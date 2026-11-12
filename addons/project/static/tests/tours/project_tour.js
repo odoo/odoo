@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         content: 'Assign the task to you',
         run: 'click',
     }, {
-        trigger: 'ul.ui-autocomplete a .o_avatar_many2x_autocomplete',
+        trigger: '.o-autocomplete--dropdown-menu a .o_avatar_many2x_autocomplete',
         content: 'Assign the task to you',
         run: "click",
     }, {

@@ -68,9 +68,7 @@ test("dropdown selection shows display_code and color", async () => {
     expect(AVATAR).toHaveClass("o_calendar_color_2");
 
     await clickFieldDropdown("work_entry_type_id");
-    await contains(
-        ".o_field_widget[name=work_entry_type_id] .dropdown-menu li:contains('Time Off')"
-    ).click();
+    await contains(".o-autocomplete--dropdown-menu li:contains('Time Off')").click();
 
     expect(AVATAR).toHaveText("T");
     expect(AVATAR).toHaveClass("o_calendar_color_5");
@@ -105,9 +103,7 @@ test("search more selection refetches display_code and color", async () => {
 
     await contains(`.o_field_widget[name=work_entry_type_id] input`).click();
     await runAllTimers();
-    await contains(
-        `.o_field_widget[name=work_entry_type_id] .o_m2o_dropdown_option_search_more`
-    ).click();
+    await contains(`.o_m2o_dropdown_option_search_more`).click();
     await contains(".modal .o_data_row .o_data_cell:contains('Special')").click();
 
     expect.verifySteps(["read:200:display_name,display_code,color"]);
@@ -143,9 +139,7 @@ test("search more 'Create New' refetches display_code and color of the new recor
 
     await contains(`.o_field_widget[name=work_entry_type_id] input`).click();
     await runAllTimers();
-    await contains(
-        `.o_field_widget[name=work_entry_type_id] .o_m2o_dropdown_option_search_more`
-    ).click();
+    await contains(`.o_m2o_dropdown_option_search_more`).click();
 
     await contains(".modal .o_create_button").click();
 

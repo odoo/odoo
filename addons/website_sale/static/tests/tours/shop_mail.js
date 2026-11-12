@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('website_sale.so_mail', {
         },
         {
             content: "Select azure interior",
-            trigger: ".modal .ui-menu-item a:contains(Interior24)",
+            trigger: ".ui-menu-item a:contains(Interior24)",
             run: "click",
         },
         {

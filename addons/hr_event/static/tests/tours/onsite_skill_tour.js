@@ -41,9 +41,9 @@ registry.category("web_tour.tours").add("hr_event_onsite_tour", {
         },
         {
             content: "Ensure we don't have any options except 'Create'",
-            trigger: "div[name='event_id'] ul",
+            trigger: ".o-autocomplete--dropdown-menu ul",
             async run() {
-                const liList = document.querySelectorAll("div[name='event_id'] ul>li");
+                const liList = document.querySelectorAll(".o-autocomplete--dropdown-menu ul > li");
                 if (liList.length !== 1) {
                     throw new Error(`Expected 1 item, found ${liList.length}`);
                 }
@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("hr_event_onsite_tour", {
         },
         {
             content: "Ensure new event is visible in the dropdown",
-            trigger: ".modal-content .dropdown-item:contains('Event1')",
+            trigger: ".o-autocomplete--dropdown-menu .dropdown-item:contains('Event1')",
         },
         {
             content: "Save the resume line with the event",
