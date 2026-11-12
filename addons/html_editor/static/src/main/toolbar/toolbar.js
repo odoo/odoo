@@ -51,18 +51,21 @@ export class Toolbar extends Component {
         this.shouldFocusFirstButton = false;
         useFocusTooltip(this.toolbarEl);
 
+        const isFocusOutsideToolbar = () =>
+            !document.activeElement.closest(
+                ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
+            );
+        // Alt+F10 is the usual shortcut to reach an editor toolbar, and is the
+        // one displayed in the hotkey overlay. Alt+F is kept as an alias, as
+        // Alt+F10 is caught by some window managers (e.g. GNOME).
+        useHotkey("alt+f10", () => this.focusFirstToolbarButton(), {
+            bypassEditableProtection: true,
+            withOverlay: () => (isFocusOutsideToolbar() ? this.toolbarEl() : null),
+            isAvailable: isFocusOutsideToolbar,
+        });
         useHotkey("alt+f", () => this.focusFirstToolbarButton(), {
             bypassEditableProtection: true,
-            withOverlay: () =>
-                document.activeElement.closest(
-                    ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
-                )
-                    ? null
-                    : this.toolbarEl(),
-            isAvailable: () =>
-                !document.activeElement.closest(
-                    ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
-                ),
+            isAvailable: isFocusOutsideToolbar,
         });
 
         onPatched(() => {

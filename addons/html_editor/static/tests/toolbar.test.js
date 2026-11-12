@@ -222,15 +222,45 @@ test("focus should be trap in toolbar on arrow left/right keys", async () => {
 });
 
 test.tags("desktop");
-test("Alt+F should move focus to the first toolbar button when focus is not on the toolbar", async () => {
+test("Alt+F10 should move focus to the first toolbar button when focus is not on the toolbar", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
     expect(el).toBeFocused();
 
-    // Alter + F should move focus to first toolbar button
-    await press(["alt", "f"]);
+    // Alt + F10 should move focus to first toolbar button
+    await press(["alt", "f10"]);
     const toolbarBtns = queryAll(".o-we-toolbar button");
     expect(toolbarBtns[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("Alt+F should move focus to the first toolbar button as an alias of Alt+F10", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(el).toBeFocused();
+
+    await press(["alt", "f"]);
+    expect(queryAll(".o-we-toolbar button")[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("pressing Alt should display the toolbar shortcut overlay", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await keyDown("alt");
+    expect(".o-we-toolbar .o_web_hotkey_overlay").toHaveCount(1);
+    expect(".o-we-toolbar .o_web_hotkey_overlay").toHaveText("F10");
+    await keyUp("alt");
+    expect(".o_web_hotkey_overlay").toHaveCount(0);
+
+    // No overlay once the focus is in the toolbar, as the shortcut is not
+    // available there
+    await press(["alt", "f10"]);
+    expect(".o-we-toolbar button[name='font_type']").toBeFocused();
+    await keyDown("alt");
+    expect(".o_web_hotkey_overlay").toHaveCount(0);
+    await keyUp("alt");
 });
 
 test.tags("desktop");
@@ -239,7 +269,7 @@ test("should display the title of the focused toolbar button as a tooltip", asyn
     await waitFor(".o-we-toolbar");
     await expectElementCount(".o-tooltip", 0);
 
-    await press(["alt", "f"]);
+    await press(["alt", "f10"]);
     expect(".o-we-toolbar button[name='font_type']").toBeFocused();
     await waitFor(".o-tooltip:contains('Select text style')");
 
@@ -439,8 +469,8 @@ test("bold shortcut should work when focus is on a toolbar button", async () => 
     setContent(el, "<p>[test]</p>");
     await expectElementCount(".o-we-toolbar", 1);
 
-    // Move focus to toolbar button by pressing Alt + F
-    await press(["alt", "f"]);
+    // Move focus to toolbar button by pressing Alt + F10
+    await press(["alt", "f10"]);
     expect(queryOne(".o-we-toolbar button[name='font_type']")).toBeFocused();
 
     // Format bold shortcut operation should be performed
