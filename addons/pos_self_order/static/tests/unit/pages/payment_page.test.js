@@ -15,33 +15,31 @@ class MockPaymentInterface extends PaymentInterface {
         this.amountPaid = 0;
         this.amountChange = 0;
     }
-    sendPaymentRequest(line) {
+    startPayment() {
         this.hasBeenCalled = true;
-        if (line.useQr) {
-            line.qr_code = "mock_qr_code";
-            return false;
-        }
-        if (line.payment_method_id.payment_method_type === "cash_machine") {
-            // Simulate cash payment with change returned
-            this.amountPaid = line.amount;
-            line.setAmount(line.amount + this.amountChange);
-        }
-        return true;
+        return { transaction_id: "mock_tx_id" };
     }
-    sendPaymentCancel(line) {
-        this.hasBeenCancelled = true;
+    cancelTransaction(transactionId) {
+        this.cancelledTransaction = transactionId;
+    }
+}
+
+class MockQrPaymentInterface extends MockPaymentInterface {
+    startPayment() {
+        return { ...super.startPayment(...arguments), qr_code: "mock_qr_code" };
     }
 }
 
 class MockPaymentInterfaceWithError extends MockPaymentInterface {
-    sendPaymentRequest(line) {
+    startPayment() {
         this.hasBeenCalled = true;
-        if (line.useQr) {
-            throw new Error("Payment failed");
-        }
-        return false;
+        throw new Error("error");
     }
 }
+
+const mockBackendResponse = {
+    order: [{}],
+};
 
 const setupPaymentPage = async () => {
     const store = await setupSelfPosEnv();
@@ -49,7 +47,6 @@ const setupPaymentPage = async () => {
     const paymentNoProvider = store.models["pos.payment.method"].create({
         name: "Card",
         payment_provider: null,
-        payment_method_type: "none",
     });
 
     const paymentTerminal = store.models["pos.payment.method"].create({
@@ -66,19 +63,19 @@ const setupPaymentPage = async () => {
     });
     paymentTerminalWithError.payment_interface = new MockPaymentInterfaceWithError();
 
-    const paymentExternalQr = store.models["pos.payment.method"].create({
+    const paymentQr = store.models["pos.payment.method"].create({
         name: "QR",
         payment_provider: "mock_qr",
-        payment_method_type: "external_qr",
+        payment_method_type: "qr",
     });
-    paymentExternalQr.payment_interface = new MockPaymentInterface();
+    paymentQr.payment_interface = new MockQrPaymentInterface();
 
-    const paymentExternalQrWithError = store.models["pos.payment.method"].create({
+    const paymentQrWithError = store.models["pos.payment.method"].create({
         name: "QRError",
         payment_provider: "mock_qr",
-        payment_method_type: "external_qr",
+        payment_method_type: "qr",
     });
-    paymentExternalQrWithError.payment_interface = new MockPaymentInterfaceWithError();
+    paymentQrWithError.payment_interface = new MockPaymentInterfaceWithError();
 
     const paymentCashMachine = store.models["pos.payment.method"].create({
         name: "CashMachine",
@@ -96,8 +93,8 @@ const setupPaymentPage = async () => {
         paymentNoProvider,
         paymentTerminal,
         paymentTerminalWithError,
-        paymentExternalQr,
-        paymentExternalQrWithError,
+        paymentQr,
+        paymentQrWithError,
         paymentCashMachine,
     };
 };
@@ -116,7 +113,7 @@ describe("startPayment", () => {
     test("succeeds if the backend returns no error", async () => {
         const { store, paymentNoProvider } = await setupPaymentPage();
 
-        onRpc("/kiosk/payment/1/kiosk", () => true);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
         await clickPaymentMethod(paymentNoProvider);
 
         expect(store.paymentError).toBe(false);
@@ -136,7 +133,7 @@ describe("startPayment", () => {
     test("succeeds if the payment terminal succeeds and backend returns no error", async () => {
         const { store, paymentTerminal } = await setupPaymentPage();
 
-        onRpc("/kiosk/payment/1/kiosk", () => true);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
         await clickPaymentMethod(paymentTerminal);
 
         expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
@@ -147,14 +144,14 @@ describe("startPayment", () => {
         const { store, paymentTerminalWithError } = await setupPaymentPage();
         await clickPaymentMethod(paymentTerminalWithError);
 
-        onRpc("/kiosk/payment/1/kiosk", () => true);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
         await clickPaymentMethod(paymentTerminalWithError);
 
         expect(paymentTerminalWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 
-    test("fails if the payment terminal succeeds but the backend returns an error", async () => {
+    test("does not call the payment terminal when the backend returns an error", async () => {
         const { store, paymentTerminal } = await setupPaymentPage();
         await clickPaymentMethod(paymentTerminal);
 
@@ -163,34 +160,36 @@ describe("startPayment", () => {
         });
         await clickPaymentMethod(paymentTerminal);
 
-        expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
+        expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(false);
         expect(store.paymentError).toBe(true);
     });
 
-    test("succeeds if the external QR code payment interface succeeds and backend returns no error", async () => {
-        const { paymentPage, store, paymentExternalQr } = await setupPaymentPage();
+    test("succeeds if the QR code payment interface succeeds and backend returns no error", async () => {
+        const { paymentPage, store, paymentQr } = await setupPaymentPage();
 
-        await clickPaymentMethod(paymentExternalQr);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
+        await clickPaymentMethod(paymentQr);
 
-        expect(paymentExternalQr.payment_interface.hasBeenCalled).toBe(true);
+        expect(paymentQr.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
         await advanceTime(500); // Wait timeout fade out
         expect(paymentPage.state.qrCode).toBe("mock_qr_code");
     });
 
-    test("fails if the external QR code payment interface fails", async () => {
-        const { store, paymentExternalQrWithError } = await setupPaymentPage();
+    test("fails if the QR code payment interface fails", async () => {
+        const { store, paymentQrWithError } = await setupPaymentPage();
 
-        await clickPaymentMethod(paymentExternalQrWithError);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
+        await clickPaymentMethod(paymentQrWithError);
 
-        expect(paymentExternalQrWithError.payment_interface.hasBeenCalled).toBe(true);
+        expect(paymentQrWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 
     test("succeeds if the cash machine payment interface succeeds", async () => {
         const { store, paymentCashMachine } = await setupPaymentPage();
 
-        onRpc("/kiosk/payment/1/kiosk", () => true);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
         await clickPaymentMethod(paymentCashMachine);
 
         expect(paymentCashMachine.payment_interface.hasBeenCalled).toBe(true);
@@ -204,11 +203,11 @@ describe("startPayment", () => {
             add: (component, { confirm }) => confirm(true),
         });
 
-        onRpc("/kiosk/payment/1/kiosk", () => true);
+        onRpc("/kiosk/payment/1/kiosk", () => mockBackendResponse);
         await clickPaymentMethod(paymentCashMachine);
         await clickBackButton();
 
-        expect(paymentCashMachine.payment_interface.hasBeenCancelled).toBe(true);
+        expect(paymentCashMachine.payment_interface.cancelledTransaction).toBe("mock_tx_id");
     });
 
     test("sends the signed partner of the order to the backend", async () => {
@@ -223,7 +222,7 @@ describe("startPayment", () => {
         onRpc("/kiosk/payment/1/kiosk", async (request) => {
             const { params } = await request.json();
             sentOrder = params.order;
-            return true;
+            return mockBackendResponse;
         });
         await clickPaymentMethod(paymentNoProvider);
 
