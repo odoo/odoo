@@ -66,6 +66,7 @@ class LeaveReport(models.Model):
 						allocation.date_from as date_from,
 						allocation.date_to as date_to,
 						allocation.employee_company_id as company_id,
+                        leave_type.allows_negative as allows_negative,
 						CASE
 							WHEN allocation.date_from > MAX(COALESCE(allocation.date_to, 'infinity'::date)) OVER (
 								PARTITION BY allocation.employee_id, allocation.holiday_status_id
@@ -77,6 +78,7 @@ class LeaveReport(models.Model):
 						END as is_new_group
                     FROM hr_leave_allocation allocation
                     JOIN hr_employee employee ON (allocation.employee_id = employee.id)
+                    JOIN hr_leave_type leave_type ON (allocation.holiday_status_id = leave_type.id)
                     WHERE allocation.state = 'validate'
                 ),
 
@@ -106,7 +108,12 @@ class LeaveReport(models.Model):
 						ga.date_from as date_from,
 						ga.date_to as date_to,
 						ga.company_id as company_id,
+                        ga.allows_negative as allows_negative,
 						ga.overlap_group as overlap_group,
+                        LEAD(ga.allocation_id) OVER (
+                            PARTITION BY ga.employee_id, ga.leave_type, ga.overlap_group
+                            ORDER BY ga.date_from, ga.allocation_id
+                        ) IS NULL as is_last,
 						ROW_NUMBER() OVER (
 							PARTITION BY ga.employee_id, ga.leave_type, ga.overlap_group
 							ORDER BY ga.date_from, ga.allocation_id
@@ -162,10 +169,19 @@ class LeaveReport(models.Model):
                     SELECT
                         sub.employee_id,
                         sub.active_employee,
-                        GREATEST(sub.cumul_rem_days - COALESCE(LAG(sub.cumul_rem_days) OVER w, 0), 0) as number_of_days,
-                        GREATEST(sub.cumul_rem_hours - COALESCE(LAG(sub.cumul_rem_hours) OVER w, 0), 0) as number_of_hours,
+                        CASE
+                            WHEN sub.allows_negative AND sub.is_last
+                                THEN sub.cumul_rem_days - COALESCE(LAG(sub.cumul_rem_days) OVER w, 0)
+                            ELSE GREATEST(sub.cumul_rem_days - COALESCE(LAG(sub.cumul_rem_days) OVER w, 0), 0)
+                        END as number_of_days,
+                        CASE
+                            WHEN sub.allows_negative AND sub.is_last
+                                THEN sub.cumul_rem_hours - COALESCE(LAG(sub.cumul_rem_hours) OVER w, 0)
+                            ELSE GREATEST(sub.cumul_rem_hours - COALESCE(LAG(sub.cumul_rem_hours) OVER w, 0), 0)
+                        END as number_of_hours,
                         sub.department_id,
                         sub.leave_type,
+                        sub.allows_negative,
                         sub.state,
                         sub.date_from,
                         sub.date_to,
@@ -173,8 +189,16 @@ class LeaveReport(models.Model):
                     FROM (
                         SELECT
                             oa.*,
-                            GREATEST(oa.cumulative_allocated_days - SUM(COALESCE(tbr.rank_days, 0)) OVER w, 0) as cumul_rem_days,
-                            GREATEST(oa.cumulative_allocated_hours - SUM(COALESCE(tbr.rank_hours, 0)) OVER w, 0) as cumul_rem_hours
+                            CASE
+                                WHEN oa.allows_negative AND oa.is_last
+                                    THEN oa.cumulative_allocated_days - SUM(COALESCE(tbr.rank_days, 0)) OVER w
+                                ELSE GREATEST(oa.cumulative_allocated_days - SUM(COALESCE(tbr.rank_days, 0)) OVER w, 0)
+                            END as cumul_rem_days,
+                            CASE
+                                WHEN oa.allows_negative AND oa.is_last
+                                    THEN oa.cumulative_allocated_hours - SUM(COALESCE(tbr.rank_hours, 0)) OVER w
+                                ELSE GREATEST(oa.cumulative_allocated_hours - SUM(COALESCE(tbr.rank_hours, 0)) OVER w, 0)
+                            END as cumul_rem_hours
                         FROM ordered_allocations oa
                         LEFT JOIN taken_by_rank tbr
                             ON  tbr.employee_id = oa.employee_id
@@ -215,7 +239,6 @@ class LeaveReport(models.Model):
 						'left' as holiday_status,
 						fb.company_id as company_id
                     FROM fifo_balances fb
-                    WHERE fb.number_of_days >= 0
 
                     /* Planned and taken leave requests */
                     UNION ALL SELECT
