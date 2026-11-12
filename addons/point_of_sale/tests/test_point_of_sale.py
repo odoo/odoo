@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 
+from odoo import fields
 from odoo.fields import Command
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
@@ -105,6 +107,36 @@ class TestPointOfSale(TransactionCase):
             'module_pos_restaurant': False,
         })
         self.assertEqual(pos_config.warehouse_id.code, 'Sho')
+
+    def test_load_product_resends_changed_pricelists(self):
+        product = self.env['product.product'].create({'name': 'product'})
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'pricelist',
+            'currency_id': self.currency.id,
+            'item_ids': [Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': product.id,
+                'compute_price': 'fixed',
+                'fixed_price': 5,
+            })],
+        })
+        config = self.env['pos.config'].create({'name': 'shop', 'pricelist_id': pricelist.id})
+        session = self.env['pos.session'].create({'config_id': config.id})
+
+        def loaded_pricelist_ids(data_date):
+            result = session.with_context(pos_data_server_date=data_date).get_pos_ui_product_pricelist_item_by_product(
+                product.product_tmpl_id.ids, product.ids, config.id,
+            )
+            self.assertEqual(len(result['product.pricelist.item']), 1)
+            return [p['id'] for p in result['product.pricelist']]
+
+        rule_date = pricelist.item_ids.write_date
+        # Rule older than the PoS data: no pricelist
+        self.assertEqual(loaded_pricelist_ids(fields.Datetime.to_string(rule_date + timedelta(seconds=1))), [])
+        # Rule changed since then: pricelist resent
+        self.assertEqual(loaded_pricelist_ids(fields.Datetime.to_string(rule_date - timedelta(seconds=1))), pricelist.ids)
+        # No PoS data date (e.g. self-order notification): always sent
+        self.assertEqual(loaded_pricelist_ids(False), pricelist.ids)
 
     def test_session_filter_local_data(self):
         product1 = self.env['product.template'].create({

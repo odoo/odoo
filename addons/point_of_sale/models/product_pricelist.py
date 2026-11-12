@@ -31,7 +31,7 @@ class ProductPricelist(models.Model):
         fields_to_read = [name for name in self._load_pos_data_fields(config) if name != 'item_ids']
         read_records = records._filtered_access("read").read(fields_to_read, load=False)
 
-        items = self.env['product.pricelist.item'].search([('pricelist_id', 'in', records.ids)])
+        items = self.env['product.pricelist.item'].search_fetch([('pricelist_id', 'in', records.ids)], ['pricelist_id'])
         item_ids_by_pricelist = defaultdict(list)
         for item in items:
             item_ids_by_pricelist[item.pricelist_id.id].append(item.id)

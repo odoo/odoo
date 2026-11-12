@@ -714,7 +714,7 @@ export class PosStore extends WithLazyGetterTrap {
             "product.template",
             "load_product_from_pos",
             [odoo.pos_config_id, domain, offset, limit],
-            {},
+            { context: { pos_data_server_date: this.config._data_server_date } },
             false
         );
         this.productAttributesExclusion = this.computeProductAttributesExclusion(
