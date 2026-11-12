@@ -321,3 +321,39 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             resupply_po.picking_ids.button_validate()
             resupply_po.action_create_invoice()
             self.assertEqual(resupply_po.invoice_ids.invoice_line_ids.account_id, account)
+
+    def test_resupply_dropship_bill_account_subcontracted_product_dropshipped(self):
+        """
+        A component dropshipped by its vendor to the subcontractor, for a subcontracted product
+        that is itself dropshipped from the subcontractor to a customer: the finished product
+        never enters the stock, so, as for any dropship, the component bill is expensed.
+        Capitalizing it would leave the component value in stock valuation with no stock.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto.id,
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id})],
+        })
+        self.product_a.categ_id = self.categ_avco_auto
+        dropship_picking_type = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('default_location_src_id.usage', '=', 'supplier'),
+            ('default_location_dest_id.usage', '=', 'customer'),
+        ], limit=1, order='sequence')
+        self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'picking_type_id': dropship_picking_type.id,
+            'dest_address_id': self.env['res.partner'].create({'name': 'Customer'}).id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        }).button_confirm()
+        resupply_po = self.env['purchase.order'].search([
+            ('product_id', '=', self.product_b.id),
+            ('state', '=', 'draft'),
+        ])
+        resupply_po.button_confirm()
+        resupply_po.picking_ids.button_validate()
+        resupply_po.action_create_invoice()
+        self.assertEqual(
+            resupply_po.invoice_ids.invoice_line_ids.account_id,
+            self.product_b.product_tmpl_id.get_product_accounts()['expense'],
+        )
