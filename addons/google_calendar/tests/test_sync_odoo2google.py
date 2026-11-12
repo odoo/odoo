@@ -758,6 +758,28 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         self.assertGoogleEventNotDeleted()
 
     @patch_api
+    def test_draft_event_synced_only_once_confirmed(self):
+        """ Draft events must not be sent to Google (attendees would be invited), neither
+        at creation nor by the synchronization cron. They must be inserted once confirmed. """
+        event = self.env['calendar.event'].create({
+            'name': "Draft Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, self.partner_jean_luc.id)],
+            'is_draft': True,
+        })
+        self.assertGoogleEventNotInserted()
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventNotInserted()
+
+        event.action_confirm()
+        self.assertGoogleEventInserted({
+            'id': False,
+            'summary': 'Draft Event',
+            'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'needsAction'}],
+        }, timeout=3)
+
+    @patch_api
     def test_event_available_privacy(self):
         """ Create an event with "Available" value for 'show_as' and assert value is properly sync in google calendar. """
         event = self.env['calendar.event'].create({
