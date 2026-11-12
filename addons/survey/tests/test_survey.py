@@ -465,6 +465,18 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertEqual(answer_line.value_char_box, 'This is only a comment')
 
     @users('survey_manager')
+    def test_certification_report_date(self):
+        """ The certification is dated when the attempt is completed, not when the answer is created """
+        with self.mock_datetime_and_now(fields.datetime(2023, 1, 1, 12, 0, 0)):
+            answer_done = self._add_answer(self.survey, self.survey_user.partner_id)
+        with self.mock_datetime_and_now(fields.datetime(2023, 1, 5, 12, 0, 0)):
+            answer_done._mark_done()
+
+        report = self.env['ir.actions.report']
+        html = report._render_qweb_html('survey.certification_report_view', answer_done.ids)[0]
+        self.assertIn(b'01/05/2023', html)
+
+    @users('survey_manager')
     def test_copy_conditional_question_settings(self):
         """ Create a survey with conditional layout, clone it and verify that the cloned survey has the same conditional
         layout as the original survey.
