@@ -148,6 +148,17 @@ class ProjectTask(models.Model):
     def _read_group_personal_stage_type_ids(self, stages, domain):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
+    def _read_group_orderby(self, table, order, groupby_terms):
+        if "stage_name" in groupby_terms:
+            terms = []
+            for term in groupby_terms:
+                if term == "stage_name":
+                    terms.append(SQL("AVG(%s) ASC NULLS LAST", table.stage_id.sequence))
+                else:
+                    terms.append(super()._read_group_orderby(table, term, groupby_terms))
+            return SQL(", ").join(terms)
+        return super()._read_group_orderby(table, order, groupby_terms)
+
     active = fields.Boolean(default=True, export_string_translation=False)
     name = fields.Char(string='Title', tracking=1, required=True, index='trigram', copy=True)
     description = fields.Html(string='Description', sanitize_attributes=False)
@@ -162,6 +173,7 @@ class ProjectTask(models.Model):
        store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
        ui_domain="[('project_ids', '=', project_id)]")
+    stage_name = fields.Char(related='stage_id.name')
     tag_ids = fields.Many2many('project.tags', string='Tags')
 
     state = fields.Selection([

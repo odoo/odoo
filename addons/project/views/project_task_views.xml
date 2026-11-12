@@ -37,7 +37,7 @@
                     <group>
                         <filter string="Priority" name="groupby_priority" context="{'group_by': 'priority'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True) or not context.get('default_project_id')"/>
-                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by': 'stage_name'}"/>
                     </group>
                 </search>
             </field>
@@ -893,7 +893,8 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <list position="attributes">
-                    <attribute name="default_group_by">stage_id</attribute>
+                    <attribute name="default_group_by">stage_name</attribute>
+                    <attribute name="expand">1</attribute>
                 </list>
             </field>
         </record>
