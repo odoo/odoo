@@ -7,10 +7,7 @@ registry.category("web_tour.tours").add("test_basic_mo_process_on_mobile", {
             trigger: ".o_field_widget[name=product_id] input",
             run: "click",
         },
-        {
-            trigger: ".modal .o_kanban_record:contains('final product')",
-            run: "click",
-        },
+        ...stepUtils.mobileKanbanSearchMany2X("Product", "final product"),
         ...stepUtils.saveForm(),
         {
             trigger: "button[name=action_confirm]",
