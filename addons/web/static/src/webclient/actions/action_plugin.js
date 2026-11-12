@@ -6,6 +6,7 @@ import {
     onWillUnmount,
     Plugin,
     proxy,
+    signal,
     t,
     useConfig,
     useListener,
@@ -47,6 +48,7 @@ import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { ReportAction } from "./reports/report_action";
 import { downloadReport, getReportUrl } from "./reports/utils";
+import { getPinnedItemIds } from "@web/search/hub_menu/hub_utils";
 
 class BlankComponent extends Component {
     props = useProps({
@@ -88,6 +90,17 @@ const actionRegistry = registry.category("actions");
  * @property {number} [index]
  * @property {boolean} [newWindow]
  * @property {boolean} [forceLeave]
+ * @property {HubInfo} [hub] hub displayed by the action
+ */
+
+/**
+ * @typedef {Object} HubInfo
+ * @property {number} id id of the hub
+ * @property {string} resModel model of the hub's record
+ * @property {number} resId id of the hub's record
+ * @property {Object[]} items items of the hub
+ * @property {number} activeItemId id of the item currently opened
+ * @property {import("@odoo/owl").Signal<number[]>} pinnedItemIds ids of the items pinned by the user, in display order
  */
 
 export async function clearUncommittedChanges(bus, { forceLeave } = {}) {
@@ -993,6 +1006,19 @@ export class ActionPlugin extends Plugin {
         }
         const index = this.#computeStackIndex(options);
         const nextStack = [...this.#controllerStack.slice(0, index), controller];
+
+        if (action.hub) {
+            const hub = action.hub;
+            controller.hub = {
+                id: hub.id,
+                resModel: hub.res_model,
+                resId: hub.res_id,
+                items: hub.item_ids,
+                activeItemId: hub.active_item_id,
+                pinnedItemIds: signal(getPinnedItemIds(hub.id, hub.res_id)),
+            };
+        }
+
         if (action.target !== "new" && options.newWindow) {
             return this.#openActionInNewWindow(action, this.#makeState(nextStack));
         }
@@ -1028,6 +1054,10 @@ export class ActionPlugin extends Plugin {
             }
         };
         controller.config.isReloadingController = controller === this.#controllerStack.at(-1);
+        if (action.target !== "new" && controller.hub) {
+            // put .hub on config so it's available in env
+            controller.config.hub = controller.hub;
+        }
 
         const plugin = this;
         class ControllerComponent extends Component {
@@ -1384,6 +1414,7 @@ export class ActionPlugin extends Plugin {
             action,
             view,
             views,
+            hub: options.hub,
             ...this.#getViewInfo(view, action, views, options.props),
         });
         action.controllers[view.type] = controller;
@@ -1449,6 +1480,7 @@ export class ActionPlugin extends Plugin {
             const controller = this.#makeController({
                 Component: clientAction,
                 action,
+                hub: options.hub,
                 ...this.#getActionInfo(action, { ...props, ...options.props }),
             });
             controller.displayName ||= clientAction.displayName?.toString() || "";
@@ -1831,6 +1863,7 @@ export class ActionPlugin extends Plugin {
                 Component: View,
                 action: controller.action,
                 views: controller.views,
+                hub: controller.hub,
                 view,
             });
 

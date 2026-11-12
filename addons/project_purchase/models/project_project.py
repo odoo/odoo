@@ -51,7 +51,7 @@ class ProjectProject(models.Model):
         action_window['domain'] = [('id', 'in', purchase_orders.ids)]
         action_window['context'] = {'default_project_id': self.id}
 
-        if len(purchase_orders) == 1 and not self.env.context.get('from_embedded_action'):
+        if len(purchase_orders) == 1 and self.env.context.get('form_when_one', True):  # not self.env.context.get('from_embedded_action'):
             action_window['views'] = [[False, 'form']]
             action_window['res_id'] = purchase_orders.id
         return action_window

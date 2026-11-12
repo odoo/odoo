@@ -609,7 +609,7 @@
                     class="o_project_kanban"
                     js_class="project_project_kanban"
                     on_create="project.open_create_project"
-                    action="action_view_tasks" type="object"
+                    action="hub_default" type="action"
                     quick_create_view="project.quick_create_project_form"
                     sample="1"
                     default_order="is_favorite desc, sequence, name, id"
@@ -940,6 +940,12 @@
             <field name="code">
                 action = record.action_open_share_project_wizard()
             </field>
+        </record>
+
+        <!-- Hub for project.project; items are defined next to the embedded actions they mirror -->
+        <record id="hub_project" model="ir.hub">
+            <field name="name">Project</field>
+            <field name="res_model">project.project</field>
         </record>
 
 </odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.HubMenu">
+        <Dropdown menuClass="'hub-menu-dropdown'" navigationOptions="{ shouldFocusChildInput: false }">
+            <button>
+                <i class="oi me-1" data-icon="apps"/> Hub
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    t-foreach="this.items"
+                    t-as="item"
+                    t-key="item.id"
+                    class="'o_menu_item o_menu_item--hub-item'"
+                    onSelected="() => this.openItem(item)"
+                >
+                    <div class="o-checkbox form-check">
+                        <input type="checkbox" class="form-check-input" t-att-checked="this.isPinned(item)" t-on-click.stop="(e) => this.checkboxClicked(e, item)"/>
+                        <label t-out="item.display_name"/>
+                    </div>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+        <div role="separator" class="dropdown-divider"></div>
+    </t>
+
+</templates>

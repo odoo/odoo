@@ -5,12 +5,18 @@ class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
 
     embedded_actions_config_ids = fields.One2many('res.users.settings.embedded.action', 'user_setting_id')
+    hub_config_ids = fields.One2many('res.users.settings.hub', 'user_setting_id')
 
     @api.model
     def _format_settings(self, fields_to_format):
         res = super()._format_settings(fields_to_format)
         if 'embedded_actions_config_ids' in fields_to_format:
             res['embedded_actions_config_ids'] = self.embedded_actions_config_ids._embedded_action_settings_format()
+        if 'hub_config_ids' in fields_to_format:
+            res['hub_config_ids'] = {
+                f'{setting.hub_id.id},{setting.res_id}': setting.pinned_item_ids or []
+                for setting in self.hub_config_ids
+            }
         return res
 
     def get_embedded_actions_settings(self):
@@ -36,4 +42,19 @@ class ResUsersSettings(models.Model):
                 'user_setting_id': self.id,
                 'action_id': action_id,
                 'res_id': res_id,
+            })
+
+    def set_hub_setting(self, hub_id, res_id, pinned_item_ids):
+        self.ensure_one()
+        hub_config = self.env['res.users.settings.hub'].search([
+            ('user_setting_id', '=', self.id), ('hub_id', '=', hub_id), ('res_id', '=', res_id)
+        ], limit=1)
+        if hub_config:
+            hub_config.pinned_item_ids = pinned_item_ids
+        else:
+            self.env['res.users.settings.hub'].create({
+                'user_setting_id': self.id,
+                'hub_id': hub_id,
+                'res_id': res_id,
+                'pinned_item_ids': pinned_item_ids,
             })
