@@ -69,6 +69,13 @@ class AccountMove(models.Model):
             errors['vat_missing'] = {'message': self.env._("You must have a VAT number to be able to issue e-invoices\n")}
         if not company.country_id or not company.street or not company.city:
             errors['address_problem'] = {'message': self.env._("Please complete the address of your company\n")}
+        untaxed_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and not line.tax_tag_ids)
+        if untaxed_lines:
+            errors['tax_missing'] = {'message': self.env._(
+                "These lines have no tax mapped to a KSeF tax rate: %(lines)s\n"
+                "If no VAT applies, use the 0%% or the exempt tax.\n",
+                lines=", ".join(untaxed_lines.mapped(lambda line: line.name or line.product_id.display_name or ''))
+            )}
         return errors
 
     def _l10n_pl_edi_get_ksef_invoice_type(self):
