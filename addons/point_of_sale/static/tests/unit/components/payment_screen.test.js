@@ -1,4 +1,4 @@
-import { test, expect, animationFrame } from "@odoo/hoot";
+import { test, expect, animationFrame, queryAll } from "@odoo/hoot";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { setupPosEnv, getFilledOrder, expectFormattedPrice, addTestTerminals } from "../utils";
@@ -223,4 +223,31 @@ test("addTip default amount of a currency without decimals", async () => {
         type: "fixed",
     });
     expect(tip).toBe(2405);
+});
+
+test.tags("desktop");
+test("payment methods: select a payment currency", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const paymentMethod = store.models["pos.payment.method"].get(1);
+    const euro = store.models["res.currency"].get(125);
+
+    paymentMethod.currency_ids = [euro];
+
+    await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    const currencyButtons = queryAll(".paymentmethod button");
+    expect(currencyButtons).toHaveLength(2);
+    expect(currencyButtons[0].querySelector(".text-center")).toHaveText("USD");
+    expect(currencyButtons[1].querySelector(".text-center")).toHaveText("EUR");
+
+    await currencyButtons[1].click();
+    await animationFrame();
+
+    expect(order.payment_ids).toHaveLength(1);
+    expect(order.payment_ids[0].payment_method_id).toBe(paymentMethod);
+    expect(order.payment_ids[0].currency).toBe(euro);
+    expect(currencyButtons[1]).toHaveClass("border-primary");
 });
