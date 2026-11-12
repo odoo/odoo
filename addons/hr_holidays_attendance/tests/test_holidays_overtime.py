@@ -591,3 +591,17 @@ class TestHolidaysOvertime(HttpCase):
         leave.action_approve()
 
         self.assertAlmostEqual(self.employee.total_overtime, 0.0, 2)
+
+    def test_deduct_extra_hours_default_type_country(self):
+        """This test makes sure that the default work entry type for overtime
+        deduction is one of the allowed work entry types for the employee's
+        country."""
+        self.company.country_id = self.env.ref('base.us')
+        self.env.ref('hr_work_entry.generic_work_entry_type_overtime').sequence = 0
+        us_overtime = self.env.ref('hr_work_entry.us_work_entry_type_overtime')
+        us_overtime.sequence = 1
+        defaults = self.env['hr.leave.allocation'].with_user(self.user_manager).with_context(
+            deduct_extra_hours=True,
+            default_employee_id=self.employee.id,
+        ).default_get(['employee_id', 'work_entry_type_id'])
+        self.assertEqual(defaults['work_entry_type_id'], us_overtime.id)
