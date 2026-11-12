@@ -93,7 +93,8 @@ class SurveyQuestion(models.Model):
         ('scale', 'Scale'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('matrix', 'Matrix')], string='Question Type',
+        ('matrix', 'Matrix'),
+        ('upload_file', 'Upload File')], string='Question Type',
         compute='_compute_question_type', readonly=False, store=True)
     is_scored_question = fields.Boolean(
         'Scored', compute='_compute_is_scored_question',
