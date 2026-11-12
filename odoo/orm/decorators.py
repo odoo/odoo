@@ -9,6 +9,8 @@ import typing
 from collections.abc import Mapping
 from functools import wraps
 
+from .utils import RegistrySetupError
+
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
     from .types import BaseModel, ValuesType
@@ -236,7 +238,7 @@ def depends(*args) -> Decorator:
     if args and callable(args[0]):
         args = args[0]
     elif any('id' in arg.split('.') for arg in args):
-        raise NotImplementedError("Compute method cannot depend on field 'id'.")
+        raise RegistrySetupError("Compute method cannot depend on field 'id'.")
     return attrsetter('_depends', args)
 
 
@@ -275,7 +277,8 @@ def autovacuum[C: Callable](method: C) -> C:
     A return value can be a tuple (done, remaining) which have similar meaning
     as in :meth:`~odoo.addons.base.models.ir_cron.IrCron._commit_progress`.
     """
-    assert method.__name__.startswith('_'), "%s: autovacuum methods must be private" % method.__name__
+    if not method.__name__.startswith('_'):
+        raise RegistrySetupError(f"{method.__name__}: autovacuum methods must be private")
     method._autovacuum = True  # type: ignore
     return method
 

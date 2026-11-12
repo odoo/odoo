@@ -35,7 +35,7 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector
 from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
 
-from .utils import SUPERUSER_ID
+from .utils import SUPERUSER_ID, RegistrySetupError, setup_warning
 from . import model_classes
 
 if typing.TYPE_CHECKING:
@@ -597,7 +597,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     or (field.company_dependent and c == 'company')
                     for c in depends_context
                 ):
-                    field._setup_warning(f'stored field should not depend on context {depends_context}')
+                    setup_warning(field, f'stored field should not depend on context {depends_context}')
 
         # clean the lazy_property again in case they are cached by another ongoing registry readonly request
         reset_cached_properties(self)
@@ -683,28 +683,28 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     continue
                 if len({field.compute_sudo for field in fields}) > 1:
                     fnames = ", ".join(field.name for field in fields)
-                    warnings.warn(
-                        f"{model_name}: inconsistent 'compute_sudo' for computed fields {fnames}. "
+                    setup_warning(
+                        model_name,
+                        f"inconsistent 'compute_sudo' for computed fields {fnames}. "
                         f"Either set 'compute_sudo' to the same value on all those fields, or "
                         f"use distinct compute methods for sudoed and non-sudoed fields.",
-                        stacklevel=1,
                     )
                 if len({field.precompute for field in fields}) > 1:
                     fnames = ", ".join(field.name for field in fields)
-                    warnings.warn(
-                        f"{model_name}: inconsistent 'precompute' for computed fields {fnames}. "
+                    setup_warning(
+                        model_name,
+                        f"inconsistent 'precompute' for computed fields {fnames}. "
                         f"Either set all fields as precompute=True (if possible), or "
                         f"use distinct compute methods for precomputed and non-precomputed fields.",
-                        stacklevel=1,
                     )
                 if len({field.store for field in fields}) > 1:
                     fnames1 = ", ".join(field.name for field in fields if not field.store)
                     fnames2 = ", ".join(field.name for field in fields if field.store)
-                    warnings.warn(
-                        f"{model_name}: inconsistent 'store' for computed fields, "
+                    setup_warning(
+                        model_name,
+                        f"inconsistent 'store' for computed fields, "
                         f"accessing {fnames1} may recompute and update {fnames2}. "
                         f"Use distinct compute methods for stored and non-stored fields.",
-                        stacklevel=1,
                     )
         return computed
 
@@ -996,10 +996,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         for indexname, tablename, field in expected:
             index = field.index
-            assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
+            if index not in ('btree', 'btree_not_null', 'trigram', True, False, None):
+                raise RegistrySetupError(f"{field}: invalid index={index!r}")
 
             if index and field.translate and index != 'trigram':
-                _schema.warning(f"Index attribute on {field!r} ignored, only trigram index is supported for translated fields")
+                setup_warning(field, "index attribute ignored, only trigram index is supported for translated fields")
                 continue
 
             # whether the field should be backed by an index, and the access

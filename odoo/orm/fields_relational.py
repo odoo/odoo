@@ -18,7 +18,7 @@ from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
 from .query import FieldSQL, Query, TableSQL
-from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
+from .utils import COLLECTION_TYPES, Prefetch, RegistrySetupError, SQL_OPERATORS, check_pg_name, setup_warning
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -86,9 +86,9 @@ class _Relational[C](Field[BaseModel, C]):
     def _setup(self, model):
         super()._setup(model)
         if self.comodel_name not in model.pool:
-            raise ValueError(f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}")
+            raise RegistrySetupError(f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}")
         if isinstance(self.domain, str):
-            self._setup_warning("string is not accepted as domain, use ui_domain")
+            setup_warning(self, "string is not accepted as domain, use ui_domain")
 
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """
@@ -103,7 +103,7 @@ class _Relational[C](Field[BaseModel, C]):
             return Domain.TRUE
         if isinstance(domain, str):
             # domain=str is used only for the client-side
-            self._setup_warning("string is not accepted as domain, use ui_domain (compute)")
+            setup_warning(self, "string is not accepted as domain, use ui_domain (compute)")
             return Domain.TRUE
         return Domain(domain)
 
@@ -150,7 +150,8 @@ class _Relational[C](Field[BaseModel, C]):
                 cids = 'company_ids'
                 field_to_check = 'company_ids'
             else:
-                self._setup_warning(
+                setup_warning(
+                    self,
                     "Couldn't generate a company-dependent domain for field. "
                     "The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either."
                 )
@@ -266,7 +267,7 @@ class Many2one(_Relational['IdType']):
             self.bypass_search_access = True
         elif self.delegate:
             comodel_name = self.comodel_name or 'comodel_name'
-            raise TypeError(
+            raise RegistrySetupError(
                 f"The delegate field {self} must be declared in the model class e.g.\n"
                 f"_inherits = {{{comodel_name!r}: {name!r}}}"
             )
@@ -292,13 +293,13 @@ class Many2one(_Relational['IdType']):
             else:
                 self.ondelete = 'restrict' if self.required else 'set null'
         if self.ondelete == 'set null' and self.required:
-            raise ValueError(
+            raise RegistrySetupError(
                 "The m2o field %s of model %s is required but declares its ondelete policy "
                 "as being 'set null'. Only 'restrict' and 'cascade' make sense."
                 % (self.name, model._name)
             )
         if self.ondelete == 'restrict' and self.comodel_name in IR_MODELS:
-            raise ValueError(
+            raise RegistrySetupError(
                 f"Field {self.name} of model {model._name} is defined as ondelete='restrict' "
                 f"while having {self.comodel_name} as comodel, the 'restrict' mode is not "
                 f"supported for this type of field as comodel."
@@ -628,7 +629,7 @@ class _RelationalMulti(_Relational[tuple['IdType', ...]]):
     def _setup(self, model):
         super()._setup(model)
         if self.required:
-            self._setup_warning("required, use @api.constrains locking comodel records")
+            setup_warning(self, "required not enforced, use @api.constrains that locks comodel records")
 
     def _update_inverse(self, records, value):
         new_id = value.id
@@ -979,7 +980,7 @@ class One2many(_RelationalMulti):
                 field = comodel._fields[self.inverse_name]
                 field.setup(comodel)
             except KeyError:
-                raise ValueError(f"{self.inverse_name!r} declared in {self!r} does not exist on {comodel._name!r}.")
+                raise RegistrySetupError(f"{self.inverse_name!r} declared in {self!r} does not exist on {comodel._name!r}.")
 
     def setup_inverses(self, registry, inverses):
         if self.inverse_name:
@@ -987,14 +988,14 @@ class One2many(_RelationalMulti):
             if self.manual and self.inverse_name not in registry[self.comodel_name]._fields:
                 # ignore manual fields (e.g. from Studio) that may reference a
                 # non-existent inverse field in the registry to avoid crashing
-                self._setup_warning(f"ignoring manual field with invalid inverse name {self.inverse_name!r}")
+                setup_warning(self, f"ignoring manual field with invalid inverse name {self.inverse_name!r}")
                 return
             invf = registry[self.comodel_name]._fields[self.inverse_name]
             if isinstance(invf, (Many2one, Many2oneReference)):
                 # setting one2many fields only invalidates many2one inverses;
                 inverses.add(self, invf)
             else:
-                self._setup_warning(f"inverse field {invf} is not a many2one or many2one_reference")
+                setup_warning(self, f"inverse field {invf} is not a many2one or many2one_reference")
             inverses.add(invf, self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
@@ -1351,7 +1352,7 @@ class Many2many(_RelationalMulti):
         # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
         #    this is considered a programming error.
         if self.ondelete not in ('cascade', 'restrict'):
-            raise ValueError(
+            raise RegistrySetupError(
                 "The m2m field %s of model %s declares its ondelete policy "
                 "as being %r. Only 'restrict' and 'cascade' make sense."
                 % (self.name, model._name, self.ondelete)
@@ -1365,7 +1366,7 @@ class Many2many(_RelationalMulti):
                 if not self.relation:
                     tables = sorted([model._table, comodel._table])
                     if tables[0] == tables[1]:
-                        raise Exception(
+                        raise RegistrySetupError(
                             f"{self}: implicit/canonical naming of many2many relationship "
                             "table is not possible when source and destination models are the same"
                         )
@@ -1398,7 +1399,7 @@ class Many2many(_RelationalMulti):
                 ):
                     continue
                 msg = "Many2many fields %s and %s use the same table and columns"
-                raise TypeError(msg % (self, field))
+                raise RegistrySetupError(msg % (self, field))
             fields.add((self.model_name, self.name))
 
     def setup_inverses(self, registry, inverses):

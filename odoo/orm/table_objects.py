@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import typing
-import warnings
 
 from odoo.tools import sql
+
+from .utils import RegistrySetupError, setup_warning
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -43,9 +44,9 @@ class TableObject:
         # first of all, you should not need to access them from any model
         # and this avoid having them in the middle of the fields when listing members
         if not name.startswith('_'):
-            raise ValueError(f"{owner.__name__}.{name}: names of SQL objects in a model must start with '_'")
+            raise RegistrySetupError(f"{owner.__name__}.{name}: names of SQL objects in a model must start with '_'")
         if name.startswith(f"_{owner.__name__}__"):
-            raise ValueError(f"{owner.__name__}.{name}: names of SQL objects must not be mangled")
+            raise RegistrySetupError(f"{owner.__name__}.{name}: names of SQL objects must not be mangled")
         self.name = name[1:]
         if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
             # only for fields on definition classes, not registry classes
@@ -119,11 +120,11 @@ class Constraint(TableObject):
 
     def __set_name__(self, owner, name):
         if name.endswith('_not_null'):
-            warnings.warn(
-                f'The Constraint "{name}" ends with _not_null. In PostgreSQL 18, '
-                'this suffix is used automatically for NOT NULL column (required).'
-                'To avoid any name clashing, please change the Constraint name.',
-                stacklevel=1,
+            setup_warning(
+                f"{owner.__name__}.{name}",
+                "constraint name ends with _not_null. In PostgreSQL 18, "
+                "this suffix is used automatically for NOT NULL column (required). "
+                "To avoid any name clashing, please change the Constraint name.",
             )
         return super().__set_name__(owner, name)
 

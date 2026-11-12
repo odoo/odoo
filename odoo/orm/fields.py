@@ -9,7 +9,6 @@ import logging
 import operator as pyoperator
 import re
 import typing
-import warnings
 from collections.abc import Set as AbstractSet
 from operator import attrgetter
 
@@ -23,7 +22,7 @@ from odoo.tools.misc import frozendict, SENTINEL, Sentinel, unique
 
 from .domains import Domain
 from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids, parse_field_expr
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, RegistrySetupError, expand_ids, parse_field_expr, setup_warning
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping, Sequence
@@ -479,15 +478,15 @@ class Field[T, C]:
             # by default, `state` fields should be reset on copy
             attrs['copy'] = attrs.get('copy', False)
         if attrs.get('_shareable'):
-            self._setup_warning("_shareable attribute shouldn't be set to True")
+            setup_warning(self, "_shareable attribute shouldn't be set to True")
         if attrs.get('compute_sql'):
             if not attrs.get('compute'):
-                self._setup_warning("compute_sql attribute makes sense only for a computed field")
+                setup_warning(self, "compute_sql attribute makes sense only for a computed field")
             if 'compute_sudo' not in attrs:
-                self._setup_warning("compute_sql requires an explicit compute_sudo parameter")
+                setup_warning(self, "compute_sql requires an explicit compute_sudo parameter")
         if attrs.get('related'):
             if attrs.pop('compute', None):
-                self._setup_warning("both compute and related are defined, set one of them to None")
+                setup_warning(self, "both compute and related are defined, set one of them to None")
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly
             attrs['store'] = store = attrs.get('store', False)
@@ -505,18 +504,18 @@ class Field[T, C]:
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('precompute'):
             if not attrs.get('compute') and not attrs.get('related'):
-                self._setup_warning("precompute attribute doesn't make any sense on non computed field")
+                setup_warning(self, "precompute attribute doesn't make any sense on non computed field")
                 attrs['precompute'] = False
             elif not attrs.get('store'):
-                self._setup_warning("precompute attribute has no impact on non stored field")
+                setup_warning(self, "precompute attribute has no impact on non stored field")
                 attrs['precompute'] = False
         if attrs.get('company_dependent'):
             if attrs.get('required'):
-                self._setup_warning("company_dependent field cannot be required")
+                setup_warning(self, "company_dependent field cannot be required")
             if attrs.get('translate'):
-                self._setup_warning("company_dependent field cannot be translated")
+                setup_warning(self, "company_dependent field cannot be translated")
             if self.type not in COMPANY_DEPENDENT_FIELDS:
-                self._setup_warning(f"company_dependent field is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}")
+                setup_warning(self, f"company_dependent field is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}")
             attrs['copy'] = attrs.get('copy', False)
             # speed up search and on delete
             attrs['index'] = attrs.get('index', 'btree_not_null')
@@ -572,7 +571,8 @@ class Field[T, C]:
             # validate field params
             for key in self._extra_keys__:
                 if not model._valid_field_parameter(self, key):
-                    self._setup_warning(
+                    setup_warning(
+                        self,
                         f"unknown parameter {key!r}, if this is an actual"
                         " parameter you may want to override the method"
                         " _valid_field_parameter on the relevant model in order to"
@@ -586,20 +586,17 @@ class Field[T, C]:
                 raise
 
             if not isinstance(self.required, bool):
-                self._setup_warning(f'property required should be a boolean ({self.required})')
+                setup_warning(self, f'property required should be a boolean ({self.required})')
 
             if not isinstance(self.readonly, bool):
-                self._setup_warning(f'property readonly should be a boolean ({self.readonly})')
+                setup_warning(self, f'property readonly should be a boolean ({self.readonly})')
 
             if self.groups and ' ' in self.groups:
-                self._setup_warning('groups must not contain spaces')
+                setup_warning(self, 'groups must not contain spaces')
 
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)
-
-    def _setup_warning(self, message: str):
-        warnings.warn(f"{self}: {message}", stacklevel=2)
 
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         """ Return the field's dependencies and cache dependencies. """
@@ -647,19 +644,19 @@ class Field[T, C]:
 
         """ Setup the attributes of a related field. """
         if not isinstance(self.related, str):
-            raise TypeError(f"{self}: related field must be a string, got {self.related!r}")
+            raise RegistrySetupError(f"{self}: related field must be a string, got {self.related!r}")
 
         # determine the chain of fields, and make sure they are all set up
         field_seq = []
         model_name = self.model_name
         for name in self.related.split('.'):
             if not model_name:
-                raise ValueError(
+                raise RegistrySetupError(
                     f"Field {name} in related field {self} is not reachable."
                 )
             field = model.pool[model_name]._fields.get(name)
             if field is None:
-                raise KeyError(
+                raise RegistrySetupError(
                     f"Field {name} referenced in related field definition {self} does not exist."
                 )
             if not field._setup_done:
@@ -669,7 +666,7 @@ class Field[T, C]:
 
         # check type consistency
         if self.type != field.type:
-            raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
+            raise RegistrySetupError("Type of related field %s is inconsistent with %s" % (self, field))
 
         self.related_field = field
 
@@ -700,7 +697,7 @@ class Field[T, C]:
         # A readonly related field without an inverse method should not have a
         # default value, as it does not make sense.
         if self.default and self.readonly and not self.inverse:
-            self._setup_warning("redundant default")
+            setup_warning(self, "redundant default")
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
@@ -945,7 +942,7 @@ class Field[T, C]:
 
             for index, fname in enumerate(dotnames.split('.')):
                 if not model_name:
-                    raise ValueError(
+                    raise RegistrySetupError(
                         f"Field {fname} in {self}'s dependencies is not reachable."
                     )
                 Model = registry[model_name]
@@ -957,24 +954,25 @@ class Field[T, C]:
                 try:
                     field = Model._fields[fname]
                 except KeyError:
-                    raise ValueError(
+                    raise RegistrySetupError(
                         f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
                         f"Dependency field '{fname}' not found in model {model_name}."
                     ) from None
                 if field is self and index and not self.recursive:
                     self.recursive = True
-                    self._setup_warning("should be declared with recursive=True")
+                    setup_warning(self, "should be declared with recursive=True")
 
                 # precomputed fields can depend on non-precomputed ones, as long
                 # as they are reachable through at least one many2one field
                 if check_precompute and field.store and field.compute and not field.precompute:
-                    self._setup_warning(f"cannot be precomputed as it depends on non-precomputed field {field}")
+                    setup_warning(self, f"cannot be precomputed as it depends on non-precomputed field {field}")
                     self.precompute = False
 
                 if field_seq and not field_seq[-1]._description_searchable:
                     # the field before this one is not searchable, so there is
                     # no way to know which on records to recompute self
-                    self._setup_warning(
+                    setup_warning(
+                        self,
                         f"Field {field_seq[-1]!r} in dependency should be searchable. "
                         f"This is necessary to determine which records to recompute when {field} is modified. "
                         f"You should either make the field searchable, or simplify the field dependency.",

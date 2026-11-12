@@ -41,7 +41,7 @@ from operator import call, itemgetter
 import psycopg2.errors
 import psycopg2.extensions
 
-from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
+from odoo.exceptions import AccessError, LockError, MissingError, UserError, ValidationError
 from odoo.tools import (
     clean_context, format_list,
     frozendict, get_lang, OrderedSet,
@@ -65,7 +65,7 @@ from .fields_textual import Char, StoredTranslations
 from .identifiers import NewId
 from .query import Query, TableSQL
 from .utils import (
-    OriginIds, Prefetch, ReversibleComparator, check_object_name, parse_field_expr,
+    OriginIds, Prefetch, RegistrySetupError, ReversibleComparator, check_object_name, parse_field_expr, setup_warning,
     COLLECTION_TYPES, SQL_OPERATORS,
     SUPERUSER_ID,
 )
@@ -256,7 +256,7 @@ class MetaModel(type):
             if '_module' not in attrs:
                 module = attrs['__module__']
                 if not module.startswith('odoo.addons.'):
-                    raise TypeError(f"Invalid import of {module}.{name}, it should start with 'odoo.addons'.")
+                    raise RegistrySetupError(f"Invalid import of {module}.{name}, it should start with 'odoo.addons'.")
                 attrs['_module'] = module.split('.')[2]
 
             _inherit = attrs.get('_inherit')
@@ -267,7 +267,7 @@ class MetaModel(type):
             if not attrs.get('_name'):
                 # add '.' before every uppercase letter preceded by any non-underscore char
                 attrs['_name'] = re.sub(r"(?<=[^_])([A-Z])", r".\1", name).lower()
-                warnings.warn(f"Class {name} has no _name, please make it explicit: _name = {attrs['_name']!r}", stacklevel=2)
+                setup_warning(f"class {name}", f"no _name, please make it explicit: _name = {attrs['_name']!r}", stacklevel=2)
 
             assert attrs.get('_name')
 
@@ -280,7 +280,7 @@ class MetaModel(type):
         super().__init__(name, bases, attrs)
 
         if '__init__' in attrs and len(inspect.signature(attrs['__init__']).parameters) != 4:
-            warnings.warn(f"The method {name}.__init__ doesn't match the new signature in module {attrs.get('__module__')}", stacklevel=2)
+            setup_warning(f"method {name}.__init__", f"doesn't match the new signature in module {attrs.get('__module__')}", stacklevel=2)
 
         if not attrs.get('_register', True):
             return
@@ -298,7 +298,7 @@ class MetaModel(type):
 
             # make sure `id` field is still a `fields.Id`
             if not isinstance(self.id, Id):
-                raise TypeError(f"Field {self.id} is not an instance of fields.Id")
+                raise RegistrySetupError(f"{self._name}: field id {self.id!r} is not an instance of fields.Id")
 
             if attrs.get('_log_access', self._auto):
                 from .fields_relational import Many2one  # noqa: PLC0415
@@ -568,9 +568,9 @@ class BaseModel(metaclass=MetaModel):
             for name in func._constrains:
                 field = cls._fields.get(name)
                 if not field:
-                    warnings.warn(f"method {cls._name}.{attr}: @constrains parameter {name!r} is not a field name")
+                    setup_warning(f"method {cls._name}.{attr}", f"@constrains parameter {name!r} is not a field name")
                 elif not (field.store or field.inverse or field.inherited):
-                    warnings.warn(f"method {cls._name}.{attr}: @constrains parameter {name!r} is not writeable")
+                    setup_warning(f"method {cls._name}.{attr}", f"@constrains parameter {name!r} is not writeable")
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed
@@ -605,8 +605,9 @@ class BaseModel(metaclass=MetaModel):
                     missing.append(name)
                 methods[name].append(func)
             if missing:
-                warnings.warn(
-                    f"method {cls._name}.{attr}: @api.onchange{func._onchange!r} "
+                setup_warning(
+                    f"method {cls._name}.{attr}",
+                    f"@api.onchange{func._onchange!r} "
                     f"parameters must be field names -> not valid: {missing}",
                 )
 
@@ -2547,9 +2548,9 @@ class BaseModel(metaclass=MetaModel):
             if self._parent_store:
                 field = self._fields.get('parent_path')
                 if field is None:
-                    warnings.warn(f"add a field parent_path on model {self._name!r}: `parent_path = fields.Char(index=True)`.")
+                    setup_warning(self._name, "add a field parent_path: `parent_path = fields.Char(index=True)`.")
                 elif not field.index:
-                    warnings.warn(f"parent_path field on model {self._name!r} should be indexed! Add index=True to the field definition.")
+                    setup_warning(self._name, "parent_path field should be indexed! Add index=True to the field definition.")
                 if not sql.column_exists(cr, self._table, 'parent_path'):
                     sql.create_column(self.env.cr, self._table, 'parent_path', parent_path_type)
                     parent_path_compute = True

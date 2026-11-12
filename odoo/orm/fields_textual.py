@@ -18,7 +18,7 @@ from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_trans
 from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate, mark_as_copy
 
 from .fields import Field, _logger
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, RegistrySetupError, expand_ids, setup_warning
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
@@ -50,13 +50,13 @@ class BaseString(Field[str | typing.Literal[False], dict[str, str] | str | Store
     def _setup(self, model):
         super()._setup(model)
         if self.related and self.store and self.translate:
-            self._setup_warning("translated stored related field  will not be computed correctly in all languages")
+            setup_warning(self, "translated stored related field will not be computed correctly in all languages")
 
     def get_depends(self, model):
         if self.translate and self.store:
             dep, dep_ctx = super().get_depends(model)
             if dep_ctx:
-                self._setup_warning("translated stored fields cannot depend on context")
+                setup_warning(self, "translated stored fields cannot depend on context")
             return dep, ()
         return super().get_depends(model)
 
@@ -525,7 +525,7 @@ class Char(BaseString):
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
         if self.size is not None and not isinstance(self.size, int):
-            raise TypeError(f"{self}: non-integer size {self.size!r}")
+            raise RegistrySetupError(f"{self}: non-integer size {self.size!r}")
 
     def _get_attrs(self, model_class, name):
         attrs = super()._get_attrs(model_class, name)
