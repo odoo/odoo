@@ -227,6 +227,9 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         }
         case "in":
         case "not in": {
+            if (fieldDef.name === "id" && fieldDef.model) {
+                return makeAutoCompleteEditor(fieldDef);
+            }
             switch (fieldDef.type) {
                 case "tags":
                     return makeInputEditor("text");
@@ -278,6 +281,20 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
     }
 
     const { type } = fieldDef;
+    if (fieldDef.name === "id" && fieldDef.model && ["=", "!="].includes(operator)) {
+        return {
+            component: DomainSelectorSingleAutocomplete,
+            extractProps: ({ value, update }) => ({
+                resModel: getResModel(fieldDef),
+                fieldString: fieldDef.string,
+                update,
+                resId: value,
+            }),
+            isSupported: () => true,
+            defaultValue: () => false,
+            shouldResetValue: (value) => value !== false && !isId(value),
+        };
+    }
     switch (type) {
         case "integer":
         case "float":
