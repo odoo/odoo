@@ -25,6 +25,7 @@ from . import (
     test_fuzzy,
     test_google_analytics,
     test_google_merchant_center,
+    test_header_icons,
     test_mail,
     test_main_controller,
     test_performance,

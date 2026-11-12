@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, dblclick, waitFor } from "@odoo/hoot-dom";
 import { Plugin } from "@html_editor/plugin";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -22,16 +22,27 @@ const searchbarHTML = (orderBy) => `
     </form>
     `;
 
-const headerSearchbarHTML = (orderBy) => `
+const headerSearchButtonHTML = `
+    <a class="o_search_btn btn o_not_editable" role="button">
+        <i class="oi-stack oi o_not_editable" data-icon="search" data-header-icon="search" role="img" aria-hidden="true"
+            data-oe-model="ir.ui.view" data-oe-id="42" data-oe-field="arch" data-oe-xpath="/data/xpath[3]/form/a[1]/i[1]"></i>
+    </a>`;
+
+/**
+ * The header search bar. With `searchButton`, it also has the button that
+ * opens the search dialog (`_simple_button_layout`).
+ */
+const headerSearchbarHTML = (orderBy, { searchButton = false } = {}) => `
     <header>
         <form method="get" data-snippet="s_searchbar_input" action="/pages" data-name="Search"
             class="o_searchbar_form s_searchbar_input o_header_searchbar o_no_save">
+            ${searchButton ? headerSearchButtonHTML : ""}
             <div role="search" class="input-group ">
                 <input type="search" name="search" class="search-query form-control oe_search_box"
                     placeholder="Search..." data-limit="5" data-order-by="${orderBy}"
                     autocomplete="off" data-search-type="pages">
                 <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button btn-primary">
-                    <i class="oi" data-icon="search" role="img" aria-hidden="true" contenteditable="false"></i>
+                    <i class="oi o_not_editable" data-icon="search" data-header-icon="search" role="img" aria-hidden="true" contenteditable="false"></i>
                 </button>
             </div>
             <input name="order" type="hidden" class="o_search_order_by" value="${orderBy}">
@@ -128,4 +139,29 @@ test("saving the header bar stores its settings on the website", async () => {
 
     await contains(".o_hb_snippets_top_actions button[data-action='save']").click();
     expect.verifySteps(["store the header search settings"]);
+});
+
+test("replacing the header search icon saves the icon only, not the search settings", async () => {
+    await setupWebsiteBuilder("", {
+        headerContent: headerSearchbarHTML("name asc", { searchButton: true }),
+    });
+
+    await dblclick(":iframe .o_header_searchbar [data-header-icon=search]");
+    await waitFor(".modal .font-icons-icons");
+    await click(".modal .font-icons-icons [data-icon=favorite]:not(.oi-filled)");
+    await waitFor(":iframe .o_header_searchbar [data-header-icon=search][data-icon=favorite]");
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("view save");
+        return true;
+    });
+    onRpc("website", "set_header_icons", ({ args }) => {
+        expect.step(args);
+        return true;
+    });
+    onRpc("website", "set_header_search", () => {
+        expect.step("store the header search settings");
+        return true;
+    });
+    await contains(".o_hb_snippets_top_actions button[data-action='save']").click();
+    expect.verifySteps([[1, { search: { icon: "favorite", filled: false } }]]);
 });
