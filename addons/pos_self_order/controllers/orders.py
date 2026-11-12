@@ -6,7 +6,6 @@ from odoo.addons.google_address_autocomplete.controllers.google_address_autocomp
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
-from odoo.service.model import call_kw
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError, UserError
 from odoo.tools import consteq
@@ -326,28 +325,8 @@ class PosSelfOrderController(http.Controller):
         if not order_sudo or not payment_method_sudo or payment_method_sudo not in order_sudo.config_id.payment_method_ids:
             raise NotFound("Order or payment method not found")
 
-        status = payment_method_sudo._payment_request_from_kiosk(order_sudo)
-
-        if not status:
-            raise BadRequest("Something went wrong")
-
-        return {'order': self.env['pos.order']._load_pos_self_data_read(order_sudo, pos_config), 'payment_status': status}
-
-    @http.route("/kiosk/payment_method_action/<action>", auth="public", type="jsonrpc", website=True)
-    def pos_self_order_kiosk_payment_method_action(self, access_token, action, args, kwargs):
-        pos_config = self._verify_pos_config(access_token)
-        payment_method_env = pos_config.env["pos.payment.method"]
-        if pos_config.self_ordering_mode != "kiosk":
-            raise Forbidden("Method only allowed in kiosk mode")
-        if args and isinstance(args[0], list):
-            if len(args[0]) != 1:
-                raise BadRequest("Only one payment method ID should be provided")
-            if not payment_method_env.search_count([("id", "in", args[0]), ("config_ids", "in", pos_config.id)]):
-                raise NotFound("Payment method not found in config")
-        if action not in payment_method_env._allowed_actions_in_self_order():
-            raise Forbidden(f"Method '{action}' is forbidden in the self order kiosk")
-
-        return call_kw(payment_method_env, action, args, kwargs)
+        payment_method_sudo._payment_request_from_kiosk(order_sudo)
+        return {'order': self.env['pos.order']._load_pos_self_data_read(order_sudo, pos_config)}
 
     @http.route('/pos_self_order/kiosk/increment_nb_print/', auth='public', type='jsonrpc', website=True)
     def pos_kiosk_increment_nb_print(self, access_token, order_id, order_access_token):
@@ -457,3 +436,42 @@ class PosSelfOrderController(http.Controller):
     def pos_ping(self, access_token):
         self._verify_pos_config(access_token)
         return {'response': 'pong'}
+
+    ########################################
+    # pos.electronic.payment proxy methods #
+    ########################################
+
+    @http.route("/kiosk/payment/start_payment", auth="public", type="jsonrpc")
+    def pos_self_order_kiosk_start_payment(self, access_token, electronic_payment_id, args):
+        electronic_payment = self._verify_electronic_payment_method(access_token, electronic_payment_id)
+        return electronic_payment.start_payment(*args)
+
+    @http.route("/kiosk/payment/cancel_transaction", auth="public", type="jsonrpc")
+    def pos_self_order_kiosk_cancel_transaction(self, access_token, electronic_payment_id, args):
+        electronic_payment = self._verify_electronic_payment_method(access_token, electronic_payment_id)
+        return electronic_payment.cancel_transaction(*args)
+
+    @http.route("/kiosk/payment/get_transaction_status", auth="public", type="jsonrpc")
+    def pos_self_order_kiosk_get_transaction_status(self, access_token, electronic_payment_id, args):
+        electronic_payment = self._verify_electronic_payment_method(access_token, electronic_payment_id)
+        return electronic_payment.get_transaction_status(*args)
+
+    @http.route("/kiosk/payment/init_payment_method", auth="public", type="jsonrpc")
+    def pos_self_order_kiosk_init_payment_method(self, access_token, electronic_payment_id, args):
+        electronic_payment = self._verify_electronic_payment_method(access_token, electronic_payment_id)
+        return electronic_payment.init_payment_method(*args)
+
+    def _verify_electronic_payment_method(self, access_token, electronic_payment_id):
+        pos_config = self._verify_pos_config(access_token)
+        if not isinstance(electronic_payment_id, int):
+            raise TypeError("ID must be an int")
+        if pos_config.self_ordering_mode != "kiosk":
+            raise Forbidden("Method only allowed in kiosk mode")
+        electronic_payment = pos_config.env["pos.electronic.payment"].browse(electronic_payment_id).exists()
+        payment_method = next(
+            (pm for pm in pos_config.payment_method_ids if pm.electronic_payment_id == electronic_payment),
+            None,
+        )
+        if not payment_method:
+            raise NotFound("Payment method not found in config")
+        return electronic_payment

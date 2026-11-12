@@ -25,6 +25,7 @@ import { ComboSuggestion } from "@point_of_sale/app/models/utils/combo_suggestio
 import { session } from "@web/session";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
+import { electronicPaymentRegistry } from "@pos_payment_method/payment_method";
 
 const { DateTime } = luxon;
 
@@ -637,10 +638,10 @@ export class SelfOrder {
         }
 
         for (const pm of this.models["pos.payment.method"].getAll()) {
-            const PaymentInterface = registry
-                .category("pos_payment_providers")
-                .get(pm.payment_provider, null);
-            pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
+            const PaymentInterface = electronicPaymentRegistry.get(pm.payment_provider, null);
+            pm.payment_interface = PaymentInterface
+                ? new PaymentInterface(pm.electronic_payment_id, this.access_token)
+                : null;
         }
         // In case of kiosk set last printer as default printer
         this.ticketPrinter.defaultPrinter = this.ticketPrinter.receiptPrinters.at(-1);

@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, mockDate, test } from "@odoo/hoot";
-import { MockServer, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { MockServer, onRpc, patchWithCleanup, runTestScope } from "@web/../tests/web_test_helpers";
 import { location } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import {
@@ -10,6 +9,7 @@ import {
     mockLNAPermissionCheck,
     setupSelfPosEnv,
 } from "../utils";
+import { electronicPaymentRegistry, PaymentMethod } from "@pos_payment_method/payment_method";
 
 definePosSelfModels();
 
@@ -635,10 +635,10 @@ describe("initHardware", () => {
         const mockTerminalMethod = models["pos.payment.method"].create({
             payment_provider: "mock_terminal",
         });
-        class MockTerminal {}
-        registry.category("pos_payment_providers").add("mock_terminal", MockTerminal);
+        class MockTerminal extends PaymentMethod {}
+        electronicPaymentRegistry.add("mock_terminal", MockTerminal);
 
-        store.initHardware();
+        await runTestScope(() => store.initHardware());
 
         expect(mockTerminalMethod.payment_interface).toBeInstanceOf(MockTerminal);
     });
