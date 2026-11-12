@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_electronic_payment_view_form_stripe" model="ir.ui.view">
+        <field name="name">pos.electronic.payment.form.inherit.stripe</field>
+        <field name="model">pos.electronic.payment</field>
+        <field name="inherit_id" ref="pos_payment_method.pos_electronic_payment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'stripe'">
+                    <page name="settings" string="Stripe">
+                        <group>
+                            <field name="stripe_payment_provider_id" invisible="payment_provider != 'stripe'" required="payment_provider == 'stripe'"/>
+                            <field
+                                name="stripe_secret_key"
+                                password="True"
+                                readonly="False"
+                                invisible="payment_provider != 'stripe' or not stripe_payment_provider_id"
+                                required="payment_provider == 'stripe'"
+                            />
+                            <field name="stripe_serial_number" invisible="payment_provider != 'stripe'" required="payment_provider == 'stripe'"/>
+                            <field name="stripe_ask_customer_for_tip" invisible="payment_provider != 'stripe'"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
