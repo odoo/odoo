@@ -12,7 +12,7 @@ patch(AllocationReport.prototype, {
     onClickPrint() {
         if (this.doc.res_model === "mrp.production") {
             const options = { additionalContext: { active_ids: [this.doc.id] } };
-            return this.actionService.doAction("mrp.action_report_production_order", options);
+            return this.actionPlugin.doAction("mrp.action_report_production_order", options);
         }
         return super.onClickPrint();
     },

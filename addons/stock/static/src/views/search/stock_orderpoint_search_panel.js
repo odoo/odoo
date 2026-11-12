@@ -1,13 +1,13 @@
-import { useService } from "@web/core/utils/hooks";
-import { onWillStart, proxy } from '@odoo/owl';
+import { onWillStart, proxy, usePlugin } from '@odoo/owl';
 import { SearchPanel } from "@web/search/search_panel/search_panel";
+import { ORM } from "@web/core/orm_plugin";
 
 
 export class StockOrderpointSearchPanel extends SearchPanel {
     static template = "stock.StockOrderpointSearchPanel";
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         super.setup(...arguments);
         this.globalHorizonDays = proxy({value: 0});
         onWillStart(this.getHorizonParameter);

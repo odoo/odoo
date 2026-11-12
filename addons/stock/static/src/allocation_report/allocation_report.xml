@@ -4,7 +4,7 @@
         <div class="o_action">
             <div class="o_allocation_report container-fluid justify-content-between">
                 <div class="o_allocation_report_header my-4">
-                    <h2 t-att-class="this.ui.isSmall ? 'fs-3' : ''">
+                    <h2 t-att-class="this.ui.isSmall() ? 'fs-3' : ''">
                         <t t-if="this.doc">
                             <t t-set="partner" t-value="this.doc.source?.partner || this.doc.partner"/>
                             <div>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <t t-if="this.hasContent">
-                    <t t-if="this.ui.isSmall" t-call="stock.AllocationReport.MobileContent"/>
+                    <t t-if="this.ui.isSmall()" t-call="stock.AllocationReport.MobileContent"/>
                     <t t-else="" t-call="stock.AllocationReport.Content"/>
                 </t>
                 <p t-else="">

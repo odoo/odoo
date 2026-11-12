@@ -1,7 +1,7 @@
 import { formatFloat } from "@web/views/fields/formatters";
-import { useService } from "@web/core/utils/hooks";
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { ORM } from "@web/core/orm_plugin";
 
 export class ForecastedDetails extends Component {
     static template = "stock.ForecastedDetails";
@@ -13,7 +13,7 @@ export class ForecastedDetails extends Component {
     });
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this._groupLines();
         this._prepareLines();
         this._prepareData();

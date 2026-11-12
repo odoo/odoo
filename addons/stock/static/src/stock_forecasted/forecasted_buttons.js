@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { Component, markup, t, useProps } from "@odoo/owl";
+import { Component, markup, t, useProps, usePlugin } from "@odoo/owl";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 export class ForecastedButtons extends Component {
     static template = "stock.ForecastedButtons";
@@ -12,8 +13,8 @@ export class ForecastedButtons extends Component {
     });
 
     setup() {
-        this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.actionPlugin = usePlugin(ActionPlugin);
+        this.orm = usePlugin(ORM);
         this.context = this.props.action.context;
         this.productId = this.context.active_id;
         this.resModel = this.props.resModel || this.context.active_model || this.context.params?.active_model || 'product.template';
@@ -45,7 +46,7 @@ export class ForecastedButtons extends Component {
             target: 'new',
             context: context,
         };
-        return this.actionService.doAction(action, { onClose: this._onClose.bind(this) });
+        return this.actionPlugin.doAction(action, { onClose: this._onClose.bind(this) });
     }
 
     async _onClickUpdateQuantity() {
@@ -56,6 +57,6 @@ export class ForecastedButtons extends Component {
         if (action.help) {
             action.help = markup(action.help);
         }
-        return this.actionService.doAction(action, { onClose: this._onClose.bind(this) });
+        return this.actionPlugin.doAction(action, { onClose: this._onClose.bind(this) });
     }
 }
