@@ -265,6 +265,8 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def write(self, vals):
+        if vals.get('state') in ('purchase', 'done'):
+            self.filtered(lambda po: po.state not in ('purchase', 'done'))._check_approval_allowed()
         vals, partner_vals = self._write_partner_values(vals)
         res = super().write(vals)
         if partner_vals:
@@ -290,6 +292,7 @@ class PurchaseOrder(models.Model):
         for order, partner_vals in zip(orders, partner_vals_list):
             if partner_vals:
                 order.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
+        orders.filtered(lambda po: po.state in ('purchase', 'done'))._check_approval_allowed()
         return orders
 
     @api.ondelete(at_uninstall=False)
@@ -1136,6 +1139,10 @@ class PurchaseOrder(models.Model):
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
             or self.env.user.has_group('purchase.group_purchase_manager'))
+
+    def _check_approval_allowed(self):
+        if not self.env.su and not all(order._approval_allowed() for order in self):
+            raise UserError(_("Only a purchase manager can approve this purchase order."))
 
     def _confirm_reception_mail(self):
         for order in self:
