@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="mail_activity_plan_action_my" model="ir.actions.act_window">
+            <field name="name">My Plans</field>
+            <field name="res_model">mail.activity.plan</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">[('user_ids', 'in', uid)]</field>
+            <field name="context">{'default_user_ids': [uid]}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your own Activity Plan
+                </p>
+                <p>
+                    Activity plans are used to assign a list of activities in just a few clicks
+                    (e.g. "Onboarding", "Prospect Follow-up", "Project Milestone Meeting", ...)
+                </p>
+            </field>
+        </record>
+
         <record id="mail_activity_schedule_view_form" model="ir.ui.view">
             <field name="name">Activity schedule</field>
             <field name="model">mail.activity.schedule</field>
@@ -40,7 +57,7 @@
                                         nolabel="1" class="w-100" domain="[('user_ids', '!=', False)]"/>
                                 </div>
                             </div>
-                            <div class="col-lg-7">
+                            <div class="col-lg-7" invisible="not plan_schedule_line_ids">
                                 <label for="plan_schedule_line_ids" string="Plan Summary" class="text-body fw-bold mb-1"/>
                                 <field name="plan_schedule_line_ids" nolabel="1">
                                     <kanban create="false" can_open="false" class="o_mail_activity_schedule_kanban">
@@ -126,18 +143,18 @@
                         </div>
                     </sheet>
                     <footer invisible="plan_id">
-                        <button name="action_schedule_activities" string="Save" type="object" class="btn-primary"
+                        <button name="action_schedule_activities" string="Schedule" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
-                        <button name="action_schedule_activities_done" string="Mark Done" type="object"
-                            invisible="has_error"
-                            class="btn-secondary"  data-hotkey="w"
-                            context="{'mail_activity_quick_update': True}"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button name="%(mail.mail_activity_plan_action_my)d" string="My Plans" type="action"
+                                class="btn-link ms-auto" context="{'default_res_model': res_model}"/>
                     </footer>
                     <footer invisible="not plan_id">
                         <button name="action_schedule_plan" string="Schedule" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button name="%(mail.mail_activity_plan_action_my)d" string="My Plans" type="action"
+                                class="btn-link ms-auto" context="{'default_res_model': res_model}"/>
                     </footer>
                 </form>
             </field>

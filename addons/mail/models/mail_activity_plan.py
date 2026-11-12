@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
+from odoo.exceptions import AccessError
 
 
 class MailActivityPlan(models.Model):
@@ -17,6 +18,7 @@ class MailActivityPlan(models.Model):
 
     name = fields.Char('Name', required=True)
     company_id = fields.Many2one('res.company')
+    user_ids = fields.Many2many("res.users", string="Users", help="Users who can use this activity plan")
     template_ids = fields.One2many(
         'mail.activity.plan.template', 'plan_id', string='Activities',
         copy=True)
@@ -56,3 +58,27 @@ class MailActivityPlan(models.Model):
         self.has_user_on_demand = False
         for plan in self.filtered('template_ids'):
             plan.has_user_on_demand = any(template.responsible_type == 'on_demand' for template in plan.template_ids)
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        if 'user_ids' in (default or {}):
+            return vals_list
+        for plan, vals in zip(self, vals_list):
+            if not plan.has_access('create'):
+                # if the plan is shared, and the user is not a manager,
+                # he won't be able to edit the plan, set him as the only
+                # user if he cannot edit the current plan
+                vals['user_ids'] = [Command.set(self.env.user.ids)]
+        return vals_list
+
+    def write(self, vals):
+        if any(not plan.has_access("write") and len(plan.user_ids) > 1 and self.env.user in plan.user_ids for plan in self):
+            # don't let the access error in the super to show the reason
+            raise AccessError(self.env._("Uh oh! Shared plans are only editable by their owners."))
+
+        res = super().write(vals)
+        if vals.keys() & {'res_model', 'user_ids'}:
+            # the create access should be after the write, so a normal user
+            # cannot create a plan with user_ids empty (visible for all users)
+            self.check_access('create')
+        return res

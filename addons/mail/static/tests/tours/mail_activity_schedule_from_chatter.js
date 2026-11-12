@@ -22,27 +22,11 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             run: "edit Play Mario Party",
         },
         {
-            trigger: "button:contains('Save')",
+            trigger: "button[name='action_schedule_activities']",
             run: "click",
         },
         {
             trigger: ".o-mail-Activity:contains('Play Mario Party')",
-            run: "click",
-        },
-        {
-            trigger: "button:contains('Activity')",
-            run: "click",
-        },
-        {
-            trigger: "div[name='summary'] input",
-            run: "edit Play Mario Kart",
-        },
-        {
-            trigger: "button.btn.btn-secondary:contains('Mark Done')",
-            run: "click",
-        },
-        {
-            trigger: ".o-mail-Message:contains('Play Mario Kart')",
         },
     ],
 });
