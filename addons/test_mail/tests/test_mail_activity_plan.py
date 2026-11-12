@@ -5,10 +5,10 @@ import re
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, tools
+from odoo import Command, fields, tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form, RecordCapturer, tagged, users
 
 
@@ -230,6 +230,65 @@ class TestActivitySchedule(ActivityScheduleCase):
         with self.assertRaises(ValidationError):
             scheduler.activity_user_id = False
 
+    @users('employee')
+    def test_plan_access_user_ids(self):
+        """User can create plan for themselves, the other can only read it."""
+        user, other_user, no_user = self.env.user, self.user_admin, self.env['res.users']
+        for plan_users, can_write in (
+            (no_user, False),
+            (other_user, False),
+            (user, True),
+            (user + other_user, False),
+        ):
+            with self.subTest(users=plan_users):
+                plan = self.plan_party.with_env(self.env)
+                plan.sudo().user_ids = plan_users
+                for records in (plan, plan.template_ids):
+                    self.assertTrue(records.has_access('read'))
+                    self.assertEqual(records.has_access('write'), can_write)
+                    self.assertEqual(records.has_access('unlink'), can_write)
+                self.assertEqual(plan.template_ids.has_access('create'), can_write)
+
+    @users('employee')
+    def test_plan_access_user_ids_create(self):
+        """Users can only create plans restricted to themselves."""
+        user, other_user, no_user = self.env.user, self.user_admin, self.env['res.users']
+        values = {'name': 'Plan', 'res_model': 'mail.test.activity', 'template_ids': [Command.create({})]}
+        for plan_users in (no_user, other_user, user + other_user):
+            with self.subTest(users=plan_users), self.assertRaises(AccessError):
+                self.env['mail.activity.plan'].create({**values, 'user_ids': plan_users.ids})
+
+        plan = self.env['mail.activity.plan'].create({**values, 'user_ids': user.ids})
+        plan.write({'res_model': 'res.partner', 'template_ids': [Command.create({})]})
+        plan.template_ids.summary = 'Renamed Activity'
+        plan.template_ids[0].unlink()
+        plan.unlink()
+
+    @users('employee')
+    def test_plan_access_user_ids_write(self):
+        """User can edit a personal plan but not a shared plan."""
+        user, other_user, no_user = self.env.user, self.user_admin, self.env['res.users']
+        own_plan, shared_plan = self.env['mail.activity.plan'].sudo().create([{
+            'name': 'Plan',
+            'res_model': 'mail.test.activity',
+            'template_ids': [Command.create({'activity_type_id': self.activity_type_todo.id})],
+            'user_ids': users.ids,
+        } for users in (user, user + other_user)]).sudo(False)
+        global_plan = self.plan_party.with_env(self.env)
+        self.assertFalse(global_plan.user_ids)
+
+        for plan_users in (no_user, other_user, user + other_user):
+            with self.subTest(users=plan_users), self.assertRaises(AccessError):
+                own_plan.user_ids = plan_users
+        for plan in (shared_plan, global_plan):
+            with self.subTest(plan_users=plan.user_ids):
+                with self.assertRaises(AccessError):
+                    plan.user_ids = user
+                with self.assertRaises(AccessError):
+                    own_plan.template_ids.plan_id = plan
+                with self.assertRaises(AccessError):
+                    plan.template_ids[0].plan_id = own_plan
+
     def test_plan_copy(self):
         """Test plan copy"""
         copied_plan = self.plan_onboarding.copy()
@@ -450,3 +509,23 @@ class TestActivitySchedule(ActivityScheduleCase):
             template.write({'responsible_type': 'role', 'role_id': False})
         template.write({'responsible_type': 'role', 'role_id': self.test_role_1.id})
         self.assertEqual(template.role_id, self.test_role_1)
+
+    def test_plan_user_ids(self):
+        """Only the users of the plan see it in the wizard, but everyone can still launch it."""
+        self.plan_onboarding.user_ids = self.user_employee
+
+        with self.with_user('employee'):
+            form = self._instantiate_activity_schedule_wizard(self.test_records[0].with_env(self.env))
+            self.assertIn(self.plan_onboarding, form.plan_available_ids)
+            form.plan_id = self.plan_onboarding
+            with self._mock_activities():
+                form.save().action_schedule_plan()
+            self.assertEqual(self._new_activities.mapped('summary'), ['Plan training', 'Training'])
+
+        with self.with_user('admin'):
+            form = self._instantiate_activity_schedule_wizard(self.test_records[0].with_env(self.env))
+            self.assertNotIn(self.plan_onboarding, form.plan_available_ids)
+            form.plan_id = self.plan_onboarding
+            with self._mock_activities():
+                form.save().action_schedule_plan()
+            self.assertEqual(self._new_activities.mapped('summary'), ['Plan training', 'Training'])

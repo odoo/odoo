@@ -5,7 +5,6 @@ from odoo import Command
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form
-from odoo.tools.misc import format_date
 
 
 class ActivityScheduleCase(MailCommon):
@@ -134,37 +133,11 @@ class ActivityScheduleCase(MailCommon):
             else:
                 self.assertEqual(activity.user_id, template.responsible_id or self.env.user)
 
-    def assertMessagesFromPlan(self, plan, record, expected_deadlines, expected_responsible=None):
-        """ Check that the last posted message on the record correspond to the one
-        that the plan must generate (number of activities and activities content).
-
-        :param <mail.activity.plan> plan: activity plan that has been applied on the record
-        :param recordset record: record on which the plan has been applied
-        :param list<date> expected_deadlines: expected deadlines of the record created activities
-        :param <res.user> expected_responsible: expected responsible for the created activities
-            if set, otherwise checked against the responsible set on the related templates.
-        """
-        message = record.message_ids[0]
-        self.assertIn(f'The plan "{plan.name}" has been started', message.body)
-
-        for template, expected_deadline in zip(plan.template_ids, expected_deadlines):
-            if expected_responsible:
-                responsible_id = expected_responsible
-            else:
-                responsible_id = template.responsible_id or self.env.user
-
-            self.assertIn(template.summary, message.body)
-            self.assertIn(f'{template.summary or template.activity_type_id.name}, '
-                          f'assigned to {responsible_id.name}, due on the '
-                          f'{format_date(self.env, expected_deadline)}', message.body)
-
     def assertPlanExecution(self, plan, records, expected_deadlines, expected_responsible=None):
-        """ Check that the plan has created the right activities and send the
-        right message on the records (see assertActivitiesFromPlan and
-        assertMessagesFromPlan). """
+        """ Check that the plan has created the right activities on the records
+        (see assertActivitiesFromPlan). """
         for record in records:
             self.assertActivitiesFromPlan(plan, record, expected_deadlines, expected_responsible)
-            self.assertMessagesFromPlan(plan, record, expected_deadlines, expected_responsible)
 
     def _instantiate_activity_schedule_wizard(self, records, additional_context_value=None):
         """ Get a new Form with context default values referring to the records. """

@@ -38,7 +38,7 @@ class MailActivityPlanTemplate(models.Model):
         ('before_plan_date', 'Before Plan Date'),
         ('after_plan_date', 'After Plan Date'),
     ],
-        string='Trigger', default="before_plan_date", required=True)
+        string='Trigger', default="after_plan_date", required=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
     summary = fields.Char('Summary', compute="_compute_summary", store=True, readonly=False)
     responsible_type = fields.Selection([
@@ -85,6 +85,15 @@ class MailActivityPlanTemplate(models.Model):
             elif template.responsible_type == 'role' and not template.role_id:
                 msg = self.env._('When selecting "Role" assignment, you must specify an assigned role.')
                 raise ValidationError(msg)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'plan_id' in vals:
+            # users should not be able to move the plan template to a different plan
+            # except if they can update that plan (eg "Sale Manager" can manage any
+            # plan related to lead).
+            self.plan_id.check_access('write')
+        return res
 
     @api.depends('activity_type_id')
     def _compute_note(self):

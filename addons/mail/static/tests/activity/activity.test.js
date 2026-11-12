@@ -535,24 +535,6 @@ test("activity mark done popover close on ESCAPE", async () => {
     await waitForNone(".o-mail-ActivityMarkAsDone");
 });
 
-test("activity mark done popover click on discard", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
-    pyEnv["mail.activity"].create({
-        activity_category: "default",
-        activity_type_id: activityTypeId,
-        can_write: true,
-        res_id: partnerId,
-        res_model: "res.partner",
-    });
-    await start();
-    await openFormView("res.partner", partnerId);
-    await contains(".btn:text('Done'):count(1)").click();
-    await contains(".o-mail-ActivityMarkAsDone button:text('Discard'):count(1)").click();
-    await waitForNone(".o-mail-ActivityMarkAsDone");
-});
-
 test("Activity are sorted by deadline", async () => {
     mockDate("2023-01-11 12:00:00");
     const dateBefore = today().plus({ days: -5 });

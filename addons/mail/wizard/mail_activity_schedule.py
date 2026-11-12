@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import html2plaintext
-from odoo.tools.misc import clean_context, format_date
+from odoo.tools.misc import clean_context
 _logger = logging.getLogger(__name__)
 
 
@@ -349,8 +349,6 @@ class MailActivitySchedule(models.TransientModel):
         applied_on = self._get_applied_on_records()
         activities_vals_list = []
         for record in applied_on:
-            body = _('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
-            activity_descriptions = []
             for template in self._plan_filter_activity_templates_to_schedule():
                 responsible = template._determine_responsible(
                     self.plan_on_demand_user_id, self.activity_user_id_fname, record,
@@ -374,16 +372,7 @@ class MailActivitySchedule(models.TransientModel):
                     role_id=role.id,
                     activity_template_id=template.id,
                 ))
-                activity_descriptions.append(
-                    _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
-                      activity=template.summary or template.activity_type_id.name,
-                      name=responsible.name, deadline=format_date(self.env, date_deadline)))
 
-            if activity_descriptions:
-                body += Markup('<ul>%s</ul>') % (
-                    Markup().join(Markup('<li>%s</li>') % description for description in activity_descriptions)
-                )
-            record.message_post(body=body)
         self.env['mail.activity'].with_context(clean_context(self.env.context)).create(activities_vals_list)
 
         if len(applied_on) == 1:
@@ -494,6 +483,7 @@ class MailActivitySchedule(models.TransientModel):
         return Domain.AND([
             ['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)],
             ['|', ('res_model', '=', False), ('res_model', '=', self.res_model)],
+            ['|', ('user_ids', '=', False), ('user_ids', 'in', self.env.uid)],
             [('template_ids', '!=', False)],  # exclude plan without activities
         ])
 

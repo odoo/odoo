@@ -7,14 +7,11 @@
             </t>
             <textarea class="form-control" style="min-height: 70px" rows="3" placeholder="Write Feedback" t-model.proxy="this.props.activity().feedback" t-ref="this.textArea"/>
             <div class="d-flex flex-wrap gap-2 mt-2">
-                <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
-                    Done &amp; Schedule Next
+                <button type="button" class="btn btn-sm btn-primary" aria-label="Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
+                    Schedule Next
                 </button>
                 <button type="button" class="btn btn-sm btn-primary" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
                     Done
-                </button>
-                <button type="button" class="btn btn-sm btn-link" t-on-click="this.close">
-                    Discard
                 </button>
             </div>
         </PopoverCard>
