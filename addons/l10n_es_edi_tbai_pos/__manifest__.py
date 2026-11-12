@@ -14,6 +14,9 @@
         'point_of_sale._assets_pos': [
             'l10n_es_edi_tbai_pos/static/src/**/*',
         ],
+        'web.assets_unit_tests': [
+            'l10n_es_edi_tbai_pos/static/tests/unit/**/*',
+        ],
     },
     'auto_install': True,
     'author': 'Odoo S.A.',
