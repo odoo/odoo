@@ -958,7 +958,7 @@ class HrExpense(models.Model):
                         is_all_approver
                         or expense.employee_id.id in expenses_employee_ids_under_user_ones
                         or expense.employee_id.expense_manager_id == user
-                        or (expense.state in {'draft', 'submitted'} and expense.employee_id.user_id == user)
+                        or (expense.employee_id.user_id == user and expense._can_be_reset_by_employee())
                 )
             )
 
@@ -1404,6 +1404,11 @@ class HrExpense(models.Model):
         """ Check whether the given expenses can be auto-validated (no approver) """
         self.ensure_one()
         return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
+
+    def _can_be_reset_by_employee(self):
+        """ Check whether the employee owning the given expense can reset it to draft themselves """
+        self.ensure_one()
+        return self.state in {'draft', 'submitted', 'refused'}
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """

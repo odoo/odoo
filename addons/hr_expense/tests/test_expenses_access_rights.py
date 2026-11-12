@@ -106,6 +106,51 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         with self.assertRaises(AccessError):
             expense.with_user(another_standard_user_team_approver).action_approve()
 
+    def test_expense_employee_can_reset_own_refused_expense(self):
+        """ An employee can reset their own refused expense to draft, correct it and resubmit it. """
+        expense = self.create_expenses({'name': "Superboy costume washing"})
+        expense_as_employee = expense.with_user(self.expense_user_employee)
+        expense_as_employee.action_submit()
+        expense.with_user(self.expense_user_manager)._do_refuse("Missing receipt")
+        self.assertRecordValues(expense, [{'state': 'refused', 'approval_state': 'refused', 'manager_id': self.expense_user_manager.id}])
+        self.assertTrue(expense_as_employee.can_reset)
+
+        # Only the reset is allowed, the refused expense itself stays read-only for the employee
+        with self.assertRaises(AccessError):
+            expense_as_employee.name = "Corrected name"
+
+        expense_as_employee.action_reset()
+        self.assertRecordValues(expense, [{'state': 'draft', 'approval_state': False, 'approval_date': False}])
+
+        expense_as_employee.name = "Corrected name"
+        expense_as_employee.action_submit()
+        self.assertRecordValues(expense, [{
+            'name': "Corrected name",
+            'state': 'submitted',
+            'approval_state': 'submitted',
+            'manager_id': self.expense_user_manager.id,
+        }])
+
+    def test_expense_employee_cant_reset_refused_expense_of_someone_else(self):
+        another_user = new_test_user(self.env, login='another_standard_user', groups='base.group_user')
+        expense = self.create_expenses({'name': "Superboy costume washing"})
+        expense.action_submit()
+        expense.with_user(self.expense_user_manager)._do_refuse("Missing receipt")
+
+        with self.assertRaises((AccessError, UserError)):
+            expense.with_user(another_user).action_reset()
+        self.assertEqual(expense.state, 'refused')
+
+    def test_expense_employee_cant_reset_own_approved_expense(self):
+        expense = self.create_expenses({'name': "Superboy costume washing"})
+        expense_as_employee = expense.with_user(self.expense_user_employee)
+        expense_as_employee.action_submit()
+        expense.with_user(self.expense_user_manager).action_approve()
+        self.assertEqual(expense.state, 'approved')
+        self.assertFalse(expense_as_employee.can_reset)
+        with self.assertRaises(UserError):
+            expense_as_employee.action_reset()
+
     def test_expense_create_and_post_message_on_submitted_and_approved(self):
         """ Test that different users can post (or not) a message and an attachment when the expense is submitted.
         The employee can delete attachments in draft, and the managers until the expense is approved.
