@@ -1270,6 +1270,13 @@ class PosOrder(models.Model):
     def _set_product_qty_available(self):
         pass
 
+    def _update_closing_qty_available(self, reverse=False):
+        if not self._should_update_quantity_on_product():
+            return
+        sign = 1 if reverse else -1
+        for line in self.lines.filtered(lambda line: line.product_id.is_storable):
+            line.product_id.sudo().with_company(line.company_id).qty_available += sign * line.qty
+
     @api.model
     def _should_update_quantity_on_product(self):
         """ Overriden in pos_stock, as the quantity update is handled through the stock module.
@@ -1735,6 +1742,7 @@ class PosOrder(models.Model):
             reversal_move = orders.session_id._create_partial_reversal_move_from_session_closing(orders)
             reversal_move._post()
             reversal_moves.append((orders, reversal_move))
+            orders._update_closing_qty_available(reverse=True)
 
         # Create rounding line if needed
         data = self._prepare_account_move_line_data_for_rounding(invoice)
