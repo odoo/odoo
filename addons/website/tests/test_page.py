@@ -2,8 +2,6 @@
 
 from lxml import html
 from unittest.mock import patch
-from freezegun import freeze_time
-from datetime import date
 
 import werkzeug
 
@@ -357,19 +355,20 @@ class WithContext(HttpCase):
         r = self.url_open(self.page.url)
         self.assertEqual(r.status_code, 404, "Deactivated users should be logged out before serving fallback pages")
 
-    def test_unpublished_page_no_cache(self):
-        """Ensure that a previously-published page that is now unpublished will not be cached."""
+    def test_hidden_page_cache_invalidation(self):
+        """Ensure that a cached page is not served anymore once it is hidden"""
         self.authenticate(None, None)
 
-        with freeze_time(date(2025, 12, 30)):
-            r = self.url_open(self.page.url)
+        r = self.url_open(self.page.url)
         self.assertEqual(r.status_code, 200, "Restricted users should see the published page")
 
         self.page.write({'is_published': False})
-
-        with freeze_time(date(2025, 12, 31)):
-            r = self.url_open(self.page.url)
+        r = self.url_open(self.page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 as the page is unpublished")
+
+        self.page.write({'is_published': True})
+        r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200, "Restricted users should see the republished page")
 
     def test_page_cache_host_indexability(self):
         """Cached HTML must preserve the current host's robots directive."""
