@@ -486,13 +486,16 @@ class TestMailTemplate(MailCommon):
             {'name': 'B Other Owner', 'user_id': self.user_employee_2.id},
             {'name': 'C Role', 'role_ids': [(4, self.role_employee.id)]},
             {'name': 'D Owned', 'user_id': self.user_employee.id},
+            {'name': 'E Other Owner + Role', 'user_id': self.user_employee_2.id, 'role_ids': [(4, self.role_employee.id)]},
         ]).with_env(self.env)
-        self.assertEqual(templates.mapped('is_user_priority'), [False, False, True, True])
+        self.assertEqual(templates.mapped('user_priority'), ['other', 'other', 'role', 'owner', 'role'])
+        # owned, then role (other owner before no owner), then others
         self.assertEqual(
             [name for _id, name in templates.name_search('', [('id', 'in', templates.ids)])],
-            ['D Owned', 'C Role', 'B Other Owner', 'A Generic'],
+            ['D Owned', 'E Other Owner + Role', 'C Role', 'B Other Owner', 'A Generic'],
         )
-        self.assertEqual(templates.search([('id', 'in', templates.ids), ('is_user_priority', '=', False)]), templates[1] + templates[0])
+        self.assertEqual(templates.search([('id', 'in', templates.ids), ('user_priority', '=', 'role')]), templates[4] + templates[2])
+        self.assertEqual(templates.search([('id', 'in', templates.ids), ('user_priority', '=', 'other')]), templates[1] + templates[0])
 
     def test_mail_template_parse_partner_list_ids(self):
         for partner_list_ids, expected in [

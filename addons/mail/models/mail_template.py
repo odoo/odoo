@@ -17,7 +17,7 @@ class MailTemplate(models.Model):
     _name = 'mail.template'
     _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'Email Template'
-    _order = 'is_user_priority desc, user_id, name, id'
+    _order = 'user_priority, user_id, name, id'
 
     _unrestricted_rendering = True
 
@@ -52,10 +52,11 @@ class MailTemplate(models.Model):
                                   "value will be the author's email alias if configured, or email address.")
     user_id = fields.Many2one('res.users', string='Owner', ui_domain="[('share', '=', False)]")
     role_ids = fields.Many2many('res.role', string='Roles')
-    is_user_priority = fields.Boolean(
-        compute='_compute_is_user_priority', compute_sudo=True,
-        compute_sql='_compute_sql_is_user_priority',
-    )  # owned by current user or by one of their roles, used notably for ordering
+    user_priority = fields.Selection(
+        [('owner', 'Owner'), ('role', 'Role'), ('other', 'Other')], string='User Priority',
+        compute='_compute_user_priority', compute_sudo=True,
+        compute_sql='_compute_sql_user_priority',
+    )  # owned by current user, then by one of their roles, then others; used notably for ordering
     # recipients
     use_default_to = fields.Boolean(
         'Default Recipients',
@@ -197,13 +198,20 @@ class MailTemplate(models.Model):
 
     @api.depends('role_ids', 'user_id')
     @api.depends_context('uid')
-    def _compute_is_user_priority(self):
+    def _compute_user_priority(self):
         for template in self:
-            template.is_user_priority = template.user_id == self.env.user or bool(template.role_ids & self.env.user.role_ids)
+            if template.user_id == self.env.user:
+                template.user_priority = 'owner'
+            elif template.role_ids & self.env.user.role_ids:
+                template.user_priority = 'role'
+            else:
+                template.user_priority = 'other'
 
-    def _compute_sql_is_user_priority(self, table):
+    def _compute_sql_user_priority(self, table):
         return SQL(
-            "(%s = %s OR %s IN (SELECT mail_template_id FROM mail_template_res_role_rel WHERE res_role_id = ANY(%s)))",
+            """CASE WHEN %s = %s THEN 'owner'
+                 WHEN %s IN (SELECT mail_template_id FROM mail_template_res_role_rel WHERE res_role_id = ANY(%s)) THEN 'role'
+                 ELSE 'other' END""",
             table.user_id, self.env.uid, table.id, self.env.user.role_ids.ids,
         )
 
