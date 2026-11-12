@@ -144,6 +144,26 @@ class TestHrAttendance(HttpCase, TransactionCase):
         attendance_form = Form(self.env['hr.attendance'].with_context(action['context']))
         self.assertEqual(attendance_form.employee_id, self.employee)
 
+    def test_last_month_attendances_rights(self):
+        """The Monthly Hours of an employee can only be changed with the rights to change them."""
+        officer = new_test_user(self.env, login='att_officer', groups='base.group_user,hr_attendance.group_hr_attendance_officer')
+        own_editor = new_test_user(self.env, login='att_own', groups='base.group_user,hr_attendance.group_hr_attendance_own')
+        officer_employee = self.env['hr.employee'].create({'name': 'Officer Employee', 'user_id': officer.id})
+        own_employee = self.env['hr.employee'].create({'name': 'Own Employee', 'user_id': own_editor.id})
+        self.employee.attendance_manager_id = officer
+
+        def rights(employee, user):
+            context = employee.with_user(user).action_open_last_month_attendances()['context']
+            return {key: context[key] for key in ('create', 'edit', 'delete')}
+
+        # The attendance manager of the employee manages his attendances
+        self.assertEqual(rights(self.employee, officer), {'create': True, 'edit': True, 'delete': True})
+        # Without "Self Attendance Edit", an attendance officer only reads his own attendances
+        self.assertEqual(rights(officer_employee, officer), {'create': False, 'edit': False, 'delete': False})
+        self.assertEqual(rights(self.other_employee, officer), {'create': False, 'edit': False, 'delete': False})
+        # "Self Attendance Edit" creates and edits the own attendances, but doesn't delete them
+        self.assertEqual(rights(own_employee, own_editor), {'create': True, 'edit': True, 'delete': False})
+
     def test_attendance_checkout_while_employee_archived(self):
         """An employee should be checked out by the system, if employee is getting archive."""
         test_attendance = self.env['hr.attendance'].create({
