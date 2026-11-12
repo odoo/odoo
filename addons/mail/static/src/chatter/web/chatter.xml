@@ -123,13 +123,13 @@
                         <MessageCardList messages="this.state.thread.sortedPinnedMessages" thread="this.state.thread" mode="'pin'"/>
                     </div>
                 </div>
-                <t t-if="this.webChatterProps.has_activities and this.activities.length and !this.messageSearch.searching and !this.messageSearch.searched">
+                <t t-if="this.webChatterProps.has_activities and this.activities.length and !this.messageSearch.searching() and !this.messageSearch.searched()">
                     <t t-call="mail.ActivityList"/>
                 </t>
                 <t t-if="this.scheduledMessages.length">
                     <t t-call="mail.ScheduledMessagesList"/>
                 </t>
-                <SearchMessageResult t-if="this.messageSearch.searching or this.messageSearch.searched" thread="this.state.thread"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
+                <SearchMessageResult t-if="this.messageSearch.searching() or this.messageSearch.searched()" thread="this.state.thread"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
                 <Thread t-else="" thread="this.state.thread" t-key="this.state.thread.localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
             </t>
         </div>

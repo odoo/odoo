@@ -1,4 +1,4 @@
-import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { Component, t, useListener, useProps } from "@odoo/owl";
 import { SearchInput } from "@mail/core/common/search_input";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -38,7 +38,7 @@ export class SearchMessageInput extends Component {
         this.MESSAGE_SEARCH_FILTERS = MESSAGE_SEARCH_FILTERS;
         this.props = useProps({
             closeSearch: t.function([]).optional(),
-            messageSearch: t.instanceOf(MessageSearchState),
+            messageSearch: t.instanceOf(MessageSearchPlugin),
             thread: t.instanceOf(this.store["mail.thread"]),
         });
         useListener(
@@ -55,9 +55,9 @@ export class SearchMessageInput extends Component {
 
     /** @param {SearchFilter} searchFilter */
     onChangeSearchFilter(searchFilter) {
-        if (searchFilter.id !== this.props.messageSearch.search_filter) {
+        if (searchFilter.id !== this.props.messageSearch.searchFilter()) {
             this.props.messageSearch.lastEmptyTerm = undefined;
-            this.props.messageSearch.search_filter = searchFilter.id;
+            this.props.messageSearch.searchFilter.set(searchFilter.id);
         }
     }
 

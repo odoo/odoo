@@ -1,7 +1,10 @@
-import { SearchState } from "@mail/utils/common/hooks";
+import { StorePlugin } from "@mail/core/common/store_plugin";
+import { Thread } from "@mail/core/common/thread_model";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { proxy } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
+
+import { computed, signal, t, useConfig, usePlugin } from "@odoo/owl";
+
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
 
@@ -67,45 +70,38 @@ export function searchHighlight(searchTerm, target) {
     return getInnerHtml(htmlDoc.body);
 }
 
-export class MessageSearchState extends SearchState {
-    count = 0;
-    /** @type {string | undefined} */
-    search_filter = undefined;
-    hasMore = false;
-    /** @type {import('@mail/core/common/message_model').Message[]} */
-    messages = [];
-    searched = false;
-    /** @type {import('models').Thread | undefined} */
-    thread;
+/**
+ * Searches messages in a thread by term and message type.
+ * Config:
+ * - `thread`: function returning the thread to search.
+ */
+export class MessageSearchPlugin extends SearchStatePlugin {
+    /** @type {import("@odoo/owl").Signal<number>} */
+    count = signal(0);
+    deps = computed(() => [this.searchFilter()]);
+    fetch = this.fetchMessages.bind(this);
+    /** @type {import("@odoo/owl").Signal<boolean>} */
+    hasMore = signal(false);
+    isActive = computed(() => !!this.searchTerm() || this.searchFilter() !== undefined);
     loadMoreBeforeMessageId;
-    /** @type {import("models").Store} */
-    store;
+    /** @type {import("@odoo/owl").Signal<import("@mail/core/common/message_model").Message[]>} */
+    messages = signal([]);
+    /** @type {import("@odoo/owl").Signal<boolean>} */
+    searched = signal(false);
+    /** @type {import("@odoo/owl").Signal<string | undefined>} */
+    searchFilter = signal(undefined);
     searchId = 0;
-
-    /** @param {import('models').Thread} [initialThread] */
-    constructor(initialThread) {
-        super();
-        this.store = useService("mail.store");
-        this.thread = initialThread;
-        this.fetch = this.fetchMessages.bind(this);
-    }
-
-    get isActive() {
-        return !!this.searchTerm || this.search_filter !== undefined;
-    }
-
-    get deps() {
-        return [this.search_filter];
-    }
+    store = usePlugin(StorePlugin);
+    thread = useConfig("thread", t.function([], t.instanceOf(Thread).optional()));
 
     /** @param {string} term */
     async fetchMessages(term) {
         term = term.trim();
-        if (!term && this.search_filter === undefined) {
-            this.searching = false;
-            this.searched = false;
-            this.messages = [];
-            this.hasMore = false;
+        if (!term && this.searchFilter() === undefined) {
+            this.searching.set(false);
+            this.searched.set(false);
+            this.messages.set([]);
+            this.hasMore.set(false);
             this.loadMoreBeforeMessageId = undefined;
             return;
         }
@@ -114,21 +110,21 @@ export class MessageSearchState extends SearchState {
         const currentSearchId = ++this.searchId;
         const data = await this.store.searchMessagesInThread(
             term,
-            this.thread,
+            this.thread(),
             before ?? false,
-            this.search_filter
+            this.searchFilter()
         );
         if (!data || currentSearchId !== this.searchId) {
             return; // Search was cleared or superseded during request.
         }
-        this.searched = true;
-        this.count = data.count;
-        this.hasMore = data.loadMore;
+        this.searched.set(true);
+        this.count.set(data.count);
+        this.hasMore.set(data.loadMore);
         if (before !== undefined) {
-            this.messages.push(...data.messages);
+            this.messages.set([...this.messages(), ...data.messages]);
         } else {
-            this.messages = data.messages;
-            if (data.messages.length === 0) {
+            this.messages.set(data.messages);
+            if (!data.messages.length) {
                 return false;
             }
         }
@@ -143,11 +139,11 @@ export class MessageSearchState extends SearchState {
     reset() {
         this.searchId++;
         super.reset();
-        this.search_filter = undefined;
-        this.messages = [];
-        this.searched = false;
-        this.count = 0;
-        this.hasMore = false;
+        this.searchFilter.set(undefined);
+        this.messages.set([]);
+        this.searched.set(false);
+        this.count.set(0);
+        this.hasMore.set(false);
         this.loadMoreBeforeMessageId = undefined;
     }
 
@@ -156,13 +152,6 @@ export class MessageSearchState extends SearchState {
      * @param {string} text
      */
     highlight(text) {
-        return searchHighlight(this.searchTerm, text);
+        return searchHighlight(this.searchTerm(), text);
     }
-}
-
-/**
- * @param {import('models').Thread} [initialThread]
- */
-export function useMessageSearch(initialThread) {
-    return proxy(new MessageSearchState(initialThread));
 }
