@@ -67,7 +67,7 @@ export class UrlAutoCompleteField extends CharField {
     }
 
     onSelect(value) {
-        const val = browser.location.origin + value;
+        const val = window.location.origin + value;
         this.update(val);
     }
     onChange({ inputValue, isOptionSelected }) {
