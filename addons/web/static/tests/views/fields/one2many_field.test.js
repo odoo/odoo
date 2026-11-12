@@ -7811,7 +7811,7 @@ test("deleting lines on a slow connection does not send a virtual delete", async
     Partner._onChanges = {
         p: function () {},
     };
-    let slowOnchange = null;
+    let slowOnchange;
     onRpc("partner", "onchange", ({ args }) => {
         const commands = args[1].p || [];
         expect(commands.some(([cmd, id]) => cmd === 2 && typeof id === "string")).toBe(false, {
