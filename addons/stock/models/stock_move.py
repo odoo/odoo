@@ -927,7 +927,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             self._update_orderpoints()
         if 'picking_id' in vals:
             self._set_references()
-        if self.env.user.has_group('stock.group_stock_picking_batch') and\
+        if self.env['stock.picking']._is_batch_feature_enabled() and\
            'state' in vals and vals['state'] in ('partially_available', 'assigned'):
             for picking in self.picking_id:
                 if picking.state != 'assigned':
@@ -1609,7 +1609,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if self.partner_id:
             picking_partner_id = self._get_picking_partner().id
             domain = Domain.AND([domain, [('partner_id', '=', picking_partner_id)]])
-        if self.env.user.has_group('stock.group_stock_picking_batch'):
+        if self.env['stock.picking']._is_batch_feature_enabled():
             domain = Domain.AND([
                 domain,
                 ['|', ('batch_id', '=', False), ('batch_id.is_wave', '=', False)],
@@ -1670,7 +1670,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         return vals
 
     def _assign_picking_post_process(self, new=False):
-        if self.env.user.has_group('stock.group_stock_picking_batch'):
+        if self.env['stock.picking']._is_batch_feature_enabled():
             for picking in self.picking_id:
                 picking._find_auto_batch()
         pass
@@ -2269,7 +2269,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
-        if self.env.user.has_group('stock.group_stock_picking_batch'):
+        if self.env['stock.picking']._is_batch_feature_enabled():
             self.move_line_ids._auto_wave()
 
     def _action_cancel(self):
