@@ -1015,6 +1015,7 @@ class ChromeBrowser:
     def stop(self):
         if self.ws is not None:
             try:
+                self._result.cancel()
                 self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
                 self._websocket_send('Browser.close')
                 self._logger.info("Closing websocket connection")
