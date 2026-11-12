@@ -1445,6 +1445,8 @@ class TransactionCase(BaseCase):
         # flush everything in setUpClass before introducing a savepoint
         cr = self.cr
         if self.savepoint is None:
+            # build the access catalog in the class cache so test methods can reuse it
+            self.env['ir.access']._get_all_access()
             # create savepoint, and close it at class cleanup
             sp = self.cr.savepoint(flush=True)
             self.addClassCleanup(sp.close, rollback=False)
