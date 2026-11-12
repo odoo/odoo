@@ -381,18 +381,19 @@ class MailThread(models.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self.env.context.get('mail_create_nolog'):
-            threads_no_subtype = self.env[self._name]
+            threads_no_subtype_ids = []
             for thread in threads:
                 subtype = thread._creation_subtype()
                 if not subtype:
-                    threads_no_subtype += thread
+                    threads_no_subtype_ids.append(thread.id)
                     continue
                 # if we have a subtype, post message to notify users from _message_auto_subscribe
                 thread.sudo().message_post(
                     subtype_id=subtype.id, author_id=self.env.user.partner_id.id,
                     body=Markup('<div><p>%s</p></div>') % thread._creation_message()
                 )
-            if threads_no_subtype:
+            if threads_no_subtype_ids:
+                threads_no_subtype = threads.browse(threads_no_subtype_ids).with_prefetch(threads._prefetch_ids)
                 bodies = dict(
                     (thread.id, thread._creation_message())
                     for thread in threads_no_subtype)
