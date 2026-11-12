@@ -6,8 +6,65 @@ import { roundPrecision } from "@web/core/utils/numbers";
 patch(GeneratePrinterData.prototype, {
     generateReceiptData() {
         const data = super.generateReceiptData(...arguments);
+<<<<<<< b9823b8a6ed7f33c4450ac6dbe2dabed3ca6a6e7
         data.extra_data.loyalties = this._generateLoyaltyReceiptData();
         data.extra_data.new_coupons = this._generateNewCouponsReceiptData();
+||||||| ba2d10f169b8c26d04c5b9fdd491673dc0005768
+        const points = this.order.getLoyaltyPoints();
+        data.extra_data.loyalties = [];
+
+        for (const coupon of points) {
+            for (const label of ["Won", "Spent", "Balance"]) {
+                const key = label.toLowerCase();
+                if (coupon.points[key]) {
+                    data.extra_data.loyalties.push({
+                        name: coupon.program.portal_point_name,
+                        type: _t(label + ":"),
+                        points: coupon.points[key],
+                    });
+                }
+            }
+        }
+
+        data.extra_data.new_coupons = (this.order.new_coupon_info || []).map((coupon) => ({
+            name: coupon.program_name,
+            code: coupon.code,
+            expiration_date: coupon.expiration_date,
+            barcode_base64: coupon.barcode_base64,
+        }));
+
+=======
+        const points = this.order.getLoyaltyPoints();
+        data.extra_data.loyalties = [];
+
+        for (const coupon of points) {
+            for (const label of ["Won", "Spent", "Balance"]) {
+                const key = label.toLowerCase();
+                if (coupon.points[key]) {
+                    data.extra_data.loyalties.push({
+                        name: coupon.program.portal_point_name,
+                        type: _t(label + ":"),
+                        points: coupon.points[key],
+                    });
+                }
+            }
+        }
+        if (!data.extra_data.loyalties.length && this.order.raw.loyalties) {
+            data.extra_data.loyalties = this.order.raw.loyalties;
+        }
+
+        data.extra_data.new_coupons = (
+            this.order.new_coupon_info ||
+            this.order.raw.new_coupon_info ||
+            []
+        ).map((coupon) => ({
+            program_name: coupon.program_name,
+            code: coupon.code,
+            expiration_date: coupon.expiration_date,
+            barcode_base64: coupon.barcode_base64,
+        }));
+
+>>>>>>> 1d4b494756ee63a4a1d786ff0c78cb9c618aa0af
         return data;
     },
     /**
