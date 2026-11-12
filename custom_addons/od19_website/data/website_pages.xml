@@ -3,6 +3,11 @@
 
     <!-- ============================================================ -->
     <!-- Website Pages                                                  -->
+    <!--                                                              -->
+    <!-- website.page inherits the website.seo.metadata mixin (through -->
+    <!-- ir.ui.view), so website_meta_title / _description /          -->
+    <!-- _keywords set here drive the <title> and the <meta> tags that -->
+    <!-- website.layout renders in <head> (SP7).                       -->
     <!-- ============================================================ -->
 
     <!-- Remove default Odoo homepage pages so our custom homepage wins -->
@@ -14,6 +19,9 @@
         <field name="view_id" ref="od19_homepage"/>
         <field name="website_id" ref="website.default_website"/>
         <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Auto-Info | Total Integrated Automation Solutions, Bangkok</field>
+        <field name="website_meta_description">The Auto-Info Co., Ltd. delivers total integrated automation — industrial (PLC/SCADA), building (BMS/HVAC) and terminal automation — with ISO 9001:2015 certified engineering, installation and service from Bangkok, Thailand.</field>
+        <field name="website_meta_keywords">automation Thailand, industrial automation, building automation, terminal automation, PLC, SCADA, BMS, HVAC, system integrator Bangkok, ISO 9001</field>
     </record>
 
     <record id="industrial_page" model="website.page">
@@ -22,6 +30,9 @@
         <field name="view_id" ref="od19_industrial_page"/>
         <field name="website_id" ref="website.default_website"/>
         <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Industrial Automation | PLC, SCADA &amp; Process Control | Auto-Info</field>
+        <field name="website_meta_description">Industrial automation solutions from Auto-Info: Modicon PLCs, SCADA and historian centralisation, variable-speed drives, process instrumentation and engineered control panels for process and manufacturing plants.</field>
+        <field name="website_meta_keywords">industrial automation, PLC, SCADA, Modicon M580, Altivar drive, control panel, process control, instrumentation, Thailand</field>
     </record>
 
     <record id="building_page" model="website.page">
@@ -30,6 +41,9 @@
         <field name="view_id" ref="od19_building_page"/>
         <field name="website_id" ref="website.default_website"/>
         <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Building Automation | BMS, HVAC &amp; Energy Management | Auto-Info</field>
+        <field name="website_meta_description">Building automation from Auto-Info: building management systems (BMS), HVAC and clean-room control, environmental monitoring, fume-hood control and energy management for offices, hospitals and life-science facilities.</field>
+        <field name="website_meta_keywords">building automation, BMS, HVAC control, clean room, environmental monitoring, energy management, Desigo CC, GMP, Thailand</field>
     </record>
 
     <record id="terminal_page" model="website.page">
@@ -38,6 +52,9 @@
         <field name="view_id" ref="od19_terminal_page"/>
         <field name="website_id" ref="website.default_website"/>
         <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Terminal Automation | Tank Gauging &amp; Loading Control | Auto-Info</field>
+        <field name="website_meta_description">Terminal automation from Auto-Info: automatic tank gauging, tank inventory and reconciliation, loading-arm and metering skids, overfill prevention and integrated terminal management systems.</field>
+        <field name="website_meta_keywords">terminal automation, tank gauging, ATG, tank inventory, loading arm, overfill prevention, TMS, fuel depot, Thailand</field>
     </record>
 
     <record id="products_page" model="website.page">
@@ -46,6 +63,9 @@
         <field name="view_id" ref="od19_products_page"/>
         <field name="website_id" ref="website.default_website"/>
         <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Products | Automation Hardware &amp; Systems | Auto-Info</field>
+        <field name="website_meta_description">Browse the Auto-Info automation catalog: Schneider Electric Modicon PLCs, Magelis HMI and Altivar drives, Siemens Symaro sensors and Desigo CC, Emerson Rosemount instrumentation and OPW loading controllers.</field>
+        <field name="website_meta_keywords">automation products, Modicon M580, M340, Magelis HMI, Altivar, Desigo CC, Symaro, Rosemount, Micro Motion, OPW Fusion, Thailand</field>
     </record>
 
     <record id="about_page" model="website.page">
@@ -54,6 +74,31 @@
         <field name="view_id" ref="od19_about_page"/>
         <field name="website_id" ref="website.default_website"/>
         <field name="is_published" eval="True"/>
+        <field name="website_meta_title">About Auto-Info | Automation System Integrator in Thailand</field>
+        <field name="website_meta_description">Learn about The Auto-Info Co., Ltd. — a Bangkok-based automation system integrator delivering industrial, building and terminal automation projects with ISO 9001:2015 certified quality since day one.</field>
+        <field name="website_meta_keywords">Auto-Info, about us, automation system integrator, Bangkok, Thailand, ISO 9001, engineering, installation, service</field>
+    </record>
+
+    <record id="quality_page" model="website.page">
+        <field name="name">Quality &amp; Certifications</field>
+        <field name="url">/quality-certifications</field>
+        <field name="view_id" ref="od19_quality_page"/>
+        <field name="website_id" ref="website.default_website"/>
+        <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Quality &amp; Certifications | ISO 9001, GMP, CSV | Auto-Info</field>
+        <field name="website_meta_description">Auto-Info quality and compliance: ISO 9001:2015 certified quality management, GMP-ready life-science automation and GAMP 5 / CSV documentation for regulated industries.</field>
+        <field name="website_meta_keywords">ISO 9001, ISO 14001, GMP, CSV, GAMP 5, quality management, compliance, automation, Thailand</field>
+    </record>
+
+    <record id="portfolio_page" model="website.page">
+        <field name="name">References</field>
+        <field name="url">/portfolio</field>
+        <field name="view_id" ref="od19_portfolio_page"/>
+        <field name="website_id" ref="website.default_website"/>
+        <field name="is_published" eval="True"/>
+        <field name="website_meta_title">Project References | Automation Case Studies | Auto-Info</field>
+        <field name="website_meta_description">Selected automation project references from Auto-Info across petrochemical, manufacturing, life-science, commercial building and fuel-terminal sectors — scope, year and delivered results.</field>
+        <field name="website_meta_keywords">automation projects, case studies, references, SCADA project, BMS project, terminal automation, Thailand</field>
     </record>
 
 </odoo>

@@ -12,6 +12,7 @@
                 <section class="od19-page-hero od19-home-hero"
                          style="background-image:url('/od19_website/static/src/img/misc/hero-circuit.jpg');">
                     <div class="od19-page-hero-overlay"/>
+                    <div class="od19-hero-sheen" aria-hidden="true"/>
                     <div class="container">
                         <span class="od19-eyebrow">Industrial · Building · Terminal Automation</span>
                         <h1 t-esc="website.company_id.od19_website_hero_title or 'Automation Solutions for a Smarter Future'"/>
@@ -19,9 +20,9 @@
                            t-esc="website.company_id.od19_website_hero_subtitle or 'Total integrated automation solutions — from system design and project management to implementation, training and long-term service contracts.'"/>
                         <div class="od19-hero-actions">
                             <a href="/contactus" class="btn btn-hero">
-                                <i class="fa fa-envelope me-2"/>Contact Us
+                                <i class="fa fa-envelope me-2"/>Request a Consultation
                             </a>
-                            <a href="/about-us" class="btn btn-ghost-light">Learn More</a>
+                            <a href="#services" class="btn btn-ghost-light">Explore Services</a>
                         </div>
                         <ul class="od19-hero-facts">
                             <li><i class="fa fa-check-circle"/> Solution provider — not just a supplier</li>
@@ -29,10 +30,13 @@
                             <li><i class="fa fa-check-circle"/> ISO 9001 quality process</li>
                         </ul>
                     </div>
+                    <a href="#services" class="od19-hero-scroll" aria-label="Scroll to services">
+                        <span>Scroll</span><i class="fa fa-angle-down" aria-hidden="true"/>
+                    </a>
                 </section>
 
                 <!-- Services -->
-                <section class="od19-section bg-light">
+                <section id="services" class="od19-section bg-light">
                     <div class="container">
                         <div class="od19-section-title">
                             <h2>Service &amp; Solutions</h2>
@@ -73,8 +77,46 @@
                     </div>
                 </section>
 
+                <!-- How We Work -->
+                <section id="how-we-work" class="od19-section bg-light">
+                    <div class="container">
+                        <div class="od19-section-title">
+                            <h2>How We Work</h2>
+                            <div class="od19-divider"/>
+                            <p class="od19-pf-sub">One accountable partner — from the first site survey to
+                               long-term support.</p>
+                        </div>
+                        <div class="od19-steps">
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">1</div>
+                                <h4>Consult &amp; Survey</h4>
+                                <p>We visit your site, review the process and agree the scope, budget
+                                   and success criteria.</p>
+                            </div>
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">2</div>
+                                <h4>Design &amp; Engineer</h4>
+                                <p>Our in-house engineers produce the system design, drawings,
+                                   bill of materials and validation plan.</p>
+                            </div>
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">3</div>
+                                <h4>Implement &amp; Commission</h4>
+                                <p>Turnkey installation, configuration and commissioning with
+                                   documented, auditable test records.</p>
+                            </div>
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">4</div>
+                                <h4>Support &amp; Improve</h4>
+                                <p>Training, preventive maintenance and service contracts with
+                                   clear SLAs and spare parts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Why Auto-Info -->
-                <section class="od19-split">
+                <section id="about" class="od19-split">
                     <div class="container">
                         <div class="row align-items-center g-5">
                             <div class="col-lg-6">
@@ -106,7 +148,7 @@
                 </section>
 
                 <!-- Product Highlights -->
-                <section class="od19-section od19-pf">
+                <section id="products" class="od19-section od19-pf">
                     <div class="container">
                         <div class="od19-section-title">
                             <h2>Featured Products</h2>
@@ -146,21 +188,33 @@
                     </div>
                 </section>
 
-                <!-- Partners -->
-                <section class="od19-section pt-0">
+                <!-- Quality & Certifications (SP5: trust band linking to the
+                     dedicated quality + references pages) -->
+                <section id="partners" class="od19-section pt-0">
                     <div class="container">
                         <div class="od19-section-title">
-                            <h2>Technology Partners</h2>
+                            <h2>Quality &amp; Certifications</h2>
                             <div class="od19-divider"/>
+                            <p class="od19-pf-sub">Certified quality management and regulated-environment
+                               compliance — backed by world-class technology partners.</p>
                         </div>
                         <div class="od19-partner-strip">
+                            <span class="od19-partner-chip"><i class="fa fa-certificate"/> ISO 9001:2015</span>
+                            <span class="od19-partner-chip"><i class="fa fa-leaf"/> ISO 14001</span>
+                            <span class="od19-partner-chip"><i class="fa fa-flask"/> GMP</span>
+                            <span class="od19-partner-chip"><i class="fa fa-check-square-o"/> CSV</span>
                             <span class="od19-partner-chip">Schneider Electric</span>
                             <span class="od19-partner-chip">Siemens</span>
                             <span class="od19-partner-chip">Emerson</span>
                             <span class="od19-partner-chip">Honeywell</span>
-                            <span class="od19-partner-chip">ABB</span>
-                            <span class="od19-partner-chip">ISO 9001</span>
-                            <span class="od19-partner-chip">GMP / CSV</span>
+                        </div>
+                        <div class="od19-pf-more">
+                            <a href="/quality-certifications" class="btn btn-hero">
+                                Quality &amp; Certifications <i class="fa fa-arrow-right"/>
+                            </a>
+                            <a href="/portfolio" class="btn btn-outline-primary">
+                                Project References <i class="fa fa-arrow-right"/>
+                            </a>
                         </div>
                     </div>
                 </section>
@@ -170,19 +224,19 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-3 col-6">
-                                <div class="od19-stat-number">20+</div>
+                                <div class="od19-stat-number" data-od19-count="20" data-od19-suffix="+">20+</div>
                                 <div class="od19-stat-label">Years Experience</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="od19-stat-number">3</div>
+                                <div class="od19-stat-number" data-od19-count="3">3</div>
                                 <div class="od19-stat-label">Automation Domains</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="od19-stat-number">100%</div>
+                                <div class="od19-stat-number" data-od19-count="100" data-od19-suffix="%">100%</div>
                                 <div class="od19-stat-label">GMP &amp; CSV Ready</div>
                             </div>
                             <div class="col-md-3 col-6">
-                                <div class="od19-stat-number">1M+</div>
+                                <div class="od19-stat-number" data-od19-count="1" data-od19-suffix="M+">1M+</div>
                                 <div class="od19-stat-label">Website Visitors</div>
                             </div>
                         </div>
@@ -190,7 +244,7 @@
                 </section>
 
                 <!-- News & Events (sourced from the blog hub at /blog) -->
-                <section class="od19-section bg-light">
+                <section id="news" class="od19-section bg-light">
                     <div class="container">
                         <t t-set="blog_tag_news" t-value="website.env.ref('od19_website.blog_tag_news', raise_if_not_found=False)"/>
                         <t t-set="blog_tag_events" t-value="website.env.ref('od19_website.blog_tag_events', raise_if_not_found=False)"/>
@@ -244,7 +298,7 @@
                 </section>
 
                 <!-- Careers teaser -->
-                <section class="od19-section">
+                <section id="careers" class="od19-section">
                     <div class="container">
                         <div class="od19-search-band">
                             <div class="row align-items-center g-4">
@@ -267,7 +321,7 @@
                 </section>
 
                 <!-- CTA -->
-                <section class="od19-section" style="background:var(--od19-primary);color:#fff;">
+                <section id="contact" class="od19-section" style="background:var(--od19-primary);color:#fff;">
                     <div class="container text-center">
                         <h2 style="color:#fff;font-weight:700;">Ready to Automate Your Business?</h2>
                         <p class="lead mb-4" style="opacity:0.9;">Let our experts help you design the right solution.</p>

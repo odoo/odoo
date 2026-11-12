@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ============================================================ -->
+    <!-- SP8 — Legal pages (PDPA)                                       -->
+    <!--                                                              -->
+    <!-- noupdate="1": legal copy is maintained by the business, so an -->
+    <!-- upgrade must not overwrite what the administrator edited in   -->
+    <!-- the website editor.  The pages are (re)published and indexed  -->
+    <!-- idempotently by website.od19_setup_pdpa() on every upgrade.    -->
+    <!-- ============================================================ -->
+
+    <record id="privacy_page" model="website.page">
+        <field name="name">Privacy Policy</field>
+        <field name="url">/privacy</field>
+        <field name="view_id" ref="od19_privacy_page"/>
+        <field name="website_id" ref="website.default_website"/>
+        <field name="is_published" eval="True"/>
+        <field name="website_indexed" eval="True"/>
+        <field name="website_meta_title">Privacy Policy | PDPA Notice | Auto-Info</field>
+        <field name="website_meta_description">How The Auto-Info Co., Ltd. collects, uses and protects personal data under Thailand's Personal Data Protection Act (PDPA) — legal basis, retention periods, your rights and how to contact us.</field>
+        <field name="website_meta_keywords">privacy policy, PDPA, personal data protection, data subject rights, Auto-Info, Thailand</field>
+    </record>
+
+    <record id="terms_page" model="website.page">
+        <field name="name">Terms of Use</field>
+        <field name="url">/terms</field>
+        <field name="view_id" ref="od19_terms_page"/>
+        <field name="website_id" ref="website.default_website"/>
+        <field name="is_published" eval="True"/>
+        <field name="website_indexed" eval="True"/>
+        <field name="website_meta_title">Terms of Use | Auto-Info</field>
+        <field name="website_meta_description">The terms that govern your use of the Auto-Info website — permitted use, intellectual property, disclaimers and the law that applies.</field>
+        <field name="website_meta_keywords">terms of use, website terms, Auto-Info, intellectual property, disclaimer, Thailand</field>
+    </record>
+
+</odoo>

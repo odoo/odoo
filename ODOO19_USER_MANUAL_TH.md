@@ -3916,7 +3916,14 @@
 - ทัวร์ทั้งหมดถูกบันทึกเป็นเรคคอร์ดใน `web_tour.tour` โดยตั้งค่า `custom=True` เพื่อไม่ให้ปนกับทัวร์ onboarding ของ Core
 - ตัวทัวร์จะถูกนับเป็น "ใช้แล้ว" (seen) เมื่อทำจบ และจะไม่เด้งซ้ำโดยอัตโนมัติ
 - ตัวสตาร์ทอัตโนมัติทำงานผ่าน service ที่ดักฟังเหตุการณ์เปลี่ยนแอป (`MENUS:APP-CHANGED`) แล้วเปิดทัวร์ที่ผูกไว้กับแอปนั้น
-- ตัวอย่างทัวร์ที่มีให้: Contacts & Credit Risk, Sales (สัญญา/เงื่อนไข/วิซาร์ด), Purchase, Inventory/Stock (มูลค่าสินค้า, FIFO, การคืนสินค้า), Accounting (บัญชี, เช็ค, DN/CN, เงินจ่ายล่วงหน้า, รายงานภาษีไทย), HR Expense, Project & Analytic, Service/Assets, Fleet, Announcement, Knowledge, Notification, Misc Features, Jasper Report, ZKTeco Attendance, Meeting Room Booking และชุดทัวร์ ISO (เอกสาร, Nonconformity, Internal Audit, ความเสี่ยง, การฝึกอบรม, การสอบเทียบ, ความพึงพอใจลูกค้า, Management Review, คุณภาพผู้ขาย)
+- ตัวอย่างทัวร์ที่มีให้ (รวมทั้งหมด 104 ทัวร์ แบ่งตามกลุ่มงาน):
+  - **การขาย/ลูกค้า:** Contacts & Credit Risk (ความเสี่ยงเครดิต), Sales (สัญญา/เงื่อนไข/วิซาร์ด/การออกใบกำกับ), Quotation Document Sequence (รหัสเอกสารใบเสนอราคา + การแก้ไข Rev.), Sales OCA Bridge (สถานะจัดส่ง/Revision/Exception/Blanket Order), Sales Reporting
+  - **การจัดซื้อ/สินค้าคงคลัง:** Purchase, Purchase Document Sequence (รหัสเอกสาร + ประเภทการจัดซื้อ), Inventory/Stock (มูลค่าสินค้า, FIFO, การคืนสินค้า, การตรวจนับ), Goods Issue
+  - **บัญชี/ภาษี:** Accounting (บัญชี, เช็ค, DN/CN, เงินจ่ายล่วงหน้า, รายงานภาษีไทย, ปิดงบ, ภาษีหัก ณ ที่จ่าย), Payment Voucher, Payment Fee, Operational Closure
+  - **โครงการ/บริการ:** Project & Analytic, Project Document Sequence (ประเภทโครงการ + ผู้รับผิดชอบการขาย), Timesheet Billing (เรียกเก็บเงินจาก Timesheet), Service Contract, Service Card
+  - **ทรัพยากรบุคคล:** HR Expense (ค่าใช้จ่าย + พอร์ทัลพนักงาน), HR Advance, ZKTeco Attendance, Partner Thai Fields (ฟิลด์ไทยของคู่ค้า)
+  - **ISO/คุณภาพ:** เอกสาร, Nonconformity, Internal Audit, ความเสี่ยง, การฝึกอบรม, การสอบเทียบ, ความพึงพอใจลูกค้า, Management Review, คุณภาพผู้ขาย
+  - **แพลตฟอร์ม/การตั้งค่า:** User Guide (วิธีใช้ทัวร์), Role Catalog (บัญชีบทบาท), Thai Localization (ปีพุทธศักราช/ข้อมูลภาษีไทย), Offline Draft (บันทึกร่างออฟไลน์), Security Roles, AI Assistant, Web Navigation (ปุ่มย้อนกลับ/ไปข้างหน้า), Documents & Signing, Notification, Dashboards, Misc Features, Jasper Reports
 
 ---
 

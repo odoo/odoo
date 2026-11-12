@@ -56,6 +56,117 @@
             </div>
         </xpath>
 
+        <!-- SP6: replace the default form (which posts to mail.mail and only
+             sends an e-mail) with a structured RFQ form that creates a real
+             crm.lead and lets the backend route it by enquiry type. -->
+        <xpath expr="//form[@id='contactus_form']" position="replace">
+            <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data"
+                  class="o_mark_required od19-rfq-form" data-mark="*"
+                  data-model_name="crm.lead" data-success-mode="redirect"
+                  data-success-page="/contactus-thank-you" data-pre-fill="true">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+
+                    <!-- Full name -->
+                    <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_name">
+                            <span class="s_website_form_label_content">Full Name</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <input id="od19_rfq_name" type="text" class="form-control s_website_form_input"
+                               name="contact_name" required="" data-fill-with="name"/>
+                    </div>
+
+                    <!-- Company -->
+                    <div class="mb-3 col-lg-6 s_website_form_field" data-type="char" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_company">
+                            <span class="s_website_form_label_content">Company</span>
+                        </label>
+                        <input id="od19_rfq_company" type="text" class="form-control s_website_form_input"
+                               name="partner_name" data-fill-with="commercial_company_name"/>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_email">
+                            <span class="s_website_form_label_content">Email</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <input id="od19_rfq_email" type="email" class="form-control s_website_form_input"
+                               name="email_from" required="" data-fill-with="email"/>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-3 col-lg-6 s_website_form_field" data-type="tel" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_phone">
+                            <span class="s_website_form_label_content">Phone</span>
+                        </label>
+                        <input id="od19_rfq_phone" type="tel" class="form-control s_website_form_input"
+                               name="phone" data-fill-with="phone"/>
+                    </div>
+
+                    <!-- Enquiry type (drives the CRM routing) -->
+                    <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required" data-type="selection" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_enquiry">
+                            <span class="s_website_form_label_content">Enquiry Type</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <select id="od19_rfq_enquiry" class="form-select s_website_form_input"
+                                name="Enquiry Type" required="">
+                            <option value="" disabled="disabled" selected="selected">&#8212; Please choose &#8212;</option>
+                            <t t-foreach="website.od19_enquiry_types()" t-as="etype">
+                                <option t-att-value="etype['key']" t-esc="etype['label']"/>
+                            </t>
+                        </select>
+                    </div>
+
+                    <!-- Product of interest -->
+                    <div class="mb-3 col-lg-6 s_website_form_field" data-type="selection" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_product">
+                            <span class="s_website_form_label_content">Product of Interest</span>
+                        </label>
+                        <select id="od19_rfq_product" class="form-select s_website_form_input"
+                                name="Product of Interest">
+                            <option value="" selected="selected">&#8212; Not specified &#8212;</option>
+                            <t t-foreach="website.od19_products()" t-as="prod">
+                                <option t-att-value="prod['name']" t-esc="prod['name']"/>
+                            </t>
+                        </select>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="mb-3 col-12 s_website_form_field s_website_form_required" data-type="text" data-name="Field">
+                        <label class="s_website_form_label" for="od19_rfq_message">
+                            <span class="s_website_form_label_content">How can we help?</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <textarea id="od19_rfq_message" class="form-control s_website_form_input"
+                                  name="description" required="" rows="6"/>
+                    </div>
+
+                    <!-- PDPA consent -->
+                    <div class="mb-3 col-12 s_website_form_field s_website_form_required od19-rfq-consent" data-type="boolean" data-name="Field">
+                        <div class="form-check">
+                            <input id="od19_rfq_consent" type="checkbox"
+                                   class="form-check-input s_website_form_input"
+                                   name="PDPA Consent" value="yes" required=""/>
+                            <label class="form-check-label" for="od19_rfq_consent">
+                                I agree that The Auto-Info Co., Ltd. may use my details to respond to
+                                this enquiry, in line with the <a href="/privacy">Privacy Policy</a>.
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="mb-0 py-2 col-12 s_website_form_submit s_website_form_no_submit_label od19-rfq-submit-row" data-name="Submit Button">
+                        <a href="#" role="button" class="btn btn-hero s_website_form_send od19-rfq-submit">
+                            Send Request <i class="fa fa-paper-plane ms-1"/>
+                        </a>
+                        <span id="s_website_form_result"/>
+                    </div>
+                </div>
+            </form>
+        </xpath>
+
         <!-- Append our additional contact cards (Head Office, Engineering Center, Hours) -->
         <xpath expr="//div[@id='wrap']" position="inside">
             <section class="od19-section bg-light">
@@ -195,6 +306,46 @@
             </section>
         </xpath>
 
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- Thank You page – override the default Odoo confirmation page   -->
+    <!-- ============================================================ -->
+    <!-- website.contactus_thanks is a website.page (_inherits ir.ui.view);
+         its backing view is exposed through the auto-generated xmlid
+         website.contactus_thanks_ir_ui_view, which is what we inherit. -->
+    <template id="od19_contactus_thanks" name="Thank You (Contact us)"
+              inherit_id="website.contactus_thanks_ir_ui_view" priority="20">
+
+        <!-- Replace the placeholder "My Company" column (fake address/phone)
+             with the real Auto-Info details so the confirmation page is
+             consistent with the contact page and shows no dummy data. -->
+        <xpath expr="//div[hasclass('col-lg-4') and .//h5[text()='My Company']]" position="replace">
+            <div class="col-lg-4 offset-lg-1">
+                <h5 class="od19-thanks-company">
+                    <i class="fa fa-building me-2"/>The Auto-Info Co., Ltd.
+                </h5>
+                <ul class="list-unstyled mb-0 ps-2">
+                    <li class="mb-2">
+                        <i class="fa fa-map-marker fa-fw me-2" style="color:var(--od19-secondary);"/>
+                        1359 Soi Ladprao 94 (Panjamitr), Ladprao Rd., Plubpla, Wangthonglang, Bangkok 10310
+                    </li>
+                    <li class="mb-2">
+                        <i class="fa fa-phone fa-fw me-2" style="color:var(--od19-secondary);"/>
+                        <span class="o_force_ltr">+66 2 934 5410-6</span>
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope fa-fw me-2" style="color:var(--od19-secondary);"/>
+                        <a href="mailto:sales@auto-info.co.th">sales@auto-info.co.th</a>
+                    </li>
+                </ul>
+                <p class="mt-3 mb-0">
+                    <a href="/contactus" class="btn btn-hero od19-thanks-back">
+                        <i class="fa fa-reply me-1"/>Back to Contact
+                    </a>
+                </p>
+            </div>
+        </xpath>
     </template>
 
 </odoo>

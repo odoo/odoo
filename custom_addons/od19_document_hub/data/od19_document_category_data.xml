@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cat_purchase" model="od19.document.category">
+        <field name="name">จัดซื้อ</field>
+        <field name="code">PUR</field>
+    </record>
+    <record id="cat_purchase_po" model="od19.document.category">
+        <field name="name">ใบสั่งซื้อ</field>
+        <field name="code">PUR_PO</field>
+        <field name="parent_id" ref="cat_purchase"/>
+    </record>
+    <record id="cat_sales" model="od19.document.category">
+        <field name="name">ขาย</field>
+        <field name="code">SAL</field>
+    </record>
+    <record id="cat_sales_tax_invoice" model="od19.document.category">
+        <field name="name">ใบกำกับภาษี</field>
+        <field name="code">SAL_TAX</field>
+        <field name="parent_id" ref="cat_sales"/>
+    </record>
+    <record id="cat_hr" model="od19.document.category">
+        <field name="name">ทรัพยากรบุคคล</field>
+        <field name="code">HR</field>
+    </record>
+    <record id="cat_iso" model="od19.document.category">
+        <field name="name">ISO</field>
+        <field name="code">ISO</field>
+    </record>
+    <record id="cat_report" model="od19.document.category">
+        <field name="name">รายงานที่ระบบสร้าง</field>
+        <field name="code">RPT</field>
+    </record>
+</odoo>

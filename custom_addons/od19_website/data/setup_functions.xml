@@ -26,4 +26,12 @@
          seed the sample posts the first time the blog is still empty. -->
     <function model="blog.blog" name="od19_setup_blog"/>
 
+    <!-- Propagate the company Google Analytics ID to the website and seed
+         the default robots.txt (only when still empty). -->
+    <function model="website" name="od19_setup_seo"/>
+
+    <!-- Enable the cookie consent bar and keep the PDPA legal pages
+         (/privacy, /terms) published and indexed. -->
+    <function model="website" name="od19_setup_pdpa"/>
+
 </odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Header logo: force autoinfo_logo.svg as the site logo         -->
+    <!-- (replaces the binary website.logo so the brand is fixed)      -->
+    <!-- ============================================================ -->
+    <template id="od19_header_brand_logo" name="Auto-Info Header Brand Logo"
+              inherit_id="website.option_header_brand_logo" priority="30">
+        <xpath expr="//span[@t-field='website.logo']" position="replace">
+            <img src="/od19_website/static/src/img/autoinfo_logo.svg"
+                 class="img-fluid"
+                 role="img"
+                 t-att-aria-label="'Logo of %s' % website.name"
+                 t-att-title="website.name"
+                 style="height: 40px; width: auto;"
+                 alt="Auto-Info Logo"/>
+        </xpath>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- 404 page: Auto-Info branded error page                        -->
+    <!-- ============================================================ -->
+    <template id="od19_404" name="Auto-Info 404 Not Found"
+              inherit_id="http_routing.404" priority="30">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="od19-404-wrap">
+                <section class="od19-404-section">
+                    <div class="container text-center py-5">
+                        <div class="od19-404-logo mb-4">
+                            <img src="/od19_website/static/src/img/autoinfo_logo.svg"
+                                 alt="Auto-Info Logo"
+                                 style="height: 80px; width: auto;"/>
+                        </div>
+                        <h1 class="od19-404-code" style="font-size: 6rem; font-weight: 700; color: #9E2424; line-height: 1;">
+                            404
+                        </h1>
+                        <h2 class="od19-404-title h3 mb-3" style="color: #374151;">
+                            หน้าที่คุณค้นหาไม่พบ
+                        </h2>
+                        <p class="od19-404-subtitle mb-4" style="color: #6b7280; font-size: 1.05rem;">
+                            The page you are looking for might have been removed, had its name
+                            changed, or is temporarily unavailable.
+                        </p>
+                        <div class="od19-404-actions d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/" class="btn btn-primary" style="background-color: #9E2424; border-color: #9E2424;">
+                                <i class="fa fa-home me-1"/> กลับหน้าแรก / Go Home
+                            </a>
+                            <a href="/contactus" class="btn btn-outline-secondary">
+                                <i class="fa fa-envelope me-1"/> ติดต่อเรา / Contact Us
+                            </a>
+                        </div>
+                        <hr class="my-5" style="border-top-color: #e5e7eb;"/>
+                        <p class="text-muted" style="font-size: 0.9rem;">
+                            Maybe you were looking for one of these <b>popular pages?</b>
+                        </p>
+                        <ul class="list-inline">
+                            <li class="list-inline-item m-1"><a href="/about-us" class="btn btn-outline-primary btn-sm">About Us</a></li>
+                            <li class="list-inline-item m-1"><a href="/products" class="btn btn-outline-primary btn-sm">Products</a></li>
+                            <li class="list-inline-item m-1"><a href="/industrial-automation" class="btn btn-outline-primary btn-sm">Industrial</a></li>
+                            <li class="list-inline-item m-1"><a href="/building-automation" class="btn btn-outline-primary btn-sm">Building</a></li>
+                            <li class="list-inline-item m-1"><a href="/careers" class="btn btn-outline-primary btn-sm">Careers</a></li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

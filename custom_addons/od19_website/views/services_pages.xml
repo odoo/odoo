@@ -21,6 +21,41 @@
     </template>
 
     <!-- ============================================================ -->
+    <!-- Reusable: related products strip (SP4)                         -->
+    <!-- Expects: rel_products (list), rel_title / rel_sub (optional)   -->
+    <!-- ============================================================ -->
+    <template id="od19_rel_products" name="Related Products Strip">
+        <section class="od19-section bg-light">
+            <div class="container">
+                <div class="od19-section-title">
+                    <h2 t-esc="rel_title or 'Related Products'"/>
+                    <div class="od19-divider"/>
+                    <p class="od19-careers-lead" t-esc="rel_sub or 'Selected products that make this solution possible.'"/>
+                </div>
+                <div class="od19-rel-grid">
+                    <a t-foreach="rel_products" t-as="p" href="/products"
+                       class="od19-rel-card od19-pc-reveal">
+                        <div class="od19-rel-media">
+                            <img t-attf-src="/od19_website/static/src/img/products/#{p['img']}"
+                                 t-att-alt="p['name']" loading="lazy"/>
+                        </div>
+                        <div class="od19-rel-body">
+                            <span class="od19-rel-brand" t-esc="p['brand']"/>
+                            <h4 t-esc="p['name']"/>
+                            <span class="od19-rel-more">View catalog <i class="fa fa-arrow-right"/></span>
+                        </div>
+                    </a>
+                </div>
+                <div class="od19-rel-foot">
+                    <a href="/products" class="btn btn-hero">
+                        Browse the full catalog <i class="fa fa-arrow-right"/>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- ============================================================ -->
     <!-- Industrial Automation                                         -->
     <!-- ============================================================ -->
     <template id="od19_industrial_page" name="Industrial Automation Page">
@@ -31,6 +66,13 @@
                 <section class="od19-page-hero od19-pc-reveal" t-attf-style="background-image:url('#{hero_img}')">
                     <div class="od19-page-hero-overlay"/>
                     <div class="container">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <a href="/#services">Services</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>Industrial Automation</span>
+                        </nav>
                         <span class="od19-eyebrow">Industrial Automation</span>
                         <h1>Industrial Automation that keeps your plant running</h1>
                         <p class="od19-lead">
@@ -165,6 +207,11 @@
                     </div>
                 </section>
 
+                <t t-set="rel_products" t-value="[p for p in website.od19_products() if p['dept'] == 'industrial'][:4]"/>
+                <t t-set="rel_title">Products for Industrial Automation</t>
+                <t t-set="rel_sub">Controllers, drives, HMI and SCADA that support this service.</t>
+                <t t-call="od19_website.od19_rel_products"/>
+
                 <t t-call="od19_website.od19_cta_section"
                    cta_title.f="Let's modernise your control system"
                    cta_text.f="Our engineers will assess your plant and propose a migration path that protects production."/>
@@ -183,6 +230,13 @@
                 <section class="od19-page-hero od19-pc-reveal" t-attf-style="background-image:url('#{hero_img}')">
                     <div class="od19-page-hero-overlay"/>
                     <div class="container">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <a href="/#services">Services</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>Building Automation</span>
+                        </nav>
                         <span class="od19-eyebrow">Building Automation</span>
                         <h1>GMP &amp; CSV compliant building automation</h1>
                         <p class="od19-lead">
@@ -312,6 +366,11 @@
                     </div>
                 </section>
 
+                <t t-set="rel_products" t-value="[p for p in website.od19_products() if p['dept'] == 'building'][:4]"/>
+                <t t-set="rel_title">Products for Building Automation</t>
+                <t t-set="rel_sub">Sensors, controllers and monitoring that keep your facility compliant.</t>
+                <t t-call="od19_website.od19_rel_products"/>
+
                 <t t-call="od19_website.od19_cta_section"
                    cta_title.f="Building a regulated facility?"
                    cta_text.f="Let us prepare the automation and validation documentation your auditors expect."/>
@@ -330,6 +389,13 @@
                 <section class="od19-page-hero od19-pc-reveal" t-attf-style="background-image:url('#{hero_img}')">
                     <div class="od19-page-hero-overlay"/>
                     <div class="container">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <a href="/#services">Services</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>Terminal Automation</span>
+                        </nav>
                         <span class="od19-eyebrow">Terminal Automation</span>
                         <h1>Best-in-class tank gauging and loading systems</h1>
                         <p class="od19-lead">
@@ -458,6 +524,11 @@
                         </div>
                     </div>
                 </section>
+
+                <t t-set="rel_products" t-value="[p for p in website.od19_products() if p['dept'] == 'terminal'][:4]"/>
+                <t t-set="rel_title">Products for Terminal Automation</t>
+                <t t-set="rel_sub">Gauging, loading and safety products at the heart of this solution.</t>
+                <t t-call="od19_website.od19_rel_products"/>
 
                 <t t-call="od19_website.od19_cta_section"
                    cta_title.f="Upgrade your terminal"

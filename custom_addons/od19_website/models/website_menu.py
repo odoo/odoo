@@ -115,3 +115,19 @@ class WebsiteMenu(models.Model):
             builtin_home.write({"parent_id": False})
             builtin_home.unlink()
             _logger.info("Removed the built-in Odoo \"Home\" menu item.")
+
+        # 5) Drop the legacy "Employee Portal" top-level menu.  Up to SP1 it sat
+        #    in the public navigation, but the page is staff-only
+        #    (``auth="user"``), so it now lives in the footer instead.  It is
+        #    targeted through its XML ID: on a fresh install the record is no
+        #    longer declared, while on an upgrade the leftover copy (the menu
+        #    block is ``noupdate="1"``, so removing the record from the data file
+        #    alone does not delete it) is removed here.  Same cascade guard as
+        #    above: detach from the shared main menu before unlinking.
+        legacy_portal = self.env.ref(
+            "od19_website.menu_employee_portal", raise_if_not_found=False
+        )
+        if legacy_portal:
+            legacy_portal.write({"parent_id": False})
+            legacy_portal.unlink()
+            _logger.info("Removed the legacy \"Employee Portal\" top-level menu item.")

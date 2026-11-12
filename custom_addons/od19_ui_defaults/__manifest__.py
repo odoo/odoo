@@ -5,7 +5,8 @@
     "summary": (
         "Project-wide UI defaults: Configuration menu is always the last menu of "
         "its app, related NavBar sections are grouped, moved or renamed together, "
-        "and the standard Sales 'Discounts' setting is enabled"
+        "form fields are more readable, and the standard Sales 'Discounts' "
+        "setting is enabled"
     ),
     "author": "OD19",
     "category": "Tools",
@@ -13,6 +14,12 @@
     "data": [
         "data/ui_defaults.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "od19_ui_defaults/static/src/css/form_readability.css",
+            "od19_ui_defaults/static/src/js/field_empty_marker.js",
+        ],
+    },
     "installable": True,
     "application": False,
     "license": "LGPL-3",

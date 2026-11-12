@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od19_retention_policy_tree" model="ir.ui.view">
+        <field name="name">od19.document.retention.policy.tree</field>
+        <field name="model">od19.document.retention.policy</field>
+        <field name="arch" type="xml">
+            <list string="นโยบายการเก็บรักษา">
+                <field name="name"/>
+                <field name="duration_month"/>
+                <field name="action"/>
+                <field name="basis"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_retention_policy_form" model="ir.ui.view">
+        <field name="name">od19.document.retention.policy.form</field>
+        <field name="model">od19.document.retention.policy</field>
+        <field name="arch" type="xml">
+            <form string="นโยบายการเก็บรักษา">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="duration_month"/>
+                        <field name="action"/>
+                        <field name="basis"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_retention_policy" model="ir.actions.act_window">
+        <field name="name">นโยบายการเก็บรักษา</field>
+        <field name="res_model">od19.document.retention.policy</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

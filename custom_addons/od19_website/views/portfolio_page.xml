@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Project References (Portfolio) Page                           -->
+    <!-- ============================================================ -->
+    <template id="od19_portfolio_page" name="Project References Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="od19-pc oe_structure">
+
+                <!-- SP5: references come from website.od19_projects() so the
+                     sector filter counts and the project grid share one source. -->
+                <t t-set="projects" t-value="website.od19_projects()"/>
+                <t t-set="count_industrial" t-value="len([p for p in projects if p['sector'] == 'industrial'])"/>
+                <t t-set="count_building" t-value="len([p for p in projects if p['sector'] == 'building'])"/>
+                <t t-set="count_terminal" t-value="len([p for p in projects if p['sector'] == 'terminal'])"/>
+
+                <!-- Hero -->
+                <section class="od19-page-hero od19-pc-reveal"
+                         style="background-image:url('/od19_website/static/src/img/hero/industrial.jpg');">
+                    <div class="od19-page-hero-overlay"/>
+                    <div class="container">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>References</span>
+                        </nav>
+                        <span class="od19-eyebrow">Project References</span>
+                        <h1>Automation delivered, in the field</h1>
+                        <p class="od19-lead">
+                            Selected projects across industrial, building and terminal automation —
+                            described by sector and delivered scope.
+                        </p>
+                        <ul class="od19-hero-facts">
+                            <li><i class="fa fa-check-circle"/> 500+ projects delivered</li>
+                            <li><i class="fa fa-check-circle"/> 20+ years in automation</li>
+                            <li><i class="fa fa-check-circle"/> 3 core domains</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Sector filter -->
+                <div class="od19-pc-filter" id="od19-projects">
+                    <div class="container od19-pc-filter-inner">
+                        <button type="button" class="od19-pc-pill active" data-filter="all">
+                            <i class="fa fa-th-large"/> All Projects
+                            <span class="od19-pc-count" t-esc="len(projects)"/>
+                        </button>
+                        <button type="button" class="od19-pc-pill" data-filter="industrial">
+                            <i class="fa fa-industry"/> Industrial
+                            <span class="od19-pc-count" t-esc="count_industrial"/>
+                        </button>
+                        <button type="button" class="od19-pc-pill" data-filter="building">
+                            <i class="fa fa-building"/> Building
+                            <span class="od19-pc-count" t-esc="count_building"/>
+                        </button>
+                        <button type="button" class="od19-pc-pill" data-filter="terminal">
+                            <i class="fa fa-tint"/> Terminal
+                            <span class="od19-pc-count" t-esc="count_terminal"/>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project grid -->
+                <section class="od19-section">
+                    <div class="container">
+                        <div class="od19-section-title">
+                            <h2>Selected Projects</h2>
+                            <div class="od19-divider"/>
+                            <p class="od19-careers-lead">
+                                Filter by domain to see the work relevant to your operation.
+                            </p>
+                        </div>
+                        <div class="od19-proj-grid">
+                            <article t-foreach="projects" t-as="p"
+                                     class="od19-proj-card od19-pc-dept od19-pc-reveal"
+                                     t-att-data-dept="p['sector']">
+                                <div class="od19-proj-media">
+                                    <img t-attf-src="/od19_website/static/src/img/#{p['img']}"
+                                         t-att-alt="p['title']" loading="lazy"/>
+                                    <span class="od19-proj-sector" t-esc="p['sector'].title()"/>
+                                    <span class="od19-proj-year" t-esc="p['year']"/>
+                                </div>
+                                <div class="od19-proj-body">
+                                    <h3 t-esc="p['title']"/>
+                                    <p t-esc="p['scope']"/>
+                                    <p class="od19-proj-detail">
+                                        <i class="fa fa-check-circle"/> <t t-esc="p['detail']"/>
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Stats -->
+                <section class="od19-stats">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3 col-6"><div class="od19-stat-number">500+</div><div class="od19-stat-label">Projects Delivered</div></div>
+                            <div class="col-md-3 col-6"><div class="od19-stat-number">20+</div><div class="od19-stat-label">Years Experience</div></div>
+                            <div class="col-md-3 col-6"><div class="od19-stat-number">3</div><div class="od19-stat-label">Core Domains</div></div>
+                            <div class="col-md-3 col-6"><div class="od19-stat-number">50+</div><div class="od19-stat-label">Life-science Sites</div></div>
+                        </div>
+                    </div>
+                </section>
+
+                <t t-call="od19_website.od19_cta_section"
+                   cta_title.f="Want references in your sector?"
+                   cta_text.f="Tell us about your plant, building or terminal — we will share the closest match."/>
+            </div>
+        </t>
+    </template>
+
+</odoo>

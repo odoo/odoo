@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attachment_form_od19_hub" model="ir.ui.view">
+        <field name="name">ir.attachment.form.od19.hub</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="after">
+                <group string="ศูนย์เอกสาร (OD19)">
+                    <group>
+                        <field name="od19_category_id"/>
+                        <field name="od19_origin"/>
+                        <field name="od19_doc_date"/>
+                        <field name="od19_partner_id"/>
+                    </group>
+                    <group>
+                        <field name="od19_department_id"/>
+                        <field name="od19_confidentiality"/>
+                        <field name="od19_source_ref"/>
+                        <field name="od19_duplicate_count"/>
+                        <field name="od19_retention_policy_id"/>
+                        <field name="od19_retention_until"/>
+                        <field name="od19_legal_hold"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_attachment_tree_od19_hub" model="ir.ui.view">
+        <field name="name">ir.attachment.tree.od19.hub</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="od19_category_id"/>
+                <field name="od19_origin"/>
+                <field name="od19_doc_date"/>
+                <field name="od19_confidentiality"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_attachment_search_od19_hub" model="ir.ui.view">
+        <field name="name">ir.attachment.search.od19.hub</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="od19_category_id"/>
+                <field name="od19_partner_id"/>
+                <field name="od19_doc_date"/>
+            </field>
+            <filter name="binary_filter" position="after">
+                <filter name="od19_external" string="รับจากภายนอก"
+                        domain="[('od19_origin','=','external')]"/>
+                <filter name="od19_internal" string="สร้างจากระบบ"
+                        domain="[('od19_origin','=','internal')]"/>
+                <filter name="od19_index_pending" string="รอสกัดข้อความ"
+                        domain="[('od19_index_state','in',['pending','failed'])]"/>
+            </filter>
+            <group position="inside">
+                <filter name="od19_group_category" string="หมวดเอกสาร"
+                        domain="[]" context="{'group_by':'od19_category_id'}"/>
+                <filter name="od19_group_origin" string="ที่มา"
+                        domain="[]" context="{'group_by':'od19_origin'}"/>
+                <filter name="od19_group_department" string="แผนก"
+                        domain="[]" context="{'group_by':'od19_department_id'}"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="action_od19_document_hub" model="ir.actions.act_window">
+        <field name="name">คลังเอกสารกลาง</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="base.view_attachment_search"/>
+        <field name="context">{'search_default_od19_index_pending': 0}</field>
+    </record>
+</odoo>

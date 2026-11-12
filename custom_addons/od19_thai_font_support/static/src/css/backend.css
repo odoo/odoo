@@ -72,7 +72,8 @@ em, .font-italic, .fst-italic {
  * Icon font restoration
  * The broad font-family override above targets .btn / .form-control
  * which accidentally clobbers icon-only elements (e.g. the "X"
- * remove button on search facets that carries both .btn and .oi).
+ * remove button on search facets that carries both .btn and .oi,
+ * or the graph view buttons that carry both .btn and .fa).
  * These rules must come LAST so they win the cascade over the
  * Sarabun override for any element that also carries an icon class.
  * ============================================================ */
@@ -80,4 +81,10 @@ em, .font-italic, .fst-italic {
 [class*=" oi-"],
 [class^="oi-"] {
     font-family: 'odoo_ui_icons' !important;
+}
+
+.fa,
+[class*=" fa-"],
+[class^="fa-"] {
+    font-family: 'FontAwesome' !important;
 }

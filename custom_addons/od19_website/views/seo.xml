@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- SEO & Analytics (SP7)                                        -->
+    <!--                                                              -->
+    <!-- Odoo 19 already renders <title>, description, keywords and    -->
+    <!-- the og:*/twitter:* block from the website.seo.metadata mixin. -->
+    <!-- We only add what the mixin does not: schema.org structured    -->
+    <!-- data, the og:locale hint and a branded fallback description.  -->
+    <!-- ============================================================ -->
+    <template id="od19_seo_jsonld" name="Auto-Info SEO Structured Data"
+              inherit_id="website.layout" priority="30">
+        <xpath expr="//head" position="inside">
+            <!-- Organization + WebSite schema.org markup on every page. -->
+            <script type="application/ld+json"
+                    t-out="website.od19_organization_jsonld()"/>
+            <!-- Social sharing locale (core emits og:* but not og:locale). -->
+            <meta property="og:locale" t-att-content="lang.replace('-', '_')"/>
+            <!-- Branded description for pages that have none of their own. -->
+            <meta t-if="not meta_description and not editable" name="description"
+                  t-att-content="website.od19_seo_default_description()"/>
+        </xpath>
+    </template>
+
+</odoo>

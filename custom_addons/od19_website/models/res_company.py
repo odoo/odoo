@@ -33,3 +33,23 @@ class ResCompany(models.Model):
     od19_website_facebook_url = fields.Char(string="Facebook URL")
     od19_website_linkedin_url = fields.Char(string="LinkedIn URL")
     od19_website_youtube_url = fields.Char(string="YouTube URL")
+    od19_website_cert_body = fields.Char(
+        string="Certification Body",
+        help="Accredited certification body that issued the ISO 9001 certificate "
+             "(e.g. shown on /quality-certifications).",
+    )
+    od19_website_cert_no = fields.Char(
+        string="Certificate Number",
+        help="ISO 9001 certificate number shown on the quality page.",
+    )
+    od19_website_cert_valid_until = fields.Date(
+        string="Certificate Valid Until",
+        help="Expiry date of the ISO 9001 certificate.",
+    )
+    od19_website_ga_key = fields.Char(
+        string="Google Analytics ID",
+        help="Google Analytics 4 measurement ID (G-XXXXXXXXXX). When set, it is "
+             "propagated to the website and the analytics script is loaded with "
+             "Odoo's cookie-consent gating (analytics denied until the visitor "
+             "accepts optional cookies).",
+    )

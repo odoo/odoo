@@ -264,6 +264,12 @@ a:hover { color: #7A1B1B; }
     font-size: 0.85rem;
     text-align: center;
 }
+/* Discreet staff-only link in the footer bar (kept out of the public navbar). */
+.od19-footer-sep { opacity: 0.4; margin: 0 8px; }
+.od19-footer-legal { color: #c2c9d3; text-decoration: none; }
+.od19-footer-legal:hover { color: #fff; text-decoration: underline; }
+.od19-footer-staff { color: #c2c9d3; text-decoration: none; }
+.od19-footer-staff:hover { color: #fff; text-decoration: underline; }
 
 /* ---------- Employee Portal ---------- */
 .od19-portal-hero {
@@ -596,6 +602,26 @@ header .o_navlink_background .oi-search {
     color: #fff;
     box-shadow: 0 8px 20px rgba(158, 36, 36, 0.28);
 }
+/* SP4: live per-department counts inside the filter pills */
+.od19-pc-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    margin-left: 2px;
+    border-radius: 20px;
+    background: rgba(158, 36, 36, 0.1);
+    color: var(--od19-primary);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.od19-pc-pill.active .od19-pc-count {
+    background: rgba(255, 255, 255, 0.24);
+    color: #fff;
+}
 
 /* ---------- Department sections ---------- */
 .od19-pc-dept {
@@ -647,6 +673,20 @@ header .o_navlink_background .oi-search {
     margin: 0;
     max-width: 640px;
 }
+/* SP4: cross-link each department to its service page */
+.od19-pc-dept-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--od19-primary);
+    text-decoration: none;
+}
+.od19-pc-dept-link i { transition: transform 0.2s ease; }
+.od19-pc-dept-link:hover { color: var(--od19-secondary); }
+.od19-pc-dept-link:hover i { transform: translateX(4px); }
 
 /* ---------- Grid + cards ---------- */
 .od19-pc-grid {
@@ -1978,6 +2018,72 @@ header .o_navlink_background .oi-search {
 }
 .od19-partner-chip:hover { transform: translateY(-4px); border-color: var(--od19-secondary); }
 
+/* ---------- Related products strip (SP4) ---------- */
+.od19-rel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+}
+.od19-rel-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #efe6e6;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+.od19-rel-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(42, 26, 26, 0.12);
+    border-color: var(--od19-secondary);
+    color: inherit;
+}
+.od19-rel-media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #f6f1f1;
+}
+.od19-rel-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+.od19-rel-card:hover .od19-rel-media img { transform: scale(1.06); }
+.od19-rel-body { padding: 16px 18px 20px; }
+.od19-rel-brand {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--od19-secondary);
+    margin-bottom: 6px;
+}
+.od19-rel-body h4 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--od19-dark);
+    margin: 0 0 12px;
+}
+.od19-rel-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--od19-primary);
+}
+.od19-rel-card:hover .od19-rel-more { color: var(--od19-secondary); }
+.od19-rel-foot { text-align: center; margin-top: 36px; }
+@media (max-width: 575.98px) {
+    .od19-rel-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+
 /* Contact page enhancements */
 .od19-map-frame { position: relative; }
 .od19-map-frame iframe {
@@ -2398,6 +2504,55 @@ a.od19-room-tile:focus {
     }
 }
 
+/* SP3: homepage hero polish — drifting light sheen + scroll cue (offline, no libs) */
+.od19-hero-sheen {
+    position: absolute;
+    inset: -40% -10%;
+    background: linear-gradient(115deg, transparent 38%,
+                rgba(255, 255, 255, 0.1) 50%, transparent 62%);
+    transform: translateX(-18%);
+    animation: od19-sheen 9s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+@keyframes od19-sheen {
+    0%, 100% { transform: translateX(-18%); opacity: 0.55; }
+    50% { transform: translateX(18%); opacity: 0.9; }
+}
+.od19-hero-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    z-index: 2;
+}
+.od19-hero-scroll i {
+    font-size: 1.5rem;
+    animation: od19-bob 1.8s ease-in-out infinite;
+}
+.od19-hero-scroll:hover { color: #fff; }
+@keyframes od19-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+}
+@media (max-width: 767.98px) {
+    .od19-hero-scroll { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .od19-hero-sheen,
+    .od19-hero-scroll i { animation: none; }
+}
+
 /* Cards: soft glass edge + layered shadow for depth */
 .od19-cap-card,
 .od19-service-card,
@@ -2488,5 +2643,329 @@ a.od19-room-tile:focus {
     max-width: 1320px;
     margin: 0 auto;
     padding: 0 15px;
+}
+
+/* ============================================================
+   SP5 — Trust & References
+   (Quality & Certifications page + Project References page)
+   ============================================================ */
+
+/* --- Certification cards --- */
+.od19-cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+.od19-cert-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid rgba(158, 36, 36, 0.1);
+    border-radius: 16px;
+    padding: 26px 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 10px 30px rgba(42, 26, 26, 0.08);
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+.od19-cert-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(158, 36, 36, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 20px 44px rgba(42, 26, 26, 0.14);
+}
+.od19-cert-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.od19-cert-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(158, 36, 36, 0.08);
+    color: var(--od19-primary);
+    font-size: 1.35rem;
+}
+.od19-cert-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.od19-cert-certified { background: rgba(22, 137, 74, 0.12); color: #16894a; }
+.od19-cert-in_progress { background: rgba(243, 146, 0, 0.14); color: #b06a00; }
+.od19-cert-compliant { background: rgba(158, 36, 36, 0.1); color: var(--od19-primary); }
+
+.od19-cert-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--od19-dark);
+    margin: 0 0 2px;
+}
+.od19-cert-sub {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--od19-gray);
+    margin-bottom: 10px;
+}
+.od19-cert-card p {
+    font-size: 0.92rem;
+    color: var(--od19-gray);
+    margin: 0 0 14px;
+}
+.od19-cert-points {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 12px 0 0;
+    border-top: 1px dashed #efe6e6;
+}
+.od19-cert-points li {
+    font-size: 0.86rem;
+    color: var(--od19-dark);
+    margin-bottom: 6px;
+}
+.od19-cert-points li i { color: var(--od19-secondary); margin-right: 6px; }
+
+/* --- Accreditation strip --- */
+.od19-accred-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+.od19-accred-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid rgba(158, 36, 36, 0.12);
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--od19-dark);
+    box-shadow: 0 6px 16px rgba(42, 26, 26, 0.05);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.od19-accred-chip i { color: var(--od19-secondary); }
+.od19-accred-chip:hover { transform: translateY(-3px); border-color: var(--od19-secondary); }
+
+/* --- Certificate detail panel --- */
+.od19-cert-panel {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid rgba(158, 36, 36, 0.1);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 12px 32px rgba(42, 26, 26, 0.09);
+}
+.od19-cert-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+}
+.od19-cert-fact span {
+    display: block;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--od19-gray);
+    margin-bottom: 4px;
+}
+.od19-cert-fact strong {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--od19-dark);
+}
+.od19-cert-no {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    letter-spacing: 0.02em;
+}
+.od19-cert-request { text-align: center; }
+.od19-cert-request p { color: var(--od19-gray); margin-bottom: 16px; }
+
+/* --- Project references grid --- */
+.od19-proj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 26px;
+}
+.od19-proj-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid rgba(158, 36, 36, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 10px 30px rgba(42, 26, 26, 0.08);
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+.od19-proj-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(158, 36, 36, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 22px 46px rgba(42, 26, 26, 0.15);
+}
+.od19-proj-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #f5eeee;
+}
+.od19-proj-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.od19-proj-card:hover .od19-proj-media img { transform: scale(1.05); }
+.od19-proj-sector,
+.od19-proj-year {
+    position: absolute;
+    top: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+}
+.od19-proj-sector { left: 12px; background: rgba(158, 36, 36, 0.92); }
+.od19-proj-year { right: 12px; background: rgba(20, 12, 12, 0.68); }
+.od19-proj-body { padding: 20px 22px 22px; }
+.od19-proj-body h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--od19-dark);
+    margin: 0 0 8px;
+}
+.od19-proj-body p { font-size: 0.9rem; color: var(--od19-gray); margin: 0 0 10px; }
+.od19-proj-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--od19-primary);
+    margin: 0;
+}
+.od19-proj-detail i { margin-top: 2px; }
+
+/* ---------- SP6: Request-for-Quotation form ---------- */
+.od19-rfq-form {
+    background: #fff;
+    border: 1px solid #efe6e6;
+    border-radius: 20px;
+    padding: 30px 30px 24px;
+    box-shadow: 0 14px 36px rgba(42, 26, 26, 0.06);
+}
+.od19-rfq-form label.s_website_form_label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #4a4141;
+    margin-bottom: 6px;
+}
+.od19-rfq-form .s_website_form_mark { color: var(--od19-primary); }
+.od19-rfq-form .form-control,
+.od19-rfq-form .form-select {
+    border: 1px solid #e3dada;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background-color: #fff;
+}
+.od19-rfq-form .form-control:focus,
+.od19-rfq-form .form-select:focus {
+    border-color: var(--od19-primary);
+    box-shadow: 0 0 0 0.18rem rgba(158, 36, 36, 0.12);
+    background-color: #fff;
+}
+.od19-rfq-form textarea.form-control { min-height: 150px; resize: vertical; }
+.od19-rfq-consent {
+    background: #fbf8f8;
+    border: 1px solid #ece2e2;
+    border-radius: 14px;
+    padding: 14px 18px;
+}
+.od19-rfq-consent .form-check-label { font-size: 0.9rem; color: #4a4141; }
+.od19-rfq-consent .form-check-input:checked {
+    background-color: var(--od19-primary);
+    border-color: var(--od19-primary);
+}
+.od19-rfq-consent .form-check-input:focus {
+    border-color: var(--od19-primary);
+    box-shadow: 0 0 0 0.18rem rgba(158, 36, 36, 0.12);
+}
+.od19-rfq-submit-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.od19-rfq-submit {
+    border-radius: 40px;
+    padding: 12px 30px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.od19-rfq-form .s_website_form_result { font-weight: 600; }
+.od19-thanks-company { color: var(--od19-primary); font-weight: 700; }
+.od19-thanks-back { border-radius: 40px; padding: 10px 24px; font-weight: 700; }
+
+/* ---------- SP8: Legal pages (Privacy Policy / Terms / Cookie) ---------- */
+.od19-legal {
+    max-width: 860px;
+    margin: 0 auto;
+    color: var(--od19-dark);
+    line-height: 1.75;
+}
+.od19-legal h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--od19-primary);
+    margin: 2rem 0 0.75rem;
+}
+.od19-legal h2:first-child { margin-top: 0; }
+.od19-legal p { margin: 0 0 1rem; }
+.od19-legal a { color: var(--od19-primary); text-decoration: underline; }
+.od19-legal-meta {
+    font-size: 0.9rem;
+    color: var(--od19-gray);
+    background: #fbf8f8;
+    border-left: 4px solid var(--od19-primary);
+    padding: 10px 16px;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+.od19-legal-list { margin: 0 0 1rem; padding-left: 1.25rem; }
+.od19-legal-list li { margin-bottom: 0.4rem; }
+.od19-legal-table th { color: var(--od19-primary); }
+
+/* --- Responsive / motion --- */
+@media (max-width: 575.98px) {
+    .od19-cert-grid,
+    .od19-proj-grid { grid-template-columns: 1fr; }
+    .od19-cert-panel { padding: 22px 18px; }
+    .od19-cert-head { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .od19-cert-card,
+    .od19-proj-card,
+    .od19-accred-chip,
+    .od19-proj-media img { transition: none; }
+    .od19-cert-card:hover,
+    .od19-proj-card:hover,
+    .od19-accred-chip:hover { transform: none; }
+    .od19-proj-card:hover .od19-proj-media img { transform: none; }
 }
 

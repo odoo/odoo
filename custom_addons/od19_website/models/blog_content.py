@@ -1,6 +1,7 @@
 import logging
 
 from odoo import api, models
+from odoo.exceptions import UserError
 from odoo.tools.json import scriptsafe as json_safe
 
 _logger = logging.getLogger(__name__)
@@ -324,15 +325,22 @@ class BlogBlog(models.Model):
         # database seeded before the translations were fixed carries the Thai
         # title under ``en_US``, and it still has to be recognised as a seed so
         # that this run can repair it.
+        # Languages that are not installed in the current database raise
+        # ``UserError: Invalid language code`` when used in ``with_context``;
+        # skip them defensively instead of pre-computing the active set, which
+        # can disagree with the environment's own language cache.
         existing = {}
         for post in blog.blog_post_ids:
             for lang in ("en_US", "th_TH"):
-                name = post.with_context(lang=lang).name
+                try:
+                    name = post.with_context(lang=lang).name
+                except UserError:
+                    continue
                 if name:
                     existing[name] = post
         seeded = 0
         for xml_name, post_date, title, subtitle, content in _POSTS:
-            post = existing.get(title["en_US"]) or existing.get(title["th_TH"])
+            post = existing.get(title["en_US"]) or existing.get(title.get("th_TH"))
             if not post:
                 if not empty_blog:
                     continue

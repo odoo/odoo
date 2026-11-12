@@ -1,0 +1,66 @@
+/* ============================================================
+ * OD19 UI Defaults — Form readability (ระบบ-wide)
+ * เป้าหมาย: แยกชั้น Label / Input / Value ให้อ่านง่าย
+ * ปรับจากสไตล์ native ของ Odoo 19 โดยไม่แตะ core และไม่เปลี่ยนโครงสร้าง
+ * ใช้ inset box-shadow แทน border เพื่อไม่ให้ layout ขยับ
+ * Brand accent: Maroon #9E2424
+ * ============================================================ */
+
+/* 1) ป้ายชื่อ — ข้อความนิ่ง หนักแน่นกว่าเดิมเล็กน้อย */
+.o_form_view .o_form_label {
+    color: #374151;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+}
+
+/* ป้ายของฟิลด์ที่ยังว่าง ให้จางลงเพื่อไม่แย่งความสนใจจากค่าจริง */
+.o_form_view .o_form_label.o_form_label_empty {
+    color: #9aa1ab;
+    font-weight: 500;
+}
+
+/* 2) ช่องกรอก — เห็นขอบเขตแม้ยังไม่กรอก */
+.o_form_view .o_field_widget input.o_input,
+.o_form_view .o_field_widget textarea.o_input,
+.o_form_view .o_field_widget select.o_input {
+    background-color: #f8f9fb;
+    border-radius: 4px;
+    box-shadow: inset 0 -1px 0 #dcdfe4;
+    transition: background-color .15s ease, box-shadow .15s ease;
+}
+
+/* 2b) เฉพาะช่องที่ยังไม่ได้เติม (edit mode) — ให้ดูเด่นขึ้นเล็กน้อย
+   ใช้ o_od19_field_empty ที่เติมจาก JS เฉพาะตอนแก้ไข จึงไม่กระทบช่องที่มีข้อมูล
+   วางไว้ก่อนกฎ hover/focus เพื่อให้ตอบสนองตอนโฟกัสยังทำงานตามปกติ */
+.o_form_view .o_field_widget.o_od19_field_empty input.o_input,
+.o_form_view .o_field_widget.o_od19_field_empty textarea.o_input,
+.o_form_view .o_field_widget.o_od19_field_empty select.o_input {
+    background-color: #eef1f6;
+    box-shadow: inset 0 0 0 1px #cdd3dd;
+}
+
+.o_form_view .o_field_widget input.o_input:hover,
+.o_form_view .o_field_widget textarea.o_input:hover,
+.o_form_view .o_field_widget select.o_input:hover {
+    background-color: #f2f4f7;
+    box-shadow: inset 0 -1px 0 #c4c9d1;
+}
+
+.o_form_view .o_field_widget input.o_input:focus,
+.o_form_view .o_field_widget textarea.o_input:focus,
+.o_form_view .o_field_widget select.o_input:focus {
+    background-color: #ffffff;
+    box-shadow: inset 0 -2px 0 #9E2424, 0 0 0 3px rgba(158, 36, 36, .10);
+}
+
+/* กัน input ใน dropdown (many2one/date) ไม่ให้ติดพื้นเทาไปด้วย */
+.o_form_view .o-dropdown--menu input.o_input,
+.o_form_view .dropdown-menu input.o_input {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* 3) จังหวะโครงสร้าง — ลดความโล่งของฟอร์ม (ปรับค่าได้) */
+.o_form_view .o_inner_group {
+    row-gap: .35rem;
+}

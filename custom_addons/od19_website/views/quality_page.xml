@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Quality & Certifications Page                                 -->
+    <!-- ============================================================ -->
+    <template id="od19_quality_page" name="Quality &amp; Certifications Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <t t-set="certs" t-value="website.od19_certifications()"/>
+                <t t-set="company" t-value="website.company_id"/>
+
+                <!-- Hero -->
+                <section class="od19-page-hero od19-pc-reveal"
+                         style="background-image:url('/od19_website/static/src/img/misc/hero-circuit.jpg');">
+                    <div class="od19-page-hero-overlay"/>
+                    <div class="container">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>Quality &amp; Certifications</span>
+                        </nav>
+                        <span class="od19-eyebrow">Quality &amp; Compliance</span>
+                        <h1>Quality you can audit</h1>
+                        <p class="od19-lead">
+                            Certified quality management, regulated-environment compliance and
+                            documented engineering — the standards behind every Auto-Info delivery.
+                        </p>
+                        <div class="od19-hero-actions">
+                            <a href="/portfolio" class="btn btn-hero">
+                                See Our References <i class="fa fa-arrow-right"/>
+                            </a>
+                            <a href="/contactus" class="btn btn-ghost-light">Request Certificate</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Certifications -->
+                <section class="od19-section">
+                    <div class="container">
+                        <div class="od19-section-title">
+                            <h2>Certifications &amp; Compliance</h2>
+                            <div class="od19-divider"/>
+                            <p class="od19-careers-lead">
+                                The standards that govern how we design, deliver and document automation.
+                            </p>
+                        </div>
+                        <div class="od19-cert-grid">
+                            <article t-foreach="certs" t-as="c" class="od19-cert-card od19-pc-reveal">
+                                <div class="od19-cert-head">
+                                    <div class="od19-cert-icon"><i t-attf-class="fa #{c['icon']}"/></div>
+                                    <span t-attf-class="od19-cert-status od19-cert-#{c['status']}"
+                                          t-esc="c['status_label']"/>
+                                </div>
+                                <h3 t-esc="c['title']"/>
+                                <span class="od19-cert-sub" t-esc="c['subtitle']"/>
+                                <p t-esc="c['desc']"/>
+                                <ul class="od19-cert-points">
+                                    <li t-foreach="c['points']" t-as="point">
+                                        <i class="fa fa-check"/> <t t-esc="point"/>
+                                    </li>
+                                </ul>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Standards & frameworks -->
+                <section class="od19-section bg-light">
+                    <div class="container">
+                        <div class="od19-section-title">
+                            <h2>Standards &amp; Frameworks</h2>
+                            <div class="od19-divider"/>
+                            <p class="od19-careers-lead">
+                                Reference standards our engineering work is aligned to.
+                            </p>
+                        </div>
+                        <div class="od19-accred-strip">
+                            <span t-foreach="website.od19_accreditations()" t-as="accr" class="od19-accred-chip">
+                                <i class="fa fa-shield"/> <t t-esc="accr"/>
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quality assurance process -->
+                <section class="od19-section">
+                    <div class="container">
+                        <div class="od19-section-title">
+                            <h2>How We Assure Quality</h2>
+                            <div class="od19-divider"/>
+                        </div>
+                        <div class="od19-steps">
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">1</div>
+                                <h4>Document Control</h4>
+                                <p>Every design, drawing and procedure is issued under a controlled revision.</p>
+                            </div>
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">2</div>
+                                <h4>Design Review</h4>
+                                <p>Peer review and customer sign-off before any system is built or shipped.</p>
+                            </div>
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">3</div>
+                                <h4>Test &amp; Validation</h4>
+                                <p>Factory and site acceptance tests with recorded, auditable results.</p>
+                            </div>
+                            <div class="od19-step od19-pc-reveal">
+                                <div class="od19-step-num">4</div>
+                                <h4>Continuous Improvement</h4>
+                                <p>Corrective actions and lessons learned feed back into our procedures.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Certificate details -->
+                <section class="od19-section bg-light">
+                    <div class="container">
+                        <div class="od19-section-title">
+                            <h2>Certificate Details</h2>
+                            <div class="od19-divider"/>
+                            <p class="od19-careers-lead">
+                                The current certificate can be verified with our quality team.
+                            </p>
+                        </div>
+                        <div class="od19-cert-panel od19-pc-reveal">
+                            <div t-if="company.od19_website_cert_body or company.od19_website_cert_no or company.od19_website_cert_valid_until"
+                                 class="od19-cert-facts">
+                                <div class="od19-cert-fact" t-if="company.od19_website_cert_body">
+                                    <span>Certification Body</span>
+                                    <strong class="od19-cert-body" t-esc="company.od19_website_cert_body"/>
+                                </div>
+                                <div class="od19-cert-fact" t-if="company.od19_website_cert_no">
+                                    <span>Certificate Number</span>
+                                    <strong class="od19-cert-no" t-esc="company.od19_website_cert_no"/>
+                                </div>
+                                <div class="od19-cert-fact" t-if="company.od19_website_cert_valid_until">
+                                    <span>Valid Until</span>
+                                    <strong t-esc="company.od19_website_cert_valid_until.strftime('%d %B %Y')"/>
+                                </div>
+                            </div>
+                            <div t-else="" class="od19-cert-request">
+                                <p>
+                                    Certificate details are available on request — our quality team will
+                                    provide the current ISO 9001 certificate and its scope of certification.
+                                </p>
+                                <a href="/contactus" class="btn btn-hero">
+                                    Request Certificate <i class="fa fa-arrow-right"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <t t-call="od19_website.od19_cta_section"
+                   cta_title.f="Need to see our quality system?"
+                   cta_text.f="We can walk your team through our procedures, records and audit trail."/>
+            </div>
+        </t>
+    </template>
+
+</odoo>

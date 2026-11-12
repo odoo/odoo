@@ -7,8 +7,9 @@
     (ACL/owner mismatch บน Windows) ทำให้ session บางครั้งหายไป -> เกิด "Session expired"
     แบบสุ่มในชุดเทสต์ HttpCase
 
-    สคริปต์นี้จึงบังคับให้การรันเทสต์ใช้ --data-dir แยกจากระบบจริง (ค่าเริ่มต้น data_test)
-    เพื่อให้ session store สะอาดและแยกขาดจาก dev/production จึงรันซ้ำได้ผลเดิมเสมอ
+    ค่าเริ่มต้นของ --data-dir จึงดึงจาก odoo.conf (data_dir) ให้ตรงกับฐานข้อมูลจริง
+    เพื่อไม่ให้ asset bundle ที่เขียนลง DB ชี้ไปไฟล์คนละ filestore แล้วเกิด 404 / จอขาว
+    (ถ้าต้องการ data-dir แยก ให้ส่ง -DataDir เอง)
 
     ค่าอื่น ๆ (db_name ฯลฯ) อ่านจาก odoo.conf โดยอัตโนมัติ
     ข้อกำหนด: ต้องไม่มี Odoo server ตัวอื่นจับพอร์ตเทสต์อยู่
@@ -57,7 +58,11 @@ function Read-OdooConf {
 $conf = Read-OdooConf
 
 if (-not $Database) { $Database = if ($conf['db_name']) { $conf['db_name'] } else { 'odoo19_pdev' } }
-if (-not $DataDir) { $DataDir = Join-Path $Root 'data_test' }
+if (-not $DataDir) {
+    # ให้ --data-dir ตรงกับ data_dir ที่ odoo.conf ใช้กับ DB จริง
+    # ป้องกัน asset bundle เขียนลง DB แต่ไฟล์ไปอยู่คนละ filestore -> 404 -> จอขาว
+    $DataDir = if ($conf['data_dir']) { $conf['data_dir'] } else { Join-Path $Root 'data' }
+}
 if (-not $LogFile) { $LogFile = Join-Path $Root 'data_test_run.log' }
 
 $testTags = ($Module | ForEach-Object { '/' + $_ }) -join ','

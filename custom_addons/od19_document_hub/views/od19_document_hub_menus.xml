@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_od19_document_root"
+              name="ศูนย์เอกสาร"
+              web_icon="od19_document_hub,static/description/icon.png"
+              groups="group_document_user"
+              sequence="60"/>
+
+    <menuitem id="menu_od19_document_hub"
+              name="คลังเอกสารกลาง"
+              parent="menu_od19_document_root"
+              action="action_od19_document_hub"
+              sequence="10"/>
+
+    <menuitem id="menu_od19_document_category"
+              name="หมวดหมู่เอกสาร"
+              parent="menu_od19_document_root"
+              action="action_od19_document_category"
+              groups="group_document_manager"
+              sequence="20"/>
+
+    <menuitem id="menu_od19_retention_policy"
+              name="นโยบายการเก็บรักษา"
+              parent="menu_od19_document_root"
+              action="action_od19_retention_policy"
+              groups="group_document_manager"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od19_document_category_tree" model="ir.ui.view">
+        <field name="name">od19.document.category.tree</field>
+        <field name="model">od19.document.category</field>
+        <field name="arch" type="xml">
+            <list string="หมวดหมู่เอกสาร">
+                <field name="complete_name"/>
+                <field name="code"/>
+                <field name="default_retention_policy_id"/>
+                <field name="auto_classify"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_document_category_form" model="ir.ui.view">
+        <field name="name">od19.document.category.form</field>
+        <field name="model">od19.document.category</field>
+        <field name="arch" type="xml">
+            <form string="หมวดหมู่เอกสาร">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="default_retention_policy_id"/>
+                            <field name="auto_classify"/>
+                            <field name="allowed_models"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_document_category" model="ir.actions.act_window">
+        <field name="name">หมวดหมู่เอกสาร</field>
+        <field name="res_model">od19.document.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

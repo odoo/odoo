@@ -35,39 +35,24 @@
         <t t-call="website.layout">
             <div id="wrap" class="od19-pc oe_structure">
 
-                <t t-set="products" t-value="[
-                    {'dept': 'industrial', 'brand': 'Schneider Electric', 'name': 'Modicon M580', 'desc': 'High-performance ePAC controller engineered for demanding process and machine automation.', 'specs': ['Up to 4 racks', 'Ethernet/IP + Modbus', 'Hot-standby ready'], 'img': 'industrial-m580.jpg'},
-                    {'dept': 'industrial', 'brand': 'Schneider Electric', 'name': 'Modicon M340', 'desc': 'Modular PLC platform delivering reliable control for mid-range industrial applications.', 'specs': ['Modular I/O', 'Fast CPU cycle', 'Compact footprint'], 'img': 'industrial-m340.jpg'},
-                    {'dept': 'industrial', 'brand': 'Schneider Electric', 'name': 'Magelis HMI', 'desc': 'Vivid touch-panel interfaces that put plant data and alarms right at the operator fingertips.', 'specs': ['7 to 15 inch', 'Multi-touch', 'IP66 front'], 'img': 'industrial-magelis-hmi.jpg'},
-                    {'dept': 'industrial', 'brand': 'Schneider Electric', 'name': 'Altivar Process Drive', 'desc': 'Heavy-duty variable speed drives that cut energy use across pumps fans and conveyors.', 'specs': ['0.75 to 630 kW', 'Built-in safety', 'Energy dashboard'], 'img': 'industrial-altivar-drive.jpg'},
-                    {'dept': 'industrial', 'brand': 'Schneider Electric', 'name': 'EcoStruxure Plant', 'desc': 'IIoT-ready automation architecture connecting the shop floor to the top floor in real time.', 'specs': ['Edge control', 'Cloud analytics', 'Open protocol'], 'img': 'industrial-ecostruxure.jpg'},
-                    {'dept': 'industrial', 'brand': 'Auto-Info Engineering', 'name': 'SCADA Centralized System', 'desc': 'Centralized supervisory control and data acquisition for complete plant visibility.', 'specs': ['Real-time trends', 'Alarm management', 'Historian logging'], 'img': 'industrial-scada.jpg'},
-                    {'dept': 'industrial', 'brand': 'Emerson', 'name': 'Rosemount Pressure Transmitter', 'desc': 'Precision pressure measurement built to survive the toughest process environments.', 'specs': ['High accuracy', 'HART / 4-20 mA', 'Hazardous area'], 'img': 'industrial-rosemount-pressure.jpg'},
-                    {'dept': 'industrial', 'brand': 'Emerson', 'name': 'Micro Motion Coriolis Meter', 'desc': 'Direct mass flow measurement delivering accuracy for critical batching and custody transfer.', 'specs': ['Mass + density', 'No moving parts', 'Custody transfer'], 'img': 'industrial-coriolis-meter.jpg'},
-                    {'dept': 'industrial', 'brand': 'Auto-Info Engineering', 'name': 'Custom Control Panel', 'desc': 'Engineered control cabinets assembled wired and tested for your exact process.', 'specs': ['IP-rated enclosures', 'Wired and tested', 'UL / IEC build'], 'img': 'industrial-control-panel.jpg'},
-
-                    {'dept': 'building', 'brand': 'Siemens', 'name': 'Symaro Sensors', 'desc': 'Temperature humidity and CO2 sensors that keep HVAC performance precise and efficient.', 'specs': ['High accuracy', 'Room and duct', 'Low drift'], 'img': 'building-symaro-sensors.jpg'},
-                    {'dept': 'building', 'brand': 'Siemens', 'name': 'Desigo CC', 'desc': 'Integrated building management platform unifying HVAC lighting and energy in one view.', 'specs': ['Multi-discipline', 'Web access', 'Open BACnet'], 'img': 'building-desigo-cc.jpg'},
-                    {'dept': 'building', 'brand': 'Auto-Info Engineering', 'name': 'HVAC Control System', 'desc': 'Smart HVAC automation that balances comfort air quality and energy cost.', 'specs': ['VAV and AHU', 'Demand control', 'Energy saving'], 'img': 'building-hvac-control.jpg'},
-                    {'dept': 'building', 'brand': 'Auto-Info Engineering', 'name': 'Environmental Monitoring', 'desc': 'Continuous GMP-grade monitoring of critical clean room parameters with full audit trail.', 'specs': ['21 CFR Part 11', 'Real-time alerts', 'Audit trail'], 'img': 'building-env-monitoring.jpg'},
-                    {'dept': 'building', 'brand': 'Auto-Info Engineering', 'name': 'Fume Hood Controller', 'desc': 'Adaptive airflow control that protects lab users while reducing exhaust energy.', 'specs': ['VAV airflow', 'Sash sensing', 'Lab safety'], 'img': 'building-fume-hood.jpg'},
-                    {'dept': 'building', 'brand': 'Auto-Info Engineering', 'name': 'Energy Management System', 'desc': 'Track and optimize building energy consumption with live dashboards and reporting.', 'specs': ['Sub-metering', 'KPI dashboard', 'ISO 50001'], 'img': 'building-energy-management.jpg'},
-                    {'dept': 'building', 'brand': 'Auto-Info Engineering', 'name': 'Building Management System', 'desc': 'Centralize control of every building subsystem from a single intuitive interface.', 'specs': ['Single pane', 'Scheduling', 'Fault detection'], 'img': 'building-bms.jpg'},
-                    {'dept': 'building', 'brand': 'Auto-Info Engineering', 'name': 'Clean Room Control', 'desc': 'GMP-compliant clean room automation maintaining pressure temperature and particle limits.', 'specs': ['Pressure cascade', 'GMP ready', 'Validated'], 'img': 'building-cleanroom-control.jpg'},
-
-                    {'dept': 'terminal', 'brand': 'Emerson Rosemount', 'name': 'Servo Gauge 854 ATG', 'desc': 'Automatic tank gauging delivering precise level and inventory for terminal storage.', 'specs': ['Custody accuracy', 'Servo level', 'Live inventory'], 'img': 'terminal-servo-gauge.jpg'},
-                    {'dept': 'terminal', 'brand': 'OPW', 'name': 'Fusion 4 MSC-L', 'desc': 'Advanced load controller for metering batching and safe truck and rail load-out.', 'specs': ['Multi-stream', 'Blend control', 'Safe loading'], 'img': 'terminal-fusion4-msc.jpg'},
-                    {'dept': 'terminal', 'brand': 'Auto-Info Engineering', 'name': 'Tank Inventory System', 'desc': 'Real-time tank inventory with reconciliation and loss detection across the terminal.', 'specs': ['Live inventory', 'Reconciliation', 'Loss detection'], 'img': 'terminal-tank-inventory.jpg'},
-                    {'dept': 'terminal', 'brand': 'Auto-Info Engineering', 'name': 'Terminal Management System', 'desc': 'Integrated TMS orchestrating loading access control and documentation end to end.', 'specs': ['Order to load', 'Access control', 'Reporting'], 'img': 'terminal-tms.jpg'},
-                    {'dept': 'terminal', 'brand': 'Auto-Info Engineering', 'name': 'Overfill Prevention System', 'desc': 'Independent safety layer that prevents overfill and protects people and assets.', 'specs': ['SIL rated', 'Independent', 'Self-test'], 'img': 'terminal-overfill-prevention.jpg'},
-                    {'dept': 'terminal', 'brand': 'Auto-Info Engineering', 'name': 'Loading Arm and Metering Skid', 'desc': 'Automated loading arms and metering skids for fast accurate tanker load-out.', 'specs': ['Top and bottom', 'Metering skid', 'Vapor recovery'], 'img': 'terminal-loading-arm-skid.jpg'},
-                    {'dept': 'terminal', 'brand': 'Emerson Rosemount', 'name': 'Tank Side Monitor', 'desc': 'Field interface hub gathering tank sensor data onto a single reliable network.', 'specs': ['Field hub', 'Multi-sensor', 'Tankbus'], 'img': 'terminal-tank-side-monitor.jpg'},
-                    {'dept': 'terminal', 'brand': 'Emerson Rosemount', 'name': 'Radar Level Gauge', 'desc': 'Non-contact radar level measurement for accurate inventory with zero maintenance.', 'specs': ['Non-contact', 'High accuracy', 'Retrofit ready'], 'img': 'terminal-radar-gauge.jpg'}
-                ]"/>
+                <!-- SP4: catalog is served from website.od19_products() so the
+                     grid, the filter counts and the service-page cross-links
+                     all read from one source of truth. -->
+                <t t-set="products" t-value="website.od19_products()"/>
+                <t t-set="count_all" t-value="len(products)"/>
+                <t t-set="count_industrial" t-value="len([p for p in products if p['dept'] == 'industrial'])"/>
+                <t t-set="count_building" t-value="len([p for p in products if p['dept'] == 'building'])"/>
+                <t t-set="count_terminal" t-value="len([p for p in products if p['dept'] == 'terminal'])"/>
+                <t t-set="brand_count" t-value="len(set(p['brand'] for p in products))"/>
 
                 <!-- Hero -->
                 <section class="od19-pc-hero">
                     <div class="container od19-pc-hero-inner">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>Products</span>
+                        </nav>
                         <span class="od19-pc-eyebrow">Product Catalog</span>
                         <h1>Technology that makes work <span class="od19-pc-hl">effortless</span></h1>
                         <p class="od19-pc-sub">
@@ -75,9 +60,9 @@
                             Building and Terminal domains — selected and supported by Auto-Info.
                         </p>
                         <div class="od19-pc-hero-stats">
-                            <div class="od19-pc-stat"><strong>25+</strong><span>Products</span></div>
+                            <div class="od19-pc-stat"><strong t-esc="'%d+' % count_all"/><span>Products</span></div>
                             <div class="od19-pc-stat"><strong>3</strong><span>Domains</span></div>
-                            <div class="od19-pc-stat"><strong>10+</strong><span>Global Brands</span></div>
+                            <div class="od19-pc-stat"><strong t-esc="brand_count"/><span>Product Brands</span></div>
                         </div>
                         <a href="#od19-pc-catalog" class="od19-pc-hero-btn">
                             Browse Catalog <i class="fa fa-arrow-down"/>
@@ -90,15 +75,19 @@
                     <div class="container od19-pc-filter-inner">
                         <button type="button" class="od19-pc-pill active" data-filter="all">
                             <i class="fa fa-th-large"/> All Products
+                            <span class="od19-pc-count" t-esc="count_all"/>
                         </button>
                         <button type="button" class="od19-pc-pill" data-filter="industrial">
                             <i class="fa fa-industry"/> Industrial
+                            <span class="od19-pc-count" t-esc="count_industrial"/>
                         </button>
                         <button type="button" class="od19-pc-pill" data-filter="building">
                             <i class="fa fa-building"/> Building
+                            <span class="od19-pc-count" t-esc="count_building"/>
                         </button>
                         <button type="button" class="od19-pc-pill" data-filter="terminal">
                             <i class="fa fa-tint"/> Terminal
+                            <span class="od19-pc-count" t-esc="count_terminal"/>
                         </button>
                     </div>
                 </div>
@@ -111,6 +100,9 @@
                             <div>
                                 <h2>Industrial Automation</h2>
                                 <p>Controllers, drives, sensors and SCADA that keep production lines running without interruption.</p>
+                                <a href="/industrial-automation" class="od19-pc-dept-link">
+                                    Explore Industrial Automation services <i class="fa fa-arrow-right"/>
+                                </a>
                             </div>
                         </div>
                         <div class="od19-pc-grid">
@@ -133,6 +125,9 @@
                             <div>
                                 <h2>Building Automation</h2>
                                 <p>GMP-ready building systems that protect comfort, compliance and energy performance.</p>
+                                <a href="/building-automation" class="od19-pc-dept-link">
+                                    Explore Building Automation services <i class="fa fa-arrow-right"/>
+                                </a>
                             </div>
                         </div>
                         <div class="od19-pc-grid">
@@ -155,6 +150,9 @@
                             <div>
                                 <h2>Terminal Automation</h2>
                                 <p>Best-in-class tank gauging and loading technology for safe, efficient terminals.</p>
+                                <a href="/terminal-automation" class="od19-pc-dept-link">
+                                    Explore Terminal Automation services <i class="fa fa-arrow-right"/>
+                                </a>
                             </div>
                         </div>
                         <div class="od19-pc-grid">
