@@ -42,3 +42,36 @@ class TestPortalHeroHtml(HttpCase):
             or "สวัสดีตอนเย็น" in html
         )
         self.assertIn('od19-avatar', html)
+
+
+@tagged("post_install", "-at_install")
+class TestPortalMyDayHtml(HttpCase):
+    def setUp(self):
+        super().setUp()
+        self.tester = self.env["res.users"].create(
+            {
+                "name": "My Day Tester",
+                "login": "my_day_tester",
+                "password": "my_day_tester",
+                "group_ids": [Command.link(self.env.ref("base.group_user").id)],
+            }
+        )
+
+    def test_my_day_strip_present(self):
+        self.authenticate("my_day_tester", "my_day_tester")
+        html = self.url_open("/employee-portal").text
+        self.assertIn('id="od19-my-day"', html)
+        self.assertIn('data-od19-me-summary="/employee-portal/me-summary"', html)
+        self.assertIn('data-od19-field="attendance"', html)
+        self.assertIn('data-od19-field="approvals"', html)
+
+    def test_my_schedule_and_anchor_present(self):
+        self.authenticate("my_day_tester", "my_day_tester")
+        html = self.url_open("/employee-portal").text
+        self.assertIn('id="od19-my-schedule"', html)
+        self.assertIn('id="od19-recognition-anchor"', html)
+
+    def test_my_day_js_in_frontend_bundle(self):
+        assets = self.env["ir.qweb"]._get_asset_content("web.assets_frontend")[0]
+        urls = [asset["url"] for asset in assets]
+        self.assertIn("/od19_website/static/src/js/od19_my_day.js", urls)
