@@ -1,4 +1,4 @@
-import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
+import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_plugin";
 import {
     actionPanel,
     SIZES,
