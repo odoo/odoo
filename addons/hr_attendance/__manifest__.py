@@ -79,6 +79,7 @@ actions(Check in/Check out) performed by them.
             "hr_attendance/static/src/components/new_employee_dialog/**/*",
             "hr_attendance/static/src/components/pin_code/**/*",
 
+            'hr_attendance/static/src/scss/kiosk/kiosk_root.css',
             'hr_attendance/static/src/scss/kiosk/hr_attendance.css',
             "web/static/src/views/fields/formatters.js",
 

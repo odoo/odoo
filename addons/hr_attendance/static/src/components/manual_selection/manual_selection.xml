@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="hr_attendance.public_kiosk_manual_selection">
         <div class="position-absolute top-0 start-0 w-100 h-100">
-            <div class="d-flex gap-2 p-2 bg-white" style="top: 0px;">
+            <div class="d-flex align-items-center gap-2 p-2 bg-white" style="top: 0px;">
                     <button
                         t-on-click="() => this.props.onClickBack()"
                         class="o_hr_attendance_back_button btn btn-secondary rounded-pill d-flex flex-row align-items-center"
@@ -10,8 +10,8 @@
                         <i class="oi me-1" data-icon="chevron_backward" role="img" aria-label="Go back" title="Go back"/>
                         Back
                     </button>
-                <div class="o_control_panel_main d-flex justify-content-between align-items-lg-center flex-grow-1">
-                    <div class="o_cp_searchview d-flex input-group h-100">
+                <div class="o_control_panel_main d-flex justify-content-between align-items-center flex-grow-1">
+                    <div class="o_cp_searchview d-flex input-group">
                         <div class="d-flex flex-row align-items-center rounded-pill border flex-grow-1">
                             <i class="o_searchview_icon oi d-print-none m-2" data-icon="search" aria-label="Search..." title="Search..."/>
                             <div class="o_searchview_input_container position-relative w-100">
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="p-2">
+                    <div class="ps-2">
                         <Pager
                             t-if="this.state.employeesData.count > this.state.limit"
                             total="this.state.employeesData.count"
