@@ -90,6 +90,12 @@ class AccountMove(models.Model):
                 move.company_id.account_storno and len(move.reversed_entry_id.pos_order_ids)
             )
 
+    def _update_qty_available(self, reverse=False):
+        # Prevent a second decrease when the closing entry is by product: its orders already updated the quantity
+        if self.env.context.get('pos_closing_entry'):
+            return
+        return super(AccountMove, self.filtered(lambda move: not move.pos_session_ids))._update_qty_available(reverse=reverse)
+
     def action_view_source_pos_orders(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
