@@ -101,8 +101,15 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_vat(self, vat, query_country_id, timeout=15):
-        query_country_id = query_country_id or self.env.company.country_id.id
-        query_country_code = self.env['res.country'].browse(query_country_id).code
+        # Without country, or searching worldwide, the VAT number may come from any country
+        query_country = self.env['res.country'].browse(query_country_id).exists() or self.env.company.country_id
+        if (
+            query_country
+            and self.env['ir.module.module']._get('base_vat').state == 'installed'
+            and not self._run_vat_checks(query_country, vat, validation='setnull')[0]
+        ):
+            return []
+        query_country_code = query_country.code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
@@ -163,13 +170,23 @@ class ResPartner(models.Model):
 
     @api.model
     def _validate_partner_autocomplete_response(self, autocomplete_response):
-        if (
-            self.env['ir.module.module']._get('base_vat').state == 'installed'
-            and (vat_number := autocomplete_response.get('vat'))
-            and (enriched_company := self.env.context.get('enriched_company_data'))
-            ):
-            country = self.env['res.country'].browse(enriched_company['country_id']['id']).exists()
+        """ Check the VAT number of the enriched company against its country.
+
+        The suggestion the company was enriched from is given by the context key `enriched_company_data`.
+
+        :param dict autocomplete_response: the enrichment data of the company
+        """
+        company_data = self.env.context.get('enriched_company_data')
+        if not company_data or self.env['ir.module.module']._get('base_vat').state != 'installed':
+            return autocomplete_response
+        country = self.env['res.country'].browse((company_data.get('country_id') or {}).get('id')).exists()
+        if vat_number := autocomplete_response.get('vat'):
             autocomplete_response['vat'] = self._run_vat_checks(country, vat_number, validation='setnull')[0]
+        elif (query := company_data.get('query')) and country and self._get_vat_validation_method(country.code):
+            # The company may have been found from its VAT number, which the enrichment data does not hold.
+            vat_number, vat_country_code = self._run_vat_checks(country, query, validation='setnull')
+            if vat_number and vat_country_code == country.code:
+                autocomplete_response['vat'] = vat_number
         return autocomplete_response
 
     @api.model

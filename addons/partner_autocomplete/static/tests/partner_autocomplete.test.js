@@ -9,7 +9,6 @@ import {
     models,
     mountView,
     onRpc,
-    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 
 // Autocomplete has a debounce time of 250 ms on input
@@ -113,7 +112,8 @@ const clearbitSuggestions = [
     },
 ];
 
-onRpc("res.partner", "autocomplete_by_name", () => iapSuggestions);
+// No company is named like a VAT number
+onRpc("res.partner", "autocomplete_by_name", ({ args }) => (/\d{4}/.test(args[0]) ? [] : iapSuggestions));
 onRpc("res.partner", "autocomplete_by_vat", () => iapSuggestions);
 onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
     name: iapSuggestions.filter((sugg) => sugg.duns === args[0])[0].name,
@@ -138,8 +138,6 @@ onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
 }));
 onRpc("/v1/companies/suggest", () => clearbitSuggestions);
 onRpc("enrich_company_message_post", () => true);
-
-preloadBundle("web.jsvat_lib");
 
 test.tags("desktop");
 test("Partner autocomplete : Company type = Individual", async () => {
