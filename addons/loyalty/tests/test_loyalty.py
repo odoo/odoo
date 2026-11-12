@@ -395,3 +395,19 @@ class TestLoyalty(TransactionCase):
         self.assertRecordValues(
             card.history_ids.sorted("id"), [{"issued": 100, "used": 0}, {"issued": 0, "used": 60}]
         )
+
+    def test_update_balance_wizard_description_is_optional(self):
+        """The balance of a card can be updated without a description, the history line then
+        gets a default one.
+        """
+        card = self.env["loyalty.card"].create({"program_id": self.program.id})
+        wizard_form = Form(
+            self.env["loyalty.card.update.balance"].with_context(default_card_id=card.id)
+        )
+        wizard_form.new_balance = 500
+        wizard_form.save().action_update_card_point()
+
+        self.assertEqual(card.points, 500)
+        self.assertRecordValues(
+            card.history_ids, [{"issued": 500, "used": 0, "description": "Gift for customer"}]
+        )
