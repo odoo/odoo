@@ -267,9 +267,10 @@ class EventEvent(models.Model):
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
                         WHERE event_id IN %s AND state IN ('open', 'done') AND active = true
+                          AND main_registration_id IS NULL
                         GROUP BY event_id, state
                     """
-            self.env['event.registration'].flush_model(['event_id', 'state', 'active'])
+            self.env['event.registration'].flush_model(['event_id', 'state', 'active', 'main_registration_id'])
             self.env.cr.execute(query, (tuple(self.ids),))
             res = self.env.cr.fetchall()
             for event_id, state, num in res:
@@ -720,7 +721,8 @@ class EventEvent(models.Model):
                 (slot.id, ticket.id): count
                 for (slot, ticket, count) in self.env['event.registration'].sudo()._read_group(
                     domain=[('event_slot_id', '!=', False), ('event_id', 'in', self.ids),
-                            ('state', 'in', ['open', 'done']), ('active', '=', True)],
+                            ('state', 'in', ['open', 'done']), ('active', '=', True),
+                            ('main_registration_id', '=', False)],
                     groupby=['event_slot_id', 'event_ticket_id'],
                     aggregates=['__count']
                 )

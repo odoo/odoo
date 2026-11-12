@@ -951,6 +951,35 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         self.assertEqual(multi_entry_registration.state, 'done',
             "When there is no remaining entries, the state of the registration should be 'done'")
 
+    @users('user_eventmanager')
+    def test_registration_multi_entry_seats(self):
+        """ Re-entering with a multi entry ticket is not a new attendee: it
+        must neither consume extra seats nor be blocked on a full event. """
+        event = self.env['event.event'].create({
+            'name': 'Multi Entry Full Event',
+            'date_begin': FieldsDatetime.to_string(datetime.today() - timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'seats_limited': True,
+            'seats_max': 2,
+        })
+        ticket = self.env['event.event.ticket'].create({
+            'name': 'Day pass (3 entries)',
+            'event_id': event.id,
+            'entry_limit': 3,
+        })
+        registrations = self.env['event.registration'].create([{
+            'name': f'Attendee {idx}',
+            'event_id': event.id,
+            'event_ticket_id': ticket.id,
+        } for idx in range(2)])
+        self.assertEqual(event.seats_available, 0)
+
+        # the first attendee enters the venue (scan of its badge)
+        registrations[0].action_attend_event()
+        event.invalidate_recordset(['seats_available', 'seats_taken'])
+        self.assertEqual(event.seats_taken, 2, "An attendance should not take an extra seat")
+        self.assertEqual(event.seats_available, 0)
+
 
 @tagged('event_registration', 'phone_number')
 @tagged('at_install', '-post_install')  # LEGACY at_install
