@@ -8,17 +8,17 @@ from odoo.addons.payment.controllers import portal as payment_portal
 
 
 class PaymentPortal(payment_portal.PaymentPortal):
-    @staticmethod
-    def _validate_transaction_kwargs(kwargs, additional_allowed_keys=()):
+    def _validate_transaction_kwargs(self, kwargs, additional_allowed_keys=()):
         """Override of `payment` to allow passing the card used to pay with a loyalty provider."""
-        payment_portal.PaymentPortal._validate_transaction_kwargs(
+        super()._validate_transaction_kwargs(
             kwargs, additional_allowed_keys=(*additional_allowed_keys, "loyalty_card_id")
         )
 
-    def _create_transaction(self, *args, loyalty_card_id=None, custom_create_values=None, **kwargs):
+    def _create_transaction(
+        self, provider_id, *args, loyalty_card_id=None, custom_create_values=None, **kwargs
+    ):
         """Override of `payment` to link the transaction to the card used to pay."""
-        provider_id = kwargs.get("provider_id", args[0] if args else None)
-        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id)
         if provider_sudo.code in LOYALTY_PAYMENT_CODES:
             try:
                 loyalty_card_id = int(loyalty_card_id)
@@ -31,7 +31,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 "loyalty_card_id": loyalty_card_id,
             }
         return super()._create_transaction(
-            *args, custom_create_values=custom_create_values, **kwargs
+            provider_id, *args, custom_create_values=custom_create_values, **kwargs
         )
 
     @route("/payment/loyalty/check_card", type="jsonrpc", auth="public")
@@ -45,8 +45,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :return: The card's id, code, and the amount it can pay; or an error message.
         :rtype: dict
         """
-        provider_sudo = self.env["payment.provider"].sudo().browse(int(provider_id)).exists()
-        if provider_sudo.code != "gift_card":
+        try:
+            provider_id = int(provider_id)
+            currency_id = int(currency_id) if currency_id else None
+            amount = float(amount or 0)
+        except (TypeError, ValueError):
+            return {"error": self.env._("This payment method is not available.")}
+
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
+        if not provider_sudo or provider_sudo.code != "gift_card":
             return {"error": self.env._("This payment method is not available.")}
 
         code = (code or "").strip()
@@ -62,14 +69,18 @@ class PaymentPortal(payment_portal.PaymentPortal):
             return {"error": self.env._("This gift card code is invalid or expired.")}
 
         currency = (
-            self.env["res.currency"].browse(int(currency_id)).exists()
+            self.env["res.currency"].browse(currency_id).exists()
             if currency_id
             else provider_sudo.company_id.currency_id
         )
+        if not currency:
+            return {"error": self.env._("This currency is not available.")}
+        if amount <= 0:
+            return {"error": self.env._("The amount to pay must be positive.")}
         balance = card_sudo._get_payment_balance(currency, provider_sudo.company_id)
         if currency.is_zero(balance):
             return {"error": self.env._("This gift card has already been used.")}
-        usable_amount = min(balance, currency.round(float(amount or 0)))
+        usable_amount = min(balance, currency.round(amount))
         return {
             "card_id": card_sudo.id,
             "code": card_sudo.code,

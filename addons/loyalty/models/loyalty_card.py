@@ -285,12 +285,13 @@ class LoyaltyCard(models.Model):
     # === PAYMENT METHODS === #
 
     @api.model
-    def _get_payment_cards(self, program_type, partner=None, company=None):
+    def _get_payment_cards(self, program_type, partner=None, company=None, currency=None):
         """Return the cards of the given type that can currently be used to pay.
 
         :param str program_type: The type of program of the cards: `gift_card` or `ewallet`.
         :param res.partner partner: The partner owning the cards; required for eWallets.
         :param res.company company: The company in which the payment is made.
+        :param res.currency currency: The currency in which to compare card balances.
         :return: The usable cards, the ones with the highest balance first.
         :rtype: loyalty.card
         """
@@ -301,10 +302,10 @@ class LoyaltyCard(models.Model):
             domain &= Domain("partner_id", "child_of", partner.commercial_partner_id.id)
         elif program_type == "ewallet":
             return self.browse()
+        currency = currency or (company and company.currency_id)
         cards = self.sudo().search(domain)
-        return cards.filtered(lambda c: c._is_usable_for_payment()).sorted(
-            lambda c: c.points, reverse=True
-        )
+        cards = cards.filtered(lambda c: c._is_usable_for_payment())
+        return cards.sorted(lambda card: card._get_payment_balance(currency, company), reverse=True)
 
     def _is_usable_for_payment(self):
         """Return whether the card can be used to pay, regardless of its balance.
@@ -318,8 +319,7 @@ class LoyaltyCard(models.Model):
             and self.program_id.active
             and self.program_type in LOYALTY_PAYMENT_CODES
             and (
-                not self.expiration_date
-                or self.expiration_date >= fields.Date.context_today(self)
+                not self.expiration_date or self.expiration_date >= fields.Date.context_today(self)
             )
         )
 

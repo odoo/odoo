@@ -13,7 +13,6 @@ class TestLoyaltyPayment(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.env.company
-        cls.company._setup_loyalty_accounting()
         cls.gift_card_provider = cls._get_loyalty_provider("gift_card")
         cls.ewallet_provider = cls._get_loyalty_provider("ewallet")
 

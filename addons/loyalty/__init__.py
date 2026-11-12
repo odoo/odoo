@@ -10,7 +10,6 @@ def post_init_hook(env):
     for code in LOYALTY_PAYMENT_CODES:
         setup_provider(env, code)
     env["payment.provider"]._recompute_loyalty_publication()
-    env["res.company"].search([("chart_template", "!=", False)])._setup_loyalty_accounting()
 
 
 def uninstall_hook(env):

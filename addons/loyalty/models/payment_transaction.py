@@ -37,6 +37,13 @@ class PaymentTransaction(models.Model):
                         provider=tx.provider_id.name,
                     )
                 )
+            if (
+                tx.loyalty_card_id.company_id
+                and tx.loyalty_card_id.company_id not in tx.company_id.parent_ids
+            ):
+                raise ValidationError(
+                    self.env._("You cannot pay with a card from another company.")
+                )
             card_partner = tx.loyalty_card_id.partner_id.commercial_partner_id
             if (
                 tx.provider_code == "ewallet"

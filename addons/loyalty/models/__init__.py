@@ -2,7 +2,6 @@
 
 from . import (
     account_payment,
-    chart_template,
     loyalty_card,
     loyalty_history,
     loyalty_mail,
@@ -14,6 +13,5 @@ from . import (
     product_pricelist,
     product_product,
     product_template,
-    res_company,
     res_partner,
 )

@@ -15,9 +15,6 @@
             <page name="payment_methods" position="attributes">
                 <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
             </page>
-            <page name="restrictions" position="attributes">
-                <attribute name="invisible">code in ('gift_card', 'ewallet')</attribute>
-            </page>
             <page name="messages" position="attributes">
                 <attribute name="invisible" separator="or" add="code in ('gift_card', 'ewallet')"/>
             </page>

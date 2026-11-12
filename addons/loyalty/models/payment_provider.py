@@ -12,26 +12,6 @@ class PaymentProvider(models.Model):
         selection_add=[("gift_card", "Gift Card"), ("ewallet", "eWallet")],
         ondelete={"gift_card": "set default", "ewallet": "set default"},
     )
-    # Loyalty providers are only published when an active program of the matching type exists.
-    is_published = fields.Boolean(compute="_compute_is_published", store=True, readonly=False)
-
-    # === COMPUTE METHODS === #
-
-    @api.depends("code", "company_id")
-    def _compute_is_published(self):
-        """Publish loyalty providers only if an active program of the same type exists.
-
-        The publication of other providers is left untouched. The recomputation is also triggered by
-        `loyalty.program` when programs are created, (un)archived, or deleted.
-        """
-        published_codes_per_company = self._get_loyalty_published_codes_per_company()
-        for provider in self:
-            if provider.code in LOYALTY_PAYMENT_CODES:
-                provider.is_published = provider.code in published_codes_per_company.get(
-                    provider.company_id.id, set()
-                ) | published_codes_per_company.get(False, set())
-            else:
-                provider.is_published = provider.is_published
 
     def _get_loyalty_published_codes_per_company(self):
         """Return the loyalty program types that have an active program, per company.
@@ -60,7 +40,18 @@ class PaymentProvider(models.Model):
     def _recompute_loyalty_publication(self):
         """Trigger the recomputation of the publication state of the loyalty providers."""
         providers = self.sudo().search([("code", "in", LOYALTY_PAYMENT_CODES)])
-        self.env.add_to_compute(self._fields["is_published"], providers)
+        published_codes_per_company = providers._get_loyalty_published_codes_per_company()
+        for provider in providers:
+            provider.is_published = provider.code in (
+                published_codes_per_company.get(provider.company_id.id, set())
+                | published_codes_per_company.get(False, set())
+            )
+
+    def write(self, vals):
+        res = super().write(vals)
+        if {"code", "company_id"} & vals.keys():
+            self._recompute_loyalty_publication()
+        return res
 
     # === CRUD METHODS === #
 
@@ -71,8 +62,6 @@ class PaymentProvider(models.Model):
             if provider.code in LOYALTY_PAYMENT_CODES:
                 vals["is_live"] = True
         return vals_list
-
-    # === BUSINESS METHODS === #
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
@@ -145,7 +134,7 @@ class PaymentProvider(models.Model):
         currency = currency or self.company_id.currency_id
         values = []
         for card in self.env["loyalty.card"]._get_payment_cards(
-            "ewallet", partner, self.company_id
+            "ewallet", partner, self.company_id, currency
         ):
             balance = card._get_payment_balance(currency, self.company_id)
             usable_amount = min(balance, currency.round(amount)) if amount else balance

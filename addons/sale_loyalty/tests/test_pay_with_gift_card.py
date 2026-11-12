@@ -133,7 +133,6 @@ class TestSaleOrderLoyaltyPayment(AccountPaymentCommon, SaleCommon):
             lambda line: line.payment_provider_id == cls.provider
         ).payment_account_id = cls.inbound_payment_method_line.payment_account_id
 
-        cls.env.company._setup_loyalty_accounting()
         cls.gift_card_provider = cls.env["payment.provider"].search(
             [("code", "=", "gift_card"), ("company_id", "=", cls.env.company.id)], limit=1
         )

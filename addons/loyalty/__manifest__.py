@@ -4,14 +4,18 @@
     "name": "Coupons & Loyalty",
     "summary": "Use discounts, gift cards, eWallets and loyalty programs in your sales channels",
     "category": "Sales",
-    "depends": ["product", "portal", "account", "account_payment"],
+    "depends": ["account_payment", "product", "portal"],
     "data": [
         "report/loyalty_report_templates.xml",
         "report/loyalty_report.xml",
+
         "data/mail_template_data.xml",
         "data/loyalty_data.xml",
+
         "wizard/loyalty_card_update_balance_views.xml",
         "wizard/loyalty_generate_wizard_views.xml",
+
+        "views/account_payment_views.xml",
         "views/loyalty_card_views.xml",
         "views/loyalty_history_views.xml",
         "views/loyalty_mail_views.xml",
@@ -20,7 +24,6 @@
         "views/loyalty_rule_views.xml",
         "views/portal_templates.xml",
         "views/res_partner_views.xml",
-        "views/account_payment_views.xml",
         "views/payment_form_templates.xml",
         "views/payment_provider_views.xml",
         "data/payment_provider_data.xml",

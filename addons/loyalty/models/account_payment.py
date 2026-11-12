@@ -21,20 +21,31 @@ class AccountPayment(models.Model):
         domain="""[
             ('program_type', '=', payment_method_code),
             ('points', '>', 0),
-            ('company_id', 'in', [False, company_id]),
             '|',
                 ('program_type', '!=', 'ewallet'),
                 ('partner_id', 'child_of', commercial_partner_id),
+            '|',
+                ('company_id', '=', False),
+                ('company_id', 'parent_of', company_id),
         ]""",
+        check_company=True,
         help="The gift card or eWallet whose balance is used to make the payment.",
     )
+    is_loyalty_payment = fields.Boolean(compute="_compute_is_loyalty_payment")
     loyalty_card_balance = fields.Monetary(
         string="Card Balance", compute="_compute_loyalty_card_balance", currency_field="currency_id"
     )
-    is_loyalty_payment = fields.Boolean(compute="_compute_is_loyalty_payment")
     show_loyalty_card_id = fields.Boolean(compute="_compute_is_loyalty_payment")
 
     # === COMPUTE METHODS === #
+
+    @api.depends("loyalty_card_id", "currency_id", "date")
+    def _compute_loyalty_card_balance(self):
+        for payment in self:
+            card = payment.loyalty_card_id
+            payment.loyalty_card_balance = card and card._get_payment_balance(
+                payment.currency_id, payment.company_id, payment.date
+            )
 
     @api.depends("payment_method_line_id", "partner_id")
     def _compute_is_loyalty_payment(self):
@@ -60,14 +71,6 @@ class AccountPayment(models.Model):
             else:
                 payment.loyalty_card_id = card
 
-    @api.depends("loyalty_card_id", "currency_id", "date")
-    def _compute_loyalty_card_balance(self):
-        for payment in self:
-            card = payment.loyalty_card_id
-            payment.loyalty_card_balance = card and card._get_payment_balance(
-                payment.currency_id, payment.company_id, payment.date
-            )
-
     @api.depends("payment_method_line_id")
     def _compute_use_electronic_payment_method(self):
         """Override of `account_payment` to hide the token and transaction fields of loyalty
@@ -83,7 +86,7 @@ class AccountPayment(models.Model):
         if self.payment_method_code != "ewallet" or not self.partner_id:
             return self.env["loyalty.card"]
         return self.env["loyalty.card"]._get_payment_cards(
-            "ewallet", self.partner_id, self.company_id
+            "ewallet", self.partner_id, self.company_id, self.currency_id
         )
 
     # === ONCHANGE METHODS === #

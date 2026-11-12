@@ -5,6 +5,5 @@
 # can be used with the provider.
 LOYALTY_PAYMENT_CODES = ("gift_card", "ewallet")
 
-# The xmlid (without the `account.<company_id>_` prefix) of the liability account holding the value
-# of the sold gift cards and eWallet top-ups until they are spent.
+# Company-specific xmlid suffix for the liability account holding card balances.
 LOYALTY_LIABILITY_ACCOUNT_XMLID = "loyalty_liability_account"

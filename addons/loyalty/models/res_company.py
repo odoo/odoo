@@ -2,7 +2,7 @@
 
 from odoo import models
 
-from odoo.addons.loyalty.const import LOYALTY_LIABILITY_ACCOUNT_XMLID, LOYALTY_PAYMENT_CODES
+from odoo.addons.loyalty.const import LOYALTY_LIABILITY_ACCOUNT_XMLID
 
 
 class ResCompany(models.Model):
@@ -48,33 +48,3 @@ class ResCompany(models.Model):
                 "noupdate": True,
             }
         ])
-
-    def _setup_loyalty_accounting(self):
-        """Configure the accounting of gift cards and eWallets.
-
-        - The gift card and eWallet top-up products are sold on the liability account, as their
-          value is owed to the customer until it is spent.
-        - The payment method lines of the loyalty providers use that same liability account so that
-          paying with a card consumes the liability instead of receiving money.
-        """
-        loyalty_products = self.env["product.product"].browse([
-            product.id
-            for xmlid in ("loyalty.gift_card_product_50", "loyalty.ewallet_product_50")
-            if (product := self.env.ref(xmlid, raise_if_not_found=False))
-        ])
-        for company in self:
-            account = company._get_loyalty_liability_account()
-            if not account:
-                continue
-            loyalty_products.product_tmpl_id.with_company(company).sudo().write({
-                "property_account_income_id": account.id
-            })
-            providers = (
-                self
-                .env["payment.provider"]
-                .sudo()
-                .search([("code", "in", LOYALTY_PAYMENT_CODES), ("company_id", "=", company.id)])
-            )
-            self.env["account.payment.method.line"].sudo().search([
-                ("payment_provider_id", "in", providers.ids)
-            ]).payment_account_id = account

@@ -695,7 +695,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 90)
 
     def test_points_awarded_ewallet(self):
-        """eWallets are payment methods: they don't reduce the amount on which points are given."""
+        """EWallets are payment methods: they don't reduce the amount on which points are given."""
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()["loyalty"])
         loyalty_card = self.env["loyalty.card"].create({
@@ -1178,11 +1178,6 @@ class TestLoyalty(TestSaleCouponCommon):
         self.ewallet._adjust_points(
             {self.ewallet: 10 - self.ewallet.points}, description="test setup"
         )
-        ewallet_top_up = Command.create({
-            "product_id": self.env.ref("loyalty.ewallet_product_50").id,
-            "product_uom_qty": 1,
-        })
-
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
             "order_line": [

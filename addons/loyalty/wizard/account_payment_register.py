@@ -18,7 +18,9 @@ class AccountPaymentRegister(models.TransientModel):
         domain="""[
             ('program_type', '=', payment_method_code),
             ('points', '>', 0),
-            ('company_id', 'in', [False, company_id]),
+            '|',
+                ('company_id', '=', False),
+                ('company_id', 'parent_of', company_id),
             '|',
                 ('program_type', '!=', 'ewallet'),
                 ('partner_id', 'child_of', partner_id),
@@ -84,7 +86,7 @@ class AccountPaymentRegister(models.TransientModel):
         if self.payment_method_code != "ewallet" or not self.partner_id:
             return self.env["loyalty.card"]
         return self.env["loyalty.card"]._get_payment_cards(
-            "ewallet", self.partner_id, self.company_id
+            "ewallet", self.partner_id, self.company_id, self.currency_id
         )
 
     # === BUSINESS METHODS === #
