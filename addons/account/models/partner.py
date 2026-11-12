@@ -921,7 +921,7 @@ class ResPartner(models.Model):
             return
 
         # Sometimes, the vat is specified with some whitespaces or dots.
-        normalized_vat = vat.replace(' ', '').replace('.', '')
+        normalized_vat = vat.replace(' ', '').replace('.', '').replace(':', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         criteria = []
