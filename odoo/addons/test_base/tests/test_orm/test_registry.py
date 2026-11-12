@@ -4,8 +4,9 @@ import weakref
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from odoo import fields, models
 from odoo.modules.registry import Registry
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 
 
 @tagged('post_install')
@@ -88,6 +89,172 @@ class TestRegistry(TransactionCase):
 
     def test_setup_models_field_leak_partial(self):
         self.test_setup_models_field_leak(('res.users', 'res.company'))
+
+    def test_init_descendants_false(self):
+        """Adding a method to base must make it available on res.partner without
+        initializing res.partner's database structures. Initializing base itself
+        must still create the module's model XML ID on install and keep it on upgrade.
+        """
+        registry = self.registry
+        base_model = registry['base']
+        partner_model = registry['res.partner']
+        module = SimpleNamespace(name='test_base')
+        self.env.transaction.will_change_registry()
+        # SQL rollback does not restore model definitions; restore their bases too.
+        with (
+            patch.dict(models.MetaModel._module_to_models__, {module.name: []}),
+            patch.object(base_model, '_base_classes__', base_model._base_classes__),
+        ):
+            class BaseExtension(models.AbstractModel):
+                _inherit = 'base'
+                _init_descendants = False
+
+                def _test_inherited_method(self):
+                    return 'Method inherited from base'
+
+            # Load the extension as the module loader would, before the registry is ready.
+            with patch.object(registry, 'ready', False):
+                loaded_model_names = registry.load(module)
+            self.assertFalse(partner_model._setup_done__)
+
+            # Python setup must still give res.partner the method added to base.
+            registry._setup_models__(self.cr, [])
+            self.assertEqual(
+                self.env['res.partner']._test_inherited_method(),
+                'Method inherited from base',
+            )
+
+            # Only base needs database initialization, not its descendant res.partner.
+            models_to_init = registry._get_models_to_init(module, loaded_model_names)
+            self.assertEqual(list(models_to_init), ['base'])
+            with (
+                patch.object(partner_model, '_auto_init') as partner_auto_init,
+                patch.object(partner_model, 'init') as partner_init,
+            ):
+                for operation, install in [('install', True), ('upgrade', False)]:
+                    with self.subTest(operation=operation):
+                        registry.init_models(self.cr, models_to_init, {'module': module.name}, install=install)
+                        partner_auto_init.assert_not_called()
+                        partner_init.assert_not_called()
+
+                        # The module must get its own XML ID pointing to the existing base model.
+                        self.assertEqual(self.env.ref('test_base.model_base'), self.env.ref('base.model_base'))
+
+
+class TestInitDescendants(BaseCase):
+    """Test which models are selected, without initializing any database tables."""
+
+    def setUp(self):
+        super().setUp()
+        self.module = SimpleNamespace(name='test_init_descendants')
+        # Collect temporary extensions here instead of adding them to a real module.
+        self.startPatcher(patch.dict(models.MetaModel._module_to_models__, {self.module.name: []}))
+
+        # base -> parent -> child use Python inheritance (_inherit).
+        # child -> delegated uses delegation (_inherits).
+        # Extending base therefore affects all four models.
+        self.model_hierarchy = {
+            'base': SimpleNamespace(_name='base', _inherit_children=['parent'], _inherits_children=[]),
+            'parent': SimpleNamespace(_name='parent', _inherit_children=['child'], _inherits_children=[]),
+            'child': SimpleNamespace(_name='child', _inherit_children=[], _inherits_children=['delegated']),
+            'delegated': SimpleNamespace(_name='delegated', _inherit_children=[], _inherits_children=[]),
+        }
+
+    def _add_extension(self, model_name='base', **attributes):
+        """Create a model extension; the metaclass registers it in our test module."""
+        return type('Extension', (models.AbstractModel,), {
+            '_module': self.module.name,
+            '_name': model_name,
+            '_inherit': model_name,
+            **attributes,
+        })
+
+    def _select_models_to_initialize(self):
+        """Run the real selection and inheritance traversal on our small hierarchy."""
+        registry = SimpleNamespace(
+            descendants=lambda *args: Registry.descendants(self.model_hierarchy, *args),
+        )
+        definitions = models.MetaModel._module_to_models__[self.module.name]
+        directly_modified_models = [definition._name for definition in definitions]
+        return Registry._get_models_to_init(registry, self.module, directly_modified_models)
+
+    def test_descendants_are_initialized_unless_the_extension_opts_out(self):
+        """A methods-only extension needs an explicit opt-out, for every _inherit form."""
+        for scenario, attributes, expected_models in [
+            ('default', {}, ['base', 'parent', 'child', 'delegated']),
+            ('opt out', {'_init_descendants': False}, ['base']),
+        ]:
+            for inheritance in ('base', ['base'], ('base',)):
+                with (
+                    self.subTest(scenario=scenario, inheritance=inheritance),
+                    patch.dict(models.MetaModel._module_to_models__, {self.module.name: []}),
+                ):
+                    self._add_extension(_inherit=inheritance, _query=lambda self: 'SELECT 1', **attributes)
+                    self.assertEqual(list(self._select_models_to_initialize()), expected_models)
+
+    def test_opt_out_cannot_remove_models_required_by_another_extension(self):
+        """Keep required descendants across different models, classes, and load orders."""
+        for scenario, extensions, expected_models in [
+            ('field added to parent', [
+                ('base', {'_init_descendants': False}),
+                ('parent', {'value': fields.Char()}),
+            ], ['base', 'parent', 'child', 'delegated']),
+            ('same model, opt-out first', [
+                ('base', {'_init_descendants': False}),
+                ('base', {'_init_descendants': True}),
+            ], ['base', 'parent', 'child', 'delegated']),
+            ('same model, opt-out last', [
+                ('base', {'_init_descendants': True}),
+                ('base', {'_init_descendants': False}),
+            ], ['base', 'parent', 'child', 'delegated']),
+            ('base requires an opted-out descendant', [
+                ('parent', {'_init_descendants': False}),
+                ('base', {}),
+            ], ['parent', 'base', 'child', 'delegated']),
+        ]:
+            with (
+                self.subTest(scenario=scenario),
+                patch.dict(models.MetaModel._module_to_models__, {self.module.name: []}),
+            ):
+                for model_name, attributes in extensions:
+                    self._add_extension(model_name, **attributes)
+                self.assertEqual(list(self._select_models_to_initialize()), expected_models)
+
+    def test_new_extension_does_not_inherit_the_opt_out(self):
+        """A Python subclass adding a field must default to initializing descendants."""
+        class MethodsOnlyExtension(models.AbstractModel):
+            _module = self.module.name
+            _inherit = 'base'
+            _init_descendants = False
+
+        class ExtensionWithField(MethodsOnlyExtension):
+            _module = self.module.name
+            _inherit = 'base'
+
+            value = fields.Char()
+
+        self.assertCountEqual(self._select_models_to_initialize(), ['base', 'parent', 'child', 'delegated'])
+
+    def test_database_changes_cannot_opt_out(self):
+        """Reject opt-outs on extensions with database changes or new model parents."""
+        for declaration, attributes in [
+            ('field', {'value': fields.Char()}),
+            ('index', {'_index': models.Index('(id)')}),
+            ('constraint', {'_constraint': models.Constraint('CHECK (id > 0)', 'Positive ID required')}),
+            ('init hook', {'init': lambda self: None}),
+            ('auto-init hook', {'_auto_init': lambda self: None}),
+            ('SQL view query', {'_table_query': 'SELECT 1'}),
+            ('default ordering', {'_order': 'name'}),
+            ('fold field', {'_fold_name': 'is_folded'}),
+            ('delegated parent', {'_inherits': {'parent': 'parent_id'}}),
+            ('additional inherited parent', {'_inherit': ['base', 'parent']}),
+            ('new model', {'_inherit': [], '_name': 'new.model'}),
+        ]:
+            with self.subTest(declaration=declaration):
+                with self.assertRaisesRegex(TypeError, '_init_descendants=False'):
+                    self._add_extension(_init_descendants=False, **attributes)
+                # A rejected definition must not be left for the module loader to use.
+                self.assertEqual(models.MetaModel._module_to_models__[self.module.name], [])
 
 
 @tagged('post_install')

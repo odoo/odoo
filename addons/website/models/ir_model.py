@@ -5,6 +5,7 @@ from odoo import models
 
 class Base(models.AbstractModel):
     _inherit = 'base'
+    _init_descendants = False
 
     def get_base_url(self):
         """

@@ -41,6 +41,7 @@ class UnlinkBlockedError(ValidationError):
 
 class Base(models.AbstractModel):
     _inherit = 'base'
+    _init_descendants = False
 
     @api.model
     @api.readonly

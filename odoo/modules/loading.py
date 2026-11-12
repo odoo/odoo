@@ -191,7 +191,7 @@ def load_module_graph(
         model_names = registry.load(package)
 
         if update_operation:
-            model_names = registry.descendants(model_names, '_inherit', '_inherits')
+            model_names = registry._get_models_to_init(package, model_names)
             models_updated |= model_names
             registry._models_to_check -= model_names
             registry._setup_models__(env.cr, [])  # incremental setup

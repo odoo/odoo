@@ -5,6 +5,7 @@ from odoo import models
 
 class Base(models.AbstractModel):
     _inherit = "base"
+    _init_descendants = False
 
     def _can_return_content(self, field_name=None, access_token=None):
         if (
