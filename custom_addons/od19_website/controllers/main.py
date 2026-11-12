@@ -283,7 +283,7 @@ class AutoInfoWebsite(http.Controller):
         env = request.env
         user = env.user
         now = fields.Datetime.now()
-        until = datetime.datetime.now() + datetime.timedelta(days=days)
+        until = now + datetime.timedelta(days=days)
         items = []
         if "od19.meeting.room.booking" in env:
             bookings = (
