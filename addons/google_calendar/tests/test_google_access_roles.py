@@ -38,3 +38,15 @@ class TestGoogleAccessRoles(TestAccessRights):
         )
         with self.assertRaises(AccessError):
             members_only_event.with_user(self.john).write({'name': 'blocked-update'})
+
+    def test_writable_calendar_ids_excludes_read_only_shares(self):
+        """writable_calendar_ids must contain owner/writer calendars only."""
+        # A calendar shared with the user as read-only must NOT be writable.
+        foreign = self.env['calendar.calendar'].with_user(self.george).create({'name': 'Foreign'})
+        self.env['calendar.user'].create({
+            'calendar_id': foreign.id,
+            'user_id': self.john.id,
+            'access_role': 'reader',
+        })
+        self.assertIn(self.john.primary_calendar_id, self.john.writable_calendar_ids)
+        self.assertNotIn(foreign, self.john.writable_calendar_ids)
