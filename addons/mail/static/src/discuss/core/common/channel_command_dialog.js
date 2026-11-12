@@ -7,13 +7,13 @@ import { registry } from "@web/core/registry";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
-export class LivechatCommandDialog extends Component {
+export class ChannelCommandDialog extends Component {
     /** @see PanelDefinition: small content, shown in a popover by a place with a large panel */
     static compact = true;
-    static template = "im_livechat.LivechatCommandDialog";
+    static template = "mail.ChannelCommandDialog";
     static components = { ActionPanel };
     props = useProps({
-        thread: t.object(),
+        channel: t.object(),
         close: t.function(),
         commandName: t.string(),
         placeholderText: t.string(),
@@ -38,7 +38,7 @@ export class LivechatCommandDialog extends Component {
     executeCommand() {
         const command = commandRegistry.get(this.props.commandName, false);
         if (command) {
-            this.props.thread.channel.executeCommand(
+            this.props.channel.executeCommand(
                 command,
                 `/${this.props.commandName} ${this.state.inputText}`
             );

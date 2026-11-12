@@ -797,6 +797,21 @@ export class DiscussChannel extends models.ServerModel {
         };
     }
 
+    _get_channel_history(ids) {
+        return this.env["mail.message"]
+            .search_read(
+                [
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", ids[0]],
+                    ["message_type", "!=", "notification"],
+                ],
+                makeKwArgs({ order: "id ASC" })
+            )
+            .map((message) => message.body)
+            .filter(Boolean)
+            .join("<br/>");
+    }
+
     /**
      * @param {number} id
      * @param {string} content

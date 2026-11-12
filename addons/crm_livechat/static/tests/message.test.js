@@ -1,13 +1,7 @@
 import { defineCrmLivechatModels } from "@crm_livechat/../tests/crm_livechat_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
-import {
-    click,
-    contains,
-    openDiscuss,
-    start,
-    startServer,
-} from "@mail/../tests/mail_test_helpers";
+import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
@@ -16,10 +10,12 @@ defineCrmLivechatModels();
 
 test("Can open lead from internal link", async () => {
     const pyEnv = await startServer();
+    serverState.groupSalesTeamId = pyEnv["res.groups"].create({ name: "Sale Salesman" });
     pyEnv["res.users"].write([serverState.userId], {
-        group_ids: pyEnv["res.groups"]
-            .search_read([["id", "=", serverState.groupLivechatId]])
-            .map(({ id }) => id),
+        group_ids: [
+            Command.link(serverState.groupLivechatId),
+            Command.link(serverState.groupSalesTeamId),
+        ],
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
