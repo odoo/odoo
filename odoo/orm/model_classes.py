@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import typing
+import warnings
 import weakref
 
 from collections import defaultdict
@@ -170,11 +171,11 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
     assert is_model_definition(model_def)
 
     if hasattr(model_def, '_constraints'):
-        _logger.warning("Model attribute '_constraints' is no longer supported, "
-                        "please use @api.constrains on methods instead.")
+        warnings.warn(f"{model_def}: model attribute '_constraints' is no longer supported, "
+                      "please use @api.constrains on methods instead.")
     if hasattr(model_def, '_sql_constraints'):
-        _logger.warning("Model attribute '_sql_constraints' is no longer supported, "
-                        "please define models.Constraint on the model.")
+        warnings.warn(f"{model_def}: model attribute '_sql_constraints' is no longer supported, "
+                      "please define models.Constraint on the model.")
 
     # all models except 'base' implicitly inherit from 'base'
     name = model_def._name
@@ -292,7 +293,7 @@ def _init_model_class_attributes(model_cls: type[BaseModel]):
         if is_model_definition(base):
             # the following attributes are not taken from registry classes
             if model_cls._name not in base._inherit and not base._description:
-                _logger.warning("The model %s has no _description", model_cls._name)
+                warnings.warn(f"The model {model_cls._name} has no _description")
             model_cls._description = base._description or model_cls._description
             model_cls._table = base._table or model_cls._table
             model_cls._log_access = getattr(base, '_log_access', model_cls._log_access)
@@ -465,8 +466,8 @@ def _setup(model_cls: type[BaseModel], env: Environment):
 
     # 5. determine and validate rec_name
     if model_cls._rec_name:
-        assert model_cls._rec_name in model_cls._fields, \
-            "Invalid _rec_name=%r for model %r" % (model_cls._rec_name, model_cls._name)
+        if model_cls._rec_name not in model_cls._fields:
+            raise ValueError(f"Invalid _rec_name={model_cls._rec_name!r} for model {model_cls._name!r}")
     elif 'name' in model_cls._fields:
         model_cls._rec_name = 'name'
     elif model_cls._custom and 'x_name' in model_cls._fields:
@@ -474,11 +475,12 @@ def _setup(model_cls: type[BaseModel], env: Environment):
 
     # 6. determine and validate active_name
     if model_cls._active_name:
-        assert (model_cls._active_name in model_cls._fields
-                and model_cls._active_name in ('active', 'x_active')), \
-            ("Invalid _active_name=%r for model %r; only 'active' and "
-            "'x_active' are supported and the field must be present on "
-            "the model") % (model_cls._active_name, model_cls._name)
+        if not (model_cls._active_name in model_cls._fields
+                and model_cls._active_name in ('active', 'x_active')):
+            raise ValueError(
+                f"Invalid _active_name={model_cls._active_name!r} for model {model_cls._name!r}; "
+                "only 'active' and 'x_active' are supported and the field must be present on the model"
+            )
     elif 'active' in model_cls._fields:
         model_cls._active_name = 'active'
     elif 'x_active' in model_cls._fields:
@@ -643,7 +645,7 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field, shareable: bo
         raise ValidationError("You can only add `fields.Field` objects to a model fields")  # pylint: disable=missing-gettext
 
     if not isinstance(getattr(model_cls, name, field), fields.Field):
-        _logger.warning("In model %r, field %r overriding existing value", model_cls._name, name)
+        warnings.warn(f"In model {model_cls._name!r}, field {name} overriding existing value", stacklevel=2)
     setattr(model_cls, name, field)
     if field._shareable != shareable:
         field._shareable = shareable
