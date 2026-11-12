@@ -1013,7 +1013,7 @@ class ChromeBrowser:
             os._exit(0)
 
     def stop(self):
-        if self.ws is not None:
+        if hasattr(self, 'ws') and self.ws is not None:
             try:
                 self._result.cancel()
                 self._logger.info("Closing chrome headless with pid %s", self.chrome_pid)
