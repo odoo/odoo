@@ -117,6 +117,8 @@
             'web/static/src/views/view_dialogs/**/*',
             'web/static/src/views/widgets/**/*',
             'web/static/src/webclient/**/*',
+            ('remove', 'web/static/src/webclient/reload_company_plugin.js'),
+            ('remove', 'web/static/src/webclient/menus/menu_plugin.js'),
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'),  # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
             ('remove', 'web/static/src/webclient/share_target/*'),
