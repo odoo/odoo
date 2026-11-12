@@ -357,6 +357,7 @@
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
+                                <field name="subformula">closing_account_id=receivable</field>
                                 <field name="date_scope">previous_return_period</field>
                             </record>
                         </field>
@@ -448,6 +449,11 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">BF_GROSS_TOTAL.balance - (BF_DEDUCTIBLE.balance + BF_CREDIT_REPORTED.balance - BF_CREDIT_ASKED.balance + BF_CANCELLED.balance + BF_OTHER_DEDUCTION.balance + BF_UNPAID_CREDIT.balance)</field>
                         <field name="subformula">if_above(XOF(0))</field>
+                    </record>
+                    <record id="account_tax_report_line_bf_net_vat_to_pay_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BF_GROSS_TOTAL.balance - (BF_DEDUCTIBLE.balance + BF_CREDIT_REPORTED.balance - BF_CREDIT_ASKED.balance + BF_CANCELLED.balance + BF_OTHER_DEDUCTION.balance + BF_UNPAID_CREDIT.balance)</field>
                     </record>
                 </field>
             </record>

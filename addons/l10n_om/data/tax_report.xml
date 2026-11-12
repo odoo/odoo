@@ -354,6 +354,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">om_7a.tax - om_7b.tax</field>
                             </record>
+                            <!-- 7(c) Total is the net VAT result: output VAT due minus input VAT credit, i.e. the payable/refundable amount. -->
+                            <record id="l10n_om_tax_report_liability_total_net_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">om_7c.tax</field>
+                            </record>
                         </field>
                     </record>
                 </field>

@@ -588,6 +588,12 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">499 (Reporte 104)</field>
                             </record>
+                            <record id="tax_report_line_104_499_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">domain</field>
+                                <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                                <field name="subformula">-sum</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -2836,6 +2842,11 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">399 (Reporte 103)</field>
+                                    </record>
+                                    <record id="tax_report_line_103_399_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c399.balance + c498.balance</field>
                                     </record>
                                 </field>
                             </record>
