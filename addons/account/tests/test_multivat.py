@@ -278,3 +278,22 @@ class TestMultiVAT(AccountTestInvoicingCommon):
             self.assertEqual(tax.cash_basis_transition_account_id.code, '411005')
 
         self.assertTrue(self.env.company.tax_exigibility, "Creating foreign cash basis taxes should enable the cash basis setting on the company.")
+
+    def test_foreign_tax_group_without_country(self):
+        get_data = data_method_provider("foreign", "nl")
+
+        def get_data_without_tax_group_country(self, template_code):
+            data = get_data(self, template_code)
+            del data['account.tax.group']['tax_group_taxes']['country_id']
+            return data
+
+        self.patch(AccountChartTemplate, '_get_chart_template_data', get_data_without_tax_group_country)
+        foreign_vat_fpos = self.env["account.fiscal.position"].create({
+            "name": "NL foreign VAT",
+            "country_id": self.env.ref("base.nl").id,
+            "foreign_vat": "NL123456782B90",
+        })
+        foreign_vat_fpos.action_create_foreign_taxes()
+
+        tax = self.env['account.tax'].search([('country_id.code', '=', 'NL'), ('name', '=', 'Tax 1')])
+        self.assertEqual(tax.tax_group_id.country_id.code, 'NL')

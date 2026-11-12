@@ -1102,6 +1102,9 @@ class AccountChartTemplate(models.AbstractModel):
             for tax_group in tax_group_data.values():
                 tax_group[field] = existing_accounts.get(tax_group.get(field))
 
+        for tax_group in tax_group_data.values():
+            tax_group['country_id'] = country.id
+
         for tax_template in tax_data.values():
             # This is required because the country isn't provided directly by the template
             tax_template['country_id'] = country.id
