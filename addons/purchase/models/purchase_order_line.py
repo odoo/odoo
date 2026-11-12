@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict, get_lang
 from odoo.tools.float_utils import float_compare, float_round
 
 
@@ -492,16 +492,19 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('product_id', 'order_id.partner_id')
     def _compute_analytic_distribution(self):
+        cache = {}
         for line in self:
             if not line.display_type:
-                distribution = self.env['account.analytic.distribution.model']._get_distribution({
+                arguments = frozendict({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
                     "partner_id": line.order_id.partner_id.id,
                     "partner_category_id": line.order_id.partner_id.category_id.ids,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution = distribution or line.analytic_distribution
+                if arguments not in cache:
+                    cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
+                line.analytic_distribution = cache[arguments] or line.analytic_distribution
 
     @api.onchange('product_id')
     def onchange_product_id(self):
