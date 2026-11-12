@@ -55,7 +55,9 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
 
     &:before {
         display: inline-block;
-        content: attr(data-icon);
+        // The ligature is the icon's name: an empty alternative text keeps
+        // screen readers from reading it.
+        content: attr(data-icon) / "";
         // Geometric precision necessary for WebKit to apply icon ligatures
         text-rendering: geometricPrecision;
         // WebKit splits the run at `-`, breaking the ligature
@@ -79,10 +81,10 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
         --icon-font-family: #{$oi-font-family};
     }
     &[data-icon="oi_twitter"]:before {
-        content: "oi_x";
+        content: "oi_x" / "";
     }
     &[data-icon="oi_twitter-square"]:before {
-        content: "oi_x-square";
+        content: "oi_x-square" / "";
     }
 }
 
