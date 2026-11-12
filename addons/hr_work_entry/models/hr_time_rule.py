@@ -316,8 +316,9 @@ class HrTimeRule(models.Model):
                 rule.country_id = rule.company_id.country_id
 
     @api.depends('country_id', 'company_id')
+    @api.depends_context('company')
     def _compute_country_work_entry_type_ids(self):
-        rule_country = {rule: rule.country_id or rule.company_id.country_id for rule in self}
+        rule_country = {rule: rule.country_id or rule.company_id.country_id or self.env.company.country_id for rule in self}
         all_country_ids = list({c.id for c in rule_country.values() if c})
 
         # which of those countries actually have localized WETs
