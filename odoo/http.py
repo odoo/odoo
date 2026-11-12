@@ -2160,6 +2160,7 @@ class Request:
             self.env = odoo.api.Environment(cr_readwrite, self.session.uid, self.session.context)
             try:
                 rule, args = self.registry['ir.http']._match(self.httprequest.path)
+                self.registry['ir.http']._apply_max_file_upload_size()
             except NotFound as not_found_exc:
                 not_found = not_found_exc
         finally:
