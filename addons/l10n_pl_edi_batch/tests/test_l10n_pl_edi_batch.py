@@ -10,7 +10,7 @@ import requests
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import freeze_time, tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
@@ -578,11 +578,11 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
     def test_cron_today_errors(self):
         now = fields.Datetime.now().replace(microsecond=0)
 
-        # A KSeF error stops the cron
+        # A KSeF error is logged, and the next run tries again
         with (
             freeze_time(now),
             self._mock_batch_requests(failing_companies=self.company),
-            self.assertRaises(UserError),
+            mute_logger('odoo.addons.l10n_pl_edi_batch.models.batch_download'),
         ):
             self.env['account.move']._cron_l10n_pl_edi_download_bills()
         self.assertFalse(self._company_batches(self.company))
@@ -649,11 +649,11 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         now = fields.Datetime.now().replace(microsecond=0)
         historic_date = self.company.l10n_pl_edi_batch_historic_date
 
-        # A KSeF error stops the cron, and doesn't move the historic date
+        # A KSeF error is logged, and doesn't move the historic date
         with (
             freeze_time(now),
             self._mock_batch_requests(failing_companies=self.company),
-            self.assertRaises(UserError),
+            mute_logger('odoo.addons.l10n_pl_edi_batch.models.batch_download'),
         ):
             self.Batch._cron_request_historic()
         self.assertFalse(self._company_batches(self.company))
@@ -743,6 +743,19 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         with freeze_time(now), self._mock_ksef({'status': {'code': 100}}):
             self.Batch._cron_check_status()
         self.assertRecordValues(requested_batch, [{'state': 'failed', 'retry_count': 10}])
+
+    def test_cron_check_status_network_error(self):
+        now = fields.Datetime.now().replace(microsecond=0)
+        requested_batch = self._create_batch('requested')
+
+        # KSeF unreachable: counted as a retry, and checked again later
+        with (
+            freeze_time(now),
+            patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request', side_effect=requests.ConnectionError),
+            mute_logger('odoo.addons.l10n_pl_edi.tools.ksef_api_service', 'odoo.addons.l10n_pl_edi_batch.models.batch_download'),
+        ):
+            self.Batch._cron_check_status()
+        self.assertRecordValues(requested_batch, [{'state': 'requested', 'retry_count': 1}])
 
     def test_cron_check_status_ksef_error(self):
         now = fields.Datetime.now().replace(microsecond=0)

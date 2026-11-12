@@ -230,6 +230,7 @@ class BatchDownload(models.Model):
         """ Every KSeF cron must:
             - run per each company that has the batch download enabled and an access_token available
             - on rate limit hit, rollback and be retriggered after ``retry_after`` seconds
+            - on any other KSeF or network error, rollback and go on with the next company: the next run tries again
             - commit per company
             - notify the progress once for all companies: ``method`` returns the work left for its company
               when it did some, None otherwise
@@ -256,6 +257,9 @@ class BatchDownload(models.Model):
                     "KSeF rate limit reached for company %s, running %s again at %s",
                     company.display_name, cron_xmlid, retry_at,
                 )
+            except UserError as e:
+                self._rollback()
+                _logger.warning("KSeF error for company %s in %s: %s", company.display_name, cron_xmlid, e)
 
         if retry_at:
             self.env.ref(cron_xmlid)._trigger(at=retry_at)
@@ -334,7 +338,14 @@ class BatchDownload(models.Model):
         def check_status(company):
             batches = self._get_company_batches(company, 'requested')
             if batch := batches[:1]:
-                data = Service(company).download_batch_status(batch.name)
+                try:
+                    data = Service(company).download_batch_status(batch.name)
+                except KSeFRateLimitError:
+                    raise
+                except UserError as e:
+                    # counted as a retry below, as if the export were still in progress
+                    _logger.warning("KSeF batch %s status check failed: %s", batch.name, e)
+                    data = {'content': batch.content or {}}
                 old_date_to = batch.date_to
                 package = data['content'].get('package') or {}
                 if is_truncated := package.get('isTruncated'):
