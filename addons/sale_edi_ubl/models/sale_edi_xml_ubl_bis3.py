@@ -236,11 +236,10 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_sale_order_line_nodes(self, document_node, vals):
         document_node['cac:OrderLine'] = order_line_nodes = []
 
-        line_idx = 1
         for base_line in vals['base_lines']:
             line_vals = {
                 **vals,
-                'line_idx': line_idx,
+                'line_idx': base_line['id'],
                 'base_line': base_line,
             }
             self._add_sale_order_line_vals(line_vals)
@@ -255,7 +254,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             order_line_nodes.append({
                 'cac:LineItem': line_node,
             })
-            line_idx += 1
 
     def _add_sale_order_line_vals(self, vals):
         self._add_document_line_vals(vals)
@@ -372,9 +370,12 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
 
         allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, order, 'sale')
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='sale')
+        line_ids = [t.findtext('.') for t in tree.findall('./{*}OrderLine/{*}LineItem/{*}ID')]
         # adapt each line to sale.order.line
-        for line in lines_vals:
+        for id, line in zip(line_ids, lines_vals):
             # remove invoice line fields
+            if self.env.context.get('include_pol_ref', False):
+                line['auto_purchase_order_line_id'] = [Command.link(int(id))]
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
             if not line.get('product_id'):

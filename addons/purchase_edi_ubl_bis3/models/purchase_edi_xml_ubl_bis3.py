@@ -239,11 +239,10 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_purchase_order_line_nodes(self, document_node, vals):
         document_node['cac:OrderLine'] = order_line_nodes = []
 
-        line_idx = 1
         for base_line in vals['base_lines']:
             line_vals = {
                 **vals,
-                'line_idx': line_idx,
+                'line_idx': base_line['id'],
                 'base_line': base_line,
             }
 
@@ -257,7 +256,6 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             order_line_nodes.append({
                 'cac:LineItem': line_node,
             })
-            line_idx += 1
 
     def _add_purchase_order_line_id_nodes(self, line_node, vals):
         self._add_document_line_id_nodes(line_node, vals)
@@ -347,7 +345,6 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     # -------------------------------------------------------------------------
     # Purchase Order EDI Import
     # -------------------------------------------------------------------------
-
     def _retrieve_order_vals(self, order, tree):
         """ Fill order details by extracting details from xml tree.
         param order: Order to fill details from xml tree.
@@ -373,9 +370,12 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
 
         allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, order, 'purchase')
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='purchase')
+        line_ids = [t.findtext('.') for t in tree.findall('./{*}OrderLine/{*}LineItem/{*}ID')]
         # adapt each line to purchase.order.line
-        for line in lines_vals:
+        for id, line in zip(line_ids, lines_vals):
             # line level charges do not have product_uom_id
+            if self.env.context.get('include_sol_ref', False):
+                line['auto_sale_order_line_id'] = int(id)
             if line.get('product_uom_id'):
                 line['uom_id'] = line.pop('product_uom_id')
             # remove invoice line fields
