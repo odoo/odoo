@@ -80,6 +80,9 @@ class UsersPasskey(models.Model):
 
     def _get_session_token_query_params(self):
         params = super()._get_session_token_query_params()
-        params['select'] = SQL("%s, ARRAY_AGG(key.id ORDER BY key.id DESC)", params['select'])
+        params['select'] = SQL(
+            "%s, ARRAY_AGG(key.id ORDER BY key.id DESC) FILTER (WHERE key.id IS NOT NULL)",
+            params['select']
+        )
         params['joins'] = SQL("%s LEFT JOIN auth_passkey_key key ON res_users.id = key.create_uid", params['joins'])
         return params
