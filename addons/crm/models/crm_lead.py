@@ -979,6 +979,19 @@ class Lead(models.Model):
         # perform search, return the first found
         return self.env['crm.stage'].search(search_domain, order=order, limit=limit)
 
+    @api.model
+    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
+        partners = super()._mail_find_partner_from_emails(emails, records=records, force_create=force_create, extra_domain=extra_domain)
+        if not records.company_id:
+            return partners
+
+        res = []
+        company_domain = self.env['res.partner']._check_company_domain(records.company_id)
+        for partner in partners:
+            if partner.filtered_domain(company_domain)
+                res.append(partner)
+        return res
+
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
