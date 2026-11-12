@@ -2762,6 +2762,8 @@ test("font-size should be preserved when replacing HTML element text", async () 
  * - buttons opening a popup (dropdowns, color selectors) rely on
  *   `aria-expanded` instead of `aria-pressed`: it must match whether the popup
  *   is open (`show` class for dropdowns, `active` class for color selectors),
+ *   they must have `aria-haspopup`, and `aria-controls` must reference the
+ *   popup while it is open, whose role must match `aria-haspopup`,
  * - buttons whose item defines `isActive` are toggle buttons: they must have
  *   `aria-pressed` matching their `active` state,
  * - other buttons are not toggle buttons and must not have `aria-pressed`.
@@ -2788,6 +2790,28 @@ function expectConsistentAriaStates(editor) {
             expect(el).not.toHaveAttribute("aria-pressed", undefined, {
                 message: `"${label}" opens a popup and is not a toggle button`,
             });
+            expect(el).toHaveAttribute("aria-haspopup", undefined, {
+                message: `"${label}" should announce its popup`,
+            });
+            if (isOpen) {
+                const popupId = el.getAttribute("aria-controls");
+                const popupEl = popupId && document.getElementById(popupId);
+                expect(!!popupEl).toBe(true, {
+                    message: `"${label}" aria-controls should reference its open popup`,
+                });
+                expect(popupEl).toHaveAttribute("role", el.getAttribute("aria-haspopup"), {
+                    message: `"${label}" popup role should match its aria-haspopup`,
+                });
+                if (popupEl.role === "dialog") {
+                    expect(popupEl).toHaveAttribute("aria-label", el.getAttribute("aria-label"), {
+                        message: `"${label}" dialog should be named after its button`,
+                    });
+                }
+            } else {
+                expect(el).not.toHaveAttribute("aria-controls", undefined, {
+                    message: `"${label}" should not reference a closed popup`,
+                });
+            }
         } else if (toggleButtonIds.has(name)) {
             expect(el).toHaveAttribute(
                 "aria-pressed",
