@@ -8,7 +8,7 @@ from odoo.tests import tagged
 @tagged('post_install', 'post_install_l10n')
 class TestGenericCO(TestGenericLocalization):
 
-    _pos_partner_pos_form_fields = ['vat', 'additional_identifiers']
+    _pos_partner_pos_form_fields = ['vat', 'additional_identifiers', 'city_id', 'state_id']
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
