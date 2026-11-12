@@ -575,6 +575,22 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         next_batch = self._company_batches(self.company) - done_batch
         self.assertRecordValues(next_batch, [{'date_from': last_storage, 'date_to': now}])
 
+        # After an outage of days, still from where the last done batch stopped
+        next_batch.unlink()
+        outage_end = now + timedelta(days=3)
+        with freeze_time(outage_end), self._mock_batch_requests():
+            self.env['account.move']._cron_l10n_pl_edi_download_bills()
+        next_batch = self._company_batches(self.company) - done_batch
+        self.assertRecordValues(next_batch, [{'date_from': last_storage, 'date_to': outage_end}])
+
+        # After a done batch where KSeF had nothing yet (420), from that batch's start
+        next_batch.unlink()
+        done_batch.content = {'status': {'code': 420}}
+        with freeze_time(outage_end), self._mock_batch_requests():
+            self.env['account.move']._cron_l10n_pl_edi_download_bills()
+        next_batch = self._company_batches(self.company) - done_batch
+        self.assertRecordValues(next_batch, [{'date_from': done_batch.date_from, 'date_to': outage_end}])
+
     def test_cron_today_errors(self):
         now = fields.Datetime.now().replace(microsecond=0)
 

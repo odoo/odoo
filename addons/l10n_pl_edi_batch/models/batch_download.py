@@ -127,7 +127,8 @@ class BatchDownload(models.Model):
 
     def _get_state_by_code(self, code):
         self.ensure_one()
-        if code == KSEF_AFTER_HWM:  # `from` is after KSeF's high water mark: nothing new is stored yet
+        # `from` is after KSeF's high water mark: nothing new is stored yet
+        if code == KSEF_AFTER_HWM:
             return 'done'
         if code not in (KSEF_IN_PROGRESS, KSEF_READY) or self.retry_count > MAX_RETRIES:
             return 'failed'
@@ -273,21 +274,21 @@ class BatchDownload(models.Model):
     @api.model
     def _request_today(self, company):
         """ Request the most recent bills, up to now: from where the last done today batch is complete
-            (where its export stopped if truncated, its high water mark otherwise), or from yesterday at Polish midnight.
+            (where its export stopped if truncated, its high water mark otherwise, its start if KSeF had nothing yet),
+            or from yesterday at Polish midnight. After an outage the window is long: KSeF truncates the export.
         """
-        yesterday = ksef_midnight(fields.Date.today() - timedelta(days=1))
-        date_from = yesterday
+        date_from = ksef_midnight(fields.Date.today() - timedelta(days=1))
         last_done_batch = self.search([
             ('company_id', '=', company.id),
             ('kind', '=', 'today'),
             ('state', '=', 'done'),
-            ('create_date', '>=', yesterday),
         ], order='create_date desc', limit=1)
         package = (last_done_batch.content or {}).get('package') or {}
         date_key = 'lastPermanentStorageDate' if package.get('isTruncated') else 'permanentStorageHwmDate'
         if last_storage_date := package.get(date_key):
-            last_storage_date = parse(last_storage_date).astimezone(timezone.utc).replace(tzinfo=None)
-            date_from = max(yesterday, last_storage_date)
+            date_from = parse(last_storage_date).astimezone(timezone.utc).replace(tzinfo=None)
+        elif last_done_batch:
+            date_from = last_done_batch.date_from
         self._create_batch_download(company, date_from=date_from, date_to=fields.Datetime.now())
 
     @api.model
@@ -353,7 +354,7 @@ class BatchDownload(models.Model):
 
                 batch.update(data)
                 if batch.state == 'downloading':
-                    batch.retry_count = 0  # the download counts its own retries
+                    batch.retry_count = 0
                     self.env.ref(CRON_DOWNLOAD)._trigger()
                     # A truncated export: this batch now ends where KSeF stopped, request the rest
                     if is_truncated:
