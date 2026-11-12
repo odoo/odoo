@@ -365,7 +365,7 @@ class ProductProduct(models.Model):
         product_value_by_lot = {pv.lot_id: pv for pv in product_values if pv.lot_id}
         # Merge: use whichever is more recent per lot (lot-specific or product-level),
         # falling back on the product-level value for lots without a specific one
-        for lot in lots or ():
+        for lot in lots:
             lot_pv, product_pv = product_value_by_lot.get(lot), product_value_by_product.get(lot.product_id)
             if not lot_pv or (product_pv and product_pv.date > lot_pv.date):
                 product_value_by_lot[lot] = product_pv
@@ -451,16 +451,13 @@ class ProductProduct(models.Model):
         product_value_by_product, product_value_by_lot = self._get_last_product_value_batch(
             at_date, lots=lots)
         manual_value_dates = [
-            pv.date if (pv := product_value_by_product.get(product)) else False
-            for product in self
+            pv.date for product in self if (pv := product_value_by_product.get(product))
         ] + [
-            pv.date if (pv := product_value_by_lot.get(lot)) else False
-            for lot in (lots or [])
+            pv.date for lot in (lots or []) if (pv := product_value_by_lot.get(lot))
         ]
         oldest_manual_value = min((date for date in manual_value_dates if date), default=None)
         if oldest_manual_value and all(manual_value_dates):
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
-
 
         products_with_manual_value = self.env['product.product'].concat(*product_value_by_product.keys())
         qty_by_product_id = {

@@ -469,40 +469,35 @@ class StockMove(models.Model):
         recomputed yet (they depend on state='done' which may not be set at call time).
         """
         valued_qty_by_move_by_lot = defaultdict(lambda: defaultdict(float))
-
+        in_domain = Domain([
+            ('location_id.is_valued_internal', '=', False),
+            ('location_dest_id.is_valued_internal', '=', True),
+        ])
+        out_domain = Domain([
+            ('location_id.is_valued_internal', '=', True),
+            ('location_dest_id.is_valued_internal', '=', False),
+        ])
         for company, moves_by_company in self.grouped('company_id').items():
             base_domain = (
                 Domain([('picked', '=', True)])
                 & (
                     Domain([('owner_id', '=', False)])
-                    |
-                    Domain([('owner_id', '=', company.partner_id.id)])
+                    | Domain([('owner_id', '=', company.partner_id.id)])
                 )
+                & (in_domain | out_domain)
             )
-
             for lot_valuated, moves in moves_by_company.grouped(lambda m: m.product_id.lot_valuated).items():
-                in_domain = base_domain & Domain([
-                    ('location_id.is_valued_internal', '=', False),
-                    ('location_dest_id.is_valued_internal', '=', True),
-                ])
-                out_domain = base_domain & Domain([
-                    ('location_id.is_valued_internal', '=', True),
-                    ('location_dest_id.is_valued_internal', '=', False),
-                ])
-
                 groupby = ['move_id'] + (['lot_id'] if lot_valuated else [])
-
-                for direction_domain in (in_domain, out_domain):
-                    for *keys, qty in self.env['stock.move.line']._read_group(
-                        domain=Domain([('move_id', 'in', moves.ids)]) & direction_domain,
-                        groupby=groupby,
-                        aggregates=['quantity_product_uom:sum'],
-                    ):
-                        move = keys[0]
-                        lot = keys[1] if lot_valuated else None
-                        valued_qty_by_move_by_lot[move.id][False] += qty
-                        if lot:
-                            valued_qty_by_move_by_lot[move.id][lot] = qty
+                for *keys, qty in self.env['stock.move.line']._read_group(
+                    domain=Domain([('move_id', 'in', moves.ids)]) & base_domain,
+                    groupby=groupby,
+                    aggregates=['quantity_product_uom:sum'],
+                ):
+                    move = keys[0]
+                    lot = keys[1] if lot_valuated else None
+                    valued_qty_by_move_by_lot[move.id][False] += qty
+                    if lot:
+                        valued_qty_by_move_by_lot[move.id][lot] = qty
 
         return valued_qty_by_move_by_lot
 

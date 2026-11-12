@@ -42,7 +42,7 @@ class StockLot(models.Model):
             for lot in lots:
                 if not lot.lot_valuated:
                     continue
-                valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
+                valuated_product = lot.product_id
                 qty_valued = lot.product_qty
                 qty_available = lot.with_context(warehouse_id=False).product_qty
                 if valuated_product.uom_id.is_zero(qty_valued):
