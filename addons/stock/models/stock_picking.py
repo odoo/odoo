@@ -809,7 +809,7 @@ class StockPicking(models.Model):
         # run scheduler for moves forecasted to not have enough in stock
         self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))._trigger_scheduler()
 
-        if self.env.user.has_group('stock.group_stock_picking_batch'):
+        if self.env['res.groups']._is_feature_enabled('stock.group_stock_picking_batch'):
             for picking in self:
                 picking._find_auto_batch()
         return True
@@ -1259,7 +1259,7 @@ class StockPicking(models.Model):
                 to_assign_ids.update(picking.backorder_ids.ids)
 
             # If batch setting is enabled, auto-batch done pickings' backorders.
-            if self.env.user.has_group('stock.group_stock_picking_batch'):
+            if self.env['res.groups']._is_feature_enabled('stock.group_stock_picking_batch'):
                 # To avoid inconsistencies, all incorrect pickings must be removed before assigning backorder pickings
                 assignable_pickings = self.env['stock.picking'].browse(to_assign_ids)
                 for picking in assignable_pickings:
