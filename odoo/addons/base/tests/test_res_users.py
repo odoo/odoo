@@ -759,6 +759,9 @@ class TestUsers2(UsersCommonCase):
         self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
         # Process any tracking message at flush for cleaner queryCount
         self.flush_tracking()
+        # read company_ids to normalize cache between enterprise and community:
+        # l10n_au_hr_payroll_api reads them during write (_records_to_log)
+        self.user_internal.company_ids
 
         # all modules: 51, base: 17; nightly: +1
         with self.assertQueryCount(52):
