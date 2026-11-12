@@ -92,7 +92,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
                         if not values:
                             continue
                         record._microsoft_patch(record._get_organizer(), record.microsoft_id, values, timeout=timeout)
-                elif vals.get('is_draft') is False:
+                # We currently only support syncing events from primary calendars.
+                elif (vals.get('is_draft') is False and record.calendar_id
+                        and record.calendar_id == record._get_event_user_m().primary_calendar_id):
                     record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=timeout)
 
         return result
