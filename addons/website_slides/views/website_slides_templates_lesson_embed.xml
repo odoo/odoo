@@ -38,7 +38,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                                         </div>
                                     </div>
                                     <div class="col flex-grow-0 d-flex text-nowrap small">
-                                        <a class="oe_slide_js_embed_option_link" role="button"
+                                        <button class="oe_slide_js_embed_option_link" type="button"
                                             t-att-data-id="slide.id"
                                             t-att-data-name="slide.name"
                                             t-att-data-url="slide.website_share_url"
@@ -46,7 +46,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                                             t-att-data-embed-code="slide.embed_code_external if slide.slide_category in ['video', 'document'] else False">
                                             <i class="oi" data-icon="share" role="img" aria-label="Share" title="Share"/>
                                             Share
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -103,28 +103,28 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                                             <input type="number" class="form-control text-center" id="page_number" style="min-width: 60px"/>
                                             <span class="input-group-text" id="page_count"/>
                                         </div>
-                                        <span id="zoomout" class="d-inline ms-2 me-2" title="Zoom out" aria-label="Zoom out" role="button">
+                                        <button id="zoomout" class="btn text-light border-0 p-0 d-inline ms-2 me-2" title="Zoom out" aria-label="Zoom out" type="button">
                                             <i class="oi" data-icon="zoom_out" role="img" aria-hidden="true"/>
-                                        </span>
-                                        <span id="zoomin" class="d-inline" title="Zoom in" aria-label="Zoom in" role="button">
+                                        </button>
+                                        <button id="zoomin" class="btn text-light border-0 p-0 d-inline" title="Zoom in" aria-label="Zoom in" type="button">
                                             <i class="oi" data-icon="zoom_in" role="img" aria-hidden="true"/>
-                                        </span>
+                                        </button>
                                     </div>
                                     <div class="col text-center o_slide_navigation_buttons">
-                                        <span id="first" class="me-1 me-sm-2" title="First slide" aria-label="First slide" role="button"><i class="oi" data-icon="skip_previous" role="img" aria-hidden="true"/></span>
-                                        <span id="previous" class="mx-1 mx-sm-2" title="Previous slide" aria-label="Previous slide" role="button"><i class="oi oi-filled" data-icon="arrow_circle_left" role="img" aria-hidden="true"/></span>
-                                        <span id="next" class="mx-1 mx-sm-2" title="Next slide" aria-label="Next slide" role="button"><i class="oi oi-filled" data-icon="arrow_circle_right" role="img" aria-hidden="true"/></span>
-                                        <span id="last" class="mx-1 mx-sm-2" title="Last slide" aria-label="Last slide" role="button"><i class="oi" data-icon="skip_next" role="img" aria-hidden="true"/></span>
+                                        <button id="first" class="btn text-light border-0 p-0 me-1 me-sm-2" title="First slide" aria-label="First slide" type="button"><i class="oi" data-icon="skip_previous" role="img" aria-hidden="true"/></button>
+                                        <button id="previous" class="btn text-light border-0 p-0 mx-1 mx-sm-2" title="Previous slide" aria-label="Previous slide" type="button"><i class="oi oi-filled" data-icon="arrow_circle_left" role="img" aria-hidden="true"/></button>
+                                        <button id="next" class="btn text-light border-0 p-0 mx-1 mx-sm-2" title="Next slide" aria-label="Next slide" type="button"><i class="oi oi-filled" data-icon="arrow_circle_right" role="img" aria-hidden="true"/></button>
+                                        <button id="last" class="btn text-light border-0 p-0 mx-1 mx-sm-2" title="Last slide" aria-label="Last slide" type="button"><i class="oi" data-icon="skip_next" role="img" aria-hidden="true"/></button>
                                         <a t-if="slide.slide_resource_downloadable" id="download" t-attf-href="/web/content/slide.slide/#{slide.id}/binary_content?download=true"
                                            class="ms-1 ms-sm-2" title="Download Content" aria-label="Download" role="button">
                                             <i class="oi" data-icon="download" role="img" aria-hidden="true"/>
                                         </a>
                                     </div>
                                     <div class="col-2 col-sm-3 text-end flex-grow-0">
-                                        <span id="fullscreen" class="ms-1 ms-sm-2"
-                                           title="View fullscreen" aria-label="Fullscreen" role="button">
+                                        <button id="fullscreen" class="btn text-light border-0 p-0 ms-1 ms-sm-2"
+                                           title="View fullscreen" aria-label="Fullscreen" type="button">
                                             <i class="oi" data-icon="open_with" role="img" aria-hidden="true"/>
-                                        </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
