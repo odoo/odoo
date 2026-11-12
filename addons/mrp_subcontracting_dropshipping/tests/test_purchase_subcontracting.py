@@ -2,7 +2,7 @@
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form, new_test_user, tagged
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
@@ -296,9 +296,22 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         """
         Create and confirm a PO with the 'Dropship Subcontractor' picking type.
         The final location of the move should be the subcontractor location,
-        not the customer location
+        not the customer location. It should fall back to the default destination
+        location for the picking type if the address is missing (for a purchase
+        user lacking sales permissions).
         """
-        po = self.env['purchase.order'].create({
+        purchase_user = new_test_user(self.env, 'purchase_user', groups='purchase.group_purchase_user', company_id=self.env.company.id)
+        po = self.env['purchase.order'].with_user(purchase_user).create({
+            'partner_id': self.subcontractor_partner1.parent_id.id,
+            'picking_type_id': self.env.company.dropship_subcontractor_pick_type_id.id,
+            'dest_address_id': False,
+            'order_line': [Command.create({'product_id': self.comp1.id, 'product_qty': 1.0})],
+        })
+        po.button_confirm()
+        self.assertEqual(po.picking_ids.move_ids.forecasted_location_id, self.env.company.subcontracting_location_id)
+
+        purchase_user.group_ids |= self.env.ref('sales_team.group_sale_salesman')
+        po = self.env['purchase.order'].with_user(purchase_user).create({
             'partner_id': self.subcontractor_partner1.parent_id.id,
             'picking_type_id': self.env.company.dropship_subcontractor_pick_type_id.id,
             'dest_address_id': self.subcontractor_partner1.id,
