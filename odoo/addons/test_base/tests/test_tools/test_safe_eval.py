@@ -137,6 +137,38 @@ class TestSafeEval(BaseCase):
         with self.assertRaises(NameError):
             safe_eval("self.__name__", {'self': self}, mode="exec")
 
+    @mute_logger('odoo.tools.safe_eval')
+    def test_05_safe_eval_repeated(self):
+        """ Evaluate the same expressions several times, as their compiled code
+        is reused between evaluations """
+        # results depend on the context of each evaluation
+        for i in range(3):
+            self.assertEqual(safe_eval("a + b * 2", {'a': i, 'b': 1}), i + 2)
+
+        # errors are raised on every evaluation
+        for _ in range(2):
+            with self.assertRaises(ValueError):
+                safe_eval('open("/etc/passwd","r")')
+            with self.assertRaises(ValueError):
+                safe_eval("import odoo", mode="exec")
+            with self.assertRaises(NameError):
+                safe_eval("self.__name__", {'self': self}, mode="exec")
+
+        # variables created by an evaluation do not leak into the next one
+        context = {'x': 1}
+        safe_eval("y = x + 1", context, mode="exec")
+        self.assertEqual(context['y'], 2)
+        context = {'x': 5}
+        safe_eval("y = x + 1", context, mode="exec")
+        self.assertEqual(context['y'], 6)
+        with self.assertRaises(ValueError):
+            safe_eval("z = y", {}, mode="exec")
+
+        # the same text evaluated in both modes
+        self.assertEqual(safe_eval("1 + 1"), 2)
+        self.assertIsNone(safe_eval("1 + 1", mode="exec"))
+        self.assertEqual(safe_eval("1 + 1"), 2)
+
     def test_06_safe_eval_fancy_syntax(self):
         """ Try Pythonic syntax, like comprehensions and walrus, to verify it does work"""
         safe_eval(dedent("""
@@ -345,6 +377,24 @@ class TestSafeEvalRuntime(TransactionCase):
         """
         with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
             safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_repeated(self):
+        """ The runtime checks apply to every evaluation of the same code, as
+        its compiled code is reused between evaluations """
+        expr = dedent("""
+            callee = lambda *args, **kwargs: ...
+            callee(arg)
+        """)
+        safe_eval(expr, {'arg': 1}, mode='exec')
+        for _ in range(2):
+            with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
+                safe_eval(expr, {'arg': self.UnsafeClass}, mode='exec')
+        safe_eval(expr, {'arg': 2}, mode='exec')
+
+        for _ in range(2):
+            with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
+                safe_eval("UnsafeClass()", self.unsafe_context, mode='exec')
 
     @mute_logger('odoo.tools.safe_eval.runtime')
     def test_check_kwargs(self):

@@ -714,12 +714,18 @@ class Registry(Mapping[str, type["BaseModel"]]):
         should be kept in the tree nodes.  This enables to discard some unnecessary
         fields from the tree nodes.
         """
-        trees = [
-            self.get_field_trigger_tree(field)
-            for field in fields
-            if field in self._field_triggers
-        ]
-        return TriggerTree.merge(trees, select)
+        key = tuple(field for field in fields if field in self._field_triggers)
+        merged_trees = self._merged_trigger_trees
+        try:
+            tree = merged_trees[key]
+        except KeyError:
+            if len(merged_trees) >= 1024:
+                # the field combinations come from arbitrary writes, keep it bounded
+                merged_trees.clear()
+            tree = merged_trees[key] = TriggerTree.merge([
+                self.get_field_trigger_tree(field) for field in key
+            ])
+        return tree if select is bool else tree.filtered(select)
 
     def get_dependent_fields(self, field: Field) -> Iterator[Field]:
         """ Return an iterable on the fields that depend on ``field``. """
@@ -745,6 +751,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     @functools.cached_property
     def _field_trigger_trees(self) -> dict[Field, TriggerTree]:
+        return {}
+
+    @functools.cached_property
+    def _merged_trigger_trees(self) -> dict[tuple[Field, ...], TriggerTree]:
         return {}
 
     def get_field_trigger_tree(self, field: Field) -> TriggerTree:
@@ -1312,4 +1322,16 @@ class TriggerTree(dict['Field', 'TriggerTree']):
             if subtree:
                 result[label] = subtree
 
+        return result
+
+    def filtered(self, select: Callable[[Field], bool]) -> TriggerTree:
+        """ Return a copy of the tree with only the fields for which ``select``
+        is true, and without the subtrees that become empty. Filtering a merged
+        tree gives the same result as merging with ``select``.
+        """
+        result = type(self)([field for field in self.root if select(field)])
+        for label, subtree in self.items():
+            subtree = subtree.filtered(select)
+            if subtree:
+                result[label] = subtree
         return result
