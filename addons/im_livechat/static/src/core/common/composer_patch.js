@@ -7,7 +7,7 @@ patch(Composer.prototype, {
     get wysiwygConfig() {
         const config = super.wysiwygConfig;
         if (
-            this.props.composer.targetThread?.channel?.channel_type !== "livechat" ||
+            this.props.composer().targetThread?.channel?.channel_type !== "livechat" ||
             this.store.self_user?.share === false
         ) {
             return config;

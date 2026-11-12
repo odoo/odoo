@@ -1,4 +1,4 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 
 import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -12,15 +12,11 @@ export class ActivityMailTemplate extends Component {
         this.store = useService("mail.store");
         this.props = usePropsPlus({
             activity: propStatic(t.signal(t.instanceOf(this.store["mail.activity"]))),
+            onActivityChanged: propStatic(
+                t.function([t.instanceOf(this.store["mail.thread"])]).optional()
+            ),
+            onClickButtons: propStatic(t.function([]).optional(() => () => {})),
         });
-        this.onActivityChanged = useProps.static(
-            "onActivityChanged",
-            t.function([t.instanceOf(this.store["mail.thread"])]).optional()
-        );
-        this.onClickButtons = useProps.static(
-            "onClickButtons",
-            t.function([]).optional(() => () => {})
-        );
     }
 
     /**
@@ -30,7 +26,7 @@ export class ActivityMailTemplate extends Component {
     onClickPreview(ev, mailTemplate) {
         ev.stopPropagation();
         ev.preventDefault();
-        this.onClickButtons();
+        this.props.onClickButtons();
         const action = {
             name: _t("Compose Email"),
             type: "ir.actions.act_window",
@@ -50,7 +46,7 @@ export class ActivityMailTemplate extends Component {
             id: this.props.activity().res_id,
         });
         this.env.services.action.doAction(action, {
-            onClose: () => this.onActivityChanged?.(thread),
+            onClose: () => this.props.onActivityChanged?.(thread),
         });
     }
 
@@ -61,7 +57,7 @@ export class ActivityMailTemplate extends Component {
     async onClickSend(ev, mailTemplate) {
         ev.stopPropagation();
         ev.preventDefault();
-        this.onClickButtons();
+        this.props.onClickButtons();
         const thread = this.store["mail.thread"].insert({
             model: this.props.activity().res_model,
             id: this.props.activity().res_id,
@@ -70,6 +66,6 @@ export class ActivityMailTemplate extends Component {
             [this.props.activity().res_id],
             mailTemplate.id,
         ]);
-        this.onActivityChanged?.(thread);
+        this.props.onActivityChanged?.(thread);
     }
 }

@@ -1,4 +1,5 @@
-import { Component, useProps, types as t } from "@odoo/owl";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
+import { Component, types as t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class FullscreenHint extends Component {
@@ -6,12 +7,12 @@ export class FullscreenHint extends Component {
 
     setup() {
         super.setup();
-        this.close = useProps.static("close", t.function());
+        this.props = usePropsPlus({ close: propStatic(t.function()) });
         this.rtc = useService("discuss.rtc");
     }
 
     onClickClose() {
         this.rtc.isFullscreenHintDismissed = true;
-        this.close();
+        this.props.close();
     }
 }
