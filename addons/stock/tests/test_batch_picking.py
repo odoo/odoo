@@ -842,6 +842,43 @@ class TestBatchPicking02(TestStockBatchCommon):
             'height': 500,
         })
 
+    def test_auto_batch_deliveries_created_by_portal_user(self):
+        """ Deliveries created on behalf of a portal user (e.g. a quotation
+        accepted from the customer portal or an eCommerce order) must be
+        auto-batched like the ones created by an internal user. """
+        self.env['res.config.settings'].create({'group_stock_picking_batch': True}).execute()
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.out_type_id.write({
+            'auto_batch': True,
+            'batch_group_by_partner': True,
+            'reservation_method': 'at_confirm',
+        })
+        customer = self.env['res.partner'].create({'name': 'Portal Customer'})
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal Customer',
+            'login': 'portal_customer_batch',
+            'partner_id': customer.id,
+            'group_ids': [Command.set(self.env.ref('base.group_portal').ids)],
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        for origin in ('SO-PORTAL-1', 'SO-PORTAL-2'):
+            self.env['stock.rule'].with_user(portal_user).sudo().run([
+                self.env['stock.rule'].Procurement(
+                    self.productA, 1, self.productA.uom_id, customer_location,
+                    origin, origin, self.env.company,
+                    {'warehouse_id': warehouse, 'partner_id': customer.id},
+                ),
+            ])
+        deliveries = self.env['stock.picking'].search([
+            ('picking_type_id', '=', warehouse.out_type_id.id),
+            ('partner_id', '=', customer.id),
+        ])
+        self.assertEqual(len(deliveries), 2)
+        self.assertEqual(deliveries.mapped('state'), ['assigned', 'assigned'])
+        self.assertTrue(deliveries.batch_id, "The deliveries should have been auto-batched")
+        self.assertEqual(deliveries.batch_id.picking_ids, deliveries)
+
     def test_same_package_several_pickings(self):
         """
         A batch with two transfers, source and destination are the same. The
