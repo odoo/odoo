@@ -198,6 +198,81 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(sum_remote_hours, 35, "It should equal the number of hours richard worked in remote")  # 5 days * 8 hours - 5 hours for leave
         self.assertEqual(sum_leave_hours, 5.0, "It should equal the number of hours richard was on leave")
 
+    def test_generate_multi_overlap_preserves_leave_work_entries(self):
+        training_type, training_on_top_type = self.env['hr.work.entry.type'].create([{
+            'name': 'Training',
+            'code': 'TRAININGTESTTOP' if allow_on_top else 'TRAININGTEST100',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'allow_request_on_top': allow_on_top,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        } for allow_on_top in (False, True)])
+        self.work_entry_type.count_as = 'absence'
+        self.work_entry_type.allow_request_on_top = False
+        self.work_entry_type_remote.leave_validation_type = 'no_validation'
+        leave_type, remote_type = self.work_entry_type, self.work_entry_type_remote
+        scenarios = [
+            (date(2015, 11, 2), leave_type, training_type,
+             [leave_type, leave_type, training_type, training_type, leave_type]),
+            (date(2015, 11, 9), leave_type, remote_type, [leave_type] * 5),
+            (date(2015, 11, 16), remote_type, training_type,
+             [remote_type, remote_type, training_type, training_type, remote_type]),
+            (date(2015, 11, 23), remote_type, training_on_top_type,
+             [remote_type, remote_type, training_on_top_type, training_on_top_type, remote_type]),
+        ]
+        for monday, existing_type, wizard_type, expected_types in scenarios:
+            with self.subTest(existing_type=existing_type, wizard_type=wizard_type):
+                friday = monday + relativedelta(days=4)
+                existing_leave = self.env['hr.leave'].create({
+                    'name': 'Existing Time Off',
+                    'employee_id': self.richard_emp.id,
+                    'work_entry_type_id': existing_type.id,
+                    'request_date_from': monday,
+                    'request_date_to': friday,
+                })
+                if existing_leave.state != 'validate':
+                    existing_leave.action_approve()
+                self.env['hr.leave.generate.multi.wizard'].create({
+                    'name': 'Generated Time Off',
+                    'company_id': self.env.company.id,
+                    'employee_ids': [(6, 0, self.richard_emp.ids)],
+                    'work_entry_type_id': wizard_type.id,
+                    'date_from': monday + relativedelta(days=2),
+                    'date_to': monday + relativedelta(days=3),
+                }).action_generate_time_off()
+
+                leaves = self.env['hr.leave'].search([
+                    ('employee_id', '=', self.richard_emp.id),
+                    ('request_date_from', '<=', friday),
+                    ('request_date_to', '>=', monday),
+                    ('state', '=', 'validate'),
+                ])
+                should_split = not (existing_type.allow_request_on_top or wizard_type.allow_request_on_top)
+                self.assertEqual(len(leaves), 3 if should_split else 2)
+                generated_leave = leaves.filtered(lambda leave: leave.name == 'Generated Time Off')
+                self.assertEqual(len(generated_leave), 1)
+                self.assertEqual(generated_leave.number_of_hours, 16)
+                self.assertEqual(existing_leave.request_date_to, monday + relativedelta(days=1) if should_split else friday)
+                for leave in leaves:
+                    resource_leave = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
+                    self.assertEqual(len(resource_leave), 1)
+                    self.assertEqual(resource_leave.date_from, leave.date_from)
+                    self.assertEqual(resource_leave.date_to, leave.date_to)
+
+                for _ in range(2):
+                    values = self.richard_emp.generate_work_entries(monday, friday)
+                    self.assertEqual(len(values), 5)
+                    self.assertEqual(
+                        {vals['date']: vals['work_entry_type_id'] for vals in values},
+                        {monday + relativedelta(days=i): entry_type for i, entry_type in enumerate(expected_types)},
+                    )
+                    self.assertTrue(all(vals['duration'] == 8 for vals in values))
+                    linked_leaves = self.env['hr.leave'].union(*(vals.get('leave_ids', self.env['hr.leave']) for vals in values))
+                    contributing_leaves = leaves.filtered(lambda leave: leave.work_entry_type_id in expected_types)
+                    self.assertCountEqual(linked_leaves, contributing_leaves)
+
     def test_work_entries_overlap_half_day_leaves(self):
         """Test that half-day leaves correctly split work entries across multiple days.
         When a half-day leave spans two days (AM on day 1, AM on day 2), verify that:
