@@ -1102,15 +1102,28 @@ class ProductProduct(models.Model):
         template_domains = [[('name', operator, value)]]
         product_domains = [[('default_code', operator, value)]]
 
+        def add_variant_name_domain(val, op):
+            if isinstance(val, str) and (m := re.match(r'^(?:\[(.*?)\]\s*)?(.*?)\s*\((.*?)\)$', val.strip())):
+                code, base_name, attrs = m.groups()
+                domain = [('name', op, base_name)]
+                if code:
+                    domain.append(('default_code', '=', code))
+                for attr in attrs.split(','):
+                    if attr := attr.strip():
+                        domain.append(('product_template_attribute_value_ids.name', op, attr))
+                product_domains.append(domain)
+
         if operator == 'in':
             product_domains.append([('barcode', 'in', value)])
             for v in value:
                 if isinstance(v, str) and (m := re.search(r'(\[(.*?)\])', v)):
                     product_domains.append([('default_code', '=', m.group(2))])
-        elif operator.endswith('like') and is_positive:
+                add_variant_name_domain(v, '=')
+        elif (operator == '=' or operator.endswith('like')) and is_positive:
             product_domains.append([('barcode', 'in', [value])])
             if isinstance(value, str) and (m := re.search(r'\[(.*?)\]', value)):
                 product_domains.append([('default_code', '=', m.group(1))])
+            add_variant_name_domain(value, operator)
 
         supplier_domain = []
         if partner_id := self.env.context.get('partner_id'):
