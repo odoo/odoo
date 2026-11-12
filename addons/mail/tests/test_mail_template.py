@@ -477,6 +477,23 @@ class TestMailTemplate(MailCommon):
         self.assertEqual(original_attachments.mapped('res_id'), self.mail_template.ids * 2)
         self.assertEqual(original_attachments.mapped('res_model'), [self.mail_template._name] * 2)
 
+    @users('employee')
+    def test_mail_template_order_user_priority(self):
+        """ Templates restricted to the user or to one of their roles come
+        first, notably in many2one suggestions. """
+        templates = self.env['mail.template'].sudo().create([
+            {'name': 'A Generic'},
+            {'name': 'B Other Owner', 'user_id': self.user_employee_2.id},
+            {'name': 'C Role', 'role_ids': [(4, self.role_employee.id)]},
+            {'name': 'D Owned', 'user_id': self.user_employee.id},
+        ]).with_env(self.env)
+        self.assertEqual(templates.mapped('is_user_priority'), [False, False, True, True])
+        self.assertEqual(
+            [name for _id, name in templates.name_search('', [('id', 'in', templates.ids)])],
+            ['D Owned', 'C Role', 'B Other Owner', 'A Generic'],
+        )
+        self.assertEqual(templates.search([('id', 'in', templates.ids), ('is_user_priority', '=', False)]), templates[1] + templates[0])
+
     def test_mail_template_parse_partner_list_ids(self):
         for partner_list_ids, expected in [
             ('1', [1]),
