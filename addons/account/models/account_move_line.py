@@ -858,7 +858,14 @@ class AccountMoveLine(models.Model):
             base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
             AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
             line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
-            line.price_total = base_line['tax_details']['raw_total_included_currency']
+
+            # Recompute price_total, pre-rounding before the Monetary field can round it.
+            # Using 'raw_total_included_currency' directly can cause problems with cases like
+            # (1.002 excl + 1.003 tax = 2.005 incl), which would become (1.00 + 1.00 = 2.01).
+            total_tax = sum(tax_data['raw_tax_amount_currency'] for tax_data in base_line['tax_details']['taxes_data'])
+            if line.currency_id:
+                total_tax = line.currency_id.round(total_tax)
+            line.price_total = line.price_subtotal + total_tax
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
