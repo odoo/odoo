@@ -146,18 +146,24 @@ class IrCache(models.Model):
              WHERE entry.hash = %s
         """, kind, list(keys), hash))
 
-        # the entries added by this transaction with a read-only cursor (see `_set__`)
+        # the entries added by this transaction with a read-only cursor (see
+        # `_set__`); `cr.postcommit.data` is not more trustworthy than the
+        # table (a server action can reach it): check them like the rows,
+        # the signature against forged values, the hash recomputed from the
+        # control against replayed old entries
         pending = self.env.cr.postcommit.data.get('ir.cache.pending', ())
-        pending_rows = {row[2]: (*row[3:5], row[0], row[5]) for row in pending if row[1] == kind and row[2] in keys}
-        if pending_rows:
+
+        pending_sql = [
+            SQL("(%s, %s::jsonb, %s, %s::timestamp, %s::bytea)", key, control, hash_, create_date, signature)
+            for (create_date, _kind, key, control, hash_, signature) in pending
+            if _kind == kind and key in keys
+        ]
+        if pending_sql:
             rows.extend(self.env.execute_query(SQL("""
                 SELECT key, control, hash, create_date, signature
                 FROM (VALUES %s) AS pending (key, control, hash, create_date, signature)
                 WHERE pending.hash = %s
-            """, SQL(", ").join(
-                SQL("(%s, %s::jsonb, %s, %s::timestamp, %s::bytea)", key, control, hash_, create_date, signature)
-                for key, (control, hash_, create_date, signature) in pending_rows.items()
-            ), hash)))
+            """, SQL(", ").join(pending_sql), hash)))
 
         directory = Path(config.cache_dir(self.env.cr.dbname))
         result = {}
