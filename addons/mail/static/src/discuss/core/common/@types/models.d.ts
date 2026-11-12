@@ -48,7 +48,6 @@ declare module "models" {
         isChannelTokenSecret: boolean|undefined;
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
         startChat: (partnerIds: number[]) => Promise<DiscussChannel>;
-        updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
         channel: DiscussChannel;

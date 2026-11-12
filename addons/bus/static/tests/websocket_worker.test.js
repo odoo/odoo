@@ -173,7 +173,7 @@ test("check connection health during inactivity", async () => {
     await expect.waitForSteps(["check_connection_health_sent"]);
 });
 
-test("debounced updates respect force and batching", async () => {
+test("debounced updates are batched", async () => {
     patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 120_000 });
     patchWithCleanup(WebsocketWorker.prototype, {
         _sendToServer(message) {
@@ -197,17 +197,11 @@ test("debounced updates respect force and batching", async () => {
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
     await advanceTime(120_000);
     await expect.waitForSteps(['subscribe - ["C1"]']);
-    // 1 add channel => force => only one forced subscribe
-    worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
-    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
-    await advanceTime(120_000);
-    await expect.waitForSteps(['subscribe - ["C1"]']);
-    // 2 force => add channel => only one forced subscribe
-    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    // the same channel again => no subscribe
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
     await advanceTime(120_000);
-    await expect.waitForSteps(['subscribe - ["C1"]']);
-    // 3 multiple adds => only one subscribe
+    await expect.waitForSteps([]);
+    // multiple adds => only one subscribe
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C2" });
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C3" });
     await advanceTime(120_000);

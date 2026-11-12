@@ -9,7 +9,7 @@ import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'BUS:ADD_CHANNEL' | 'BUS:DELETE_CHANNEL' | 'BUS:FORCE_UPDATE_CHANNELS' | 'BUS:INITIALIZE_CONNECTION' | 'BUS:REQUEST_LOGS' | 'BUS:SEND' | 'BUS:SET_LOGGING_ENABLED' | 'BUS:LEAVE' | 'BUS:STOP' | 'BUS:START'} WorkerAction
+ * @typedef {'BUS:ADD_CHANNEL' | 'BUS:DELETE_CHANNEL' | 'BUS:INITIALIZE_CONNECTION' | 'BUS:REQUEST_LOGS' | 'BUS:SEND' | 'BUS:SET_LOGGING_ENABLED' | 'BUS:LEAVE' | 'BUS:STOP' | 'BUS:START'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -79,7 +79,7 @@ export class WebsocketWorker {
         this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
         this.lastNotificationId = null;
-        /** @type {?{force: boolean, minId: number|null}} */
+        /** @type {?{minId: number|null}} */
         this.nextSubscribeData = null;
         this.loggingEnabled = null;
         this.messageWaitQueue = [];
@@ -195,8 +195,6 @@ export class WebsocketWorker {
                 return this._addChannel(client, data);
             case "BUS:DELETE_CHANNEL":
                 return this._deleteChannel(client, data);
-            case "BUS:FORCE_UPDATE_CHANNELS":
-                return this._scheduleUpdateChannels({ force: true });
             case "BUS:SET_LOGGING_ENABLED":
                 this.loggingEnabled = data;
                 break;
@@ -578,15 +576,13 @@ export class WebsocketWorker {
      * `_scheduleUpdateChannels` only.
      */
     _debouncedUpdateChannels = debounce(() => {
-        const { force, minId } = this.nextSubscribeData;
+        const { minId } = this.nextSubscribeData;
         this.nextSubscribeData = null;
         const allTabsChannels = [
             ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
         ].sort();
         const allTabsChannelsString = JSON.stringify(allTabsChannels);
-        const shouldUpdateChannelSubscription =
-            allTabsChannelsString !== this.lastChannelSubscription;
-        if (force || shouldUpdateChannelSubscription) {
+        if (allTabsChannelsString !== this.lastChannelSubscription) {
             const check_outdated = minId !== null && !this.lastChannelSubscription;
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
@@ -604,14 +600,10 @@ export class WebsocketWorker {
     /**
      * Schedule a channel subscription update. The operation is debounced and may be
      * batched with other calls. The server will only be notified if the channel set has
-     * changed since the last subscription, unless `force` is true.
-     *
-     * @param {boolean} force If true, ensures a subscription event is sent even if the
-     * channel list has not changed.
+     * changed since the last subscription.
      */
-    _scheduleUpdateChannels({ force = false } = {}) {
+    _scheduleUpdateChannels() {
         this.nextSubscribeData ??= { minId: this.lastNotificationId };
-        this.nextSubscribeData.force ||= force;
         this._debouncedUpdateChannels();
     }
 
