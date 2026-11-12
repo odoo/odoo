@@ -32,6 +32,10 @@ class PosSelfOrderController(http.Controller):
         if not pos_config.self_ordering_mode == device_type:
             raise Unauthorized("Invalid device type")
 
+        cookie_lang = request.cookies.get('frontend_lang')
+        if cookie_lang in pos_config.self_ordering_available_language_ids.mapped('code'):
+            pos_config = pos_config.with_context(lang=cookie_lang)
+
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
         safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, device_type, table)
