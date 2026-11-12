@@ -436,7 +436,7 @@
                     <field name="location_dest_id" string="Destination Location" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id" string="Partner" filter_domain="[('picking_id.partner_id', 'child_of', self)]"/>
                     <filter string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
-                    <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                    <filter string="To Do" name="future" domain="[('state','in',('assigned','partially_available','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available, Partially Available or Waiting"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
                     <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
