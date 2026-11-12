@@ -104,7 +104,7 @@ class ir_cron(models.Model):
         for cron in self:
             cron._try_lock()
             _logger.info('Manually starting job `%s`.', cron.name)
-            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
+            cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.with_context(lang=self.env.user.lang).run()
             self.env.flush_all()
             _logger.info('Job `%s` done.', cron.name)
             cron.lastcall = fields.Datetime.now()
@@ -390,7 +390,7 @@ class ir_cron(models.Model):
             odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', cron_name, server_action_id), depth=log_depth)
             _logger.info('Starting job `%s`.', cron_name)
             start_time = time.time()
-            self.env['ir.actions.server'].browse(server_action_id).run()
+            self.env['ir.actions.server'].browse(server_action_id).with_context(lang=self.env.user.lang).run()
             self.env.flush_all()
             end_time = time.time()
             _logger.info('Job done: `%s` (%.3fs).', cron_name, end_time - start_time)
