@@ -2,7 +2,7 @@
 
 <t t-name="html_builder.TextEffectSelector">
     <Dropdown state="this.dropdown" menuClass="'o_text_effect_popover'" focusToggleOnClosed="false" disabled="this.state.isDisabled" manual="true">
-        <button class="btn btn-light o_hb_select_text_effect" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title" t-att-aria-label="this.props.title"
+        <button type="button" class="btn btn-light o_hb_select_text_effect" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title" t-att-aria-label="this.props.title"
                 t-att="{ disabled: this.state.isDisabled }" t-on-click.stop="this.onClickTextEffect">
             <t t-call="html_builder.TextEffectSelectorSvg"/>
         </button>

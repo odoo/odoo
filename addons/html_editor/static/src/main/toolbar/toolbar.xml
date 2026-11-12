@@ -15,7 +15,7 @@
                                     getSelection.bind="this.props.getSelection"
                                     isDisabled="'isDisabled' in button.props ? button.props.isDisabled : !!button.isDisabled"/>
                             </t>
-                            <button t-else=""
+                            <button type="button" t-else=""
                                 class="btn btn-light"
                                 t-att-class="{
                                     active: button.isActive,
