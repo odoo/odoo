@@ -395,13 +395,23 @@ class HrEmployee(models.Model):
         now_tz = now.replace(tzinfo=datetime.UTC).astimezone(tz)
         month_start = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0).astimezone(datetime.UTC).replace(tzinfo=None)
         month_end = (now_tz + relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0).astimezone(datetime.UTC).replace(tzinfo=None)
+        user = self.env.user
+        can_edit = user.has_group('hr_attendance.group_hr_attendance_user') \
+            or (user.has_group('hr_attendance.group_hr_attendance_officer') and self.attendance_manager_id == user) \
+            or (user.has_group('hr_attendance.group_hr_attendance_own') and self.user_id == user)
         return {
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
             "views": [[False, "list"], [False, "form"]],
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
-            "context": {"group_by": ["check_in:week"]},
+            "context": {
+                "group_by": ["check_in:week"],
+                "default_employee_id": self.id,
+                "create": can_edit,
+                "edit": can_edit,
+                "delete": can_edit,
+            },
         }
 
     @api.depends("user_id.im_status", "attendance_state")
