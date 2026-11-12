@@ -2,9 +2,9 @@
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import new_test_user, tagged, TransactionCase
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -354,3 +354,21 @@ class TestResourceCalendarReference(TransactionCase):
             'hours_per_week': 30,
         })
         self.assertRecordValues(variable.copy(), [{'days_per_week': 4, 'hours_per_week': 30, 'hours_per_day': 7.5}])
+
+    def test_reference_calendar_of_parent_company(self):
+        """ The calendars of a branch can take a calendar of its parent company as reference: the users of the branch
+        read it, but can't change it, nor read the calendars of the other branches. """
+        parent = self.env['res.company'].create({'name': 'Parent Company'})
+        branch, other_branch = self.env['res.company'].create([
+            {'name': 'Branch', 'parent_id': parent.id},
+            {'name': 'Other Branch', 'parent_id': parent.id},
+        ])
+        branch.resource_calendar_id.reference_calendar_id = parent.resource_calendar_id
+        user = new_test_user(self.env, 'branch_user', company_id=branch.id, company_ids=[branch.id], groups='base.group_user')
+        calendar = branch.resource_calendar_id.with_user(user).with_company(branch)
+        reference = calendar.reference_calendar_id
+        self.assertEqual(reference.name, parent.resource_calendar_id.name)
+        with self.assertRaises(AccessError):
+            reference.name = 'Changed'
+        with self.assertRaises(AccessError):
+            other_branch.resource_calendar_id.with_user(user).with_company(branch).name  # noqa: B018
