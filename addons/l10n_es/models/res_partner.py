@@ -1,72 +1,11 @@
 import re
 
-from odoo import api, fields, models
+from odoo import api, models
 from odoo.tools.business_data import split_vat
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
-
-    l10n_es_passport = fields.Char(
-        string='Passport',
-        compute='_compute_l10n_es_passport',
-        inverse='_inverse_l10n_es_passport',
-    )
-    l10n_es_foreign_id = fields.Char(
-        string='Country of residence ID document',
-        compute='_compute_l10n_es_foreign_id',
-        inverse='_inverse_l10n_es_foreign_id',
-    )
-    l10n_es_res_cert = fields.Char(
-        string='Residence certificate',
-        compute='_compute_l10n_es_res_cert',
-        inverse='_inverse_l10n_es_res_cert',
-    )
-    l10n_es_other_id = fields.Char(
-        string='Other supporting document',
-        compute='_compute_l10n_es_other_id',
-        inverse='_inverse_l10n_es_other_id',
-    )
-
-    # ── ES_PASSPORT ──────────────────────────────────────────────────────
-    @api.depends('additional_identifiers')
-    def _compute_l10n_es_passport(self):
-        for partner in self:
-            partner.l10n_es_passport = partner._get_additional_identifier('ES_PASSPORT')
-
-    def _inverse_l10n_es_passport(self):
-        for partner in self:
-            partner._set_additional_identifier('ES_PASSPORT', partner.l10n_es_passport)
-
-    # ── ES_FOREIGN_ID ─────────────────────────────────────────────────────
-    @api.depends('additional_identifiers')
-    def _compute_l10n_es_foreign_id(self):
-        for partner in self:
-            partner.l10n_es_foreign_id = partner._get_additional_identifier('ES_FOREIGN_ID')
-
-    def _inverse_l10n_es_foreign_id(self):
-        for partner in self:
-            partner._set_additional_identifier('ES_FOREIGN_ID', partner.l10n_es_foreign_id)
-
-    # ── ES_RES_CERT ───────────────────────────────────────────────────────
-    @api.depends('additional_identifiers')
-    def _compute_l10n_es_res_cert(self):
-        for partner in self:
-            partner.l10n_es_res_cert = partner._get_additional_identifier('ES_RES_CERT')
-
-    def _inverse_l10n_es_res_cert(self):
-        for partner in self:
-            partner._set_additional_identifier('ES_RES_CERT', partner.l10n_es_res_cert)
-
-    # ── ES_OTHER_ID ───────────────────────────────────────────────────────
-    @api.depends('additional_identifiers')
-    def _compute_l10n_es_other_id(self):
-        for partner in self:
-            partner.l10n_es_other_id = partner._get_additional_identifier('ES_OTHER_ID')
-
-    def _inverse_l10n_es_other_id(self):
-        for partner in self:
-            partner._set_additional_identifier('ES_OTHER_ID', partner.l10n_es_other_id)
 
     def _l10n_es_is_foreign(self):
         self.ensure_one()
@@ -79,7 +18,10 @@ class ResPartner(models.Model):
         without a VAT number, so it shouldn't be treated as one (e.g. forced into a simplified
         invoice) just for lacking a VAT. """
         self.ensure_one()
-        return bool(self.has_vat or self.l10n_es_passport or self.l10n_es_foreign_id or self.l10n_es_res_cert or self.l10n_es_other_id)
+        return self.has_vat or any(
+            self._get_additional_identifier(identifier_type)
+            for identifier_type in ('ES_PASSPORT', 'ES_FOREIGN_ID', 'ES_RES_CERT', 'ES_OTHER_ID')
+        )
 
     def _l10n_es_freelancer(self):
         self.ensure_one()
@@ -95,14 +37,14 @@ class ResPartner(models.Model):
         priority order shared by SII's IDOtro and TicketBAI's alt_id (03-06 doc types).
         """
         self.ensure_one()
-        if self.l10n_es_passport:
-            return '03', self.l10n_es_passport  # Passport
-        if self.l10n_es_foreign_id or self.vat:
-            return '04', self.vat or self.l10n_es_foreign_id  # Country of residence ID document
-        if self.l10n_es_res_cert:
-            return '05', self.l10n_es_res_cert  # Residence certificate
-        if self.l10n_es_other_id:
-            return '06', self.l10n_es_other_id  # Other supporting document
+        if passport := self._get_additional_identifier('ES_PASSPORT'):
+            return '03', passport  # Passport
+        if foreign_id := self.vat or self._get_additional_identifier('ES_FOREIGN_ID'):
+            return '04', foreign_id  # Country of residence ID document
+        if res_cert := self._get_additional_identifier('ES_RES_CERT'):
+            return '05', res_cert  # Residence certificate
+        if other_id := self._get_additional_identifier('ES_OTHER_ID'):
+            return '06', other_id  # Other supporting document
         return '06', 'NO_DISPONIBLE'  # Without anything -> Other probatory document
 
     def _l10n_es_edi_get_partner_info(self):
