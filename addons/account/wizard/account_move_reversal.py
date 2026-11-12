@@ -138,7 +138,7 @@ class AccountMoveReversal(models.TransientModel):
         # Handle reverse method.
         moves_to_redirect = self.env['account.move']
         for moves, default_values_list, is_cancel_needed in batches:
-            new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
+            new_moves = moves.with_context(mail_notrack=True)._reverse_moves(default_values_list, cancel=is_cancel_needed)
             new_moves._compute_partner_bank_id()
             moves._message_log_batch(
                 bodies={
