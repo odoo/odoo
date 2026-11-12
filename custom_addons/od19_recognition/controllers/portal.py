@@ -26,7 +26,7 @@ class Od19RecognitionPortal(http.Controller):
     def my_recognition(self, given=None, error=None, **kwargs):
         return request.render(
             "od19_recognition.portal_recognition_page",
-            self._od19_recognition_page_data(given=given, error=error),
+            self._od19_page_data(given=given, error=error),
         )
 
     # ------------------------------------------------------------------
