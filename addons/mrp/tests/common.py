@@ -277,7 +277,9 @@ class TestMrpCommon(TestStockCommon):
     def full_availability(self):
         """set full availability for all calendars"""
         # setup master-data: resource.calendar edits require HR/system rights
-        calendar = self.env['resource.calendar'].sudo().search([])
+        calendar = self.env['resource.calendar'].sudo().search([
+            ('company_id', 'in', self.env.companies.ids + [False]),
+        ])
         calendar.write({'attendance_ids': [(5, 0, 0)]})
         calendar.write({'attendance_ids': [
             (0, 0, {'dayofweek': '0', 'hour_from': 0, 'hour_to': 24}),
