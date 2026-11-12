@@ -143,12 +143,13 @@ export default class DeviceIdentifierSequence {
 
 /**
  * Clears local storage while preserving the device UUID so the customer
- * display can reconnect to the POS after reload.
+ * display can reconnect to the POS after reload, and the device receipt
+ * counters so the receipt numbers do not restart at 1.
  */
 export function clearLocalStorage() {
-    const deviceUuid = localStorage.getItem("device_uuid");
-    localStorage.clear();
-    if (deviceUuid) {
-        localStorage.setItem("device_uuid", deviceUuid);
+    for (const key of Object.keys(localStorage)) {
+        if (key !== "device_uuid" && !key.endsWith("-unique_device_identifier")) {
+            localStorage.removeItem(key);
+        }
     }
 }
