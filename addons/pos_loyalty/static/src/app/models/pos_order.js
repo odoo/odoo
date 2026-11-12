@@ -25,6 +25,9 @@ patch(PosOrder.prototype, {
         }
         return [...nonRewardLines, ...rewardLines];
     },
+    get isLoyaltyApplicable() {
+        return true;
+    },
     /**
      * Whether one of the program's codes has been entered on this order
      * @param {loyalty_program} program
@@ -67,6 +70,9 @@ patch(PosOrder.prototype, {
      * @returns {loyalty_program[]} the automatically applied programs
      */
     get appliedPrograms() {
+        if (!this.isLoyaltyApplicable) {
+            return [];
+        }
         return this.models["loyalty.program"].filter((program) => {
             const codeActivated = this.isProgramCodeActivated(program);
             const active =
@@ -95,6 +101,9 @@ patch(PosOrder.prototype, {
      * @returns {loyalty_reward[]} the list of rewards that might be applied
      */
     get availableRewards() {
+        if (!this.isLoyaltyApplicable) {
+            return [];
+        }
         // A reward is no longer available once it's been claimed: either it produced
         // a reward line, or it was explicitly claimed (in active_rewards) even if it
         // matched no product and so created no line.
@@ -340,9 +349,10 @@ patch(PosOrder.prototype, {
      * is added/removed or a quantity changes).
      */
     recomputeRewards() {
-        if (this.finalized) {
+        if (this.finalized || !this.isLoyaltyApplicable) {
             return;
         }
+
         // Guard against re-entrancy: creating/deleting reward lines must not trigger another pass.
         if (this._recomputingRewards) {
             return;

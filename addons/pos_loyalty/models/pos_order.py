@@ -75,6 +75,10 @@ class PosOrder(models.Model):
                 )
         return result
 
+    def _is_loyalty_applicable(self):
+        self.ensure_one()
+        return True
+
     def _process_loyalty(self):
         """Create/credit the loyalty cards involved in this order and record history.
 
@@ -86,7 +90,7 @@ class PosOrder(models.Model):
         :returns: the loyalty.card records created or credited.
         """
         self.ensure_one()
-        if not self.config_id:
+        if not self.config_id or not self._is_loyalty_applicable():
             return self.env['loyalty.card']
 
         # Lock processing the same order
