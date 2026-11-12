@@ -164,19 +164,34 @@ export class SocialMediaLinks extends BaseOptionComponent {
                                 delete medias[platform];
                             }
                         } else if (href) {
-                            this.dependencies.builderActions
-                                .getAction("toggleSocialMediaLink")
-                                .apply({
-                                    editingElement,
-                                    params: {
-                                        href,
-                                        platform,
-                                        getIndex: () =>
-                                            editingElement
-                                                .querySelector(".s_social_media_links")
-                                                .querySelectorAll("[data-platform]").length,
-                                    },
-                                });
+                            // look for an existing customLink with the same platform
+                            const customLinkEl = editingElement.querySelector(
+                                `[data-platform=customLink-${platform}]`
+                            );
+                            // if it exists: restore it to regular status
+                            if (customLinkEl) {
+                                customLinkEl.setAttribute("href", href);
+                                customLinkEl.dataset.platform = platform;
+                                delete medias[`customLink-${platform}`];
+                                this.dependencies.massMailingSocialMediaOptionPlugin.addMedia(
+                                    platform,
+                                    href
+                                );
+                            } else {
+                                this.dependencies.builderActions
+                                    .getAction("toggleSocialMediaLink")
+                                    .apply({
+                                        editingElement,
+                                        params: {
+                                            href,
+                                            platform,
+                                            getIndex: () =>
+                                                editingElement
+                                                    .querySelector(".s_social_media_links")
+                                                    .querySelectorAll("[data-platform]").length,
+                                        },
+                                    });
+                            }
                             medias[platform] = { href, active: true, custom: false };
                         }
                     }
