@@ -199,7 +199,29 @@ test("ticket data renders receipt change on overpayment", async () => {
     expectTicketData(ticket, {
         total_amount: "$ 115.00",
         is_change: true,
-        change_amount: "-5",
+        change_amount: "$ 5.00",
+    });
+});
+
+test("ticket data renders the change once and formatted for a synced order", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+    const cashPm = store.models["pos.payment.method"].get(1);
+
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+    addPayment(order, cashPm, 120.0);
+    const changeLine = addPayment(order, cashPm, -5.0);
+    changeLine.is_change = true;
+    order.amount_return = 5.0;
+    order.setOrderPrices();
+    order.state = "paid";
+
+    const { ticket } = renderReceipt(store, order);
+    expectTicketData(ticket, {
+        total_amount: "$ 115.00",
+        payment_lines: [{ name: cashPm.name, amount: "120.00" }],
+        change_amount: "$ 5.00",
     });
 });
 

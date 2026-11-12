@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import tagged
 from odoo.tools import (
     DEFAULT_SERVER_DATE_FORMAT,
@@ -603,3 +603,44 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         })
         names = [line['product_data']['display_name'] for line in order._order_receipt_generate_line_data()]
         self.assertEqual(names, [f"{product.name} (40)", product.display_name])
+
+    def test_receipt_change_shown_once_and_formatted(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        session = self.main_pos_config.current_session_id
+        product = self.env['product.product'].create({
+            'name': 'Change Product',
+            'available_in_pos': True,
+            'list_price': 450.0,
+            'taxes_id': False,
+        })
+        order_data = {
+            'amount_paid': 500,
+            'amount_return': -50,
+            'amount_tax': 0,
+            'amount_total': 450,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'lines': [Command.create({
+                'price_unit': 450.0,
+                'product_id': product.id,
+                'price_subtotal': 450.0,
+                'price_subtotal_incl': 450.0,
+                'tax_ids': [Command.set([])],
+                'qty': 1,
+            })],
+            'session_id': session.id,
+            'payment_ids': [Command.create({
+                'amount': 500,
+                'payment_method_id': self.main_pos_config._get_cash_payment_method().id,
+            })],
+            'uuid': '12346-123-9999',
+            'user_id': self.env.uid,
+            'state': 'paid',
+        }
+        order_id = self.env['pos.order'].sync_from_ui([order_data])['pos.order'][0]['id']
+        order = self.env['pos.order'].browse(order_id)
+        self.assertTrue(order.payment_ids.filtered('is_change'))
+
+        data = order.order_receipt_generate_data()
+        self.assertEqual([p['amount'] for p in data['payments']], [order._order_receipt_format_currency(500)])
+        self.assertEqual(data['extra_data']['change_amount'], order._order_receipt_format_currency(50))
