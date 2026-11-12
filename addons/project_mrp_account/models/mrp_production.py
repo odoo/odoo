@@ -31,6 +31,7 @@ class MrpProduction(models.Model):
             if 'project_id' in vals and production.state != 'draft':
                 production.move_raw_ids._create_analytic_move()
                 production.workorder_ids._create_or_update_analytic_entry()
+                production._create_or_update_extra_cost_analytic_entry()
         return res
 
     def _validate_analytic_distribution(self):
@@ -54,3 +55,30 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         self._validate_analytic_distribution()
         return super().action_confirm()
+
+    def button_mark_done(self):
+        res = super().button_mark_done()
+        self._create_or_update_extra_cost_analytic_entry()
+        return res
+
+    def _create_or_update_extra_cost_analytic_entry(self):
+        for production in self:
+            if (
+                production.state != 'done'
+                or not production.extra_cost
+                or not production.project_id
+                or not production.picking_type_id.analytic_costs
+            ):
+                continue
+
+            finish_move = production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)
+            distribution = production.project_id._get_analytic_distribution()
+
+            line_vals = self.env['account.analytic.account']._perform_analytic_distribution(
+                distribution,
+                -(production.uom_id._compute_quantity(production.qty_producing, production.bom_id.uom_id, round=False) * production.extra_cost),
+                production.qty_producing,
+                finish_move.analytic_account_line_ids,
+                finish_move,
+            )
+            finish_move.analytic_account_line_ids += production.env['account.analytic.line'].create(line_vals)

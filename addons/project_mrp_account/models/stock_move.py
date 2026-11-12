@@ -18,6 +18,13 @@ class StockMove(models.Model):
             res['category'] = 'manufacturing_order'
             if self.state == 'done' and production.state == 'done' and production.date_finished:
                 res['date'] = fields.Date.context_today(production, timestamp=production.date_finished)
+        if self.production_id:
+            res.update({
+                'name': self.env._("[EXTRA COST] %s", self.production_id.display_name),
+                'ref': self.production_id.display_name,
+                'product_uom_id': self.uom_id.id,
+                'category': 'manufacturing_order',
+            })
         return res
 
     def _prepare_analytic_lines(self):
