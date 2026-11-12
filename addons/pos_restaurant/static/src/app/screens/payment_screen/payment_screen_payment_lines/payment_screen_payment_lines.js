@@ -1,23 +1,23 @@
 import { patch } from "@web/core/utils/patch";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 patch(PaymentScreenPaymentLines.prototype, {
     async sendPaymentAdjust(line) {
-        const prevAmount = line.getAmount();
-        const amountDiff = line.pos_order_id.totalDue - line.pos_order_id.amountPaid;
-        const newAmount = prevAmount + amountDiff;
-
-        line.setAmount(newAmount);
+        const adjustmentAmount = line.pos_order_id.remainingDue;
         line.setPaymentStatus("waiting");
-
-        const isAdjustSuccessful =
-            await line.payment_method_id.payment_interface?.sendPaymentAdjust(line.uuid);
-
-        if (!isAdjustSuccessful) {
-            line.setAmount(prevAmount);
+        try {
+            await line.adjustAmount(adjustmentAmount);
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t(
+                    "%s payment adjustment failed",
+                    this.adjustableTipLine.payment_method_id.name
+                ),
+                body: error?.data?.message ?? error?.message ?? error,
+            });
         }
-
         line.setPaymentStatus("done");
     },
 

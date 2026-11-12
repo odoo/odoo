@@ -111,6 +111,7 @@ export class TipScreen extends Component {
 
         if (!amount) {
             await this.pos.data.write("pos.order", [serverId], { is_tipped: true, tip_amount: 0 });
+            await this.adjustableTipLine.capturePayment();
             this.goNextScreen();
             return;
         }
@@ -132,9 +133,28 @@ export class TipScreen extends Component {
 
         order.state = "draft";
         await this.pos.setTip(amount);
-        order.state = "paid";
-        await this.adjustableTipLine.adjustAmount(amount);
 
+        this.state.adjustmentInProgress = true;
+        try {
+            await this.adjustableTipLine.adjustAmount(amount);
+            if (this.adjustableTipLine.requiresCapture()) {
+                await this.adjustableTipLine.capturePayment();
+            }
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t(
+                    "%s payment adjustment failed",
+                    this.adjustableTipLine.payment_method_id.name
+                ),
+                body: error?.data?.message ?? error?.message ?? error,
+            });
+            await this.pos.setTip(0);
+            return;
+        } finally {
+            this.state.adjustmentInProgress = false;
+        }
+
+        order.state = "paid";
         const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
         delete serializedTipLine["record_dependencies"];

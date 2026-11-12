@@ -9,12 +9,12 @@ export class PosPaymentMethod extends Base {
         return this.payment_method_type === "terminal";
     }
 
-    get useQr() {
-        return this.payment_method_type === "external_qr";
+    get useCashMachine() {
+        return this.payment_method_type === "cash_machine";
     }
 
-    get useBankQrCode() {
-        return this.payment_method_type === "bank_qr_code";
+    get useQr() {
+        return this.payment_method_type === "qr";
     }
 
     get config() {

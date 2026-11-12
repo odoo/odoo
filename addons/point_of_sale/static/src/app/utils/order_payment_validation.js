@@ -38,7 +38,7 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
-        if (this.pos.config.set_tip_after_payment && !this.order.is_tipped) {
+        if (this.canTipAfterPayment) {
             if (this.order.adjustableTipLine) {
                 return {
                     page: "TipScreen",
@@ -57,6 +57,10 @@ export default class OrderPaymentValidation {
 
     get paymentLines() {
         return this.order.payment_ids;
+    }
+
+    get canTipAfterPayment() {
+        return Boolean(!this.order.is_tipped && this.pos.config.set_tip_after_payment);
     }
 
     /**
@@ -152,6 +156,15 @@ export default class OrderPaymentValidation {
 
         this.pos.customerDisplay.send({ processingValidation: true });
         try {
+            const uncapturedPayments = this.paymentLines.filter(
+                (line) =>
+                    line.requiresCapture() &&
+                    (!this.canTipAfterPayment || line !== this.order.adjustableTipLine)
+            );
+            for (const payment of uncapturedPayments) {
+                await payment.capturePayment();
+            }
+
             // 1. Ensure pos is set as the source when paid from the PoS.
             // If the order came from Self Order and was paid from the PoS.
             this.order.source = "pos";
