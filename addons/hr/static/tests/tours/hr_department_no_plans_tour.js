@@ -41,12 +41,17 @@ registry.category("web_tour.tours").add("hr_department_no_plans_tour", {
         },
         {
             content: "Plans view is displayed without any plan",
-            trigger: ".o_breadcrumb .active:contains('Employee Plans')",
+            trigger: ".o_list_view .o_view_nocontent, .o_list_view .o_data_row",
             run: () => {
                 if (document.querySelector(".o_error_dialog")) {
                     throw new Error("An error occurred when opening the department plans");
                 }
-                if (document.querySelector(".o_data_row, .o_kanban_record:not(.o_kanban_ghost)")) {
+                const realRows = [
+                    ...document.querySelectorAll(
+                        ".o_data_row, .o_kanban_record:not(.o_kanban_ghost)"
+                    ),
+                ].filter((row) => !row.closest(".o_view_sample_data"));
+                if (realRows.length) {
                     throw new Error("The department plans view should not contain any plan");
                 }
             },
