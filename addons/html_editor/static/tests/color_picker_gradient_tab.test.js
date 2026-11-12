@@ -59,3 +59,10 @@ test("radial size buttons specify aria-label", async () => {
     }
     expect(".o_radial_size_row button").toHaveCount(4);
 });
+
+test.tags("desktop");
+test("radial size buttons have decorative images", async () => {
+    await openCustomGradient("Radial");
+    expect(".o_radial_size_row button img").toHaveCount(4);
+    expect(".o_radial_size_row button img:not([alt=''])").toHaveCount(0);
+});
