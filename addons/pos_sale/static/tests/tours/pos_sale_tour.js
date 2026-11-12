@@ -694,3 +694,33 @@ registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed"
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_so_again_after_new_line_1", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("30.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_so_again_after_new_line_2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            PosSale.settleNthOrder(1),
+            ProductScreen.orderLineHas("New Service", "1.00"),
+            ProductScreen.orderLineHas("Settled Service", "0.00"),
+            ProductScreen.orderLineHas("Settled Goods", "0.00"),
+            ProductScreen.totalAmountIs("5.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
