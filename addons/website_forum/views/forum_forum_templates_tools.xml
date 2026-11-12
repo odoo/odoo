@@ -128,21 +128,21 @@
 
 <template id="author_box">
     <t t-set="display_info" t-value="show_name or show_date or show_karma"/>
-    <t t-if="allow_biography and object.can_display_biography and env.user.karma >= website.karma_profile_min" t-set="bio_popover_data">
-        <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
-            <div class="d-flex flex-column">
-                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="website.image_url(object.create_uid, 'avatar_128', '128x128')" alt="Avatar"/>
-            </div>
-            <div>
-                <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name"]}'/>
-                <span class="o_wforum_bio_popover_info" t-field="object.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
-                <div class="o_wforum_bio_popover_bio mt-1 mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
-            </div>
-        </div>
-    </t>
-    <div t-attf-class="o_wforum_author_box d-inline-flex #{ 'o_show_info ' if display_info else '' }#{ 'o_compact align-items-center ' if compact else '' }#{ 'o_wforum_bio_popover ' if bio_popover_data else ''}#{_box_classes}"
-         t-att-data-bs-content="bio_popover_data"
+    <t t-set="show_bio" t-value="allow_biography and object.can_display_biography and env.user.karma >= website.karma_profile_min"/>
+    <div t-attf-class="o_wforum_author_box d-inline-flex #{ 'o_show_info ' if display_info else '' }#{ 'o_compact align-items-center ' if compact else '' }#{ 'o_wforum_bio_popover ' if show_bio else ''}#{_box_classes}"
          data-bs-placement="top">
+        <template t-if="show_bio" class="o_wforum_bio_template">
+            <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
+                <div class="d-flex flex-column">
+                    <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="website.image_url(object.create_uid, 'avatar_128', '128x128')" alt="Avatar"/>
+                </div>
+                <div>
+                    <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name"]}'/>
+                    <span class="o_wforum_bio_popover_info" t-field="object.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
+                    <div class="o_wforum_bio_popover_bio mt-1 mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
+                </div>
+            </div>
+        </template>
         <t t-set="user_profile_url" t-value="False"/>
         <t t-if="'forum_id' in object and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
             <t t-set="user_profile_url" t-valuef="/profile/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }"/>
