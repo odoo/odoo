@@ -23,9 +23,16 @@ patch(GeneratePrinterData.prototype, {
                 }
             }
         }
+        if (!data.extra_data.loyalties.length && this.order.raw.loyalties) {
+            data.extra_data.loyalties = this.order.raw.loyalties;
+        }
 
-        data.extra_data.new_coupons = (this.order.new_coupon_info || []).map((coupon) => ({
-            name: coupon.program_name,
+        data.extra_data.new_coupons = (
+            this.order.new_coupon_info ||
+            this.order.raw.new_coupon_info ||
+            []
+        ).map((coupon) => ({
+            program_name: coupon.program_name,
             code: coupon.code,
             expiration_date: coupon.expiration_date,
             barcode_base64: coupon.barcode_base64,
