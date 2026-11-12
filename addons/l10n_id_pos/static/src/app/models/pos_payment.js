@@ -1,10 +1,12 @@
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
 import { patch } from "@web/core/utils/patch";
+import { user } from "@web/core/user";
 
 patch(PosPayment.prototype, {
     getQrPopupProps() {
         // Extract only required fields to prevent circular references when serializing data for customer display
         const base = super.getQrPopupProps();
+        user.updateContext({ qris_model: "pos.order", qris_model_id: this.pos_order_id.uuid });
         return {
             ...base,
             paymentMethod: {

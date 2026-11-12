@@ -11,11 +11,8 @@
                     You have not activated any <bold><a type="action" name="%(payment.action_payment_provider)d" class="alert-link" role="button">payment provider</a></bold> to allow online payments.
                 </div>
             </xpath>
-            <xpath expr="//form/sheet/group/div/group/field[@name='payment_method_type']" position="attributes">
+            <xpath expr="//field[@name='electronic_payment_id']" position="attributes">
                 <attribute name="invisible" add="type == 'online'" separator="or"/>
-            </xpath>
-            <xpath expr="//form/sheet/group/div/group/field[@name='qr_code_method']" position="attributes">
-                <attribute name="invisible">type == 'online' or hide_qr_code_method</attribute>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='receivable_account_id']" position="attributes">
                 <attribute name="invisible">type == 'online'</attribute>
