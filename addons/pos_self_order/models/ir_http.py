@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from urllib.parse import urlsplit
 
 from odoo import api, models
 from odoo.http import request
@@ -22,27 +23,22 @@ class IrHttp(models.AbstractModel):
         if not lang_code:
             return super().get_nearest_lang(lang_code)
 
-        referer_url = request.httprequest.headers.get('Referer', '')
-        path = request.httprequest.path
-
-        if '/pos-self/' in path:
-            path_with_config = path
-        elif '/website/translations' in path and '/pos-self/' in referer_url:
-            path_with_config = referer_url
-        else:
-            path_with_config = None
-
-        if path_with_config:
-            config_id_match = re.search(r'/pos-self(?:/data)?/(\d+)', path_with_config)
-            if config_id_match:
-                pos_config = request.env['pos.config'].sudo().browse(int(config_id_match[1]))
-                if pos_config.self_ordering_available_language_ids:
-                    self_order_langs = pos_config.self_ordering_available_language_ids.mapped('code')
+        # The config is either in the requested path (self-order page and data), or in the
+        # referer for the requests sent from a self-order page (RPCs and translations).
+        # Page navigations (e.g. to the online payment page) keep the website languages.
+        httprequest = request.httprequest
+        urls = [httprequest.path]
+        if httprequest.method == 'POST' or '/website/translations' in httprequest.path:
+            urls.append(urlsplit(httprequest.headers.get('Referer', '')).path)
+        for url in urls:
+            if config_id_match := re.search(r'/pos-self(?:/data)?/(\d+)', url):
+                pos_config = request.env['pos.config'].sudo().browse(int(config_id_match[1])).exists()
+                if self_order_langs := pos_config.self_ordering_available_language_ids.mapped('code'):
                     if lang_code in self_order_langs:
                         return lang_code
                     short_code = lang_code.partition('_')[0]
-                    matched_code = next((code for code in self_order_langs if code.startswith(short_code)), None)
-                    if matched_code:
+                    if matched_code := next((code for code in self_order_langs if code.startswith(short_code)), None):
                         return matched_code
+                break
 
         return super().get_nearest_lang(lang_code)
