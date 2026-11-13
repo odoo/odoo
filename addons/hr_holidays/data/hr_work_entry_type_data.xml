@@ -65,6 +65,63 @@
         }"/>
     </function>
 
+<!-- AL : Albania -->
+    <!-- Overtime is encoded by HR, not requested by the employees: work beyond the normal daily or weekly time,
+         paid at least 25% more, 50% on the weekly rest day and the public holidays (Labour Code, art. 88 and 91) -->
+    <record id="hr_work_entry.al_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: at least 22 working days of paid leave a year (Labour Code, art. 92, as amended by Law No.
+         91/2024) -->
+    <record id="hr_work_entry.al_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Temporary incapacity on a medical certificate: the first 14 days paid by the employer at least 80% of the
+         wage (Labour Code, art. 130) -->
+    <record id="hr_work_entry.al_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Temporary incapacity from the 15th day of the medical certificate, paid by the Social Insurance Institute
+         (Law No. 7703 of 1993 on social insurance, art. 23) -->
+    <record id="hr_work_entry.l10n_al_work_entry_type_sick_leave_social_insurance" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Maternity leave: 365 calendar days, paid by the Social Insurance Institute (Law No. 7703 of 1993, art. 27) -->
+    <record id="hr_work_entry.l10n_al_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
+    <!-- Time off in lieu of the overtime: at least 25% longer than the overtime, given within 2 months (Labour Code,
+         art. 91(2)) -->
+    <record id="hr_work_entry.al_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="country_id" ref="base.al"/>
+    </record>
+
 <!-- AU : Australia -->
     <record id="hr_work_entry.l10n_au_work_entry_type_overtime_regular" model="hr.work.entry.type">
         <field name="time_off_selectable">False</field>
