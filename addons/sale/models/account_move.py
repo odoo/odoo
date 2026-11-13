@@ -301,7 +301,9 @@ class AccountMove(models.Model):
 
     @api.model
     def _analytic_line_domain_get_invoiced_lines(self, so_lines):
-        return Domain("so_line", "in", so_lines.ids) & (
+        # The analytic lines of a customer invoice are linked to the item they invoice, but they
+        # are its revenue, not a delivered service or material to invoice.
+        return Domain("so_line", "in", so_lines.ids) & Domain("category", "!=", "invoice") & (
             Domain("reinvoice_move_id", "=", False)
             | Domain(
                 "reinvoice_move_id",
