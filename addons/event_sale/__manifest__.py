@@ -46,6 +46,9 @@ this event.
         'web.assets_tests': [
             'event_sale/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'event_sale/static/tests/**/*.test.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
