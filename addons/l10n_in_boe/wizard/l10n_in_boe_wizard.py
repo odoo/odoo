@@ -17,7 +17,7 @@ class L10n_InBoeWizard(models.TransientModel):
 
         return defaults
 
-    move_ids = fields.Many2many('account.move', string="Original Entry", required=True)
+    move_ids = fields.Many2many('account.move', string="Original Entry", ui_required=True)
     company_currency_id = fields.Many2one('res.currency', compute="_compute_move_defaults", string="Company Currency")
     currency_id = fields.Many2one('res.currency', compute="_compute_move_defaults", readonly=False, string="Document Currency")
     source_partner_id = fields.Many2one('res.partner', compute="_compute_move_defaults")

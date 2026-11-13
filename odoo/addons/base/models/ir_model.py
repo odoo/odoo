@@ -241,7 +241,7 @@ class IrModel(models.Model):
                         help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"')
     info = fields.Text(string='Information')
     explanation = fields.Text(string='Explanation', help='Verbose description of what is this model for')
-    field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
+    field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', ui_required=True, copy=True,
                                default=_default_field_id)
     inherited_model_ids = fields.Many2many('ir.model', compute='_inherited_models', string="Inherited models",
                                            help="The list of models that extends the current model.")

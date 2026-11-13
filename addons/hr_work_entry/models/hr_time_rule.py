@@ -229,7 +229,7 @@ class HrTimeRule(models.Model):
         'hr.work.entry.type',
         'hr_time_rule_condition_work_entry_type_rel',
         string="Time Type",
-        required=True,
+        ui_required=True,
         ui_domain="[('id', 'in', country_work_entry_type_ids)]",
         help="If set, only the selected types will be considered by this rule.",
     )

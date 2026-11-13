@@ -9,7 +9,7 @@ class BaseModuleUninstall(models.TransientModel):
     _description = "Module Uninstall"
 
     module_ids = fields.Many2many(
-        'ir.module.module', string="Module(s)", required=True,
+        'ir.module.module', string="Module(s)", ui_required=True,
         domain=[('state', 'in', ['installed', 'to upgrade', 'to install'])],
         ondelete='cascade', readonly=True,
     )

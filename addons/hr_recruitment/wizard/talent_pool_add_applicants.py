@@ -7,7 +7,7 @@ class TalentPoolAddApplicants(models.TransientModel):
     applicant_ids = fields.Many2many(
         "hr.applicant",
         string="Applicants",
-        required=True,
+        ui_required=True,
     )
     talent_pool_ids = fields.Many2many("hr.talent.pool", string="Talent Pool")
     categ_ids = fields.Many2many(

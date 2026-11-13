@@ -11,7 +11,7 @@ class PurchaseAlternativeCreate(models.TransientModel):
         'purchase.order', help="The original PO that this alternative PO is being created for."
     )
     partner_ids = fields.Many2many(
-        'res.partner', string='Vendor', required=True,
+        'res.partner', string='Vendor', ui_required=True,
         help="Choose a vendor for alternative PO")
     purchase_warn_msg = fields.Text(
         'Warning Messages',

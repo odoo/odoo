@@ -10,7 +10,7 @@ class MailingContactToList(models.TransientModel):
 
     contact_ids = fields.Many2many('mailing.contact', string='Mailing Contacts')
     partner_ids = fields.Many2many('res.partner', string='Contacts')
-    mailing_list_ids = fields.Many2many('mailing.list', string='Mailing Lists', required=True)
+    mailing_list_ids = fields.Many2many('mailing.list', string='Mailing Lists', ui_required=True)
 
     def action_add_contacts(self):
         if self.partner_ids:

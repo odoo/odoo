@@ -17,7 +17,7 @@ class EventBoothConfigurator(models.TransientModel):
         'event.booth.category', string='Booth Category', required=True,
         compute='_compute_event_booth_category_id', readonly=False, store=True)
     event_booth_ids = fields.Many2many(
-        'event.booth', string='Booth', required=True,
+        'event.booth', string='Booth', ui_required=True,
         compute='_compute_event_booth_ids', readonly=False, store=True)
 
     @api.depends('event_id')
