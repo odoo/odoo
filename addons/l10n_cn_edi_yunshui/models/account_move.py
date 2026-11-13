@@ -600,6 +600,11 @@ class AccountMove(models.Model):
         """Return why the tax bureau would refuse this invoice's fapiao, checked before contacting it."""
         self.ensure_one()
         errors = []
+        if self.l10n_cn_edi_invoice_type_code == '01' and not self.commercial_partner_id.vat:
+            errors.append(self.env._(
+                "A special fapiao (专票) needs the customer's Tax ID: %(customer)s has none.",
+                customer=self.commercial_partner_id.name,
+            ))
         product_lines = self._l10n_cn_edi_product_lines()
         negative_lines = product_lines.filtered(lambda line: line.price_subtotal < 0)
         for line in product_lines:
