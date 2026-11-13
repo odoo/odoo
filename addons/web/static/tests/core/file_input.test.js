@@ -22,7 +22,7 @@ async function createFileInput({ mockPost, mockAdd, props }) {
     mockService("http", {
         post: mockPost || (() => {}),
     });
-    await mountWithCleanup(FileInput, { props });
+    return await mountWithCleanup(FileInput, { props });
 }
 
 // -----------------------------------------------------------------------------
@@ -138,6 +138,28 @@ test("uploading the same file twice triggers the onChange twice", async () => {
     expect.verifySteps(["fake_file.txt"]);
 });
 
+test("uploading an empty file", async () => {
+    const file = new File([], "empty.txt", { type: "text/plain" });
+    await createFileInput({
+        props: {
+            onUpload(files) {
+                expect.step(files[0].name);
+            },
+        },
+        mockPost: (_, params) => {
+            expect(params.ufile).toEqual([file]);
+            return JSON.stringify([{ name: file.name }]);
+        },
+    });
+
+    await contains(".o_file_input input", { visible: false }).click();
+    await setInputFiles([file]);
+    await animationFrame();
+
+    expect.verifySteps(["empty.txt"]);
+    expect(".o_file_input input").toBeEnabled();
+});
+
 test("uploading a file that is too heavy will send a notification", async () => {
     patchWithCleanup(session, { max_file_upload_size: 2 });
     await createFileInput({
@@ -213,3 +235,32 @@ test("support preprocessing of files via props", async () => {
 
     expect.verifySteps(["fake_file.txt"]);
 });
+
+for (const failure of ["network", "server"]) {
+    test(`Upload button is enabled after a ${failure} error`, async () => {
+        let firstAttempt = true;
+        const fileInput = await createFileInput({
+            props: {},
+            mockPost: () => {
+                if (firstAttempt) {
+                    firstAttempt = false;
+                    if (failure === "network") {
+                        throw new Error("Upload failed");
+                    }
+                    return JSON.stringify({ error: "Upload failed" });
+                }
+                expect.step("retry");
+                return "[]";
+            },
+        });
+
+        await expect(fileInput.onFileInputChange()).rejects.toThrow("Upload failed");
+        await animationFrame();
+        expect(".o_file_input input").toBeEnabled();
+
+        await fileInput.onFileInputChange();
+        await animationFrame();
+        expect.verifySteps(["retry"]);
+        expect(".o_file_input input").toBeEnabled();
+    });
+}
