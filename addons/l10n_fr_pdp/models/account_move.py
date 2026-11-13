@@ -478,7 +478,7 @@ class AccountMove(models.Model):
             tagret_move = matched[0] if matched else move
             if tagret_move._l10n_fr_pdp_is_purchase():
                 move.l10n_fr_pdp_flow_10_operation_type = 'purchase'
-            elif tagret_move._l10n_fr_pdp_is_sale():
+            elif tagret_move.is_sale_document(include_receipts=True):
                 move.l10n_fr_pdp_flow_10_operation_type = 'sale'
             else:
                 move.l10n_fr_pdp_flow_10_operation_type = None
@@ -514,7 +514,7 @@ class AccountMove(models.Model):
                 move.l10n_fr_pdp_flow_10_report_type = None
                 continue
             is_purchase = move._l10n_fr_pdp_is_purchase()
-            is_sale = not is_purchase and move._l10n_fr_pdp_is_sale()
+            is_sale = not is_purchase and move.is_sale_document(include_receipts=True)
             if is_purchase or is_sale:
                 move.l10n_fr_pdp_flow_10_report_type = 'transaction'
             elif move.move_type == 'entry':
@@ -553,10 +553,6 @@ class AccountMove(models.Model):
                 or any(tax.tax_exigibility == 'on_payment' for tax in move.invoice_line_ids.tax_ids)
             )
         )
-
-    def _l10n_fr_pdp_is_sale(self):
-        self.ensure_one()
-        return self.is_sale_document(include_receipts=True)
 
     def _l10n_fr_pdp_is_purchase(self):
         self.ensure_one()
@@ -652,7 +648,7 @@ class AccountMove(models.Model):
         """Return whether this move uses the company's foreign tax registration."""
         self.ensure_one()
         return (
-            self._l10n_fr_pdp_is_sale()
+            self.is_sale_document(include_receipts=True)
             and bool(self.fiscal_position_id.foreign_vat)
             and self.tax_country_id != self.company_id.account_fiscal_country_id
         )
@@ -703,7 +699,7 @@ class AccountMove(models.Model):
     def _need_ubl_cii_xml(self, invoice_edi_format):
         self.ensure_one()
         builder = self.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
-        if 'email' not in self.env.context.get('sending_method', []) or not invoice_edi_format or not builder:
+        if 'email' not in self.env.context.get('sending_method', []) or invoice_edi_format != 'ubl_21_fr' or builder is None:
             return super()._need_ubl_cii_xml(invoice_edi_format)
 
         _xml_content, errors = builder._export_invoice(self)

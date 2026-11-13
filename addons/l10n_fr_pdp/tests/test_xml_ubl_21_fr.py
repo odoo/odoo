@@ -21,6 +21,28 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_pdf_fallback_is_limited_to_french_ubl(self):
+        """Incomplete French UBL data may fall back to PDF for email delivery.
+
+        Other EDI formats must still be generated so their validation errors
+        are reported instead of silently dropping the XML attachment.
+        """
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        invoice.partner_id.write({
+            'vat': False,
+            'additional_identifiers': False,
+            'routing_identifier': False,
+        })
+        invoice = invoice.with_context(sending_method=['email'])
+
+        for edi_format, needs_xml in [('ubl_21_fr', False), ('ubl_bis3', True)]:
+            with self.subTest(edi_format=edi_format):
+                builder = invoice.partner_id.commercial_partner_id._get_edi_builder(edi_format)
+                _xml_content, errors = builder._export_invoice(invoice)
+                self.assertTrue(errors)
+                self.assertEqual(invoice._need_ubl_cii_xml(edi_format), needs_xml)
+
     def test_export_invoice_partner_fr_without_pdp(self):
         """
         A French Peppol proxy user must have the BR-FR-05 mandatory notes
