@@ -644,6 +644,20 @@ class AccountEdiProxyClientUser(models.Model):
             )
             return response
 
+        if info['process_condition_code'] == '501' and flow_number == '2' and content['state'] == 'done':
+            # The receiving platform declared the flow inadmissible: the invoice has to be sent again.
+            # We force the error state since the 'done' state may have been fetched before this lifecycle was received.
+            # The lifecycle is not kept as a response: its 'RE' status would otherwise be restored on the next
+            # recompute of `peppol_move_state` (e.g. reset to draft) and prevent sending the invoice again.
+            origin_move.peppol_move_state = 'error'
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                errors=[self.env._('An error occurred on the receiving Access Point: "%s"', info['process_condition'])] + status_details,
+                pa_status='error',
+                error_source=self.env._("PA Lifecycle"),
+            )
+            return response
+
         response = self.env['account.peppol.response'].create({
             'peppol_message_uuid': uuid,
             'pdp_ref_uuid': origin_peppol_lifecycle_uuid,
@@ -704,6 +718,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         return {
             'process_condition_code': process_condition_code,
+            'process_condition': xml_node.findtext("rsm:AcknowledgementDocument/ram:ReferenceReferencedDocument/ram:ProcessCondition", namespaces=CDAR_NSMAP),
             'response_code': PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(process_condition_code, process_condition_code),
             'issue_date': _parse_cdar_datetime_node(xml_node.find("rsm:AcknowledgementDocument/ram:IssueDateTime/udt:DateTimeString", namespaces=CDAR_NSMAP)),
             'status_infos': status_infos,
