@@ -49,6 +49,36 @@ describe("Pivot custom groups", () => {
         });
     });
 
+    test("Can have custom groups with boolean measures", async function () {
+        Partner._records[0].bar = false; // product 37: [false], product 41: [true, true, false]
+        const { model, pivotId } = await createSpreadsheetWithPivot();
+        updatePivot(model, pivotId, {
+            columns: [{ fieldName: "GroupedProducts", order: "asc" }],
+            rows: [],
+            measures: [
+                { id: "bar:bool_and", fieldName: "bar", aggregator: "bool_and" },
+                { id: "bar:bool_or", fieldName: "bar", aggregator: "bool_or" },
+            ],
+            customFields: {
+                GroupedProducts: {
+                    parentField: "product_id",
+                    name: "GroupedProducts",
+                    groups: [
+                        { name: "A Group", values: [37, 41] },
+                        { name: "B Group", values: [200, 201] },
+                    ],
+                },
+            },
+        });
+        await waitForDataLoaded(model);
+        setCellContent(model, "A1", '=PIVOT.VALUE(1, "bar:bool_or", "GroupedProducts", "A Group")');
+        setCellContent(model, "A2", '=PIVOT.VALUE(1, "bar:bool_and", "GroupedProducts", "B Group")');
+        setCellContent(model, "A3", '=PIVOT.VALUE(1, "bar:bool_or", "GroupedProducts", "B Group")');
+        expect(getEvaluatedCell(model, "A1").value).toBe(true);
+        expect(getEvaluatedCell(model, "A2").value).toBe(""); // false
+        expect(getEvaluatedCell(model, "A3").value).toBe(true);
+    });
+
     test("Can have custom groups on char field", async function () {
         Partner._records = Partner._records.map((record, i) => ({
             ...record,
