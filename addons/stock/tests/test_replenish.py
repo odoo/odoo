@@ -11,22 +11,22 @@ from odoo import Command, fields
 class TestStockReplenish(TestStockCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_base_delay(self):
         """Open the replenish view and check if delay is taken into account
             in the base date computation
         """
-        push_location = self.env['stock.location'].create({
+        push_location = self.env['stock.location'].sudo().create({
             'location_id': self.stock_location.location_id.id,
             'name': 'push location',
         })
 
-        route_no_delay = self.env['stock.route'].create({
+        route_no_delay = self.env['stock.route'].sudo().create({
             'name': 'new route',
             'rule_ids': [Command.create({
                 'name': 'create a move to push location',
@@ -40,7 +40,7 @@ class TestStockReplenish(TestStockCommon):
             })],
         })
 
-        route_delay = self.env['stock.route'].create({
+        route_delay = self.env['stock.route'].sudo().create({
             'name': 'new route',
             'rule_ids': [Command.create({
                 'name': 'create a move to push location',
@@ -85,7 +85,7 @@ class TestStockReplenish(TestStockCommon):
         self.env.user.sudo().company_ids += company
         self.env = self.env(context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company.id]))
         self.productA = self.productA.with_env(self.env)
-        route = self.env['stock.route'].create({
+        route = self.env['stock.route'].sudo().create({
             'name': 'Test Route',
             'company_id': company.id,
         })
@@ -97,7 +97,7 @@ class TestStockReplenish(TestStockCommon):
         """ Open the replenish view and verify that the routes from the product
         category are available.
         """
-        route = self.env['stock.route'].create({
+        route = self.env['stock.route'].sudo().create({
             'name': 'Product category route',
             'product_categ_selectable': True
         })
