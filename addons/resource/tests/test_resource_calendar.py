@@ -126,3 +126,138 @@ class TestResourceCalendar(TransactionCase):
             form.company_id = self.env.company
 
         self.assertEqual(work_schedule.attendance_ids, attendance_1)
+
+    def test_flexible_calendar_attendance_intervals_with_leaves(self):
+        flexible_calendar = self.env["resource.calendar"].create({
+            "name": "Test Flexible Calendar",
+            "flexible_hours": True,
+            "full_time_required_hours": 40,
+            "hours_per_day": 8,
+            "tz": "UTC",
+        })
+        resource = self.env["resource.resource"].create({
+            "name": "Test Resource",
+            "calendar_id": flexible_calendar.id,
+            "tz": "UTC",
+        })
+        self.env["resource.calendar.leaves"].create([
+            {
+                "name": "Late leave",
+                "resource_id": resource.id,
+                "date_from": datetime(2022, 1, 10, 16, 0),
+                "date_to": datetime(2022, 1, 10, 17, 0),
+            },
+            {
+                "name": "Early leave",
+                "resource_id": resource.id,
+                "date_from": datetime(2022, 1, 11, 10, 0),
+                "date_to": datetime(2022, 1, 11, 11, 0),
+            },
+            {
+                "name": "First hourly leave",
+                "resource_id": resource.id,
+                "date_from": datetime(2022, 1, 12, 10, 0),
+                "date_to": datetime(2022, 1, 12, 11, 0),
+            },
+            {
+                "name": "Second hourly leave",
+                "resource_id": resource.id,
+                "date_from": datetime(2022, 1, 12, 16, 0),
+                "date_to": datetime(2022, 1, 12, 17, 0),
+            },
+            {
+                "name": "Full-day leave",
+                "resource_id": resource.id,
+                "date_from": datetime(2022, 1, 14, 0, 0),
+                "date_to": datetime(2022, 1, 14, 23, 59, 59),
+            },
+        ])
+
+        start_dt = pytz.UTC.localize(datetime(2022, 1, 10))
+        end_dt = pytz.UTC.localize(datetime(2022, 1, 14))
+        work_intervals = flexible_calendar._work_intervals_batch(start_dt, end_dt, resources=resource)
+
+        def get_ranges(intervals, day):
+            return [
+                (start.strftime("%H:%M"), stop.strftime("%H:%M"))
+                for start, stop, _records in intervals[resource.id]
+                if start.date() == day
+            ]
+
+        # 10 January: 16:00-17:00.
+        # The synthetic attendance must end at 17:00.
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 10).date()),
+            [("09:00", "16:00")],
+        )
+        # 11 January: 10:00-11:00.
+        # The default end-based calculation would start too early,
+        # so use the leave start as reference.
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 11).date()),
+            [("11:00", "18:00")],
+        )
+        # 12 January: two separate hourly leaves.
+        # Use the latest leave end as reference.
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 12).date()),
+            [("09:00", "10:00"), ("11:00", "16:00")],
+        )
+        # 13 January: no leaves, preserve the default behavior.
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 13).date()),
+            [("08:00", "16:00")],
+        )
+        # 14 January: a full-day leave already covers the default interval.
+        # There is no reason to move it.
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 14).date()),
+            [],
+        )
+
+    def test_flexible_calendar_attendance_intervals_with_multi_day_leave(self):
+        flexible_calendar = self.env["resource.calendar"].create({
+            "name": "Test Flexible Calendar",
+            "flexible_hours": True,
+            "full_time_required_hours": 40,
+            "hours_per_day": 8,
+            "tz": "UTC",
+        })
+        resource = self.env["resource.resource"].create({
+            "name": "Test Resource",
+            "calendar_id": flexible_calendar.id,
+            "tz": "UTC",
+        })
+        self.env["resource.calendar.leaves"].create({
+            "name": "Multi-day leave",
+            "resource_id": resource.id,
+            "date_from": datetime(2022, 1, 10, 10, 0),
+            "date_to": datetime(2022, 1, 12, 11, 0),
+        })
+        start_dt = pytz.UTC.localize(datetime(2022, 1, 10))
+        end_dt = pytz.UTC.localize(datetime(2022, 1, 14))
+        work_intervals = flexible_calendar._work_intervals_batch(start_dt, end_dt, resources=resource)
+
+        def get_ranges(intervals, day):
+            return [
+                (start.strftime("%H:%M"), stop.strftime("%H:%M"))
+                for start, stop, _records in intervals[resource.id]
+                if start.date() == day
+            ]
+
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 10).date()),
+            [],
+        )
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 11).date()),
+            [],
+        )
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 12).date()),
+            [],
+        )
+        self.assertEqual(
+            get_ranges(work_intervals, datetime(2022, 1, 13).date()),
+            [("08:00", "16:00")],
+        )
