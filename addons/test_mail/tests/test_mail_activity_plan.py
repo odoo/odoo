@@ -510,6 +510,53 @@ class TestActivitySchedule(ActivityScheduleCase):
         template.write({'responsible_type': 'role', 'role_id': self.test_role_1.id})
         self.assertEqual(template.role_id, self.test_role_1)
 
+    @users('employee')
+    def test_plan_single_activity(self):
+        """A plan with a single activity is scheduled like a regular activity."""
+        plan = self.env['mail.activity.plan'].sudo().create({
+            'name': 'Single Activity Plan',
+            'res_model': 'mail.test.activity',
+            'template_ids': [Command.create({
+                'activity_type_id': self.activity_type_todo.id,
+                'delay_count': 1,
+                'delay_from': 'after_plan_date',
+                'delay_unit': 'weeks',
+                'responsible_id': self.user_admin.id,
+                'responsible_type': 'other',
+                'summary': 'Single Activity',
+            })],
+        }).sudo(False)
+        test_record = self.test_records[0].with_env(self.env)
+        with self.mock_datetime_and_now(self.reference_now):
+            form = self._instantiate_activity_schedule_wizard(test_record)
+            form.plan_id = plan
+            self.assertEqual(form.activity_type_id, self.activity_type_todo)
+            self.assertEqual(form.activity_user_id, self.user_admin)
+            self.assertEqual(form.date_deadline, (self.reference_now + relativedelta(days=7)).date())
+            self.assertEqual(form.summary, 'Single Activity')
+            form.summary = 'Edited Summary'
+            with self._mock_activities():
+                form.save().action_schedule_activities()
+        self.assertActivityCreatedOnRecord(test_record, {
+            'activity_plan_id': plan,
+            'activity_template_id': plan.template_ids,
+            'activity_type_id': self.activity_type_todo,
+            'summary': 'Edited Summary',
+            'user_id': self.user_admin,
+        })
+
+        # a plan with several activities cannot be scheduled as a single activity
+        form = self._instantiate_activity_schedule_wizard(test_record)
+        form.plan_id = self.plan_onboarding
+        with self.assertRaises(ValueError):
+            form.save().action_schedule_activities()
+
+        # selecting another activity type leaves the plan
+        form = self._instantiate_activity_schedule_wizard(test_record)
+        form.plan_id = plan
+        form.activity_type_id = self.activity_type_call
+        self.assertFalse(form.plan_id)
+
     def test_plan_user_ids(self):
         """Only the users of the plan see it in the wizard, but everyone can still launch it."""
         self.plan_onboarding.user_ids = self.user_employee
