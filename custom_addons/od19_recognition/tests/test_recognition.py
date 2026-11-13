@@ -1,8 +1,13 @@
+from unittest.mock import patch
+
 from odoo import Command, fields, http
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, TransactionCase, tagged
 
-from odoo.addons.od19_recognition.controllers.portal import RECOGNITION_SUMMARY_CACHE
+from odoo.addons.od19_recognition.controllers.portal import (
+    RECOGNITION_SUMMARY_CACHE,
+    Od19RecognitionPortal,
+)
 
 
 @tagged("post_install", "-at_install")
@@ -318,6 +323,24 @@ class TestRecognitionPortal(HttpCase):
         self.assertEqual(response.status_code, 200)
         feed_ids = [item["id"] for item in response.json()["feed"]]
         self.assertNotIn(cross.id, feed_ids)
+
+    def test_summary_second_request_uses_cache(self):
+        self.authenticate("feed_giver", "feed_giver")
+        RECOGNITION_SUMMARY_CACHE.clear()
+        original = Od19RecognitionPortal._od19_summary_data
+        calls = {"n": 0}
+
+        def counting(controller, *args, **kwargs):
+            calls["n"] += 1
+            return original(controller, *args, **kwargs)
+
+        with patch.object(Od19RecognitionPortal, "_od19_summary_data", counting):
+            first = self.url_open("/my/recognition/summary")
+            second = self.url_open("/my/recognition/summary")
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 200)
+        self.assertEqual(first.json(), second.json())
+        self.assertEqual(calls["n"], 1)
 
 
 @tagged("post_install", "-at_install")
