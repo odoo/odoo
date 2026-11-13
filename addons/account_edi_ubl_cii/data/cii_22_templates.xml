@@ -108,7 +108,7 @@
                 xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <!-- Contact. -->
-                <ram:Name t-out="partner.display_name if partner.name else partner.commercial_partner_id.display_name"/>
+                <ram:Name t-out="partner_name or (partner.display_name if partner.name else partner.commercial_partner_id.display_name)"/>
                 <ram:SpecifiedLegalOrganization t-if="specified_legal_organization_val">
                     <ram:ID t-att-schemeID="str('0002')"
                             t-out="specified_legal_organization_val"/>
@@ -223,6 +223,7 @@
                             <!-- Address. -->
                             <t t-call="account_edi_ubl_cii.account_invoice_partner_facturx_export_22"
                                 partner="record.partner_id"
+                                partner_name="record.commercial_partner_id.name"
                                 specified_legal_organization_val="buyer_specified_legal_organization"/>
 
                             <ram:URIUniversalCommunication t-if="record.partner_id.routing_scheme and record.partner_id.routing_endpoint">
