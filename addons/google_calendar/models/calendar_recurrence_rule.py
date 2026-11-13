@@ -98,11 +98,13 @@ class CalendarRecurrence(models.Model):
         new_parsed_rrule = self._rrule_parse(self.rrule, self.dtstart, until_tz=new_tz)
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
-        emails = [a.get('email') for a in google_attendees]
+        emails = [a.get('email') for a in google_attendees if not a.get('resource', False)]
         partners = self._get_sync_partner(emails)
         existing_attendees = self.calendar_event_ids.attendee_ids
         partners_by_email = {(p.email_normalized or p.email): p for p in partners}
         for google_attendee in google_attendees:
+            if google_attendee.get('resource'):
+                continue
             attendee_email = google_attendee.get('email')
             attendee_email_normalized = email_normalize(attendee_email)
             if attendee_email in existing_attendees.mapped('email'):
