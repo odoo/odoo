@@ -1,6 +1,30 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
 
+# 增值税特殊管理 (zzstsgl) as Yunshui takes it: the Chinese name (spec 5.1.1).
+VAT_SPECIAL_POLICY_NAMES = {
+    'simplified': '简易征收',
+    'rare_earth': '稀土产品',
+    'exemption': '免税',
+    'non_taxable': '不征税',
+    'collect_refund': '先征后退',
+    'collect_refund_100': '100%先征后退',
+    'collect_refund_50': '50%先征后退',
+    'simplified_3': '按3%简易征收',
+    'simplified_5': '按5%简易征收',
+    'simplified_5_1_5': '按5%简易征收减按1.5%计征',
+    'immediate_refund_30': '即征即退30%',
+    'immediate_refund_50': '即征即退50%',
+    'immediate_refund_70': '即征即退70%',
+    'immediate_refund_100': '即征即退100%',
+    'refund_gt_3': '超税负3%即征即退',
+    'refund_gt_8': '超税负8%即征即退',
+    'refund_gt_12': '超税负12%即征即退',
+    'refund_gt_6': '超税负6%即征即退',
+    'simplified_2': '按2%简易征收',
+    'simplified_3_1_5': '按3%简易征收减按1.5%计征',
+}
+
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'

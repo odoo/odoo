@@ -462,6 +462,14 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             'invoice_line_ids': [Command.create({'product_id': self.product_a.id, **line}) for line in lines],
         })
 
+    def test_lines_with_different_reduced_tax_codes_are_refused(self):
+        invoice = self._invoice_of([
+            {'price_unit': 100.0, 'tax_ids': self._sale_tax(5, l10n_cn_reduced_tax_code='05').ids},
+            {'price_unit': 100.0, 'tax_ids': self._sale_tax(3).ids},
+        ])
+
+        self.assertEqual(invoice._l10n_cn_edi_check_invoice(), ["All the lines of a fapiao must have the same Reduced Tax Code, or none."])
+
     def test_line_discount_is_sent_as_a_discount_row(self):
         tax = self._sale_tax(13)
         invoice = self._invoice_of([

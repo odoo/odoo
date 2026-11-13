@@ -166,11 +166,16 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         with self.assertRaisesRegex(UserError, 'could not confirm tax-bureau session status'):
             client.get_session_state()
 
-    def test_special_vat_treatment_is_rejected(self):
+    def test_special_vat_treatment_is_sent(self):
         invoice = self._post_invoice()
-        invoice.invoice_line_ids.tax_ids.l10n_cn_reduced_tax_code = '01'
+        invoice.invoice_line_ids.tax_ids.write({'l10n_cn_vat_special_policy': 'simplified_3', 'l10n_cn_reduced_tax_code': '05'})
 
-        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'does not support special VAT treatment')
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
+
+        self.assertEqual(invoice._l10n_cn_edi_check_invoice(), [])
+        self.assertEqual(payload['jazslxdm'], '05')
+        self.assertEqual(payload['invoiceItems'][0]['yhzcbs'], 'Y')
+        self.assertEqual(payload['invoiceItems'][0]['zzstsgl'], '按3%简易征收')
 
     def test_tax_rate_outside_the_spec_set_is_rejected(self):
         for rate, accepted in ((0.0, True), (1.0, True), (13.0, True), (17.0, True), (2.0, False), (13.5, False)):
