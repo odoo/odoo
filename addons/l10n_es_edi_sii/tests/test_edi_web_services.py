@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests import tagged
@@ -65,3 +66,47 @@ class TestEdiWebServices(TestEsEdiCommon):
 
         self.assertEqual(self.out_invoice.l10n_es_edi_sii_state, 'sent')
         self.assertEqual(self.in_invoice.l10n_es_edi_sii_state, 'sent')
+
+    def _mock_sii_fault(self, document_instance, communication_type, info_list):
+        """ This cleanly mocks the return value of _post_to_agency when our specific Exception is caught """
+        return {
+            doc: (False, {
+                'response_message': 'Fault error:\n[9120] Valor DE322038342 o tipo incorrecto del campo: NIF',
+                'is_soap_fault': True
+            })
+            for doc in document_instance
+        }
+
+    def test_sii_soap_fault_sets_document_to_cancelled(self):
+        """ Test that a hard SOAP fault correctly sets state to 'cancelled' to prevent infinite cron loops. """
+
+        purchase_journal = self.company_data['default_journal_purchase']
+        purchase_tax = self._get_tax_by_xml_id('p_iva10_bc')
+
+        fault_invoice = self._create_invoice_one_line(
+            move_type='in_invoice',
+            ref='TEST_REF_123',
+            journal_id=purchase_journal,
+            partner_id=self.partner_a,
+            invoice_date='2024-01-01',
+            product_id=self.product_a,
+            tax_ids=purchase_tax,
+            post=True,
+        )
+
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_fault,
+        ):
+            self.env.ref('l10n_es_edi_sii.action_l10n_es_send_sii').with_context(
+                active_model='account.move', active_ids=fault_invoice.ids,
+            ).run()
+
+        document = fault_invoice.l10n_es_edi_sii_document_ids
+
+        self.assertTrue(document, "The SII document should have been created.")
+        self.assertEqual(document.state, 'cancelled')
+
+        self.assertIn("9120", document.response_message)
+        self.assertIn("NIF", document.response_message)
