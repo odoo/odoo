@@ -55,6 +55,7 @@
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
         'wizard/product_label_layout_views.xml',
+        'wizard/stock_not_entire_pack_warning_views.xml',
         'wizard/stock_orderpoint_snooze_views.xml',
         'wizard/stock_package_destination_views.xml',
         'wizard/stock_inventory_adjustment_name.xml',
