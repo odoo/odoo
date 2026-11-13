@@ -161,8 +161,10 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         self.pay_pos_order(order)
         refund_action = order.refund()
         pos_refund = self.env['pos.order'].browse(refund_action['res_id'])
+        self.assertTrue(pos_refund.to_invoice)
 
         # An error is raised if the refund is not invoiced
+        pos_refund.to_invoice = False
         with self.assertRaises(UserError):
             self.pay_pos_order(pos_refund)
 
