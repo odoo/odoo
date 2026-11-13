@@ -2,6 +2,7 @@
 
 import re
 from contextlib import contextmanager
+from unittest.mock import patch
 
 from odoo.http.router import root
 from odoo.tests.common import TransactionCase, tagged
@@ -600,3 +601,33 @@ class TestQwebDataSnippet(TransactionCase):
         str_queries = "\n".join(website_queries)
 
         self.assertLessEqual(len(website_queries), 20, f'Maximum queries: {20}\n{str_queries}')
+
+
+@tagged('post_install', '-at_install')
+class TestQwebCodeCacheWebsite(TransactionCase):
+
+    def test_website_write(self):
+        """ The compiled code stored in `ir.cache` depends on the website. """
+        website = self.env['website'].browse(1)
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_ir_cache_website',
+            'type': 'qweb',
+            'arch_db': '<t t-name="test_ir_cache_website"><div>content</div></t>',
+        })
+        IrQweb = self.env['ir.qweb'].with_context(website_id=website.id)
+
+        def render():
+            """ Render like a new worker, return whether the code is generated. """
+            self.env.transaction.invalidate_ormcache('templates')
+            self.env.invalidate_all()
+            with patch.object(self.env.registry['ir.qweb'], '_generate_code', autospec=True, side_effect=self.env.registry['ir.qweb']._generate_code) as generate:
+                self.assertEqual(str(IrQweb._render(view.id)), '<div>content</div>')
+            return generate.called
+
+        self.assertTrue(render())
+        self.assertFalse(render(), "the code is read from ir.cache")
+        self.assertFalse(render(), "the code is read from ir.cache")
+
+        website.write({'name': 'Other name'})
+        self.assertTrue(render(), "the website changed, the code is generated again")
+        self.assertFalse(render(), "the code is read from ir.cache")

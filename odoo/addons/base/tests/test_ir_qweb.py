@@ -2908,10 +2908,13 @@ class TestQWebCodeCache(TransactionCase):
                     self.render(self.caller, '<div><span>callee</span></div>', generated=generated)
                 savepoint.rollback()
 
+        # another control with the same views
+        same_views = json.dumps({**row['control'], 'x': 1})
+
         # the payload, the control (same views, so same hash), or the key (the
         # row of another template)
         check_forged(self.callee, data=evil)
-        check_forged(self.callee, control=json.dumps(row['control'] + row['control']))
+        check_forged(self.callee, control=same_views)
         check_forged(self.caller, key=self.rows(self.caller)[0]['key'])
         # a row whose hash does not match its source is not even read
         with self.env.cr.savepoint(flush=False) as savepoint:
@@ -2921,7 +2924,7 @@ class TestQWebCodeCache(TransactionCase):
             savepoint.rollback()
         # the row itself modified, not a copy
         with self.assertLogs('odoo.addons.base.models.ir_cache', 'INFO'):
-            self.env.cr.execute(SQL("UPDATE ir_cache SET control = %s WHERE id = %s", json.dumps(row['control'] + row['control']), row['id']))
+            self.env.cr.execute(SQL("UPDATE ir_cache SET control = %s WHERE id = %s", same_views, row['id']))
             self.render(self.caller, '<div><span>callee</span></div>', generated=self.callee)
 
         # a new signed row is added and used

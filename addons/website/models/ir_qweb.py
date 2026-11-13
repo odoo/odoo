@@ -4,6 +4,7 @@ import re
 from collections import OrderedDict
 
 from odoo import models
+from odoo.tools import SQL
 from odoo.http import request
 from odoo.addons.website.tools import add_form_signature
 
@@ -49,6 +50,21 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    def _get_template_cache_control(self, views):
+        control = super()._get_template_cache_control(views)
+        control['website_id'] = self.env.context.get('website_id') or None
+        return control
+
+    def _get_template_cache_sql(self):
+        # the compiled code also depends on the website of `control`
+        return SQL(
+            """(SELECT md5(concat_ws('|', %s, (
+                SELECT w.write_date FROM website w WHERE w.id = (control->>'website_id')::int
+            ))))""",
+            super()._get_template_cache_sql(),
+            to_flush=self.env['website']._fields['write_date'],
+        )
 
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)

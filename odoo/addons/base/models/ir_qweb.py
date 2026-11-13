@@ -1004,14 +1004,17 @@ class IrQweb(models.AbstractModel):
 
     def _get_template_cache_sql(self):
         IrUiView = self.env['ir.ui.view']
-        # hash of the views of `control` (ids of the views of a template) and of the
-        # views inheriting from them, see `ir.cache`
+        # hash of the views of `control` (`view_ids`: ids of the views of a
+        # template) and of the views inheriting from them, see `ir.cache`
         return SQL("""(
             SELECT md5(string_agg(concat_ws('|', v.id, v.inherit_id, v.active, v.write_date, md5(v.arch_db::text)), ',' ORDER BY v.id))
             FROM ir_ui_view v
-            WHERE v.id IN (SELECT jsonb_array_elements_text(control)::int)
-                OR v.inherit_id IN (SELECT jsonb_array_elements_text(control)::int)
+            WHERE v.id IN (SELECT jsonb_array_elements_text(control->'view_ids')::int)
+                OR v.inherit_id IN (SELECT jsonb_array_elements_text(control->'view_ids')::int)
         )""", to_flush=[IrUiView._fields[f] for f in ('inherit_id', 'active', 'arch_db', 'write_date')])
+
+    def _get_template_cache_control(self, views):
+        return {'view_ids': views._get_inheriting_views().ids}
 
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
@@ -1132,7 +1135,7 @@ class IrQweb(models.AbstractModel):
                 views += view
             self.env['ir.cache']._set__('qweb', ir_cache_key,
                     marshal.dumps((code, options, def_name, compiled)),
-                    views._get_inheriting_views().ids, self._get_template_cache_sql(),
+                    self._get_template_cache_control(views), self._get_template_cache_sql(),
                 )
         return self.__load_code(code, options, def_name, compiled)
 
