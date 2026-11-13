@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_l10n_fr_pdp_partner_lookup_form" model="ir.ui.view">
+        <field name="name">l10n_fr_pdp.partner.lookup.form</field>
+        <field name="model">l10n_fr_pdp.partner.lookup</field>
+        <field name="arch" type="xml">
+            <form string="Partner Lookup">
+                <sheet>
+                    <div class="alert alert-info" role="alert" invisible="line_count &lt;= 1">
+                        <field name="line_count" class="oe_inline"/> billing addresses are registered in the annuaire for this SIREN.
+                        Choose the one to use for e-invoicing.
+                    </div>
+                    <group>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="available_annuaire_line_ids" invisible="1">
+                            <tree>
+                                <field name="identifier"/>
+                                <field name="platform_id"/>
+                                <field name="nature"/>
+                            </tree>
+                        </field>
+                        <field name="selected_line_id" required="True" options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" name="action_change_pdp_endpoint" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Close" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_fr_pdp_annuaire_line_tree" model="ir.ui.view">
+        <field name="name">l10n_fr_pdp.annuaire.line.tree</field>
+        <field name="model">l10n_fr_pdp.annuaire.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="identifier"/>
+                <field name="platform_id"/>
+                <field name="nature"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
