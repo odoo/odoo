@@ -171,6 +171,7 @@ class PosConfig(models.Model):
     module_pos_avatax = fields.Boolean("AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_appointment = fields.Boolean("Online Booking")
+    module_pos_deposit = fields.Boolean("Deposit Management")
     use_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
     amount_authorized_diff = fields.Float('Amount Authorized Difference',
@@ -785,7 +786,7 @@ class PosConfig(models.Model):
         return not cash_method.config_ids.filtered(lambda config: config != self)
 
     @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
-        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id',
+        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'module_pos_deposit', 'iface_tipproduct', 'default_preset_id',
         'module_pos_appointment', 'set_tip_after_payment', 'cash_rounding', 'rounding_method', 'only_round_cash_method')
     def _compute_local_data_integrity(self):
         self.last_data_change = self.env.cr.now()
