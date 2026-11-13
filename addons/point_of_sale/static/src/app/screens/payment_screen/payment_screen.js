@@ -206,7 +206,12 @@ export class PaymentScreen extends Component {
 
         const result = this.currentOrder.addPaymentline(paymentMethod, args);
         if (result.status) {
-            this.numberBuffer.set(result.data.amount.toString());
+            // The buffer is read in the currency of the payment line (see updateSelectedPaymentline)
+            const paymentLine = result.data;
+            const bufferAmount = paymentLine.isDifferentCurrency
+                ? paymentLine.amount_currency
+                : paymentLine.amount;
+            this.numberBuffer.set(bufferAmount.toString());
             if (!this.isRefundOrder && paymentMethod.useBankQrCode) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
