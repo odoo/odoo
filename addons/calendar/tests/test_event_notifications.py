@@ -368,6 +368,43 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (2)")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 15, 10, 10))
 
+    def test_recurrence_reminder_schedules_next_occurrence_with_email_alarm(self):
+        alarm, notification_alarm = self.env['calendar.alarm'].create([{
+            'name': 'Alarm',
+            'alarm_type': 'email',
+            'interval': 'minutes',
+            'duration': 5,
+        }, {
+            'name': 'Notification',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 5,
+        }])
+        self.env.ref('calendar.ir_cron_scheduler_alarm').lastcall = False
+        with freeze_time('2022-04-13 10:00+0000'):
+            now = fields.Datetime.now()
+            event = self.env['calendar.event'].create({
+                'name': "Recurring Event",
+                'start': now + relativedelta(minutes=20),
+                'stop': now + relativedelta(minutes=25),
+                'partner_ids': [fields.Command.link(self.partner.id)],
+                'recurrency': True,
+                'rrule_type': 'daily',
+                'count': 4,
+                'alarm_ids': alarm.ids,
+            })
+            occurrences = event.recurrence_id.calendar_event_ids.sorted('start')
+            occurrences[1].write({'recurrence_update': 'self_only', 'alarm_ids': [fields.Command.clear()]})
+            occurrences[2].write({'recurrence_update': 'self_only', 'alarm_ids': [fields.Command.set(notification_alarm.ids)]})
+
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt, freeze_time('2022-04-13 10:16+0000'):
+            self.env['calendar.alarm_manager']._send_reminder()
+        self.assertTrue(self.env['mail.message'].search([
+            ('model', '=', 'calendar.event'), ('res_id', '=', occurrences[0].id), ('subject', '=', 'Recurring Event - Reminder'),
+        ]), "The reminder of the first occurrence should be sent")
+        self.assertEqual(capt.records.mapped('call_at'), [datetime(2022, 4, 16, 10, 15)],
+            "The alarm of the fourth occurrence should be scheduled")
+
     def test_notification_event_timezone(self):
         """
             Check the domain that decides when calendar events should be notified to the user.
