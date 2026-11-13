@@ -1194,6 +1194,8 @@ export class ActionPlugin extends Plugin {
             }
             actionDialogProps.header = action.context.header ?? actionDialogProps.header;
             actionDialogProps.footer = action.context.footer ?? actionDialogProps.footer;
+            actionDialogProps.closeOnClickAway =
+                action.context.closeOnClickAway ?? actionDialogProps.closeOnClickAway;
             const onClose = this.#dialog?.onClose;
             delete this.#dialog?.onClose;
             removeDialogFn = this.#dialogPlugin.add(ActionDialog, actionDialogProps, {

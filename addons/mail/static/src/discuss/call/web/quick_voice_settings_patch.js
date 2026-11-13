@@ -11,6 +11,7 @@ patch(QuickVoiceSettings.prototype, {
     onClickVoiceSettings() {
         this.actionService.doAction({
             context: {
+                closeOnClickAway: true,
                 dialog_size: "medium",
                 footer: false,
             },

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PermissionPromptDialog">
-        <Dialog title="this.props.title or ''" size="this.props.size or 'md'" contentClass="this.props.contentClass">
+        <Dialog closeOnClickAway="this.props.closeOnClickAway" title="this.props.title or ''" size="this.props.size or 'md'" contentClass="this.props.contentClass">
             <t t-if="this.props.illustrationPosition === 'left'">
                 <div class="d-flex align-items-center justify-content-between gap-4" t-att-class="this.ui.isSmall ? 'flex-column': 'flex-row pb-2'">
                     <div t-att-class="this.ui.isSmall ? 'w-100': 'w-50'">

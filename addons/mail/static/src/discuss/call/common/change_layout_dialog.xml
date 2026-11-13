@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.ChangeLayoutDialog">
-        <Dialog size="'md'" footer="false" title.translate="Change layout">
+        <Dialog closeOnClickAway="true" size="'md'" footer="false" title.translate="Change layout">
             <div class="o-discuss-ChangeLayoutDialog d-flex flex-column">
                 <t t-foreach="this.layoutOptions" t-as="option" t-key="option.value">
                     <button class="o-discuss-ChangeLayoutDialog-option btn d-flex align-items-center gap-2 my-1" t-att-class="{ 'o-selected': this.isSelected(option.value) }" t-on-click="() => this.onSelectLayout(option.value)">
