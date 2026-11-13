@@ -65,6 +65,7 @@ class HrEmployee(models.Model):
         all_overtimes = self.env['hr.attendance.overtime.line']._read_group(
             domain=[
                 ('employee_id', 'in', self.ids),
+                ('status', '=', 'approved'),
             ],
             groupby=["employee_id", "compensable_as_leave"],
             aggregates=["duration:sum"],
