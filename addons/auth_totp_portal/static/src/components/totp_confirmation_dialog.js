@@ -5,28 +5,24 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 
-/**
- * This is a quick-and-dirty fix to enable the copy of the TOTP secret in the
- * portal.
- */
 export class TotpConfirmationDialog extends InputConfirmationDialog {
     setup() {
         super.setup();
         this.tooltip = usePopover(Tooltip, { position: "bottom" });
 
-        const onClickClipboardButton = async (ev) => {
+        const onClickCopyButton = async (ev) => {
             ev.preventDefault();
-            const clipboardButtonEl = ev.currentTarget;
-            const secretSpan = this.modalRef().querySelector("span[name='secret']");
-            browser.navigator.clipboard.writeText(secretSpan.textContent).then(() => {
-                this.tooltip.open(clipboardButtonEl, { tooltip: _t("Copied!") });
+            const copyButtonEl = ev.currentTarget;
+            const secretEl = this.modalRef().querySelector(copyButtonEl.dataset.copyTarget);
+            browser.navigator.clipboard.writeText(secretEl.textContent).then(() => {
+                this.tooltip.open(copyButtonEl, { tooltip: _t("Copied!") });
                 setTimeout(this.tooltip.close, 800);
             });
         };
         useListener(
-            () => this.modalRef()?.querySelector("#collapseTotpSecret .o_clipboard_button"),
+            () => this.modalRef()?.querySelector("[data-copy-target]"),
             "click",
-            onClickClipboardButton
+            onClickCopyButton
         );
     }
 }

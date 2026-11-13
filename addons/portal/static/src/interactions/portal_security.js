@@ -64,7 +64,7 @@ export class PortalSecurity extends Interaction {
     }
 
     async _onCopyButtonClick(ev) {
-        const target_btn = ev.target;
+        const target_btn = ev.currentTarget;
         if (!target_btn) {
             return;
         }
@@ -163,7 +163,7 @@ export class PortalSecurity extends Interaction {
         await this.waitFor(
             handleCheckIdentity(
                 this.waitFor(
-                    this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.target.id)])
+                    this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.currentTarget.id)])
                 ),
                 this.services.orm,
                 this.services.dialog

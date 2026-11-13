@@ -1,41 +1,31 @@
 <odoo>
     <template id="passkeys_portal_hook" name="Passkeys Portal hook" inherit_id="portal.portal_my_security">
         <xpath expr="//section[@name='portal_revoke_all_devices_popup']" position="before">
-            <section name="portal_passkey_management">
-                <h4>
-                    Passkeys
-                </h4>
-                <div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Created</th>
-                                <th>Last Used</th>
-                                <th/>
-                                <th/>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="user_id.auth_passkey_key_ids" t-as="key">
-                                <tr class="o_passkey_portal_entry" t-att-id="key.id">
-                                    <td><span t-field="key.name" class="o_passkey_name"/></td>
-                                    <td><span t-field="key.create_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
-                                    <td><span t-field="key.write_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
-                                    <td>
-                                        <i class="oi oi-filled o_passkey_portal_rename" data-icon="edit" type="button"/>
-                                    </td>
-                                    <td>
-                                        <i class="oi oi-filled text-danger o_passkey_portal_delete" data-icon="delete" type="button"/>
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                </div>
-                <button type="button" class="btn btn-light mt-1" id="portal_passkey_add">
-                    Add Passkey
-                </button>
+            <section name="portal_passkey_management" class="border rounded-3 mb-3 overflow-hidden">
+                <t t-call="portal.portal_security_header"
+                    section_icon.f="key"
+                    section_title.translate="Passkeys"
+                    section_description.translate="Sign in with your fingerprint, face or screen lock instead of a password.">
+                    <button type="button" class="btn btn-light btn-sm text-nowrap" id="portal_passkey_add">
+                        Add Passkey
+                    </button>
+                </t>
+                <ul t-if="user_id.auth_passkey_key_ids" class="list-group list-group-flush border-top">
+                    <li t-foreach="user_id.auth_passkey_key_ids" t-as="key" class="o_passkey_portal_entry list-group-item d-flex align-items-center gap-1 px-3" t-att-id="key.id">
+                        <div class="flex-grow-1 min-w-0 small">
+                            <div class="o_passkey_name fw-semibold text-truncate" t-field="key.name"/>
+                            <div class="opacity-75">
+                                Created <span t-field="key.create_date" t-options="{'widget': 'date'}"/> · Last used <span t-field="key.write_date" t-options="{'widget': 'date'}"/>
+                            </div>
+                        </div>
+                        <button type="button" class="o_passkey_portal_rename btn btn-link btn-sm text-reset" title="Rename" aria-label="Rename">
+                            <i class="oi" data-icon="edit" aria-hidden="true"/>
+                        </button>
+                        <button type="button" class="o_passkey_portal_delete btn btn-link btn-sm text-danger" title="Delete" aria-label="Delete">
+                            <i class="oi" data-icon="delete" aria-hidden="true"/>
+                        </button>
+                    </li>
+                </ul>
             </section>
         </xpath>
     </template>

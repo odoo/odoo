@@ -151,6 +151,7 @@
             </li>
             <li t-if="page_name == 'my_details'" class="breadcrumb-item active">Account Details</li>
             <li t-if="page_name == 'address_form'" class="breadcrumb-item active">Details</li>
+            <li t-if="page_name == 'security'" class="breadcrumb-item active">Connection &amp; Security</li>
         </ol>
     </template>
 
@@ -491,181 +492,197 @@
         </div>
     </template>
 
+    <template id="portal_security_header" name="Security Section Header">
+        <div class="d-flex align-items-start gap-3 p-3">
+            <div t-attf-class="o_portal_icon d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 #{section_icon_class or 'text-primary'}">
+                <i class="oi oi-lg" t-att-data-icon="section_icon" aria-hidden="true"/>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2 gap-sm-3 flex-grow-1 min-w-0">
+                <div class="flex-grow-1">
+                    <h2 class="d-flex flex-wrap align-items-center gap-2 mb-0 fs-6">
+                        <t t-out="section_title"/>
+                        <span t-if="section_status" t-attf-class="badge rounded-pill #{section_status_class}" t-out="section_status"/>
+                        <a t-if="section_doc_url" t-att-href="section_doc_url" target="_blank" class="text-reset opacity-50" title="Documentation" aria-label="Documentation">
+                            <i class="oi" data-icon="info" aria-hidden="true"/>
+                        </a>
+                    </h2>
+                    <p class="mb-0 small opacity-75" t-out="section_description"/>
+                </div>
+                <t t-out="0"/>
+            </div>
+        </div>
+    </template>
+
     <template id="portal_my_security">
-        <t t-call="portal.portal_layout" additional_title.translate="Security" no_breadcrumbs="1"><div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
-            <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
-                <t t-out="errors"/>
-            </div>
-            <div class="d-flex gap-2 my-3">
-                <a href="/my/" title="Go Back" class="btn btn-light px-2"><i class="oi" data-icon="chevron_backward"/></a>
-                <h3 class="my-0">Connection &amp; Security</h3>
-            </div>
-            <section name="portal_change_password">
-                <h4>Change Password</h4>
-                <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
-                    Password Updated!
-                </div>
-                <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
-                    <t t-out="errors['password']"/>
-                </div>
-                <form action="/my/security" method="post" class="oe_reset_password_form">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <input type="hidden" name="op" value="password"/>
-                    <div class="mb-4 o_caps_lock_warning">
-                        <label for="current">Password:</label>
-                        <div class="input-group input-group-sm">
-                            <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
-                                   id="current" name="old"
-                                   autocomplete="current-password" required="required"/>
-                            <button class="btn border border-start-0 o_show_password rounded-end" type="button" aria-label="Show password">
-                                <i class="oi" data-icon="visibility" aria-hidden="true"/>
-                            </button>
-                            <div class="invalid-feedback">
-                                <t t-out="get_error(errors, 'password.old')"/>
-                            </div>
-                        </div>
+        <t t-call="portal.portal_layout" additional_title.translate="Security" page_name="'security'">
+            <div class="row">
+                <div class="o_portal_security_body col-lg-8 pb-5">
+                    <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
+                        <t t-out="errors"/>
                     </div>
-                    <div class="mb-1 o_caps_lock_warning">
-                        <label for="new">New Password:</label>
-                        <div class="input-group input-group-sm mb-1">
-                            <input type="password"
-                                t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
-                                id="new" name="new1"
-                                autocomplete="new-password" required="required"/>
-                            <button type="button" class="btn border border-start-0 o_show_password rounded-end" aria-label="Show password">
-                                <i class="oi" data-icon="visibility" aria-hidden="true"/>
-                            </button>
-                            <div class="invalid-feedback">
-                                <t t-out="get_error(errors, 'password.new1')"/>
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <h1 class="h3 mb-1">Connection &amp; Security</h1>
+                        <p class="mb-0 text-muted">Manage how you sign in and keep your account safe.</p>
                     </div>
-                    <div class="mb-3 o_caps_lock_warning">
-                        <label for="new2">Verify New Password:</label>
-                        <div class="input-group input-group-sm">
-                            <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
-                                id="new2" name="new2"
-                                autocomplete="new-password" required="required"/>
-                            <button type="button" class="btn border border-start-0 o_show_password rounded-end" aria-label="Show password">
-                                <i class="oi" data-icon="visibility" aria-hidden="true"/>
-                            </button>
-                            <div class="invalid-feedback">
-                                <t t-out="get_error(errors, 'password.new2')"/>
+                    <section name="portal_change_password" class="border rounded-3 mb-3">
+                        <t t-call="portal.portal_security_header"
+                            section_icon.f="lock"
+                            section_title.translate="Password"
+                            section_description.translate="Use a strong password that you don't use anywhere else."/>
+                        <div class="border-top p-3">
+                            <div class="alert alert-success" role="alert" t-if="success and success.get('password')">
+                                Password Updated!
                             </div>
+                            <div class="alert alert-danger" role="alert" t-if="get_error(errors, 'password')">
+                                <t t-out="errors['password']"/>
+                            </div>
+                            <form action="/my/security" method="post" class="oe_reset_password_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="op" value="password"/>
+                                <div class="mb-3 o_caps_lock_warning">
+                                    <label for="current" class="form-label">Current password</label>
+                                    <div class="input-group">
+                                        <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
+                                               id="current" name="old"
+                                               autocomplete="current-password" required="required"/>
+                                        <button class="btn border border-start-0 o_show_password rounded-end" type="button" aria-label="Show password">
+                                            <i class="oi" data-icon="visibility" aria-hidden="true"/>
+                                        </button>
+                                        <div class="invalid-feedback">
+                                            <t t-out="get_error(errors, 'password.old')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 o_caps_lock_warning">
+                                    <label for="new" class="form-label">New password</label>
+                                    <div class="input-group">
+                                        <input type="password"
+                                            t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
+                                            id="new" name="new1"
+                                            autocomplete="new-password" required="required"/>
+                                        <button type="button" class="btn border border-start-0 o_show_password rounded-end" aria-label="Show password">
+                                            <i class="oi" data-icon="visibility" aria-hidden="true"/>
+                                        </button>
+                                        <div class="invalid-feedback">
+                                            <t t-out="get_error(errors, 'password.new1')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 o_caps_lock_warning">
+                                    <label for="new2" class="form-label">Confirm new password</label>
+                                    <div class="input-group">
+                                        <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
+                                            id="new2" name="new2"
+                                            autocomplete="new-password" required="required"/>
+                                        <button type="button" class="btn border border-start-0 o_show_password rounded-end" aria-label="Show password">
+                                            <i class="oi" data-icon="visibility" aria-hidden="true"/>
+                                        </button>
+                                        <div class="invalid-feedback">
+                                            <t t-out="get_error(errors, 'password.new2')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Change Password</button>
+                            </form>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-light">Change Password</button>
-                </form>
-            </section>
-            <section name="portal_revoke_all_devices_popup">
-            <h4>Revoke All Sessions</h4>
-                    <button type="button" class="btn btn-light" id="portal_revoke_all_sessions_popup">
-                        Log out from all devices
-                    </button>
-            </section>
-            <section t-if="debug and allow_api_keys">
-                <h4>
-                Developer API Keys
-                    <a href="https://www.odoo.com/documentation/latest/developer/reference/external_api.html#api-key" target="_blank">
-                        <i title="Documentation" class="oi oi-fw o_button_icon" data-icon="info"></i>
-                    </a>
-                </h4>
-                <div>
-                    <table class="table o_main_table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Scope</th>
-                                <th>Added On</th>
-                                <th>Expiration Date</th>
-                                <th/>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="env.user.api_key_ids" t-as="key">
-                                <tr>
-                                    <td><span t-field="key.name"/></td>
-                                    <td><span t-field="key.scope"/></td>
-                                    <td><span t-field="key.create_date"/></td>
-                                    <td><span t-field="key.expiration_date"/></td>
-                                    <td>
-                                        <i class="oi oi-filled text-danger o_portal_remove_api_key" data-icon="delete" type="button" t-att-id="key.id"/>
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-light o_portal_new_api_key">New API Key</button>
-                </div>
-            </section>
-            <section name="portal_deactivate_account" groups="base.group_portal">
-                <h4>Delete Account</h4>
-                <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>
-                <button class="btn btn-light" data-bs-toggle="modal"
-                    data-bs-target="#portal_deactivate_account_modal">
-                    Delete Account
-                </button>
-                <div t-attf-class="modal #{'show d-block' if open_deactivate_modal else ''}"
-                    id="portal_deactivate_account_modal" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-danger">
-                                <h5 class="modal-title">Are you sure you want to do this?</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <form action="/my/deactivate_account" method="post" class="modal-body"
-                                id="portal_deactivate_account_form">
-                                <div>
-                                    <div class="alert alert-danger"
+                    </section>
+                    <section name="portal_revoke_all_devices_popup" class="border rounded-3 mb-3">
+                        <t t-call="portal.portal_security_header"
+                            section_icon.f="logout"
+                            section_title.translate="Sessions"
+                            section_description.translate="Signed in on a shared or lost device? Log out everywhere.">
+                            <button type="button" class="btn btn-light btn-sm text-nowrap" id="portal_revoke_all_sessions_popup">
+                                Log out from all devices
+                            </button>
+                        </t>
+                    </section>
+                    <section t-if="debug and allow_api_keys" name="portal_api_keys" class="border rounded-3 mb-3 overflow-hidden">
+                        <t t-call="portal.portal_security_header"
+                            section_icon.f="code"
+                            section_title.translate="Developer API Keys"
+                            section_description.translate="Let your scripts and tools connect to your account."
+                            section_doc_url.f="https://www.odoo.com/documentation/latest/developer/reference/external_api.html#api-key">
+                            <button type="button" class="btn btn-light btn-sm text-nowrap o_portal_new_api_key">New API Key</button>
+                        </t>
+                        <ul t-if="env.user.api_key_ids" class="list-group list-group-flush border-top">
+                            <li t-foreach="env.user.api_key_ids" t-as="key" class="list-group-item d-flex align-items-center gap-3 px-3">
+                                <div class="flex-grow-1 min-w-0 small">
+                                    <div class="fw-semibold text-truncate" t-field="key.name"/>
+                                    <div class="opacity-75">
+                                        <span t-field="key.scope"/> · Added <span t-field="key.create_date" t-options="{'widget': 'date'}"/>
+                                        <t t-if="key.expiration_date"> · Expires <span t-field="key.expiration_date" t-options="{'widget': 'date'}"/></t>
+                                    </div>
+                                </div>
+                                <button type="button" class="o_portal_remove_api_key btn btn-link btn-sm text-danger" t-att-id="key.id" title="Delete" aria-label="Delete">
+                                    <i class="oi" data-icon="delete" aria-hidden="true"/>
+                                </button>
+                            </li>
+                        </ul>
+                    </section>
+                    <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>
+                    <section name="portal_deactivate_account" groups="base.group_portal" class="border rounded-3 mt-4">
+                        <t t-call="portal.portal_security_header"
+                            section_icon.f="person_remove"
+                            section_icon_class.f="text-danger"
+                            section_title.translate="Delete account"
+                            section_description.translate="Permanently disable your account. This can't be undone.">
+                            <button type="button" class="btn btn-outline-danger btn-sm text-nowrap" data-bs-toggle="modal"
+                                data-bs-target="#portal_deactivate_account_modal">
+                                Delete account
+                            </button>
+                        </t>
+                    </section>
+                    <div groups="base.group_portal" t-attf-class="modal #{'show d-block' if open_deactivate_modal else ''}"
+                        id="portal_deactivate_account_modal" tabindex="-1" role="dialog" aria-labelledby="portal_deactivate_account_title">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="portal_deactivate_account_title">Delete your account?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                                </div>
+                                <form action="/my/deactivate_account" method="post" class="modal-body"
+                                    id="portal_deactivate_account_form">
+                                    <div t-if="get_error(errors, 'deactivate.other')" class="alert alert-danger"
                                         t-out="get_error(errors, 'deactivate.other')"/>
-                                    <p class="text-muted">
-                                        Disable your account, preventing any further login.<br/>
-                                        <b>
-                                            <i class="oi text-danger" data-icon="warning"></i>
-                                            This action cannot be undone.
-                                        </b>
+                                    <p class="d-flex gap-2 mb-4">
+                                        <i class="oi text-danger" data-icon="warning" aria-hidden="true"/>
+                                        <span>Disable your account, preventing any further login. <b>This action cannot be undone.</b></span>
                                     </p>
-                                    <hr/>
-                                    <p>1. Enter your password to confirm you own this account</p>
-                                    <input name="password" type="password" required="1"
-                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'password' else ''}"
-                                        placeholder="Password"/>
+                                    <label for="deactivate_password" class="form-label">Enter your password to confirm you own this account</label>
+                                    <input id="deactivate_password" name="password" type="password" required="1" autocomplete="current-password"
+                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'password' else ''}"/>
                                     <div t-if="deactivate_error == 'password'" class="invalid-feedback">
                                         Wrong password.
                                     </div>
-                                    <hr/>
-                                    <p>
-                                        2. Confirm you want to delete your account by
-                                        copying down your login (<t t-out="env.user.login"/>).
-                                    </p>
-                                    <input name="validation" type="text" required="1"
+                                    <label for="deactivate_validation" class="form-label mt-3">
+                                        Type your login (<t t-out="env.user.login"/>) to confirm
+                                    </label>
+                                    <input id="deactivate_validation" name="validation" type="text" required="1"
                                         t-attf-class="form-control #{'is-invalid' if deactivate_error == 'validation' else ''}"/>
                                     <div t-if="deactivate_error == 'validation'" class="invalid-feedback">
                                         You should enter "<t t-out="env.user.login"/>" to validate your action.
                                     </div>
-                                    <div class="d-flex flex-row align-items-center">
-                                        <input type="checkbox" name="request_blacklist" id="request_blacklist" checked="1"/>
-                                        <label for="request_blacklist" class="ms-2 mw-100 fw-normal mt-3">
+                                    <div class="form-check mt-3">
+                                        <input type="checkbox" class="form-check-input" name="request_blacklist" id="request_blacklist" checked="1"/>
+                                        <label for="request_blacklist" class="form-check-label">
                                             Put my email and phone in a block list to make sure I'm never contacted again
                                         </label>
                                     </div>
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                </form>
+                                <div class="modal-footer justify-content-start">
+                                    <input type="submit" class="btn btn-danger" form="portal_deactivate_account_form"
+                                        value="Delete account"/>
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                        Discard
+                                    </button>
                                 </div>
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            </form>
-                            <div class="modal-footer justify-content-start">
-                                <input type="submit" class="btn btn-danger" form="portal_deactivate_account_form"
-                                    value="Delete Account"/>
-                                <button type="button" class="btn" data-bs-dismiss="modal">
-                                    Discard
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </div></t>
+            </div>
+        </t>
     </template>
 
     <template id="record_pager" name="Portal Record Pager">

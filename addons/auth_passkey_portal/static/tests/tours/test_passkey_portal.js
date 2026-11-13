@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("passkeys_portal_create", {
     steps: () => [
         {
             content: "Ensure there are no passkeys already",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: "#portal_passkey_add",
             run: () => {
                 const amount = document.querySelectorAll(".o_passkey_portal_entry").length;
                 if (amount != 0) {
@@ -17,11 +17,11 @@ registry.category("web_tour.tours").add("passkeys_portal_create", {
             },
         }, {
             content: "Add a Passkey",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: "#portal_passkey_add",
             run: "click",
         }, {
             content: "Check that we have to enter enhanced security mode",
-            trigger: "form strong:contains(Please enter your password to confirm you own this account)",
+            trigger: ".modal form:contains(Please enter your password to confirm you own this account)",
         }, {
             content: "Input password",
             trigger: "form input[name=password]",
@@ -95,7 +95,7 @@ registry.category("web_tour.tours").add("passkeys_portal_rename", {
     steps: () => [
         {
             content: "Ensure there is one passkey",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: "#portal_passkey_add",
             run: () => {
                 const amount = document.querySelectorAll(".o_passkey_portal_entry").length;
                 if (amount != 1) {
@@ -126,7 +126,7 @@ registry.category("web_tour.tours").add("passkeys_portal_delete", {
     steps: () => [
         {
             content: "Ensure there is one passkey",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: "#portal_passkey_add",
             run: () => {
                 const amount = document.querySelectorAll(".o_passkey_portal_entry").length;
                 if (amount != 1) {
@@ -139,7 +139,7 @@ registry.category("web_tour.tours").add("passkeys_portal_delete", {
             run: "click",
         }, {
             content: "Check that we have to enter enhanced security mode",
-            trigger: "form strong:contains(Please enter your password to confirm you own this account)",
+            trigger: ".modal form:contains(Please enter your password to confirm you own this account)",
         }, {
             content: "Input password",
             trigger: "form input[name=password]",
@@ -151,7 +151,7 @@ registry.category("web_tour.tours").add("passkeys_portal_delete", {
             expectUnloadPage: true,
         }, {
             content: "Ensure there are no more passkeys",
-            trigger: 'button:contains("Add Passkey")',
+            trigger: "#portal_passkey_add",
             run: () => {
                 const amount = document.querySelectorAll(".o_passkey_portal_entry").length;
                 if (amount != 0) {

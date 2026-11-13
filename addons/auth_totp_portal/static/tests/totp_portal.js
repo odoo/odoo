@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     trigger: 'a:contains("Cannot scan it?")',
 },
 {
-    trigger: `span[name="secret"]:hidden`,
+    trigger: `#auth_totp_portal_secret:hidden`,
     async run(helpers) {
         const secret = this.anchor.textContent;
         const token = await rpc("/totphook", {
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     expectUnloadPage: true,
 }, {
     content: "Check that the button has changed",
-    trigger: 'button:contains(Disable two-factor authentication)',
+    trigger: 'button#auth_totp_portal_disable',
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_enabled', {
@@ -100,7 +100,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     expectUnloadPage: true,
 }, {
     content: "Check that the button has changed",
-    trigger: 'button:contains(Enable two-factor authentication)',
+    trigger: 'button#auth_totp_portal_enable',
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_disabled', {

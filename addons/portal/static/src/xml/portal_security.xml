@@ -1,24 +1,19 @@
 <templates xml:space="preserve">
     <t t-name="portal.identitycheck">
         <form string="Security Control">
-            <h3><strong>Please enter your password to confirm you own this account</strong></h3>
-            <br/>
-            <div>
-                <input class="form-control col-10 col-md-6" autocomplete="current-password"
-                       name="password" type="password" required="required"/>
-            </div>
-            <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
+            <p>Please enter your password to confirm you own this account</p>
+            <input class="form-control" autocomplete="current-password" aria-label="Password"
+                   name="password" type="password" required="required"/>
+            <a href="/web/reset_password/" class="d-inline-block mt-2 small">Forgot password?</a>
         </form>
     </t>
     <t t-name="portal.keydescription">
         <form id="key_description_form" string="Key Description">
-            <label class="text-muted d-block mb-1">Key Name — your only way to identify that key</label>
-            <h1 class="mb-3">
-                <input type="text" class="form-control form-control-lg border-0 px-1" placeholder='e.g. "Odoo MCP"' name="description" required="1"/>
-            </h1>
+            <label for="key_description" class="form-label">Key Name — your only way to identify that key</label>
+            <input type="text" id="key_description" class="form-control mb-3" placeholder='e.g. "Odoo MCP"' name="description" required="1"/>
             <div class="mb-3" t-if="scope_selection and scope_selection.length > 1">
+                <div class="form-label">Scope</div>
                 <div class="d-flex flex-wrap gap-2">
-                    <label class="text-muted d-block mb-1">Scope</label>
                     <t t-foreach="scope_selection" t-as="scope" t-key="scope[0]">
                         <input type="radio" class="btn-check" name="scope"
                             t-att-id="`scope_${scope[0]}`" t-att-value="scope[0]"
@@ -28,9 +23,9 @@
                     </t>
                 </div>
             </div>
-            <div class="mb-3">
+            <div>
+                <div class="form-label">Expires</div>
                 <div class="d-flex flex-wrap gap-2">
-                    <label class="text-muted d-block mb-1">Expires</label>
                     <t t-foreach="duration_selection" t-as="duration" t-key="duration[0]">
                         <input type="radio" class="btn-check" name="duration"
                             t-att-id="`duration_${duration[0]}`" t-att-value="duration[0]"
@@ -44,17 +39,17 @@
     </t>
     <t t-name="portal.keyshow">
         <div>
-            <h3><strong id="sample">Write down your key</strong></h3>
-            <p>This key won't be shown again. Please copy it and store it securely. Treat it like a password, it grants full access to your account.</p>
-            <div class="d-inline-flex align-items-stretch border rounded mb-3">
-                <code id="portal_api_key_value" t-out="key" class="px-2 py-1"/>
-                <button type="button" class="oi btn btn-sm btn-light border-start rounded-0 px-2" data-icon="content_copy" data-copy-target="#portal_api_key_value"/>
+            <p class="fw-semibold mb-1" id="sample">Write down your key</p>
+            <p class="small text-muted">This key won't be shown again. Please copy it and store it securely. Treat it like a password, it grants full access to your account.</p>
+            <div class="d-flex align-items-stretch border rounded-3 mb-3">
+                <code id="portal_api_key_value" t-out="key" class="flex-grow-1 text-break px-3 py-2"/>
+                <button type="button" class="btn btn-light border-start rounded-0 rounded-end px-3" data-copy-target="#portal_api_key_value" aria-label="Copy" title="Copy">
+                    <i class="oi" data-icon="content_copy" aria-hidden="true"/>
+                </button>
             </div>
-            <div id="rpc_key_card" class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>To login, use the following parameters (Python):</strong>
-                </div>
-                <div class="card-body">
+            <div id="rpc_key_card" class="border rounded-3">
+                <div class="small fw-semibold border-bottom px-3 py-2">To login, use the following parameters (Python):</div>
+                <div class="small p-3">
                     <code>
                     import requests<br/><br/>
                     url = "<t t-out="base_url"/>"<br/>

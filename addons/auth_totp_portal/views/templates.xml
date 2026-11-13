@@ -1,66 +1,39 @@
 <odoo>
     <template id="totp_portal_hook" name="TOTP Portal hook" inherit_id="portal.portal_my_security">
         <xpath expr="//section[@name='portal_change_password']" position="after">
-            <!--
-                portal users don't have access to non-qweb views anymore, so
-                embed the target view as a *data island* of sorts, a JSON embed
-                of the fields_view_get could have been nice but at 14k it'd be a
-                bit ridiculous
-            -->
-            <div class="d-none" id="totp_wizard_view">
-                <t t-out="env.ref('auth_totp.view_totp_wizard').sudo().get_combined_arch()"/>
-            </div>
-            <section>
-                <h4>
-                    Two-factor authentication
-                    <a href="https://www.odoo.com/documentation/latest/applications/general/auth/2fa.html" target="_blank">
-                        <i title="Documentation" class="oi oi-fw o_button_icon" data-icon="info"/>
-                    </a>
-                </h4>
-                <t t-if="not user_id.totp_enabled">
-                    <div class="alert alert-secondary" role="status">
-                        <i class="oi" data-icon="warning"/>
-                        Two-factor authentication not enabled
-                    </div>
-                    <button type="button" class="btn btn-light" id="auth_totp_portal_enable">
-                        Enable two-factor authentication
+            <t t-if="user_id.totp_enabled" t-set="totp_status">On</t>
+            <t t-else="" t-set="totp_status">Off</t>
+            <section class="border rounded-3 mb-3 overflow-hidden">
+                <t t-call="portal.portal_security_header"
+                    section_icon.f="smartphone"
+                    section_title.translate="Two-factor authentication"
+                    section_description.translate="Ask for a code from an authenticator app when you sign in."
+                    section_status="totp_status"
+                    section_status_class="'text-bg-success' if user_id.totp_enabled else 'bg-200 text-body'"
+                    section_doc_url.f="https://www.odoo.com/documentation/latest/applications/general/auth/2fa.html">
+                    <button t-if="not user_id.totp_enabled" type="button" class="btn btn-primary btn-sm text-nowrap" id="auth_totp_portal_enable">
+                        Enable
+                    </button>
+                    <button t-else="" type="button" class="btn btn-light btn-sm text-nowrap" id="auth_totp_portal_disable">
+                        Disable
                     </button>
                 </t>
-                <t t-else="">
-                    <span class="text-success">
-                        <i class="oi oi-filled" data-icon="check_circle"/>
-                        Two-factor authentication enabled
-                    </span>
-                    <button type="button" class="btn btn-link" id="auth_totp_portal_disable">
-                        (Disable two-factor authentication)
-                    </button>
-                    <t t-if="len(user_id.totp_trusted_device_ids)">
-                        <table class="table o_main_table">
-                            <thead>
-                                <tr>
-                                    <th><strong>Trusted Device</strong></th>
-                                    <th><strong>Added On</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="user_id.totp_trusted_device_ids" t-as="td">
-                                    <td>
-                                        <span t-field="td.name"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="td.create_date"/>
-                                    </td>
-                                    <td>
-                                        <i class="oi oi-filled text-danger" data-icon="delete" type="button" t-att-id="td.id"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button class="btn btn-primary" type="button" id="auth_totp_portal_revoke_all_devices">
-                            Revoke All
+                <ul t-if="user_id.totp_enabled and user_id.totp_trusted_device_ids" class="list-group list-group-flush border-top">
+                    <li t-foreach="user_id.totp_trusted_device_ids" t-as="td" class="list-group-item d-flex align-items-center gap-3 px-3">
+                        <div class="flex-grow-1 min-w-0 small">
+                            <div class="fw-semibold text-truncate" t-field="td.name"/>
+                            <div class="opacity-75">Trusted since <span t-field="td.create_date" t-options="{'widget': 'date'}"/></div>
+                        </div>
+                        <button type="button" class="o_totp_portal_revoke_device btn btn-link btn-sm text-danger" t-att-id="td.id" title="Revoke" aria-label="Revoke">
+                            <i class="oi" data-icon="delete"/>
                         </button>
-                    </t>
-                </t>
+                    </li>
+                    <li class="list-group-item px-3">
+                        <button type="button" class="btn btn-link btn-sm p-0" id="auth_totp_portal_revoke_all_devices">
+                            Revoke all trusted devices
+                        </button>
+                    </li>
+                </ul>
             </section>
         </xpath>
     </template>

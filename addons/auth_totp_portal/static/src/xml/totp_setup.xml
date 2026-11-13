@@ -1,0 +1,27 @@
+<templates xml:space="preserve">
+    <t t-name="auth_totp_portal.totp_setup">
+        <form class="o_auth_totp_enable_2FA">
+            <div class="d-none d-md-flex align-items-center gap-3 mb-3">
+                <img class="border rounded-3 flex-shrink-0" t-att-src="qrcode_src" width="160" height="160" alt="QR code"/>
+                <div>
+                    <p class="fw-semibold mb-1">Scan this QR code</p>
+                    <p class="small text-muted mb-2">Open your authenticator app and scan the code to add your account.</p>
+                    <a class="small" href="#collapseTotpSecret" role="button" data-bs-toggle="collapse"
+                        aria-expanded="false" aria-controls="collapseTotpSecret">Cannot scan it?</a>
+                </div>
+            </div>
+            <p class="fw-semibold mb-2 d-md-none">Add this key to your authenticator app</p>
+            <div class="collapse" id="collapseTotpSecret">
+                <div class="d-flex align-items-stretch border rounded-3 mb-3">
+                    <code id="auth_totp_portal_secret" class="flex-grow-1 text-break px-3 py-2" t-out="secret"/>
+                    <button type="button" class="btn btn-light border-start rounded-0 rounded-end px-3" data-copy-target="#auth_totp_portal_secret" aria-label="Copy" title="Copy">
+                        <i class="oi" data-icon="content_copy" aria-hidden="true"/>
+                    </button>
+                </div>
+            </div>
+            <label for="auth_totp_portal_code" class="form-label">Enter the code shown in your app</label>
+            <input id="auth_totp_portal_code" name="code" class="form-control" placeholder="6-digit code"
+                autocomplete="one-time-code" inputmode="numeric" required="required" minlength="6" maxlength="6"/>
+        </form>
+    </t>
+</templates>
