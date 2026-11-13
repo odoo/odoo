@@ -32,6 +32,7 @@ class TestReports(odoo.tests.TransactionCase):
             'account.report_invoice_with_payments': invoice_domain,
             'account.report_invoice': invoice_domain,
             'account_edi_ubl_cii.account_invoices_generated_by_odoo': [('move_type', 'in', ('in_invoice', 'in_refund'))],
+            'l10n_it_edi.account_invoices_sdi_preview': [('move_type', 'in', ('in_invoice', 'in_refund'))],
             'l10n_th.report_commercial_invoice': invoice_domain,
         }
         extra_data_reports = {
