@@ -259,7 +259,7 @@ class SaleOrder(models.Model):
         precompute=True,
         readonly=False,
         check_company=True,
-        ui_domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]",
+        domain=[("payment_type", "=", "inbound")],
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
@@ -1058,7 +1058,7 @@ class SaleOrder(models.Model):
             "state",
         ])
 
-        accessible_orders = self.env['sale.order']._search([])
+        accessible_orders = self.env["sale.order"]._search([])
 
         result = self.env.execute_query(
             SQL(
