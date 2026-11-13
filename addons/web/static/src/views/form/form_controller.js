@@ -401,6 +401,9 @@ export class FormController extends Component {
      * @param {Record} record
      */
     async onRecordSaved(record, changes) {
+        if (record === this.model.root && !this.canEdit && !this.env.inDialog) {
+            record._switchMode("readonly");
+        }
         if (this.duplicateId === record.id) {
             const translationChanges = {};
             for (const fieldName in changes) {
