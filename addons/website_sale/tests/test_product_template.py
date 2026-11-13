@@ -138,6 +138,26 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         )
         self.assertAlmostEqual(result["price"], expected_price, places=2)
 
+    def test_get_additionnal_combination_info_packaging_prices_include_taxes(self):
+        self._enable_uom()
+        self.website.show_line_subtotals_tax_selection = "tax_included"
+        tax = self.env["account.tax"].create({"name": "Test tax", "amount": 15})
+        product = self._create_product(
+            list_price=100,
+            taxes_id=[Command.set(tax.ids)],
+            uom_ids=[Command.set(self.uom_pack_6.ids)],
+        )
+        with self.mock_request():
+            result = self.env["product.template"]._get_additionnal_combination_info(
+                product, 1.0, product.uom_id, Date.from_string("2020-01-01"), self.website,
+            )
+        self.assertAlmostEqual(result["price"], 115.0)
+        self.assertEqual(
+            result["packaging_prices"],
+            {product.uom_id.id: 115.0, self.uom_pack_6.id: 115.0},
+            "Packaging prices should be displayed like the product price, taxes included.",
+        )
+
     def test_get_available_uoms_no_restrictions(self):
         self._enable_uom()
         template = self.product.product_tmpl_id
