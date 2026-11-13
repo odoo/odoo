@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from datetime import date
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -20,3 +22,16 @@ class TestSetupWizard(AccountTestInvoicingCommon):
             }
         ])
         self.assertTrue(wizard)
+
+    def test_financial_year_opening_accounting_manager(self):
+        """ An accounting manager, without the right to write on companies, can set
+        the opening date with the opening balance wizard. """
+        accountant = new_test_user(
+            self.env, login='accountant', groups='account.group_account_manager',
+            company_id=self.env.company.id,
+        )
+        wizard = self.env['account.financial.year.op'].with_user(accountant).create({
+            'company_id': self.env.company.id,
+        })
+        wizard.opening_date = '2025-01-01'
+        self.assertEqual(self.env.company.account_opening_date, date(2025, 1, 1))
