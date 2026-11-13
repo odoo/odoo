@@ -651,7 +651,8 @@ class HrEmployee(models.Model):
               (``{date: {'amount', 'is_virtual', 'leave_id'}}``, the time not covered by any
               allocation), ``to_recheck_leaves`` (the future requests not deducted) and
               ``exceeding_duration`` (negative or zero, what the future accrual will miss to cover
-              them).
+              them) and ``approved_leaves`` (the validated requests counted in
+              ``<unit>_leaves_taken``).
         :rtype: tuple
         """
         employees = self or self._get_contextual_employee()
@@ -719,10 +720,12 @@ class HrEmployee(models.Model):
         #          |--to_recheck_leaves
         #          |--excess_days
         #          |--exceeding_duration
+        #          |--approved_leaves
         # - VALUES:
         # "to_recheck_leaves" stores every leave that is not yet taken into account by the "allocation_leaves_consumed" dictionary.
         # "excess_days" represents the excess amount that somehow isn't taken into account by the first dictionary.
         # "exceeding_duration" sum up the to_recheck_leaves duration and compares it to the maximum allocated for that time period.
+        # "approved_leaves" stores the validated leaves counted in the "leaves_taken" of the first dictionary.
         allocations_leaves_consumed = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0))))
 
         to_recheck_leaves_per_work_entry_type = defaultdict(lambda:
@@ -732,7 +735,8 @@ class HrEmployee(models.Model):
                     'is_virtual': True,
                 }),
                 'exceeding_duration': 0,
-                'to_recheck_leaves': self.env['hr.leave']
+                'to_recheck_leaves': self.env['hr.leave'],
+                'approved_leaves': self.env['hr.leave'],
             })
         )
         for allocation in allocations:
@@ -844,6 +848,9 @@ class HrEmployee(models.Model):
                         for counter in (primary, secondary):
                             counter['to_recheck']['to_recheck_leaves'] |= leave
                         continue
+
+                    if leave.state == 'validate':
+                        primary['to_recheck']['approved_leaves'] |= leave
 
                     if work_entry_type.requires_allocation:
                         # primary and secondary each track their own remaining amount; the loop
