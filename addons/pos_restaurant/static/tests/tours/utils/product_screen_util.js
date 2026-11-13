@@ -1,10 +1,16 @@
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
-export function clickOrderButton() {
+export function clickOrderButton(fakePrint = false) {
+    const steps = [];
+    if (fakePrint) {
+        steps.push(Chrome.fakePrintChange());
+    }
     return [
+        ...steps,
         {
             content: "click order button",
             trigger: ".actionpad .submit-order",
