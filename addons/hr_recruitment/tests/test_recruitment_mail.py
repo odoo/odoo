@@ -57,3 +57,58 @@ class TestRecruitmentMail(MailCase):
             recipients_cc=[],
             subject='Application refused: Laurie Poiret',
         )
+
+    def test_refuse_single_mail_with_template_recipients(self):
+        """Refusing one applicant sends the edited email to the recipients of the template,
+        with the attachments of the wizard."""
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'email_from': 'from@test.test',
+            'email_cc': 'cc@test.test',
+            'email_to': '{{ object.partner_id.email }}',
+            'use_default_to': False,
+            'subject': 'Application refused: {{ object.partner_name }}',
+            'body_html': '<p>Dear <t t-out="object.partner_name"/></p>',
+        })
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Not good',
+            'template_id': mail_template.id,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Laurie Poiret',
+            'email_from': 'laurie.poiret@aol.ru',
+        })
+        attachment = self.env['ir.attachment'].create({
+            'name': 'feedback.txt',
+            'raw': b'Some feedback',
+            'mimetype': 'text/plain',
+            'res_model': 'mail.compose.message',
+            'res_id': 0,
+        })
+        action = applicant.archive_applicant()
+        self.assertEqual(action['res_model'], 'applicant.refuse.single')
+        applicant_refuse_single = self.env['applicant.refuse.single'].with_context(action['context']).create({
+            'refuse_reason_id': refuse_reason.id,
+        })
+        applicant_refuse_single.write({
+            'body': '<p>Dear Laurie, thank you for your time.</p>',
+            'attachment_ids': attachment.ids,
+        })
+        self.assertTrue(applicant_refuse_single.send_mail)
+
+        with self.mock_mail_gateway():
+            applicant_refuse_single.action_refuse_reason_apply()
+
+        self.assertSentEmail(
+            'from@test.test',
+            ['"Laurie Poiret" <laurie.poiret@aol.ru>'],
+            subject='Application refused: Laurie Poiret',
+            body_content='Dear Laurie, thank you for your time.',
+            attachments_info=[{'name': 'feedback.txt', 'raw': b'Some feedback', 'type': 'text/plain'}],
+        )
+        self.assertIn(
+            '"cc@test.test" <cc@test.test>',
+            [email_cc for mail in self._mails for email_cc in mail['email_cc']],
+            "The email should be sent to the CC of the template",
+        )
