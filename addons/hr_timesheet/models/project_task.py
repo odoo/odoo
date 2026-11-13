@@ -267,6 +267,11 @@ class ProjectTask(models.Model):
                         task.display_name = f"{task.display_name} \t --{hours_left}--"
                     else:
                         task.display_name = task.display_name + "\u00A0" + hours_left
+                if task.parent_id and task.parent_id.has_access('read'):
+                    if self.env.context.get('formatted_display_name'):
+                        task.display_name = f"{task.display_name} \t --{task.parent_id.name}--"
+                    else:
+                        task.display_name = task.display_name + "\u00A0" + task.parent_id.name
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_entries(self):
