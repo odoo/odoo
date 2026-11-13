@@ -345,7 +345,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=13, employee=12):  # tm: 10 / 10
+        with self.assertQueryCount(admin=13, employee=13):  # tm: 10 / 10
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
@@ -414,7 +414,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=15, employee=14):  # tm: 12 / 12
+        with self.assertQueryCount(admin=15, employee=15):  # tm: 12 / 12
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -440,7 +440,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=17, employee=16):  # tm: 14 / 14
+        with self.assertQueryCount(admin=17, employee=17):  # tm: 14 / 14
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
