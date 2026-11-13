@@ -327,6 +327,26 @@ class DatabaseExists(UserError, ValueError):
     pass
 
 
+def _superuser_commands(dbname: str, *queries: str) -> str:
+    """ Return the shell commands an administrator can run to execute
+    ``queries`` as superuser in the current database and in the template
+    database, so that new databases inherit the result.
+    """
+    template = config['db_template']
+    template_cmds = [(template, query) for query in queries]
+    if template == 'template0':
+        # template0 refuses connections by default: open it temporarily, then
+        # lock it again. Other templates accept connections and must not be
+        # locked afterwards.
+        template_cmds = [
+            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS true"),
+            *template_cmds,
+            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS false"),
+        ]
+    cmds = [(dbname, query) for query in queries] + template_cmds
+    return "\n".join(f"sudo -u postgres psql -d {db} -c '{query}'" for db, query in cmds)
+
+
 def _create_empty_database(db_name: str) -> None:
     db_system_name = config['db_system']
     try:
@@ -363,18 +383,8 @@ def _create_empty_database(db_name: str) -> None:
         db = odoo.sql_db.db_connect(db_name)
         with db.cursor() as cr:
             try_install_extension(cr, 'pg_trgm')
-            if (
-                odoo.tools.config['unaccent']
-                and has_unaccent(cr) != FunctionStatus.INDEXABLE
-                and try_install_extension(cr, 'unaccent')
-            ):
-                # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
-                # because it depends on external data - see
-                # https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
-                # But in the case of Odoo, we consider that those data don't
-                # change in the lifetime of a database. If they do change, all
-                # indexes created with this function become corrupted!
-                cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE")
+            if odoo.tools.config['unaccent']:
+                _install_immutable_unaccent(cr)
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
     _check_faketime_mode(db_name)
@@ -388,54 +398,116 @@ def _create_empty_database(db_name: str) -> None:
         _logger.warning("Unable to make public schema public-accessible: %s", e)
 
 
-def try_install_extension(cr: Cursor, extension_name: str) -> bool:
+def try_install_extension(cr: Cursor, extension_name: str, *, schema: str = 'public') -> bool:
     """ Create ``extension_name`` in the current database if it is missing.
 
     Trusted extensions (e.g. unaccent, pg_trgm) can be installed by the
     database owner directly. If creating it fails, log why (and, when a
     superuser is needed, the commands to run) instead of raising.
 
+    :param schema: the schema in which the extension is created (created if missing)
     :return: whether the extension is installed
     """
     create_extension = SQL(
-        "CREATE EXTENSION IF NOT EXISTS %s WITH SCHEMA public",
+        "CREATE EXTENSION IF NOT EXISTS %s WITH SCHEMA %s",
         SQL.identifier(extension_name),
+        SQL.identifier(schema),
     )
     try:
         with cr.savepoint(flush=False):
+            if schema != 'public':
+                cr.execute(SQL(
+                    "CREATE SCHEMA IF NOT EXISTS %s", SQL.identifier(schema)
+                ), log_exceptions=False)
             cr.execute(create_extension, log_exceptions=False)
         return True
     except psycopg2.errors.InsufficientPrivilege:
-        pass
+        # A superuser installs the extension in the public schema
+        create_extension_public = SQL(
+            "CREATE EXTENSION IF NOT EXISTS %s WITH SCHEMA public",
+            SQL.identifier(extension_name),
+        )
+        _logger.warning(
+            "PostgreSQL extension %r is required but not installed, and creating it "
+            "needs a superuser. Enable it as a database administrator:\n%s",
+            extension_name,
+            _superuser_commands(cr.dbname, cr.mogrify(create_extension_public).decode()),
+        )
     except psycopg2.Error as e:
         _logger.warning(
             "PostgreSQL extension %r is required but could not be created: %s",
             extension_name, str(e).strip(),
         )
-        return False
-
-    create_extension_str = cr.mogrify(create_extension).decode()
-    template = config['db_template']
-    cmds = [(cr.dbname, create_extension_str)]
-    if template == 'template0':
-        # template0 refuses connections by default: open it temporarily so that
-        # future databases inherit the extension, then lock it again. Other
-        # templates accept connections and must not be locked afterwards.
-        cmds += [
-            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS true"),
-            (template, create_extension_str),
-            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS false"),
-        ]
-    else:
-        cmds.append((template, create_extension_str))
-
-    _logger.warning(
-        "PostgreSQL extension %r is required but not installed, and creating it "
-        "needs a superuser. Enable it as a database administrator:\n%s",
-        extension_name,
-        "\n".join(f"sudo -u postgres psql -d {db} -c '{sql}'" for db, sql in cmds),
-    )
     return False
+
+
+def _install_immutable_unaccent(cr: Cursor) -> None:
+    """
+    Install the ``unaccent`` extension and make ``public.unaccent(text)`` an
+    immutable function, so that it can be used in index expressions.
+
+    The function provided by the extension cannot be made immutable by Odoo
+    because ``unaccent`` is a trusted extension, its objects are owned by the
+    bootstrap superuser, and ``ALTER FUNCTION`` requires ownership.
+
+    Instead, the extension is installed in its own schema (outside of the
+    search_path) and a wrapper owned by the database owner is created as
+    ``public.unaccent(text)``. All the ``unaccent(...)`` calls in SQL resolve to
+    that wrapper through the search_path, and :func:`has_unaccent` sees it.
+
+    From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
+    because it depends on external data (the dictionary's rules file:
+    https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
+    ). But in the case of Odoo, we consider that those data don't change in the
+    lifetime of a database. If they do change, all indexes created with this
+    function become corrupted!
+    """
+    status = has_unaccent(cr)
+    if status == FunctionStatus.INDEXABLE:
+        return
+    if status == FunctionStatus.PRESENT:
+        _logger.warning(
+            "Function unaccent(text) exists but is not immutable, so it cannot be "
+            "used in indexes. Make it immutable as a database administrator:\n%s\n"
+            "Then rebuild the indexes that should use it.",
+            _superuser_commands(cr.dbname, 'ALTER FUNCTION unaccent(text) IMMUTABLE'),
+        )
+        return
+
+    # The extension may already exist in another schema (e.g. inherited from
+    # the template database), in which case the wrapper calls it there.
+    cr.execute("""
+        SELECT n.nspname
+        FROM pg_extension e
+        JOIN pg_namespace n ON n.oid = e.extnamespace
+        WHERE e.extname = 'unaccent'
+    """)
+    row = cr.fetchone()
+    schema = row[0] if row else 'unaccent'
+
+    if not row and not try_install_extension(cr, 'unaccent', schema=schema):
+        # Nothing will create the wrapper once an administrator has installed
+        # the extension: they must create it too.
+        _logger.warning(
+            "Once the extension 'unaccent' is installed, make its function "
+            "unaccent(text) immutable as a database administrator:\n%s",
+            _superuser_commands(cr.dbname, 'ALTER FUNCTION unaccent(text) IMMUTABLE'),
+        )
+        return
+
+    try:
+        with cr.savepoint(flush=False):
+            cr.execute(SQL("""
+                CREATE OR REPLACE FUNCTION public.unaccent(text) RETURNS text
+                LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+                    BEGIN ATOMIC SELECT %s.unaccent($1);
+                END
+            """, quoted_identifier(cr, schema)), log_exceptions=False)
+    except psycopg2.Error as e:
+        _logger.warning(
+            "Unable to create immutable wrapper public.unaccent(text): %s",
+            str(e).strip(),
+        )
 
 
 def _initialize_db(
