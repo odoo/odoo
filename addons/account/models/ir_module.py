@@ -77,7 +77,15 @@ class IrModuleModule(models.Model):
         if not was_installed and is_installed:
             if self.name != 'account':
                 for demo in [False, True] if self.demo else [False]:
-                    for company in self.env['res.company'].search([('chart_template', '!=', False)], order="parent_path"):
+                    domain = [('chart_template', '!=', False)]
+                    if demo:
+                        test_company_ids = self.env['ir.model.data'].search([
+                            ('module', '=', 'base'),
+                            ('model', '=', 'res.company'),
+                            ('name', '=like', r'test\_company%'),
+                        ]).mapped('res_id')
+                        domain.append(('id', 'not in', test_company_ids))
+                    for company in self.env['res.company'].search(domain, order="parent_path"):
                         ChartTemplate = self.env['account.chart.template'].with_company(company)
                         module_template_data = ChartTemplate._get_chart_template_data(company.chart_template, demo, self.name)
                         module_template_data.pop('template_data', None)
