@@ -170,8 +170,7 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         invoice = self._post_invoice()
         invoice.invoice_line_ids.tax_ids.l10n_cn_reduced_tax_code = '01'
 
-        with self.assertRaisesRegex(UserError, 'does not support special VAT treatment'):
-            invoice._l10n_cn_edi_prepare_lines()
+        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'does not support special VAT treatment')
 
     def test_tax_rate_outside_the_spec_set_is_rejected(self):
         for rate, accepted in ((0.0, True), (1.0, True), (13.0, True), (17.0, True), (2.0, False), (13.5, False)):
@@ -187,8 +186,7 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
                 if accepted:
                     self.assertEqual(invoice._l10n_cn_edi_prepare_lines()[0]['taxRate'], f'{rate / 100:g}')
                 else:
-                    with self.assertRaisesRegex(UserError, 'does not accept a .* tax rate'):
-                        invoice._l10n_cn_edi_prepare_lines()
+                    self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'does not accept a .* tax rate')
 
     def test_duplicate_order_is_reconciled_via_query(self):
         invoice = self._post_invoice()

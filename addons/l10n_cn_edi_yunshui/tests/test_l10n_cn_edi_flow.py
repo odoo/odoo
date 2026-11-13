@@ -191,6 +191,36 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(errors, {broken: f"Missing Tax Category Code on line: {broken.invoice_line_ids.product_id.name}"})
         self.assertEqual((broken + invoice).mapped('l10n_cn_edi_state'), ['not_sent', 'issued'])
 
+    def test_invoice_errors_come_before_the_login(self):
+        invoice = self._create_posted_invoice()
+        invoice.invoice_line_ids.l10n_cn_tax_category_id = False
+        self.responses['get_session_state'] = 'login'
+
+        self.assertEqual(self._issue(invoice), f"Missing Tax Category Code on line: {invoice.invoice_line_ids.product_id.name}")
+        self.assertFalse(self.client.calls)
+
+    def test_send_dialog_shows_the_invoice_errors(self):
+        invoice = self._create_posted_invoice()
+        invoice.invoice_line_ids.l10n_cn_tax_category_id = False
+
+        wizard = self.create_send_and_print(invoice)
+
+        self.assertEqual(
+            wizard.alerts['l10n_cn_edi_invalid_invoices']['message'],
+            f"Missing Tax Category Code on line: {invoice.invoice_line_ids.product_id.name}",
+        )
+
+    def test_send_dialog_lists_the_invoices_that_cannot_be_issued(self):
+        broken = self._create_posted_invoice()
+        broken.invoice_line_ids.l10n_cn_tax_category_id = False
+        invoices = broken + self._create_posted_invoice()
+
+        wizard = self.create_send_and_print(invoices)
+
+        alert = wizard.alerts['l10n_cn_edi_invalid_invoices']
+        self.assertEqual(alert['message'], f"The e-Fapiao of these invoices can't be issued as they are: {broken.name}")
+        self.assertEqual(alert['action']['res_id'], broken.id)
+
     def test_issue_failure_is_recorded(self):
         invoice = self._create_posted_invoice()
         self.responses['issue'] = {'state': 'failed', 'error': "Buyer tax number is invalid"}
@@ -494,8 +524,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             ],
         })
 
-        with self.assertRaisesRegex(UserError, 'Global negative lines spanning multiple tax groups are not supported'):
-            invoice._l10n_cn_edi_prepare_lines()
+        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'Global negative lines spanning multiple tax groups are not supported')
 
     def test_prepare_lines_rejects_multiple_taxes(self):
         extra_tax = self.env['account.tax'].create({
@@ -507,8 +536,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         })
         invoice = self.init_invoice('out_invoice', partner=self.partner_a, products=self.product_a, taxes=self.tax_sale_a + extra_tax)
 
-        with self.assertRaisesRegex(UserError, 'Only one percentage tax is supported'):
-            invoice._l10n_cn_edi_prepare_lines()
+        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'Only one percentage tax is supported')
 
     def test_prepare_lines_rejects_non_percent_tax(self):
         fixed_tax = self.env['account.tax'].create({
@@ -520,8 +548,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         })
         invoice = self.init_invoice('out_invoice', partner=self.partner_a, products=self.product_a, taxes=fixed_tax)
 
-        with self.assertRaisesRegex(UserError, 'Only one percentage tax is supported'):
-            invoice._l10n_cn_edi_prepare_lines()
+        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'Only one percentage tax is supported')
 
     def test_prepare_lines_rejects_cross_tax_group_global_discount(self):
         extra_tax = self.env['account.tax'].create({
@@ -541,8 +568,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             ],
         })
 
-        with self.assertRaisesRegex(UserError, 'Global negative lines spanning multiple tax groups are not supported'):
-            invoice._l10n_cn_edi_prepare_lines()
+        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), 'Global negative lines spanning multiple tax groups are not supported')
 
     def test_prepare_lines_rejects_100_percent_discount(self):
         invoice = self.env['account.move'].create({
@@ -559,8 +585,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             ],
         })
 
-        with self.assertRaisesRegex(UserError, '100% line discounts are not supported'):
-            invoice._l10n_cn_edi_prepare_lines()
+        self.assertRegex('\n'.join(invoice._l10n_cn_edi_check_invoice()), '100% line discounts are not supported')
 
     # ------------------------------------------------------------------
     # Red forms, seller side
