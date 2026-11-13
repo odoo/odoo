@@ -152,7 +152,7 @@ test("SelectionField, edition and on many2one field", async () => {
 test.tags("desktop");
 test("[Offline] SelectionField on many2one field", async () => {
     const setOffline = mockOffline();
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
 
     Partner._onChanges.product_id = () => {};
     Partner._records[0].product_id = 37;
@@ -204,7 +204,7 @@ test("[Offline] SelectionField on many2one field", async () => {
     await setOffline(false);
 
     expect(getService("offline").offline).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
 });
 
 test("unset selection field with string keys", async () => {

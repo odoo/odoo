@@ -222,6 +222,14 @@ export class FormController extends Component {
                 },
                 [this.model]
             );
+            effect(
+                (offlineService) => {
+                    if (status(this) === "mounted" && !offlineService.offline) {
+                        this.model.root.runPendingOnchanges();
+                    }
+                },
+                [this.offlineService]
+            );
         });
 
         onError((error) => {
