@@ -208,6 +208,9 @@ class EventMail(models.Model):
             # do not send emails if the mailing was scheduled before the slot but the slot is over
             if mail_slot.scheduled_date <= now and (self.interval_type not in ('before_event', 'after_event_start') or mail_slot.event_slot_id.end_datetime > now):
                 self._execute_event_based(mail_slot=mail_slot)
+        # done only once each slot has been contacted, not when sent mails reach
+        # the event's taken seats (next slots may still get new attendees)
+        self.mail_done = all(self.mail_slot_ids.mapped('mail_done'))
 
     def _execute_attendee_based(self):
         """ Main scheduler method when running in attendee-based mode aka
@@ -317,7 +320,6 @@ class EventMail(models.Model):
                 mail_slot.mail_count_done = total_sent
                 mail_slot.mail_done = total_sent >= mail_slot.event_slot_id.seats_taken
                 scheduler.mail_count_done = sum(scheduler.mail_slot_ids.mapped('mail_count_done'))
-                scheduler.mail_done = scheduler.mail_count_done >= scheduler.event_id.seats_taken
             elif scheduler.last_registration_id:
                 total_sent = self.env["event.registration"].search_count([
                     ("id", "<=", self.last_registration_id.id),
