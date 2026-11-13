@@ -14,6 +14,7 @@ from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     GST_COUNTRY_CODES,
     FloatFmt,
+    SUPPORTED_FILE_TYPES,
 )
 from odoo.addons.account_edi_ubl_cii.tools import CreditNote, DebitNote, Invoice
 from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
@@ -2153,6 +2154,11 @@ class AccountEdiUBL(models.AbstractModel):
     # IMPORT: INVOICE
     # -------------------------------------------------------------------------
 
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+        return self._ubl_import_invoice(invoice, file_data, new=new)
+
     def _import_ubl_init_collected_values(self, invoice, collected_values):
         return self._import_init_collected_values(invoice, collected_values)
 
@@ -2489,7 +2495,11 @@ class AccountEdiUBL(models.AbstractModel):
         # so that importing the UBL document does not result in any information loss.
         # If a matching product is found, the product name part will be removed.
         # See _import_ubl_invoice_retrieve_products.
-        name_to_write = '\n'.join(filter(None, [name, description]))
+        # Some documents already repeat the item name at the start of the description: don't add it twice.
+        if name and description.startswith(f"{name}\n"):
+            name_to_write = description
+        else:
+            name_to_write = '\n'.join(filter(None, [name, description]))
 
         collected_values['to_write']['name'] = name_to_write
 
@@ -3023,6 +3033,11 @@ class AccountEdiUBL(models.AbstractModel):
                 continue
             collected_values['to_write'][field_name] = node_value
 
+    def _import_ubl_invoice_get_tax_exclusive_amount(self, collected_values):
+        """ Return the untaxed amount of the document as stated in the xml, None if it's not there. """
+        tax_exclusive_amount_str = collected_values['tree'].findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+        return float(tax_exclusive_amount_str) if tax_exclusive_amount_str else None
+
     def _import_ubl_invoice_fix_untaxed_amount(self, collected_values):
         if not collected_values['are_taxes_complete']:
             return
@@ -3030,12 +3045,12 @@ class AccountEdiUBL(models.AbstractModel):
         tree = collected_values['tree']
         file_document_sign = collected_values['file_document_sign']
         currency = collected_values['currency_values']['currency']
-        tax_exclusive_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
-        if not tax_exclusive_amount_str:
+        tax_exclusive_amount = self._import_ubl_invoice_get_tax_exclusive_amount(collected_values)
+        if tax_exclusive_amount is None:
             return
 
         payable_rounding_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
-        tax_exclusive_amount = file_document_sign * float(tax_exclusive_amount_str or 0.0)
+        tax_exclusive_amount = file_document_sign * tax_exclusive_amount
         payable_rounding_amount = file_document_sign * float(payable_rounding_amount_str or 0.0)
         expected_untaxed_amount = tax_exclusive_amount + payable_rounding_amount
         invoice = collected_values['invoice']
@@ -3065,46 +3080,47 @@ class AccountEdiUBL(models.AbstractModel):
             ]
 
     def _import_attachments(self, invoice, tree):
-        """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
-        IrConfigParam = self.env['ir.config_parameter'].sudo()
-        disable_pdf_in_xml = IrConfigParam.get_bool("account_edi_ubl_cii.disable_pdf_in_xml")
-        additional_docs = super()._import_attachments(invoice, tree)
+        """ EXTENDS 'account_edi_common': import the embedded documents in the UBL xml if some are found."""
+        attachments = super()._import_attachments(invoice, tree)
+        if invoice.message_main_attachment_id.mimetype == 'application/pdf':
+            # Invoice look like it was already imported, don't import attachments again
+            return attachments
+        attachments_vals = []
+        additional_docs = tree.findall('./{*}AdditionalDocumentReference')
+        for document in additional_docs:
+            attachment_name = document.find('{*}ID')
+            attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
+            if attachment_name is not None and attachment_data is not None:
+                mimetype = attachment_data.attrib.get('mimeCode')
+                # Strip internal newlines/spaces to prevent 'raw' field validation failure on create
+                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)) or not (text := ''.join((attachment_data.text or '').split())):
+                    continue
+                # Normalize the name of the file : some e-fff emitters put the full path of the file
+                # (Windows or Linux style) and/or the name of the xml instead of the pdf.
+                # Get only the filename with the right extension.
+                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
+                attachments_vals.append({
+                    'name': name,
+                    'res_id': invoice.id,
+                    'res_model': 'account.move',
+                    'raw': text + '=' * (len(text) % 4),  # Fix incorrect padding
+                    'type': 'binary',
+                    'mimetype': mimetype,
+                })
+        new_attachments = self.env['ir.attachment'].create(attachments_vals)
+
+        # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
+        # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
+        pdf_attachments = new_attachments.filtered(lambda a: a.mimetype == 'application/pdf')
         if (
-            additional_docs or
-            invoice.message_main_attachment_id or
-            not invoice.is_purchase_document() or
-            disable_pdf_in_xml
+            pdf_attachments
+            and invoice.message_main_attachment_id
+            and invoice.message_main_attachment_id.name.endswith('.xml')
+            and 'pdf' not in invoice.message_main_attachment_id.mimetype
         ):
-            return additional_docs
-        try:
-            invoices_by_odoo_xmlid = 'account_edi_ubl_cii.action_report_account_invoices_generated_by_odoo'
-            if not self.env.ref(invoices_by_odoo_xmlid, raise_if_not_found=False):
-                _logger.warning("Missing template while generating substitute PDF attachment for invoice %s", invoice.id)
-                return additional_docs
-            report_xmlid = invoices_by_odoo_xmlid
+            invoice._message_set_main_attachment_id(pdf_attachments[0], force=True, filter_xml=False)
 
-            pdf_raw, pdf_extension = self.env['ir.actions.report'] \
-                        ._render_qweb_pdf(report_xmlid, res_ids=[invoice.id])
-
-            if pdf_extension != 'pdf':
-                return additional_docs
-
-            invoice_name = invoice.display_name.replace(_('Draft'), '')
-            pdf_filename = _('%(invoice_name)s - Generated by Odoo', invoice_name=invoice_name)
-
-            attachment = self.env['ir.attachment'].create({
-                'name': pdf_filename + '.pdf',
-                'res_id': invoice.id,
-                'res_model': 'account.move',
-                'raw': pdf_raw,
-                'type': 'binary',
-                'mimetype': 'application/pdf',
-            })
-            invoice._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
-            return attachment
-        except Exception:  # noqa: BLE001
-            _logger.exception("Error while generating substitute PDF attachment for invoice %s", invoice.id)
-        return additional_docs
+        return attachments | new_attachments
 
     def _import_ubl_invoice_post_processing(self, collected_values):
         self._import_invoice_post_processing(collected_values)

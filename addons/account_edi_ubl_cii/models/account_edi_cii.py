@@ -5,6 +5,7 @@ from odoo.tools.partner_identifiers import is_identifier_void
 from datetime import datetime
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
+    SUPPORTED_FILE_TYPES,
 )
 
 DEFAULT_CII_DATE_FORMAT = '%Y%m%d'
@@ -1603,3 +1604,59 @@ class AccountEdiCii(models.AbstractModel):
         self._import_cii_invoice_fix_untaxed_amount(collected_values)
         self._import_cii_invoice_post_processing(collected_values)
         return
+
+    def _import_attachments(self, invoice, tree):
+        """ EXTENDS 'account_edi_common': import the embedded documents in the CII xml if some are found.
+
+        Unlike UBL, which uses 'AdditionalDocumentReference'/'EmbeddedDocumentBinaryObject', CII embeds documents
+        using 'ram:AdditionalReferencedDocument'/'ram:AttachmentBinaryObject' nodes.
+        """
+        attachments = super()._import_attachments(invoice, tree)
+        if invoice.message_main_attachment_id.mimetype == 'application/pdf':
+            # Invoice look like it was already imported, don't import attachments again
+            return attachments
+        attachments_vals = []
+        additional_docs = tree.findall('.//{*}ApplicableHeaderTradeAgreement/{*}AdditionalReferencedDocument')
+        for document in additional_docs:
+            attachment_data = document.find('{*}AttachmentBinaryObject')
+            if attachment_data is None:
+                continue
+            mimetype = attachment_data.attrib.get('mimeCode')
+            # Strip internal newlines/spaces to prevent 'raw' field validation failure on create
+            if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)) or not (text := ''.join((attachment_data.text or '').split())):
+                continue
+            # Normalize the name of the file : some e-fff emitters put the full path of the file
+            # (Windows or Linux style) and/or the name of the xml instead of the pdf.
+            # Get only the filename with the right extension.
+            attachment_name = attachment_data.attrib.get('filename') or document.findtext('{*}IssuerAssignedID')
+            name = (attachment_name or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
+            attachments_vals.append({
+                'name': name,
+                'res_id': invoice.id,
+                'res_model': 'account.move',
+                'raw': text + '=' * (len(text) % 4),  # Fix incorrect padding
+                'type': 'binary',
+                'mimetype': mimetype,
+            })
+        new_attachments = self.env['ir.attachment'].create(attachments_vals)
+
+        # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
+        # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
+        pdf_attachments = new_attachments.filtered(lambda a: a.mimetype == 'application/pdf')
+        if (
+            pdf_attachments
+            and invoice.message_main_attachment_id
+            and invoice.message_main_attachment_id.name.endswith('.xml')
+            and 'pdf' not in invoice.message_main_attachment_id.mimetype
+        ):
+            invoice._message_set_main_attachment_id(pdf_attachments[0], force=True, filter_xml=False)
+
+        return attachments | new_attachments
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        """
+        :param account.move invoice:
+        """
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+        return self._cii_import_invoice(invoice, file_data, new=new)

@@ -286,14 +286,32 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             },
         }
 
-    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
-        # Override 'account.edi.xml.ubl_20' to include AllowanceCharge in it, as PriceAmount is different in OIOUBL
-        rebate = super()._retrieve_rebate_val(tree, xpath_dict, quantity)
+    def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
+        # EXTENDS 'account.edi.ubl'
+        # In OIOUBL, the PriceAmount is net of the line allowances/charges (see '_add_document_line_price_nodes').
+        # Restore the gross price unit so that the line allowances are kept as a discount.
+        super()._import_ubl_invoice_line_add_price_unit_quantity_discount(collected_values)
+        to_write = collected_values['to_write']
+        quantity = to_write['quantity']
+        if not quantity or not collected_values['line_tree'].findtext('./{*}Price/{*}PriceAmount'):
+            return
 
-        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
-        charge_amount = sum(d['amount'] for d in charges)
+        total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
+        total_charges = sum(charge['amount'] for charge in collected_values['charges'])
+        discount_amount = to_write['price_unit'] * quantity * to_write['discount'] / 100
+        to_write['price_unit'] += (total_allowances - total_charges) / quantity
+        gross_subtotal = to_write['price_unit'] * quantity
+        to_write['discount'] = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
 
-        return rebate + (discount_amount - charge_amount) / quantity
+    def _import_ubl_invoice_get_tax_exclusive_amount(self, collected_values):
+        # EXTENDS 'account.edi.ubl'
+        # In OIOUBL, TaxExclusiveAmount holds the tax amount (see '_add_invoice_monetary_total_nodes').
+        tree = collected_values['tree']
+        tax_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+        tax_inclusive_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
+        if not tax_amount_str or not tax_inclusive_amount_str:
+            return None
+        return float(tax_inclusive_amount_str) - float(tax_amount_str)
 
     def _get_line_discount_allowance_charge_node(self, vals):
         if not (charge_node := super()._get_line_discount_allowance_charge_node(vals)):
