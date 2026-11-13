@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from collections import defaultdict
 import colorsys
 import datetime
 import logging
@@ -1744,28 +1745,94 @@ class Website(Home):
     def _get_image_id(model, model_id, field, index):
         return f"{model}-{model_id}-{field}-{index}"
 
+    def _matches_link(self, href, old_link):
+        return bool(href and old_link) and href.rstrip('/') == old_link.rstrip('/')
+
+    def _modify_html_links(self, value, links):
+        """ Replace or remove the links of the html ``value`` matching ``links``.
+
+        The fragment is not part of the checked links: the links are matched
+        without it, and it is kept on the new link unless it has its own.
+
+        :return: the modified html (None if unchanged), and the indexes in
+            ``links`` of the links found
+        """
+        tree = html.fromstring(str(value))
+        found = set()
+        for a in tree.xpath('.//a[@href]'):
+            path, _sep, fragment = a.get('href').partition('#')
+            for index, link in enumerate(links):
+                if not self._matches_link(path, link['oldLink'].partition('#')[0]):
+                    continue
+                if link.get('remove'):
+                    a.drop_tag()
+                else:
+                    new_link = link['newLink']
+                    if fragment and '#' not in new_link:
+                        new_link = f'{new_link}#{fragment}'
+                    # lxml escapes the attribute value itself
+                    a.set('href', new_link)
+                found.add(index)
+                break
+        if not found:
+            return None, found
+        return html.tostring(tree, encoding='unicode', method='html'), found
+
+    def _modify_record_html(self, record, field_name, links):
+        """ :return: the indexes in ``links`` of the links found in the field """
+        field = record._fields[field_name]
+        if not callable(field.translate):
+            new_html, found = self._modify_html_links(record[field_name], links)
+            if new_html:
+                record.write({field_name: new_html})
+            return found
+
+        # The href is part of the non translatable structure, which must be
+        # the same for all languages: replace the link in every stored value
+        # (delayed translations included), otherwise it would be restored
+        # from the source the next time it is edited.
+        translations = record._get_stored_translations(field_name) or {}
+        found = set()
+        for key, value in translations.items():
+            new_html, found_in_value = self._modify_html_links(value, links)
+            if new_html:
+                translations[key] = field.convert_to_cache(new_html, record)
+            found |= found_in_value
+        if found:
+            record.write({field_name: translations})
+        return found
+
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
-    def update_broken_links(self, links):
+    def update_broken_links(self, links, lang=None):
+        """ Fix or remove the given broken links.
+
+        :return: the indexes in ``links`` of the links not found, e.g. already
+            fixed from another tab
+        """
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
-        for link in links:
-            record = request.env[link['res_model']].browse(link['res_id'])
-            if not record.has_access('write'):
+
+        website = self.env.website
+        if lang not in website.language_ids.mapped('code'):
+            lang = website.default_lang_id.code
+
+        indexes_by_field = defaultdict(list)
+        for index, link in enumerate(links):
+            field_name = link.get('field') or 'arch'
+            if field_name == 'arch':
+                field_name = 'arch_db'
+            indexes_by_field[link['res_model'], link['res_id'], field_name].append(index)
+
+        found = set()
+        for (res_model, res_id, field_name), indexes in indexes_by_field.items():
+            if res_model not in request.env:
                 continue
-            link['field'] = 'arch_db' if link['field'] == 'arch' else link['field']
-            tree = html.fromstring(str(record[link['field']]))
-            modified = False
-            for element in tree.xpath('//a'):
-                href = element.get('href')
-                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
-                    if link['remove']:
-                        element.drop_tag()
-                    else:
-                        element.set('href', link['newLink'])
-                    modified = True
-            if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
+            record = request.env[res_model].browse(res_id).with_context(lang=lang)
+            if field_name not in record._fields or not record.exists() or not record.has_access('write'):
+                continue
+            found_in_record = self._modify_record_html(record, field_name, [links[i] for i in indexes])
+            found.update(indexes[i] for i in found_in_record)
+        return [index for index in range(len(links)) if index not in found]
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, replica=True)
     def get_seo_data(self, res_id, res_model):

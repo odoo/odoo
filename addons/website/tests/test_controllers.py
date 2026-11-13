@@ -3,6 +3,7 @@
 import json
 from urllib.parse import parse_qs
 
+from lxml import html
 from urllib3.util import parse_url
 from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
@@ -292,3 +293,140 @@ class TestControllers(tests.HttpCase):
         res_login = self.url_open('/web/login')
         self.assertEqual(res_login.status_code, 200)
         self.assertNotIn('meta name="robots" content="noindex', res_login.text)
+
+    def test_update_broken_links_multi_lang(self):
+        website = self.env.ref('base.default_website')
+        langs = self.env['res.lang']
+        for code in ('fr_FR', 'nl_NL', 'de_DE'):
+            langs += self.env['res.lang']._activate_lang(code)
+        website.language_ids = self.env.ref('base.lang_en') + langs
+        website.default_lang_id = self.env.ref('base.lang_en')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Broken Link Test View',
+            'type': 'qweb',
+            'website_id': website.id,
+            'arch_db': '<t t-name="test"><div><p>Hello <a href="/old">my link</a> world</p></div></t>',
+        })
+        view.update_field_translations('arch_db', {
+            'fr_FR': {'Hello': 'Bonjour', 'my link': 'mon lien', 'world': 'monde'},
+            'nl_NL': {'Hello': 'Hallo', 'my link': 'mijn link', 'world': 'wereld'},
+            'de_DE': {'Hello': 'Hallo', 'my link': 'mein Link', 'world': 'Welt'},
+        })
+
+        def update_broken_link(lang, new_link):
+            self.make_jsonrpc_request('/website/update_broken_links', {
+                'links': [{
+                    'oldLink': '/old',
+                    'newLink': new_link,
+                    'remove': False,
+                    'res_model': 'ir.ui.view',
+                    'res_id': view.id,
+                    'field': 'arch',
+                }],
+                'lang': lang,
+            })
+            self.env.invalidate_all()
+            return dict(view._get_stored_translations('arch_db'))
+
+        # delayed translations: other languages still show their old text
+        view.with_context(lang='en_US', delay_translations=True).arch_db = \
+            '<t t-name="test"><div><p>Hi <a href="/old">my link</a> world</p></div></t>'
+
+        self.authenticate('admin', 'admin')
+        # the href belongs to the structure shared by all languages: fixing it
+        # in a language fixes it in all of them, delayed translations included
+        update_broken_link('fr_FR', '/new')
+        # the link is not broken anymore in the other languages
+        translations = update_broken_link('nl_NL', '/new-nl')
+        self.assertEqual(translations, {
+            'en_US': '<t t-name="test"><div><p>Hi <a href="/new">my link</a> world</p></div></t>',
+            'fr_FR': '<t t-name="test"><div><p>Bonjour <a href="/new">mon lien</a> monde</p></div></t>',
+            '_fr_FR': '<t t-name="test"><div><p>Hi <a href="/new">mon lien</a> monde</p></div></t>',
+            'nl_NL': '<t t-name="test"><div><p>Hallo <a href="/new">mijn link</a> wereld</p></div></t>',
+            '_nl_NL': '<t t-name="test"><div><p>Hi <a href="/new">mijn link</a> wereld</p></div></t>',
+            'de_DE': '<t t-name="test"><div><p>Hallo <a href="/new">mein Link</a> Welt</p></div></t>',
+            '_de_DE': '<t t-name="test"><div><p>Hi <a href="/new">mein Link</a> Welt</p></div></t>',
+        })
+
+    def test_update_broken_links_survives_source_edit(self):
+        website = self.env.ref('base.default_website')
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        website.language_ids = self.env.ref('base.lang_en') + lang_fr
+        website.default_lang_id = self.env.ref('base.lang_en')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Broken Link Test View',
+            'type': 'qweb',
+            'website_id': website.id,
+            'arch_db': '<t t-name="test"><div><p>Hello <a href="/old">my link</a> world</p></div></t>',
+        })
+        view.update_field_translations('arch_db', {
+            'fr_FR': {'Hello': 'Bonjour', 'my link': 'mon lien', 'world': 'monde'},
+        })
+
+        self.authenticate('admin', 'admin')
+        self.make_jsonrpc_request('/website/update_broken_links', {
+            'links': [{
+                'oldLink': '/old',
+                'newLink': '/new',
+                'remove': False,
+                'res_model': 'ir.ui.view',
+                'res_id': view.id,
+                'field': 'arch',
+            }],
+            'lang': 'fr_FR',
+        })
+        self.env.invalidate_all()
+        self.assertIn('/new', view.with_context(lang='en_US').arch_db)
+
+        # the default language is then edited in the website editor
+        view.with_context(lang='en_US', delay_translations=True).arch_db = \
+            '<t t-name="test"><div><p>Hi <a href="/new">my link</a> world</p></div></t>'
+        self.env.invalidate_all()
+        translations = dict(view._get_stored_translations('arch_db'))
+        # validating the delayed French translation must not bring back the broken link
+        self.assertNotIn('/old', translations.get('_fr_FR', translations['fr_FR']), translations)
+
+    def test_update_broken_links_href_variants(self):
+        website = self.env.ref('base.default_website')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Broken Link Test View',
+            'type': 'qweb',
+            'website_id': website.id,
+            'arch_db': '<t t-name="test"><div>'
+                       '<p><a href="/old-anchor#section">anchor</a></p>'
+                       '<p><a href="/old-anchor-2#section">anchor 2</a></p>'
+                       '<p><a href="/old-remove#section">remove</a></p>'
+                       '<p><a href="/old-query">query</a></p>'
+                       '</div></t>',
+        })
+
+        def link(old_link, new_link, remove=False, res_model='ir.ui.view'):
+            return {
+                'oldLink': old_link,
+                'newLink': new_link,
+                'remove': remove,
+                'res_model': res_model,
+                'res_id': view.id,
+                'field': 'arch',
+            }
+
+        self.authenticate('admin', 'admin')
+        # the dialog sends the links without their fragment
+        not_updated = self.make_jsonrpc_request('/website/update_broken_links', {'links': [
+            link('/old-anchor', '/new-anchor'),
+            link('/old-anchor-2', '/new-anchor-2#other'),
+            link('/old-remove', '', remove=True),
+            link('/old-query', '/new-query?a=1&b=2'),
+            # unknown models are ignored
+            link('/old-query', '/unknown', res_model='not.a.model'),
+            # already fixed, e.g. from another tab
+            link('/already-fixed', '/new'),
+        ]})
+        self.assertEqual(not_updated, [4, 5])
+        self.env.invalidate_all()
+        tree = html.fromstring(view.arch_db)
+        self.assertEqual(
+            [a.get('href') for a in tree.xpath('//a')],
+            ['/new-anchor#section', '/new-anchor-2#other', '/new-query?a=1&b=2'],
+        )
+        self.assertIn('<p>remove</p>', view.arch_db)
