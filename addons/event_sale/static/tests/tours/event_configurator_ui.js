@@ -9,6 +9,15 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
         ...tourUtils.selectCustomer("Azure"),
         ...tourUtils.addProduct("Event Registration"),
         {
+            trigger: ".o_dialog .modal-header .btn-close",
+            run: "click",
+        },
+        {
+            content: "Wait the modal is closed",
+            trigger: "body:not(:has(.modal))",
+        },
+        ...tourUtils.addProduct("Event Registration"),
+        {
             trigger: 'div[name="event_id"] input',
             run: "click",
         },
