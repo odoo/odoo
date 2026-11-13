@@ -6,7 +6,7 @@
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'o-is-sticky': this.state.isTopStickyPinned }">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="this.state.activePanel === this.CHATTER_PANEL.SEARCH" class="flex-grow-1">
-                    <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
+                    <SearchMessageInput closeSearch.bind="this.closeSearch" thread="this.state.thread"/>
                 </div>
                 <div t-else="" class="d-flex gap-1">
                     <button class="o-mail-Chatter-sendMessage btn text-nowrap" t-att-class="{
@@ -129,7 +129,7 @@
                 <t t-if="this.scheduledMessages.length">
                     <t t-call="mail.ScheduledMessagesList"/>
                 </t>
-                <SearchMessageResult t-if="this.messageSearch.searching() or this.messageSearch.searched()" thread="this.state.thread"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
+                <SearchMessageResult t-if="this.messageSearch.searching() or this.messageSearch.searched()" thread="this.state.thread" onClickJump.bind="this.closeSearch"/>
                 <Thread t-else="" thread="this.state.thread" t-key="this.state.thread.localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
             </t>
         </div>

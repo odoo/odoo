@@ -1,5 +1,5 @@
 import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
-import { Component, providePlugins, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import { Component, providePlugins, t, useOnChange, useProps } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -18,7 +18,6 @@ export class SearchMessagesPanel extends Component {
             thread: t.instanceOf(this.store["mail.thread"]),
         });
         providePlugins([MessageSearchPlugin], { thread: () => this.props.thread });
-        this.messageSearch = usePlugin(MessageSearchPlugin);
         useOnChange(
             () => [this.props.thread],
             () => this.props.close?.(),

@@ -111,7 +111,7 @@ patch(Message.prototype, {
     formatTrackingOrNone(trackingFieldInfo, trackingValue) {
         const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue);
         return formattedValue
-            ? this.props.messageSearch?.highlight(formattedValue) ?? formattedValue
+            ? this.messageSearch?.highlight(formattedValue) ?? formattedValue
             : _t("None");
     },
 });

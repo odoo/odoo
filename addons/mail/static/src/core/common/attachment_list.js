@@ -53,6 +53,7 @@ export class AttachmentList extends Component {
         Object.assign(this, { attClassObjectToString, formatDate, formatDateTime });
         this.store = useService("mail.store");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
+        this.messageSearch = useMaybePlugin(MessageSearchPlugin);
         this.props = usePropsPlus({
             attachmentGroups: t.array(
                 t.object({
@@ -61,7 +62,6 @@ export class AttachmentList extends Component {
                 })
             ),
             isSelecting: t.boolean().optional(false),
-            messageSearch: t.instanceOf(MessageSearchPlugin).optional(),
             onToggleSelected: t.function([t.instanceOf(this.store["ir.attachment"])]).optional(),
             selectedAttachments: t.array(t.instanceOf(this.store["ir.attachment"])).optional(),
             thread: propStatic(

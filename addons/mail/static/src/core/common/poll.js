@@ -1,5 +1,6 @@
 import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 import { computedUntilStale } from "@mail/utils/common/signal";
 
 import {
@@ -26,9 +27,9 @@ export class Poll extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            messageSearch: types.instanceOf(MessageSearchPlugin).optional(),
             poll: types.instanceOf(this.store["mail.poll"]),
         });
+        this.messageSearch = useMaybePlugin(MessageSearchPlugin);
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();
         this.state = proxy({
