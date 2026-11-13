@@ -5562,6 +5562,16 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.move_finished_ids.move_line_ids.lot_id, new_sn)
 
+    def test_add_workorder_without_workcenter_to_confirmed_mo(self):
+        """ Adding a work order line to a confirmed MO recomputes its end date
+        while the new line has no work center yet. """
+        product = self.env['product.product'].create({'name': 'Bug Part', 'is_storable': True})
+        mo = self.env['mrp.production'].create({'product_id': product.id, 'product_qty': 1})
+        mo.action_confirm()
+        draft = mo.new(origin=mo)
+        draft.workorder_ids += self.env['mrp.workorder'].new({'name': 'Cut'})
+        self.assertEqual(draft.date_finished, mo.date_start + timedelta(hours=1))
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (
