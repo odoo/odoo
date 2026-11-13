@@ -32,6 +32,7 @@ test("activity click on View", async () => {
         res_model: "calendar.event",
         name: "meeting1",
         start: "2022-07-06 06:30:00",
+        stop: "2022-07-06 07:30:00",
         attendee_ids: [calendarAttendeeId],
     });
     pyEnv["mail.activity"].create({
@@ -63,6 +64,7 @@ test("Can delete activity linked to an event", async () => {
         res_model: "calendar.event",
         name: "meeting1",
         start: serializeDateTime(DateTime.now().plus({ days: 1 })),
+        stop: serializeDateTime(DateTime.now().plus({ days: 1, hours: 1 })),
         attendee_ids: [attendeeId],
     });
     pyEnv["mail.activity"].create({
