@@ -18,6 +18,13 @@ async function editAutocomplete(el, value) {
 }
 
 class ResPartner extends mailModels.ResPartner {
+    additional_identifiers = fields.Json();
+    available_additional_identifiers_metadata = fields.Json({
+        default: {
+            FR_SIREN: { label: "SIREN", display_optional: "hide" },
+            FR_SIRET: { label: "SIRET", display_optional: "hide" },
+        },
+    });
     state_id = fields.Many2one({ relation: "res.country.state" });
     _views = {
         form: `
@@ -35,6 +42,31 @@ class ResPartner extends mailModels.ResPartner {
                 <field name="zip"/>
                 <field name="country_id"/>
                 <field name="vat" widget="field_partner_autocomplete"/>
+                <field name="additional_identifiers" widget="additional_identifiers_list"/>
+            </form>
+        `,
+    };
+}
+
+class ResCompany extends mailModels.ResCompany {
+    additional_identifiers = fields.Json();
+    ape = fields.Char();
+    l10n_fr_das2_activity = fields.Char();
+    city = fields.Char();
+    country_id = fields.Many2one({ relation: "res.country" });
+    street = fields.Char();
+    zip = fields.Char();
+    _views = {
+        form: `
+            <form>
+                <field name="name" widget="field_partner_autocomplete"/>
+                <field name="street"/>
+                <field name="city"/>
+                <field name="zip"/>
+                <field name="country_id"/>
+                <field name="ape"/>
+                <field name="l10n_fr_das2_activity"/>
+                <field name="additional_identifiers" invisible="1"/>
             </form>
         `,
     };
@@ -47,6 +79,10 @@ class ResCountry extends models.Model {
         {
             id: 1,
             name: "Belgium",
+        },
+        {
+            id: 2,
+            name: "France",
         },
     ];
 }
@@ -62,7 +98,7 @@ class ResCountryState extends models.Model {
     ];
 }
 
-defineModels({ ...mailModels, ResPartner, ResCountry, ResCountryState });
+defineModels({ ...mailModels, ResCompany, ResPartner, ResCountry, ResCountryState });
 
 const iapSuggestions = [
     {
@@ -212,6 +248,115 @@ test("Partner autocomplete : VAT search", async () => {
             message: `${fieldName} should be filled`,
         });
     }
+});
+
+test("Partner autocomplete: enrich by registration number", async () => {
+    onRpc("res.partner", "autocomplete_by_field", ({ args }) => {
+        expect.step(args[1]);
+        return args[1].length < 9 ? [] : [
+            {
+                name: "ETABLISSEMENTS ADRIEN RIQUIER",
+                enrichment_type: "vat",
+                enrichment_query: "FR00552032500019",
+                city: "Dargnies",
+                country_id: { id: 2, name: "France" },
+            },
+        ];
+    });
+    onRpc("res.partner", "enrich_by_vat", ({ args, kwargs }) => {
+        expect.step(args[0]);
+        expect(kwargs.context.enriched_company_data.country_id.id).toBe(2);
+        return {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            street: "12 RUE HENRI BARBUSSE",
+            city: "Dargnies",
+            zip: "80570",
+            ape: "4674B",
+            country_id: { id: 2, display_name: "France" },
+            warning: "Please verify the suggested company information.",
+            additional_identifiers: {
+                FR_SIREN: "005520325",
+                FR_SIRET: "00552032500019",
+            },
+        };
+    });
+    onRpc("res.partner", "web_save", ({ args }) => {
+        expect(args[1].ape).toBe(undefined);
+        expect(args[1].warning).toBe(undefined);
+        expect(args[1].additional_identifiers).toEqual({
+            FR_SIREN: "005520325",
+            FR_SIRET: "00552032500019",
+        });
+    });
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+    });
+
+    expect("#FR_SIRET").toHaveCount(0);
+    await editAutocomplete("[name='name'] .dropdown input", "005");
+    await editAutocomplete("[name='name'] .dropdown input", "00552032500019");
+    await contains("[name='name'] .o-autocomplete ul li").click();
+
+    expect.verifySteps(["005", "00552032500019", "FR00552032500019"]);
+    expect("[name='street'] input").toHaveValue("12 RUE HENRI BARBUSSE");
+    expect("#FR_SIRET").toHaveValue("00552032500019");
+    expect("#FR_SIREN").toHaveValue("005520325");
+    expect(".o_notification_content").toHaveText("Please verify the suggested company information.");
+});
+
+test("Partner autocomplete: fill INPI data on a company", async () => {
+    onRpc("res.partner", "autocomplete_by_field", () => [
+        {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            enrichment_type: "vat",
+            enrichment_query: "FR00552032500019",
+            city: "Dargnies",
+            country_id: { id: 2, name: "France" },
+        },
+    ]);
+    onRpc("res.partner", "enrich_by_vat", () => ({
+        name: "ETABLISSEMENTS ADRIEN RIQUIER",
+        street: "12 RUE HENRI BARBUSSE",
+        city: "Dargnies",
+        zip: "80570",
+        ape: "4674B",
+        l10n_fr_das2_activity: "Commerce de fournitures",
+        additional_identifiers: {
+            FR_SIREN: "005520325",
+            FR_SIRET: "00552032500019",
+        },
+    }));
+    onRpc("res.company", "web_save", ({ args }) => {
+        expect(args[1].ape).toBe("4674B");
+        expect(args[1].additional_identifiers).toEqual({
+            FR_SIREN: "005520325",
+            FR_SIRET: "00552032500019",
+        });
+    });
+    await mountView({
+        resModel: "res.company",
+        type: "form",
+    });
+
+    await editAutocomplete("[name='name'] .dropdown input", "riquier");
+    await contains("[name='name'] .o-autocomplete ul li").click();
+    expect("[name='ape'] input").toHaveValue("4674B");
+    expect("[name='l10n_fr_das2_activity'] input").toHaveValue("Commerce de fournitures");
+    await contains(".o_form_button_save").click();
+});
+
+test("Partner autocomplete: D&B company suggestions still work", async () => {
+    await mountView({
+        resModel: "res.company",
+        type: "form",
+    });
+    await editAutocomplete("[name='name'] .dropdown input", "company");
+    await contains("[name='name'] .o-autocomplete ul li").click();
+    expect("[name='street'] input").toHaveValue("Chaussée de Namur 40");
+    expect("[name='country_id'] input").toHaveValue("Belgium");
+    expect("[name='ape'] input").toHaveValue("");
+    await contains(".o_form_button_save").click();
 });
 
 test.tags("desktop");

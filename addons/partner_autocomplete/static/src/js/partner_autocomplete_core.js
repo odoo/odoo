@@ -93,7 +93,10 @@ export function usePartnerAutocomplete() {
         if (isGSTNumber(company.query)) {
             return orm.call("res.partner", "enrich_by_gst", [company.query]);
         }
-        return orm.call("res.partner", "enrich_by_duns", [company.duns], { context: context });
+        if (company.enrichment_type === "vat") {
+            return orm.call("res.partner", "enrich_by_vat", [company.enrichment_query], { context });
+        }
+        return orm.call("res.partner", "enrich_by_duns", [company.duns], { context });
     }
 
     function removeUselessFields(company, fieldsToKeep) {
@@ -114,6 +117,10 @@ export function usePartnerAutocomplete() {
      */
     function getCreateData(company, fieldsToKeep) {
         return enrichCompany(company).then((companyData) => {
+            if (companyData.warning) {
+                notification.add(companyData.warning, { type: "warning" });
+                delete companyData.warning;
+            }
             // Fetch additional company info via Autocomplete Enrichment API
             let isEnrichAccessible = false;
             if (companyData.error) {
@@ -152,7 +159,8 @@ export function usePartnerAutocomplete() {
         // Optimization: if the search query starts with the same content as a previous query for
         // which there was no results, there won't be any results for the current query.
         // E.g., if there is no results for query "abc123", there won't be any results for query "abc1234".
-        if (fieldName === 'name' && lastNoResultsQuery && value.startsWith(lastNoResultsQuery)) {
+        // Numeric identifiers can match only once complete, even after a prefix had no result.
+        if (fieldName === 'name' && lastNoResultsQuery && value.startsWith(lastNoResultsQuery) && !/^[0-9 ]+$/.test(value)) {
             return [];
         }
 

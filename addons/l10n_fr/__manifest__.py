@@ -8,7 +8,7 @@
     'description': """
 """,
     'depends': [
-        'base',
+        'partner_autocomplete',
     ],
     'data': [
         'data/res_country_data.xml',
