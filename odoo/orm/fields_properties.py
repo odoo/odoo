@@ -747,7 +747,7 @@ class Properties(Field['Property', dict]):
                 SQL("%s->>0 = %s", sql_property, property_alias),
             )
 
-            return property_alias
+            return SQLWithSelection("%s", property_alias, selection_keys=options)
 
         elif property_type == 'many2one':
             comodel = model.env.get(definition.get('comodel'))
@@ -902,6 +902,15 @@ class SQLWithProperty(sql.LiteralSQL):
         return self._property(self, name)
 
     __getattr__ = __getitem__
+
+
+class SQLWithSelection(sql.LiteralSQL):
+    """ SQL expression of a selection property, with the keys of its options
+    in the order of its definition.
+    """
+    def __init__(self, code, /, *args, selection_keys, **kw):
+        super().__init__(code, *args, **kw)
+        self.selection_keys = selection_keys
 
 
 class Property(abc.Mapping):

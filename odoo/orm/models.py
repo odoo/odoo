@@ -2210,6 +2210,8 @@ class BaseModel(metaclass=MetaModel):
         if not order:
             return SQL()
 
+        from .fields_properties import SQLWithSelection  # noqa: PLC0415
+
         orderby_terms = []
 
         for order_part in order.split(','):
@@ -2252,8 +2254,8 @@ class BaseModel(metaclass=MetaModel):
                         query._order_groupby.insert(0, groupby_terms[term])
                         groupby_terms[term] = SQL(", ").join(query._order_groupby)
                         query._order_groupby.clear()
-            elif field and field.type == 'selection':
-                sql_keys = list(field.get_values(self.env))
+            elif (field and field.type == 'selection') or isinstance(groupby_terms[term], SQLWithSelection):
+                sql_keys = list(field.get_values(self.env)) if field else groupby_terms[term].selection_keys
                 sql_expr = SQL("array_position(%s::text[], %s::text)", sql_keys, groupby_terms[term])
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
             elif granularity == 'day_of_week':

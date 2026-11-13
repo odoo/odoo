@@ -465,6 +465,30 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self._check_domains_count(result)
 
+    def test_properties_field_read_group_selection_order(self):
+        """ The order of a selection property follows its options, like a selection field. """
+        Model = self.env['test_orm.message']
+        for state in ('done', 'progress', 'draft'):
+            Model.create({
+                'discussion': self.discussion_2.id,
+                'author': self.user.id,
+                'attributes': {'state': state},
+            })
+        domain = [('discussion', '=', self.discussion_2.id)]
+
+        for order, expected in (
+            (None, ['draft', 'progress', 'done']),
+            ('attributes.state DESC', ['done', 'progress', 'draft']),
+        ):
+            with self.subTest(order=order):
+                result = Model.formatted_read_group(
+                    domain=domain + [('attributes.state', '!=', False)],
+                    aggregates=['__count'],
+                    groupby=['attributes.state'],
+                    order=order,
+                )
+                self.assertEqual([group['attributes.state'] for group in result], expected)
+
     def test_properties_field_web_read_group(self):
         self.messages.discussion = self.discussion_1
         # search on text properties
