@@ -740,3 +740,56 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         mo_1.workorder_ids[0].workcenter_id.analytic_distribution = {str(wc_analytic_account.id): 100.0}
         mo_1.with_user(mrp_user).button_mark_done()
         self.assertEqual(mo_1.state, 'done')
+
+    def test_mo_overview_extra_cost(self):
+        component_product = self.env['product.product'].create({
+            'name': 'Component Product',
+            'standard_price': 100.0,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'qty_available': 12,
+            'is_storable': True,
+        })
+
+        by_product = self.env['product.product'].create({
+            'name': 'Final By Product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_storable': True,
+        })
+
+        manufacturing_product = self.env['product.product'].create({
+            'name': 'Final Product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_storable': True,
+        })
+
+        bom_extra_cost = self.env['mrp.bom'].sudo().create({
+            'product_id': manufacturing_product.id,
+            'product_tmpl_id': manufacturing_product.product_tmpl_id.id,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': component_product.id, 'product_qty': 1}),
+            ],
+            'extra_cost': 50,
+            'byproduct_ids': [Command.create({'product_id': by_product.id, 'product_qty': 1, 'cost_share': 10})],
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = manufacturing_product
+        mo_form.bom_id = bom_extra_cost
+        mo_form.product_qty = 2.0
+        mo_form.uom_id = self.env.ref('uom.product_uom_pack_6')
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_mark_done()
+
+        report = self.env['report.mrp.report_mo_overview']
+        report_data = report._get_report_data(mo.id)
+        self.assertEqual(report_data['summary']['mo_cost'], 1620.0)
+        self.assertEqual(report_data['extras']['unit_mo_cost'], 810.0)
+        self.assertEqual(report_data['summary']['extra_cost'] * report_data['summary']['extra_cost_quantity'], 600.0)
+        self.assertEqual(report_data['components'][0]['summary']['mo_cost'], 1200.0)
+        self.assertEqual(report_data['byproducts']['summary']['mo_cost'], 180.0)
+        self.assertEqual(report_data['cost_breakdown'][0]['unit_avg_total_cost'], 135.0)
+        self.assertEqual(report_data['cost_breakdown'][1]['unit_avg_total_cost'], 15.0)
