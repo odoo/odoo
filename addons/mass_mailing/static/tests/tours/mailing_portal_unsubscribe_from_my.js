@@ -124,7 +124,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_my", {
         },
         {
             content: "Now exclude me",
-            trigger: "div#button_blocklist_add",
+            trigger: "button#button_blocklist_add",
             run: "click",
         },
         {

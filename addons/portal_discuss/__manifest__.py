@@ -7,7 +7,6 @@
     "depends": ["mail", "portal"],
     "data": [
         "data/portal_entry_data.xml",
-        "views/portal_templates.xml",
     ],
     "assets": {
         "mail.assets_public": [

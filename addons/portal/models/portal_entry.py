@@ -10,8 +10,13 @@ class PortalEntry(models.Model):
     url = fields.Char("Target URL")
     description = fields.Text("Description of Card", translate=True)
     image = fields.Binary("Image")
+    icon = fields.Char("Icon", help="Name of an Odoo icon, shown instead of the image")
     sequence = fields.Integer("sequence", default="999")
     placeholder_count = fields.Char("Placeholder Count")
+    alert_placeholder_count = fields.Char(
+        "Alert Placeholder Count",
+        help="Counter of the documents awaiting the user, shown as a danger badge instead of the card counter",
+    )
     category = fields.Char("Category", default="common_category")
     show_in_portal = fields.Boolean("Show in Portal", default=True)
     is_config_card = fields.Boolean("Config Card", default=False)

@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_continue_after
                 expectUnloadPage: true,
             },
             {
-                trigger: ".o_portal_wrap h1:text(My account)",
+                trigger: ".o_portal_wrap .o_portal_my_home",
             },
             {
                 trigger:

@@ -175,25 +175,29 @@
             <div id="wrap" class='o_portal_wrap' data-name="My Account">
                 <div class="container pt-3 pb-5">
                     <t t-if="my_details">
-                        <div class="wrapper col-12 d-flex flex-wrap justify-content-between align-items-center">
-                            <h1 class="my-3 h3">My account</h1>
-                            <button class="btn py-0 d-flex align-items-center gap-2 d-lg-none ms-auto"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#accountOffCanvas">
-                                <img class="o_avatar rounded"
-                                t-att-src="image_data_uri(user_id.partner_id.avatar_1024)" alt="Contact"/>
-                            </button>
+                        <t t-set="header_content"><t t-call="portal.side_content" placement="'header'"/></t>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4 mb-3 mb-lg-4">
+                            <div name="portal_profile" class="d-flex align-items-center gap-3 min-w-0">
+                                <img class="rounded object-fit-cover flex-shrink-0" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="" width="56" height="56"/>
+                                <div class="d-flex flex-column min-w-0">
+                                    <h1 class="h3 mb-0 text-break">Hello, <t t-out="user_id.name"/></h1>
+                                    <div class="small text-muted text-break">
+                                        <t t-if="user_id.email"><t t-out="user_id.email"/> · </t><a href="/my/account">Edit profile</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Side by side, they share the row on tablet -->
+                            <t t-set="tablet_halves" t-value="'flex-md-grow-1 flex-lg-grow-0 flex-basis-md-0 flex-basis-lg-auto min-w-0' if sales_user and header_content.strip() else ''"/>
+                            <div t-if="sales_user or header_content.strip()" t-attf-class="d-flex flex-wrap align-items-center gap-2 w-100 #{'w-lg-auto' if tablet_halves else 'w-md-auto'}">
+                                <div t-if="header_content.strip()" t-attf-class="#{tablet_halves} w-100 w-md-auto" t-out="header_content"/>
+                                <div t-if="sales_user" name="portal_contact" t-attf-class="o_my_contact #{tablet_halves} w-100 w-md-auto">
+                                    <t t-call="portal.portal_contact"/>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row justify-content-between">
-                            <div t-attf-class="o_portal_content col-12 col-lg-8 mb-5">
-                                <t t-out="0"/>
-                            </div>
-                            <div class="d-none d-lg-flex justify-content-end col-lg-4">
-                                <t t-call="portal.side_content"/>
-                            </div>
-                            <div class="offcanvas offcanvas-start d-lg-none" id="accountOffCanvas">
-                                <t t-call="portal.side_content" isOffcanvas="true"/>
-                            </div>
+                        <t t-call="portal.side_content" placement="'top'"/>
+                        <div class="o_portal_content mb-5">
+                            <t t-out="0"/>
                         </div>
                     </t>
                     <t t-else="">
@@ -226,16 +230,16 @@
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <div class="o_portal_docs">
                     <div t-if="portal_entries.get('alert', [])"
-                        class="o_portal_category d-flex flex-wrap gap-2 mt-3 o_not_editable" id="portal_alert_category">
+                        class="o_portal_category d-flex flex-wrap gap-2 o_not_editable" id="portal_alert_category">
                         <t t-foreach="portal_entries.get('alert', [])" t-as="entry">
                             <t t-call="portal.portal_docs_entry"
-                                bg_color.f="alert alert-primary align-items-center"
+                                bg_color.f="alert alert-primary align-items-center gap-3 mb-0"
                                 show_count="True"
                                 placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
                     <div t-if="portal_cards or (editable and portal_hidden_cards)"
-                        class="o_portal_cards d-grid mt-3" id="portal_cards">
+                        class="o_portal_cards d-grid" id="portal_cards">
                         <t t-set="visible_portal_cards" t-value="portal_cards._filter_visible_portal_cards()"/>
                         <t t-foreach="portal_cards" t-as="entry">
                             <t
@@ -265,38 +269,42 @@
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
         <t t-set="show_portal_card" t-value="force_show or is_card_visible"/>
-        <t t-set="show_counter_as_badge" t-value="False"/>
         <div t-att-data-id="entry.id"
+            t-att-data-category="entry.category"
             t-att-data-show-in-portal="'true' if entry.show_in_portal else 'false'"
             t-att-data-hidden-by-business-rule="'1' if not show_portal_card and not entry.placeholder_count else None"
             t-att-class="'o_portal_index_card ' +  ('' if entry.show_in_portal and show_portal_card else 'd-none ') + ('w-100 order-0' if show_count else 'order-2')">
-            <a t-att-href="entry.url" data-name="Portal Cards" t-att-title="entry.name" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else ''}">
-                <div t-if="entry.image" class="o_portal_icon d-none">
-                    <span t-field="entry.image"
-                        t-options="{'widget': 'image', 'width': 64, 'height': 64}"
+            <a t-att-href="entry.url" data-name="Portal Cards" t-att-title="entry.name" t-attf-class="d-flex align-items-center p-3 h-100 rounded-3 text-decoration-none #{bg_color or 'border'}">
+                <div t-if="not show_count and (entry.icon or entry.image)" class="o_portal_icon d-none align-items-center justify-content-center flex-shrink-0 rounded-3 text-primary">
+                    <i t-if="entry.icon" class="oi oi-lg" t-att-data-icon="entry.icon" role="img" aria-hidden="true"/>
+                    <span t-else="" t-field="entry.image"
+                        t-options="{'widget': 'image', 'width': 28, 'height': 28}"
                         role="img"
-                        style="display: block; width: 64px; height: 64px;"
                         t-attf-aria-label="'Icon for %s' % entry.name"/>
                 </div>
-                <div t-att-class="'alert-link' if bg_color else ''">
-                    <div t-attf-class="fs-5 lh-1 #{'d-flex gap-2 align-items-center' if placeholder_count or count else ''}">
-                    <t t-out="count"/>
-                        <span t-if="entry.placeholder_count and not force_show and not show_counter_as_badge" t-att-class="'fw-bold' if show_count else 'd-none'"
-                            t-att-data-placeholder_count="entry.placeholder_count" t-att-data-category="entry.category"/>
-                        <h5 class="mb-0" t-field="entry.name"/>
-                    </div>
-                    <div class="opacity-75">
-                        <p class="mt-1 mb-0" t-field="entry.description"/>
+                <span t-if="not show_count and (entry.placeholder_count and entry.placeholder_count != entry.alert_placeholder_count)"
+                    class="o_portal_count d-none"
+                    t-att-data-placeholder_count="entry.placeholder_count" t-att-data-category="entry.category"/>
+                <span t-if="show_count and entry.placeholder_count" class="badge rounded-circle bg-primary"
+                        t-att-data-placeholder_count="entry.placeholder_count" t-att-data-category="entry.category"/>
+                <div class="ms-2">
+                    <div t-attf-class="#{'d-flex gap-2 align-items-center' if count else ''}">
+                        <t t-out="count"/>
+                        <h5 class="o_portal_title mb-0" t-field="entry.name"/>
                     </div>
                 </div>
-                <span t-if="show_counter_as_badge" class="bg-danger badge rounded-pill align-self-center d-none" t-att-data-placeholder_count="entry.placeholder_count" t-att-data-category="entry.category"/>
+                <span t-if="entry.alert_placeholder_count"
+                    class="o_portal_badge badge rounded-circle d-none d-inline-flex align-items-center justify-content-center flex-shrink-0 ms-auto bg-danger"
+                    t-att-data-placeholder_count="entry.alert_placeholder_count" data-category="alert"/>
+                <span t-if="entry.alert_placeholder_count" class="o_portal_badge_label visually-hidden">awaiting your action</span>
+                <i t-if="show_count" class="oi flex-shrink-0" data-icon="chevron_forward" aria-hidden="true"/>
             </a>
         </div>
     </template>
 
     <template id="portal_docs_entry_layout" inherit_id="portal.portal_docs_entry" active="True" customize_show="True" name="Use Pictograms">
         <xpath expr="//div[hasclass('o_portal_icon')]" position="attributes">
-            <attribute name="class" remove="d-none" add="d-block align-self-start" separator=" "/>
+            <attribute name="class" remove="d-none" add="d-flex" separator=" "/>
         </xpath>
     </template>
 
@@ -439,22 +447,18 @@
     </template>
 
     <template id="portal_contact" name="Contact">
-        <div class="o_portal_contact_details mb-5">
-            <h5>Your contact</h5>
-            <hr class="mt-1"/>
-            <h6 t-out="sales_user.name"/>
-            <div t-if="sales_user.email_normalized" class="d-flex align-items-baseline mb-1">
-                <i class="oi oi-fw oi-filled me-1 text-600" data-icon="mail"/>
-                <a class="text-break w-100" t-att-href="'mailto:'+sales_user.email" t-out="sales_user.email"/>
+        <div class="o_portal_contact_details d-flex align-items-center gap-2 p-2 bg-light rounded-3">
+            <img class="o_avatar rounded" t-att-src="image_data_uri(sales_user.avatar_128)" alt=""/>
+            <div t-attf-class="d-flex flex-column flex-grow-1 min-w-0 lh-sm #{'me-3' if sales_user.email_normalized or sales_user.phone else ''}">
+                <span class="small text-muted">Your contact</span>
+                <small class="fw-semibold text-truncate" t-out="sales_user.name"/>
             </div>
-            <div t-if="sales_user.phone" class="d-flex flex-nowrap align-items-center mb-1">
-                <i class="oi oi-fw oi-filled me-1 text-600" data-icon="phone"/>
-                <span t-out="sales_user.phone"/>
-            </div>
-            <div t-if="sales_user.city" class="d-flex flex-nowrap align-items-center mb-1">
-                <i class="oi oi-fw me-1 text-600" data-icon="location_on"/>
-                <span t-out="sales_user.city"/>
-            </div>
+            <a t-if="sales_user.email_normalized" class="btn btn-link text-reset px-2" t-att-href="'mailto:' + sales_user.email" t-att-title="sales_user.email" aria-label="Send an email">
+                <i class="oi oi-filled text-primary" data-icon="mail" aria-hidden="true"/>
+            </a>
+            <a t-if="sales_user.phone" class="btn btn-link text-reset px-2" t-att-href="'tel:' + sales_user.phone" t-att-title="sales_user.phone" aria-label="Call">
+                <i class="oi oi-filled text-primary" data-icon="phone" aria-hidden="true"/>
+            </a>
         </div>
     </template>
 
@@ -773,24 +777,6 @@
     </template>
 
     <template id="side_content">
-        <div t-if="isOffcanvas" class="offcanvas-header justify-content-end">
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"/>
-        </div>
-        <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100'}}">
-            <div class="d-flex justify-content-start align-items-start gap-3 mb-4">
-                <img class="rounded object-fit-cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50" height="50"/>
-                <div class="d-flex flex-column justify-content-center">
-                    <h5 class="mb-0" t-out="user_id.name"/>
-                    <p class="mb-0 text-muted" t-out="user_id.parent_name"/>
-                </div>
-            </div>
-            <div class="o_portal_my_details">
-                <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
-            </div>
-            <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="oi oi-filled" data-icon="edit"/> Edit information</a>
-            <div name="portal_contact" class="o_my_contact mt-5" t-if="sales_user">
-                <t t-call="portal.portal_contact"/>
-            </div>
-        </div>
+        <!-- Filled by other modules, beside the contact (placement 'header') or above the cards ('top') -->
     </template>
 </odoo>

@@ -2,6 +2,7 @@
 <odoo noupdate="1">
     <record id="portal_invoice_client" model="portal.entry">
         <field name="name">Your Invoices</field>
+        <field name="icon">receipt_long</field>
         <field name="description">Follow, download or pay your invoices</field>
         <field name="url">/my/invoices?filterby=invoices</field>
         <field name="image" type="bytes" file="account/static/src/img/bill.svg"/>
@@ -12,6 +13,7 @@
 
     <record id="portal_invoice_vendor" model="portal.entry">
         <field name="name">Our Invoices</field>
+        <field name="icon">payments</field>
         <field name="description">Follow, download or pay our invoices</field>
         <field name="url">/my/invoices?filterby=bills</field>
         <field name="image" type="bytes" file="account/static/src/img/bill.svg"/>

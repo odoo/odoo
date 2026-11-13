@@ -20,17 +20,6 @@
         </xpath>
     </template>
 
-    <template id="account_payment.portal_docs_entry" inherit_id="portal.portal_docs_entry">
-        <xpath expr="//a" position="inside">
-            <button
-                t-if="entry.placeholder_count == 'overdue_invoice_count'"
-                onclick="event.preventDefault(); window.location.href='/my/invoices/overdue'"
-                class="btn btn-secondary ms-auto">
-                Pay Now
-            </button>
-        </xpath>
-    </template>
-
     <template id="portal_overdue_invoices_page" name="Overdue payments">
         <t t-call="portal.portal_layout">
             <div class="row justify-content-center my-3">

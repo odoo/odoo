@@ -2,6 +2,7 @@
 <odoo noupdate="1">
     <record id="portal_rfq" model="portal.entry">
         <field name="name">Requests for Quotation</field>
+        <field name="icon">assignment</field>
         <field name="description">Follow your Requests for Quotation</field>
         <field name="url">/my/rfq</field>
         <field name="image" type="bytes" file="web/static/img/rfq.svg"/>
@@ -12,6 +13,7 @@
 
     <record id="portal_purchase_orders" model="portal.entry">
         <field name="name">Our Orders</field>
+        <field name="icon">local_shipping</field>
         <field name="description">Follow orders you have to fulfill</field>
         <field name="url">/my/purchase</field>
         <field name="image" type="bytes" file="purchase/static/src/img/calculator.svg"/>

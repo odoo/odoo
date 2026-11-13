@@ -70,7 +70,7 @@
                 <div class="col-lg-6 offset-lg-3 mt-4">
                     <div id="o_mailing_subscription_form">
                         <form action="/mailing/list/update" method="POST">
-                            <h1 class="o_page_header">Mailing Subscriptions</h1>
+                            <h1 class="h3 mb-4">Mailing Subscriptions</h1>
 
                             <div id="o_mailing_subscription_form_blocklisted"
                                  t-att-class="'' if is_blocklisted else 'd-none'">
@@ -110,24 +110,25 @@
                                         t-if="mailing_list not in lists_optout or mailing_list.is_public">
                                         <t t-set="title" t-value="mailing_list.name"/>
                                         <input type="checkbox"
+                                               t-att-id="'o_mailing_list_%s' % mailing_list.id"
                                                name="mailing_list_ids"
                                                t-att-data-member="1"
                                                t-att-disabled="'disabled' if is_blocklisted else None"
                                                t-att-value="mailing_list.id"
                                                t-att-checked="None if mailing_list in lists_optout else 'checked'"
                                                t-att-title="title"/>
-                                        <span class="ms-1" t-out="title"/>
-                                        <span class="o_mailing_list_unsubscribed ms-auto">
-                                            <t t-if="mailing_list in lists_optout">
+                                        <label class="ms-2" t-att-for="'o_mailing_list_%s' % mailing_list.id" t-out="title"/>
+                                        <small class="o_mailing_list_unsubscribed ms-auto">
+                                            <span t-if="mailing_list in lists_optout" class="text-muted">
                                                 Not subscribed
-                                            </t>
-                                            <t t-else="">
+                                            </span>
+                                            <span t-else="" class="text-success-emphasis">
                                                 Subscribed
-                                            </t>
-                                        </span>
+                                            </span>
+                                        </small>
                                     </li>
                                 </ul>
-                                <p t-if="lists_public">
+                                <p t-if="lists_public" class="mt-5">
                                     You may also be interested in
                                 </p>
                                 <ul id="o_mailing_subscription_form_lists_additional"
@@ -137,11 +138,12 @@
                                         t-as="mailing_list"
                                         class="list-group-item">
                                         <input type="checkbox"
+                                               t-att-id="'o_mailing_list_%s' % mailing_list.id"
                                                name="mailing_list_ids"
                                                t-att-disabled="'disabled' if is_blocklisted else None"
                                                t-att-value="mailing_list.id"
                                                t-att-title="mailing_list.name"/>
-                                        <span class="ms-1" t-out="mailing_list.name"/>
+                                        <label class="ms-1" t-att-for="'o_mailing_list_%s' % mailing_list.id" t-out="mailing_list.name"/>
                                     </li>
                                 </ul>
                                 <p t-if="not lists_optin and not lists_optout and not lists_public">
@@ -149,17 +151,17 @@
                                 </p>
                             </div>
                             <div id="o_mailing_subscription_blocklist"
-                                 class="d-flex align-items-center mb-4 pt-3">
+                                 class="d-flex align-items-center mb-4 pt-4">
                                 <button type="submit" id="button_form_send"
                                         t-att-disabled="'disabled' if is_blocklisted else None"
                                         t-att-class="'btn btn-primary ' + ('' if lists_optin or lists_optout or lists_public else 'd-none')">
                                     Apply changes
                                 </button>
-                                <div class="btn btn-link me-2 text-uppercase d-none"
+                                <button type="button" class="btn btn-light mx-2 d-none"
                                      t-if="blocklist_enabled and blocklist_possible"
-                                     id="button_blocklist_add">Exclude Me</div>
-                                <div class="btn btn-link text-uppercase d-none"
-                                     id="button_blocklist_remove">Opt Back In</div>
+                                     id="button_blocklist_add">Exclude Me</button>
+                                <button type="button" class="btn btn-link text-uppercase d-none"
+                                     id="button_blocklist_remove">Opt Back In</button>
                                 <div id="o_mailing_subscription_update_info" class="d-none"/>
                             </div>
                         </form>
@@ -173,9 +175,8 @@
                             <span t-out="unsubscribed_name"/>
                         </t>
                         <div id="o_mailing_subscription_feedback"
-                             t-att-class="'' if feedback_enabled else 'd-none'">
-                            <form action="/mail/mailing/feedback" method="POST"
-                                  class="mt-3">
+                            t-attf-class="#{'' if feedback_enabled else 'd-none'} rounded p-3 bg-light small">
+                            <form action="/mail/mailing/feedback" method="POST">
                                 <p>
                                     Please let us know why you updated your subscription.
                                 </p>

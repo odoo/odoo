@@ -2,39 +2,40 @@
 <templates xml:space="preserve">
     <t t-name="loyalty.portal_loyalty_card_dialog">
         <Dialog size="'md'" header="false" footer="false" t-on-click="this.props.close">
-            <div class="d-flex align-items-center" t-on-click.stop="">
-                <div class="d-flex justify-content-between w-100 align-items-center">
+            <div class="d-flex align-items-center mt-3" t-on-click.stop="">
+                <div class="d-flex justify-content-between align-items-center w-100">
                     <div class="d-flex align-items-center gap-2">
                         <img
                             class="img-fluid"
+                            alt=""
                             t-att-src="this.props.img_path"
                             width="40"
                         />
                         <div class="fs-5"><t t-out="this.props.program.program_name"/></div>
                     </div>
-                    <div class="d-flex flex-column align-items-end">
-                        <span class="fs-5" t-out="this.props.card.points_display"/>
+                    <div class="d-flex align-items-center gap-2 me-3">
                         <i class="text-secondary fs-6" t-if="this.props.card.expiration_date">
                             Valid until <t t-out="this.props.card.expiration_date"/>
                         </i>
+                        <span class="badge bg-primary fs-6 fw-normal" t-out="this.props.card.points_display"/>
                     </div>
                 </div>
-                <div
+                <button
                     type="button"
-                    class="d-sm-block btn-close p-0 p-md-2"
+                    class="btn-close p-0 p-md-2"
+                    aria-label="Close"
                     t-on-click="this.props.close"
                 />
             </div>
-            <hr/>
-            <div class="mt-0 pt-0" t-on-click.stop="">
-                <div name="history_lines">
+            <div t-on-click.stop="">
+                <div name="history_lines" class="mt-4">
                     <t t-if="this.props.history_lines.length">
                         <strong>Last Transactions</strong>
                         <div
                             t-foreach="this.props.history_lines"
                             t-as="line"
                             t-key="line_index"
-                            class="row px-2"
+                            class="row mx-0 mt-2 border rounded p-2"
                         >
                             <div class="col-7 text-truncate">
                                 <t t-if="line.order_id and line.order_portal_url">
@@ -46,9 +47,13 @@
                                     <t t-out="line.description"/>
                                 </t>
                             </div>
-                            <div t-out="line.points" class="text-end col-5"/>
+                            <div
+                                t-out="line.points"
+                                class="col-5 text-end"
+                                t-att-class="{'text-success-emphasis': line.points.startsWith('+')}"
+                            />
                         </div>
-                        <div class="mt-1 mb-1">
+                        <div class="mt-2 mb-3">
                             <a t-attf-href="/my/loyalty_card/{{this.props.card.id}}/history/">
                                 -&gt; View History
                             </a>

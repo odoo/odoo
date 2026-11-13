@@ -1,49 +1,43 @@
 <odoo>
     <template id="loyalty_buttons" inherit_id="portal.side_content">
-        <div name="portal_contact" position="after">
-            <div class='o_loyalty_container'>
-                <div
-                    t-foreach="cards_per_programs"
-                    t-as="program"
-                    class="portal-loyalty-buttons cursor-pointer"
-                >
-                    <div
-                        t-att-data-card_id="card.id"
-                        t-foreach="cards_per_programs[program]"
-                        t-as="card"
-                        class="o_loyalty_card d-flex my-2"
-                    >
-                        <span
-                            t-attf-class="o_notification_bar rounded-start"
-                            style="width: 0.5rem; background-color: var(--cyan)"
-                        />
-                        <div class="w-100 py-3 ps-3 pe-5 border border-start-0 rounded-end d-flex flex-row gap-3">
-                            <img
-                                class="img-fluid"
-                                t-attf-src="/loyalty/static/src/img/{{ program.program_type }}.svg"
-                                width="40"
-                            />
-                            <div class="d-flex flex-column gap-1">
-                                <div>
-                                    <strong t-out="program.display_name"/>
-                                </div>
-                                <p id="card_points" class="m-0 text-600">
-                                    <t t-out="card.points_display"/>
-                                </p>
-                                <t t-if="
-                                    program.program_type == 'loyalty'
-                                    and any(
-                                        reward.required_points &lt;= card.points for reward in program.reward_ids
-                                    )
-                                ">
-                                    <p class="m-0 text-info">A reward is waiting for you</p>
-                                </t>
-                            </div>
-                        </div>
+        <xpath expr="." position="inside">
+            <t t-set="member_barcode" t-value="user_id.partner_id.barcode"/>
+            <t t-set="loyalty_count" t-value="bool(member_barcode) + sum(len(cards) for cards in (cards_per_programs or {}).values())"/>
+            <t t-set="in_header" t-value="placement == 'header'"/>
+            <!-- A lone tile goes beside the contact, several above the cards; three share a row from 992px, four from 1400px -->
+            <div t-if="loyalty_count and in_header == (loyalty_count == 1)"
+                t-attf-class="o_loyalty_container #{'w-100' if in_header else 'row row-cols-1 %s g-3 mb-4' % ('row-cols-sm-2' if loyalty_count == 2 else 'row-cols-lg-3' if loyalty_count == 3 else 'row-cols-sm-2 row-cols-xxl-4')}">
+                <div t-if="member_barcode" t-att-class="None if in_header else 'col'">
+                    <div t-attf-class="d-flex align-items-center gap-2 w-100 h-100 rounded-3 #{'p-2 pe-3' if in_header else 'p-2'} bg-light">
+                        <span class="o_portal_icon d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-white text-primary">
+                            <i class="oi" data-icon="badge" aria-hidden="true"/>
+                        </span>
+                        <span class="d-flex flex-column min-w-0 lh-sm">
+                            <span class="small text-muted">Member card</span>
+                            <small class="fw-semibold text-truncate" t-out="member_barcode"/>
+                        </span>
                     </div>
                 </div>
+                <t t-foreach="cards_per_programs or {}" t-as="program">
+                    <div t-foreach="cards_per_programs[program]" t-as="card" t-att-class="None if in_header else 'col'">
+                        <button
+                            type="button"
+                            t-att-data-card_id="card.id"
+                            t-attf-class="o_loyalty_card d-flex align-items-center gap-2 w-100 h-100 border-0 rounded-3 #{'p-2 pe-3' if in_header else 'p-2'} bg-light text-start text-reset"
+                        >
+                            <span class="o_portal_icon d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-white text-primary">
+                                <i class="oi" t-att-data-icon="'payments' if program.program_type == 'ewallet' else 'star'" aria-hidden="true"/>
+                            </span>
+                            <span class="d-flex flex-column flex-grow-1 min-w-0 lh-sm">
+                                <span class="small text-muted text-truncate" t-out="program.display_name"/>
+                                <small class="fw-semibold text-truncate" t-out="card.points_display"/>
+                            </span>
+                            <i t-if="not in_header" class="oi opacity-50" data-icon="chevron_forward" aria-hidden="true"/>
+                        </button>
+                    </div>
+                </t>
             </div>
-        </div>
+        </xpath>
     </template>
 
     <template id="loyalty_card_history_template" name="My Loyalty History">

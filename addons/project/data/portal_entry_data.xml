@@ -2,6 +2,7 @@
 <odoo noupdate="1">
     <record id="portal_projects" model="portal.entry">
         <field name="name">Projects</field>
+        <field name="icon">folder</field>
         <field name="description">Follow the evolution of your projects</field>
         <field name="url">/my/projects</field>
         <field name="image" type="bytes" file="web/static/img/folder.svg"/>
@@ -12,6 +13,7 @@
 
     <record id="portal_tasks" model="portal.entry">
         <field name="name">Tasks</field>
+        <field name="icon">checklist</field>
         <field name="description">Follow and comments tasks of your projects</field>
         <field name="url">/my/tasks</field>
         <field name="image" type="bytes" file="project/static/src/img/tasks.svg"/>

@@ -19,6 +19,8 @@ class PortalAccount(CustomerPortal):
     def _prepare_portal_counter_values(self, counter):
         if counter == 'overdue_invoice_count':
             return 'account.move', self._get_overdue_invoices_domain(), 'read'
+        if counter == 'invoice_to_pay_count':
+            return 'account.move', self._get_invoices_to_pay_domain(), 'read'
         if counter == 'invoice_count':
             return 'account.move', self._get_invoices_domain('out'), 'read'
         if counter == 'bill_count':
@@ -46,13 +48,17 @@ class PortalAccount(CustomerPortal):
             move_type = ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
         return Domain('state', 'not in', ('cancel', 'draft')) & Domain('move_type', 'in', move_type)
 
-    def _get_overdue_invoices_domain(self, partner_id=None):
+    def _get_invoices_to_pay_domain(self, partner_id=None):
         return [
             ('state', 'not in', ('cancel', 'draft')),
             ('move_type', 'in', ('out_invoice', 'out_receipt')),
             ('payment_state', 'not in', ('in_payment', 'paid', 'reversed', 'blocked', 'invoicing_legacy')),
-            ('invoice_date_due', '<', fields.Date.context_today(request.env.user)),
             ('partner_id', '=', partner_id or request.env.user.partner_id.id),
+        ]
+
+    def _get_overdue_invoices_domain(self, partner_id=None):
+        return self._get_invoices_to_pay_domain(partner_id) + [
+            ('invoice_date_due', '<', fields.Date.context_today(request.env.user)),
         ]
 
     def _get_account_searchbar_sortings(self):

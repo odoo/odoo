@@ -1,0 +1,54 @@
+.o_portal_cards {
+    gap: 1.25rem;
+}
+
+@media (min-width: 992px) {
+    .o_portal_cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .o_portal_cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    /* Four cards or fewer: two columns */
+    .o_portal_cards:not(:has(> :nth-child(5 of .o_portal_index_card:not(.d-none)))) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.o_portal_index_card > a {
+    transition: box-shadow .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.o_portal_index_card > a:not(.alert):hover {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .08);
+}
+
+.o_portal_icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: color-mix(in srgb, currentColor 10%, var(--body-bg, #fff));
+}
+
+.o_portal_index_card .o_portal_icon {
+    width: 3rem;
+    height: 3rem;
+}
+
+.o_portal_title {
+    font-size: 1.1rem;
+}
+
+.o_portal_badge {
+    --badge-font-weight: 400;
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+/* Read only while its badge shows */
+.o_portal_badge.d-none + .o_portal_badge_label {
+    display: none;
+}

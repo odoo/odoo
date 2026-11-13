@@ -3,11 +3,14 @@
         <div name="history_lines" position="before">
             <div
                 t-if="this.props.program.program_type == 'loyalty'"
-                class="d-flex align-items-center flex-column"
+                class="d-flex flex-column align-items-center my-5"
             >
                 <img
                     t-att-src="`/report/barcode/Code128/${this.props.card.code}?&amp;width=350&amp;height=100`"
-                    style="width:400px;height:100px"
+                    class="img-fluid"
+                    alt=""
+                    width="400"
+                    height="100"
                 />
                 <span t-out="this.props.card.code" class="fs-5"/>
             </div>

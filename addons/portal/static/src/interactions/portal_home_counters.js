@@ -39,29 +39,44 @@ export class PortalHomeCounters extends Interaction {
                 counters: pick(needed, ...neededKeys.slice(i * counterByRpc, (i + 1) * counterByRpc)),
             });
             Object.keys(documentsCountersData).forEach((counterName) => {
-                const documentsCounterEl = this.el.querySelector(
-                    `[data-placeholder_count='${counterName}']`
-                );
-                documentsCounterEl.textContent = documentsCountersData[counterName];
-                // The element is hidden by default, only show it if its counter is > 0 or if it's in the list of counters always shown
-                if (
-                    documentsCountersData[counterName] !== 0 ||
-                    countersAlwaysDisplayed.includes(counterName)
-                ) {
-                    const cardEl = documentsCounterEl.closest(".o_portal_index_card");
-                    if (cardEl.dataset.showInPortal !== "false") {
-                        if (documentsCounterEl.classList.contains("badge")) {
-                            documentsCounterEl.classList.remove("d-none");
-                        }
-                        cardEl.classList.remove("d-none");
-                    }
+                const documentsCounterEl = this.getCounterEl(counterName);
+                const count = documentsCountersData[counterName];
+                documentsCounterEl.textContent = count;
+                // A card total only decides whether the card shows
+                documentsCounterEl.classList.toggle("d-none", !count || documentsCounterEl.matches(".o_portal_count"));
+                // The element is hidden by default, only show it if its counter is > 0
+                if (count !== 0) {
+                    this.showCard(documentsCounterEl);
                 }
             });
             return documentsCountersData;
         });
         return Promise.all(proms).then((results) => {
+            // Cards kept at zero are meant for customers, not for vendors
+            const isVendor = this.el.querySelector(
+                ".o_portal_index_card[data-category='vendor_category']:not(.d-none)"
+            );
+            if (!isVendor) {
+                const counters = Object.assign({}, ...results);
+                for (const counterName of countersAlwaysDisplayed) {
+                    if (counters[counterName] === 0) {
+                        this.showCard(this.getCounterEl(counterName));
+                    }
+                }
+            }
             this.el.querySelector(".o_portal_doc_spinner").remove();
         });
+    }
+
+    getCounterEl(counterName) {
+        return this.el.querySelector(`[data-placeholder_count='${counterName}']`);
+    }
+
+    showCard(documentsCounterEl) {
+        const cardEl = documentsCounterEl.closest(".o_portal_index_card");
+        if (cardEl.dataset.showInPortal !== "false") {
+            cardEl.classList.remove("d-none");
+        }
     }
 }
 

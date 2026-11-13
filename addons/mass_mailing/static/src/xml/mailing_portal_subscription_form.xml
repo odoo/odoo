@@ -14,23 +14,24 @@
                 t-key="mailing_list_key"
                 class="list-group-item d-flex align-items-center">
                 <input type="checkbox"
+                       t-att-id="'o_mailing_list_' + mailing_list['id']"
                        name="mailing_list_ids"
                        t-att-data-member="1"
                        t-att-value="mailing_list['id']"
                        t-att-checked="mailing_list['opt_out'] ? undefined : 'checked'"
                        t-att-title="mailing_list['name']"/>
-                <span class="ms-1" t-out="mailing_list['name']"/>
-                <span class="o_mailing_list_unsubscribed ms-auto">
-                    <t t-if="mailing_list['opt_out']">
+                <label class="ms-2" t-att-for="'o_mailing_list_' + mailing_list['id']" t-out="mailing_list['name']"/>
+                <small class="o_mailing_list_unsubscribed ms-auto">
+                    <span t-if="mailing_list['opt_out']" class="text-muted">
                         Not subscribed
-                    </t>
-                    <t t-else="">
+                    </span>
+                    <span t-else="" class="text-success-emphasis">
                         Subscribed
-                    </t>
-                </span>
+                    </span>
+                </small>
             </li>
         </ul>
-        <p t-if="listsProposal.length">
+        <p t-if="listsProposal.length" class="mt-5">
             You may also be interested in
         </p>
         <ul id="o_mailing_subscription_form_lists_additional"
@@ -41,10 +42,11 @@
                 t-key="mailing_list_key"
                 class="list-group-item">
                 <input type="checkbox"
+                       t-att-id="'o_mailing_list_' + mailing_list['id']"
                        name="mailing_list_ids"
                        t-att-value="mailing_list['id']"
                        t-att-title="mailing_list['name']"/>
-                <span class="ms-1" t-out="mailing_list['name']"/>
+                <label class="ms-1" t-att-for="'o_mailing_list_' + mailing_list['id']" t-out="mailing_list['name']"/>
             </li>
         </ul>
     </t>

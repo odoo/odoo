@@ -2,10 +2,12 @@
 <odoo noupdate="1">
     <record id="portal_entry_discuss" model="portal.entry">
         <field name="name">Discuss</field>
+        <field name="icon">forum</field>
         <field name="description">Access your conversations</field>
         <field name="url">/my/conversations</field>
         <field name="image" type="bytes" file="portal_discuss/static/src/img/portal-discuss.png"/>
         <field name="placeholder_count">discuss_count</field>
+        <field name="alert_placeholder_count">discuss_count</field>
         <field name="is_config_card" eval="True"/>
     </record>
 </odoo>

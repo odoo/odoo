@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list", 
         },
         {
             content: "Now exclude me",
-            trigger: "div#button_blocklist_add",
+            trigger: "button#button_blocklist_add",
             run: "click",
         },
         {
@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list_wi
         },
         {
             content: "Now exclude me",
-            trigger: "div#button_blocklist_add",
+            trigger: "button#button_blocklist_add",
             run: "click",
         },
         {
@@ -132,7 +132,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list_wi
         },
         {
             content: "Revert exclusion list",
-            trigger: "div#button_blocklist_remove",
+            trigger: "button#button_blocklist_remove",
             run: "click",
         },
         {
@@ -194,7 +194,7 @@ registry.category("web_tour.tours").add("mailing_portal_unsubscribe_from_list_wi
         },
         {
             content: "Now exclude me (again)",
-            trigger: "div#button_blocklist_add",
+            trigger: "button#button_blocklist_add",
             run: "click",
         },
         {

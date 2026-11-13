@@ -214,9 +214,8 @@ class CustomerPortal(Controller):
             if model_name:
                 Model = request.env[model_name].sudo(request.env.su or access == 'sudo')
                 if access == 'sudo' or not isinstance(access, str) or Model.has_access(access):
-                    # Need precise count for alerts and discuss unread messages, else
-                    # only need to know if there's one matching record or not to display the card.
-                    precise_count = counter == 'discuss_count' or category == "alert"
+                    # Alerts show their count, a card only needs to know whether one record exists
+                    precise_count = category == "alert"
                     count = Model.search_count(domain, limit=None if precise_count else 1)
             res[counter] = count
         # For performance, cache counters as boolean to prevent recomputing the card visibility on each refresh.
