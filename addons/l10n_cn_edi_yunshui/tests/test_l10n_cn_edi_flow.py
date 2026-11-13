@@ -100,6 +100,22 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
         self.assertEqual(payload['bz'], "Pay within 30 days")
 
+    def test_foreign_currency_invoice_is_issued_in_cny(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'currency_id': self.setup_other_currency('USD').id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': self.tax_sale_a.ids})],
+        })
+        invoice.action_post()
+
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
+
+        self.assertEqual(invoice.amount_total, 1130.0)
+        self.assertEqual(payload['invoiceAmount'], "565.00")
+        self.assertEqual([item['amount'] for item in payload['invoiceItems']], ["565.00"])
+
     def test_issue_retry_reuses_the_serial_number(self):
         invoice = self._create_posted_invoice()
         self.responses['issue'] = UserError("Timeout")

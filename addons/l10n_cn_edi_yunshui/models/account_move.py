@@ -327,8 +327,8 @@ class AccountMove(models.Model):
         if self.move_type != 'out_refund' or not (doc.amount_untaxed or doc.amount_tax):
             return True
         return not (
-            self.currency_id.compare_amounts(abs(doc.amount_untaxed), self.amount_untaxed)
-            or self.currency_id.compare_amounts(abs(doc.amount_tax), self.amount_tax)
+            self.company_currency_id.compare_amounts(abs(doc.amount_untaxed), abs(self.amount_untaxed_signed))
+            or self.company_currency_id.compare_amounts(abs(doc.amount_tax), abs(self.amount_tax_signed))
         )
 
     def _l10n_cn_edi_matching_inbound_red_form(self):
@@ -609,7 +609,7 @@ class AccountMove(models.Model):
             'invoiceKind': INVOICE_KIND[self.l10n_cn_edi_invoice_type_code],
             'invoiceType': '1',
             'businessType': '1' if buyer.vat else '0',
-            'invoiceAmount': f"{self.amount_total:.2f}",
+            'invoiceAmount': f"{self.amount_total_signed:.2f}",
             'payerName': buyer.name or '',
             'deliverType': '0',
             'invoiceItems': self._l10n_cn_edi_prepare_lines(),
@@ -664,14 +664,21 @@ class AccountMove(models.Model):
                 ))
         positive_lines = product_lines.filtered(lambda line: line.price_subtotal >= 0)
         negative_lines = product_lines - positive_lines
+        # The fapiao is in CNY: send the amounts as posted in the company currency.
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
+        subtotals, taxes = {}, {}
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
+            subtotals[base_line['record']] = tax_details['total_excluded'] + tax_details['delta_total_excluded']
+            taxes[base_line['record']] = sum(tax_data['tax_amount'] for tax_data in tax_details['taxes_data'])
         if negative_lines and len({(line.tax_ids.amount, line.tax_ids.price_include) for line in product_lines}) > 1:
             raise UserError(self.env._(
                 "Global negative lines spanning multiple tax groups are not supported for e-Fapiao. "
                 "Please split by tax group before issuing.",
             ))
-        total_discount = sum(negative_lines.mapped('price_subtotal'))
-        total_discount_tax = sum(line.price_total - line.price_subtotal for line in negative_lines)
-        total_positive = sum(positive_lines.mapped('price_subtotal'))
+        total_discount = sum(subtotals[line] for line in negative_lines)
+        total_discount_tax = sum(taxes[line] for line in negative_lines)
+        total_positive = sum(subtotals[line] for line in positive_lines)
         remaining_discount, remaining_discount_tax = total_discount, total_discount_tax
         items = []
         for index, line in enumerate(positive_lines):
@@ -691,8 +698,8 @@ class AccountMove(models.Model):
                     rate=abs(tax.amount),
                     line=name,
                 ))
-            amount = round(line.price_subtotal, 2)
-            amount_tax = round(line.price_total - line.price_subtotal, 2)
+            amount = round(subtotals[line], 2)
+            amount_tax = round(taxes[line], 2)
             discount, discount_tax = 0.0, 0.0
             if total_discount < 0 and total_positive > 0:
                 if index == len(positive_lines) - 1:
