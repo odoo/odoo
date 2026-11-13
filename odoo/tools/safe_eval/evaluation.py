@@ -15,9 +15,11 @@ import ast
 import dis
 import functools
 import sys
+import threading
 import types
 import typing
 import zoneinfo
+from collections import OrderedDict
 from opcode import opmap, opname
 from types import CodeType
 
@@ -385,6 +387,70 @@ _BUBBLEUP_EXCEPTIONS = (
 )
 
 
+def _2q_lru_cache(max_size):
+    """
+    Decorator caching the result returned by the decorated function in a
+    thread-safe 2Q LRU, bounded in number of entries.
+
+    A plain LRU (e.g. ``functools.lru_cache``) caches every result on its first
+    call, so a burst of one-shot calls evicts the results that are reused across
+    requests. 2Q only keeps long-term results. One-shot calls thus only churn
+    ``fifo`` and never evict ``lru``.
+
+    Source: https://www.vldb.org/conf/1994/P439.PDF
+
+    :param max_size: maximum number of entries
+    """
+    def decorator(func):
+        lock = threading.Lock()
+        fifo_size = max(1, max_size // 4)
+        tags_size = max(1, max_size // 2)
+        lru = OrderedDict()
+        fifo = OrderedDict()
+        tags = OrderedDict()
+
+        def reclaim():
+            while len(fifo) + len(lru) >= max_size:
+                if fifo and (len(fifo) >= fifo_size or not lru):
+                    evicted_key, _ = fifo.popitem(last=False)
+                    tags[hash(evicted_key)] = None
+                    if len(tags) > tags_size:
+                        tags.popitem(last=False)
+                else:
+                    lru.popitem(last=False)
+
+        @functools.wraps(func)
+        def wrapper(*args):
+            key = args
+            with lock:
+                if (result := lru.get(key)) is not None:
+                    lru.move_to_end(key)
+                    return result
+                if (result := fifo.get(key)) is not None:
+                    return result
+
+            result = func(*args)
+            with lock:
+                if key in lru or key in fifo:  # Inserted concurrently by another thread
+                    return result
+                reclaim()
+                if hash(key) in tags:  # seen again after leaving the FIFO
+                    lru[key] = result
+                else:
+                    fifo[key] = result
+
+            return result
+        return wrapper
+    return decorator
+
+
+@_2q_lru_cache(max_size=2048)
+def _get_safe_eval_code_obj(expr, filename, mode) -> CodeType:
+    code_obj = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, code_obj, expr)
+    return code_obj
+
+
 def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     """System-restricted Python expression evaluation
 
@@ -424,8 +490,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
         __builtins__=dict(_BUILTINS),
     )
 
-    c = compile_codeobj(expr, filename=filename, mode=mode)
-    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    c = _get_safe_eval_code_obj(expr, filename, mode)
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)
