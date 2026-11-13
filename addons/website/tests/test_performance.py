@@ -92,21 +92,22 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             else:
                 _logger.warning("Query type %s for query %s is not supported by _check_url_hot_query", query_type, query)
 
-        if not select_tables_perf:
-            select_tables_perf = {}
-        select = {}
-        for key in (sql_from_tables.keys() | select_tables_perf.keys()):
-            value = sql_from_tables.get(key, 0) - select_tables_perf.get(key, 0)
-            if value:
-                select[key] = value
+        select_tables_perf = select_tables_perf or {}
+        insert_tables_perf = insert_tables_perf or {}
 
-        if not insert_tables_perf:
-            insert_tables_perf = {}
-        insert = {}
-        for key in (sql_into_tables.keys() | insert_tables_perf.keys()):
-            value = sql_into_tables.get(key, 0) - insert_tables_perf.get(key, 0)
-            if value:
-                insert[key] = value
+        def _diff(found, expected):
+            return {
+                'added': {k: found[k] for k in found.keys() - expected.keys()},
+                'removed': {k: expected[k] for k in expected.keys() - found.keys()},
+                'modified': {
+                    k: {'expected': expected[k], 'found': found[k]}
+                    for k in found.keys() & expected.keys()
+                    if found[k] != expected[k]
+                },
+            }
+
+        select = _diff(sql_from_tables, select_tables_perf)
+        insert = _diff(sql_into_tables, insert_tables_perf)
 
         if query_count != expected_query_count:
             msq = f"Expected {expected_query_count} queries but {query_count} where ran:\nDiff of select queries: {select}\nDiff of insert queries: {insert}{query_separator}{queries}{query_separator}"
