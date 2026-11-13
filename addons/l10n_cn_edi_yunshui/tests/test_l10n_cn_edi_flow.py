@@ -116,6 +116,26 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(payload['invoiceAmount'], "565.00")
         self.assertEqual([item['amount'] for item in payload['invoiceItems']], ["565.00"])
 
+    def test_foreign_currency_lines_add_up_to_the_cny_total(self):
+        usd = self.setup_other_currency('USD', rates=[('2019-01-01', 0.1404)])
+        tax = self._sale_tax(13)
+        for rounding in ('round_per_line', 'round_globally'):
+            self.company_data['company'].tax_calculation_rounding_method = rounding
+            invoice = self._invoice_of([
+                {'price_unit': 33.33, 'quantity': 3, 'discount': 7.0, 'tax_ids': tax.ids},
+                {'price_unit': 19.99, 'quantity': 7, 'tax_ids': tax.ids},
+                {'price_unit': 0.07, 'quantity': 11, 'tax_ids': tax.ids},
+                {'price_unit': -12.34, 'tax_ids': tax.ids},
+            ])
+            invoice.currency_id = usd
+            invoice.action_post()
+
+            payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
+
+            with self.subTest(rounding=rounding):
+                self.assertEqual(payload['invoiceAmount'], f"{invoice.amount_total_signed:.2f}")
+                self.assertAlmostEqual(sum(float(item['amount']) for item in payload['invoiceItems']), invoice.amount_total_signed, 2)
+
     def test_values_too_long_for_the_bureau_are_not_issued(self):
         invoice = self._create_posted_invoice()
         invoice.partner_id.write({'name': "名" * 101, 'street': "路" * 141})
@@ -388,6 +408,56 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
         self.assertEqual([line['rowType'] for line in lines], ['2', '1', '2', '1'])
         self.assertEqual([line['amount'] for line in lines], ['600.00', '-60.00', '1800.00', '-180.00'])
+
+    def _sale_tax(self, amount, **vals):
+        return self.env['account.tax'].create({
+            'name': f"VAT {amount}%", 'amount': amount, 'type_tax_use': 'sale', 'company_id': self.company_data['company'].id, **vals,
+        })
+
+    def _invoice_of(self, lines):
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, **line}) for line in lines],
+        })
+
+    def test_line_discount_is_sent_as_a_discount_row(self):
+        tax = self._sale_tax(13)
+        invoice = self._invoice_of([
+            {'price_unit': 600.0, 'discount': 10.0, 'tax_ids': tax.ids},
+            {'price_unit': 900.0, 'quantity': 2.0, 'discount': 10.0, 'tax_ids': tax.ids},
+        ])
+
+        lines = invoice._l10n_cn_edi_prepare_lines()
+
+        self.assertEqual([(line['rowType'], line['amount']) for line in lines], [
+            ('2', '678.00'), ('1', '-67.80'), ('2', '2034.00'), ('1', '-203.40'),
+        ])
+        self.assertAlmostEqual(sum(float(line['amount']) for line in lines), invoice.amount_total)
+
+    def test_each_line_carries_its_rate_and_zero_rate_flag(self):
+        invoice = self._invoice_of([
+            {'price_unit': 100.0, 'tax_ids': self._sale_tax(amount, **vals).ids}
+            for amount, vals in [(13, {}), (9, {}), (6, {}), (0, {'l10n_cn_free_tax_mark': '1'})]
+        ])
+
+        lines = invoice._l10n_cn_edi_prepare_lines()
+
+        self.assertEqual([(line['taxRate'], line.get('zeroRateFlag')) for line in lines], [
+            ('0.13', None), ('0.09', None), ('0.06', None), ('0', '1'),
+        ])
+
+    def test_tax_included_lines_add_up_to_the_invoice_total(self):
+        tax = self._sale_tax(13, price_include_override='tax_included')
+        invoice = self._invoice_of([
+            {'price_unit': price_unit, 'quantity': quantity, 'tax_ids': tax.ids}
+            for price_unit, quantity in [(33.3333, 1.333), (12.3456, 2.777), (7.0001, 3.141)]
+        ])
+
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
+
+        self.assertEqual(f"{sum(float(line['amount']) for line in payload['invoiceItems']):.2f}", payload['invoiceAmount'])
+        self.assertEqual(payload['invoiceAmount'], f"{invoice.amount_total:.2f}")
 
     def test_global_discount_over_categories_of_the_same_rate(self):
         other_category = self.env['l10n_cn_edi.tax.category'].sudo().create({'name': 'Other', 'code': '1010101020000000000'})
