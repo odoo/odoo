@@ -652,4 +652,30 @@ describe("animate text in toolbar", () => {
 
         expect("button[title='Animate Text']").toHaveClass("active");
     });
+
+    test("the highlight of an animated text is applied inside it", async () => {
+        await setupWebsiteBuilder(`<p class="test">Your section title</p>`);
+        const paragraphEl = queryOne(":iframe .test");
+        setSelection({
+            anchorNode: paragraphEl.firstChild,
+            anchorOffset: 0,
+            focusNode: paragraphEl.firstChild,
+            focusOffset: paragraphEl.firstChild.length,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+
+        // Reselect the animated text to apply the highlight on it.
+        await thirdClick(paragraphEl);
+        await advanceTime(500);
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Apply highlight']").click();
+        await contains(".o_popover .o_text_highlight_underline").click();
+
+        expect(paragraphEl.outerHTML).toBe(
+            `<p class="test"><span class="o_animated_text o_animate o_anim_fade_in o_animate_preview"><span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-color: var(--o-color-1); --text-highlight-width: 2px;">Your section title</span></span></p>`
+        );
+    });
 });

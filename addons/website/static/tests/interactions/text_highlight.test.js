@@ -85,3 +85,11 @@ test("[rtl] SVG positionned inside highlighted text", async () => {
     // in RTL with LTR content, highlight of previous line is top right
     expect(relativePosition(items[3], items[2])).toBe("beforeLeft,afterBottom");
 });
+
+test("highlight applied on an animated text is drawn (structure of a previous version)", async () => {
+    await startInteractions(`
+        <p><span class="o_animated_text o_text_highlight o_text_highlight_underline" style="display: inline-block; --text-highlight-width: 2px;">personality</span></p>
+    `);
+    await animationFrame();
+    expect(".o_text_highlight > .o_text_highlight_svg").toHaveCount(1);
+});
