@@ -411,7 +411,7 @@ class Website(models.Model):
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
-            style['preview_url']
+            style["preview_url"]
             for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
             for style in mapping.values()
         }
@@ -788,13 +788,10 @@ class Website(models.Model):
         if not self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
             return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
-        if PRICELIST_SESSION_CACHE_KEY in request.session:
-            pricelist_sudo = ProductPricelistSudo.browse(
-                request.session[PRICELIST_SESSION_CACHE_KEY]
-            )
+        if pricelist_id := request.session.get(PRICELIST_SESSION_CACHE_KEY):
+            pricelist_sudo = ProductPricelistSudo.search_fetch([("id", "=", pricelist_id)])
             if pricelist_sudo and (
-                pricelist_sudo.exists()
-                and pricelist_sudo._is_available_on_website(self)
+                pricelist_sudo._is_available_on_website(self)
                 and pricelist_sudo._is_available_in_country(self._get_geoip_country_code())
             ):
                 return pricelist_sudo.sudo()
@@ -834,11 +831,12 @@ class Website(models.Model):
         fpos_sudo = AccountFiscalPositionSudo
 
         if FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
-            fpos_sudo = AccountFiscalPositionSudo.browse(
-                request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
-            )
-            if not fpos_sudo or fpos_sudo.exists():
+            fpos_id = request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
+            if fpos_id is False:
+                # `False` is cached in the session when no fiscal position could not be applied.
                 return fpos_sudo
+            if (cached_fpos_sudo := AccountFiscalPositionSudo.browse(fpos_id)).exists():
+                return cached_fpos_sudo
 
         partner_sudo = self.env.user.partner_id
 
@@ -1202,20 +1200,23 @@ class Website(models.Model):
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
 
-    def _prevent_product_sale(self, product_or_template, is_zero_price_product):
+    def _prevent_product_sale(self, product_or_template, is_zero_price_product=None):
         """Return whether selling the provided product online should be prevented, depending on
         price and categories.
 
         :param product.product|product.template product_or_template: The product to check.
-        :param boolean is_zero_price_product: Whether the product price is zero or not.
+        :param bool is_zero_price_product: Whether the product price is zero or not. If not
+            provided, it is computed from the contextual price, only when prevent zero price is on.
         :return: Whether selling the product online should be prevented.
-        :rtype: boolean
+        :rtype: bool
         """
         if not self.prevent_sale:
             return False
 
         # If the sale of zero-priced products should be prevented.
         if self.prevent_sale_for == "zero_price":
+            if is_zero_price_product is None:
+                is_zero_price_product = not product_or_template._get_contextual_price()
             return is_zero_price_product
 
         # If the sale of products in specific categories should be prevented.
