@@ -208,20 +208,35 @@ class StockMove(models.Model):
 
     def _should_count_for_quantity_received(self):
         res = super()._should_count_for_quantity_received()
-        return res or self.is_subcontract or self.location_id.is_subcontract()
+        return (
+            res
+            or self.is_subcontract
+            or self.location_id.is_subcontract()
+            or (self._is_subcontract_return_chain() and self.location_id == self._get_subcontract_return_location())
+        )
 
     def _check_access_if_subcontractor(self, vals):
         if self.env.user._is_portal() and not self.env.su:
             if vals.get('state') == 'done' or self.env.context.get('default_state') == 'done':
                 raise AccessError(_("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))
 
+    def _get_subcontract_return_location(self):
+        self.ensure_one()
+        return self.picking_id.partner_id.with_company(self.company_id).property_stock_subcontractor
+
+    def _is_subcontract_return_chain(self):
+        self.ensure_one()
+        origin = self.origin_returned_move_id
+        while origin.origin_returned_move_id:
+            origin = origin.origin_returned_move_id
+        return origin.is_subcontract
+
     def _is_subcontract_return(self):
         self.ensure_one()
-        subcontracting_location = self.picking_id.partner_id.with_company(self.company_id).property_stock_subcontractor
         return (
                 not self.is_subcontract
-                and self.origin_returned_move_id.is_subcontract
-                and self.location_dest_id.id == subcontracting_location.id
+                and self._is_subcontract_return_chain()
+                and self.location_dest_id == self._get_subcontract_return_location()
         )
 
     def _can_create_lot(self):
