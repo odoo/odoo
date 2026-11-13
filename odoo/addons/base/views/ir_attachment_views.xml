@@ -72,6 +72,11 @@
                         help="Filter on my documents"/>
                     <filter name="url_filter" string="URL" domain="[('type', '=', 'url')]"/>
                     <filter name="binary_filter" string="Stored" domain="[('type', '=', 'binary')]"/>
+                    <filter name="binary_fields_filter"
+                        string="Binary Fields"
+                        domain="[('res_field', '!=', False)]"
+                        help="Attachments storing the value of binary fields, hidden by default"
+                        groups="base.group_no_one"/>
                     <separator/>
                     <field name="create_uid" string="Created by"/>
                     <field name="type"/>
