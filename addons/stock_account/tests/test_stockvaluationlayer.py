@@ -220,6 +220,31 @@ class TestStockValuationStandard(TestStockValuationCommon):
         # in the currency of comp 1 which is the main company selected) = 10150
         self.assertEqual(product_both.total_value, 10150)
 
+    def test_quant_value_multicompany(self):
+        self.product.with_company(self.company).standard_price = 1
+        self.product.with_company(self.other_company).standard_price = 3
+        self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10, company=self.other_company)
+        quants = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('location_id.usage', '=', 'internal')])
+        quant_1 = quants.filtered(lambda q: q.company_id == self.company)
+        quant_2 = quants - quant_1
+        self.user_admin.company_ids += self.other_company
+        quant = quant_1.with_user(self.user_admin)
+        for allowed_companies, expected_value in [
+            (self.env['res.company'], 10),
+            (self.company, 10),
+            (self.company | self.other_company, 20),
+        ]:
+            with self.subTest(allowed_companies=allowed_companies.ids):
+                quant_in_session = quant.with_context(allowed_company_ids=allowed_companies.ids)
+                self.env.invalidate_all()
+                self.assertEqual(quant_in_session.value, expected_value)
+                self.env.invalidate_all()
+                self.assertEqual(quant_in_session.sudo().value, expected_value)
+
+        self.env.invalidate_all()
+        self.assertEqual(quant_2.with_context(allowed_company_ids=self.company.ids).sudo().value, 20)
+
     def test_change_qty_and_locations_of_done_sml(self):
         sub_stock_loc = self.env['stock.location'].create({
             'name': 'shelf1',
