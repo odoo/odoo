@@ -785,15 +785,15 @@ class AccountMove(models.Model):
                 'unitPrice': line.currency_id.round(line.price_unit * sign),
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
-                'itemTotalAmountWithoutTax': line.currency_id.round(line.price_unit * line.quantity),
+                'itemTotalAmountWithoutTax': line.currency_id.round(line.price_unit * line.quantity) * sign,
                 # In Vietnam a line will always have only one tax.
                 # Values are either: -2 (no tax), -1 (not declaring/paying taxes), 0,5,8,10 (the tax %)
                 # Most use cases will be -2 or a tax percentage, so we limit the support to these.
                 'taxPercentage': line.tax_ids and line.tax_ids[0].amount or -2,
-                'taxAmount': line.currency_id.round(line.price_total - line.price_subtotal),
+                'taxAmount': line.currency_id.round(line.price_total - line.price_subtotal) * sign,
                 'discount': line.discount,
-                'itemTotalAmountAfterDiscount': line.price_subtotal,
-                'itemTotalAmountWithTax': line.price_total,
+                'itemTotalAmountAfterDiscount': line.price_subtotal * sign,
+                'itemTotalAmountWithTax': line.price_total * sign,
                 'selection': code_map[line.display_type],
             }
             if (
