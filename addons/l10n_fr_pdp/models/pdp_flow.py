@@ -4,7 +4,6 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -557,10 +556,8 @@ class PdpFlow(models.Model):
 
     def action_view_error_moves(self):
         """Open list view of invalid invoices."""
-        action = self._get_moves()._get_records_action(name=self.env._("Invalid Invoices"))
-        domain = action.get('domain') or []
-        action['domain'] = expression.AND([domain, [('l10n_fr_pdp_has_error', '=', True)]])
-        return action
+        error_moves = self._get_moves().filtered('l10n_fr_pdp_has_error')
+        return self._get_moves_action(error_moves, self.env._("Invalid Invoices"))
 
     def action_open_send_wizard(self):
         """Open send wizard if errors exist, otherwise send directly."""
@@ -579,11 +576,16 @@ class PdpFlow(models.Model):
 
     def action_view_moves(self):
         """Open list view of related invoices."""
+        return self._get_moves_action(self._get_moves(), self.env._("Related Invoices"))
+
+    def _get_moves_action(self, moves, name):
+        """Return an action opening the given moves in the e-reporting list view."""
         ereporting_view = self.env.ref("l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting", raise_if_not_found=False)
         view = ereporting_view.id if ereporting_view else False
-        return self._get_moves()._get_records_action(
-            name=self.env._("Related Invoices"),
+        return moves._get_records_action(
+            name=name,
             views=[(view, 'list'), (False, 'form')],
+            domain=[('id', 'in', moves.ids)],
             context={'create': False, 'group_by': ['move_type']},
         )
 
