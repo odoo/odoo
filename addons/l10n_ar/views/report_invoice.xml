@@ -3,7 +3,7 @@
 
     <!-- this header can be used on any Argentinean report, to be useful some variables should be passed -->
     <template id="custom_header">
-        <div class="mb-3">
+        <div class="mb-3" data-report-margin-top="42" data-report-header-spacing="42">
             <div class="row mb-2">
                 <div name="left-upper-side" class="col-5" t-if="not pre_printed_report">
                     <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
@@ -13,7 +13,7 @@
                         <h1 style="line-height: 35px;">
                             <strong><span t-out="not pre_printed_report and document_letter or '&#160;'"/></strong>
                         </h1>
-                        <span style="font-size: x-small;" t-out="not pre_printed_report and document_legend or '&#160;'"/>
+                        <span class="small" t-out="not pre_printed_report and document_legend or '&#160;'"/>
                     </span>
                 </div>
                 <div name="right-upper-side" class="col-5 text-end" style="padding-left: 0px;" t-if="not pre_printed_report">
@@ -25,7 +25,7 @@
 
                 </div>
             </div>
-            <div class="row">
+            <div class="row small">
                 <div class="col-6" style="padding-right: 0px;">
                     <t t-if="not pre_printed_report">
                         <!-- (1) Nombre de Fantasia -->
