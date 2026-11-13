@@ -317,7 +317,7 @@
     <BuilderRow label.translate="Visibility Rule">
         <BuilderSelect preview="false" action="'setVisibility'">
             <BuilderSelectItem actionValue="'visible'" classAction="''">None</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'hidden'" classAction="'s_website_form_field_hidden'">Hidden</BuilderSelectItem>
+            <BuilderSelectItem id="'hidden_opt'" actionValue="'hidden'" classAction="'s_website_form_field_hidden'">Hidden</BuilderSelectItem>
             <BuilderSelectItem id="'hidden_if_opt'" actionValue="'conditional'" classAction="'s_website_form_field_hidden_if d-none'">Visible only if</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
@@ -434,6 +434,9 @@
             />
         </div>
     </t>
+    <BuilderRow label.translate="Visibility" t-if="!isActiveItem('hidden_opt')">
+        <t t-call="website.DeviceVisibility"/>
+    </BuilderRow>
 </t>
 
 <t t-name="website.s_website_form_submit_option">
