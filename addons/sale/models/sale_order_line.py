@@ -324,6 +324,8 @@ class SaleOrderLine(models.Model):
     analytic_line_ids = fields.One2many(
         comodel_name="account.analytic.line", inverse_name="so_line", string="Analytic lines"
     )
+    # precomputed as the amounts, which are precomputed, read it to prepare the tax base lines
+    analytic_distribution = fields.Json(compute="_compute_analytic_distribution", store=True, precompute=True)
 
     invoice_lines = fields.Many2many(
         comodel_name="account.move.line",
