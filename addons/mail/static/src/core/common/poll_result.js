@@ -13,10 +13,10 @@ export class PollResult extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
-            messageSearch: types.instanceOf(MessageSearchPlugin).optional(),
             poll: types.instanceOf(this.store["mail.poll"]),
         });
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
+        this.messageSearch = useMaybePlugin(MessageSearchPlugin);
     }
 
     onClickViewPoll() {

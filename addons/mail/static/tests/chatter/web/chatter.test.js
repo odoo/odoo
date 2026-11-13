@@ -28,6 +28,7 @@ import {
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
 import { Message } from "@mail/core/common/message";
+import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_plugin";
 import { describe, expect, mockUserAgent, rightClick, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
@@ -316,24 +317,37 @@ test("chatter: dropping attachments should close pinned messages and search pane
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
-    pyEnv["mail.message"].create({
-        body: "Pinned message",
-        model: "res.partner",
-        pinned_at: "2025-01-01 00:00:00",
-        res_id: partnerId,
-    });
+    pyEnv["mail.message"].create([
+        {
+            body: "Pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId,
+        },
+        {
+            body: "Searched text",
+            model: "res.partner",
+            res_id: partnerId,
+        },
+    ]);
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
+    await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "text");
+    await waitFor(".o-mail-SearchMessageResult:count(1)");
+    await waitFor(`.${HIGHLIGHT_CLASS}:count(1)`);
     await dragenterFiles(".o-mail-Chatter", [text]);
     await dropFiles(".o-Dropzone", [text]);
     await waitFor(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt')):count(1)"
+        ".o-mail-AttachmentBox .o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt')):count(1)"
     );
     await waitForNone(".o-mail-SearchMessageInput");
+    await waitForNone(".o-mail-SearchMessageResult");
+    // the search is cleared, so its term is not highlighted in the file names
+    await waitForNone(`.${HIGHLIGHT_CLASS}`);
     await contains("button[title='Pinned Messages']:count(1)").click();
     await waitFor(".o-mail-pinnedMessages:count(1)");
     await dragenterFiles(".o-mail-Chatter", [text2]);

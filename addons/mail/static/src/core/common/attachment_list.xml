@@ -86,7 +86,7 @@
                                     t-att-data-mimetype="attachment.mimetype" />
                                 <div t-if="attachment.name"
                                     class="text-truncate align-items-center fw-bold"
-                                    t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+                                    t-out="this.messageSearch?.highlight(attachment.name) ?? attachment.name" />
                             </div>
                         </div>
                         <!-- hover information (not for mobile view) -->
@@ -104,7 +104,7 @@
                                     <div t-if="attachment.name"
                                         class="o-mail-Attachment-hoverImageText o_line_clamp fw-bold text-break lh-sm"
                                         t-att-class="{ 'o-text-white': attachment.isImage }"
-                                        t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+                                        t-out="this.messageSearch?.highlight(attachment.name) ?? attachment.name" />
                                 </div>
                                 <div t-if="attachment.file_size"
                                     class="ms-4 o-mt-0_5 flex-shrink-0 text-nowrap"

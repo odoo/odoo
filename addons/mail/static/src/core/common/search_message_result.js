@@ -1,4 +1,4 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, usePlugin, useProps } from "@odoo/owl";
 import { MessageCardList } from "./message_card_list";
 import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -11,22 +11,22 @@ export class SearchMessageResult extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
+        this.messageSearch = usePlugin(MessageSearchPlugin);
         this.props = useProps({
-            messageSearch: t.instanceOf(MessageSearchPlugin),
             onClickJump: t.function([]).optional(),
             thread: t.instanceOf(this.store["mail.thread"]),
         });
     }
 
     get MESSAGE_FOUND() {
-        const count = this.props.messageSearch.messages().length;
+        const count = this.messageSearch.messages().length;
         if (count === 0) {
             return false;
         }
         if (count === 1) {
             return _t("1 message found");
         }
-        if (this.props.messageSearch.hasMore()) {
+        if (this.messageSearch.hasMore()) {
             return _t(
                 "Showing the first %(count)s messages found. Narrow your search or scroll to see more.",
                 { count }
@@ -36,10 +36,10 @@ export class SearchMessageResult extends Component {
     }
 
     onLoadMoreVisible() {
-        const msgs = this.props.messageSearch.messages();
+        const msgs = this.messageSearch.messages();
         if (!msgs?.length) {
             return;
         }
-        this.props.messageSearch.loadMore(Math.min(...msgs.map((m) => m.id)));
+        this.messageSearch.loadMore(Math.min(...msgs.map((m) => m.id)));
     }
 }

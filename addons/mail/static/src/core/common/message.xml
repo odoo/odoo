@@ -35,7 +35,7 @@
                 <div class="w-100 min-w-0" t-att-class="this.getContentAttClass()" t-ref="this.messageContentRef">
                     <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="this.headerAttClass" name="header">
                         <span t-if="this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
-                            <strong class="me-1 fw-bold" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
+                            <strong class="me-1 fw-bold" t-out="this.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
                         </span>
                         <t t-if="!this.isAlignedRight" t-call="mail.Message.notification"/>
                         <t t-if="this.isAlignedRight and !this.message.bubbleColor" t-call="mail.Message.actions"/>
@@ -77,10 +77,10 @@
                                                 <i t-if="this.message.isEmpty" class="text-muted opacity-75" t-out="this.message.inlineBody"/>
                                                 <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" dropzoneRef="this.messageBody" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
                                                 <t t-else="">
-                                                    <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
+                                                    <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
                                                     <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.hasEmailLikeBody" t-ref="this.shadowBody"/>
                                                     <t t-elif="this.message.showTranslation" t-out="this.message.richTranslationValue"/>
-                                                    <div t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" class="o-mail-Message-richBody overflow-x-auto" t-att-class="this.richBodyAttClass" t-ref="this.richBodyRef" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
+                                                    <div t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" class="o-mail-Message-richBody overflow-x-auto" t-att-class="this.richBodyAttClass" t-ref="this.richBodyRef" t-out="this.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
                                                     <p class="fst-italic text-muted small" t-if="this.message.showTranslation">
                                                         <t t-if="this.message.translationSource" t-out="this.translatedFromText"/>
                                                     </p>
@@ -88,22 +88,21 @@
                                                         <i class="oi text-danger" data-icon="warning" role="img" aria-label="Translation Failure"/>
                                                         <t t-if="this.message.translationErrors" t-out="this.translationFailureText"/>
                                                     </p>
-                                                    <t t-if="this.showSubtypeDescription" t-out="this.props.messageSearch?.highlight(this.message.subtype_id?.description) ?? this.message.subtype_id?.description"/>
+                                                    <t t-if="this.showSubtypeDescription" t-out="this.messageSearch?.highlight(this.message.subtype_id?.description) ?? this.message.subtype_id?.description"/>
                                                 </t>
                                             </div>
                                         </div>
                                     </t>
                                 </t>
                                 <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.ancestors.inChatWindow" t-call="mail.Message.actions"/>
-                                <PollResult t-if="this.message.ended_poll_ids.length" messageSearch="this.props.messageSearch" poll="this.message.poll"/>
-                                <Poll t-elif="this.message.poll" messageSearch="this.props.messageSearch" poll="this.message.poll"/>
+                                <PollResult t-if="this.message.ended_poll_ids.length" poll="this.message.poll"/>
+                                <Poll t-elif="this.message.poll" poll="this.message.poll"/>
                             </div>
                             <div class="position-relative">
                                 <AttachmentList
                                     t-if="this.message.extra_body_attachment_ids.length > 0 and !this.isEditing"
                                     attachmentGroups="this.attachmentGroups"
-                                    unlinkAttachments.bind="this.onClickAttachmentUnlink"
-                                    messageSearch="this.props.messageSearch"/>
+                                    unlinkAttachments.bind="this.onClickAttachmentUnlink"/>
                             </div>
                             <MessageLinkPreviewList t-if="(this.message.message_link_preview_ids.length > 0 and this.store.hasLinkPreviewFeature and !this.message.linkPreviewSquash) or (!this.isEditing and this.message.linkPreviewSquash and this.message.parent_id)" messageLinkPreviews="this.message.message_link_preview_ids"/>
                         </div>
@@ -168,7 +167,7 @@
 
 <t t-name="mail.Message.bodyAsNotification">
     <div class="o-mail-Message-body text-break w-100" t-att-class="this.bodyAttClass" t-ref="this.messageBody">
-        <t t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
+        <t t-out="this.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
     </div>
 </t>
 

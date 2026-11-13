@@ -142,6 +142,7 @@ const chatterPatch = {
                                 this.reloadParentView();
                             }
                         });
+                        this.closeSearch();
                         this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     }
                 },
@@ -170,6 +171,7 @@ const chatterPatch = {
                         this.webChatterProps.isAttachmentBoxVisibleInitially &&
                         this.attachments.length > 0
                     ) {
+                        this.closeSearch();
                         this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     }
                 }
@@ -480,6 +482,7 @@ const chatterPatch = {
                     if (self.hasParentReloadOnAttachmentsChanged) {
                         self.reloadParentView();
                     }
+                    self.closeSearch();
                     self.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     if (self.rootRef()) {
                         self.rootRef().scrollTop = 0;
