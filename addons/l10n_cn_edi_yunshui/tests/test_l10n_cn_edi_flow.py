@@ -904,6 +904,15 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
         self.assertEqual(len(bill.l10n_cn_edi_document_ids), 1)
 
+    def test_fapiao_xml_cannot_be_deleted(self):
+        invoice = self._create_posted_invoice()
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'xml': b'<EInvoice/>'}
+        self._issue(invoice)
+        xml = self._fapiao(invoice).xml_id
+
+        with self.assertRaisesRegex(UserError, "You can't delete the XML of a fapiao"):
+            xml.with_user(self._create_user('account.group_account_invoice')).unlink()
+
     def test_cron_fills_in_the_files_the_provider_did_not_have_yet(self):
         invoice = self._create_posted_invoice()
         self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
