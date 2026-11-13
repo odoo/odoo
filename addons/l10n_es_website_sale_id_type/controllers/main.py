@@ -67,7 +67,7 @@ class WebsiteSaleL10nEsIdType(WebsiteSaleL10nEsEcommerce):
         # overwrite the whole `additional_identifiers` field. Keep them out of the portal checks
         # and put them back afterwards, so they are written unchanged.
         unchanged_identifiers = {}
-        if partner_sudo:
+        if partner_sudo and 'l10n_es_id_type' in kwargs:
             for key, value in list(identifiers.items()):
                 stored_value = partner_sudo._get_additional_identifier(key)
                 if value == stored_value or not (value or stored_value):
