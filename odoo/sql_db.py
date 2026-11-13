@@ -301,7 +301,12 @@ class Cursor(BaseCursor):
         self._closed = False   # real initialization value
         # See the docstring of this class.
         self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
-        self.connection.set_session(readonly=pool.readonly)
+        try:
+            self.connection.set_session(readonly=pool.readonly)
+        except Exception:
+            self._closed = True
+            self._cnx.close()  # never give back a connection in an unknown state
+            raise
 
         self.cache = {}
         self._now = None
@@ -809,7 +814,17 @@ class Connection(object):
 
     def cursor(self):
         _logger.debug('create cursor to %r', self.dsn)
-        return Cursor(self.__pool, self.__dbname, self.__dsn)
+        deadline = time.monotonic() + 30
+        while True:
+            try:
+                return Cursor(self.__pool, self.__dbname, self.__dsn)
+            except psycopg2.errors.FeatureNotSupported as exc:
+                # After a failover, pooled connections may point to a demoted
+                # primary: drop them and wait for the new primary
+                if time.monotonic() > deadline:
+                    raise
+                _logger.warning("Database is in recovery, retrying: %s", exc)
+                time.sleep(0.5)
 
     def __bool__(self):
         raise NotImplementedError()
