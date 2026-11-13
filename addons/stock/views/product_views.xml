@@ -567,8 +567,6 @@
                         icon="history" context="{'search_default_product_id': id, 'default_product_id': id}"/>
                     <button name="action_view_orderpoints" string="Replenishment" type="object" class="btn-link"
                         icon="refresh" context="{'search_default_product_id': id, 'is_stock_report': True}" />
-                    <button name="%(action_view_quants)d" string="Locations" type="action" class="btn-link" groups="stock.group_stock_multi_locations"
-                        icon="inventory_2" context="{'search_default_product_id': id, 'default_product_id': id}" invisible="qty_available == 0"/>
                     <button name="action_product_forecast_report" string="Forecast" type="object" class="btn-link"
                         icon="area_chart" context="{'default_product_id': id}" invisible="incoming_qty == 0 and outgoing_qty == 0"/>
                 </list>
@@ -587,6 +585,13 @@
                 </filter>
                 <filter name="goods" position="attributes">
                     <attribute name="invisible">1</attribute>
+                </filter>
+                <filter name="combo" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </filter>
+                <filter name="is_storable" position="replace">
+                    <filter name="real_stock_available" position="move"/>
+                    <filter name="real_stock_negative" position="move"/>
                 </filter>
                 <filter name="real_stock_negative" position="after">
                     <searchpanel>

@@ -104,6 +104,12 @@ class ProductProduct(models.Model):
             to_date=to_date,
         )
 
+    def _get_move_domain_sql(self):
+        if self.env.context.get("suggest_based_on") and "suggest_days" in self.env.context:
+            to_date = fields.Datetime.now() + relativedelta(days=self.env.context.get("suggest_days"))
+            return super(ProductProduct, self.with_context(to_date=to_date))._get_move_domain_sql()
+        return super()._get_move_domain_sql()
+
     @api.depends_context('suggest_based_on', 'warehouse_id')
     def _compute_monthly_demand(self):
         based_on = self.env.context.get("suggest_based_on", "30_days")

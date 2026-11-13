@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.tools import float_round, groupby
+from odoo.tools import SQL, float_round, groupby
 
 
 class ProductTemplate(models.Model):
@@ -115,6 +115,13 @@ class ProductProduct(models.Model):
             kit_product.company_currency_id = kit_product.company_id.currency_id or self.env.company.currency_id
             kit_product.total_value = 0.0
             kit_product.avg_cost = 0.0
+
+    def _compute_sql_total_value(self, table):
+        # kits are not valuated, same as in `_compute_value`
+        kits = self.with_context(active_test=False).search([('is_kits', '=', True)])
+        if not kits:
+            return super()._compute_sql_total_value(table)
+        return SQL("CASE WHEN %s IN %s THEN 0 ELSE %s END", table.id, tuple(kits.ids), super()._compute_sql_total_value(table))
 
 
 class ProductCategory(models.Model):

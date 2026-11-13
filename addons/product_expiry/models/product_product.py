@@ -11,6 +11,9 @@ class ProductProduct(models.Model):
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         return super(ProductProduct, self.with_context(with_expiration=datetime.date.today()))._compute_quantities_dict(lot_id, owner_id, package_id, from_date, to_date)
 
+    def _get_expired_qty_sql(self, table):
+        return super(ProductProduct, self.with_context(with_expiration=datetime.date.today()))._get_expired_qty_sql(table)
+
     free_qty = fields.Float(help="Available quantity (computed as Quantity On Hand "
              "- reserved quantity - quantity to remove)\n"
              "In a context with a single Stock Location, this includes "

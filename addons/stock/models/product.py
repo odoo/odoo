@@ -46,9 +46,11 @@ class ProductProduct(models.Model):
 
     stock_quant_ids = fields.One2many('stock.quant', 'product_id') # used to compute quantities
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
+    display_name = fields.Char(compute='_compute_display_name', compute_sql='_compute_sql_display_name', compute_sudo=False)
     qty_available = fields.Float(
-        'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        inverse='_inverse_qty_available', digits='Product Unit', compute_sudo=False, store=False,
+        'Quantity On Hand', compute='_compute_quantities', compute_sql='_compute_sql_qty_available',
+        search='_search_qty_available', inverse='_inverse_qty_available',
+        digits='Product Unit', compute_sudo=False, store=False,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -60,6 +62,7 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     virtual_available = fields.Float(
+        compute='_compute_quantities', compute_sql='_compute_sql_virtual_available', compute_sudo=False,
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
              "In a context with a single Stock Location, this includes "
@@ -70,8 +73,8 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     free_qty = fields.Float(
-        'Free To Use Quantity ', compute='_compute_quantities', search='_search_free_qty',
-        digits='Product Unit', compute_sudo=False,
+        'Free To Use Quantity ', compute='_compute_quantities', compute_sql='_compute_sql_free_qty',
+        search='_search_free_qty', digits='Product Unit', compute_sudo=False,
         help="Available quantity (computed as Quantity On Hand "
              "- reserved quantity)\n"
              "In a context with a single Stock Location, this includes "
@@ -82,6 +85,7 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     incoming_qty = fields.Float(
+        compute='_compute_quantities', compute_sql='_compute_sql_incoming_qty', compute_sudo=False,
         help="Quantity of planned incoming products.\n"
              "In a context with a single Stock Location, this includes "
              "goods arriving to this Location, or any of its children.\n"
@@ -91,6 +95,7 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods arriving to any Stock "
              "Location with 'internal' type.")
     outgoing_qty = fields.Float(
+        compute='_compute_quantities', compute_sql='_compute_sql_outgoing_qty', compute_sudo=False,
         help="Quantity of planned outgoing products.\n"
              "In a context with a single Stock Location, this includes "
              "goods leaving this Location, or any of its children.\n"
@@ -267,6 +272,100 @@ class ProductProduct(models.Model):
             )
 
         return res
+
+    def _compute_sql_display_name(self, table):
+        """ "[default_code] name" as in `_compute_display_name` for sorting by default_code and name"""
+        if not self.env.context.get('display_default_code', True):
+            return table.name
+        return SQL("COALESCE('[' || NULLIF(%s, '') || '] ', '') || (%s)", table.default_code, table.name)
+
+    def _sum_by_product_sql(self, table, model, domain, field_name):
+        """ Return an SQL subquery: the sum of `field_name` over the records of `model` matching
+        `domain` and the product_id on `table`."""
+        query = self.env[model].with_context(active_test=False)._search(domain)
+        query.add_where(SQL("%s = %s", query.table.product_id, table.id))
+        return SQL("COALESCE(%s, 0)", query.subselect(SQL("SUM(%s)", query.table[field_name])))
+
+    def _get_quant_domain_sql(self):
+        """ Domain of the quants using the context. Similar to the params passed to _compute_quantities_dict"""
+        ctx = self.env.context
+        domain = Domain(self._get_domain_locations()[0])
+        if ctx.get('lot_id') is not None:
+            domain &= Domain('lot_id', '=', ctx['lot_id'])
+        if ctx.get('owner_id') is not None:
+            domain &= Domain('owner_id', '=', ctx['owner_id'])
+        if 'owners' in ctx:
+            domain &= Domain('owner_id', 'in', ctx['owners']) if ctx['owners'] else Domain('owner_id', '=', False)
+        if ctx.get('package_id') is not None:
+            domain &= Domain('package_id', '=', ctx['package_id'])
+        return domain
+
+    def _get_move_domain_sql(self):
+        """ Domain of the pending moves counted in incoming/outgoing quantities, as in `_compute_quantities_dict`. """
+        ctx = self.env.context
+        domain = Domain('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))
+        if ctx.get('lot_id') is not None:
+            domain &= Domain('move_line_ids.lot_id', '=', ctx['lot_id'])
+        if ctx.get('owner_id') is not None:
+            domain &= Domain('restrict_partner_id', '=', ctx['owner_id'])
+        if 'owners' in ctx:
+            domain &= Domain('move_line_ids.owner_id', 'in', ctx['owners']) if ctx['owners'] else Domain('move_line_ids.owner_id', '=', False)
+        if ctx.get('from_date'):
+            domain &= Domain('date', '>=', ctx['from_date'])
+        if to_date := self.env.company._to_datetime_upper_bound(ctx.get('to_date')):
+            domain &= Domain('date', '<=', to_date)
+        return domain
+
+    def _get_expired_qty_sql(self, table):
+        """ Unreserved quantity of the expired quants, only when 'with_expiration' is in the context. """
+        ctx = self.env.context
+        if not ctx.get('with_expiration'):
+            return SQL("0")
+        max_date = ctx['to_date'] if ctx.get('to_date') and ctx.get('fresh_qty_forecast') else ctx['with_expiration']
+        domain = self._get_quant_domain_sql() & Domain('removal_date', '<=', max_date)
+        return SQL(
+            "(%s - %s)",
+            self._sum_by_product_sql(table, 'stock.quant', domain, 'quantity'),
+            self._sum_by_product_sql(table, 'stock.quant', domain, 'reserved_quantity'),
+        )
+
+    def _compute_sql_qty_available(self, table):
+        ctx = self.env.context
+        qty_available = self._sum_by_product_sql(table, 'stock.quant', self._get_quant_domain_sql(), 'quantity')
+
+        to_date = self.env.company._to_datetime_upper_bound(ctx.get('to_date'))
+        if to_date and to_date < fields.Datetime.now():
+            __, __, __, domain_move_in_loc_done, domain_move_out_loc_done = self._get_domain_locations()
+            domain_move_done = Domain('state', '=', 'done') & Domain('date', '>', to_date)
+            if ctx.get('owner_id') is not None:
+                domain_move_done &= Domain('owner_id', '=', ctx['owner_id'])
+            if 'owners' in ctx:
+                domain_move_done &= Domain('owner_id', 'in', ctx['owners']) if ctx['owners'] else Domain('owner_id', '=', False)
+            done_in = self._sum_by_product_sql(table, 'stock.move.line', domain_move_done & Domain(domain_move_in_loc_done), 'quantity_product_uom')
+            done_out = self._sum_by_product_sql(table, 'stock.move.line', domain_move_done & Domain(domain_move_out_loc_done), 'quantity_product_uom')
+            qty_available = SQL("(%s - %s + %s)", qty_available, done_in, done_out)
+        return qty_available
+
+    def _compute_sql_incoming_qty(self, table):
+        domain = self._get_move_domain_sql() & Domain(self._get_domain_locations()[1])
+        return self._sum_by_product_sql(table, 'stock.move', domain, 'product_qty')
+
+    def _compute_sql_outgoing_qty(self, table):
+        domain = self._get_move_domain_sql() & Domain(self._get_domain_locations()[2])
+        return self._sum_by_product_sql(table, 'stock.move', domain, 'product_qty')
+
+    def _compute_sql_free_qty(self, table):
+        reserved_qty = self._sum_by_product_sql(table, 'stock.quant', self._get_quant_domain_sql(), 'reserved_quantity')
+        return SQL("(%s - %s - %s)", self._compute_sql_qty_available(table), reserved_qty, self._get_expired_qty_sql(table))
+
+    def _compute_sql_virtual_available(self, table):
+        return SQL(
+            "(%s + %s - %s - %s)",
+            self._compute_sql_qty_available(table),
+            self._compute_sql_incoming_qty(table),
+            self._compute_sql_outgoing_qty(table),
+            self._get_expired_qty_sql(table),
+        )
 
     def _inverse_qty_available(self):
         """
