@@ -40,7 +40,7 @@
                             widget="badges_many2one"
                             options="{'related_icon_field': 'icon', 'badge_limit': 8}"
                             nolabel="1"/>
-                        <div class="row o_activity_details" invisible="not plan_id">
+                        <div class="row o_activity_details" invisible="plan_steps_count &lt; 2">
                             <div class="col-lg-5">
                                 <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                                     <i class="oi oi-filled" data-icon="calendar_today" title="Due date"/>
@@ -57,7 +57,7 @@
                                         nolabel="1" class="w-100" domain="[('user_ids', '!=', False)]"/>
                                 </div>
                             </div>
-                            <div class="col-lg-7" invisible="not plan_schedule_line_ids">
+                            <div class="col-lg-7">
                                 <label for="plan_schedule_line_ids" string="Plan Summary" class="text-body fw-bold mb-1"/>
                                 <field name="plan_schedule_line_ids" nolabel="1">
                                     <kanban create="false" can_open="false" class="o_mail_activity_schedule_kanban">
@@ -142,14 +142,14 @@
                             <field name="warning"/>
                         </div>
                     </sheet>
-                    <footer invisible="plan_id">
+                    <footer invisible="plan_steps_count &gt; 1">
                         <button name="action_schedule_activities" string="Schedule" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                         <button name="%(mail.mail_activity_plan_action_my)d" string="My Plans" type="action"
                                 class="btn-link ms-auto" context="{'default_res_model': res_model}"/>
                     </footer>
-                    <footer invisible="not plan_id">
+                    <footer invisible="plan_steps_count &lt; 2">
                         <button name="action_schedule_plan" string="Schedule" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>

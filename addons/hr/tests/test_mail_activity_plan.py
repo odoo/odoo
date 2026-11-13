@@ -237,6 +237,32 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             form.save()
             self.employee_manager.user_id = self.user_manager
 
+    def test_responsible_single_activity(self):
+        """The responsible should be the same for a plan with a single activity or when selecting an activity type."""
+        plan_employee = self.env['mail.activity.plan'].create({
+            'name': 'Plan',
+            'res_model': 'hr.employee',
+            'template_ids': [Command.create({
+                'activity_type_id': self.activity_type_todo.id,
+                'responsible_type': 'employee',
+            })],
+        })
+        # the employee has no user: the responsible is their manager (see `@_determine_responsible`)
+        self.employee_2.write({'parent_id': self.employee_1.id, 'user_id': False})
+        for plan in (plan_employee, self.env['mail.activity.plan']):
+            with self.subTest(plan=plan), self.with_user('test_employee1'):
+                form = self._instantiate_activity_schedule_wizard(self.employee_2.with_env(self.env))
+                if plan:
+                    form.plan_id = plan
+                else:
+                    form.activity_type_id = self.activity_type_todo
+                self.assertEqual(form.activity_type_id, self.activity_type_todo)
+                self.assertEqual(form.activity_user_id, self.user_employee_1)
+                self.assertFalse(form.has_warning)
+                with self._mock_activities():
+                    form.save().action_schedule_activities()
+                self.assertEqual(self._new_activities.user_id, self.user_employee_1)
+
     @freeze_time('2023-08-31')
     @users('admin')
     def test_default_due_date(self):
