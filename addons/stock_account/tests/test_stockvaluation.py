@@ -3187,6 +3187,19 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move2.remaining_value, 0)
         self.assertEqual(product.standard_price, 6)
 
+    def test_fifo_remaining_value_different_uom(self):
+        """ The remaining value of a FIFO receipt made in another UoM than the
+        product's is the share of its value that is still in stock. """
+        product = self.product_fifo
+        move = self._make_in_move(product, 2, unit_cost=10, uom_id=self.uom_pack_of_6.id)
+        self.assertEqual(move.value, 120)
+        self.assertEqual(move.remaining_qty, 12)
+        self.assertEqual(move.remaining_value, 120)
+
+        self._make_out_move(product, 3)
+        self.assertEqual(move.remaining_qty, 9)
+        self.assertEqual(move.remaining_value, 90)
+
     def test_stock_move_value_with_different_uom(self):
         """ Ensure that the stock move value is correctly computed
         when the move's UoM differs from the product's UoM.
