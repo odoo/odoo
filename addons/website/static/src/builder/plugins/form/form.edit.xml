@@ -399,6 +399,31 @@
 
     <!-- Monetary Field -->
     <t t-name="website.form_field_monetary">
-        <t t-call="website.form_field_float" />
+        <t t-if="field.showCurrency">
+            <t t-call="website.form_field">
+                <div class="input-group">
+                    <t t-if="field.currency.position === 'before'" t-call="website.form_field_monetary_currency"/>
+                    <input
+                        type="number"
+                        class="form-control s_website_form_input"
+                        t-att-name="field.name"
+                        step="any"
+                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-value="field.value"
+                        t-att-placeholder="field.placeholder"
+                        t-att-id="field.id"
+                    />
+                    <t t-if="field.currency.position !== 'before'" t-call="website.form_field_monetary_currency"/>
+                </div>
+                <input t-if="!field.currency_field_readonly" class="hidden-currency-input s_website_form_input" type="hidden" t-att-name="field.currency_field" t-att-value="field.currencyId" />
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="website.form_field_float" />
+        </t>
+    </t>
+
+    <t t-name="website.form_field_monetary_currency">
+        <span class="input-group-text o_currency_display o_not_editable" t-out="field.currency.name"/>
     </t>
 </templates>
