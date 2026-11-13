@@ -291,6 +291,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
         self.assertIn(move.ubl_cii_xml_id, extra_attachments)
 
+<<<<<<< f185efc07caae71d3eb0be13bdde7c0c4b733439
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
         partner.vat = 'DE123456788'
@@ -328,6 +329,42 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'peppol_endpoint': '0477472701',
         }])
 
+||||||| 2f06ba4538ce269caf90678f6b181fa064fc2419
+    def test_peppol_eas_endpoint_compute(self):
+        partner = self.partner_a
+        partner.vat = 'DE123456788'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9930',
+            'peppol_endpoint': 'DE123456788',
+        }])
+
+        partner.vat = 'FR23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        partner.vat = '23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        partner.write({
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+        })
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
+
+=======
+>>>>>>> 246f67de84b717a6f6905d990c262c9fb91c957f
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({
