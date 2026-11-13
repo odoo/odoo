@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_picking_form_inherit_deca_report" model="ir.ui.view">
+        <field name="name">view.picking.view.form.inherit.deca.report</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_es_print_deca" type="object" string="Generate DeCA"
+                    invisible="country_code != 'ES' or picking_type_code != 'outgoing' or state in ('draft', 'cancel')"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="DeCA" name="deca_versions" invisible="country_code != 'ES' or picking_type_code != 'outgoing' or not l10n_es_deca_attachment_ids">
+                    <field name="l10n_es_deca_attachment_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="raw" string="Download" widget="binary" filename="name"/>
+                            <field name="create_date"/>
+                            <button name="action_l10n_es_open_deca_pickings" type="object" icon="fa-truck" title="Show deliveries" invisible="l10n_es_deca_picking_count &lt; 2"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_es_generate_deca" model="ir.actions.server">
+        <field name="name">Generate DeCA</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_l10n_es_print_deca()</field>
+    </record>
+
+</odoo>
