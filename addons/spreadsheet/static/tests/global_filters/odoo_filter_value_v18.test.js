@@ -182,6 +182,36 @@ test("ODOO.FILTER.LABEL date from/to with from and to defined", async function (
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("1/1/2021");
 });
 
+test("ODOO.FILTER.LABEL date range which is not exactly a month, quarter or year", async function () {
+    const { model } = await createModelWithDataSource();
+    setCellContent(model, "A1", `=ODOO.FILTER.LABEL("Date Filter")`);
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "date",
+        label: "Date Filter",
+    });
+    const setRange = (from, to) =>
+        setGlobalFilterValue(model, { id: "42", value: { type: "range", from, to } });
+
+    await setRange("2022-04-01", "2022-06-30");
+    expect(getEvaluatedCell(model, "A1").value).toBe("Q2/2022");
+
+    // three months, but not a quarter
+    await setRange("2022-02-01", "2022-04-30");
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("2/1/2022");
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("4/30/2022");
+
+    // first half of the year
+    await setRange("2022-01-01", "2022-06-30");
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("1/1/2022");
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("6/30/2022");
+
+    // same month, different years
+    await setRange("2022-01-01", "2023-01-31");
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("1/1/2022");
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("1/31/2023");
+});
+
 test("ODOO.FILTER.LABEL relation filter", async function () {
     const { model } = await createModelWithDataSource({
         mockRPC: function (route, { method, args }) {
