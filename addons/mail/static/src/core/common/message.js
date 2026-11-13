@@ -29,7 +29,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
+import { MessageSearchPlugin, useSearchHighlight } from "@mail/core/common/message_search_plugin";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -156,6 +156,7 @@ export class Message extends Component {
         this.ui = usePlugin(UIPlugin);
         this.recordLink = usePlugin(RecordLinkPlugin);
         this.messageSearch = useMaybePlugin(MessageSearchPlugin);
+        this.highlightSearch = useSearchHighlight();
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
@@ -241,8 +242,7 @@ export class Message extends Component {
                         "span",
                         this.message.showTranslation
                             ? this.message.richTranslationValue
-                            : this.messageSearch?.highlight(this.message.richBody) ??
-                                  this.message.richBody
+                            : this.highlightSearch(this.message.richBody)
                     );
                     const roots = this.prepareMessageBody(bodyEl) ?? [];
                     shadowRoot.appendChild(bodyEl);

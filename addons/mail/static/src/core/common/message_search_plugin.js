@@ -1,5 +1,6 @@
 import { StorePlugin } from "@mail/core/common/store_plugin";
 import { Thread } from "@mail/core/common/thread_model";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
@@ -68,6 +69,17 @@ export function searchHighlight(searchTerm, target) {
         }
     }
     return getInnerHtml(htmlDoc.body);
+}
+
+/**
+ * Returns a function highlighting the term of the surrounding message search,
+ * if any, in the given text.
+ *
+ * @returns {(text: string) => string}
+ */
+export function useSearchHighlight() {
+    const messageSearch = useMaybePlugin(MessageSearchPlugin);
+    return (text) => searchHighlight(messageSearch?.searchTerm(), text);
 }
 
 /**
@@ -145,13 +157,5 @@ export class MessageSearchPlugin extends SearchStatePlugin {
         this.count.set(0);
         this.hasMore.set(false);
         this.loadMoreBeforeMessageId = undefined;
-    }
-
-    /**
-     * Highlights `searchTerm` in `text`.
-     * @param {string} text
-     */
-    highlight(text) {
-        return searchHighlight(this.searchTerm(), text);
     }
 }

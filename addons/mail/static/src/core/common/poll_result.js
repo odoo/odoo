@@ -1,5 +1,5 @@
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { MessageSearchPlugin } from "@mail/core/common/message_search_plugin";
+import { useSearchHighlight } from "@mail/core/common/message_search_plugin";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { Component, types, useProps } from "@odoo/owl";
@@ -16,7 +16,7 @@ export class PollResult extends Component {
             poll: types.instanceOf(this.store["mail.poll"]),
         });
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
-        this.messageSearch = useMaybePlugin(MessageSearchPlugin);
+        this.highlightSearch = useSearchHighlight();
     }
 
     onClickViewPoll() {
