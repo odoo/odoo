@@ -1562,14 +1562,15 @@ class MrpProduction(models.Model):
         move_raws_to_adjust._adjust_procure_method()
         moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
+        # Force confirm state only for draft production not for more advanced state like
+        # 'progress' (in case of backorders with some qty_producing). Done before running
+        # the scheduler, as it can merge new needs into these productions.
+        self.filtered(lambda mo: mo.state == 'draft').state = 'confirmed'
         # run scheduler for moves forecasted to not have enough in stock
         ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         self.move_raw_ids.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._trigger_scheduler()
         self.picking_ids.filtered(
             lambda p: p.state not in ['cancel', 'done']).action_confirm()
-        # Force confirm state only for draft production not for more advanced state like
-        # 'progress' (in case of backorders with some qty_producing)
-        self.filtered(lambda mo: mo.state == 'draft').state = 'confirmed'
         return True
 
     def _link_workorders_and_moves(self):

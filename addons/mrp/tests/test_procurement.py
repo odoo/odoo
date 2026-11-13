@@ -1140,3 +1140,50 @@ class TestProcurement(TestMrpCommon):
         mo = parent_mo._get_children()
         self.assertEqual(mo.product_id, finished)
         self.assertEqual(self.env['stock.move'].search([('product_id', '=', component.id)]), mo.move_raw_ids)
+
+    def test_pbm_orderpoint_merge_into_mo_being_confirmed(self):
+        """ The auto orderpoints of a multi-level BoM create MOs that are
+        confirmed together. The need of one MO can be merged into another one
+        that is still being confirmed: its components picking must follow. """
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        warehouse.pbm_route_id.rule_ids.filtered(
+            lambda r: r.location_src_id == warehouse.pbm_loc_id).procure_method = 'mts_else_mto'
+        route_manufacture = warehouse.manufacture_pull_id.route_id
+        component = self.env['product.product'].create({'name': 'Component', 'is_storable': True})
+        semi, intermediate, final_1, final_2 = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'route_ids': [Command.link(route_manufacture.id)],
+        } for name in ('Semi', 'Intermediate', 'Final 1', 'Final 2')])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': line_product.id, 'product_qty': qty})],
+        } for product, line_product, qty in (
+            (semi, component, 2),
+            (intermediate, semi, 1),
+            (final_1, semi, 1),
+            (final_2, intermediate, 1),
+        )])
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 1000)
+        self.env['stock.warehouse.orderpoint'].create([{
+            'product_id': product.id,
+            'location_id': warehouse.lot_stock_id.id,
+        } for product in (semi, intermediate, final_1, final_2)])
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': qty,
+            }) for product, qty in ((final_1, 3), (final_2, 50))],
+        })
+        delivery.action_confirm()
+
+        semi_mo = self.env['mrp.production'].search([('product_id', '=', semi.id)])
+        self.assertRecordValues(semi_mo, [{'state': 'confirmed', 'product_qty': 53}])
+        self.assertRecordValues(semi_mo.move_raw_ids | semi_mo.picking_ids.move_ids, [
+            {'product_id': component.id, 'product_uom_qty': 106},
+            {'product_id': component.id, 'product_uom_qty': 106},
+        ])
