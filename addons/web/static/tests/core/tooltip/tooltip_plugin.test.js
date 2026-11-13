@@ -307,6 +307,19 @@ test("tooltip using touch enabled device", async () => {
     expect(".o_popover").toHaveText("hello");
 });
 
+test.tags("desktop");
+test("tooltip popover has the tooltip role", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button data-tooltip="hello">Action</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    await hover("button");
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveAttribute("role", "tooltip");
+});
+
 test.tags("mobile");
 test("touch rendering - hold-to-show", async () => {
     class MyComponent extends Component {
