@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import Query
-from odoo.tools import split_every
+from odoo.tools import OrderedSet, groupby, split_every
 from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.urls import urljoin as url_join
@@ -713,18 +713,16 @@ class WebsitePublishedMixin(models.AbstractModel):
         # ----------------------------------------------------------------------
         # STEP 2: Send chatter notifications like the UI would
         # ----------------------------------------------------------------------
-        for message in pending_notifications:
-            target_sudo = self.env[message.model].browse(message.res_id).sudo()
-            message_sudo = message.sudo()
-            if not target_sudo:
-                continue
+        # Batch notifications per model
+        recipients_by_msg = {}
+        for model, model_messages in groupby(pending_notifications, lambda message: message.model):
+            messages_sudo = self.env['mail.message'].sudo().union(message for message in model_messages if message.res_id)
+            targets_sudo = self.env[model].sudo().browse(OrderedSet(messages_sudo.mapped('res_id')))
+            recipients_by_msg.update(targets_sudo._notify_thread_batch(messages_sudo, skip_existing=True))
 
-            # Compute recipients (followers, partners, etc.)
-            recipients = target_sudo._notify_get_recipients(message_sudo)
-            if recipients:
-                # Mirror the UI path so followers receive the same notifications
-                # they would if the message had been posted manually.
-                target_sudo._notify_thread(message_sudo, skip_existing=True)
+        for message in pending_notifications:
+            if recipients := recipients_by_msg.get(message.id):
+                message_sudo = message.sudo()
 
                 # We've just sent notifications → clear caches again so
                 # message.notified_partner_ids and message.notification_ids

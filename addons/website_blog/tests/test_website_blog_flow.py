@@ -95,7 +95,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         } for idx, blog in enumerate(blogs + blogs + self.test_blog)])
         published_subtype = self.env.ref('website_blog.mt_blog_blog_published')
 
-        with self.assertQueryCount(176):  # website_blog: 130
+        with self.assertQueryCount(158):  # website_blog: 112
             posts.sudo().write({'is_published': True, 'publish_on': False})
 
         self.assertTrue(all(posts.mapped('published_date')))

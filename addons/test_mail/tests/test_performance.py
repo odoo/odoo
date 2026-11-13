@@ -1065,7 +1065,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=53, employee=55):
+        with self.assertQueryCount(admin=51, employee=53):
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -1083,7 +1083,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(admin=67, employee=69):
+        with self.assertQueryCount(admin=65, employee=67):
             record.message_post_with_source(
                 template,
                 message_type='comment',
@@ -1219,7 +1219,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=80, employee=80):
+        with self.assertQueryCount(admin=78, employee=78):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
@@ -1249,7 +1249,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec1.message_ids), 1)
 
-        with self.assertQueryCount(admin=47, employee=47):
+        with self.assertQueryCount(admin=45, employee=45):
             rec.write({
                 'name': 'Test2',
                 'container_id': self.container.id,
@@ -1286,7 +1286,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=47, employee=47):
+        with self.assertQueryCount(admin=45, employee=45):
             rec.write({
                 'name': 'Test2',
                 'container_id': container_id,
@@ -2025,7 +2025,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=73):  # tm 63
+        with self.assertQueryCount(employee=71):  # tm 61
             ticket.message_post(
                 attachments=attachments_vals,
                 attachment_ids=attachments.ids,
@@ -2074,7 +2074,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=595):  # tm: 535
+        with self.assertQueryCount(employee=575):  # tm: 515
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,
@@ -2115,8 +2115,8 @@ class TestPerformance(BaseMailPostPerformance):
         scheduled_date = fields.Datetime.now() + timedelta(days=1)
 
         for test_tickets, expected_count in [
-            (list(tickets), 442),  # one message on each record,  # tm: 379
-            ([tickets[0]] * len(tickets), 422),  # all messages on the same record, # tm: 359
+            (list(tickets), 332),  # one message on each record,  # tm: 269
+            ([tickets[0]] * len(tickets), 312),  # all messages on the same record, # tm: 249
         ]:
             with self.subTest(records_count=len(set(test_tickets))):
                 messages = self.env['mail.message']
