@@ -1,9 +1,10 @@
-import { test, describe, expect } from "@odoo/hoot";
+import { test, describe, expect, tick } from "@odoo/hoot";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { serverState, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { SplitBillScreen } from "@pos_restaurant/app/screens/split_bill_screen/split_bill_screen";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 definePosModels();
 
@@ -366,5 +367,41 @@ describe("pos.order restaurant patches", () => {
         // The course is reindexed, but its name is left untouched
         expect(course2.index).toBe(1);
         expect(course2.name).toBe("Course 2");
+    });
+
+    test("paying directly cleans courses", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        const course2 = store.addCourse({ backendCourse: store.models["pos.course"].get(2) });
+        await store.addLineToOrder(
+            { product_tmpl_id: store.models["product.template"].get(5), qty: 1 },
+            order
+        );
+        order.lines[0].course_id = course2;
+
+        const course1 = store.addCourse({ backendCourse: store.models["pos.course"].get(1) });
+        await store.addLineToOrder(
+            { product_tmpl_id: store.models["product.template"].get(5), qty: 1 },
+            order
+        );
+        order.lines[1].course_id = course1;
+
+        expect(course2.index).toBe(1);
+        expect(course1.index).toBe(2);
+
+        const cashMethod = store.models["pos.payment.method"].find(
+            (method) => method.type == "cash"
+        );
+        order.addPaymentline(cashMethod);
+        const validation = new OrderPaymentValidation({
+            pos: store,
+            orderUuid: order.uuid,
+        });
+        await validation.validateOrder(true);
+        await tick();
+
+        expect(course1.index).toBe(1);
+        expect(course2.index).toBe(2);
     });
 });

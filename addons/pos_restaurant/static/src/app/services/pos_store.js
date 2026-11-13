@@ -174,6 +174,12 @@ patch(PosStore.prototype, {
 
         return await super.sendOrderInPreparationUpdateLastChange(order, opts);
     },
+    async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
+        if (!opts.cancelled) {
+            order.cleanCourses();
+        }
+        return await super.checkPreparationStateAndSentOrderInPreparation(order, opts);
+    },
     handlePreparationOrder(destOrder, prepOrders) {
         for (const prepOrder of prepOrders) {
             prepOrder.pos_order_id = destOrder;
