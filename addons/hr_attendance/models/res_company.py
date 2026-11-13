@@ -27,7 +27,21 @@ class ResCompany(models.Model):
     attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_user', init_storage='_init_column_attendance_kiosk_key')
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
+||||||| d98aff1232df958b925f71190b12fd23f7245c63
+    attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
+    attendance_overtime_validation = fields.Selection([
+        ('no_validation', 'Automatically Approved'),
+        ('by_manager', 'Approved by Manager'),
+    ], string='Extra Hours Validation', default='no_validation')
+=======
+    attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=False)
+    attendance_overtime_validation = fields.Selection([
+        ('no_validation', 'Automatically Approved'),
+        ('by_manager', 'Approved by Manager'),
+    ], string='Extra Hours Validation', default='no_validation')
+>>>>>>> 24079f54144c015c0a4ae57cb68e40b4bb060fc1
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     single_check_in = fields.Boolean(string="Single Check-In Attendance System")
     auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
