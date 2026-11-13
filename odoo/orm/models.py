@@ -6019,7 +6019,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} + {other}")
             if other:
                 ids = self._ids + other._ids
-                return self.__class__(self.env, ids, Prefetch.union(self._prefetch_ids, other._prefetch_ids))
+                return self.__class__(self.env, ids, Prefetch.union([self._prefetch_ids, other._prefetch_ids]))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} + {other!r}")
         return self
@@ -6045,7 +6045,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        return self.__class__(self.env, tuple(ids), Prefetch.union(*prefetch_ids_list))
+        return self.__class__(self.env, tuple(ids), Prefetch.union(prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -6082,7 +6082,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} | {other}")
             if other:
                 ids = tuple(dict.fromkeys(self._ids + other._ids))
-                return self.__class__(self.env, ids, Prefetch.union(self._prefetch_ids, other._prefetch_ids))
+                return self.__class__(self.env, ids, Prefetch.union([self._prefetch_ids, other._prefetch_ids]))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} | {other!r}")
         return self
@@ -6108,7 +6108,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
-        return self.__class__(self.env, tuple(dict.fromkeys(ids)), Prefetch.union(*prefetch_ids_list))
+        return self.__class__(self.env, tuple(dict.fromkeys(ids)), Prefetch.union(prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """

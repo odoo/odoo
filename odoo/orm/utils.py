@@ -215,7 +215,7 @@ class Prefetch:
     origin = OriginIds
 
     @staticmethod
-    def union(*prefetches: Reversible) -> Reversible:
+    def union(prefetches: Reversible[Reversible]) -> Reversible:
         """ A prefetch object for the concatenation/union of recordsets. """
         if not prefetches:
             return ()
