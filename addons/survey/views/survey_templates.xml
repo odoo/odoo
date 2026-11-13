@@ -4,6 +4,7 @@
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
         <xpath expr="//head" position="before">
+            <t t-if="survey" t-set="title" t-value="survey.title"/>
             <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
