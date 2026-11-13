@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
+from freezegun import freeze_time
+
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.fields import Datetime
 from odoo.tests import Form, tagged, users
 
 
@@ -301,6 +306,26 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         with self.mockSMSGateway():
             sms_composer._action_send_sms()
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
+
+    def test_composer_comment_field_scheduled(self):
+        scheduled_date = Datetime.now() + timedelta(days=1)
+        composer = self.env['sms.composer'].with_context(
+            active_model='mail.test.sms', active_id=self.test_record.id,
+            default_number_field_name='mobile_nbr',
+        ).create({
+            'body': self._test_body,
+            'scheduled_date': scheduled_date,
+        })
+        self.assertEqual(composer.recipient_single_number_itf, '+32456010203')
+        composer.action_schedule_message()
+
+        with self.mockSMSGateway(), freeze_time(scheduled_date + timedelta(hours=1)):
+            self.env.ref('mail.ir_cron_post_scheduled_message').method_direct_trigger()
+
+        self.assertSMSNotification(
+            [{'partner': self.partner_1, 'number': '+32456010203'}],
+            self._test_body, self.test_record.message_ids[0],
+        )
 
 
 @tagged('sms_composer')
