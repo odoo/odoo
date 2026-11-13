@@ -261,3 +261,27 @@ class TestSelfAccessRights(TestHrCommon):
 
         hubert_acc.invalidate_recordset(["display_name"])
         self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_ids.sudo(False).display_name, 'FR******7890')
+
+    def test_users_list_readable_without_employee_rights(self):
+        """ An administrator without Employees rights can read the public
+        employee fields of other users (e.g. the users list, which shows
+        job_title), but not their private ones. """
+        admin = new_test_user(self.env, login='adm', groups='base.group_user,base.group_system', name='Admin')
+        other = new_test_user(self.env, login='oth', groups='base.group_user', name='Other')
+        location = self.env['hr.work.location'].create({
+            'name': 'Office',
+            'address_id': self.env.company.partner_id.id,
+        })
+        self.env['hr.employee'].create({
+            'name': 'Other',
+            'user_id': other.id,
+            'job_title': 'Accountant',
+            'work_location_id': location.id,
+            'private_city': 'Secret City',
+        })
+        self.env.invalidate_all()
+        other_as_admin = other.with_user(admin)
+        self.assertEqual(other_as_admin.job_title, 'Accountant')
+        self.assertEqual(other_as_admin.work_location_id, location)
+        with self.assertRaises(AccessError):
+            other_as_admin.private_city
