@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_pos_ui_inherit_pos_account_peppol" model="ir.ui.view">
+        <field name="name">res.partner.form.pos.ui.inherit.pos_account_peppol</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="pos_edi_ubl.view_partner_form_pos_ui_inherit_pos_edi_ubl"/>
+        <field name="arch" type="xml">
+            <page name="accounting" position="attributes">
+                <attribute name="groups"/>
+            </page>
+            <field name="routing_identifier_override" position="after">
+                <label for="peppol_verification_state"/>
+                <div class="d-flex gap-2 align-items-center justify-content-around">
+                    <div class="d-flex flex-column">
+                        <field name="peppol_verification_state" readonly="1"/>
+                        <span name="routing_identifier_span" invisible="peppol_verification_state != 'valid'">
+                            with <field name="routing_identifier" class="oe_inline" readonly="1"/>
+                        </span>
+                    </div>
+                    <button name="action_pos_check_peppol_endpoint" type="object"
+                        class="btn btn-secondary" context="{'reload_form': True}" string="Verify"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>
