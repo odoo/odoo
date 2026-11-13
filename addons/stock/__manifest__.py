@@ -106,7 +106,6 @@
         'web.report_assets_common': [
             'stock/static/src/scss/report_stock_reception_labels.css',
             'stock/static/src/scss/report_stock_rule.scss',
-            'stock/static/src/scss/report_stockinventory.css',
             'stock/static/src/scss/report_stockpicking_operations.scss',
         ],
         'web.assets_backend': [
