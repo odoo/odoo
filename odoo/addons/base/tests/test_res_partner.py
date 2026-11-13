@@ -324,6 +324,15 @@ class TestPartner(TransactionCaseWithUserDemo):
             "'Destination Contact' name should contain db ID in brackets"
         )
 
+    def test_partner_with_falsy_type(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Falsy Type Partner',
+            'type': False,
+        })
+        self.assertEqual(partner.type, 'contact')
+        partner.write({'type': False})
+        self.assertEqual(partner.type, 'contact')
+
     def test_display_name_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env.ref('base.module_base')._update_translations(['fr_FR'])
