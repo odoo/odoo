@@ -39,10 +39,16 @@ class SaleOrder(models.Model):
         invoice_vals = super()._prepare_invoice()
         today = fields.Date.context_today(self)
         if self.l10n_jp_closing_date and self.l10n_jp_closing_date <= today:
-            closing_dates = self.partner_invoice_id.commercial_partner_id._l10n_jp_get_closing_dates(today)
+            partner = self.partner_invoice_id.commercial_partner_id
+            closing_dates = partner._l10n_jp_get_closing_dates(today)
             invoice_vals.update({
                 'invoice_date': max(date for date in closing_dates if date <= today),
                 # One summary invoice per billed customer, wherever its orders are delivered.
                 'partner_shipping_id': self.partner_invoice_id.address_get(['delivery'])['delivery'],
             })
+            if partner.l10n_jp_pay_at_next_closing:
+                invoice_vals.update({
+                    'invoice_payment_term_id': False,
+                    'invoice_date_due': min(date for date in closing_dates if date > today),
+                })
         return invoice_vals

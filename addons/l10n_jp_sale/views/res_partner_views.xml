@@ -8,6 +8,7 @@
             <group id="invoice_send_settings" position="after">
                 <group string="Summary Invoice" name="l10n_jp_summary_invoice" invisible="'JP' not in fiscal_country_codes">
                     <field name="l10n_jp_closing_day_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="l10n_jp_pay_at_next_closing" invisible="not l10n_jp_closing_day_ids"/>
                 </group>
             </group>
         </field>

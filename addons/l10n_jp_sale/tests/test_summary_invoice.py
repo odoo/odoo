@@ -67,6 +67,23 @@ class TestJPSummaryInvoice(AccountTestInvoicingCommon):
 
         self.assertEqual(orders.mapped('l10n_jp_missed_closing'), [True, False])
 
+    def test_summary_invoice_is_due_at_the_next_closing_date(self):
+        self.partner_a.write({
+            'l10n_jp_closing_day_ids': [Command.link(self.env.ref('l10n_jp_sale.closing_day_end_of_month').id)],
+            'l10n_jp_pay_at_next_closing': True,
+        })
+        order = self._create_order('2026-11-10 03:00:00', payment_term_id=self.pay_terms_b.id)
+
+        invoice = order._create_invoices()
+        invoice.action_post()
+
+        self.assertRecordValues(invoice, [{
+            'invoice_date': fields.Date.to_date('2026-11-15'),
+            'invoice_date_due': fields.Date.to_date('2026-11-30'),
+            'invoice_payment_term_id': False,
+        }])
+        self.assertEqual(invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').date_maturity, fields.Date.to_date('2026-11-30'))
+
     def test_order_billed_before_its_closing_date_keeps_the_invoice_date_empty(self):
         order = self._create_order('2026-11-16 03:00:00')
 

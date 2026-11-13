@@ -13,6 +13,10 @@ class ResPartner(models.Model):
         string="Closing Dates",
         help="Days of the month on which the orders of this customer are closed, to be billed on one summary invoice.",
     )
+    l10n_jp_pay_at_next_closing = fields.Boolean(
+        string="Pay at Next Closing Date",
+        help="Summary invoices are due at the closing date that follows theirs, whatever the payment terms.",
+    )
 
     def _l10n_jp_get_closing_dates(self, date):
         """Return the closing dates of the previous, current and next month of the given date."""
