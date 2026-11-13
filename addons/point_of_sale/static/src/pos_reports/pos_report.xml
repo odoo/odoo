@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="pos_reports.PosReport">
+        <div t-if="this.report.reportId" class="o_action pos_report d-flex flex-column h-100">
+            <ControlPanel display="{ adaptToScroll: false }">
+                <t t-set-slot="control-panel-buttons">
+                    <button class="btn btn-primary" t-on-click="() => this.report.exportReport('pdf')">
+                        PDF
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="() => this.report.exportReport('xlsx')">
+                        XLSX
+                    </button>
+                </t>
+
+                <t t-set-slot="control-panel-actions">
+                    <div class="d-flex gap-1 flex-wrap">
+                        <PosReportFilters />
+                    </div>
+                </t>
+            </ControlPanel>
+
+            <div class="d-flex h-100 o_content flex-column">
+                <div class="mx-auto w-100">
+                    <t t-foreach="this.headerExtensions" t-as="ext" t-key="ext_index">
+                        <t t-component="ext.component" />
+                    </t>
+                    <div class="o_report_grid d-flex flex-column gap-0 rounded">
+                        <t t-foreach="this.report.sections" t-as="section" t-key="section_index">
+                            <div class="o_report_section_block d-grid align-items-start p-0" t-att-style="'--num-data-cols: ' + (section.columns || []).length">
+                                <Header columns="section.columns" sectionName="section.name" />
+                                <TreeNode line="section" columns="section.columns" />
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
