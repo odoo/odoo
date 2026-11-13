@@ -138,8 +138,18 @@ export class PaymentScreen extends Component {
         this.pos.addAnimation = true;
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
+<<<<<<< 3a033cf647258d77a122b60102dff440c6225beb
     async addNewPaymentLine(paymentMethod, args = {}) {
         const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates();
+||||||| 5c8347a950f207ce6d88ef2bc6b57bc7f673d516
+    async addNewPaymentLine(paymentMethod) {
+        const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates();
+=======
+    async addNewPaymentLine(paymentMethod) {
+        const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates({
+            order: this.currentOrder,
+        });
+>>>>>>> 2bde1d3d336264884f7814f6628a3efee6d1b954
         if (!canSend) {
             this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
             return;
@@ -339,6 +349,7 @@ export class PaymentScreen extends Component {
     async sendPaymentRequest(line) {
         const paymentMethod = line.payment_method_id;
         const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates({
+            order: line.pos_order_id,
             paymentline: line,
         });
 
