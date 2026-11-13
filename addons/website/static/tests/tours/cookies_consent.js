@@ -21,7 +21,22 @@ function assertGtagConsent(expectedState) {
     }
 }
 
+<<<<<<< f185efc07caae71d3eb0be13bdde7c0c4b733439
 registry.category("web_tour.tours").add("cookie_bar_updates_gtag_consent", {
+||||||| 6c2294507f22a3380bedccb229f42a90bd3658d8
+registry.category("web_tour.tours").add("cookies_consent", {
+=======
+/**
+ * Assert that the Google tag blocked before consent has been restored.
+ */
+function assertGoogleTagLoaded() {
+    if (!document.querySelector("script[src^='https://www.googletagmanager.com/gtag/js']")) {
+        console.error("The Google tag should be loaded once optional cookies are accepted");
+    }
+}
+
+registry.category("web_tour.tours").add("cookies_consent", {
+>>>>>>> d1d081c83ed4effb3f755ef52e104be73a51da80
     url: "/",
     steps: () => [
         {
@@ -33,7 +48,16 @@ registry.category("web_tour.tours").add("cookie_bar_updates_gtag_consent", {
             content: "Ensure gtag consent is granted",
             trigger: "body",
             run: function () {
+<<<<<<< f185efc07caae71d3eb0be13bdde7c0c4b733439
                 assertGtagConsent("granted");
+||||||| 6c2294507f22a3380bedccb229f42a90bd3658d8
+                assertOptionalCookies(true);
+                assertConsentInDataLayer("granted");
+=======
+                assertOptionalCookies(true);
+                assertConsentInDataLayer("granted");
+                assertGoogleTagLoaded();
+>>>>>>> d1d081c83ed4effb3f755ef52e104be73a51da80
             },
         },
         {
