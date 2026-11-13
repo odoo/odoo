@@ -254,13 +254,17 @@ class PaymentTransaction(models.Model):
         return super()._compute_reference_prefix(separator, **values)
 
     def _get_line_items(self):
-        """Override of `payment` to add the items of the linked sales orders."""
-        line_items = super()._get_line_items()
+        """Override of `account_payment` to return the items of the linked sales orders."""
+        self.ensure_one()
+        if not self.sale_order_ids:
+            return super()._get_line_items()
+
+        line_items = {}
         for line in self.sale_order_ids.order_line:
             if line.display_type or line.is_downpayment or line.product_type == "combo":
                 continue
             product = line.product_id.with_context(display_default_code=False)
-            line_items[line] = {
+            line_items[line.id] = {
                 "name": product.display_name or line.name or "",
                 "description": line.name or "",
                 "sku": product.default_code,

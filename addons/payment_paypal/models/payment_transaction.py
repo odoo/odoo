@@ -218,9 +218,9 @@ class PaymentTransaction(models.Model):
         return {
             "reference_id": self.reference,
             "description": f"{self.company_id.name}: {self.reference}",
-            **self._paypal_prepare_items_payload(),
             "payee": payee_data,
             **shipping_address_vals,
+            **self._paypal_prepare_items_payload(),
         }
 
     def _paypal_prepare_items_payload(self):
@@ -232,13 +232,12 @@ class PaymentTransaction(models.Model):
         currency = self.currency_id
         amount_vals = {"currency_code": currency.name, "value": str(self.amount)}
         line_items = self._get_line_items().values()
-        # Negative amounts (e.g., discounts) and nameless items are not supported.
-        if any(
-            line_item["total"] < 0 or not line_item["name"] for line_item in line_items
-        ) or currency.compare_amounts(
-            sum(line_item["total"] for line_item in line_items), self.amount
-        ):
-            return {"amount": amount_vals, "items": []}
+        total_amount = sum(line_item["total"] for line_item in line_items)
+        has_discounts = any(line_item["total"] < 0 for line_item in line_items)
+        has_nameless_items = any(not line_item["name"] for line_item in line_items)
+        is_partial_payment = currency.compare_amounts(total_amount, self.amount) != 0
+        if has_discounts or has_nameless_items or is_partial_payment:
+            return {"amount": amount_vals}
 
         items = []
         for line_item in line_items:
@@ -249,7 +248,8 @@ class PaymentTransaction(models.Model):
                 or quantity != int(quantity)
                 or currency.compare_amounts(unit_amount * quantity, line_item["total"])
             ):
-                # Send the line as a single unit priced at its total.
+                # Force the quantity to 1, priced at the line total, for non-whole quantities or when
+                # the rounded unit amount does not add up to the total.
                 quantity, unit_amount = 1, line_item["total"]
             item = {
                 "name": line_item["name"][:3000],
@@ -268,16 +268,20 @@ class PaymentTransaction(models.Model):
                 item["upc"] = {"type": "UPC-A", "code": barcode}
             if 0 < len(line_item.get("url", "")) <= 2048:
                 item["url"] = line_item["url"]
-            # Only accepts HTTPS image URLs ending with an image file extension.
             image_url = line_item.get("image_url", "")
-            if image_url.startswith("https://") and len(image_url) <= 2048:
+            if (
+                image_url.startswith("https://")
+                and len(image_url) <= 2048
+                and image_url.lower().endswith((".jpg", ".jpeg", ".png", ".gif"))
+            ):
                 item["image_url"] = image_url
 
             items.append(item)
 
-        if items:
-            # The item total is required when items are sent.
-            amount_vals["breakdown"] = {"item_total": dict(amount_vals)}
+        if not items:
+            return {"amount": amount_vals}
+        # The item total is required when items are sent.
+        amount_vals["breakdown"] = {"item_total": dict(amount_vals)}
         return {"amount": amount_vals, "items": items}
 
     def _paypal_prepare_payment_source_payload(self, invoice_address_vals, has_shipping):

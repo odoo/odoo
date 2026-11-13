@@ -367,9 +367,10 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
 
     def test_items_payload_with_taxes_included_amounts(self):
         """Test that items are sent with their taxes included unit amounts and the item total."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
         tx = self._create_transaction(flow="direct", amount=23.0)
         line_items = {"line": {"name": "Chair", "description": "", "quantity": 2, "total": 23.0}}
-        with patch.object(type(tx), "_get_line_items", return_value=line_items):
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
             payload = tx._paypal_prepare_items_payload()
         item = payload["items"][0]
         self.assertEqual((item["quantity"], item["unit_amount"]["value"]), ("2", "11.50"))
@@ -377,38 +378,42 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
 
     def test_items_payload_falls_back_to_single_quantity(self):
         """Test that an item with a fractional quantity is sent with a quantity of 1."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
         tx = self._create_transaction(flow="direct", amount=10.0)
         line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
-        with patch.object(type(tx), "_get_line_items", return_value=line_items):
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
             item = tx._paypal_prepare_items_payload()["items"][0]
         self.assertEqual((item["quantity"], item["unit_amount"]["value"]), ("1", "10.00"))
 
     def test_no_items_with_negative_line(self):
         """Test that no items are sent when a line item is negative."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
         tx = self._create_transaction(flow="direct", amount=15.0)
         line_items = {
             "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
             "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
         }
-        with patch.object(type(tx), "_get_line_items", return_value=line_items):
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
             payload = tx._paypal_prepare_items_payload()
-        self.assertFalse(payload["items"])
+        self.assertNotIn("items", payload)
         self.assertNotIn("breakdown", payload["amount"])
 
     def test_no_items_with_nameless_line(self):
         """Test that no items are sent when a line item has no name."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
         tx = self._create_transaction(flow="direct", amount=10.0)
         line_items = {"line": {"name": "", "description": "", "quantity": 1, "total": 10.0}}
-        with patch.object(type(tx), "_get_line_items", return_value=line_items):
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
             payload = tx._paypal_prepare_items_payload()
-        self.assertFalse(payload["items"])
+        self.assertNotIn("items", payload)
         self.assertNotIn("breakdown", payload["amount"])
 
     def test_no_items_for_partial_payment(self):
         """Test that no items are sent when they do not add up to the transaction amount."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
         tx = self._create_transaction(flow="direct", amount=10.0)
         line_items = {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
-        with patch.object(type(tx), "_get_line_items", return_value=line_items):
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
             payload = tx._paypal_prepare_items_payload()
-        self.assertFalse(payload["items"])
+        self.assertNotIn("items", payload)
         self.assertNotIn("breakdown", payload["amount"])

@@ -798,12 +798,12 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         )
 
     def test_get_line_items(self):
-        """Test that only the accountable lines are returned as line items, with their taxes
-        included total, without the internal reference in their name, and named after their
-        description when they have no product."""
+        """Test that only the accountable lines are returned as line items, with all their
+        details."""
         product = self.env["product.product"].create({
             "name": "Desk",
             "default_code": "DESK",
+            "barcode": "012345678905",
             "list_price": 100.0,
             "taxes_id": [Command.create({"name": "Tax 15%", "amount": 15.0})],
         })
@@ -811,8 +811,16 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             order_line=[
                 Command.create({"display_type": "line_section", "name": "Section"}),
                 Command.create({"display_type": "line_note", "name": "Note"}),
-                Command.create({"product_id": product.id, "product_uom_qty": 2.0}),
-                Command.create({"name": "Assembly", "price_unit": 20.0}),
+                Command.create({
+                    "product_id": product.id,
+                    "name": "Oak desk",
+                    "product_uom_qty": 2.0,
+                }),
+                Command.create({
+                    "name": "Assembly",
+                    "price_unit": 20.0,
+                    "tax_ids": [Command.clear()],
+                }),
             ]
         )
         tx = self._create_transaction(flow="redirect", sale_order_ids=[order.id])
@@ -822,8 +830,26 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
         line_items = tx._get_line_items()
 
-        self.assertEqual(list(line_items), [product_line, productless_line])
-        self.assertEqual(line_items[product_line]["name"], "Desk")
-        self.assertEqual(line_items[product_line]["quantity"], 2.0)
-        self.assertEqual(line_items[product_line]["total"], 230.0)
-        self.assertEqual(line_items[productless_line]["name"], "Assembly")
+        self.assertEqual(list(line_items), [product_line.id, productless_line.id])
+        self.assertDictEqual(
+            line_items[product_line.id],
+            {
+                "name": "Desk",
+                "description": "Oak desk",
+                "sku": "DESK",
+                "barcode": "012345678905",
+                "quantity": 2.0,
+                "total": 230.0,
+            },
+        )
+        self.assertDictEqual(
+            line_items[productless_line.id],
+            {
+                "name": "Assembly",
+                "description": "Assembly",
+                "sku": False,
+                "barcode": False,
+                "quantity": 1.0,
+                "total": 20.0,
+            },
+        )

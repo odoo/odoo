@@ -14,14 +14,14 @@ class PaymentTransaction(models.Model):
         """Override of `sale` to add the page and image URLs of the published products."""
         line_items = super()._get_line_items()
         for line in self.sale_order_ids.order_line:
-            if not (item := line_items.get(line)):
+            if not (item := line_items.get(line.id)):
                 continue
             if line.product_id.is_published and line.product_id.sale_ok:
                 base_url = line.order_id.get_base_url()
                 item["url"] = f"{base_url}{line.product_id.website_url}"
                 if line.product_id.image_128:
                     item["image_url"] = (
-                        f"{base_url}/web/image/product.product/{line.product_id.id}/image_512/"
+                        f"{base_url}/web/image/product.product/{line.product_id.id}/image_128/"
                         "image.png"
                     )
         return line_items
