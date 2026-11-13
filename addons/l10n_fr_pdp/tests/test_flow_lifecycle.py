@@ -31,6 +31,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'name': 'NOM MATELAS',
             'siret': '34057796400024',
             'vat': 'FR23334175221',
+            'account_peppol_proxy_state': 'receiver',
         })
         cls.company.invalidate_recordset([
             'account_peppol_edi_user',
@@ -3062,6 +3063,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_annuaire_start_date': '2025-01-01',
         })
         self.proxy_user.company_id = branch.id
+        branch.account_peppol_proxy_state = 'receiver'
 
         # Ensure the partner has a receivable account for the branch by copying from parent company
         self.b2bi_customer.with_company(branch).property_account_receivable_id = self.b2bi_customer.with_company(self.company).property_account_receivable_id
