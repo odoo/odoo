@@ -1439,6 +1439,25 @@ class TestCompute(common.TransactionCase):
         self.assertFalse(obj.active)
         self.assertEqual(obj.name, "test!")
 
+    def test_mail_trigger_filter_domain(self):
+        """ The "Apply on" domain of a mail-triggered automation must be respected """
+        lead_thread_model = self.env["ir.model"]._get("base.automation.lead.thread.test")
+        create_automation(self, trigger="on_message_received", model_id=lead_thread_model.id,
+            filter_domain=repr([("name", "=", "match")]),
+            _actions={
+                "state": "object_write",
+                "update_path": "active",
+                "update_boolean_value": "false",
+            },
+        )
+        ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
+        matching, other = self.env["base.automation.lead.thread.test"].create([{"name": "match"}, {"name": "other"}])
+
+        other.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment", message_type="comment")
+        self.assertTrue(other.active, "the automation should not run on a record outside its domain")
+        matching.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment", message_type="comment")
+        self.assertFalse(matching.active)
+
     def test_compute_on_create(self):
         lead_model = self.env['ir.model']._get('base.automation.lead.test')
         stage_field = self.env['ir.model.fields']._get('base.automation.lead.test', 'stage_id')

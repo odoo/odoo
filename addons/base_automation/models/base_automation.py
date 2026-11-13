@@ -928,6 +928,7 @@ class BaseAutomation(models.Model):
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
                     records = automation._filter_pre(self, feedback=True)
+                    records = automation._filter_post(records, feedback=True)
                     _logger.debug(
                         "Processing automation rule %s (#%s) on %s records (_message_post)",
                         automation.sudo().name, automation.sudo().id, len(records),
