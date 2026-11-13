@@ -149,6 +149,42 @@ test("dropping the popup snippet appends it to the end of the container", async 
     expect(":iframe #wrap.o_savable > .s_popup:last-child").toHaveCount(1);
 });
 
+test("undoing the drop of a popup or removing it restores the page scroll", async () => {
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section style="height: 3000px;"><p>Tall content</p></section>`,
+        { loadIframeBundles: true, loadAssetsFrontendJS: true }
+    );
+    const editor = getEditor();
+    const htmlEl = queryOne(":iframe html");
+    const expectPageScrollable = (scrollable) => {
+        expect(htmlEl.scrollHeight).toBeGreaterThan(htmlEl.clientHeight);
+        if (scrollable) {
+            expect(":iframe body").not.toHaveClass("modal-open");
+            expect(":iframe body").not.toHaveStyle({ overflow: "hidden" });
+        } else {
+            expect(":iframe body").toHaveClass("modal-open");
+            expect(":iframe body").toHaveStyle({ overflow: "hidden" });
+        }
+    };
+    expectPageScrollable(true);
+
+    await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+    expectPageScrollable(false);
+    await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () => undo(editor));
+    expect(":iframe .s_popup").toHaveCount(0);
+    expectPageScrollable(true);
+
+    redo(editor);
+    await waitFor(":iframe .s_popup .modal", { visible: true });
+    expectPageScrollable(false);
+    await contains(":iframe .s_popup .modal section").click();
+    await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+        contains("[data-container-title='Popup'] .oe_snippet_remove").click()
+    );
+    expect(":iframe .s_popup").toHaveCount(0);
+    expectPageScrollable(true);
+});
+
 describe("Popup options: popup in page before edit", () => {
     let builder;
     // Done in `beforeEach` because frontend JS takes too much time to load.

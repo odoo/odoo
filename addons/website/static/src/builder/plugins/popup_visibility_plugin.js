@@ -113,6 +113,17 @@ export class PopupVisibilityPlugin extends Plugin {
             modalInstance.show();
         } else {
             modalInstance.hide();
+            // When the popup is removed right after being hidden (e.g. undoing
+            // its drop or removing it), Bootstrap skips the transition callback
+            // of the now disconnected modal, so `_hideModal` never runs and
+            // the page stays unscrollable. Finish hiding it synchronously.
+            queueMicrotask(() => {
+                if (!modalEl.isConnected && modalInstance._isTransitioning) {
+                    // Consume the pending transition callback.
+                    modalEl.dispatchEvent(new Event("transitionend"));
+                    modalInstance._hideModal();
+                }
+            });
         }
     }
 
