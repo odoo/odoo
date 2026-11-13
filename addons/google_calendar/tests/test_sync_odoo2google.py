@@ -854,6 +854,26 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: record.id}},
         })
 
+    @patch.object(ResUsers, '_sync_request')
+    def test_full_sync_does_not_send_updates(self, mock_sync_request):
+        """ During a full synchronization (e.g. the first one), the Odoo events sent to Google must not
+        notify their attendees, as it would mail them about all their existing events. """
+        mock_sync_request.return_value = (GoogleEvent([]), (), True)
+        with self.mock_datetime_and_now("2023-01-10"):
+            self.env.cr.postcommit.clear()
+            event = self.env['calendar.event'].with_user(self.organizer_user).create({
+                'name': "Future Event",
+                'start': datetime(2023, 1, 20, 8, 0),
+                'stop': datetime(2023, 1, 20, 9, 0),
+                'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)],
+                'need_sync': False,
+            })
+            with self.mock_google_service():
+                self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_events(self.google_service)
+                self.call_post_commit_hooks()
+            self.assertFalse(event._is_event_over(), "Future event should not be considered over")
+            self.assertGoogleEventSendUpdates('none')
+
     @patch_api
     def test_allday_duplicated_first_event_in_recurrence(self):
         """ Ensure that when creating recurrence with 'all day' events the first event won't get duplicated in Google. """
