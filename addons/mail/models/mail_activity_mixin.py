@@ -267,6 +267,22 @@ class MailActivityMixin(models.AbstractModel):
             ('user_id', '=', self.env.user.id)
         ])]
 
+    def write(self, vals):
+        result = super().write(vals)
+        # Update activity names if any of the dependencies (and transitively those fields' dependencies) is written to
+        # e.g. if self.display_name depends on 'sale_order_id.name, customer_name' and self.customer_name depends on 'partner_id'
+        # then writing to either `sale_order_id`, `customer_name` or `partner_id` will recompute the name of all activities.
+        # The trigger tree "root" is cached and already contains all the fields on this record which need to be recomputed
+        # so simply checking if "display_name" is one of them for each written field is sufficient and relatively cheap.
+        if any(
+            self._fields['display_name'] in self.pool.get_field_trigger_tree(self._fields[fname]).root
+            for fname in vals
+        ):
+            activities = self.sudo().with_context(active_test=False).activity_ids
+            res_name_field = activities._fields['res_name']
+            self.env.add_to_compute(res_name_field, activities - self.env.protected(res_name_field))
+        return result
+
     # Reschedules next my activity to Today
     def action_reschedule_my_next_today(self):
         self.ensure_one()
