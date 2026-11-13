@@ -3,6 +3,13 @@
     width: var(--Avatar-size, #{$o-avatar-size});
 }
 
+.o_tag > i.o_material_resource::before {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+}
+
 .o_m2o_avatar .o_material_resource {
     height: var(--Avatar-size, #{$o-avatar-size});
     width: var(--Avatar-size, #{$o-avatar-size});
