@@ -28,8 +28,9 @@ class TestPortalSaleTimesheet(TestProjectSharingCommon, TestCommonSaleTimesheet)
             'project_id': self.project_portal.id,
             'task_id': self.task_portal.id,
             'employee_id': self.employee_user.id,
-            'validated': True,
         })
+        if 'validated' in timesheet_entry._fields:
+            timesheet_entry.validated = True
 
         timesheets = self.env['account.analytic.line'].search(timesheet_domain)
         self.assertIn(timesheet_entry.id, timesheets.ids,
