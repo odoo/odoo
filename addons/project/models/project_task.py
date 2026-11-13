@@ -1394,9 +1394,12 @@ class ProjectTask(models.Model):
                         if not project_link:
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
+            assignable_partners = project.sudo().collaborator_ids.filtered(
+                lambda c: c.access_mode in ['edit', 'advanced_edit'],
+            ).partner_id
             for task in self:
                 if portal_assignees := task.user_ids.filtered(lambda u: u.share):
-                    users_to_remove = portal_assignees.filtered(lambda u: u.partner_id.id not in project.message_follower_ids.partner_id.ids)
+                    users_to_remove = portal_assignees.filtered(lambda u: u.partner_id not in assignable_partners)
                     if users_to_remove:
                         task.user_ids -= users_to_remove
         if vals.get('parent_id') is False:
