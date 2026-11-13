@@ -1009,6 +1009,7 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}gh]</blockquote>`,
         });
     });
+<<<<<<< 00954beaac2e861fd65aa9cb182467c9ca5cee01
 
     test("inserting a tab should not impact <br>", async () => {
         await testTabulation({
@@ -1018,6 +1019,17 @@ describe("insert tabulation", () => {
             contentAfter: `<p>a<br>${oeTab(TAB_WIDTH)}[]b</p>`,
         });
     });
+||||||| fb5dffbfc2b2281a2c4ba994214cc860dee28cca
+=======
+
+    test("should not insert a tab character in a non-editable element", async () => {
+        await testTabulation({
+            contentBefore: `<div contenteditable="false"><div>[]<textarea></textarea></div></div>`,
+            stepFunction: keydownTab,
+            contentAfter: `<div contenteditable="false"><div>[]<textarea></textarea></div></div>`,
+        });
+    });
+>>>>>>> d3105882c5dd0cda40bf54444dd49b123947d616
 });
 
 describe("delete backward tabulation", () => {
