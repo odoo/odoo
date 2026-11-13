@@ -116,9 +116,9 @@ patch(PosStore.prototype, {
         };
 
         let employee = false;
-        const allEmployees = this.models["hr.employee"].filter(
-            (employee) => employee.id !== this.accessRight.loggedCashier?.id
-        );
+        const allEmployees = this.accessRight
+            .getPosEmployees()
+            .filter((employee) => employee.id !== this.accessRight.loggedCashier?.id);
         const pinMatchEmployees = this.accessRight.getEmployeeByPinCode(allEmployees, pin);
         if (!pinMatchEmployees.length && !pin) {
             await ask(this.dialog, {
