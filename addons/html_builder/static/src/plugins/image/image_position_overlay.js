@@ -49,6 +49,12 @@ export class ImagePositionOverlay extends Component {
         const editableDocument = this.props.editable.ownerDocument;
         useListener(editableDocument, "pointerdown", this.discard.bind(this));
         useListener(document, "pointerdown", this.discard.bind(this));
+        useListener(document, "click", (ev) => {
+            // click without pointer (eg. access keys) don't trigger pointerdown
+            if (ev.detail === 0 && !this.overlayRef().contains(ev.target)) {
+                this.discard();
+            }
+        });
 
         useListener(window, "resize", this._dimensionOverlay);
         useListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay);
