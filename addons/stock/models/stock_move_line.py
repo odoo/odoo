@@ -1761,7 +1761,7 @@ class StockMoveLine(models.Model):
             if self.picking_type_id.wave_date_granularity == 'day':
                 description_items.append(format_date(self.env, self.date))
             elif self.picking_type_id.wave_date_granularity == 'week':
-                description_items.append(_('Week %d', self.date.date().isocalendar().week))
+                description_items.append(_('Week %d', fields.Datetime.context_timestamp(self, self.date).date().isocalendar().week))
 
         description = ', '.join(description_items)
         return description
