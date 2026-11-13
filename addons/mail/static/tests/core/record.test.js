@@ -2,7 +2,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
+import { Component, immediateEffect, markup, proxy, xml } from "@odoo/owl";
 import {
     destroyApp,
     getService,
@@ -782,6 +782,11 @@ test("lazy compute should re-compute while they are observed", async () => {
 });
 
 test("store updates can be observed", async () => {
+    localRegistry.remove("Store");
+    (class extends Store {
+        static _name = "Store";
+        abc;
+    }).register(localRegistry);
     const store = await start();
     function onUpdate() {
         expect.step(`abc:${store.abc}`);
@@ -918,7 +923,7 @@ test("onEnter runs for the other records when the callback of one throws", async
         name;
     }).register(localRegistry);
     const store = await start();
-    store.warnErrors = false;
+    store._.warnErrors = false;
     const thread = store.Thread.insert("General");
     const [john, marc] = store.Member.insert(["John", "Marc"]);
     expect(() => (thread.members = [john, marc])).toThrow("boom");
@@ -1040,7 +1045,7 @@ test("immediate onChange runs once the write is applied", async () => {
     const store = await start();
     const general = store.Thread.insert({ name: "General", count: 1 });
     expect.verifySteps(["General:1"]);
-    store.MAKE_UPDATE(() => {
+    store._.MAKE_UPDATE(() => {
         general.count = 2;
         expect.verifySteps([]);
         general.count = 3;
@@ -1104,7 +1109,7 @@ test("an immediate onChange that throws does not stop the other observers", asyn
         count = 0;
     }).register(localRegistry);
     const store = await start();
-    store.warnErrors = false;
+    store._.warnErrors = false;
     const general = store.Thread.insert("General");
     general.onChange(
         () => [general.count],
@@ -1134,7 +1139,7 @@ test("an immediate onChange that throws in its dependencies leaves the store usa
         other = 0;
     }).register(localRegistry);
     const store = await start();
-    store.warnErrors = false;
+    store._.warnErrors = false;
     const general = store.Thread.insert("General");
     general.onChange(
         () => {
@@ -1586,7 +1591,7 @@ test("Inserting single-id data on non-single id Model throws human-readable erro
         author = fields.One("Persona");
     }).register(localRegistry);
     const store = await start();
-    store.warnErrors = false;
+    store._.warnErrors = false;
     const paul = store.Persona.insert({ partner_id: 1 });
     store.Persona.insert({ guest_id: 2 });
     expect(store.Persona.get({ partner_id: 1 }).exists()).toBe(true);
@@ -1647,10 +1652,10 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
     function assertExists(store) {
         const msg = store.Message.get("msg-1");
         if (msg) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
         for (const msg of store.Message.records.values()) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
     }
     let deleting = false;
@@ -1755,6 +1760,27 @@ test("record.delete() should empty its own relations", async () => {
     expect(john.exists()).toBe(true);
     expect.verifySteps(["members:0"]);
     expect(john._.uses.data.size).toBe(0);
+});
+
+test("record.delete() should clear the relations pointing at it", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        composer = fields.One("Composer");
+        drafts = fields.Many("Composer");
+    }).register(localRegistry);
+    (class Composer extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const composer = store.Composer.insert({ name: "c1" });
+    const thread = store.Thread.insert({ name: "general", composer, drafts: [composer] });
+    expect(thread.composer.name).toBe("c1");
+    expect(thread.drafts.length).toBe(1);
+    composer.delete();
+    expect(thread.composer).toBe(undefined);
+    expect(thread.drafts.length).toBe(0);
 });
 
 test("Delete record with side-effect compute to insert it should have resulting record with only insert data (old data is removed)'", async () => {
@@ -2281,6 +2307,24 @@ test("writing on a computed is warned + ignored", async () => {
     expect(thread.label).toBe("label 0");
     thread.counter = 1;
     expect(thread.label).toBe("label 1");
+});
+
+test("a name the model does not declare is warned + dropped", async () => {
+    patch(console, { warn: (msg) => expect.step(msg) });
+    (class Thread extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    thread.foo = 1;
+    store.Thread.insert({ name: "general", bar: 2 });
+    expect.verifySteps([
+        'Dropping unknown field "foo" written on "Thread": records only hold declared fields.',
+        'Dropping unknown field "bar" inserted on "Thread": records only hold declared fields.',
+    ]);
+    expect(thread.foo).toBe(undefined);
+    expect(thread.bar).toBe(undefined);
 });
 
 test("an onChange registered in setup runs on the proxy and cleans up", async () => {
