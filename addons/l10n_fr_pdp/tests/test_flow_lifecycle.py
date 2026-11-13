@@ -514,6 +514,32 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(transaction.findtext('CategoryCode'), 'TPS1')
         self.assertEqual(transaction.findtext('TaxDueDateTypeCode'), '5')
 
+    def test_invoice_exempt_under_cgi_261_is_not_reported(self):
+        exempt_tax = self._get_tax_on_payment_20().copy({
+            'name': 'Exempt letting',
+            'amount': 0,
+            'ubl_cii_tax_category_code': 'E',
+            'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-135-1',
+        })
+        invoice = self._create_reporting_invoice(partner=self.b2c_customer, tax_ids=exempt_tax)
+        self.assertFalse(invoice.l10n_fr_pdp_flow_10_report_type)
+        self.assertFalse(invoice.l10n_fr_pdp_last_flow_id)
+
+        export_tax = exempt_tax.copy({'ubl_cii_tax_category_code': 'G', 'ubl_cii_tax_exemption_reason_code': False})
+        invoice = self._create_reporting_invoice(partner=self.b2c_customer, tax_ids=export_tax)
+        self.assertEqual(invoice.l10n_fr_pdp_flow_10_report_type, 'transaction')
+
+        belgium = self.env.ref('base.be')
+        foreign_exempt_tax = exempt_tax.copy({
+            'country_id': belgium.id,
+            'tax_group_id': self.env['account.tax.group'].create({'name': 'BE', 'country_id': belgium.id}).id,
+        })
+        invoice = self.env['account.move'].new({
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'name': 'Letting', 'tax_ids': foreign_exempt_tax.ids})],
+        })
+        self.assertFalse(invoice._l10n_fr_pdp_is_exempt_from_reporting())
+
     def test_b2c_invoice_without_taxes_creates_transaction_flow(self):
         invoice = self._create_reporting_invoice(
             partner=self.b2c_customer,
