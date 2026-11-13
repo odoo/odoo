@@ -348,3 +348,11 @@ test("should update toolbar font size when applying and removing it on a collaps
     );
     expect(fontSizeInputEl).toHaveValue(21);
 });
+
+test("should apply inline style instead of class for predefined font size when useInlineStyle is true", async () => {
+    const { el } = await setupEditor("<p>[abc]</p>", { config: { useInlineStyle: true } });
+    await waitFor(".o-we-toolbar [name='font_size']");
+    await contains(".o-we-toolbar [name='font_size'].dropdown-toggle").click();
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
+    expect(getContent(el)).toBe('<p><span style="font-size: 80px;">[abc]</span></p>');
+});
