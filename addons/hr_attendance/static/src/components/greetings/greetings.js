@@ -40,6 +40,11 @@ export class KioskGreetings extends Component {
     checkOutTime = computed(() =>
         this.attendance.check_out ? formatDateTime(deserializeDateTime(this.attendance.check_out)) : ""
     );
+    recordedBreak = computed(
+        () =>
+            Boolean(this.attendance.break_duration) &&
+            formatFloatTime(this.attendance.break_duration)
+    );
     hoursToday = computed(() => formatFloatTime(this.props.employeeData.hours_today));
     overtimeToday = computed(
         () =>

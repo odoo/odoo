@@ -99,6 +99,7 @@ class HrAttendance(http.Controller):
                     'id': employee.last_attendance_id.id,
                     'check_in': employee.last_attendance_id.check_in,
                     'check_out': employee.last_attendance_id.check_out,
+                    'break_duration': employee.last_attendance_id.break_duration,
                 },
                 'overtime_today': sum(request.env['hr.attendance'].sudo().search([
                     ('employee_id', '=', employee.id),

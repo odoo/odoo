@@ -633,13 +633,22 @@ class HrAttendance(models.Model):
                     )
                 )
 
-                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-                if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.with_context(skip_time_rules=True).check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
+                automatic_break = att.employee_id._get_remaining_automatic_break(
+                    expected_worked_hours + max_tol, expected_worked_hours,
+                    att.check_in, att.work_entry_type_id, exclude=att,
+                )
+                allowed_hours = expected_worked_hours + automatic_break + max_tol - previous_attendances_duration
+
+                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar plus the automatic break left for the day
+                if current_attendance_duration > allowed_hours:
+                    check_out = max(
+                        att.check_in + relativedelta(hours=allowed_hours),
+                        att.check_in + relativedelta(seconds=1),
+                    )
+                    # the time rules record the automatic break, the employee exceeding the schedule
                     att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
-                        "out_mode": "auto_check_out"
+                        "check_out": check_out,
+                        "out_mode": "auto_check_out",
                     })
                     att.message_post(
                         body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
@@ -840,11 +849,85 @@ class HrAttendance(models.Model):
         return [('state', '=', 'validated')]
 
     def _get_time_rule_break_hours(self):
-        """Return ``break_duration``, which the time rules do not count as worked time.
+        """Return ``break_duration``, which the time rules do not count as worked time, plus the
+        automatic break about to be recorded (``automatic_break_pending`` context key, see
+        :meth:`_collect_time_rule_outputs`).
 
         :rtype: float
         """
-        return self.break_duration or 0.0
+        hours = self.break_duration or 0.0
+        if pending := self.env.context.get('automatic_break_pending'):
+            hours += dict(pending).get(self.id, 0.0)
+        return hours
+
+    def _collect_time_rule_outputs(self, rules, ranges_by_employee):
+        """Record the automatic breaks of the rules taking effect before evaluating them.
+
+        The rules with an automatic break are evaluated one by one in sequence, alone and
+        without writing anything. A rule taking effect on a day (worked time above its expected
+        hours and its ``employer_tolerance``) gives its break, deducted from the worked time seen
+        by the next rules; a rule not taking effect is skipped. With, in sequence, a 5 minutes
+        break above 3h, 15 minutes above 7h, 10 minutes above 4h and 15 minutes above 5h, 5:10
+        worked gives 5 + 10 minutes (4:55 left).
+
+        The breaks of the day not recorded yet (the breaks already recorded that day, e.g. by a
+        manager, are counted) go on the latest attendance carrying the excess, or else on another
+        attendance of the day, provided it has no break yet and the break fits in it. The rules
+        are then evaluated for real, the new breaks deducted from the worked time.
+        """
+        break_rules = rules.filtered(
+            lambda r: r.automatic_break_duration > 0 and r._allows_automatic_break(),
+        ).sorted(lambda r: (r.sequence, r.id))
+        if not break_rules or self.env.context.get('automatic_break_dry_run'):
+            return super()._collect_time_rule_outputs(rules, ranges_by_employee)
+
+        Attendance = self.sudo().browse()
+        due = defaultdict(float)  # {(employee, day): hours of the rules applied}
+        pending = {}  # {(employee, day): (attendance, hours)}
+        for rule in break_rules:
+            dry_run = self.with_context(
+                automatic_break_dry_run=True,
+                automatic_break_pending=tuple((att.id, hours) for att, hours in pending.values()),
+            )
+            excess, _deficit, active_iv = super(HrAttendance, dry_run)._collect_time_rule_outputs(
+                rule, ranges_by_employee,
+            )
+            sources_by_day = defaultdict(lambda: Attendance)  # sources carrying the excess
+            for employee, by_source in excess.items():
+                for source, intervals in by_source.items():
+                    for iv in intervals:
+                        if iv.end > iv.start:
+                            sources_by_day[employee, iv.start.date()] |= source
+
+            for (employee, day), sources in sources_by_day.items():
+                due[employee, day] += rule.automatic_break_duration / 60
+                amount = due[employee, day] - employee._get_recorded_break_duration(sources[:1].check_in)
+                if float_compare(amount, 0.0, precision_digits=4) <= 0:
+                    continue
+                tz = ZoneInfo(employee._get_tz(day))
+                day_sources = Attendance.union(
+                    source for source in active_iv[employee]
+                    if source.check_in.replace(tzinfo=UTC).astimezone(tz).date() == day
+                )
+                # same attendance as for the previous breaks of the day, else the latest one
+                # carrying the excess, then the others of the day
+                candidates = sources.sorted('check_in', reverse=True) | (day_sources - sources).sorted('check_in')
+                if (employee, day) in pending:
+                    candidates = pending[employee, day][0] | candidates
+                target = next((
+                    att for att in candidates
+                    if not att.time_rule_id
+                    and float_is_zero(att.break_duration, precision_digits=4)
+                    and 'technical' not in (att.in_mode, att.out_mode)
+                    and float_compare(amount, time_to_float(att.check_out - att.check_in), precision_digits=4) < 0
+                ), None)
+                if target:
+                    pending[employee, day] = (target, amount)
+
+        for attendance, hours in pending.values():
+            attendance.with_context(skip_time_rules=True).break_duration = hours
+
+        return super()._collect_time_rule_outputs(rules, ranges_by_employee)
 
     def _get_time_rule_split_preview(self):
         """Return the attendances the daily overtime rules would split the attendance into.

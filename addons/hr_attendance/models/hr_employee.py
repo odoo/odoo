@@ -311,6 +311,55 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
+    def _get_recorded_break_duration(self, check_in=None, exclude=None):
+        """Return the breaks already recorded on the attendances of the local day of
+        ``check_in`` (now by default), refused attendances and ``exclude`` excepted.
+
+        The time rule outputs are included: they carry their share of the break of the
+        attendance they were split from.
+
+        :param datetime check_in: naive UTC datetime
+        :param exclude: ``hr.attendance`` to leave out
+        :return: hours
+        :rtype: float
+        """
+        self.ensure_one()
+        check_in = check_in or fields.Datetime.now()
+        tz = ZoneInfo(self._get_tz(check_in.date()))
+        day_start = check_in.replace(tzinfo=datetime.UTC).astimezone(tz).replace(
+            hour=0, minute=0, second=0, microsecond=0,
+        )
+        day_end = day_start + relativedelta(days=1)
+        attendances = self.env['hr.attendance'].sudo().search([
+            ('employee_id', '=', self.id),
+            ('check_in', '>=', day_start.astimezone(datetime.UTC).replace(tzinfo=None)),
+            ('check_in', '<', day_end.astimezone(datetime.UTC).replace(tzinfo=None)),
+            ('state', '!=', 'refused'),
+            ('id', 'not in', exclude.ids if exclude else []),
+        ])
+        return sum(attendances.mapped('break_duration'))
+
+    def _get_remaining_automatic_break(self, net_hours, expected_hours, check_in=None, work_entry_type=None, exclude=None):
+        """Return the automatic breaks of the day of ``check_in`` (now by default) not recorded
+        yet, for a day whose worked time, the breaks deducted, is ``net_hours``; see
+        ``hr.time.rule._get_automatic_break_duration``.
+
+        :param float net_hours: worked hours of the day, the breaks deducted
+        :param float expected_hours: expected hours of the day in the employee's schedule
+        :param datetime check_in: naive UTC datetime
+        :param work_entry_type: ``hr.work.entry.type`` of the attendance
+        :param exclude: ``hr.attendance`` whose break is not counted as recorded
+        :return: hours
+        :rtype: float
+        """
+        self.ensure_one()
+        day_break = self.env['hr.time.rule'].sudo()._get_automatic_break_duration(
+            self, net_hours, expected_hours, check_in, work_entry_type,
+        )
+        if not day_break:
+            return 0.0
+        return max(day_break - self._get_recorded_break_duration(check_in, exclude), 0.0)
+
     def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
         """Check the employee in or out, now.
 

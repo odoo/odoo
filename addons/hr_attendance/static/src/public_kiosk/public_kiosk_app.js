@@ -264,6 +264,7 @@ class kioskAttendanceApp extends Component {
             {
                 employeeName: employee.employee_name,
                 maxMinutes: this.attendanceDurationInMinutes(employee.attendance),
+                defaultMinutes: Math.round((employee.attendance?.break_duration || 0) * 60),
                 onConfirm: (minutes) => this.saveBreakDuration(employee, minutes),
             },
             {
