@@ -23,6 +23,7 @@ from odoo.tools.translate import LazyGettext, LazyTranslate
 from odoo.tools.partner_identifier_validation import (
     NON_DIGIT_RE,
     ae_tin_validate,
+    hr_mb_validate,
     nl_kvk_validate,
     nl_oin_validate,
     pk_cn_validate,
@@ -696,6 +697,14 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'validation_function': hr_oib.validate,
         'countries': ['HR'],
     },
+    'HR_MB': {
+        'label': _lt('MB'),
+        'help': _lt('Business Identification Number (Matični broj).'),
+        'placeholder': '02737043',
+        'category': 'EN',
+        'validation_function': hr_mb_validate,
+        'countries': ['HR'],
+    },
     'HU_EN': {
         'sequence': 30,
         'label': _lt('Company ID'),
@@ -1032,6 +1041,8 @@ def get_deduced_identifiers(key, value):
         deduced['DK_CVR'] = get_non_prefixed_identifier('DK', value)
     if key == 'FR_SIRET':
         deduced['FR_SIREN'] = fr_siret.to_siren(value)
+    if key == 'HR_VAT':
+        deduced['HR_EN'] = get_non_prefixed_identifier('HR', value)
     if key == 'HU_TIN':
         deduced['HU_VAT'] = get_prefixed_identifier('HU', value)[:10]  # "HU" + 8 digits
     if key == 'SG_GST':

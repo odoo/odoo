@@ -119,6 +119,15 @@ class TestPartnerIdentifiers(TransactionCase):
         partner.vat = 'FI01120389'
         self.assertEqual((partner.additional_identifiers or {}).get('FI_EN'), '01120389')
 
+    def test_vat_deduces_hr_en(self):
+        """Setting a Croatian VAT should automatically deduce HR_EN."""
+        partner = self.env['res.partner'].create({
+            'name': 'HR Partner',
+            'country_id': self.env.ref('base.hr').id,
+        })
+        partner.vat = 'HR86742905038'
+        self.assertEqual((partner.additional_identifiers or {}).get('HR_EN'), '86742905038')
+
     def test_vat_deduces_no_en(self):
         """Setting a Norwegian VAT should automatically deduce NO_EN, with or without the MVA suffix."""
         for vat in ('NO974760673MVA', 'NO974760673'):

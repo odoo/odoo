@@ -9,6 +9,8 @@ from odoo.tools import single_email_re
 NON_DIGIT_RE = re.compile(r'\D')
 # AE TIN: 10-digit
 AE_TIN_RE = re.compile(r'\d{10}')
+# HR MB: 8-digit
+HR_MB_RE = re.compile(r'\d{8}')
 # KVK: 8-digit
 NL_KVK_RE = re.compile(r'\d{8}')
 # OIN: 20-digit
@@ -43,6 +45,21 @@ def nl_kvk_validate(value):
     value = NON_DIGIT_RE.sub('', value)
     if not NL_KVK_RE.fullmatch(value):
         raise InvalidFormat()
+    return value
+
+
+def hr_mb_validate(value):
+    """Normalize and validate a Croatian MB number."""
+    value = NON_DIGIT_RE.sub('', value)
+    if not HR_MB_RE.fullmatch(value):
+        raise InvalidFormat()
+    check = 0
+    weight = 8
+    for n in value[:7]:
+        check += int(n) * weight
+        weight -= 1
+    if (11 - check % 11) % 11 % 10 != int(value[7]):
+        raise InvalidChecksum()
     return value
 
 
