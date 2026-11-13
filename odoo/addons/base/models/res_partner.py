@@ -99,6 +99,7 @@ _ref_vat = frozendict({
     'lv': 'LV41234567891',
     'ma': '12345678',
     'mc': 'FR53000004605',
+    'me': 'ME02655284',
     'mt': 'MT12345634',
     'mx': _lt('GODE561231GR8'),
     'nl': 'NL123456782B90',
@@ -2217,6 +2218,11 @@ class ResPartner(models.Model):
     def check_vat_rs(self, vat):
         vat = vat.removeprefix('RS')
         return stdnum.util.get_cc_module('rs', 'vat').is_valid(vat)
+
+    # VAT validation in Montenegro: the 8-digit PIB, alone or prefixed with ME (Art. 55 of the VAT law)
+    def check_vat_me(self, vat):
+        vat = vat.upper().removeprefix('ME')
+        return stdnum.util.get_cc_module('me', 'vat').is_valid(vat)
 
     _check_vat_sa_re = re.compile(r"^3[0-9]{13}3$")
 
