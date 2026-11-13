@@ -6,12 +6,12 @@ export class FullscreenHint extends Component {
 
     setup() {
         super.setup();
-        this.close = useProps.static("close", t.function());
+        this.props = useProps({ close: t.function().static() });
         this.rtc = useService("discuss.rtc");
     }
 
     onClickClose() {
         this.rtc.isFullscreenHintDismissed = true;
-        this.close();
+        this.props.close();
     }
 }
