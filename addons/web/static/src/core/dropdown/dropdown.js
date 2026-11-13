@@ -69,6 +69,8 @@ export const dropdownProps = {
         .optional(),
 
     disabled: t.boolean().optional(false),
+    /** Whether closing all parents from this dropdown, e.g. on item selection, closes its parents */
+    closeParents: t.boolean().optional(true),
     holdOnHover: t.boolean().optional(false),
     focusToggleOnClosed: t.boolean().optional(true),
 
@@ -111,7 +113,9 @@ export class Dropdown extends Component {
 
     setup() {
         this.state = this.props.state || useDropdownState();
-        this.nesting = useDropdownNesting(this.state);
+        this.nesting = useDropdownNesting(this.state, {
+            shouldCloseParents: () => this.props.closeParents,
+        });
         this.group = useDropdownGroup(this.state);
 
         this.navigation = useNavigation(this.menuRef, {
