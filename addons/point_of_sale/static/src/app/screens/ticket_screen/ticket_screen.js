@@ -249,6 +249,9 @@ export class TicketScreen extends Component {
             !this.pos.doNotAllowRefundAndSales()
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
+        // Set the partner to the destinationOrder first: it resets the pricelist and the
+        // fiscal position, the fiscal position of the refunded order must win.
+        this.setPartnerToRefundOrder(partner, destinationOrder);
 
         destinationOrder.takeaway = order.takeaway;
         // Add orderline for each toRefundDetail to the destinationOrder.
@@ -299,8 +302,6 @@ export class TicketScreen extends Component {
         if (order.fiscal_position_id) {
             destinationOrder.update({ fiscal_position_id: order.fiscal_position_id });
         }
-        // Set the partner to the destinationOrder.
-        this.setPartnerToRefundOrder(partner, destinationOrder);
 
         if (this.pos.get_order().uuid !== destinationOrder.uuid) {
             this.pos.set_order(destinationOrder);

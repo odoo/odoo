@@ -1229,6 +1229,46 @@ class TestUi(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([])
         self.assertTrue(order[0].name == order[1].name + " REFUND")
 
+    def test_refund_customer_order_keeps_fiscal_position(self):
+        """ The refund of an order with a customer must keep the fiscal position of the
+        refunded order, not take the customer's one. """
+        tax_15 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_excluded',
+        })
+        tax_0 = self.env['account.tax'].create({
+            'name': 'Tax 0%',
+            'amount': 0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_excluded',
+        })
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_15.id,
+                'tax_dest_id': tax_0.id,
+            })],
+        })
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 100,
+            'taxes_id': [(6, 0, tax_15.ids)],
+        })
+        self.main_pos_config.write({
+            'fiscal_position_ids': [(4, fiscal_position.id)],
+            'tax_regime_selection': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionPartnerRefund', login="pos_user")
+        refund = self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.amount_total < 0)
+        self.assertEqual(refund.fiscal_position_id, fiscal_position)
+        self.assertEqual(refund.amount_total, -100)
+
     def test_lot_refund(self):
 
         self.product1 = self.env['product.product'].create({
