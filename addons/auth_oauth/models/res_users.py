@@ -5,6 +5,7 @@ import json
 
 import requests
 import werkzeug.http
+import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessDenied, UserError
@@ -12,6 +13,8 @@ from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
 base.models.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
+
+_logger = logging.getLogger(__name__)
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -31,8 +34,11 @@ class ResUsers(models.Model):
             response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
 
         if response.ok: # nb: could be a successful failure
-            return response.json()
-
+            try:
+                return response.json()
+            except json.JSONDecodeError:
+                _logger.error(f"Invalid request in endpoint: {endpoint}, return a non json request")
+                return {'error': 'invalid_request'}
         auth_challenge = werkzeug.http.parse_www_authenticate_header(
             response.headers.get('WWW-Authenticate'))
         if auth_challenge.type == 'bearer' and 'error' in auth_challenge:
