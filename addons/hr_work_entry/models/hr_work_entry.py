@@ -52,11 +52,51 @@ class HrWorkEntry(models.Model):
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
 
-    @api.constrains('duration')
+    @api.constrains('duration', 'date')
     def _check_duration(self):
+        def _get_tz(work_entry):
+            """Resolve pytz timezone following the version -> employee -> company calendar hierarchy."""
+            work_entry.ensure_one()
+            version = work_entry.version_id
+            tz_str = (
+                (version and (
+                    version.resource_calendar_id.tz
+                    or version.employee_id.resource_calendar_id.tz
+                    or version.company_id.resource_calendar_id.tz
+                ))
+                or work_entry.employee_id.resource_calendar_id.tz
+                or work_entry.company_id.resource_calendar_id.tz
+                or work_entry.env.company.resource_calendar_id.tz
+                or 'UTC'
+            )
+            return pytz.timezone(tz_str)
+
+        def _get_max_day_duration(work_entry):
+            """Compute the physical hours available on this specific calendar date."""
+            work_entry.ensure_one()
+            if not work_entry.date:
+                return 24.0
+
+            tz = _get_tz(work_entry)
+            start_dt = tz.localize(datetime.combine(work_entry.date, time.min))
+            end_dt = tz.localize(datetime.combine(work_entry.date + timedelta(days=1), time.min))
+            return (end_dt - start_dt).total_seconds() / 3600.0
+
         for work_entry in self:
-            if float_compare(work_entry.duration, 0, 3) <= 0 or float_compare(work_entry.duration, 24, 3) > 0:
-                raise ValidationError(self.env._("Duration must be positive and cannot exceed 24 hours."))
+            if float_compare(work_entry.duration, 0, precision_digits=3) <= 0:
+                raise ValidationError(self.env._("Duration must be strictly positive."))
+
+            max_duration = _get_max_day_duration(work_entry)
+            if float_compare(work_entry.duration, max_duration, precision_digits=3) > 0:
+                formatted_max = int(max_duration) if max_duration.is_integer() else max_duration
+                raise ValidationError(
+                    self.env._(
+                        "Duration cannot exceed %(max_duration)s hours for date %(date)s in timezone %(tz)s.",
+                        max_duration=formatted_max,
+                        date=work_entry.date,
+                        tz=_get_tz(work_entry).zone,
+                    ),
+                )
 
     @api.depends('display_code', 'duration')
     def _compute_display_name(self):
