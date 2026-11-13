@@ -1924,13 +1924,16 @@ test("facets display with any / not any operator (with a complex path)", async f
     expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
+    // the "id" condition displays the record name, which needs to be fetched
+    expect.verifySteps([`fields_get`, `web_search_read`]);
 
     await addNewRule();
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        `Company ➔ Company : ( Id = 1 and Id = 1 ) or Bar ${label("not set")}`,
+        `Company ➔ Company : ( Id = First record and Id = First record ) or Bar ${label(
+            "not set"
+        )}`,
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
@@ -1957,12 +1960,15 @@ test("facets display with any / not any operator (with a or)", async function ()
     expect.verifySteps([`get_views`]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect.verifySteps([`fields_get`]);
+    // the "id" condition displays the record name, which needs to be fetched
+    expect.verifySteps([`fields_get`, `web_search_read`]);
 
     await addNewRule();
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Company : ( Id = 1 and Id = 1 ) or Bar ${label("not set")}`]);
+    expect(getFacetTexts()).toEqual([
+        `Company : ( Id = First record and Id = First record ) or Bar ${label("not set")}`,
+    ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
 

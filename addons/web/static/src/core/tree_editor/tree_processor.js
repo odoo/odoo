@@ -10,7 +10,7 @@ import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_edi
 import { unique, zip } from "@web/core/utils/arrays";
 import { condition, Expression, isTree, normalizeValue } from "./condition_tree";
 import { constructTreeFromDomain } from "./construct_tree_from_domain";
-import { disambiguate, getResModel, isId } from "./utils";
+import { disambiguate, getResModel, isId, adaptIdFieldDef } from "./utils";
 import { introduceVirtualOperators } from "./virtual_operators";
 import { InRange } from "./tree_editor_components";
 
@@ -397,9 +397,11 @@ export const treeProcessorService = {
             const fieldDefs = {};
             for (const path of paths) {
                 promises.push(
-                    fieldService.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                        fieldDefs[path] = fieldDef;
-                    })
+                    fieldService
+                        .loadFieldInfo(resModel, path)
+                        .then(({ fieldDef, resModel: fieldModel }) => {
+                            fieldDefs[path] = adaptIdFieldDef(fieldDef, fieldModel);
+                        })
                 );
             }
             await Promise.all(promises);
