@@ -323,8 +323,8 @@ class AccountMove(models.Model):
             return child_models
 
         return [
-            *_get_child_models('account.edi.xml.ubl_20'),
-            *_get_child_models('account.edi.xml.cii'),
+            *_get_child_models('account.edi.ubl'),
+            *_get_child_models('account.edi.cii'),
         ]
 
     def _get_edi_decoder(self, file_data, new=False):

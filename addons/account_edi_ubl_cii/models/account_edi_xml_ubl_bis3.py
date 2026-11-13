@@ -465,16 +465,3 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
             if logs:
                 order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))
-
-    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
-        """
-        corresponds to the errors raised by 'schematron/openpeppol/3.13.0/xslt/PEPPOL-EN16931-UBL.xslt' for
-        invoices in ecosio. This xslt was obtained by transforming the corresponding sch
-        https://docs.peppol.eu/poacc/billing/3.0/files/PEPPOL-EN16931-UBL.sch.
-
-        The national rules (https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules) are included in this file.
-        They always refer to the supplier's country.
-        """
-        if invoice.invoice_line_ids:
-            return invoice._reason_cannot_decode_has_invoice_lines()
-        return self._ubl_import_invoice(invoice, file_data, new=new)
