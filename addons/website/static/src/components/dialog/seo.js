@@ -839,9 +839,7 @@ export class SeoChecks extends Component {
             }
         });
         onMounted(() => {
-            if (this.props.isDefaultLang) {
-                this.getBrokenLinks();
-            }
+            this.getBrokenLinks();
         });
         useEffect(() => {
             this.seoContext.hasNoImageWarning = !this.state.altAttributes.some(
@@ -1188,18 +1186,13 @@ export class OptimizeSEODialog extends Component {
             },
         });
 
-        const rpcCalls = [];
-        if (
-            seoContext.brokenLinks.some(
-                (link) => link.oldLink !== link.newLink || link.remove === true
-            )
-        ) {
-            rpcCalls.push(
-                rpc("/website/update_broken_links", {
-                    links: seoContext.brokenLinks,
-                })
-            );
+        const modifiedLinks = seoContext.brokenLinks.filter(
+            (link) => link.oldLink !== link.newLink || link.remove === true
+        );
+        if (modifiedLinks.length) {
+            await rpc("/website/update_broken_links", { links: modifiedLinks });
         }
+        const rpcCalls = [];
         if (!this.isDefaultLang) {
             const translationsByRecord = {};
             for (const img of seoContext.updatedAlts || []) {

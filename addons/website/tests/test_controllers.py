@@ -292,3 +292,36 @@ class TestControllers(tests.HttpCase):
         res_login = self.url_open('/web/login')
         self.assertEqual(res_login.status_code, 200)
         self.assertNotIn('meta name="robots" content="noindex', res_login.text)
+
+    def _update_broken_links(self, **link):
+        admin_env = self.env(user=self.env.ref('base.user_admin'))
+        with MockRequest(admin_env, website=self.env.ref('base.default_website')):
+            Website().update_broken_links([{
+                'res_model': 'ir.ui.view',
+                'field': 'arch',
+                'remove': False,
+                **link,
+            }])
+
+    def test_update_broken_links_all_languages(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Broken Link Test View',
+            'type': 'qweb',
+            'website_id': self.env.ref('base.default_website').id,
+            'arch': '<div><a href="/broken">Link</a></div>',
+        })
+        view.update_field_translations('arch_db', {'fr_FR': {'Link': 'Lien'}})
+        # Edit the default language with a delayed translation in French.
+        view.with_context(delay_translations=True).arch = '<div><a href="/broken">New link</a></div>'
+        self.assertIn('_fr_FR', view._get_stored_translations('arch_db'))
+
+        self._update_broken_links(res_id=view.id, oldLink='/broken', newLink='/fixed')
+
+        translations = view._get_stored_translations('arch_db')
+        self.assertEqual(set(translations), {'en_US', 'fr_FR', '_fr_FR'})
+        for lang, value in translations.items():
+            self.assertIn('href="/fixed"', value, f"The link should be fixed in {lang}")
+            self.assertNotIn('/broken', value, f"The link should be fixed in {lang}")
+        self.assertIn('Lien', view.with_context(lang='fr_FR').arch)
+
