@@ -5,7 +5,7 @@ import requests
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tools import file_open
 
 from odoo.addons.account.tests.common import PatchRequestsMixin
@@ -392,3 +392,49 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
                 ),
             ]):
                 self.company_data['default_journal_purchase'].l10n_hr_mer_get_new_documents_all()
+
+    def test_post_received_bill_as_invoicing_user(self):
+        """ Confirming a received bill approves it on MojEracun, which a user who
+        can't read the MojEracun credentials should be able to do as well. """
+        invoicing_user = new_test_user(
+            self.env,
+            login='hr_invoicing_user',
+            groups='account.group_account_invoice',
+            company_id=self.env.company.id,
+        )
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2025-12-24',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 47.0})],
+            'l10n_hr_edi_addendum_id': [Command.create({
+                'mer_document_eid': '3148006',
+                'business_document_status': '4',
+            })],
+        })
+
+        expected_request = self._build_request(
+            endpoint='/apis/v2/UpdateDokumentProcessStatus',
+            request_args={
+                'ElectronicId': '3148006',
+            },
+        )
+        mocked_response = self._build_response(
+            status_code=200,
+            response_json={
+                'ElectronicId': 3148006,
+                'DocumentProcessStatusId': 0,
+            },
+        )
+        # As in a real request, the company is first read as the user, which
+        # doesn't fetch the credentials restricted to accounting managers.
+        self.env.invalidate_all()
+        bill = bill.with_user(invoicing_user)
+        bill.company_id.name
+        with self.assertRequests([(expected_request, mocked_response)]):
+            bill.action_post()
+
+        self.assertRecordValues(bill, [{
+            'state': 'posted',
+            'l10n_hr_business_document_status': '0',
+        }])
