@@ -104,3 +104,42 @@ class TestMultiCompany(TestHrCommon):
 
         # user A should still read hr_presence_state even if he does not have access to the company of the employee
         self.employee_b.with_user(self.user_a).with_company(self.company_a).hr_presence_state
+
+    def test_work_location_multi_company(self):
+        address = self.env['res.partner'].create({'name': 'Shared work address'})
+        location_a, location_b = self.env['hr.work.location'].create([
+            {
+                'name': 'Location A',
+                'company_id': self.company_a.id,
+                'address_id': address.id,
+            },
+            {
+                'name': 'Location B',
+                'company_id': self.company_b.id,
+                'address_id': address.id,
+            },
+        ])
+        domain = [('address_id', '=', address.id)]
+
+        for user, company, visible_location, hidden_location in [
+            (self.user_a, self.company_a, location_a, location_b),
+            (self.user_b, self.company_b, location_b, location_a),
+        ]:
+            with self.subTest(user=user.login):
+                WorkLocation = self.env['hr.work.location'].with_user(user).with_context(
+                    allowed_company_ids=company.ids,
+                )
+                self.assertEqual(WorkLocation.search(domain), visible_location)
+                self.assertEqual(WorkLocation.name_search(domain=domain), [(visible_location.id, visible_location.name)])
+                self.assertEqual(WorkLocation.browse(visible_location.id).read(['name'])[0]['name'], visible_location.name)
+                with self.assertRaises(AccessError):
+                    WorkLocation.browse(hidden_location.id).read(['name'])
+
+        WorkLocation = self.env['hr.work.location'].with_user(self.user_a).with_context(
+            allowed_company_ids=(self.company_a | self.company_b).ids,
+        )
+        self.assertEqual(WorkLocation.search(domain), location_a | location_b)
+        self.assertEqual(WorkLocation.name_search(domain=domain), [
+            (location_a.id, location_a.name),
+            (location_b.id, location_b.name),
+        ])
