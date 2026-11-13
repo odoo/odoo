@@ -2,7 +2,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 
-import { Component, onWillStart, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, usePlugin, useProps, computed } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -11,6 +11,16 @@ import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
 import { useDebounced } from "@web/core/utils/timing";
+import {
+    parseClipboard,
+    splitEntries,
+} from "@mail/discuss/core/common/channel_invitation_clipboard";
+
+const EMAIL_REGEX = /[^\s<>:;,()"]+@[^\s<>:;,()"]+/;
+
+function normalizeEmail(email) {
+    return (email.match(EMAIL_REGEX)?.[0] ?? email).trim().toLowerCase();
+}
 
 /**
  * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
@@ -69,6 +79,7 @@ export class ChannelInvitation extends Component {
             sentEmails: new Set(),
             showingPartialResults: false,
         });
+        this.splitSearchStr = computed(() => splitEntries(this.searchStr));
         this.debouncedFetchPartnersToInvite = useDebounced(
             this.fetchPartnersToInvite.bind(this),
             250
@@ -135,18 +146,46 @@ export class ChannelInvitation extends Component {
         return _t("Search people to invite");
     }
 
+    get tooltipInfo() {
+        let inviteOptions;
+        if (this.props.channel?.allow_invite_by_email) {
+            inviteOptions = [
+                _t("Search for an existing user by name or email"),
+                _t("Enter an email address to invite by email"),
+                _t(
+                    "Paste several email addresses, separated by commas or semicolons or from your favorite spreadsheet, to select them at once"
+                ),
+            ];
+        } else {
+            inviteOptions = [
+                _t("Search for an existing user by name or email"),
+                _t(
+                    "Paste several email addresses, separated by commas or semicolons or from your favorite spreadsheet, to select the matching users at once"
+                ),
+            ];
+        }
+        return JSON.stringify({
+            content: _t("To search for people to invite, you can:"),
+            inviteOptions,
+        });
+    }
+
+    searchForChannelInvite(searchTerm) {
+        return this.orm.call("res.partner", "search_for_channel_invite", [], {
+            search_term: searchTerm,
+            channel_id: this.props.channel?.id ?? false,
+            limit: this.searchLimit,
+            with_portal_users:
+                this.props.channel &&
+                (this.props.channel.channel_type === "group" ||
+                    !this.props.channel.group_public_id),
+        });
+    }
+
     async fetchPartnersToInvite() {
         const results = await this.sequential(async () => {
             this.state.hasPendingRequest = true;
-            const res = await this.orm.call("res.partner", "search_for_channel_invite", [], {
-                search_term: this.searchStr,
-                channel_id: this.props.channel?.id ?? false,
-                limit: this.searchLimit,
-                with_portal_users:
-                    this.props.channel &&
-                    (this.props.channel.channel_type === "group" ||
-                        !this.props.channel.group_public_id),
-            });
+            const res = await this.searchForChannelInvite(this.searchStr);
             this.state.hasPendingRequest = false;
             return res;
         });
@@ -154,29 +193,75 @@ export class ChannelInvitation extends Component {
             return;
         }
         this.store.insert(results.store_data);
-        const selectablePartners = results.partner_ids.map((id) =>
-            this.store["res.partner"].get(id)
-        );
+        for (const email of results.emails_already_sent) {
+            this.state.sentEmails.add(email);
+        }
+        const partners = results.partner_ids.map((id) => this.store["res.partner"].get(id));
         this.selectablePartners = this.store.sortPartnerSuggestions(
-            selectablePartners,
+            partners,
             this.searchStr,
             this.props.channel?.thread
         );
         this.state.showingPartialResults = results.partner_ids.length > this.searchLimit;
         const selectableEmails = this.state.selectedEmails.filter((addr) =>
-            addr.includes(this.searchStr)
+            this.splitSearchStr().some((term) => addr.includes(term))
         );
-        if (results.selectable_email) {
-            selectableEmails.push(results.selectable_email);
-        }
-        if (results.email_already_sent) {
-            this.state.sentEmails.add(results.selectable_email);
-        }
+        selectableEmails.push(...results.selectable_emails);
         this.state.selectableEmails = [...new Set(selectableEmails)];
+    }
+
+    /**
+     * Selects what the pasted entries resolve to, and returns the entries that resolved to
+     * nothing so they can be fixed by hand.
+     */
+    async selectPastedEntries(entries) {
+        const results = await this.searchForChannelInvite(entries.join(","));
+        this.store.insert(results.store_data);
+        for (const email of results.emails_already_sent) {
+            this.state.sentEmails.add(email);
+        }
+        const sentEmails = new Set(results.emails_already_sent);
+        const newEmails = results.selectable_emails.filter((email) => !sentEmails.has(email));
+        const resolvedEmails = new Set([...newEmails, ...results.member_emails]);
+        const pastedEmails = new Set(entries.map(normalizeEmail));
+        for (const id of results.partner_ids) {
+            const partner = this.store["res.partner"].get(id);
+            const email = partner.email && normalizeEmail(partner.email);
+            if (pastedEmails.has(email)) {
+                resolvedEmails.add(email);
+                if (!partner.in(this.selectedPartners)) {
+                    this.selectedPartners.push(partner);
+                }
+            }
+        }
+        for (const email of newEmails) {
+            if (!this.state.selectedEmails.includes(email)) {
+                this.state.selectedEmails.push(email);
+            }
+        }
+        return entries.filter((entry) => !resolvedEmails.has(normalizeEmail(entry)));
     }
 
     onInput() {
         this.searchStr = this.inputRef()?.value;
+        this.debouncedFetchPartnersToInvite();
+    }
+
+    async onInputPaste(ev) {
+        const clipboardText = parseClipboard(ev.clipboardData);
+        const entries = clipboardText ? splitEntries(clipboardText) : [];
+        if (entries.length < 2) {
+            return;
+        }
+        ev.preventDefault();
+        const input = this.inputRef();
+        const startText = this.searchStr.slice(0, input.selectionStart).replace(/[,;]$/, "");
+        const endText = this.searchStr.slice(input.selectionEnd).replace(/^[,;]/, "");
+        // without any email, it is not a list but e.g. a name holding a comma
+        const unresolved = entries.some((entry) => EMAIL_REGEX.test(entry))
+            ? await this.selectPastedEntries(entries)
+            : [clipboardText];
+        this.searchStr = [startText, ...unresolved, endText].filter(Boolean).join(",");
         this.debouncedFetchPartnersToInvite();
     }
 
@@ -257,9 +342,8 @@ export class ChannelInvitation extends Component {
                             .filter(Boolean),
                     ]),
                 ];
-                channel = await this.store.createGroupChat({ users_to });
-                await this.store.fetchStoreData("/discuss/channel/add_members", {
-                    channel_id: channel.id,
+                channel = await this.store.createGroupChat({
+                    users_to,
                     emails: this.state.selectedEmails,
                 });
             } else {

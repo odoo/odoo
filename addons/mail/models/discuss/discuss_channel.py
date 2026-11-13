@@ -1091,6 +1091,19 @@ class DiscussChannel(models.Model):
             .search_fetch(member_domain, ["partner_id", "guest_id"])
             .mapped(lambda m: email_normalize(m.partner_id.email or m.guest_id.email))
         )
+        # invitations are sent right away, so bigger batches are refused rather than queued
+        send_limit = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_int("mail.mail.force.send.limit", 100)
+        )
+        if send_limit and len(eligible_emails) >= send_limit:
+            raise UserError(
+                self.env._(
+                    "You can invite up to %(limit)s people by email at once.",
+                    limit=send_limit - 1,
+                )
+            )
         mail_body = Markup("<p>%s</p>") % self.env._(
             "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%(strong_end)s channel."
         ) % {
@@ -1143,7 +1156,7 @@ class DiscussChannel(models.Model):
         found_partners = self.env["res.partner"]._find_or_create_from_emails(
             invited_emails, no_create=True
         )
-        partners = self.env["res.partner"].union(*found_partners)
+        partners = self.env["res.partner"].union(found_partners)
         guest_emails = [
             email for email, partner in zip(invited_emails, found_partners) if not partner
         ]

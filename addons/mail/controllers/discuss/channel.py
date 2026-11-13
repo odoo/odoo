@@ -202,12 +202,16 @@ class DiscussChannelWebclientController(WebclientController):
         users_to,
         default_display_mode=False,
         name="",
+        emails=None,
     ):
         if resolve_channel := request.env["discuss.channel"]._create_group(
             users_to=request.env["res.users"].with_context(active_test=False).search_fetch([("id", "in", users_to)]),
             name=name,
             default_display_mode=default_display_mode,
         ):
+            if emails:
+                # same request, so that a refused invitation rolls the group back
+                resolve_channel.invite_by_email(emails=emails)
             store.resolve_data_request(
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )

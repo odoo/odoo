@@ -10,13 +10,15 @@ import {
     start,
     startServer,
     MENU_ACTIVE_IDS,
+    pasteMulti,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
+import { describe, queryOne, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     Command,
     contains,
     getService,
+    onRpc,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
@@ -518,4 +520,584 @@ test("Go to conversation from self chat transfers active call to the existing ch
     ).click();
     await waitFor(".o-mail-DiscussContent-threadName:value('TestPartner'):count(1)");
     await waitFor(".o-discuss-CallParticipantCard:count(1)");
+});
+
+test("Pasted list of emails in the invite form should be joined with commas", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test1\ntest2\n test3",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3" });
+});
+
+test("Pasted html table of emails (coming from spreadsheets) in the invite form should be joined with commas", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>`,
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3" });
+});
+
+test("Multi column pasted html table of emails should take all cells and be joined with commas", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td><td>test2</td></tr>
+                        <tr><td>test3</td><td>test4</td></tr>
+                    </table>`,
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3,test4" });
+});
+
+test("Pasting on selected text, should replace the selection with the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1");
+    queryOne(".o-discuss-ChannelInvitation-search").setSelectionRange(1, 4);
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test2\ntest3",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "t,test2,test3,1" });
+});
+
+test("Pasting on selected text, should keep commas around the selection when replacing it with the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1,test2,test3");
+    queryOne(".o-discuss-ChannelInvitation-search").setSelectionRange(6, 11);
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test4\ntest5",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test4,test5,test3" });
+});
+
+test("Pasting in front of existing text, should keep the existing text after the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1,test2");
+    queryOne(".o-discuss-ChannelInvitation-search").setSelectionRange(0, 0);
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test3\ntest4",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test3,test4,test1,test2" });
+});
+
+test("Pasting at the end of existing text, should keep the existing text before the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1,test2");
+    queryOne(".o-discuss-ChannelInvitation-search").setSelectionRange(11, 11);
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test3\ntest4",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3,test4" });
+});
+
+test("Pasting document with table should fallback to text/plain if it contains other elements", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>
+                    <p>other element</p>`,
+        "text/plain": "test4\ntest5\n test6",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test4,test5,test6" });
+});
+
+test("Pasting document with multiple tables should fallback to text/plain", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>
+                    <table><tr><td>test4</td></tr>
+                        <tr><td>test5</td></tr>
+                        <tr><td>test6</td></tr>
+                    </table>`,
+        "text/plain": "test7\ntest8\n test9",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test7,test8,test9" });
+});
+
+test("Pasting html with no table should fallback to text/plain", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<p>test1</p>
+                    <p>test2</p>
+                    <p>test3</p>`,
+        "text/plain": "test4\ntest5\n test6",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test4,test5,test6" });
+});
+
+test("Pasted html table drops empty cells and trims the others", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td> test2 </td></tr>
+                        <tr><td></td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>`,
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3" });
+});
+
+test("Pasted plain text drops empty lines and trims the others", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test1\n\n test2 \n test3",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3" });
+});
+
+test("Pasted html cells are kept whole, spaces and commas included", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>Doe, John</td></tr>
+                        <tr><td>Jane Smith</td></tr>
+                    </table>`,
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "Doe, John,Jane Smith" });
+});
+
+test("Pasted plain text lines are kept whole, spaces and commas included", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "Doe, John\nJane Smith",
+    });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "Doe, John,Jane Smith" });
+});
+
+test("Pasting several emails selects the partners they match instead of listing them as selectable", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo Partner",
+        email: "demo@partner.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "demo@partner.com\nnew1@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Demo Partner):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "" });
+});
+
+test("Pasting several brand-new emails selects them instead of listing them as selectable", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "new1@test.com\nnew2@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new2@test.com):count(1)");
+});
+
+test("Pasting emails separated by semicolons selects each of them", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "new1@test.com; new2@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new2@test.com):count(1)");
+});
+
+test("Pasting emails with a comma in their quoted name selects the partners they match", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create([
+        { name: "John Doe", email: "john@test.com" },
+        { name: "Jane Doe", email: "jane@test.com" },
+    ]);
+    pyEnv["res.users"].create(partnerIds.map((partner_id) => ({ partner_id })));
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": '"Doe, John" <john@test.com>,"Doe, Jane" <jane@test.com>',
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(John Doe):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Jane Doe):count(1)");
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "" });
+});
+
+test("Pasting several entries keeps the ones that match nobody in the search", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo Partner",
+        email: "demo@partner.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "demo@partner.com\nJohn Doe",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Demo Partner):count(1)");
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "John Doe" });
+});
+
+test("Pasting several entries drops the ones of current members from the search", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo Partner",
+        email: "demo@partner.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "demo@partner.com\nnew1@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "" });
+});
+
+test("Pasting an address that already received an invitation leaves it in the search with a hint", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    onRpc("res.partner", "search_for_channel_invite", ({ parent }) => {
+        const result = parent();
+        result.emails_already_sent = result.selectable_emails.filter(
+            (email) => email === "sent@test.com"
+        );
+        return result;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "sent@test.com\nnew1@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "sent@test.com" });
+    await waitFor(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('sent@test.com')):has(:text('Invitation already sent to this address')):count(1)"
+    );
+});
+
+test("Pasting a name holding a comma searches it as a name", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Doe, John", email: "john@test.com" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", { "text/plain": "Doe, John" });
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "Doe, John" });
+    await waitFor(".o-discuss-ChannelInvitation-selectable:has(:text('Doe, John')):count(1)");
+});
+
+test("Pasting an address preceded by a name selects its partner", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo Partner",
+        email: "demo@partner.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "Demo demo@partner.com\nnew1@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Demo Partner):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await mailContains(".o-discuss-ChannelInvitation-search", { value: "" });
+});
+
+test("Pasting one address among names selects only the partner owning it", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create([
+        { name: "Ann Smith", email: "ann@example.com" },
+        { name: "Joann Miller", email: "joann@example.com" },
+    ]);
+    pyEnv["res.users"].create(partnerIds.map((partner_id) => ({ partner_id })));
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "Ann Smith\nann@example.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Ann Smith):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:count(1)");
+});
+
+test("Typing several emails suggests them instead of selecting them", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo Partner",
+        email: "demo@partner.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "demo@partner.com,new1@test.com");
+    await waitFor(
+        ".o-discuss-ChannelInvitation-selectable:not(.o-selected):has(:text('Demo Partner')):count(1)"
+    );
+    await waitFor(
+        ".o-discuss-ChannelInvitation-selectable:not(.o-selected):has(:text('new1@test.com')):count(1)"
+    );
+});
+
+test("What a pasted list selected stays selected once the search text changes", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo Partner",
+        email: "demo@partner.com",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "demo@partner.com\nnew1@test.com",
+    });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Demo Partner):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
+    await insertText(".o-discuss-ChannelInvitation-search", "something else", { replace: true });
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(Demo Partner):count(1)");
+    await waitFor(".o-discuss-ChannelInvitation-selectedList button:text(new1@test.com):count(1)");
 });

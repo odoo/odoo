@@ -402,6 +402,18 @@ export async function pasteFiles(selector, files, options) {
 
 /**
  * Waits until exactly one element matching the given `selector` is present in
+ * `options.target` and then pastes `data` on it.
+ *
+ * @param {import("@odoo/hoot-dom").Target} selector
+ * @param {Object.<string,string>} data
+ * @param {ContainsOptions} [options] forwarded to `contains`
+ */
+export async function pasteMulti(selector, data, options) {
+    await contains(selector, { pasteMulti: data, ...options });
+}
+
+/**
+ * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then focuses on it.
  *
  * @param {import("@odoo/hoot-dom").Target} selector
@@ -521,6 +533,7 @@ afterEach(() => (hasUsedContainsPositively = false));
  * @property {ContainsTuple} [parent] if provided, the found element(s) must have as
  *  parent the node matching the parent parameter.
  * @property {Object[]} [pasteFiles] if provided, pastes the given files on the found element
+ * @property {Object.<string,string>} [pasteMulti] if provided, pastes the given data on the found element
  * @property {number|"bottom"} [scroll] if provided, the scrollTop of the found element(s)
  *  must match.
  *  Note: when using one of the scrollTop options, it is advised to ensure the height is not going
@@ -811,6 +824,18 @@ class Contains {
             const ev = new Event("paste", { bubbles: true });
             Object.defineProperty(ev, "clipboardData", {
                 value: createFakeDataTransfer(this.options.pasteFiles),
+            });
+            el.dispatchEvent(ev);
+        }
+        if (this.options.pasteMulti) {
+            message = `${message} and pasted multiple data types`;
+            const clipboardData = new DataTransfer();
+            for (const [type, value] of Object.entries(this.options.pasteMulti)) {
+                clipboardData.setData(type, value);
+            }
+            const ev = new ClipboardEvent("paste", {
+                bubbles: true,
+                clipboardData,
             });
             el.dispatchEvent(ev);
         }

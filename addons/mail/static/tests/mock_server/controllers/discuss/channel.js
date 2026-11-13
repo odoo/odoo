@@ -213,6 +213,12 @@ registerStoreHandler(
             params.default_display_mode,
             params.name
         );
+        if (params.emails?.length) {
+            DiscussChannel.invite_by_email(
+                channelId.map((channel) => channel.id),
+                params.emails
+            );
+        }
         store.resolve_data_request((res) =>
             res.one("channel", "_store_channel_fields", { value: channelId })
         );
