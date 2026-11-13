@@ -358,7 +358,7 @@ class Cart(PaymentPortal):
             "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
             # Do not include delivery related lines
             "minor_amount": payment_utils.to_minor_currency_units(
-                order._get_amount_total_excluding_delivery(), order.currency_id
+                order._get_amount_to_pay_excluding_delivery(), order.currency_id
             ),
             "merchant_name": self.env.website.name,
             "transaction_route": f"/shop/payment/transaction/{order.id}",
@@ -440,12 +440,10 @@ class Cart(PaymentPortal):
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
             "currency": order_sudo.currency_id.name,
-            "amount": order_sudo.amount_total,
+            "amount": (amount_to_pay := order_sudo._get_amount_to_pay()),
             "minor_amount": (
-                order_sudo.amount_total
-                and payment_utils.to_minor_currency_units(
-                    order_sudo.amount_total, order_sudo.currency_id
-                )
+                amount_to_pay
+                and payment_utils.to_minor_currency_units(amount_to_pay, order_sudo.currency_id)
             ),
             "website_sale.cart_lines": IrUiView._render_template(
                 "website_sale.cart_lines",

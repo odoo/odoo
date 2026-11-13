@@ -222,7 +222,11 @@ class Delivery(WebsiteSale):
         ):
             order_sudo._set_delivery_method(cheapest_dm)
 
-        amount_without_delivery = order_sudo._compute_amount_total_without_delivery()
+        # The delivery is always charged in full: the part of the order total that is not paid
+        # upfront (see `_get_amount_to_pay`) only comes from the other lines.
+        amount_without_delivery = order_sudo._compute_amount_total_without_delivery() - (
+            order_sudo.amount_total - order_sudo._get_amount_to_pay()
+        )
 
         # Return the list of delivery methods available for the sales order.
         return {

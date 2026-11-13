@@ -2626,7 +2626,22 @@ class SaleOrder(models.Model):
 
         if self.prepayment_percent == 0:
             return 0
-        return self.currency_id.round(self.amount_total * self.prepayment_percent)
+        return self.currency_id.round(self._get_amount_to_pay() * self.prepayment_percent)
+
+    def _get_amount_to_pay(self):
+        """Return the amount the customer pays online to settle the order, taxes included.
+
+        It is the order total by default. Modules that charge another amount upfront, e.g. only
+        the prorated first period of a subscription, override it: the portal, the checkout and the
+        confirmation of the order then all rely on this amount.
+
+        :return: The amount to pay.
+        :rtype: float
+        """
+        if not self:
+            return 0
+        self.ensure_one()
+        return self.amount_total
 
     def _is_confirmation_amount_reached(self):
         """Return whether `self.amount_paid` is higher than the prepayment required amount.
@@ -2776,13 +2791,13 @@ class SaleOrder(models.Model):
         """Return whether the sale order is paid or not based on the linked transactions.
 
         A sales order is considered paid if the sum of all the paid (i.e., `authorized` or `done`)
-        transactions' amount is equal to or higher than `self.amount_total`.
+        transactions' amount is equal to or higher than the amount to pay.
 
         :return: Whether the order is considered paid
         :rtype: bool
         """
         self.ensure_one()
-        return self.currency_id.compare_amounts(self.amount_paid, self.amount_total) >= 0
+        return self.currency_id.compare_amounts(self.amount_paid, self._get_amount_to_pay()) >= 0
 
     def _check_not_partially_paid(self):
         """Check if the order is partially paid, and raises an error if so.
