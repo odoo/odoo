@@ -23,6 +23,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Store as StoreModel } from "@mail/model/store";
 import { toRawValue } from "@mail/utils/common/local_storage";
 
+<<<<<<< 8dd23357410ce4592702c0eb65e46096ce62e456
 import {
     describe,
     expect,
@@ -33,6 +34,12 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot";
+||||||| 8ea8dd69ebc899afa567040fc31379aa48ddf320
+import { describe, expect, mockPermission, queryOne, test, waitFor } from "@odoo/hoot";
+=======
+import { describe, expect, mockPermission, queryOne, test, waitFor } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
+>>>>>>> 03078485c59c6146eb9358c2dea001dd01204bf0
 import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
@@ -1313,4 +1320,22 @@ test("preserve message link formatting in messaging menu", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await waitFor(`.o-mail-NotificationItem-text a[href="https://odoo.com/"]:count(1)`);
+});
+
+test("allow tab navigation in messaging menu", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "R&D" },
+        { name: "General" },
+    ]);
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-NotificationItem:has(:text('General'))");
+    await click(".o-mail-SearchInput input");
+    expect(".o-mail-SearchInput input").toBeFocused();
+    for (let i = 0; i < 5; i++) {
+        await press("Tab");
+        await animationFrame();
+    }
+    expect(".o-mail-NotificationItem:has(:text('R&D'))").toBeFocused();
 });
