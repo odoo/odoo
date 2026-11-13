@@ -464,7 +464,7 @@ export class Store extends BaseStore {
             ev.preventDefault();
             this["mail.thread"].getOrFetch({ model, id }).then((thread) => {
                 if (thread) {
-                    thread.open({ focus: true });
+                    thread.open({ focus: true, asSideChannel: true });
                 } else {
                     this.notification.add(_t("This thread is no longer available."), {
                         type: "danger",
@@ -489,7 +489,11 @@ export class Store extends BaseStore {
                         targetThread.highlightMessage = message;
                         let isOpen = targetThread.eq(thread);
                         if (!isOpen) {
-                            isOpen = targetThread.open({ focus: true, swapOpened: false });
+                            isOpen = targetThread.open({
+                                focus: true,
+                                swapOpened: false,
+                                asSideChannel: true,
+                            });
                         }
                         if (!isOpen) {
                             window.open(link.href);

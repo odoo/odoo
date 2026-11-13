@@ -12,7 +12,7 @@ registerMessageAction("create-or-view-thread", {
             const subChannel = await store["discuss.channel"].getOrFetch(
                 message.linkedSubChannel.id
             );
-            subChannel?.open({ focus: true });
+            subChannel?.open({ focus: true, asSideChannel: true });
         } else {
             message.channel_id?.createSubChannel({ initialMessage: message });
         }

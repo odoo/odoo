@@ -22,6 +22,7 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 /**
@@ -1259,4 +1260,37 @@ export function useRightClickMenu(
         }
     });
     return res;
+}
+
+/** The area of the last interaction, @see useEscapeFocus */
+let escapeFocusArea;
+
+/**
+ * Calls `onEscape` on an Escape no element handler stopped, when this area is the last one
+ * interacted with (the innermost one wins), e.g. to focus its composer again after a dropdown.
+ *
+ * @param {() => HTMLElement} rootRef
+ * @param {() => void} [onEscape] none to only claim interactions, e.g. the call
+ */
+export function useEscapeFocus(rootRef, onEscape) {
+    const area = {};
+    // capture, from the outer areas to the inner ones: the composer stops the propagation of focusin
+    const onInteraction = () => (escapeFocusArea = area);
+    useListener(rootRef, "focusin", onInteraction, { capture: true });
+    useListener(rootRef, "pointerdown", onInteraction, { capture: true });
+    // document: after the element handlers, before the window hotkeys that close overlays
+    useListener(
+        () => rootRef()?.ownerDocument,
+        "keydown",
+        (ev) => {
+            if (getActiveHotkey(ev) === "escape" && escapeFocusArea === area) {
+                onEscape?.();
+            }
+        }
+    );
+    onWillUnmount(() => {
+        if (escapeFocusArea === area) {
+            escapeFocusArea = undefined;
+        }
+    });
 }

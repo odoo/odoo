@@ -316,7 +316,7 @@ export class Composer extends Component {
                 return;
             }
             focusedFor = current;
-            if (focus && this.editor?.editable) {
+            if (focus && this.leadsFocus && this.editor?.editable) {
                 this.editor.shared.selection.focusEditable();
             }
         };
@@ -619,6 +619,11 @@ export class Composer extends Component {
     /** Incremented to (re)focus the composer. */
     get focusRequest() {
         return this.props.autofocus + this.props.composer.autofocus;
+    }
+
+    /** Multiple Composer components share the same Composer record, only one should take focus. */
+    get leadsFocus() {
+        return !this.store.rtc.isFullscreen || Boolean(this.ancestors.inMeetingView);
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */

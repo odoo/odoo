@@ -53,7 +53,7 @@ import {
     queryFirst,
     test,
 } from "@odoo/hoot";
-import { animationFrame, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
+import { animationFrame, press, rightClick, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import {
     Command,
     contains,
@@ -2515,6 +2515,82 @@ test("Escape closes meeting UI layers sequentially", async () => {
     triggerHotkey("Escape");
     await waitForNone(".o-mail-Meeting");
     await waitFor(".o-discuss-Call:count(1)");
+});
+
+test.tags("focus required");
+test("Escape in an overlay opened from the meeting chat focuses its composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
+    await waitFor(".o-mail-Meeting:count(1)");
+    await contains("[title='Chat']:count(1)").click();
+    await waitFor(".o-mail-ActionPanel-header:text('In call messages'):count(1)");
+    const moreActions = ".o-mail-Meeting .o-mail-Composer button[title='More Actions']";
+    // the composer of the meeting chat, not the one of Discuss behind, of the same composer record
+    const composerFocused = ".o-mail-Meeting .o-mail-Composer-html:focus";
+    await insertTextInComposer(".o-mail-Meeting .o-mail-Composer", "hey");
+    // "More Actions", with the focus on its toggle
+    await contains(`${moreActions}:count(1)`).click();
+    await waitFor(`${moreActions}:focus`);
+    triggerHotkey("Escape");
+    await waitForNone(".o-dropdown--menu");
+    await waitFor(composerFocused);
+    // "More Actions", with the focus moved into its menu
+    await contains(`${moreActions}:count(1)`).click();
+    triggerHotkey("ArrowDown");
+    await waitFor(".o-dropdown--menu .o-dropdown-item:focus");
+    triggerHotkey("Escape");
+    await waitForNone(".o-dropdown--menu");
+    await waitFor(composerFocused);
+    // emoji picker
+    await contains(".o-mail-Meeting .o-mail-Composer button[title='Add Emojis']:count(1)").click();
+    await waitFor(".o-EmojiPicker input:focus");
+    triggerHotkey("Escape");
+    await waitForNone(".o-EmojiPicker");
+    await waitFor(composerFocused);
+    triggerHotkey("Enter");
+    // right-click menu, leaving the focus on the thread (focused by the browser on pointerdown)
+    await rightClick(await waitFor(".o-mail-Meeting .o-mail-Message:has(:text('hey'))"));
+    queryFirst(".o-mail-Meeting .o-mail-Thread").focus();
+    await waitFor(".o-dropdown--menu");
+    triggerHotkey("Escape");
+    await waitForNone(".o-dropdown--menu");
+    await waitFor(composerFocused);
+    await waitFor(".o-mail-ActionPanel-header:text('In call messages'):count(1)");
+});
+
+test.tags("focus required");
+test("Escape in an overlay opened from the PiP meeting chat focuses its composer", async () => {
+    const { popoutIframe } = mockPipWindow();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    await contains(".o-mail-ActionList-button[name='more-action:call-layout']:count(1)").click();
+    await contains(".o-dropdown-item[name='picture-in-picture']:count(1)").click();
+    // the meeting in the PiP window, a document of its own
+    const target = popoutIframe.contentDocument;
+    await mailContains(".o-mail-Meeting", { target });
+    await click(".o-mail-Meeting button[title='More']", { target });
+    await click(".o-dropdown-item[name='meeting-chat']", { target });
+    await mailContains(".o-mail-ActionPanel-header:text('In call messages')", { target });
+    const moreActions = ".o-mail-Composer button[title='More Actions']";
+    await click(moreActions, { target });
+    await mailContains(".o-dropdown--menu", { target });
+    target.querySelector(moreActions).focus(); // as a real click does
+    target.activeElement.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Escape", bubbles: true })
+    );
+    await mailContains(".o-dropdown--menu", { target, count: 0 });
+    await waitUntil(() => target.activeElement.matches(".o-mail-Composer-html"));
+    await mailContains(".o-mail-ActionPanel-header:text('In call messages')", { target });
 });
 
 test("Access to Pinned Messages from Meeting Chat", async () => {

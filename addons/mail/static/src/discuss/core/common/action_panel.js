@@ -56,7 +56,9 @@ export class ActionPanel extends Component {
             "flex-shrink-0": !this.env.inDialog,
             "o-mail-ActionPanel-chatter": this.ancestors.inChatter,
             "o-chatWindow": this.ancestors.inChatWindow,
-            "px-2": this.ancestors.inDiscussApp || this.ancestors.inChatWindow,
+            "px-2":
+                (this.ancestors.inDiscussApp && !this.ancestors.inChannelPanel) ||
+                this.ancestors.inChatWindow,
             rounded: !this.props.resizable,
         });
     }
