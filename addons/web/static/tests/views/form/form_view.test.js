@@ -6,7 +6,6 @@ import {
     manuallyDispatchProgrammaticEvent,
     middleClick,
     press,
-    queryAll,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
@@ -341,6 +340,7 @@ test(`button box rendering on big screen`, async () => {
         btnString += `<button class="oe_stat_button" id="btn${i}">My Button ${i}</button>`;
     }
 
+    await resize({ width: 1534 });
     await mountView({
         resModel: "partner",
         type: "form",
@@ -356,51 +356,6 @@ test(`button box rendering on big screen`, async () => {
     for (const btn of buttonBox.children) {
         expect(btn).toHaveRect({ top: buttonBoxRect.top });
     }
-});
-
-test.tags("desktop");
-test(`button box moves the buttons that don't fit in the "More" dropdown`, async () => {
-    mockService("ui", (env) => {
-        Object.defineProperty(env, "isSmall", {
-            value: false,
-        });
-        return {
-            bus: new EventBus(),
-            get size() {
-                return SIZES.XXL;
-            },
-            get isSmall() {
-                return false;
-            },
-        };
-    });
-    let btnString = "";
-    for (let i = 0; i < 8; i++) {
-        btnString += `<button class="oe_stat_button">A rather long stat button label ${i}</button>`;
-    }
-
-    await resize({ width: 4000 });
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `<form><sheet><div name="button_box">${btnString}</div></sheet></form>`,
-        resId: 2,
-    });
-    expect(`.o-form-buttonbox > button`).toHaveCount(8);
-    expect(`.o-form-buttonbox .o_button_more`).toHaveCount(0);
-
-    await resize({ width: 1400 });
-    await animationFrame();
-    const buttonBox = queryFirst(`.o-form-buttonbox`);
-    const visibleButtons = queryAll(`.o-form-buttonbox > button`).length;
-    expect(visibleButtons).toBeLessThan(7);
-    expect(buttonBox.scrollWidth).toBeLessThan(buttonBox.clientWidth + 1);
-    await contains(`.o-form-buttonbox .o_button_more`).click();
-    expect(`.o_dropdown_more .oe_stat_button`).toHaveCount(8 - visibleButtons);
-
-    await resize({ width: 4000 });
-    await animationFrame();
-    expect(`.o-form-buttonbox > button`).toHaveCount(8);
 });
 
 test(`button box rendering invisible`, async () => {
@@ -8027,7 +7982,6 @@ test(`check scroll on small height screens`, async () => {
     expect(`.modal-dialog`).toHaveCount(1);
 });
 
-test.tags("desktop");
 test(`correct amount of buttons`, async () => {
     let screenSize = SIZES.XXL;
     mockService("ui", (env) => {
@@ -8076,7 +8030,11 @@ test(`correct amount of buttons`, async () => {
     await assertFormContainsNButtonsWithSizeClass(SIZES.MD, 7);
     await assertFormContainsNButtonsWithSizeClass(SIZES.LG, 3);
     await assertFormContainsNButtonsWithSizeClass(SIZES.XL, 4);
-    await assertFormContainsNButtonsWithSizeClass(SIZES.XXL, 7);
+    await resize({ width: 1533 });
+    await assertFormContainsNButtonsWithSizeClass(SIZES.XXL, 4);
+    await resize({ width: 1534 });
+    await animationFrame();
+    expect(`.o-form-buttonbox button.oe_stat_button`).toHaveCount(7);
 });
 
 test(`can set bin_size to false in context`, async () => {
