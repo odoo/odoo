@@ -8,14 +8,16 @@ class L10nARWebsiteSale(WebsiteSale):
 
     def _get_mandatory_fields_billing(self, country_id=False):
         """Extend mandatory fields to add new identification and responsibility fields when company is argentina"""
+        order = request.website.sale_get_order(force_create=True)
         res = super()._get_mandatory_fields_billing(country_id)
-        if request.website.sudo().company_id.country_id.code == "AR":
+        if order.sudo().company_id.country_id.code == "AR":
             res += ["l10n_latam_identification_type_id", "l10n_ar_afip_responsibility_type_id", "vat"]
         return res
 
     def _get_country_related_render_values(self, kw, render_values):
         res = super()._get_country_related_render_values(kw, render_values)
-        if request.website.sudo().company_id.country_id.code == "AR":
+        order = request.website.sale_get_order(force_create=True)
+        if order.sudo().company_id.country_id.code == "AR":
             res.update({'identification': kw.get('l10n_latam_identification_type_id'),
                         'responsibility': kw.get('l10n_ar_afip_responsibility_type_id'),
                         'responsibility_types': request.env['l10n_ar.afip.responsibility.type'].search([]),
@@ -25,7 +27,8 @@ class L10nARWebsiteSale(WebsiteSale):
 
     def _get_vat_validation_fields(self, data):
         res = super()._get_vat_validation_fields(data)
-        if request.website.sudo().company_id.country_id.code == "AR":
+        order = request.website.sale_get_order(force_create=True)
+        if order.sudo().company_id.country_id.code == "AR":
             res.update({'l10n_latam_identification_type_id': int(data['l10n_latam_identification_type_id'])
                                                              if data.get('l10n_latam_identification_type_id') else False})
             res.update({'name': data['name'] if data.get('name') else False})
@@ -39,7 +42,8 @@ class L10nARWebsiteSale(WebsiteSale):
         error, error_message = super().checkout_form_validate(mode, all_form_values, data)
 
         # Identification type and AFIP Responsibility Combination
-        if request.website.sudo().company_id.country_id.code == "AR":
+        order = request.website.sale_get_order(force_create=True)
+        if order.sudo().company_id.country_id.code == "AR":
             if mode[1] == 'billing':
                 if error and any(field in error for field in ['l10n_latam_identification_type_id', 'l10n_ar_afip_responsibility_type_id']):
                     return error, error_message
