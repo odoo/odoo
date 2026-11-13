@@ -1388,3 +1388,41 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         payment_register_form.currency_id = self.env['res.currency']
 
         self.assertEqual(payment_register.withholding_line_ids.original_base_amount, 1000.0)
+
+    def test_deducted_withholding_split_over_counterpart_lines(self):
+        """One withholding entry with a payable line per bill must deduct each bill's share only."""
+        wth_tax = self.percent_tax(-10, type_tax_use='purchase', is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        payable_account = self.company_data['default_account_payable']
+        bills = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-06-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'Product Line',
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(wth_tax.ids)],
+            })],
+        } for _i in range(2)])
+        bills.action_post()
+        tax_rep_line = wth_tax.invoice_repartition_line_ids.filtered(lambda rep: rep.repartition_type == 'tax')
+        withholding_entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2026-06-01',
+            'line_ids': [
+                Command.create({'account_id': payable_account.id, 'partner_id': self.partner_a.id, 'debit': 100.0}),
+                Command.create({'account_id': payable_account.id, 'partner_id': self.partner_a.id, 'debit': 100.0}),
+                Command.create({
+                    'account_id': self.company_data['default_account_tax_purchase'].id,
+                    'tax_repartition_line_id': tax_rep_line.id,
+                    'credit': 200.0,
+                }),
+            ],
+        })
+        withholding_entry.action_post()
+        entry_payable_lines = withholding_entry.line_ids.filtered(lambda line: line.account_id == payable_account)
+        for bill, entry_line in zip(bills, entry_payable_lines):
+            (bill.line_ids.filtered(lambda line: line.account_id == payable_account) + entry_line).reconcile()
+        self.assertRecordValues(bills, [{
+            'withholding_deducted_amount_currency': 100.0,
+            'withholding_residual_amount_currency': 0.0,
+        }] * 2)

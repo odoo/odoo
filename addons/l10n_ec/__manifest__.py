@@ -43,6 +43,7 @@ Master Data:
         'account_debit_note',
         'l10n_latam_invoice_document',
         'account',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
