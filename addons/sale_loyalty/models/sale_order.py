@@ -80,13 +80,15 @@ class SaleOrder(models.Model):
             order.extra_total_fields = groups
 
     def _compute_gift_card_count(self):
-        gift_card_data = dict(
-            self.env["loyalty.card"]._read_group(
-                domain=[("order_id", "in", self.ids), ("program_type", "=", "gift_card")],
-                groupby=["order_id"],
-                aggregates=["__count"],
+        gift_card_data = {}
+        if self.env["loyalty.card"].has_access("read"):
+            gift_card_data = dict(
+                self.env["loyalty.card"]._read_group(
+                    domain=[("order_id", "in", self.ids), ("program_type", "=", "gift_card")],
+                    groupby=["order_id"],
+                    aggregates=["__count"],
+                )
             )
-        )
         for order in self:
             order.gift_card_count = gift_card_data.get(order, 0)
 
@@ -145,7 +147,7 @@ class SaleOrder(models.Model):
 
         _id, issued, cost = loyalty_history_data[0]
 
-        coupons = self.coupon_point_ids.coupon_id
+        coupons = self.sudo().coupon_point_ids.coupon_id
         point_name = coupons.point_name if len(coupons) == 1 else self.env._("Points")
 
         return {"point_name": point_name, "issued": issued, "cost": cost}
@@ -1798,17 +1800,20 @@ class SaleOrder(models.Model):
             invoice.action_post()
 
             if invoice._is_ready_to_be_sent():
-                send_context = {'allow_raising': False, 'allow_fallback_pdf': True}
+                send_context = {"allow_raising": False, "allow_fallback_pdf": True}
 
                 default_template_param = (
-                    self.env['ir.config_parameter']
+                    self
+                    .env["ir.config_parameter"]
                     .sudo()
-                    .get_int('sale.default_invoice_email_template')
+                    .get_int("sale.default_invoice_email_template")
                 )
 
                 if default_template_param:
-                    mail_template = self.env['mail.template'].sudo().browse(default_template_param)
+                    mail_template = self.env["mail.template"].sudo().browse(default_template_param)
                     if mail_template.exists():
-                        send_context['mail_template'] = mail_template
+                        send_context["mail_template"] = mail_template
 
-                self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, **send_context)
+                self.env["account.move.send"]._generate_and_send_invoices_post_commit(
+                    invoice, **send_context
+                )

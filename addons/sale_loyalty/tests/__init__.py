@@ -12,5 +12,6 @@ from . import (
     test_program_without_code_operations,
     test_sale_auto_invoice,
     test_sale_invoicing,
+    test_sale_order_access,
     test_unlink_reward,
 )
