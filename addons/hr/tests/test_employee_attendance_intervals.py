@@ -6,7 +6,7 @@ from odoo.tests.common import TransactionCase
 
 class TestEmployeeAttendanceIntervals(TransactionCase):
     """Tests for hr.employee._attendance_intervals (inherited from resource.mixin), whose behavior
-    is driven by hr.employee's override of _get_calendar_periods (calendar per hr.version)."""
+    is driven by resource.resource's override of _get_calendar_tz_periods (calendar per hr.version)."""
 
     @classmethod
     def setUpClass(cls):
@@ -90,17 +90,49 @@ class TestEmployeeAttendanceIntervals(TransactionCase):
         self.assertEqual(result, [(datetime(2026, 1, 5, 9, 0, tzinfo=UTC), datetime(2026, 1, 5, 17, 0, tzinfo=UTC))],
             "Only the recurring dated attendance occurring within the period should be returned")
 
-    def test_employee_without_contract_has_no_attendance(self):
-        """An employee whose version has no contract_date_start should not have any attendance
-        interval, as _get_calendar_periods only considers versions with contract overlap."""
+    def test_employee_without_contract_uses_current_calendar(self):
+        """An employee who never had a contract works according to their current calendar."""
         employee = self.env['hr.employee'].create({
             'name': 'No contract employee',
             'tz': 'UTC',
             'date_version': date(2026, 1, 1),
+            'resource_calendar_id': self.part_time_calendar.id,
+        })
+        result = self._times(employee, self.monday, self.sunday)
+        self.assertEqual(result, [
+            (datetime(2026, 1, day, 9, 0, tzinfo=UTC), datetime(2026, 1, day, 12, 0, tzinfo=UTC))
+            for day in (5, 7, 9)
+        ], "The current calendar should be used without any contract")
+
+    def test_employee_out_of_contract_has_no_attendance(self):
+        """An employee with contracts has no attendance outside of them, before the first one
+        included: the current calendar is only a fallback for employees who never had one."""
+        employee = self.env['hr.employee'].create({
+            'name': 'Future contract employee',
+            'tz': 'UTC',
+            'date_version': date(2026, 2, 1),
+            'contract_date_start': date(2026, 2, 1),
             'resource_calendar_id': self.full_time_calendar.id,
         })
         result = self._times(employee, self.monday, self.sunday)
-        self.assertEqual(result, [], "No attendance should be returned without a contract")
+        self.assertEqual(result, [], "No attendance should be returned before the first contract")
+
+    def test_first_version_applies_from_contract_start(self):
+        """The first version of a contract is in effect from the contract start, even when it is
+        dated later, and the last one until the contract end, even when it is open-ended."""
+        employee = self.env['hr.employee'].create({
+            'name': 'Late version employee',
+            'tz': 'UTC',
+            'date_version': date(2026, 1, 7),  # Wednesday
+            'contract_date_start': date(2026, 1, 5),  # Monday
+            'contract_date_end': date(2026, 1, 8),  # Thursday
+            'resource_calendar_id': self.part_time_calendar.id,
+        })
+        result = self._times(employee, self.monday, self.sunday)
+        self.assertEqual(result, [
+            (datetime(2026, 1, day, 9, 0, tzinfo=UTC), datetime(2026, 1, day, 12, 0, tzinfo=UTC))
+            for day in (5, 7)
+        ], "The version should apply from the contract start (Monday) to the contract end (Thursday)")
 
     def test_timezone_only_localizes_without_shifting_hours(self):
         """The calendar's naive hours represent wall-clock time in the employee's own timezone:

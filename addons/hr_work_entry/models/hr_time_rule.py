@@ -512,8 +512,8 @@ class HrTimeRule(models.Model):
                     )
 
         if leave_requests:
-            leave_employees = self.env['hr.employee'].union(*(
-                emp for items in leave_requests.values() for emp, _rid, _tz, _cal, _period in items))
+            leave_employees = self.env['hr.employee'].union(
+                emp for items in leave_requests.values() for emp, _rid, _tz, _cal, _period in items)
             leave_dt_start = min(p_dt_start for _cal_id, p_dt_start, _p_dt_end in leave_requests)
             leave_dt_end = max(p_dt_end for _cal_id, _p_dt_start, p_dt_end in leave_requests)
             leave_intervals = leave_employees._leave_intervals(

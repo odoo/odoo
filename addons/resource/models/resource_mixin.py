@@ -275,12 +275,12 @@ class ResourceMixin(models.AbstractModel):
         intervals = self.resource_id._leave_intervals(dt_from, dt_to, domain)
         return {record: intervals.get(record.resource_id, Intervals()) for record in self}
 
-    def _work_intervals(self, dt_from, dt_to, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+    def _work_intervals(self, dt_from, dt_to, domain=None, att_domain=None, availability=False, compute_leaves=True):
         """ Return the work intervals of each record, see ``resource.resource._work_intervals``.
 
         :return: ``{record: Intervals}`` for every record of ``self``
         :rtype: dict
         """
         intervals = self.resource_id._work_intervals(
-            dt_from, dt_to, domain, attendance_domain, availability, compute_leaves)
+            dt_from, dt_to, domain, att_domain, availability, compute_leaves)
         return {record: intervals.get(record.resource_id, Intervals()) for record in self}

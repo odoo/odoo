@@ -723,14 +723,14 @@ class ResourceResource(models.Model):
             result[resource] = Intervals(items)
         return result
 
-    def _work_intervals(self, dt_from, dt_to, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+    def _work_intervals(self, dt_from, dt_to, domain=None, att_domain=None, availability=False, compute_leaves=True):
         """ Return the work intervals of each resource: attendances minus leaves.
         Replaces ``resource.calendar._work_intervals_batch``.
 
         :param datetime dt_from: timezone-aware start of the period
         :param datetime dt_to: timezone-aware end of the period
         :param list domain: leave domain, see :meth:`_leave_intervals`
-        :param attendance_domain: attendance domain, see :meth:`_attendance_intervals`
+        :param att_domain: attendance domain, see :meth:`_attendance_intervals`
         :param bool availability: see :meth:`_attendance_intervals`
         :param bool compute_leaves: when ``False``, leaves are not deducted
         :return: ``{resource: Intervals}`` for every resource of ``self``
@@ -739,13 +739,13 @@ class ResourceResource(models.Model):
         assert dt_from.tzinfo and dt_to.tzinfo, "Timezone-aware datetimes are expected"
         windows = self._get_period_windows(dt_from, dt_to)
         return self._work_intervals_from_windows(
-            dt_from, dt_to, windows, domain, attendance_domain, availability, compute_leaves)
+            dt_from, dt_to, windows, domain, att_domain, availability, compute_leaves)
 
-    def _work_intervals_from_windows(self, dt_from, dt_to, windows, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+    def _work_intervals_from_windows(self, dt_from, dt_to, windows, domain=None, att_domain=None, availability=False, compute_leaves=True):
         """ Compute :meth:`_work_intervals` from the windows of :meth:`_get_period_windows`.
         Override this method (not :meth:`_work_intervals`) to remove other time from the work
         intervals, using ``_attendance_intervals_from_windows`` with the same ``windows``. """
-        attendances = self._attendance_intervals_from_windows(dt_from, dt_to, windows, attendance_domain, availability)
+        attendances = self._attendance_intervals_from_windows(dt_from, dt_to, windows, att_domain, availability)
         if not compute_leaves:
             return attendances
         leaves = self._leave_intervals_from_windows(dt_from, dt_to, windows, domain)

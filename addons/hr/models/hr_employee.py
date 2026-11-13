@@ -1340,10 +1340,10 @@ class HrEmployee(models.Model):
         """Return the ids of the employees of ``self`` expected to work now.
 
         An employee is "working now" when the working schedule of their version
-        in contract has work intervals within the next hour. Only company-wide
-        leaves are considered, not the employee's own time off. Employees without
-        calendar or contract are never returned. Despite ``@api.model``, it works
-        on ``self``.
+        in contract (their current one if they never had a contract) has work
+        intervals within the next hour. Only company-wide leaves are considered,
+        not the employee's own time off. Employees without calendar are never
+        returned. Despite ``@api.model``, it works on ``self``.
 
         :rtype: list[int]
         """
@@ -2915,7 +2915,9 @@ class HrEmployee(models.Model):
         full_interval = Intervals([(start_dt, stop_dt, self.env['resource.calendar.attendance'])])
         # a day more on each side: the intervals are moved to the user timezone below
         dt_from, dt_to = start_dt - relativedelta(days=1), stop_dt + relativedelta(days=1)
-        resources = self.resource_id
+        # sudo: the employees are listed to users without access to them (e.g. through
+        # hr.employee.public in the gantt views), whatever the active companies
+        resources = self.sudo().resource_id
         windows = resources._get_period_windows(dt_from, dt_to)
         work_intervals = resources._work_intervals_from_windows(dt_from, dt_to, windows)
         presence_intervals = resources._attendance_intervals_from_windows(dt_from, dt_to, windows, availability=True)
@@ -3063,13 +3065,10 @@ class HrEmployee(models.Model):
         if not valid_versions:
             calendar = self.resource_calendar_id
             resources_per_tz = self._get_resources_per_tz(date_from)
-            calendar_intervals = calendar._work_intervals_batch(
+            return self._work_intervals(
                 date_from,
                 date_to,
-                resources_per_tz=resources_per_tz,
-                compute_leaves=True,
-                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
-            return calendar_intervals
+                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self]
         # The first version in contract applies from the contract start, even when it is dated later:
         # the resource-side _work_intervals follow the version dates, so they cannot be used here.
         employee_tz = ZoneInfo(self.tz) if self.tz else None
@@ -3162,6 +3161,27 @@ class HrEmployee(models.Model):
         :return: versions ordered by ``date_version``
         :rtype: hr.version
         """
+        versions = self.env['hr.version'].union(*(
+            version
+            for periods in self._get_contract_version_periods(date_from, date_to).values()
+            for _start, _stop, version in periods
+        ))
+        return versions.sorted('date_version')
+
+    def _get_contract_version_periods(self, date_from, date_to):
+        """Return the days of ``[date_from, date_to]`` on which each version in contract is in effect.
+
+        Within a contract, a version is effective from its ``date_version``
+        (the first version from the contract start) until the day before the
+        next version of the same contract (the last one until the contract
+        end). Days out of any contract are absent. Works in batch.
+
+        :param datetime.date date_from: start of the period (inclusive)
+        :param datetime.date date_to: end of the period (inclusive)
+        :return: ``{employee: [(date_from, date_to, version), ...]}`` with inclusive dates,
+            ordered by date (``defaultdict(list)``)
+        :rtype: dict
+        """
         candidate_versions = self.version_ids.filtered_domain([
             ('active', '=', True),
             ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
@@ -3169,10 +3189,10 @@ class HrEmployee(models.Model):
         ])
         versions_per_contract = defaultdict(lambda: self.env['hr.version'])
         for version in candidate_versions:
-            key = (version.employee_id.id, version.contract_date_start, version.contract_date_end)
+            key = (version.employee_id, version.contract_date_start, version.contract_date_end)
             versions_per_contract[key] += version
 
-        result = self.env['hr.version']
+        result = defaultdict(list)
         for (employee, contract_start, contract_end), versions in versions_per_contract.items():
             versions = versions.sorted('date_version')
             for index, version in enumerate(versions):
@@ -3182,9 +3202,12 @@ class HrEmployee(models.Model):
                     eff_end = versions[index + 1].date_version - relativedelta(days=1)
                 else:
                     eff_end = contract_end or date.max
-                if eff_start <= date_to and eff_end >= date_from:
-                    result += version
-        return result.sorted('date_version')
+                start, stop = max(eff_start, date_from), min(eff_end, date_to)
+                if start <= stop:
+                    result[employee].append((start, stop, version))
+        for periods in result.values():
+            periods.sort(key=lambda period: period[0])
+        return result
 
     # ---------------------------------------------------------
     # Messaging

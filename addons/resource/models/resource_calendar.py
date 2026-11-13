@@ -1249,8 +1249,9 @@ class ResourceCalendar(models.Model):
                         if hour_start == hour_stop:
                             break
                     else:
+                        # the whole day, up to the next midnight so that consecutive days are contiguous
                         start = datetime.combine(att_date, time.min)
-                        stop = datetime.combine(att_date, time.max)
+                        stop = datetime.combine(att_date + timedelta(days=1), time.min)
                         interval_tuple_list.append((start, stop, att))
                         # When checking availabilities, the information regarding the attendance record don't really
                         # matter, so we can skip other attendances of the day.
