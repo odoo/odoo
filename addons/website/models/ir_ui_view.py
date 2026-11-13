@@ -382,6 +382,27 @@ class IrUiView(models.Model):
                     modules=tuple(modules),
         )
 
+    def _get_loaded_xmlid_view_ids(self):
+        """ Return the ids of the views in ``self`` that the current registry
+        load has already loaded from data files.
+
+        This method is meant to be overridden by other modules.
+        """
+        loaded_view_ids = super()._get_loaded_xmlid_view_ids()
+        if not self.env.context.get('website_id'):
+            return loaded_view_ids
+        # A website-specific view has no XML ID: it counts once the generic
+        # view with the same key is loaded (see `_get_filter_xmlid_query()`).
+        specific_views = self.filtered(lambda view: view.website_id and view.id not in loaded_view_ids)
+        if specific_views:
+            generic_views = self.with_context(active_test=False).search([
+                ('key', 'in', specific_views.mapped('key')),
+                ('website_id', '=', False),
+            ])
+            loaded_keys = set(generic_views._get_loaded_xmlid_view_ids())
+            loaded_view_ids.update(specific_views.filtered(lambda view: view.key in loaded_keys).ids)
+        return loaded_view_ids
+
     @api.model
     def _get_cached_template_prefetched_keys(self):
         return super()._get_cached_template_prefetched_keys() + ['active', 'visibility', 'track']
