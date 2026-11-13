@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="spreadsheet_dashboard_project_margin" model="spreadsheet.dashboard">
+        <field name="name">Project Profitability</field>
+        <field name="spreadsheet_binary_data" type="bytes" file="addons/sale_project_margin/data/files/sale_project_margin_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_project"/>
+        <field name="sample_dashboard_file_path">sale_project_margin/data/files/sale_project_margin_dashboard.json</field>
+        <field name="sequence">150</field>
+        <field name="is_published">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,1612 @@
+{
+  "version": "19.5.1",
+  "sheets": [
+    {
+      "id": "0c9499ff-64b2",
+      "name": "Dashboard",
+      "colNumber": 6,
+      "rowNumber": 160,
+      "rows": {
+        "7": {
+          "size": 30
+        }
+      },
+      "cols": {
+        "0": {
+          "size": 187
+        },
+        "1": {
+          "size": 187
+        },
+        "2": {
+          "size": 187
+        },
+        "3": {
+          "size": 187
+        },
+        "4": {
+          "size": 187
+        },
+        "5": {
+          "size": 187
+        }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "00000001-0002",
+          "col": 0,
+          "row": 0,
+          "offset": {
+            "x": 0,
+            "y": 2
+          },
+          "width": 272,
+          "height": 118,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "keyValue": "='Cost & Revenue'!F11",
+            "title": {
+              "text": "Forecast Revenues",
+              "color": "#01666B",
+              "bold": true
+            },
+            "baselineMode": "text",
+            "baselineColorUp": "#43C5B1",
+            "baselineColorDown": "#EA6175",
+            "baseline": "=CONCATENATE('Cost & Revenue'!F13,\" invoiced\")",
+            "humanize": false,
+            "chartId": "bbbb1111-00002"
+          }
+        },
+        {
+          "id": "00000001-0003",
+          "col": 0,
+          "row": 0,
+          "offset": {
+            "x": 282,
+            "y": 2
+          },
+          "width": 272,
+          "height": 118,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "keyValue": "='Cost & Revenue'!C11",
+            "title": {
+              "text": "Forecast Costs",
+              "color": "#01666B",
+              "bold": true
+            },
+            "baselineMode": "text",
+            "baselineColorUp": "#43C5B1",
+            "baselineColorDown": "#EA6175",
+            "baseline": "=CONCATENATE('Cost & Revenue'!C12,\" vs. budget\")",
+            "humanize": false,
+            "chartId": "bbbb1111-00003"
+          }
+        },
+        {
+          "id": "00000001-0004",
+          "col": 0,
+          "row": 0,
+          "offset": {
+            "x": 564,
+            "y": 2
+          },
+          "width": 272,
+          "height": 118,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "keyValue": "='Cost & Revenue'!C5",
+            "title": {
+              "text": "Forecast Margin %",
+              "color": "#01666B",
+              "bold": true
+            },
+            "baselineMode": "text",
+            "baselineColorUp": "#43C5B1",
+            "baselineColorDown": "#EA6175",
+            "baseline": "=CONCATENATE(\"+\",ROUND(('Cost & Revenue'!C5-'Cost & Revenue'!C6)*100,1),\"% vs. actual\")",
+            "humanize": false,
+            "chartId": "bbbb1111-00004"
+          }
+        },
+        {
+          "id": "00000001-0005",
+          "col": 0,
+          "row": 0,
+          "offset": {
+            "x": 846,
+            "y": 2
+          },
+          "width": 272,
+          "height": 118,
+          "tag": "chart",
+          "data": {
+            "type": "scorecard",
+            "keyValue": "='Cost & Revenue'!C6",
+            "title": {
+              "text": "Actual Margin %",
+              "color": "#01666B",
+              "bold": true
+            },
+            "baselineMode": "text",
+            "baselineColorUp": "#43C5B1",
+            "baselineColorDown": "#EA6175",
+            "baseline": "",
+            "humanize": false,
+            "chartId": "bbbb1111-00005"
+          }
+        },
+        {
+          "id": "5e28d62b-4e77",
+          "col": 0,
+          "row": 6,
+          "offset": {
+            "x": 0,
+            "y": 1.79998779296875
+          },
+          "width": 552,
+          "height": 410,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "7a5aef90-aefb": {
+                "dataSetStyles": {},
+                "dataSource": {
+                  "labelRange": "'Cost & Revenue'!J11:J",
+                  "type": "range",
+                  "dataSets": [
+                    {
+                      "dataSetId": "0",
+                      "dataRange": "'Cost & Revenue'!H11:H"
+                    },
+                    {
+                      "dataSetId": "1",
+                      "dataRange": "'Cost & Revenue'!I11:I"
+                    }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "legendPosition": "none",
+                "title": {},
+                "type": "sunburst",
+                "showValues": false,
+                "valuesDesign": {
+                  "fontSize": 9
+                },
+                "groupColors": [
+                  "#EA6175",
+                  "#875A7B"
+                ],
+                "humanize": true,
+                "pieHolePercentage": 5,
+                "annotationText": ""
+              }
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "918fd8b1-b6b0",
+                  "_zone": {
+                    "top": 8,
+                    "left": 1,
+                    "right": 2,
+                    "hasHeader": true
+                  }
+                }
+              },
+              {
+                "type": "chart",
+                "chartId": "7a5aef90-aefb"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "e0d9a9d7-bcdd",
+          "col": 3,
+          "row": 6,
+          "offset": {
+            "x": 6,
+            "y": 1.79998779296875
+          },
+          "width": 551,
+          "height": 410,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "96e8be35-bb0d": {
+                "dataSetStyles": {},
+                "dataSource": {
+                  "labelRange": "'Cost & Revenue'!N11:N100",
+                  "type": "range",
+                  "dataSets": [
+                    {
+                      "dataSetId": "0",
+                      "dataRange": "'Cost & Revenue'!L11:L"
+                    },
+                    {
+                      "dataSetId": "1",
+                      "dataRange": "'Cost & Revenue'!M11:M"
+                    }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "legendPosition": "none",
+                "title": {},
+                "type": "sunburst",
+                "valuesDesign": {
+                  "fontSize": 10
+                },
+                "groupColors": [
+                  "#D9EAD3",
+                  "#43C5B1"
+                ],
+                "humanize": true,
+                "pieHolePercentage": 5
+              }
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "918fd8b1-b6b0",
+                  "_zone": {
+                    "top": 8,
+                    "left": 4,
+                    "right": 5,
+                    "hasHeader": true
+                  }
+                }
+              },
+              {
+                "type": "chart",
+                "chartId": "96e8be35-bb0d"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "e1f2a3b4-1001",
+          "col": 0,
+          "row": 24,
+          "offset": {
+            "x": 0,
+            "y": 5
+          },
+          "width": 1118,
+          "height": 381,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "fontSize": 18,
+              "text": "Service Products",
+              "color": "#01666B",
+              "bold": true
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "d1a2b3c4-1001",
+                  "_zone": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 7
+                  }
+                },
+                "columnWeights": [
+                  300,
+                  110,
+                  110,
+                  110,
+                  110,
+                  110,
+                  110,
+                  110
+                ]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "e1f2a3b4-1002",
+          "col": 0,
+          "row": 42,
+          "offset": {
+            "x": 0,
+            "y": 5
+          },
+          "width": 1118,
+          "height": 381,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "fontSize": 18,
+              "text": "Material Products",
+              "color": "#01666B",
+              "bold": true
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "d1a2b3c4-1002",
+                  "_zone": {
+                    "top": 0,
+                    "left": 0,
+                    "right": 7
+                  }
+                },
+                "columnWeights": [
+                  300,
+                  110,
+                  110,
+                  110,
+                  110,
+                  110,
+                  110,
+                  110
+                ]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "918fd8b1-b6b0",
+      "name": "Cost & Revenue",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {
+        "0": {
+          "size": 210
+        },
+        "1": {
+          "size": 210
+        },
+        "4": {
+          "size": 242
+        }
+      },
+      "merges": [],
+      "cells": {
+        "B9": "Costs",
+        "B11": "Future costs",
+        "B12": "Draft",
+        "B13": "Confirmed",
+        "B15": "Confirmed costs",
+        "B16": "=PIVOT(2)",
+        "C9": "='Cost & Revenue'!C15+'Cost & Revenue'!C11",
+        "C11": "='Cost & Revenue'!C12",
+        "C12": "=IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"draft\"),0)+IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"sent\"),0)",
+        "C13": "=IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"to approve\"),0)+IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"purchase\"),0)",
+        "C15": "=PIVOT.VALUE(2,\"amount:sum\")",
+        "E3": "Date",
+        "E9": "Revenues",
+        "E11": "Future revenues",
+        "E12": "Draft",
+        "E13": "Confirmed",
+        "E16": "Confirmed revenues",
+        "E17": "=PIVOT(4)",
+        "F3": "=ODOO.FILTER.VALUE(\"Date\")",
+        "F9": "='Cost & Revenue'!F16+'Cost & Revenue'!F11",
+        "F11": "=PIVOT.VALUE(3,\"Total:sum\")",
+        "F12": "=IFERROR(PIVOT.VALUE(3,\"Total:sum\",\"state\",\"draft\"),0)+IFERROR(PIVOT.VALUE(3,\"Total:sum\",\"state\",\"sent\"),0)",
+        "F13": "=IFERROR(PIVOT.VALUE(3,\"Total:sum\",\"state\",\"sale\"),0)",
+        "F16": "=PIVOT.VALUE(4,\"amount:sum\")",
+        "H11": "Future",
+        "H13": "Actuals",
+        "I11": "=B12",
+        "I12": {
+          "R": "+R1"
+        },
+        "I13": "=PIVOT(2)",
+        "J11": "=IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"draft\"),0)+IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"sent\"),0)",
+        "J12": "=IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"to approve\"),0)+IFERROR(PIVOT.VALUE(1,\"Total:sum\",\"state\",\"purchase\"),0)",
+        "L11": "Future",
+        "L14": "Actuals",
+        "M11": "Draft",
+        "M12": "Confirmed",
+        "M14": "=PIVOT(4)",
+        "N11": "=IFERROR(PIVOT.VALUE(3,\"Total:sum\",\"state\",\"draft\"),0)+IFERROR(PIVOT.VALUE(3,\"Total:sum\",\"state\",\"sent\"),0)",
+        "N12": "=IFERROR(PIVOT.VALUE(3,\"Total:sum\",\"state\",\"sale\"),0)",
+        "B5": "Forecast Margin %",
+        "C5": "=IFERROR(('Cost & Revenue'!F11+'Cost & Revenue'!C11)/'Cost & Revenue'!F11,0)",
+        "B6": "Actual Margin %",
+        "C6": "=IFERROR(('Cost & Revenue'!F9+'Cost & Revenue'!C9)/'Cost & Revenue'!F9,0)"
+      },
+      "styles": {
+        "B9:C9": 4,
+        "E9:F9": 4,
+        "B11:C11": 5,
+        "B15:C15": 5,
+        "E11:F11": 5,
+        "E16:F16": 5,
+        "J7:K7": 5,
+        "J9:K10": 5
+      },
+      "formats": {
+        "F9": 1,
+        "F16": 1,
+        "C5:C6": 4,
+        "C11:C13": 1,
+        "F11:F13": 1,
+        "J11:J12": 1,
+        "N11:N12": 1
+      },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "margin-below-20",
+          "ranges": [
+            "C5:C6"
+          ],
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "customFormula",
+            "values": [
+              "=$C$5-$C$6>0.2"
+            ],
+            "style": {
+              "textColor": "#D50000",
+              "bold": true
+            }
+          }
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "d1a2b3c4-1001",
+      "name": "Service Products",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {
+        "0": {
+          "size": 228
+        },
+        "1": {
+          "size": 110
+        },
+        "2": {
+          "size": 110
+        },
+        "3": {
+          "size": 110
+        },
+        "4": {
+          "size": 110
+        },
+        "5": {
+          "size": 110
+        },
+        "6": {
+          "size": 110
+        },
+        "7": {
+          "size": 110
+        }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=PIVOT(10)"
+      },
+      "styles": {
+        "B1:H1": 10
+      },
+      "formats": {
+        "B2:F100": 1,
+        "G2:H100": 4
+      },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "d1a2b3c4-1002",
+      "name": "Material Products",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {
+        "0": {
+          "size": 228
+        },
+        "1": {
+          "size": 110
+        },
+        "2": {
+          "size": 110
+        },
+        "3": {
+          "size": 110
+        },
+        "4": {
+          "size": 110
+        },
+        "5": {
+          "size": 110
+        },
+        "6": {
+          "size": 110
+        },
+        "7": {
+          "size": 110
+        }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=PIVOT(11)"
+      },
+      "styles": {
+        "B1:H1": 10
+      },
+      "formats": {
+        "B2:F100": 1,
+        "G2:H100": 4
+      },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": {},
+    "2": {
+      "verticalAlign": "middle"
+    },
+    "3": {
+      "wrapping": "wrap"
+    },
+    "4": {
+      "bold": true,
+      "fontSize": 12,
+      "textColor": "#01666B"
+    },
+    "6": {
+      "textColor": "#01666B",
+      "bold": true
+    },
+    "7": {
+      "bold": true,
+      "textColor": "#01666B",
+      "align": "right"
+    },
+    "8": {
+      "textColor": "#01666B",
+      "bold": true,
+      "wrapping": "wrap",
+      "align": "center"
+    },
+    "9": {
+      "wrapping": "overflow",
+      "bold": true,
+      "fontSize": 12,
+      "textColor": "#01666B",
+      "align": "center",
+      "verticalAlign": "middle"
+    },
+    "10": {
+      "textColor": "#01666B",
+      "bold": true,
+      "align": "center"
+    },
+    "11": {
+      "bold": true,
+      "fontSize": 12,
+      "textColor": "#01666B",
+      "align": "center",
+      "verticalAlign": "middle"
+    }
+  },
+  "formats": {
+    "1": "[$$]#,##0.00",
+    "2": "#,##0.00",
+    "3": "@* ",
+    "4": "0.00%"
+  },
+  "borders": {},
+  "revisionId": "76583dcb-d7c5-4e93-a434-16473eccac76",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss a",
+      "formulaArgSeparator": ",",
+      "weekStart": 7,
+      "digitGrouping": "[3,0]"
+    }
+  },
+  "pivots": {
+    "d67d0106-243f": {
+      "type": "ODOO",
+      "name": "Purchase Order Line",
+      "model": "purchase.order.line",
+      "rows": [
+        {
+          "fieldName": "state",
+          "order": "asc"
+        },
+        {
+          "fieldName": "id",
+          "order": "asc"
+        }
+      ],
+      "columns": [],
+      "measures": [
+        {
+          "id": "qty_to_invoice_raw:sum",
+          "fieldName": "qty_to_invoice_raw",
+          "aggregator": "sum"
+        },
+        {
+          "id": "price_unit",
+          "fieldName": "price_unit"
+        },
+        {
+          "id": "Total:sum",
+          "fieldName": "Total",
+          "aggregator": "sum",
+          "userDefinedName": "Total",
+          "computedBy": {
+            "sheetId": "0c9499ff-64b2",
+            "formula": "=-'price_unit'*'qty_to_invoice_raw:sum'"
+          }
+        },
+        {
+          "id": "price_subtotal:sum",
+          "fieldName": "price_subtotal",
+          "aggregator": "sum"
+        },
+        {
+          "id": "product_qty:sum",
+          "fieldName": "product_qty",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "qty_received:sum",
+          "fieldName": "qty_received",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "qty_invoiced:sum",
+          "fieldName": "qty_invoiced",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "Received:sum",
+          "fieldName": "Received",
+          "aggregator": "sum",
+          "userDefinedName": "Received",
+          "computedBy": {
+            "sheetId": "918fd8b1-b6b0",
+            "formula": "=IFERROR('price_subtotal:sum'/'product_qty:sum'*'qty_received:sum',0)"
+          }
+        },
+        {
+          "id": "Billed:sum",
+          "fieldName": "Billed",
+          "aggregator": "sum",
+          "userDefinedName": "Billed",
+          "computedBy": {
+            "sheetId": "918fd8b1-b6b0",
+            "formula": "=IFERROR('price_subtotal:sum'/'product_qty:sum'*'qty_invoiced:sum',0)"
+          }
+        }
+      ],
+      "style": {},
+      "filters": [],
+      "domain": [
+        [
+          "state",
+          "!=",
+          "cancel"
+        ]
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      },
+      "formulaId": "1",
+      "fieldMatching": {
+        "6abb700d-f183": {
+          "chain": "distribution_analytic_account_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "order_id.date_approve",
+          "type": "datetime",
+          "offset": 0
+        },
+        "8edb54c1-842f": {
+          "chain": "order_id.project_id.partner_id",
+          "type": "many2one"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "order_id.project_id.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "order_id.project_id.tag_ids",
+          "type": "many2many"
+        },
+        "3d2b2ecb-f255": {
+          "chain": "order_id.project_id.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "order_id.project_id.allow_billable",
+          "type": "boolean"
+        }
+      }
+    },
+    "165588d4-c3df": {
+      "type": "ODOO",
+      "name": "Analytic Line",
+      "model": "account.analytic.line",
+      "rows": [
+        {
+          "fieldName": "billable_type",
+          "order": "asc"
+        }
+      ],
+      "columns": [],
+      "measures": [
+        {
+          "id": "amount:sum",
+          "fieldName": "amount",
+          "aggregator": "sum"
+        }
+      ],
+      "style": {
+        "tableStyleId": "None",
+        "displayTotals": false,
+        "displayColumnHeaders": false,
+        "displayMeasuresRow": false,
+        "tabularForm": false
+      },
+      "filters": [],
+      "formulaId": "2",
+      "domain": [
+        [
+          "category_report",
+          "=",
+          "costs"
+        ]
+      ],
+      "fieldMatching": {
+        "6abb700d-f183": {
+          "chain": "account_id",
+          "type": "many2one"
+        },
+        "8edb54c1-842f": {
+          "chain": "account_id.project_ids.partner_id",
+          "type": "many2one"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "account_id.project_ids.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "account_id.project_ids.tag_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        },
+        "3d2b2ecb-f255": {
+          "chain": "account_id.project_ids.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "account_id.project_ids.allow_billable",
+          "type": "boolean"
+        }
+      },
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
+    },
+    "073e0e60-914c": {
+      "type": "ODOO",
+      "name": "Sales Order Line",
+      "model": "sale.order.line",
+      "rows": [
+        {
+          "fieldName": "state",
+          "order": "asc"
+        }
+      ],
+      "columns": [],
+      "measures": [
+        {
+          "id": "price_subtotal:sum",
+          "fieldName": "price_subtotal",
+          "aggregator": "sum",
+          "isHidden": false
+        },
+        {
+          "id": "untaxed_amount_invoiced:sum",
+          "fieldName": "untaxed_amount_invoiced",
+          "aggregator": "sum",
+          "isHidden": false
+        },
+        {
+          "id": "Total:sum",
+          "fieldName": "Total",
+          "aggregator": "sum",
+          "userDefinedName": "Total",
+          "computedBy": {
+            "sheetId": "918fd8b1-b6b0",
+            "formula": "=max(0,'price_subtotal:sum'-'untaxed_amount_invoiced:sum')"
+          }
+        }
+      ],
+      "style": {
+        "tableStyleId": "None"
+      },
+      "filters": [],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      },
+      "domain": [
+        [
+          "state",
+          "not in",
+          [
+            "cancel"
+          ]
+        ]
+      ],
+      "formulaId": "3",
+      "fieldMatching": {
+        "8edb54c1-842f": {
+          "chain": "order_partner_id",
+          "type": "many2one"
+        },
+        "6abb700d-f183": {
+          "chain": "distribution_analytic_account_ids",
+          "type": "many2many"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "distribution_analytic_account_ids.project_ids.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "distribution_analytic_account_ids.project_ids.tag_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "order_id.date_order",
+          "type": "datetime",
+          "offset": 0
+        },
+        "3d2b2ecb-f255": {
+          "chain": "order_id.project_id.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "order_id.project_id.allow_billable",
+          "type": "boolean"
+        }
+      }
+    },
+    "8beba63f-a1ac": {
+      "type": "ODOO",
+      "name": "Analytic Line (copy)",
+      "model": "account.analytic.line",
+      "rows": [
+        {
+          "fieldName": "billable_type",
+          "order": "asc"
+        }
+      ],
+      "columns": [],
+      "measures": [
+        {
+          "id": "amount:sum",
+          "fieldName": "amount",
+          "aggregator": "sum"
+        }
+      ],
+      "style": {
+        "tableStyleId": "None",
+        "displayTotals": false,
+        "displayColumnHeaders": false,
+        "displayMeasuresRow": false
+      },
+      "filters": [],
+      "formulaId": "4",
+      "domain": [
+        [
+          "category_report",
+          "=",
+          "revenues"
+        ]
+      ],
+      "fieldMatching": {
+        "6abb700d-f183": {
+          "chain": "account_id",
+          "type": "many2one"
+        },
+        "8edb54c1-842f": {
+          "chain": "account_id.project_ids.partner_id",
+          "type": "many2one"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "account_id.project_ids.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "account_id.project_ids.tag_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "date",
+          "type": "date",
+          "offset": 0
+        },
+        "3d2b2ecb-f255": {
+          "chain": "account_id.project_ids.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "account_id.project_ids.allow_billable",
+          "type": "boolean"
+        }
+      },
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
+    },
+    "5b6c7d8e-1001": {
+      "type": "ODOO",
+      "name": "Service Products",
+      "model": "sale.order.line",
+      "rows": [
+        {
+          "fieldName": "product_id",
+          "order": "asc"
+        }
+      ],
+      "columns": [],
+      "measures": [
+        {
+          "id": "price_subtotal:sum",
+          "fieldName": "price_subtotal",
+          "aggregator": "sum",
+          "userDefinedName": "Sold"
+        },
+        {
+          "id": "qty_delivered:sum",
+          "fieldName": "qty_delivered",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "qty_invoiced:sum",
+          "fieldName": "qty_invoiced",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "product_uom_qty:sum",
+          "fieldName": "product_uom_qty",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "Delivered:sum",
+          "fieldName": "Delivered",
+          "aggregator": "sum",
+          "userDefinedName": "Delivered",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1001",
+            "formula": "=IFERROR('price_subtotal:sum'/'product_uom_qty:sum'*'qty_delivered:sum',0)"
+          }
+        },
+        {
+          "id": "untaxed_amount_to_invoice:sum",
+          "fieldName": "untaxed_amount_to_invoice",
+          "aggregator": "sum",
+          "userDefinedName": "To Invoice"
+        },
+        {
+          "id": "untaxed_amount_invoiced:sum",
+          "fieldName": "untaxed_amount_invoiced",
+          "aggregator": "sum",
+          "userDefinedName": "Invoiced"
+        },
+        {
+          "id": "margin:sum",
+          "fieldName": "margin",
+          "aggregator": "sum",
+          "userDefinedName": "Forecast Margin",
+          "isHidden": true
+        },
+        {
+          "id": "Forecast Cost:sum",
+          "fieldName": "Forecast Cost",
+          "aggregator": "sum",
+          "userDefinedName": "Forecast Cost",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1001",
+            "formula": "='price_subtotal:sum'-'margin:sum'"
+          }
+        },
+        {
+          "id": "Actual Margin:sum",
+          "fieldName": "Actual Margin",
+          "aggregator": "sum",
+          "userDefinedName": "Actual Margin",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1001",
+            "formula": "='untaxed_amount_invoiced:sum'-IFERROR(('price_subtotal:sum'-'margin:sum')/'product_uom_qty:sum'*'qty_invoiced:sum',0)"
+          },
+          "isHidden": true
+        },
+        {
+          "id": "Forecast Margin %:avg",
+          "fieldName": "Forecast Margin %",
+          "aggregator": "avg",
+          "userDefinedName": "Forecast Margin %",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1001",
+            "formula": "=IFERROR('margin:sum'/'price_subtotal:sum',0)"
+          }
+        },
+        {
+          "id": "Actual Margin %:avg",
+          "fieldName": "Actual Margin %",
+          "aggregator": "avg",
+          "userDefinedName": "Actual Margin %",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1001",
+            "formula": "=IFERROR('Actual Margin:sum'/'untaxed_amount_invoiced:sum',0)"
+          }
+        }
+      ],
+      "style": {
+        "tableStyleId": "None",
+        "numberOfRows": 100,
+        "displayTotals": true,
+        "displayColumnHeaders": false,
+        "displayMeasuresRow": true
+      },
+      "filters": [],
+      "formulaId": "10",
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "not in",
+          [
+            "cancel"
+          ]
+        ],
+        [
+          "product_id.type",
+          "=",
+          "service"
+        ],
+        "|",
+        "|",
+        [
+          "project_id",
+          "!=",
+          false
+        ],
+        [
+          "task_id",
+          "!=",
+          false
+        ],
+        [
+          "order_id.project_id",
+          "!=",
+          false
+        ]
+      ],
+      "fieldMatching": {
+        "8edb54c1-842f": {
+          "chain": "order_partner_id",
+          "type": "many2one"
+        },
+        "6abb700d-f183": {
+          "chain": "distribution_analytic_account_ids",
+          "type": "many2many"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "distribution_analytic_account_ids.project_ids.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "distribution_analytic_account_ids.project_ids.tag_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "order_id.date_order",
+          "type": "datetime",
+          "offset": 0
+        },
+        "3d2b2ecb-f255": {
+          "chain": "order_id.project_id.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "order_id.project_id.allow_billable",
+          "type": "boolean"
+        }
+      },
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
+    },
+    "5b6c7d8e-1002": {
+      "type": "ODOO",
+      "name": "Material Products",
+      "model": "sale.order.line",
+      "rows": [
+        {
+          "fieldName": "product_id",
+          "order": "asc"
+        }
+      ],
+      "columns": [],
+      "measures": [
+        {
+          "id": "price_subtotal:sum",
+          "fieldName": "price_subtotal",
+          "aggregator": "sum",
+          "userDefinedName": "Sold"
+        },
+        {
+          "id": "qty_delivered:sum",
+          "fieldName": "qty_delivered",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "qty_invoiced:sum",
+          "fieldName": "qty_invoiced",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "product_uom_qty:sum",
+          "fieldName": "product_uom_qty",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "Delivered:sum",
+          "fieldName": "Delivered",
+          "aggregator": "sum",
+          "userDefinedName": "Delivered",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1002",
+            "formula": "=IFERROR('price_subtotal:sum'/'product_uom_qty:sum'*'qty_delivered:sum',0)"
+          }
+        },
+        {
+          "id": "untaxed_amount_to_invoice:sum",
+          "fieldName": "untaxed_amount_to_invoice",
+          "aggregator": "sum",
+          "userDefinedName": "To Invoice"
+        },
+        {
+          "id": "untaxed_amount_invoiced:sum",
+          "fieldName": "untaxed_amount_invoiced",
+          "aggregator": "sum",
+          "userDefinedName": "Invoiced"
+        },
+        {
+          "id": "margin:sum",
+          "fieldName": "margin",
+          "aggregator": "sum",
+          "userDefinedName": "Forecast Margin",
+          "isHidden": true
+        },
+        {
+          "id": "Forecast Cost:sum",
+          "fieldName": "Forecast Cost",
+          "aggregator": "sum",
+          "userDefinedName": "Forecast Cost",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1002",
+            "formula": "='price_subtotal:sum'-'margin:sum'"
+          }
+        },
+        {
+          "id": "Actual Margin:sum",
+          "fieldName": "Actual Margin",
+          "aggregator": "sum",
+          "userDefinedName": "Actual Margin",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1002",
+            "formula": "='untaxed_amount_invoiced:sum'-IFERROR(('price_subtotal:sum'-'margin:sum')/'product_uom_qty:sum'*'qty_invoiced:sum',0)"
+          },
+          "isHidden": true
+        },
+        {
+          "id": "Forecast Margin %:avg",
+          "fieldName": "Forecast Margin %",
+          "aggregator": "avg",
+          "userDefinedName": "Forecast Margin %",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1002",
+            "formula": "=IFERROR('margin:sum'/'price_subtotal:sum',0)"
+          }
+        },
+        {
+          "id": "Actual Margin %:avg",
+          "fieldName": "Actual Margin %",
+          "aggregator": "avg",
+          "userDefinedName": "Actual Margin %",
+          "computedBy": {
+            "sheetId": "d1a2b3c4-1002",
+            "formula": "=IFERROR('Actual Margin:sum'/'untaxed_amount_invoiced:sum',0)"
+          }
+        }
+      ],
+      "style": {
+        "tableStyleId": "None",
+        "numberOfRows": 100,
+        "displayTotals": true,
+        "displayColumnHeaders": false,
+        "displayMeasuresRow": true
+      },
+      "filters": [],
+      "formulaId": "11",
+      "domain": [
+        "&",
+        "&",
+        [
+          "state",
+          "not in",
+          [
+            "cancel"
+          ]
+        ],
+        [
+          "product_id.type",
+          "!=",
+          "service"
+        ],
+        "|",
+        "|",
+        [
+          "project_id",
+          "!=",
+          false
+        ],
+        [
+          "task_id",
+          "!=",
+          false
+        ],
+        [
+          "order_id.project_id",
+          "!=",
+          false
+        ]
+      ],
+      "fieldMatching": {
+        "8edb54c1-842f": {
+          "chain": "order_partner_id",
+          "type": "many2one"
+        },
+        "6abb700d-f183": {
+          "chain": "distribution_analytic_account_ids",
+          "type": "many2many"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "distribution_analytic_account_ids.project_ids.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "distribution_analytic_account_ids.project_ids.tag_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "order_id.date_order",
+          "type": "datetime",
+          "offset": 0
+        },
+        "3d2b2ecb-f255": {
+          "chain": "order_id.project_id.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "order_id.project_id.allow_billable",
+          "type": "boolean"
+        }
+      },
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
+    },
+    "5b6c7d8e-1005": {
+      "type": "ODOO",
+      "name": "Purchase Order Lines (Project)",
+      "model": "purchase.order.line",
+      "rows": [],
+      "columns": [],
+      "measures": [
+        {
+          "id": "price_subtotal:sum",
+          "fieldName": "price_subtotal",
+          "aggregator": "sum",
+          "userDefinedName": "Sold"
+        },
+        {
+          "id": "product_qty:sum",
+          "fieldName": "product_qty",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "qty_received:sum",
+          "fieldName": "qty_received",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "qty_invoiced:sum",
+          "fieldName": "qty_invoiced",
+          "aggregator": "sum",
+          "isHidden": true
+        },
+        {
+          "id": "Received:sum",
+          "fieldName": "Received",
+          "aggregator": "sum",
+          "userDefinedName": "Received",
+          "computedBy": {
+            "sheetId": "918fd8b1-b6b0",
+            "formula": "=IFERROR('price_subtotal:sum'/'product_qty:sum'*'qty_received:sum',0)"
+          }
+        },
+        {
+          "id": "Billed:sum",
+          "fieldName": "Billed",
+          "aggregator": "sum",
+          "userDefinedName": "Billed",
+          "computedBy": {
+            "sheetId": "918fd8b1-b6b0",
+            "formula": "=IFERROR('price_subtotal:sum'/'product_qty:sum'*'qty_invoiced:sum',0)"
+          }
+        }
+      ],
+      "style": {
+        "tableStyleId": "None",
+        "displayTotals": false,
+        "displayColumnHeaders": false,
+        "displayMeasuresRow": false
+      },
+      "filters": [],
+      "domain": [
+        "&",
+        [
+          "state",
+          "!=",
+          "cancel"
+        ],
+        [
+          "order_id.project_id",
+          "!=",
+          false
+        ]
+      ],
+      "customFields": {},
+      "formulaId": "14",
+      "fieldMatching": {
+        "6abb700d-f183": {
+          "chain": "distribution_analytic_account_ids",
+          "type": "many2many"
+        },
+        "769761d4-9d4d": {
+          "chain": "order_id.date_approve",
+          "type": "datetime",
+          "offset": 0
+        },
+        "8edb54c1-842f": {
+          "chain": "order_id.project_id.partner_id",
+          "type": "many2one"
+        },
+        "93cb1e4c-cbb1": {
+          "chain": "order_id.project_id.user_id",
+          "type": "many2one"
+        },
+        "3d2b2ecb-f268": {
+          "chain": "company_id",
+          "type": "many2one"
+        },
+        "953a65bb-1d0c": {
+          "chain": "order_id.project_id.tag_ids",
+          "type": "many2many"
+        },
+        "3d2b2ecb-f255": {
+          "chain": "order_id.project_id.last_update_status",
+          "type": "selection"
+        },
+        "b111ab1e-0001": {
+          "chain": "order_id.project_id.allow_billable",
+          "type": "boolean"
+        }
+      },
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
+    }
+  },
+  "pivotNextId": 17,
+  "customTableStyles": {},
+  "namedRanges": {},
+  "globalFilters": [
+    {
+      "id": "6abb700d-f183",
+      "label": "Project",
+      "type": "relation",
+      "modelName": "account.analytic.account",
+      "domainOfAllowedValues": [
+        [
+          "plan_id",
+          "in",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "769761d4-9d4d",
+      "label": "Date",
+      "type": "date"
+    },
+    {
+      "id": "8edb54c1-842f",
+      "label": "Customer",
+      "type": "relation",
+      "modelName": "res.partner",
+      "domainOfAllowedValues": []
+    },
+    {
+      "id": "93cb1e4c-cbb1",
+      "label": "Project Manager",
+      "type": "relation",
+      "modelName": "res.users",
+      "domainOfAllowedValues": []
+    },
+    {
+      "id": "3d2b2ecb-f268",
+      "label": "Company",
+      "type": "relation",
+      "modelName": "res.company",
+      "domainOfAllowedValues": []
+    },
+    {
+      "id": "b111ab1e-0001",
+      "label": "Billable Projects",
+      "type": "boolean",
+      "resModel": "project.project",
+      "defaultValue": {
+        "operator": "set"
+      }
+    },
+    {
+      "id": "3d2b2ecb-f255",
+      "label": "Status",
+      "type": "selection",
+      "resModel": "project.project",
+      "selectionField": "last_update_status"
+    },
+    {
+      "id": "953a65bb-1d0c",
+      "label": "Project Tags",
+      "type": "relation",
+      "modelName": "project.tags",
+      "domainOfAllowedValues": []
+    }
+  ],
+  "lists": {}
+}

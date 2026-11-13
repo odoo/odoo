@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Overrides the "Project Profitability" dashboard of sale_project_margin
+         with the version that includes the features provided by this module. -->
+    <record id="sale_project_margin.spreadsheet_dashboard_project_margin" model="spreadsheet.dashboard">
+        <field name="spreadsheet_binary_data" type="bytes" file="sale_project_margin_purchase/data/files/sale_project_margin_dashboard.json"/>
+        <field name="sample_dashboard_file_path">sale_project_margin_purchase/data/files/sale_project_margin_dashboard.json</field>
+    </record>
+</odoo>

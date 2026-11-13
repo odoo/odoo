@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+ir_rule_spreadsheet_dashboard_project_margin_all_groups,Project Profitability dashboard: require all groups,spreadsheet.dashboard,,ru,"[(1, '=', 1)] if (user.has_group('project.group_project_manager') and (user.has_group('account.group_account_readonly') or user.has_group('account.group_account_manager')) and user.has_group('sales_team.group_sale_salesman_all_leads')) else [('name', '!=', 'Project Profitability')]"
