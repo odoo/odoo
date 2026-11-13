@@ -168,14 +168,14 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
         if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
             return;
         }
-        return super.createRecord(...arguments);
+        return super.unlinkRecord(...arguments);
     }
 
     async unlinkRecords(recordIds) {
         if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
             return;
         }
-        return super.createRecord(...arguments);
+        return super.unlinkRecords(...arguments);
     }
 
     async multiExcludeDates(ids, dates) {
