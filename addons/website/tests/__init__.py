@@ -40,6 +40,7 @@ from . import test_ui
 from . import test_unsplash_beacon
 from . import test_views
 from . import test_views_inherit_module_update
+from . import test_website_branding
 from . import test_website_default_website
 from . import test_website_favicon
 from . import test_website_form_editor
