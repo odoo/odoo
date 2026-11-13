@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.tools import float_compare, float_is_zero, format_date, frozendict, groupby
 
 
 class SaleOrderLine(models.Model):
@@ -1669,16 +1669,19 @@ class SaleOrderLine(models.Model):
 
     @api.depends("order_id.partner_id", "product_id")
     def _compute_analytic_distribution(self):
+        cache = {}
         for line in self:
             if not line.display_type:
-                distribution = line.env["account.analytic.distribution.model"]._get_distribution({
+                arguments = frozendict({
                     "product_id": line.product_id.id,
                     "product_categ_id": line.product_id.categ_id.id,
                     "partner_id": line.order_id.partner_id.id,
                     "partner_category_id": line.order_id.partner_id.category_id.ids,
                     "company_id": line.company_id.id,
                 })
-                line.analytic_distribution = distribution or line.analytic_distribution
+                if arguments not in cache:
+                    cache[arguments] = line.env["account.analytic.distribution.model"]._get_distribution(arguments)
+                line.analytic_distribution = cache[arguments] or line.analytic_distribution
 
     @api.depends("product_id", "state", "qty_invoiced", "qty_delivered")
     def _compute_product_updatable(self):
