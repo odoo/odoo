@@ -18,6 +18,12 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.curr_2 = cls.setup_other_currency('EUR')
         cls.curr_3 = cls.setup_other_currency('CAD', rates=[('2016-01-01', 6.0), ('2017-01-01', 4.0)])
 
+        # Plain partners sharing the default receivable account, unlike partner_a and partner_b.
+        cls.old_partner, cls.new_partner = cls.env['res.partner'].create([
+            {'name': 'old partner'},
+            {'name': 'new partner'},
+        ])
+
         cls.payment_2016_curr_1 = cls.env['account.move'].create({
             'date': '2016-01-01',
             'line_ids': [
@@ -309,3 +315,110 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             with self.subTest(user=user.login):
                 widget_vals = invoice.with_user(user).invoice_payments_widget
                 self.assertEqual({vals['move_id']: vals['can_open_move'] for vals in widget_vals['content']}, expected)
+
+    def _create_draft_invoice(self, partner, currency=None):
+        """
+        Create a draft invoice of 300 without taxes.
+        :return: (invoice, invoice_line), invoice_line being its receivable line.
+        """
+        invoice = self._create_invoice_one_line(
+            price_unit=300.0, tax_ids=[], invoice_date='2017-01-01',
+            partner_id=partner, currency_id=currency,
+        )
+        return invoice, invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+
+    def _create_reconciled_draft_invoice(self, invoice_partner, payment_partner, currency=None,
+                                         payment_date='2017-01-01'):
+        """
+        Create a draft invoice of 300 and a posted payment of 300, then reconcile them.
+        :return: (invoice, invoice_line, payment_line), the lines being the reconciled receivable lines.
+        """
+        invoice, invoice_line = self._create_draft_invoice(invoice_partner, currency=currency)
+        payment = self.init_payment(300.0, post=True, date=payment_date, partner=payment_partner, currency=currency)
+        payment_line = payment.move_id.line_ids.filtered(lambda line: line.account_id == invoice_line.account_id)
+        (invoice_line + payment_line).reconcile()
+        self.assertTrue(invoice_line.reconciled)
+        return invoice, invoice_line, payment_line
+
+    def test_draft_change_partner_unreconcile(self):
+        """
+        A payment of the old partner must not stay reconciled with an invoice given to another partner.
+        """
+        invoice, invoice_line, payment_line = self._create_reconciled_draft_invoice(self.old_partner, self.old_partner)
+
+        invoice.partner_id = self.new_partner
+
+        self.assertFalse(invoice_line.matched_debit_ids + invoice_line.matched_credit_ids)
+        self.assertRecordValues(payment_line, [{'reconciled': False, 'amount_residual': -300.0}])
+
+    def test_draft_change_partner_contact_keep_reconciliation(self):
+        """
+        A payment made by a contact of the new partner belongs to the same commercial partner and stays reconciled.
+        """
+        contact = self.env['res.partner'].create({'name': 'new partner contact', 'parent_id': self.new_partner.id})
+        invoice, invoice_line, payment_line = self._create_reconciled_draft_invoice(self.old_partner, contact)
+
+        invoice.partner_id = self.new_partner
+
+        self.assertRecordValues(invoice_line + payment_line, [
+            {'reconciled': True, 'partner_id': self.new_partner.id},
+            {'reconciled': True, 'partner_id': contact.id},
+        ])
+
+    def test_draft_change_partner_exchange_diff_unreconcile(self):
+        """
+        The payment already belongs to the new partner, but the exchange difference entry created by the
+        reconciliation carries the old partner on its receivable line. Keeping the reconciliation would leave
+        -50 on the old partner and +50 on the new one, so it must be broken and redone.
+        """
+        # Invoice of 300 EUR on 2017-01-01 at rate 2 (150 USD), paid by 300 EUR on 2016-01-01 at rate 3 (100 USD):
+        # the exchange difference of 50 USD is booked against the invoice line, with the invoice partner.
+        invoice, invoice_line, payment_line = self._create_reconciled_draft_invoice(
+            self.old_partner, self.new_partner, currency=self.curr_2, payment_date='2016-01-01',
+        )
+        exchange_move = (invoice_line.matched_debit_ids + invoice_line.matched_credit_ids).exchange_move_id
+        exchange_loss_account = self.env.company.expense_currency_exchange_account_id
+        self.assertRecordValues(exchange_move.line_ids, [
+            {'account_id': invoice_line.account_id.id, 'partner_id': self.old_partner.id, 'balance': -50.0},
+            {'account_id': exchange_loss_account.id, 'partner_id': self.old_partner.id, 'balance': 50.0},
+        ])
+
+        invoice.partner_id = self.new_partner
+
+        self.assertRecordValues(invoice_line + payment_line, [
+            {'reconciled': False, 'partner_id': self.new_partner.id, 'amount_residual': 150.0},
+            {'reconciled': False, 'partner_id': self.new_partner.id, 'amount_residual': -100.0},
+        ])
+        self.assertFalse(exchange_move.exists())
+
+        # Reconciling again books the exchange difference on the new partner.
+        (invoice_line + payment_line).reconcile()
+        new_exchange_move = (invoice_line.matched_debit_ids + invoice_line.matched_credit_ids).exchange_move_id
+        self.assertEqual(new_exchange_move.line_ids.partner_id, self.new_partner)
+
+    def test_draft_change_partner_st_line_unreconcile(self):
+        """
+        When the invoice was paid from a bank statement line of the old partner, the statement line
+        must be reset to its suspense account, as when undoing its reconciliation.
+        """
+        invoice, invoice_line = self._create_draft_invoice(self.old_partner)
+        bank_journal = self.company_data['default_journal_bank']
+        st_line = self.env['account.bank.statement.line'].create({
+            'journal_id': bank_journal.id,
+            'date': '2017-01-01',
+            'payment_ref': 'ref',
+            'amount': 300.0,
+            'partner_id': self.old_partner.id,
+        })
+        _liquidity_line, st_suspense_line, _other_lines = (
+            st_line.with_context(skip_account_move_synchronization=True)._seek_for_lines()
+        )
+        st_suspense_line.account_id = invoice_line.account_id
+        (st_suspense_line + invoice_line).reconcile()
+        self.assertTrue(st_line.is_reconciled)
+
+        invoice.partner_id = self.new_partner
+
+        self.assertFalse(invoice_line.matched_debit_ids + invoice_line.matched_credit_ids)
+        self.assertRecordValues(st_line, [{'is_reconciled': False}])
+        self.assertIn(bank_journal.suspense_account_id, st_line.line_ids.account_id)
