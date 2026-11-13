@@ -93,6 +93,28 @@ class PaymentTransaction(models.Model):
                 return prefix
         return super()._compute_reference_prefix(separator, **values)
 
+    def _get_line_items(self):
+        """ Override of `payment` to return the items of the linked invoices. """
+        self.ensure_one()
+        if not self.invoice_ids:
+            return super()._get_line_items()
+
+        line_items = {}
+        product_lines = self.invoice_ids.invoice_line_ids.filtered(
+            lambda line: line.display_type == 'product'
+        )
+        for line in product_lines:
+            product = line.product_id.with_context(display_default_code=False)
+            line_items[line.id] = {
+                'name': product.display_name or line.name or '',
+                'description': line.name or '',
+                'sku': product.default_code,
+                'barcode': product.barcode,
+                'quantity': line.quantity,
+                'total': line.price_total,
+            }
+        return line_items
+
     # === LIFECYCLE METHODS - POST-PROCESSING === #
 
     def _post_process(self):

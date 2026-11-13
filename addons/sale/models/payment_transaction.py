@@ -255,6 +255,27 @@ class PaymentTransaction(models.Model):
                 return separator.join(orders.mapped("name"))
         return super()._compute_reference_prefix(separator, **values)
 
+    def _get_line_items(self):
+        """Override of `account_payment` to return the items of the linked sales orders."""
+        self.ensure_one()
+        if not self.sale_order_ids:
+            return super()._get_line_items()
+
+        line_items = {}
+        for line in self.sale_order_ids.order_line:
+            if line.display_type or line.is_downpayment or line.product_type == "combo":
+                continue
+            product = line.product_id.with_context(display_default_code=False)
+            line_items[line.id] = {
+                "name": product.display_name or line.name or "",
+                "description": line.name or "",
+                "sku": product.default_code,
+                "barcode": product.barcode,
+                "quantity": line.product_uom_qty,
+                "total": line.price_total,
+            }
+        return line_items
+
     @api.readonly
     def action_view_sales_orders(self):
         action = {

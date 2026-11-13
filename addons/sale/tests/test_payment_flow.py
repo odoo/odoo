@@ -796,3 +796,60 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(
             tx.invoice_ids.payment_state, tx.invoice_ids._get_invoice_in_payment_state()
         )
+
+    def test_get_line_items(self):
+        """Test that only the accountable lines are returned as line items, with all their
+        details."""
+        product = self.env["product.product"].create({
+            "name": "Desk",
+            "default_code": "DESK",
+            "barcode": "012345678905",
+            "list_price": 100.0,
+            "taxes_id": [Command.create({"name": "Tax 15%", "amount": 15.0})],
+        })
+        order = self._create_so(
+            order_line=[
+                Command.create({"display_type": "line_section", "name": "Section"}),
+                Command.create({"display_type": "line_note", "name": "Note"}),
+                Command.create({
+                    "product_id": product.id,
+                    "name": "Oak desk",
+                    "product_uom_qty": 2.0,
+                }),
+                Command.create({
+                    "name": "Assembly",
+                    "price_unit": 20.0,
+                    "tax_ids": [Command.clear()],
+                }),
+            ]
+        )
+        tx = self._create_transaction(flow="redirect", sale_order_ids=[order.id])
+        product_line, productless_line = order.order_line.filtered(
+            lambda line: not line.display_type
+        )
+
+        line_items = tx._get_line_items()
+
+        self.assertEqual(list(line_items), [product_line.id, productless_line.id])
+        self.assertDictEqual(
+            line_items[product_line.id],
+            {
+                "name": "Desk",
+                "description": "Oak desk",
+                "sku": "DESK",
+                "barcode": "012345678905",
+                "quantity": 2.0,
+                "total": 230.0,
+            },
+        )
+        self.assertDictEqual(
+            line_items[productless_line.id],
+            {
+                "name": "Assembly",
+                "description": "Assembly",
+                "sku": False,
+                "barcode": False,
+                "quantity": 1.0,
+                "total": 20.0,
+            },
+        )
