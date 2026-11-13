@@ -18,6 +18,7 @@ import {
     serializeDate,
     serializeDateTime,
     strftimeToLuxonFormat,
+    toLocaleDateTimeString,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
@@ -101,6 +102,16 @@ test("formatDateTime in different timezone", async () => {
     mockDate("2009-05-04 00:00:00", 0);
     expect(formatDateTime(DateTime.utc())).toBe("05/04/2009 00:00:00");
     expect(formatDateTime(DateTime.utc(), { tz: "Asia/Kolkata" })).toBe("05/04/2009 05:30:00");
+});
+
+test("toLocaleDateTimeString with different timeFormat", async () => {
+    mockDate("2009-05-05 23:45:00", 0);
+
+    patchWithCleanup(localization, { timeFormat: "HH:mm:ss" });
+    expect(toLocaleDateTimeString(DateTime.utc())).toBe("May 5, 23:45");
+
+    patchWithCleanup(localization, { timeFormat: "hh:mm:ss a" });
+    expect(toLocaleDateTimeString(DateTime.utc())).toBe("May 5, 11:45 PM");
 });
 
 test("parseDate(Time) outputs DateTime objects in local TZ", async () => {
