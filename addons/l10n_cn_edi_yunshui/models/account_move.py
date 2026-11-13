@@ -6,6 +6,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import html2plaintext
 
+from .account_tax import VAT_SPECIAL_POLICY_NAMES
 from .l10n_cn_edi_document import (
     BUREAU_STATES,
     FILES_GRACE,
@@ -617,9 +618,7 @@ class AccountMove(models.Model):
                 continue
             if not line.l10n_cn_tax_category_id:
                 errors.append(self.env._("Missing Tax Category Code on line: %(line)s", line=name))
-            if tax.l10n_cn_vat_special_policy or tax.l10n_cn_reduced_tax_code:
-                errors.append(self.env._("Yunshui simple issuance does not support special VAT treatment (line %(line)s).", line=name))
-            elif tax._l10n_cn_edi_rate() not in TAX_RATES:
+            if tax._l10n_cn_edi_rate() not in TAX_RATES:
                 errors.append(self.env._("Yunshui does not accept a %(rate)s%% tax rate (line %(line)s).", rate=abs(tax.amount), line=name))
             if line.discount >= 100:
                 errors.append(self.env._("100% line discounts are not supported for e-Fapiao. Use an explicit negative line instead."))
@@ -628,6 +627,8 @@ class AccountMove(models.Model):
                 "Global negative lines spanning multiple tax groups are not supported for e-Fapiao. "
                 "Please split by tax group before issuing.",
             ))
+        if len(set(product_lines.tax_ids.mapped('l10n_cn_reduced_tax_code'))) > 1:
+            errors.append(self.env._("All the lines of a fapiao must have the same Reduced Tax Code, or none."))
         buyer_values = self._l10n_cn_edi_prepare_buyer_values()
         limits = {
             'payerName': (100, self.env._("Customer name")),
@@ -658,6 +659,8 @@ class AccountMove(models.Model):
         }
         if self.company_id.l10n_cn_edi_drawer:
             payload['invoicer'] = self.company_id.l10n_cn_edi_drawer
+        if reduced_tax_code := self._l10n_cn_edi_product_lines().tax_ids[:1].l10n_cn_reduced_tax_code:
+            payload['jazslxdm'] = reduced_tax_code
         return payload
 
     def _l10n_cn_edi_prepare_buyer_values(self):
@@ -745,7 +748,11 @@ class AccountMove(models.Model):
                 'itemNo': line.l10n_cn_tax_category_id.code,
             }
             if line.tax_ids.l10n_cn_free_tax_mark:
+                # 2.1.2 #66: a zero-rate mark goes without the policy fields.
                 item['zeroRateFlag'] = line.tax_ids.l10n_cn_free_tax_mark
+            elif line.tax_ids.l10n_cn_vat_special_policy:
+                item['yhzcbs'] = 'Y'
+                item['zzstsgl'] = VAT_SPECIAL_POLICY_NAMES[line.tax_ids.l10n_cn_vat_special_policy]
             is_discounted = discount < 0
             row = {**item, 'rowType': LINE_DISCOUNTED if is_discounted else LINE_NORMAL, 'amount': f"{amount + amount_tax:.2f}"}
             if line.quantity:
