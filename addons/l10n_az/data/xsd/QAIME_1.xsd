@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    XSD 1.0 derivative of the official EQF_MT.xsd (QAIME_1), so that lxml/libxml2 can compile it:
+    the XML declaration is 1.0, every xs:assert is removed (they are re-implemented in Python, see
+    account.move._l10n_az_eqf_validate_xml) and the leading xs:any only accepts foreign namespaces
+    (the embedded xsl:stylesheet) to keep the content model deterministic.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xerces="http://xerces.apache.org"
+           xmlns:fn="http://www.w3.org/2005/xpath-functions">
+    <xs:complexType name="root_type">
+        <xs:sequence>
+            <xs:any maxOccurs="1" minOccurs="0" namespace="##other" processContents="skip"/>
+            <xs:element name="qaimeKime" type="voen_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Alan tərəfin VÖENi buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="qaimeKimden" type="voen_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Satan tərəfin VÖENi buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ds" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Əgər dəqiqləşmiş fakturadırsa dəqiqləşdirilən fakturanın seriyası buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dn" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Əgər dəqiqləşmiş fakturadırsa dəqiqləşdirilən fakturanın nömrəsi buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="des" type="str_no_empty_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimənin əsas qeydi buraya yazılır. Ən çox 150 simvol ola bilər
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="des2" type="str_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimənin əlavə qeydi buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ma" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimə təqdim edən filial/obyektin adı buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="mk" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimə təqdim edən filial/obyektin kodu buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="bma" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimə alan filial/obyektin adı buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="bmk" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimə alan filial/obyektin kodu buraya yazılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="product" type="product_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların siyahısı
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="qaimeKimeAd" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Qaimə kimə ad
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+			<xs:element name="nka" type="str_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Nəğd satış
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="version" type="xs:string" use="required"/>
+        <xs:attribute name="kod" type="xs:string" use="required"/>
+        <xs:attribute name="old" type="xs:string" use="optional"/>
+        <!--<xs:assert test="(@old eq 1) or fn:abs(xs:decimal(//qaimeYekunTable//c8 - sum(//qaimeTable//c14))) le xs:decimal(0.01)" xerces:message="#validation.qaimeYekunTable.c12"/>-->
+        <!--<xs:assert test="(@old eq 1) or fn:abs(xs:decimal(//qaimeYekunTable//c4*0.18 - //qaimeYekunTable//c8)) le xs:decimal(0.01)" xerces:message="#validation.qaimeYekunTable.c13"/>-->
+    </xs:complexType>
+
+    <xs:element name="root" type="root_type"/>
+
+    <xs:simpleType name="digit_10_num_type">
+        <xs:restriction base="xs:string">
+            <xs:length value="10"/>
+            <xs:pattern value="\d+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+     <xs:simpleType name="digit_barkod_num_type">
+        <xs:restriction base="xs:string">
+             <xs:minLength value="1"/>
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="voen_type">
+        <xs:restriction base="xs:string">
+            <xs:length value="10"/>
+            <xs:pattern value="\d+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="str_type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="0"/>
+            <xs:maxLength value="4000"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="str_no_empty_type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="4000"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="str_0_150_type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="0"/>
+            <xs:maxLength value="150"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="str_1_150_type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="150"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+	<xs:simpleType name="str_mal_adi_type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="300"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="decimal_2_type">
+        <xs:restriction base="xs:decimal">
+            <xs:pattern value="(\.\d+)|(\d+(\.\d+)?)"/>
+            <xs:fractionDigits value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="decimal_4_type">
+        <xs:restriction base="xs:decimal">
+            <xs:pattern value="(\.\d+)|(\d+(\.\d+)?)"/>
+            <xs:fractionDigits value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="decimal_9_type">
+        <xs:restriction base="xs:decimal">
+            <xs:pattern value="(\.\d+)|(\d+(\.\d+)?)"/>
+            <xs:fractionDigits value="9"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="product_type">
+        <xs:sequence>
+            <xs:element name="qaimeTable" type="product_vhfTable_type" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların siyahısı yazilacaq
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="qaimeYekunTable" type="product_vhfYekunTable_type" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların yekun məbləğləri bura yazılacaq
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="product_vhfTable_type">
+        <xs:sequence>
+            <xs:element name="row" type="product_vhfTable_row_type" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        MALLAR-Hər fakturada ən az bir mal olmalıdır. Burada hər bir "row" sətrinin "no" atributu mütləq
+                        olmalıdır və "no" sıfırdan başlayaraq mal sayısı qədər artır.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="product_vhfYekunTable_type">
+        <xs:sequence>
+            <xs:element name="row" type="product_vhfYekunTable_row_type" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların yekun cəmi
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="product_vhfTable_row_type">
+        <xs:sequence>
+            <xs:element name="c1" type="digit_10_num_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mal kodu burada saxlanılır. 10 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c2" type="str_mal_adi_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mal adı burada saxlanılır.Max 150 simvoldur
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c3" type="str_1_150_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Ölçü vahidi burada saxlanılır.Max 150 simvoldur
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c4" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malın miqdarı burada saxlanılır. Kəsir hissə ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c5" type="decimal_9_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malın buraxılış qiyməti burada saxlanılır. Kəsir hissə ən çox 9 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c6" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Cəmi qiyməti burada saxlanılır.Kəsir hissə ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c7" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Aksiz dərəcəsi burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c8" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Aksiz məbləği burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c9" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Cəmi məbləğ burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c10" type="decimal_4_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        ƏDV-yə cəlb edilən məbləğ burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c11" type="decimal_4_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        ƏDV-yə cəlb edilməyən məbləğ burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+             <xs:element name="c12" type="decimal_4_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        ƏDV-dən azad olan məbləğ burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c13" type="decimal_4_type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        ƏDV-yə 0 dərəcə ilə cəlb edilən məbləğ burada saxlanılır. Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+
+
+            <xs:element name="c14" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Ödənilməli ƏDV burada saxlanılır.Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+             <xs:element name="c15" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Yol vergisi məbləği burada saxlanılır
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c16" type="decimal_4_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Yola salınmış mallara,görülmüş işlərə və göstərilmiş xidmətlər üçün məbləğ burada
+                        saxlanılır.Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+             <xs:element name="c17" type="digit_barkod_num_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Barkod burada saxlanılır.Maksimal 20 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="productId" type="digit_barkod_num_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malın unikal ID-si burada saxlanılır.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+
+        </xs:sequence>
+        <xs:attribute name="no" type="xs:nonNegativeInteger" use="required"/>
+        <xs:attribute name="old" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+    <xs:complexType name="product_vhfYekunTable_row_type">
+        <xs:sequence>
+            <xs:element name="c1" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların cəmi qiyməti burada saxlanılır.Kəsir hissəsi ən çox 2 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c2" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların aksiz cəmi məbləği burada saxlanılır.Kəsir hissəsi ən çox 2 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c3" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların cəmi məbləği burada saxlanılır.Kəsir hissəsi ən çox 2 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c4" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların ƏDV-yə cəlb edilən cəmi məbləği burada saxlanılır.Kəsir hissəsi ən çox 2 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c5" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların ƏDV-yə cəlb edilməyən cəmi məbləği burada saxlanılır.Kəsir hissəsi ən çox 2 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+             <xs:element name="c6" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların ƏDV-dən azad olan cəmi məbləği burada saxlanılır.Kəsir hissəsi ən çox 2
+                        rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c7" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların ƏDV-yə 0 dərəcə ilə cəlb edilən cəmi məbləği burada saxlanılır.Kəsir hissəsi ən çox 2
+                        rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="c8" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Malların cəmi ödənilməli ƏDV məbləği burada saxlanılır.Kəsir hissəsi ən çox 2 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+           
+
+            <xs:element name="c9" type="decimal_2_type">
+                <xs:annotation>
+                    <xs:documentation>
+                        Yola salınmış mallara,görülmüş işlərə və göstərilmiş xidmətlər üçün cəmi məbləğ burada
+                        saxlanılır.Kəsir hissəsi ən çox 4 rəqəmlidir
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            
+             <xs:element name="c10" type="decimal_2_type"  minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Yol vergisi
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_az_eqf" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_az</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='preview_invoice']" position="after">
+                <button name="action_l10n_az_eqf_generate" type="object" string="Generate EQF"
+                        groups="account.group_account_invoice"
+                        invisible="country_code != 'AZ' or move_type != 'out_invoice' or state != 'posted'"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list//column[@name='product_and_description']" position="after">
+                <field name="l10n_az_eqf_product_code" optional="show" column_invisible="parent.country_code != 'AZ' or parent.move_type != 'out_invoice'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_az_eqf_generate" model="ir.actions.server">
+        <field name="name">Generate EQF</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">action</field>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_l10n_az_eqf_generate()</field>
+    </record>
+</odoo>
