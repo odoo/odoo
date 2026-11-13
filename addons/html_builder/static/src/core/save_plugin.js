@@ -62,7 +62,9 @@ export class SavePlugin extends Plugin {
         on_editor_started_handlers: this.startObserving.bind(this),
         // Resource definitions:
         clean_for_save_processors: (rootEl) => {
-            rootEl.classList.remove("o_dirty");
+            for (const dirtyEl of selectElements(rootEl, ".o_dirty")) {
+                dirtyEl.classList.remove("o_dirty");
+            }
             this.removeZWSPFromEmbeddedFields(rootEl);
             return rootEl;
         },
