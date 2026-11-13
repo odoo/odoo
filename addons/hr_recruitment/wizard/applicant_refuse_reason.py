@@ -4,6 +4,7 @@ from itertools import product
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import clean_context
 
 
 class ApplicantGetRefuseReason(models.TransientModel):
@@ -164,8 +165,10 @@ class ApplicantGetRefuseReason(models.TransientModel):
         for applicant in self.applicant_ids:
             mail_values = self._prepare_mail_values(applicant)
             if self.template_id:
-                # Ensure template custom recipients are used if needed
+                # Ensure template custom recipients are used if needed. Clean the context of
+                # the refuse action (default_applicant_ids), as contacts may be created for them.
                 composer = self.env['mail.compose.message'].with_context(
+                    clean_context(self.env.context),
                     default_composition_mode='comment',
                     default_model=applicant._name,
                     default_res_ids=applicant.ids,
