@@ -54,6 +54,15 @@ class ResCompany(models.Model):
         help="Work entry type assigned to attendances and read by the time rule engine.",
     )
 
+    attendance_tolerance = fields.Boolean(
+        string="Check-In/Out Tolerance",
+        help="A check-in or a check-out close enough to the planned time (the planning shift if any, else the working "
+             "schedule) is recorded at the planned time.",
+    )
+    attendance_tolerance_early_check_in = fields.Integer(string="Early Arrivals (Minutes)", default=15)
+    attendance_tolerance_late_check_in = fields.Integer(string="Late Arrivals (Minutes)", default=0)
+    attendance_tolerance_early_check_out = fields.Integer(string="Early Departures (Minutes)", default=15)
+    attendance_tolerance_late_check_out = fields.Integer(string="Late Departures (Minutes)", default=0)
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
     attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
     attendance_break_management = fields.Boolean(
