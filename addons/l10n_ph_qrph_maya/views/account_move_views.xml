@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_action_l10n_ph_qrph_update_payment_status" model="ir.actions.server">
+        <field name="name">Check QRPH Payment</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_l10n_ph_qrph_update_payment_status()
+        </field>
+    </record>
+
+</odoo>
