@@ -41,16 +41,9 @@ export class ThemeSelector extends Component {
 
     setup() {
         this.themeService = useService("mass_mailing.themes");
-        const scope = useScope();
+        this.scope = useScope();
         providePlugins([StyleSheetPlugin], {
-            styleSheetPromises: [
-                getStyleSheets(scope, this.props.iframeRef(), "mass_mailing.assets_iframe_style"),
-                getStyleSheets(
-                    scope,
-                    this.props.iframeRef(),
-                    "mass_mailing.assets_theme_selector_template_shadowdom"
-                ),
-            ],
+            styleSheetPromises: this.loadStyleSheets(),
         });
 
         onWillStart(() => this.themeService.load());
@@ -89,6 +82,17 @@ export class ThemeSelector extends Component {
         onWillUnmount(() => {
             this.htmlResizeObserver.disconnect();
         });
+    }
+
+    loadStyleSheets() {
+        return [
+            getStyleSheets(this.scope, this.props.iframeRef(), "mass_mailing.assets_iframe_style"),
+            getStyleSheets(
+                this.scope,
+                this.props.iframeRef(),
+                "mass_mailing.assets_theme_selector_template_shadowdom"
+            ),
+        ];
     }
 
     onSelectTemplate(html) {

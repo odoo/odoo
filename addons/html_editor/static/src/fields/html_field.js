@@ -223,24 +223,20 @@ export class HtmlField extends Component {
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
 
+    /**
+     * Hook to pre-compute values before cloning the editable content
+     * in @see getEditorContent
+     */
+    prepareSaveWithPendingImages() {}
+
+    savePendingImages(content) {
+        return this.editor.shared.imageSave?.savePendingImagesInClone(content);
+    }
+
     async getEditorContent() {
+        this.prepareSaveWithPendingImages();
         const content = this.editor.getElContent();
-        const oldSrcToNewSrcMap = await this.editor.shared.imageSave?.savePendingImages(content);
-        // Update the actual editable if still in the DOM.
-        if (this.editor.editable && oldSrcToNewSrcMap) {
-            this.editor.editable
-                .querySelectorAll(".o_b64_image_to_save, .o_modified_image_to_save")
-                .forEach((unsavedImage) => {
-                    const oldSrc = unsavedImage.getAttribute("src");
-                    if (oldSrcToNewSrcMap.has(oldSrc)) {
-                        unsavedImage.setAttribute("src", oldSrcToNewSrcMap.get(oldSrc));
-                    }
-                    unsavedImage.classList.remove(
-                        "o_b64_image_to_save",
-                        "o_modified_image_to_save"
-                    );
-                });
-        }
+        await this.savePendingImages(content);
         return content;
     }
 
@@ -248,6 +244,7 @@ export class HtmlField extends Component {
         if (status(this) === "destroyed") {
             return;
         }
+        const recordResId = this.props.record?.resId;
         if (this.isDirty) {
             if (this.state.showCodeView) {
                 await this.updateValue(this.codeViewRef().value);
@@ -256,11 +253,17 @@ export class HtmlField extends Component {
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
+            if (recordResId !== this.props.record.resId) {
+                return;
+            }
             const changeId = this.lastChangeId;
             const editable = this.editor.editable;
             const el = await this.getEditorContent();
+            if (recordResId !== this.props.record.resId) {
+                return;
+            }
             this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record?.resId,
+                recordResId,
                 extractUnmappedAttachmentsIds(editable)
             );
             const content = el.innerHTML;
