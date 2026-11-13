@@ -425,6 +425,7 @@ class HTML_Editor(http.Controller):
             'mimetype': mimetype or attachment.mimetype,
             'name': name or attachment.name,
             'res_id': 0,
+            'url': False,
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0

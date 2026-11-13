@@ -138,6 +138,11 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         })
         modify('demo', 'event-demo.gif')
 
+        # Restricted editor with event rights can modify url attachment (for e.g. media library)
+        attachment.url = '/event-demo2.gif'
+        modify('demo', 'event-demo2.gif')
+        attachment.url = False  # Reset previous value
+
         # Website designer cannot modify event
         self.user_demo.write({
             'group_ids': [
