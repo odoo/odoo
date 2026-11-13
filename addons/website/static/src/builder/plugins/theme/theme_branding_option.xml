@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.ThemeBrandingOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Name" tooltip.translate="Your website's name, displayed in the browser tab next to the page title. Pages with a custom SEO title keep their own title.">
+            <BuilderTextInput
+                action="'setWebsiteName'"
+                default="this.branding.getSavedWebsiteName()"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Favicon" tooltip.translate="Small icon displayed in the browser tab next to the page title.">
+            <t t-set="favicon" t-value="this.branding.getDisplayedFavicon()"/>
+            <t t-if="favicon">
+                <div class="o_preview_alpha_background border rounded d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden"
+                    style="width: var(--o-hb-btn-minHeight); height: var(--o-hb-btn-minHeight);">
+                    <img t-att-src="favicon.url"
+                        class="w-100 h-100"
+                        t-att-class="favicon.cropToSquare ? 'object-fit-cover' : 'object-fit-contain'"
+                        alt=""
+                        aria-hidden="true"/>
+                </div>
+                <BuilderButton
+                    action="'replaceBrandingImage'"
+                    actionParam="'favicon'"
+                    type="'global'"
+                    className="'flex-grow-1 text-truncate'"
+                    label.translate="Replace"
+                    title.translate="Replace Favicon"/>
+                <BuilderButton
+                    action="'removeFavicon'"
+                    className="'btn-danger-color-hover flex-shrink-0'"
+                    icon="'close_small'"
+                    title.translate="Remove Favicon"/>
+            </t>
+
+            <BuilderButton t-else=""
+                action="'replaceBrandingImage'"
+                actionParam="'favicon'"
+                type="'secondary'"
+                className="'w-100 text-truncate'"
+                label.translate="None"
+                title.translate="Upload a favicon"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Logo">
+            <BuilderButton
+                action="'replaceBrandingImage'"
+                actionParam="'logo'"
+                type="'global'"
+                className="'w-100 text-truncate'"
+                label.translate="Replace Logo"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+</templates>

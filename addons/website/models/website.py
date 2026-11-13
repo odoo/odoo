@@ -2732,3 +2732,84 @@ class Website(models.CachedModel):
     def _get_settings_to_copy_onto_new_default_website(self):
         # This list is extended by other modules
         return []
+
+    # -------------------------------------------------------------------------
+    # Website Builder / Branding API
+    # -------------------------------------------------------------------------
+
+    def update_branding(self, values):
+        """Save the name, favicon and logo from the website builder.
+
+        Each field is saved separately, so a refused field doesn't block the
+        others.
+
+        :param dict values: Supported keys: 'name' (str), 'favicon' (int|False), 'logo' (int).
+        :return: the saved name, whether there is a favicon, and why each
+            refused field was refused, e.g. ``{"name": "B", "has_favicon": True,
+            "errors": {"logo": "The selected file must be an image."}}``.
+        """
+        self.ensure_one()
+        # AccessError is a UserError: the loop below would report it per field.
+        self.check_access("write")
+        if not isinstance(values, dict):
+            raise ValidationError(self.env._("Invalid branding values."))
+
+        prepare_by_field = {
+            "name": self._prepare_branding_name,
+            "favicon": self._prepare_branding_favicon,
+            "logo": self._prepare_branding_logo,
+        }
+        errors = {}
+        for field, prepare in prepare_by_field.items():
+            if field not in values:
+                continue
+            try:
+                with self.env.cr.savepoint():
+                    if vals := prepare(values[field]):
+                        self.write(vals)
+            except UserError as error:
+                errors[field] = error.args[0]
+
+        return {
+            "name": self.name,
+            "has_favicon": bool(self.favicon),
+            "errors": errors,
+        }
+
+    def _prepare_branding_name(self, value):
+        if not isinstance(value, str) or not value.strip():
+            raise ValidationError(self.env._("The website name cannot be empty."))
+        name = value.strip()
+        return {"name": name} if name != self.name else {}
+
+    def _prepare_branding_favicon(self, attachment_id):
+        if attachment_id is False:
+            return {"favicon": False}
+        return {"favicon": self._get_branding_image_data(attachment_id)}
+
+    def _prepare_branding_logo(self, attachment_id):
+        if attachment_id is False:
+            raise ValidationError(self.env._("The logo cannot be removed."))
+        return {"logo": self._get_branding_image_data(attachment_id)}
+
+    def _get_branding_image_data(self, attachment_id):
+        if type(attachment_id) is not int or attachment_id <= 0:
+            raise ValidationError(self.env._("Invalid image reference."))
+
+        # Same error whether the attachment is missing or not readable, so that
+        # the answer doesn't tell which attachment ids exist.
+        attachment = self.env["ir.attachment"].browse(attachment_id).exists()
+        if not attachment or not attachment.has_access("read"):
+            raise ValidationError(self.env._("The selected image does not exist or you cannot access it."))
+
+        if not (attachment.mimetype or "").startswith("image/"):
+            raise ValidationError(self.env._("The selected file must be an image."))
+
+        if not attachment.raw:
+            if attachment.type == "url":
+                raise ValidationError(self.env._(
+                    "This image could not be downloaded from its URL. Please upload the file instead.",
+                ))
+            raise ValidationError(self.env._("The selected image is empty."))
+
+        return attachment.raw
