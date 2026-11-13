@@ -42,9 +42,11 @@
                 display: none;
             }
             &:after {
-                @include o-position-absolute(50%, map-get($spacers, 1));
-                transform: translate(-50%, -50%);
-                font-size: .5rem;
+                align-self: center;
+                flex: 0 0 auto;
+                margin-left: map-get($spacers, 2);
+                font-size: .75rem;
+                line-height: 1;
                 content: "\f0d7";
                 font-family: FontAwesome;
             }
