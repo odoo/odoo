@@ -48,6 +48,7 @@ import {
     propComputed,
     useForwardRefsToParent,
     useLongPress,
+    useMaybePlugin,
     useRightClickMenu,
 } from "@mail/utils/common/hooks";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
@@ -113,7 +114,6 @@ export class Message extends Component {
             isFirstMessage: t.boolean().optional(),
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
-            messageSearch: t.instanceOf(MessageSearchPlugin).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
             previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),
@@ -155,6 +155,7 @@ export class Message extends Component {
         this.dialog = useService("dialog");
         this.ui = usePlugin(UIPlugin);
         this.recordLink = usePlugin(RecordLinkPlugin);
+        this.messageSearch = useMaybePlugin(MessageSearchPlugin);
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
@@ -230,7 +231,7 @@ export class Message extends Component {
                 this.shadowRoot(),
                 this.message.showTranslation,
                 this.message.richTranslationValue,
-                this.props.messageSearch?.searchTerm(),
+                this.messageSearch?.searchTerm(),
                 this.message.richBody,
                 this.isEditing,
             ],
@@ -240,7 +241,7 @@ export class Message extends Component {
                         "span",
                         this.message.showTranslation
                             ? this.message.richTranslationValue
-                            : this.props.messageSearch?.highlight(this.message.richBody) ??
+                            : this.messageSearch?.highlight(this.message.richBody) ??
                                   this.message.richBody
                     );
                     const roots = this.prepareMessageBody(bodyEl) ?? [];
@@ -267,7 +268,7 @@ export class Message extends Component {
             const current = {
                 isEditing: this.isEditing,
                 richBody: this.message.richBody,
-                searchTerm: this.props.messageSearch?.searchTerm(),
+                searchTerm: this.messageSearch?.searchTerm(),
                 bodyEl: this.messageBody(),
             };
             if (shallowEqual(current, preparedFor)) {
