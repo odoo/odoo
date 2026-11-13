@@ -1,9 +1,17 @@
-import { patch } from '@web/core/utils/patch';
-import { redirect } from '@web/core/utils/urls';
+import { useListener } from "@odoo/owl";
+import { patch } from "@web/core/utils/patch";
+import { redirect } from "@web/core/utils/urls";
 
-import { ExpressCheckout } from '@payment/interactions/express_checkout';
+import { ExpressCheckout } from "@payment/interactions/express_checkout";
 
 patch(ExpressCheckout.prototype, {
+    setup() {
+        super.setup();
+        // Monitor updates of the amount on eCommerce's cart pages.
+        useListener(this.services.cart.bus, "cart_amount_changed", (ev) =>
+            this._updateAmount(...ev.detail)
+        );
+    },
     /**
      * Redirect the user if the checkout progress wasn't complete at the transaction creation.
      * @override

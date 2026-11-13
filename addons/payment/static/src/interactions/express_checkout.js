@@ -3,7 +3,6 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc, RPCError } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
-import { useListener } from "@odoo/owl";
 
 export class ExpressCheckout extends Interaction {
     static selector = 'form[name="o_payment_express_checkout_form"]';
@@ -12,10 +11,6 @@ export class ExpressCheckout extends Interaction {
         this.paymentContext = {};
         Object.assign(this.paymentContext, this.el.dataset);
         this.paymentContext.shippingInfoRequired = !!this.paymentContext.shippingInfoRequired;
-        // Monitor updates of the amount on eCommerce's cart pages.
-        useListener(this.env.bus, 'cart_amount_changed', (ev) =>
-            this._updateAmount(...ev.detail)
-        );
     }
 
     async willStart() {
