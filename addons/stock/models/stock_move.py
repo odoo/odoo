@@ -2492,7 +2492,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _rollup_move_dests(self, seen=False):
         if not seen:
             seen = OrderedSet()
-        unseen = OrderedSet(self.ids) - seen
+        unseen = OrderedSet(move_id for move_id in self.ids if move_id not in seen)
         if not unseen:
             return seen
         seen.update(unseen)
@@ -2502,7 +2502,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _rollup_move_origs(self, seen=False):
         if not seen:
             seen = OrderedSet()
-        unseen = OrderedSet(self.ids) - seen
+        unseen = OrderedSet(move_id for move_id in self.ids if move_id not in seen)
         if not unseen:
             return seen
         seen.update(unseen)
