@@ -1,8 +1,9 @@
 import { test, describe, expect } from "@odoo/hoot";
-import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
+import { createTestProduct, setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { serverState, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { SplitBillScreen } from "@pos_restaurant/app/screens/split_bill_screen/split_bill_screen";
+import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_printer_data";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
@@ -43,6 +44,57 @@ describe("pos.order restaurant patches", () => {
         order.cleanCourses();
         expect(order.course_ids.includes(course2)).toBe(false);
         expect(order.course_ids.includes(course1)).toBe(true);
+    });
+
+    test("service fee is the last receipt line with courses", async () => {
+        const store = await setupPosEnv();
+        const { variant: feeProduct } = createTestProduct(store, { name: "Service Fee", price: 0 });
+        const preset = store.models["pos.preset"].create({
+            name: "Service fee preset",
+            identification: "none",
+            use_timing: false,
+            attendance_ids: [],
+            service_fee: true,
+            service_fee_product_id: feeProduct,
+            service_fee_type: "percent",
+            service_fee_amount: 0.1,
+            service_fee_based_on: "pre_discount",
+        });
+        const order = store.addNewOrder({ preset_id: preset });
+        const addLine = (product, course, price = 10) =>
+            store.models["pos.order.line"].create({
+                order_id: order,
+                product_id: product,
+                product_tmpl_id: product.product_tmpl_id,
+                price_unit: price,
+                qty: 1,
+                tax_ids: [],
+                course_id: course,
+            });
+        const soup = createTestProduct(store, { name: "Soup" }).variant;
+        const steak = createTestProduct(store, { name: "Steak" }).variant;
+        const cake = createTestProduct(store, { name: "Cake" }).variant;
+        const starter = store.addCourse();
+        addLine(soup, starter);
+        const main = store.addCourse();
+        // The fee is created while the first course is alone, then follows the last
+        // course: its line predates the lines of that course.
+        addLine(feeProduct, main, 1);
+        addLine(steak, main);
+        addLine(cake, main);
+
+        const receiptLines = new GeneratePrinterData({
+            models: store.models,
+            order,
+        }).generateLineData();
+
+        expect(receiptLines.map((line) => line.product_data.display_name)).toEqual([
+            "Soup",
+            "Steak",
+            "Cake",
+            "Service Fee",
+        ]);
+        expect(receiptLines.at(-1).is_service_fee_line).toBe(true);
     });
 
     test("getNextCourseIndex", async () => {
