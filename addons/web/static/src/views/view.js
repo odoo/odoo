@@ -75,6 +75,7 @@ import { ViewPlugin } from "./view_plugin";
  * @property {boolean} [activateFavorite]
  * @property {Record<string, any>[]} [dynamicFilters]
  * @property {boolean} [hideCustomGroupBy]
+ * @property {boolean} [hideDateSearchItems]
  * @property {string[]} [searchMenuTypes]
  * @property {Record<string, any>} [globalState]
  *
@@ -185,6 +186,7 @@ const STANDARD_PROPS = [
     "activateFavorite",
     "dynamicFilters",
     "hideCustomGroupBy",
+    "hideDateSearchItems",
     "searchMenuTypes",
 
     ...CALLBACK_RECORDER_NAMES,
@@ -460,6 +462,7 @@ export class View extends Component {
         const wsProps = {
             ...pick(toRaw(props), ...Object.keys(withSearchProps)),
             hideCustomGroupBy: props.hideCustomGroupBy || descr.hideCustomGroupBy,
+            hideDateSearchItems: props.hideDateSearchItems || descr.hideDateSearchItems,
             searchMenuTypes,
             canOrderByCount,
             SearchModel: descr.SearchModel,

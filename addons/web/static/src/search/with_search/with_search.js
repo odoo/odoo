@@ -35,6 +35,7 @@ export const withSearchProps = {
     activateFavorite: t.boolean().optional(),
     dynamicFilters: t.array(t.object()).optional(),
     hideCustomGroupBy: t.boolean().optional(),
+    hideDateSearchItems: t.boolean().optional(),
     searchMenuTypes: t.array(t.string()).optional(),
     canOrderByCount: t.boolean().optional(),
     defaultGroupBy: t.array(t.string()).optional(),

@@ -1,4 +1,4 @@
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 import { EventBus, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -70,6 +70,9 @@ class DropdownNestingState {
  * close itself when the active element is the same as the current
  * dropdown to separate dropdowns in different dialogs.
  *
+ * The returned `current` nesting state is provided to the content of the
+ * dropdown menu only: a dropdown in its toggler is not one of its submenus.
+ *
  * @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} state
  * @returns
  */
@@ -88,7 +91,6 @@ export function useDropdownNesting(state) {
         });
     });
 
-    useSubEnv({ [DROPDOWN_NESTING]: current });
     useBus(BUS, "dropdown-opened", ({ detail: other }) => current.handleChange(other));
 
     useEffect(() => {
@@ -103,6 +105,7 @@ export function useDropdownNesting(state) {
     const isRTL = () => localization.direction === "rtl";
 
     return {
+        current,
         get hasParent() {
             return Boolean(current.parent);
         },

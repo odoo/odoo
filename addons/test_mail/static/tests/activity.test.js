@@ -13,12 +13,13 @@ import { ActivityController } from "@mail/views/web/activity/activity_controller
 import { ActivityModel } from "@mail/views/web/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { keyDown, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { keyDown, queryAllTexts, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, disableAnimations, mockDate } from "@odoo/hoot-mock";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { defineTestMailModels, testMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import {
+    getService,
     mockService,
     onRpc,
     serverState,
@@ -660,6 +661,48 @@ test("activity view: group_by in the action has no effect", async () => {
         views: [[false, "activity"]],
     });
     await expect.waitForSteps(["get_activity_data"]);
+});
+
+test("activity view: date filters are hidden, and restored when switching view", async () => {
+    MailTestActivity._views = {
+        activity: archs["mail.test.activity,false,activity"],
+        list: `<list><field name="name"/></list>`,
+        search: `
+            <search>
+                <filter name="named" string="Named" domain="[('name', '!=', False)]"/>
+                <separator/>
+                <filter name="date_filter" string="Date" date="date"/>
+            </search>
+        `,
+    };
+    onRpc("get_activity_data", ({ kwargs }) => expect.step(kwargs.domain));
+    await start();
+    await getService("action").doAction({
+        res_model: "mail.test.activity",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "activity"],
+        ],
+        context: { search_default_named: 1, search_default_date_filter: 1 },
+    });
+    const facets = ["Named", "Date: April 2023"];
+    expect(queryAllTexts(".o_searchview_facet")).toEqual(facets);
+
+    await getService("action").switchView("activity");
+    expect(queryAllTexts(".o_searchview_facet")).toEqual(["Named"]);
+    await expect.waitForSteps([
+        [
+            ["name", "!=", false],
+            ["activity_ids.active", "in", [true, false]],
+        ],
+    ]);
+    await click(".o_searchview_dropdown_toggler");
+    await waitFor(".o_filter_menu .o_menu_item:text(Named)");
+    expect(queryAllTexts(".o_filter_menu .o_menu_item")).not.toInclude("Date");
+
+    await getService("action").switchView("list");
+    expect(queryAllTexts(".o_searchview_facet")).toEqual(facets);
 });
 
 test("activity view: search more to schedule an activity for a record of a respecting model", async () => {

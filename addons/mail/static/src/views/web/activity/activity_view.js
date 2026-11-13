@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 export const activityView = {
     type: "activity",
     searchMenuTypes: ["filter", "favorite"],
+    hideDateSearchItems: true,
     Controller: ActivityController,
     Renderer: ActivityRenderer,
     ArchParser: ActivityArchParser,
