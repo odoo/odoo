@@ -4,11 +4,18 @@ import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messagi
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { onClickIntent, useOnBottomScrolled, usePeek, useSearch } from "@mail/utils/common/hooks";
+import {
+    onClickIntent,
+    propStatic,
+    useOnBottomScrolled,
+    usePeek,
+    usePropsPlus,
+    useSearch,
+} from "@mail/utils/common/hooks";
 import { computedShallowEqual, incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, computed, signal, types, useEffect, usePlugin, useProps } from "@odoo/owl";
+import { Component, computed, signal, types, useEffect, usePlugin } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -45,7 +52,7 @@ export class MessagingMenu extends Component {
     /** @type {import("@odoo/owl").Signal<import("models").MessagingMenuUIState|undefined>} */
     peekedTabState = signal(undefined);
     /** The tab shown as active: the peeked one only has the look of a hovered tab. */
-    selectedTab = computed(() => this.selectedState().activeTab);
+    selectedTab = computed(() => this.props.state().activeTab);
     containerRef = signal.ref();
     filteredMessages = computedShallowEqual(() => {
         const filters = [...this.state().activePluginFilters];
@@ -73,13 +80,17 @@ export class MessagingMenu extends Component {
         this.notification = useService("mail.notification.permission");
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
-        this.selectedState = useProps.static(
-            "state",
-            types.signal(types.instanceOf(this.store.MessagingMenuUIState))
-        );
+        this.props = usePropsPlus({
+            close: propStatic(types.function().optional()),
+            onToggleSidebar: propStatic(types.function().optional()),
+            searchInputAutofocus: propStatic(
+                types.signal(types.number()).optional(() => signal(0))
+            ),
+            state: propStatic(types.signal(types.instanceOf(this.store.MessagingMenuUIState))),
+        });
         /** The state of the shown list: the one of the peeked tab, if any, also while it hides. */
         this.state = computed(
-            () => (this.canPeek() && this.peekedTabState()) || this.selectedState()
+            () => (this.canPeek() && this.peekedTabState()) || this.props.state()
         );
         this.activeTab = computed(() => this.state().activeTab);
         this.messageSearch = useSearch({
@@ -103,14 +114,8 @@ export class MessagingMenu extends Component {
             },
             deps: () => [this.filteredMessages()],
         });
-        this.close = useProps.static("close", types.function().optional());
-        this.onToggleSidebar = useProps.static("onToggleSidebar", types.function().optional());
-        this.searchInputAutofocus = useProps.static(
-            "searchInputAutofocus",
-            types.signal(types.number()).optional(() => signal(0))
-        );
-        this.focusSearchInput = incrementFn(this.searchInputAutofocus);
-        // Bound once so `onClickMessage` is a stable (useProps.static) handler.
+        this.focusSearchInput = incrementFn(this.props.searchInputAutofocus);
+        // Bound once so `onClickMessage` is a stable (static prop) handler.
         this.onClickMessage = this.onClickMessage.bind(this);
         useOnBottomScrolled(this.tabContentRef, () =>
             this.activeTab().loadMore({
@@ -219,7 +224,7 @@ export class MessagingMenu extends Component {
         } else {
             this.peekedTabState.set(
                 this.store.MessagingMenuUIState.insert({
-                    id: `${this.selectedState().id}.peek`,
+                    id: `${this.props.state().id}.peek`,
                     activeTab: tab,
                 })
             );
@@ -238,13 +243,13 @@ export class MessagingMenu extends Component {
      */
     resetPeek() {
         this.clearPeekedTab();
-        this.selectedState().searchTerm = "";
+        this.props.state().searchTerm = "";
     }
 
     onClickToggleSidebar() {
         this.peek.close();
         this.resetPeek();
-        this.onToggleSidebar();
+        this.props.onToggleSidebar();
     }
 
     /**
@@ -266,7 +271,7 @@ export class MessagingMenu extends Component {
             return;
         }
         this.clearPeekedTab();
-        this.selectedState().selectTab(tab);
+        this.props.state().selectTab(tab);
     }
 
     /** A conversation of the list is opened in the content. */
@@ -274,7 +279,7 @@ export class MessagingMenu extends Component {
         if (!this.peek.isOpen()) {
             return;
         }
-        this.selectedState().activeTab = this.activeTab();
+        this.props.state().activeTab = this.activeTab();
         this.peek.closeOnceLeft();
     }
 
@@ -307,7 +312,7 @@ export class MessagingMenu extends Component {
     onClickAction(action) {
         action.onClick();
         if (!action.preventDropdownClose) {
-            this.close?.();
+            this.props.close?.();
         }
     }
 
@@ -344,6 +349,6 @@ export class MessagingMenu extends Component {
                 }
                 throw error;
             });
-        this.close?.();
+        this.props.close?.();
     }
 }

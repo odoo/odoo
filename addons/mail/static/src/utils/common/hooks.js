@@ -1089,41 +1089,20 @@ export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
 }
 
-/**
- * Single read-only signal derived from one plain-value prop. The result is a signal tracking prop
- * changes, but it is less efficient than `propSignal` as a prop change always triggers an
- * unnecessary render of the parent. To be used only when the parent does not pass a signal and it
- * is not possible to update all parents to pass signals.
- *
- * @template S
- * @param {string} name
- * @param {S} shape shape of the final value (e.g. `t.number()`)
- * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>} the resulting
- *   (read-only) signal, which always exists (never `undefined`), even when the prop is optional.
- */
-export function propComputed(name, shape) {
-    const rawProps = useProps({ [name]: shape });
-    return computed(() => rawProps[name]);
-}
-
-/**
- * Single signal for one prop that is itself a signal: a thin wrapper over `useProps.static` that adds
- * the `t.signal(...)` typing. The parent must pass a stable signal reference (but its inner value
- * may change).
- *
- * @template S
- * @param {string} name
- * @param {S} shape shape of the final value (e.g. `t.number()`)
- * @param {object} [options]
- * @param {boolean} [options.optional]
- * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>}
- */
-export function propSignal(name, shape, { optional = false } = {}) {
-    const type = t.signal(shape);
-    return useProps.static(name, optional ? type.optional() : type);
-}
-
+const PROP_COMPUTED_SYM = Symbol("propComputed");
 const PROP_STATIC_SYM = Symbol("propStatic");
+
+/**
+ * Plain-value prop of a `usePropsPlus({...})` shape, read as a read-only signal that always exists,
+ * even when the prop is optional. A prop change still renders the parent: prefer a signal prop.
+ *
+ * @template S
+ * @param {S} shape shape of the plain value (e.g. `t.number()`)
+ * @returns {import("@odoo/owl").Type<import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>>}
+ */
+export function propComputed(shape) {
+    return /** @type {any} */ ({ [PROP_COMPUTED_SYM]: true, shape });
+}
 
 /**
  * Static prop of a `usePropsPlus({...})` shape, read with `useProps.static`: the parent must pass
@@ -1140,15 +1119,25 @@ export function propStatic(shape) {
 /** @type {import("@odoo/owl").PropsFunction} */
 export const usePropsPlus = (shape) => {
     const usePropsShape = {};
+    const computedShape = {};
     const staticShape = {};
     for (const [key, shapeItem] of Object.entries(shape)) {
-        if (shapeItem?.[PROP_STATIC_SYM]) {
+        if (shapeItem?.[PROP_COMPUTED_SYM]) {
+            computedShape[key] = shapeItem.shape;
+        } else if (shapeItem?.[PROP_STATIC_SYM]) {
             staticShape[key] = shapeItem.shape;
         } else {
             usePropsShape[key] = shapeItem;
         }
     }
     const result = useProps(usePropsShape);
+    if (Object.keys(computedShape).length) {
+        // separate call: the computed keys are not getters of `result`, so they can be assigned on it
+        const computedProps = useProps(computedShape);
+        for (const key of Object.keys(computedShape)) {
+            result[key] = computed(() => computedProps[key]);
+        }
+    }
     for (const [key, shapeItem] of Object.entries(staticShape)) {
         result[key] = useProps.static(key, shapeItem);
     }

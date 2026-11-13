@@ -1,10 +1,10 @@
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { propComputed } from "@mail/utils/common/hooks";
+import { propComputed, propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, computed, t, useProps } from "@odoo/owl";
+import { Component, computed, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -25,20 +25,20 @@ export class SubChannelPreview extends Component {
         super.setup(...arguments);
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
-        this.class = propComputed("class", t.string().optional());
-        this.searchTerm = propComputed("searchTerm", t.string().optional(""));
+        this.props = usePropsPlus({
+            channel: propComputed(t.instanceOf(this.store["discuss.channel"])),
+            class: propComputed(t.string().optional()),
+            onClick: propStatic(subChannelPreviewOnClickType(this.store).optional()),
+            searchTerm: propComputed(t.string().optional("")),
+        });
         this.threadName = computed(() =>
-            this.searchTerm()
+            this.props
+                .searchTerm()
                 .split(" ")
                 .reduce(
                     (name, word) => highlightText(word, name, HIGHLIGHT_CLASS),
-                    this.channel().displayName
+                    this.props.channel().displayName
                 )
-        );
-        this.onClick = useProps.static(
-            "onClick",
-            subChannelPreviewOnClickType(this.store).optional()
         );
     }
 
@@ -47,13 +47,13 @@ export class SubChannelPreview extends Component {
     }
 
     get messageCountText() {
-        if (this.channel().message_count === 1) {
+        if (this.props.channel().message_count === 1) {
             return _t("1 Message");
         }
-        return _t("%(count)s Messages", { count: this.channel().message_count });
+        return _t("%(count)s Messages", { count: this.props.channel().message_count });
     }
 
     get startedByText() {
-        return _t("Started by %(name)s", { name: this.channel().create_uid.name });
+        return _t("Started by %(name)s", { name: this.props.channel().create_uid.name });
     }
 }

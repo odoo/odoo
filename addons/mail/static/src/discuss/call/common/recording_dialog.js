@@ -1,4 +1,5 @@
-import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
+import { Component, signal, t, useEffect } from "@odoo/owl";
 
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -8,10 +9,9 @@ export class RecordingDialog extends Component {
     static template = "discuss.RecordingDialog";
     static components = { CheckBox, Dialog };
 
-    close = useProps.static("close", t.function([]));
-
     setup() {
         super.setup();
+        this.props = usePropsPlus({ close: propStatic(t.function([])) });
         this.store = useService("mail.store");
         const recordingState = this.store.rtc?.recordingState;
         const isRecording = this.store.rtc?.isRecording();
@@ -51,7 +51,9 @@ export class RecordingDialog extends Component {
     isRecordingActionDisabled() {
         return Boolean(
             this.store.rtc?.recordingRequest ||
-                (!this.store.rtc?.isRecording() && !this.state().transcription && !this.state().video)
+                (!this.store.rtc?.isRecording() &&
+                    !this.state().transcription &&
+                    !this.state().video)
         );
     }
 
@@ -83,16 +85,16 @@ export class RecordingDialog extends Component {
             transcription: this.state().transcription,
             video: this.state().video,
         });
-        this.close();
+        this.props.close();
     }
 
     onClickStopRecording() {
         this.store.rtc.stopRecording();
-        this.close();
+        this.props.close();
     }
 
     onClickUpdate() {
         this.store.rtc.setRecording({ transcription: this.state().transcription });
-        this.close();
+        this.props.close();
     }
 }
