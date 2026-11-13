@@ -2,9 +2,19 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BorderConfiguratorOption">
+<<<<<<< 5a2050024c07278e77ee83d2ecf227c1ef7cec97
     <BuilderRow label="this.props.label" level="this.props.level">
         <BuilderNumberInput action="this.props.action" actionParam="{ mainParam: this.getStyleActionParam('width'), extraClass: this.props.withBSClass and 'border' }" unit="'px'" min="0" composable="true"/>
         <BuilderSelect action="this.props.action" actionParam="this.getStyleActionParam('style')" t-if="this.state.hasBorder">
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    <BuilderRow label="props.label">
+        <BuilderNumberInput action="props.action" actionParam="{ mainParam: getStyleActionParam('width'), extraClass: props.withBSClass and 'border' }" unit="'px'" min="0" composable="true"/>
+        <BuilderSelect action="props.action" actionParam="getStyleActionParam('style')" t-if="state.hasBorder">
+=======
+    <BuilderRow label="props.label">
+        <BuilderNumberInput action="props.action" actionParam="{ mainParam: getStyleActionParam('width'), extraClass: props.withBSClass and 'border' }" unit="'px'" min="0" allowDecimals="false" composable="true"/>
+        <BuilderSelect action="props.action" actionParam="getStyleActionParam('style')" t-if="state.hasBorder">
+>>>>>>> 3fab976fae18a791010694b6d3a6724ad73f26db
             <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
             <BuilderSelectItem title.translate="Dashed" actionValue="'dashed'"><div class="o-hb-border-preview" style="border-style: dashed;"/></BuilderSelectItem>
             <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
