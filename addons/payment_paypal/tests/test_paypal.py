@@ -371,7 +371,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="direct", amount=23.0)
         line_items = {"line": {"name": "Chair", "description": "", "quantity": 2, "total": 23.0}}
         with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
-            payload = tx._paypal_prepare_items_payload()
+            payload = tx._prepare_line_items_payload()
         item = payload["items"][0]
         self.assertEqual((item["quantity"], item["unit_amount"]["value"]), ("2", "11.50"))
         self.assertEqual(payload["amount"]["breakdown"]["item_total"]["value"], "23.0")
@@ -382,7 +382,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="direct", amount=10.0)
         line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
         with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
-            item = tx._paypal_prepare_items_payload()["items"][0]
+            item = tx._prepare_line_items_payload()["items"][0]
         self.assertEqual((item["quantity"], item["unit_amount"]["value"]), ("1", "10.00"))
 
     def test_no_items_with_negative_line(self):
@@ -394,7 +394,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
         }
         with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
-            payload = tx._paypal_prepare_items_payload()
+            payload = tx._prepare_line_items_payload()
         self.assertNotIn("items", payload)
         self.assertNotIn("breakdown", payload["amount"])
 
@@ -404,7 +404,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="direct", amount=10.0)
         line_items = {"line": {"name": "", "description": "", "quantity": 1, "total": 10.0}}
         with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
-            payload = tx._paypal_prepare_items_payload()
+            payload = tx._prepare_line_items_payload()
         self.assertNotIn("items", payload)
         self.assertNotIn("breakdown", payload["amount"])
 
@@ -414,6 +414,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="direct", amount=10.0)
         line_items = {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
         with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
-            payload = tx._paypal_prepare_items_payload()
+            payload = tx._prepare_line_items_payload()
         self.assertNotIn("items", payload)
         self.assertNotIn("breakdown", payload["amount"])

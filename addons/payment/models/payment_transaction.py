@@ -717,6 +717,17 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         return {}
 
+    def _prepare_line_items_payload(self):
+        """Prepare the provider-specific payload of the line items.
+
+        Note: `self.ensure_one()`
+
+        :return: The provider-specific payload of the line items.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {}
+
     # === LIFECYCLE METHODS - OUTBOUND REQUESTS === #
 
     def _charge_with_token(self):

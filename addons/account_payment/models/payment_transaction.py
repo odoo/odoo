@@ -100,9 +100,10 @@ class PaymentTransaction(models.Model):
             return super()._get_line_items()
 
         line_items = {}
-        for line in self.invoice_ids.invoice_line_ids:
-            if line.display_type != 'product':
-                continue
+        product_lines = self.invoice_ids.invoice_line_ids.filtered(
+            lambda line: line.display_type == 'product'
+        )
+        for line in product_lines:
             product = line.product_id.with_context(display_default_code=False)
             line_items[line.id] = {
                 'name': product.display_name or line.name or '',

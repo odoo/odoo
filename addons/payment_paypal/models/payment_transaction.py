@@ -220,15 +220,14 @@ class PaymentTransaction(models.Model):
             "description": f"{self.company_id.name}: {self.reference}",
             "payee": payee_data,
             **shipping_address_vals,
-            **self._paypal_prepare_items_payload(),
+            **self._prepare_line_items_payload(),
         }
 
-    def _paypal_prepare_items_payload(self):
-        """Prepare the amount and items payload.
+    def _prepare_line_items_payload(self):
+        """Override of `payment` to return the amount and items payload of PayPal."""
+        if self.provider_code != "paypal":
+            return super()._prepare_line_items_payload()
 
-        :return: The amount and items payload
-        :rtype: dict
-        """
         currency = self.currency_id
         amount_vals = {"currency_code": currency.name, "value": str(self.amount)}
         line_items = self._get_line_items().values()
@@ -238,7 +237,6 @@ class PaymentTransaction(models.Model):
         is_partial_payment = currency.compare_amounts(total_amount, self.amount) != 0
         if has_discounts or has_nameless_items or is_partial_payment:
             return {"amount": amount_vals}
-
         items = []
         for line_item in line_items:
             quantity = line_item["quantity"]
@@ -260,22 +258,20 @@ class PaymentTransaction(models.Model):
                     "value": float_repr(unit_amount, currency.decimal_places),
                 },
             }
-
-            if line_item.get("sku"):
-                item["sku"] = line_item["sku"][:127]
+            if sku := line_item.get("sku"):
+                item["sku"] = sku[:127]
             # Only accepts UPC codes, not other barcode encodings.
             if (barcode := line_item.get("barcode")) and check_barcode_encoding(barcode, "upca"):
                 item["upc"] = {"type": "UPC-A", "code": barcode}
-            if 0 < len(line_item.get("url", "")) <= 2048:
-                item["url"] = line_item["url"]
-            image_url = line_item.get("image_url", "")
+            if (url := line_item.get("url")) and len(url) <= 2048:
+                item["url"] = url
             if (
-                image_url.startswith("https://")
+                (image_url := line_item.get("image_url"))
+                and image_url.startswith("https://")
                 and len(image_url) <= 2048
                 and image_url.lower().endswith((".jpg", ".jpeg", ".png", ".gif"))
             ):
                 item["image_url"] = image_url
-
             items.append(item)
 
         if not items:
@@ -390,7 +386,7 @@ class PaymentTransaction(models.Model):
                     "reference_id": self.reference,
                     "custom_id": self.reference,
                     "description": f"{self.company_id.name}: {self.reference}",
-                    **self._paypal_prepare_items_payload(),
+                    **self._prepare_line_items_payload(),
                 }
             ],
             "payment_source": {
