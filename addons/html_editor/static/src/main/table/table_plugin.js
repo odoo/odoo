@@ -227,6 +227,8 @@ export class TablePlugin extends Plugin {
         /** Properties */
         properties: [
             { predicate: (node) => closestElement(node, "TD, TH"), powerButtons: false },
+            // Tab moves between cells instead of indenting.
+            { predicate: "TD, TH", indentable: false },
             // Before the other `toolbar` declarations, so that the content of the
             // selected cells (images, inline code...) gets the table toolbar too.
             withSequence(5, {

@@ -154,8 +154,8 @@ export class ListPlugin extends Plugin {
                 props: {
                     getButtons: () => this.listSelectorButtons,
                     getListMode: this.getListMode.bind(this),
-                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) =>
-                        item.run()
+                    previewableOperation: this.dependencies.history.makePreviewableOperation(
+                        (item) => item.run()
                     ),
                 },
                 isAvailable: this.canToggleList.bind(this),
@@ -187,6 +187,7 @@ export class ListPlugin extends Plugin {
             { predicate: `LI, LI > ${baseContainerGlobalSelector}`, hint: _t("List") },
             { predicate: (node) => closestElement(node, "LI"), powerButtons: false },
             { predicate: isListItemElement, selectionPlaceholders: true },
+            { predicate: "LI", indentable: true },
         ],
 
         /** Handlers */

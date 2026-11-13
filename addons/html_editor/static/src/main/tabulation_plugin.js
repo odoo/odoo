@@ -17,6 +17,9 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
+import { withSequence } from "@html_editor/utils/resource";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
 
 const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
 const GRID_COLUMN_WIDTH = 40; //@todo Configurable?
@@ -41,7 +44,7 @@ function isIndentationTab(tab) {
 
 export class TabulationPlugin extends Plugin {
     static id = "tabulation";
-    static dependencies = ["dom", "selection", "history", "delete", "split"];
+    static dependencies = ["dom", "selection", "history", "delete", "split", "properties"];
     static shared = shared(["indentBlocks", "outdentBlocks"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -57,6 +60,27 @@ export class TabulationPlugin extends Plugin {
                 isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
+        ...(hasTouch() && {
+            toolbar_groups: withSequence(35, { id: "indentationMobile" }),
+            toolbar_items: [
+                {
+                    id: "indent",
+                    groupId: "indentationMobile",
+                    commandId: "tab",
+                    description: _t("Increase indent"),
+                    icon: "format_indent_increase",
+                    isAvailable: this.canIndentFromToolbar.bind(this),
+                },
+                {
+                    id: "outdent",
+                    groupId: "indentationMobile",
+                    commandId: "shiftTab",
+                    description: _t("Decrease indent"),
+                    icon: "format_indent_decrease",
+                    isAvailable: this.canIndentFromToolbar.bind(this),
+                },
+            ],
+        }),
         shortcuts: [
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
@@ -91,6 +115,25 @@ export class TabulationPlugin extends Plugin {
             this.indentBlocks(targetedBlocks);
         }
         this.dependencies.history.commit();
+    }
+
+    /**
+     *
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     * @returns {boolean}
+     */
+    canIndentFromToolbar(selection) {
+        for (
+            let element = closestElement(selection.anchorNode);
+            element && element !== this.editable;
+            element = element.parentElement
+        ) {
+            const indentable = this.dependencies.properties.get(element, "indentable");
+            if (indentable !== undefined) {
+                return indentable;
+            }
+        }
+        return true;
     }
 
     handleShiftTab() {
