@@ -16,8 +16,8 @@
     </t>
 
     <t t-name="mail.MessageSeenIndicatorDialog">
-        <Dialog size="'sm'" title.translate="Seen by:" footer="false" withBodyPadding="false" contentClass="'o-mail-MessageSeenIndicatorDialog'">
-            <ul class="list-group list-group-flush list-unstyled py-1" t-ref="this.contentRef" tabindex="0">
+        <Dialog size="'sm'" title.translate="Seen by:" footer="false" withBodyPadding="false" contentClass="'o-mail-MessageSeenIndicatorDialog'" modalRef="this.modalRef">
+            <ul class="list-group list-group-flush list-unstyled py-1" tabindex="0">
                 <li class="list-group-item py-2" t-foreach="this.props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
                     <t t-call="mail.MessageSeenIndicatorPopover.card"/>
                 </li>

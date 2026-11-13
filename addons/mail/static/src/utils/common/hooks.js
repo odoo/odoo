@@ -18,6 +18,8 @@ import {
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
+import { useEnv } from "@web/owl2/utils";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
@@ -1259,4 +1261,36 @@ export function useRightClickMenu(
         }
     });
     return res;
+}
+
+/**
+ * Hook to add a click away feature on a custom Dialog.
+ *
+ * @param {import("@odoo/owl").Signal<HTMLElement>} modalRef the signal passed to Dialog.props.modalRef.
+ * @param {() => void} closeFn a function that triggers the close of the dialog.
+ */
+export function useDialogCloseOnClickAway(modalRef, closeFn) {
+    const env = useEnv();
+    useListener(
+        window,
+        "mousedown",
+        (ev) => {
+            if (!env.dialogData.isActive) {
+                return;
+            }
+            const modalContent = modalRef()?.querySelector(".modal-content");
+            if (!modalContent) {
+                return;
+            }
+            const target = ev.composedPath()[0];
+            if (
+                target &&
+                !modalContent.contains(target) &&
+                (!env[OVERLAY_SYMBOL]?.contains(target) || modalRef() === target)
+            ) {
+                closeFn();
+            }
+        },
+        true
+    );
 }

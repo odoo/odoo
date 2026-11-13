@@ -2718,6 +2718,37 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await waitForNone(".o-mail-MessageReactionMenu");
 });
 
+test("View reactions dialog has a title and closes on click outside", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+        reaction_ids: [
+            pyEnv["mail.message.reaction"].create({
+                content: "😅",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-Message");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('View Reactions')");
+    await waitFor(".o-mail-MessageReactionMenu .modal-title:text('Message Reactions')");
+    await click(".o-mail-MessageReactionMenu .modal-title");
+    await animationFrame();
+    expect(".o-mail-MessageReactionMenu:has(:text('😅 1'))").toHaveCount(1);
+    await click(".modal");
+    await waitForNone(".o-mail-MessageReactionMenu");
+});
+
 test("Click on view reactions from right-click on message shows the reactions", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
