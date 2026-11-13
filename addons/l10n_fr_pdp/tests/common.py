@@ -1,7 +1,8 @@
 import datetime
 import requests
 
-from base64 import b64encode
+from base64 import b64decode, b64encode
+from cryptography.fernet import Fernet
 from freezegun import freeze_time
 from unittest import mock
 from unittest.mock import patch
@@ -208,3 +209,52 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
                 .with_context(active_model=invoice._name, active_ids=invoice.ids) \
                 .create({})
             wizard.action_send_and_print()
+
+    def _get_ppf_document_request_handler(self, peppol_uuid, xml, flow_number='1'):
+        enc_key = file_open(f'{FILE_PATH}/enc_key', 'rb').read()
+        fernet_key = self.private_key._decrypt(b64decode(enc_key))
+        document = b64encode(Fernet(fernet_key).encrypt(xml))
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            message = {
+                'filename': 'CFE0614A_PPF262_PPF2620614000000000060019',
+                'uuid': FAKE_UUID[2],
+                'state': 'done',
+                'direction': 'incoming',
+                'document_type': 'CrossDomainAcknowledgementAndResponse',
+                'timestamp': '2022-12-30',
+                'error': False,
+                'flow_id': 'CFE0614A_PPF262_PPF2620614000000000060019',
+            }
+            content = {
+                'filename': 'CFE0614A_PPF262_PPF2620614000000000060019',
+                'enc_key': enc_key,
+                'document': document,
+                'state': 'done',
+                'error': False,
+                'direction': 'incoming',
+                'document_type': 'CrossDomainAcknowledgementAndResponse',
+                'flow_id': 'CFE0614A_PPF262_PPF2620614000000000060019',
+                'flow_number': flow_number,
+                'ref_status_code': '500',
+                'origin_ref_status_code': '200',
+                'origin_ppf_message_uuid': FAKE_UUID[2],
+                'origin_peppol_message_uuid': peppol_uuid,
+                'origin_peppol_lifecycle_uuid': False,
+            }
+            responses = {
+                '/api/pdp/1/get_all_ppf_documents': {
+                    'has_more': False,
+                    'messages': [message],
+                },
+                '/api/pdp/1/get_ppf_document': {FAKE_UUID[2]: content},
+                '/api/pdp/1/ack_ppf': {},
+            }
+            if r.path_url not in responses:
+                return self._request_handler(s, r, **kwargs)
+            response = requests.Response()
+            response.status_code = 200
+            response.json = lambda: {'result': responses[r.path_url]}
+            return response
+
+        return _request_handler

@@ -251,12 +251,17 @@ class AccountMove(models.Model):
         if not tax_extract_responses and self.partner_id.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
             return 'in_progress'
         states = set(tax_extract_responses.mapped('response_code'))
-        if {'refused', 'RE'} & states:
+        # We prioritize 500 (admissible / 'AB') over 501 (inadmissible 'RE') in case we get both.
+        # This is because sometimes there is an error during the sending after the PPF received the message.
+        # Then they send us a 500 / 'admissible' while the PPF message is still "processing" on IAP side.
+        if 'refused' in states:
             state = 'error'
         elif 'AP' in states:
             state = 'done'
         elif 'AB' in states:
             state = 'sent'
+        elif 'RE' in states:
+            state = 'error'
         else:
             state = False
         return state
