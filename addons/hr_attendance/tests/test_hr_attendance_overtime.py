@@ -1958,6 +1958,26 @@ class TestHrAttendanceOvertime(HttpCase):
             "when updating overtime for the following day.",
         )
 
+    def test_overtime_recomputation_consecutive_night_shifts(self):
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 22, 0),
+            'check_out': datetime(2021, 1, 5, 2, 0),
+        })
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 5, 14, 0),
+            'check_out': datetime(2021, 1, 6, 1, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 4.0, "The 5th has 12 worked hours over two attendances.")
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 6, 8, 0),
+            'check_out': datetime(2021, 1, 6, 17, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 4.0, "The overtime of the 5th should still count the previous night shift.")
+
     def test_weekly_overtime_flexible_resource_public_holiday(self):
         self.ruleset.rule_ids.write({
             'expected_hours_from_contract': True,
