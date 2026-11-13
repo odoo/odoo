@@ -1258,6 +1258,21 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(line_ids[1].debit, 0)                          # Line should be at 0 since it's a zero amount order
         self.assertEqual(line_ids[1].credit, 0)                         # Line should be at 0 since it's a zero amount order
 
+    def test_close_session_with_only_fully_discounted_orders(self):
+        session = self.open_pos_session()
+        orders = self.env['pos.order']
+        for qty in (1, -1):
+            order = self.create_pos_order(products=[[self.product_6, {'discount': 100, 'qty': qty}]])
+            order.with_context(generate_pdf=False)._process_saved_order(False)
+            self.assertEqual(order.state, 'paid')
+            self.assertEqual(order.amount_total, 0)
+            orders |= order
+
+        session.close_session_from_ui({self.cash_pm.id: 0})
+        self.assertEqual(session.state, 'closed')
+        self.assertEqual(orders.mapped('state'), ['done', 'done'])
+        self.assertFalse(session.move_ids)
+
     def test_various_orders(self):
         StatementLine = self.env['account.bank.statement.line']
         BankPayment = self.env['account.payment']
