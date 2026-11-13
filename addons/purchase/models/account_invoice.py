@@ -478,7 +478,8 @@ class AccountMove(models.Model):
 
         elif method == 'subset_match':
             # A subset of the referenced purchase order lines matches a subset of the invoice lines.
-            # We add the purchase order lines, but adjust the quantity to the quantities in the invoice.
+            # We add the purchase order lines, but adjust the quantity, taxes and discount to the
+            # values in the invoice.
             # The original invoice lines that correspond with a purchase order line are removed.
             self._set_purchase_orders(matched_po_lines.order_id, force_write=False)
 
@@ -487,8 +488,8 @@ class AccountMove(models.Model):
                     lambda l: l.purchase_line_id and l.purchase_line_id not in matched_po_lines)
                 invoice.invoice_line_ids = [Command.delete(line.id) for line in unmatched_lines]
 
-                # We remove the original matched invoice lines and apply their quantities and taxes to the matched
-                # purchase order lines.
+                # We remove the original matched invoice lines and apply their quantities, taxes and discounts
+                # to the matched purchase order lines.
                 inv_and_po_lines = list(map(lambda line: (
                         invoice.invoice_line_ids.filtered(
                             lambda l: l.purchase_line_id and l.purchase_line_id.id == line[0]),
@@ -498,7 +499,11 @@ class AccountMove(models.Model):
                     matched_inv_lines
                 ))
                 invoice.invoice_line_ids = [
-                    Command.update(po_line.id, {'quantity': inv_line.quantity, 'tax_ids': inv_line.tax_ids})
+                    Command.update(po_line.id, {
+                        'quantity': inv_line.quantity,
+                        'tax_ids': inv_line.tax_ids,
+                        'discount': inv_line.discount,
+                    })
                     for po_line, inv_line in inv_and_po_lines
                 ]
                 invoice.invoice_line_ids = [Command.delete(inv_line.id) for dummy, inv_line in inv_and_po_lines]
