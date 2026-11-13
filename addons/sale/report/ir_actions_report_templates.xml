@@ -98,6 +98,7 @@
             <!-- Is there a discount on at least one line? -->
             <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
             <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report)"/>
+            <t t-set="display_uom" t-value="doc.env['res.groups']._is_feature_enabled('uom.group_uom')"/>
             <!-- Hide taxes AND show taxed amounts on lines -->
             <t t-set="hide_taxes_details" t-value="False"/>
             <t t-set="display_taxes" t-value="not hide_taxes_details and any(l._has_taxes() for l in lines_to_report)"/>
@@ -203,7 +204,7 @@
                                 </t>
                                 <t
                                     t-set="show_section_qty_uom"
-                                    t-value="line.section_qty != 1 or line.section_uom_id != default_section_uom"
+                                    t-value="display_uom and (line.section_qty != 1 or line.section_uom_id != default_section_uom)"
                                 />
 
                                 <td
@@ -227,7 +228,7 @@
                                     >(<span
                                             t-field="line.section_qty"
                                             t-options="{'widget': 'float', 'min_precision': 0}"
-                                        /> <span t-field="line.section_uom_id"/>)</span>
+                                        /> <span t-if="display_uom" t-field="line.section_uom_id"/>)</span>
                                 </td>
                                 <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
                                     <span
@@ -275,7 +276,7 @@
                                 </td>
                                 <td name="td_combo_quantity" class="text-end">
                                     <span t-field="line.product_uom_qty"/>
-                                    <span t-field="line.product_uom_id"/>
+                                    <span t-if="display_uom" t-field="line.product_uom_id"/>
                                 </td>
                                 <td
                                     name="td_combo_price"
@@ -321,9 +322,9 @@
                                 </td>
                                 <td name="td_product_quantity" class="o_td_quantity text-end">
                                     <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
-                                    <span t-field="line.product_uom_id">units</span>
+                                    <span t-if="display_uom" t-field="line.product_uom_id">units</span>
                                     <span
-                                        t-if="line.product_id and line.product_uom_id != line.product_id.uom_id"
+                                        t-if="display_uom and line.product_id and line.product_uom_id != line.product_id.uom_id"
                                         class="text-muted small"
                                     >
                                         <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
@@ -390,7 +391,7 @@
                                 </td>
                                 <td name="td_section_group_quantity" class="text-end text-nowrap">
                                     <span t-field="line.section_qty"/>
-                                    <span t-field="line.section_uom_id"/>
+                                    <span t-if="display_uom" t-field="line.section_uom_id"/>
                                 </td>
                                 <td name="td_section_group_priceunit" class="text-end text-nowrap">
                                     <span

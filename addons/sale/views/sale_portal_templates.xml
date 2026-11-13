@@ -717,6 +717,7 @@
             <section id="details" class="p-0 p-lg-3 pt-lg-0 rounded-bottom border-start border-end border-bottom" style="page-break-inside: auto;">
                 <t t-set="lines_to_report" t-value="sale_order._get_order_lines_to_report()"/>
                 <t t-set="display_discount" t-value="any(line.discount > 0 for line in lines_to_report)"/>
+                <t t-set="display_uom" t-value="sale_order.env['res.groups']._is_feature_enabled('uom.group_uom')"/>
                 <t t-set="hide_taxes_details" t-value="False"/>
                 <t t-set="display_taxes" t-value="not hide_taxes_details and any(line._has_taxes() for line in lines_to_report)"/>
                 <t t-if="sale_order.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
@@ -765,7 +766,7 @@
                                         <span t-field="line.label"/>
                                         <div class="fw-normal text-muted small mt-1">
                                             <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}"/>
-                                            <span class="ms-1" t-field="line.product_uom_id"/>
+                                            <span t-if="display_uom" class="ms-1" t-field="line.product_uom_id"/>
                                         </div>
                                     </div>
                                     <span t-if="not collapse_prices_m"
@@ -799,7 +800,7 @@
                                         <div class="d-flex flex-wrap align-items-baseline gap-1 mt-1 small text-muted">
                                             <span name="span_qty_uom">
                                                 <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}"/>
-                                                <span class="ms-1" t-field="line.product_uom_id"/>
+                                                <span t-if="display_uom" class="ms-1" t-field="line.product_uom_id"/>
                                             </span>
                                             <t t-if="line.price_unit">
                                                 <span>×</span>
@@ -1057,7 +1058,7 @@
                                         >
                                             <div id="quote_qty">
                                                 <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}"/>
-                                                <span t-field="line.product_uom_id"/>
+                                                <span t-if="display_uom" t-field="line.product_uom_id"/>
                                             </div>
                                         </td>
                                         <td
@@ -1112,7 +1113,7 @@
                                         <td name="td_product_quantity" class="text-end">
                                             <div id="quote_qty">
                                                 <span t-field="line.product_uom_qty" t-options="{'min_precision': 0}"/>
-                                                <span t-field="line.product_uom_id"/>
+                                                <span t-if="display_uom" t-field="line.product_uom_id"/>
                                             </div>
                                         </td>
                                         <td t-if="display_discount" name="td_product_discount"
