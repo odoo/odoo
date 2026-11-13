@@ -445,5 +445,7 @@ class HrVersion(models.Model):
                 'date_to': version.date_end,
                 'state': 'confirm',
             })
-            version.allocation_from_working_schedule_id._update_accrual()
+            # The accrual cannot run after the end of the allocation (the version end date).
+            accrual_date_to = min(version.date_end, fields.Date.today()) if version.date_end else None
+            version.allocation_from_working_schedule_id._update_accrual(accrual_date_to)
             version.allocation_from_working_schedule_id.action_approve()
