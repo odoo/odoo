@@ -16,6 +16,21 @@ class SmsSms(models.Model):
     # See commit message for why this is useful.
     mailing_trace_ids = fields.One2many('mailing.trace', 'sms_id_int', string='Statistics')
 
+    def _send(self, *args, **kwargs):
+        # Lock the batch's traces and their mailings until commit: status webhooks
+        # for these SMS then wait on their own trace/mailing updates instead of
+        # interleaving with the batch (deadlocks / serialization failures).
+        if traces := self.sms_tracker_id.mailing_trace_id:
+            self.env.cr.execute(
+                "SELECT id FROM mailing_trace WHERE id IN %s ORDER BY id FOR NO KEY UPDATE",
+                [tuple(traces.ids)],
+            )
+            self.env.cr.execute(
+                "SELECT id FROM mailing_mailing WHERE id IN %s ORDER BY id FOR NO KEY UPDATE",
+                [tuple(traces.mass_mailing_id.ids)],
+            )
+        return super()._send(*args, **kwargs)
+
     def _update_body_short_links(self):
         """ Override to tweak shortened URLs by adding statistics ids, allowing to
         find customer back once clicked. """
