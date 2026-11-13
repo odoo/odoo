@@ -6045,12 +6045,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        ids = tuple(ids)
-        if len(prefetch_ids_list) == 1:
-            prefetch_ids = prefetch_ids_list[0]
-        else:
-            prefetch_ids = Prefetch.union(*prefetch_ids_list)
-        return self.__class__(self.env, ids, prefetch_ids)
+        return self.__class__(self.env, tuple(ids), Prefetch.union(*prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -6113,12 +6108,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
-        ids = tuple(dict.fromkeys(ids))
-        if len(prefetch_ids_list) == 1:
-            prefetch_ids = prefetch_ids_list[0]
-        else:
-            prefetch_ids = Prefetch.union(*prefetch_ids_list)
-        return self.__class__(self.env, ids, prefetch_ids)
+        return self.__class__(self.env, tuple(dict.fromkeys(ids)), Prefetch.union(*prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
