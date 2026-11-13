@@ -320,6 +320,13 @@ class MrpProduction(models.Model):
             ('secondary', 'Secondary'),
             ('invisible', 'Invisible'),
         ], compute='_compute_validate_button_style')
+    employee_ids = fields.Many2many(
+            "hr.employee",
+            string="working employees",
+            compute="_compute_employee_ids",
+            compute_sudo=True,
+            bypass_search_access=True,
+        )
 
     @api.depends('production_group_id.child_ids.production_ids')
     def _compute_mrp_production_child_count(self):
@@ -1000,6 +1007,11 @@ class MrpProduction(models.Model):
         for mo in self:
             packages = mo.move_finished_ids.move_line_ids.result_package_id
             mo.packages_count = len(packages)
+
+    @api.depends('workorder_ids', 'workorder_ids.employee_ids')
+    def _compute_employee_ids(self):
+        for record in self:
+            record.employee_ids = record.workorder_ids.employee_ids
 
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
