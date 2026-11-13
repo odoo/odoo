@@ -1,14 +1,28 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< c7a3d32c3097900f63dd46253c5d0f36e87529a7
 from datetime import datetime, timedelta
 from freezegun import freeze_time
+||||||| 555e93d608d4c9ef841f57280f5cc4a3907fae7d
+from datetime import datetime, timedelta
+=======
+from datetime import date, datetime, timedelta
+>>>>>>> 5f3f85dea8a416f80903455fb1aaa4799b673dfa
 from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
+from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+<<<<<<< c7a3d32c3097900f63dd46253c5d0f36e87529a7
 from odoo.tests.common import tagged, users
+||||||| 555e93d608d4c9ef841f57280f5cc4a3907fae7d
+from odoo.tests.common import users
+=======
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
+from odoo.tests.common import users
+>>>>>>> 5f3f85dea8a416f80903455fb1aaa4799b673dfa
 
 
 @tagged('event_track_internals')
@@ -177,6 +191,50 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+
+    def test_split_track_by_days_long_duration(self):
+        """ A track running over several days is split into one entry per day,
+        and keeps its real duration across a daylight saving time change. """
+        for date_tz, track_date, duration, expected_slots, end_hour in [
+            # DST ends on 25 October 2026 at 03:00, the day lasts 25 hours
+            ('Europe/Brussels', datetime(2026, 10, 24, 20, 0, 0), 50.0, {
+                date(2026, 10, 24): [(22, 8)],
+                date(2026, 10, 25): [(0, 100)],
+                date(2026, 10, 26): [(0, 92)],
+            }, 23),
+            # DST starts on 30 April 2027 at midnight, the day starts at 01:00 and lasts 23 hours
+            ('Africa/Cairo', datetime(2027, 4, 29, 20, 0, 0), 30.0, {
+                date(2027, 4, 29): [(22, 8)],
+                date(2027, 4, 30): [(1, 92)],
+                date(2027, 5, 1): [(0, 20)],
+            }, 5),
+        ]:
+            with self.subTest(date_tz=date_tz):
+                self.event_0.track_ids.unlink()
+                self.event_0.date_tz = date_tz
+                track = self.env['event.track'].create({
+                    'name': 'Marathon Track',
+                    'event_id': self.event_0.id,
+                    'date': track_date,
+                    'duration': duration,
+                    'is_published': True,
+                })
+
+                with MockRequest(self.env):
+                    calendar_values = EventTrackController()._prepare_calendar_values(self.event_0)
+                self.assertEqual(
+                    {
+                        day: [
+                            (time_slot.hour, tracks_by_location[track.location_id][track]['rowspan'])
+                            for time_slot, tracks_by_location in time_slots.items()
+                            if track in tracks_by_location.get(track.location_id, {})
+                        ]
+                        for day, time_slots in calendar_values['time_slots'].items()
+                    },
+                    expected_slots,
+                    'Each day of the agenda should only show the part of the track running on that day')
+                last_time_slot = list(calendar_values['time_slots'][max(expected_slots)])[-1]
+                self.assertEqual(last_time_slot.hour, end_hour, 'The agenda should end at the real end of the track')
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
