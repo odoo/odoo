@@ -13,7 +13,7 @@
                                     <td class="ps-3 pe-3"><t t-out="this.props.version_changes[field_name][0]"/></td>
                                     <td><i class="oi" data-icon="east"/></td>
                                     <td class="ps-3 pe-3"><t t-out="this.props.version_changes[field_name][1]"/></td>
-                                    <td><t t-out="field_name"/></td>
+                                    <td>(<t t-out="this.props.record.fields[field_name].string"/>)</td>
                                 </tr>
                             </t>
                         </tbody>
