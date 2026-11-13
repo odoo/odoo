@@ -1067,7 +1067,7 @@ class IrQweb(models.AbstractModel):
         entry = None
         if key in misses:  # already looked up by `_preload_code_cached`
             misses.discard(key)
-        elif (data := self.env['ir.cache']._get('qweb', [key], self._get_template_cache_sql()).get(key)):
+        elif (data := self.env['ir.cache'].lookup('qweb', key, self._get_template_cache_sql())):
             entry = marshal.loads(data)
         result = self.__load_code(*entry) if entry else self._generate_code_uncached(ref, key)
         self._preload_code_cached(result[2].get('calls', ()))
@@ -1087,7 +1087,8 @@ class IrQweb(models.AbstractModel):
                 and (key := repr(self._get_cache_key(info['ref']))) not in misses
                 and ormcache.get_value(self, info['ref']) is None
             }
-            entries = self.env['ir.cache']._get('qweb', keys, self._get_template_cache_sql())
+            values = self.env['ir.cache']._lookup('qweb', keys, hash=self._get_template_cache_sql())
+            entries = {key: value for key, value in zip(keys, values) if value is not None}
             misses.update(keys.keys() - entries.keys())
             missing = [ref for key, ref in keys.items() if key not in entries]
             trees = self._preload_trees(missing)

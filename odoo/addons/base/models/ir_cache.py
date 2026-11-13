@@ -47,7 +47,7 @@ class IrCache(models.Model):
     in the table (ORM, server action, SQL injection, psql...) or in the
     files of the values (next to the filestore, see
     :meth:`~odoo.tools.config.configmanager.cache_dir`): an entry is used
-    only if its file exists and its signature is valid, see :meth:`_get`.
+    only if its file exists and its signature is valid, see :meth:`_lookup`.
     The signature is computed with a key that only lives in the memory of
     the server (see :func:`_get_ir_cache_secret`), so a valid entry can only
     be produced by :meth:`_set__`.
@@ -109,11 +109,14 @@ class IrCache(models.Model):
         :return: whether the canary is valid, i.e. the entries are signed with
             the current key
         """
-        data = self._get('ir.cache', ('ir.cache',))
-        return data.get('ir.cache') == b'0'
+        return self.lookup('ir.cache', 'ir.cache') == b'0'
+
+    @api.private
+    def lookup(self, kind: str, key: str, hash: SQL | str = '') -> bytes | None:
+        return self._lookup(kind, [key], hash=hash)[0]
 
     @api.model
-    def _get(self, kind: str, keys: Collection[str], hash: SQL | str = '') -> dict[str, bytes]:
+    def _lookup(self, kind: str, keys: Collection[str], hash: SQL | str = '') -> tuple[bytes | None]:
         """ Return the value of the last entry of each key, if its signature
         is valid and if its source did not change: its ``hash`` is equal to
         ``hash``, or to the expression ``hash`` computed from its ``control``.
@@ -133,7 +136,7 @@ class IrCache(models.Model):
             the valid entries only
         """
         if not keys:
-            return {}
+            return ()
         secret = _get_ir_cache_secret(self.env)
 
         rows = self.env.execute_query(SQL("""
@@ -181,7 +184,7 @@ class IrCache(models.Model):
                 result[key] = data
         if invalid and kind != 'ir.cache' and self._check_secret():
             _logger.info("ir.cache: invalid signature of the %s entries %r, ignored", kind, invalid)
-        return result
+        return tuple(result.get(key) for key in keys)
 
     @api.model
     def _set__(self, kind: str, key: str, value: Buffer, control: list | tuple | dict | None = None, hash: SQL | str = ''):
@@ -191,7 +194,7 @@ class IrCache(models.Model):
         This must be done in the transaction that produced ``value``: when the
         transaction is rolled back, the entry is either rolled back too, or
         does not match its source anymore. With a read-only cursor, the entry is stored by a
-        new cursor after the commit, and :meth:`_get` returns it until then.
+        new cursor after the commit, and :meth:`_lookup` returns it until then.
 
         :param str kind: the type of the entry, e.g. ``'qweb'``
         :param str key: the key of the entry
@@ -217,7 +220,7 @@ class IrCache(models.Model):
             [[hash_value]] = self.env.execute_query(SQL("SELECT %s FROM (SELECT %s::jsonb AS control) entry", hash, control_json))
 
         data = bytes(value)
-        message = b'\0'.join([kind.encode(), key.encode(), control_json.encode(), hash_value.encode(), data])  # same as in `_get`
+        message = b'\0'.join([kind.encode(), key.encode(), control_json.encode(), hash_value.encode(), data])  # same as in `_lookup`
 
         signature = hmac_lib.digest(secret, message, 'sha256')
         create_date = datetime.now(timezone.utc).replace(tzinfo=None)
@@ -245,7 +248,7 @@ class IrCache(models.Model):
             return
 
         # A read-only cursor can not write: insert the entries with a new
-        # cursor after the commit, `_get` reads them in the meantime. The hash
+        # cursor after the commit, `_lookup` reads them in the meantime. The hash
         # is the one of the source seen by the transaction that produced the
         # value: if the source changed in the meantime, the entry is simply
         # not used.
