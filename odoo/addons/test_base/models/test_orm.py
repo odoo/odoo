@@ -336,7 +336,13 @@ class TestOrmCreativeworkEdition(models.Model):
     _description = 'Test ORM Creative Work Edition'
 
     name = fields.Char()
-    res_id = fields.Many2oneReference(model_field='res_model', ondelete='ignore')
+    res_id = fields.Many2oneReference(
+        model_field='res_model',
+        ondelete=lambda self, model: {
+            'test_orm.creativework.book': 'cascade',
+            'test_orm.creativework.movie': 'set null',
+        }.get(model._name, 'ignore'),
+    )
     res_model_id = fields.Many2one('ir.model', required=True, ondelete='cascade')
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 

@@ -152,6 +152,33 @@ class One2manyCase(TransactionExpressionCase):
         res_movies_not_of_edition_name = self._search(self.Movie, [('editions', '!=', one_movie_edition.name)])
         self.assertItemsEqual(t(res_movies_not_of_edition_name), t(movies.filtered(lambda r: one_movie_edition not in r.editions)))
 
+    def test_many2one_reference_callable_ondelete(self):
+        """Removing lines from a one2many whose inverse is a many2one_reference
+        with a callable ondelete must apply the policy returned by it."""
+        # book: ondelete is 'cascade', removed editions are deleted
+        book = self.Book.search([('name', '=', 'Nineteen Eighty Four')])
+        first, fourth = book.editions.sorted('name')
+        self.assertEqual(first.name, 'First edition')
+        book.editions = [Command.unlink(first.id)]
+        self.assertFalse(first.exists())
+        self.assertEqual(book.editions, fourth)
+        book.editions = [Command.clear()]
+        self.assertFalse(fourth.exists())
+        self.assertFalse(book.editions)
+
+        # movie: ondelete is 'set null', removed editions are kept
+        movie = self.Movie.search([('name', '=', 'The Gold Rush')])
+        editions = movie.editions
+        self.assertEqual(len(editions), 2)
+        movie.editions = [Command.unlink(editions[0].id)]
+        self.assertTrue(editions[0].exists())
+        self.assertFalse(editions[0].res_id)
+        self.assertEqual(movie.editions, editions[1])
+        movie.editions = [Command.set([])]
+        self.assertEqual(editions.exists(), editions)
+        self.assertFalse(any(editions.mapped('res_id')))
+        self.assertFalse(movie.editions)
+
     def test_many2one_reference_inverse_cache(self):
         """Writing on a many2one_reference updates the cache of its inverses."""
         gold_rush = self.Movie.search([('name', '=', 'The Gold Rush')])
