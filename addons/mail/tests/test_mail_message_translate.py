@@ -73,11 +73,12 @@ class TestTranslationController(HttpCase):
         if f"/v2/?key={self.api_key}" in url:
             return {"translations": [{"translatedText": SAMPLE[data.get("target")]}]}
 
-    def _mock_translation_request(self, data, user=None):
+    def _mock_translation_request(self, data, user=None, cookies=None):
         with patch.object(requests, "post", self._patched_post):
             user = user or self.env.user
             return self.make_jsonrpc_request(
-                "/mail/message/translate", data, cookies={"frontend_lang": user.lang}
+                "/mail/message/translate", data,
+                cookies=dict({"frontend_lang": user.lang}, **(cookies or {})),
             )
 
     def test_update_message(self):
@@ -134,6 +135,36 @@ class TestTranslationController(HttpCase):
             self.env["mail.message.translation"].search([]).mapped("target_lang"),
             ["zh-CN", "zh-TW"],
         )
+
+    def test_translation_website_visitor(self):
+        user_admin = self.env.ref("base.user_admin")
+        user_public = self.env.ref("base.public_user")
+        user_public.write({'lang': 'en_US'})
+
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        test_group = self.env["discuss.channel"].create({"name": "Group", "channel_type": "group"})
+        test_group._add_members(guests=guest, partners=user_admin.partner_id)
+        message = self.env["mail.message"].with_user(user_admin).create(
+            {
+                "body": SAMPLE["text"],
+                "model": "discuss.channel",
+                "res_id": test_group.id,
+                "message_type": "comment",
+                "subtype_id": self.env.ref("mail.mt_comment").id,
+            }
+        )
+
+        result = self._mock_translation_request(
+            {"message_id": message.id},
+            user=user_public,
+            cookies={
+                'frontend_lang': 'fr_FR',
+                guest._cookie_name: guest._format_auth_cookie(),
+            }
+        )
+        self.assertFalse(result.get("error"))
+        self.assertEqual(result["body"], SAMPLE["fr"])
+        self.assertEqual(result["lang_name"], SAMPLE["lang"]["fr"])
 
     def test_invalid_api_key(self):
         self.env["ir.config_parameter"].set_str("mail.google_translate_api_key", "INVALIDKEY")
