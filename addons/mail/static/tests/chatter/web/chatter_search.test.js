@@ -14,6 +14,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 import { contains, serverState } from "@web/../tests/web_test_helpers";
 
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_plugin";
@@ -208,6 +209,7 @@ test("opening search in chatter hides files and pinned messages panels", async (
 });
 
 test("Search in chatter should be hightligted", async () => {
+    mockDate("2024-10-20 10:00:00");
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -216,11 +218,20 @@ test("Search in chatter should be hightligted", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
+    pyEnv["mail.scheduled.message"].create({
+        subject: "empty subject",
+        body: "<p>scheduled empty body</p>",
+        model: "res.partner",
+        res_id: partnerId,
+        scheduled_date: "2024-10-20 14:00:00",
+    });
     await start();
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']:count(1)").click();
     await insertText(".o-mail-SearchInput input", "empty");
     await waitFor(`.o-mail-SearchMessageResult .o-mail-Message .${HIGHLIGHT_CLASS}:count(1)`);
+    await waitFor(`.o-mail-Scheduled-Message .${HIGHLIGHT_CLASS}:count(2)`);
+    await waitFor(`.${HIGHLIGHT_CLASS}:count(3)`);
 });
 
 test("Scrolling bottom in non-aside chatter should load more searched message", async () => {
