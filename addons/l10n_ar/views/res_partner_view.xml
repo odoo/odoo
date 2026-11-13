@@ -10,7 +10,7 @@
                 <field name="l10n_ar_afip_responsibility_type_id"
                        invisible="'AR' not in fiscal_country_codes"
                        options="{'no_open': True, 'no_create': True}"
-                       readonly="parent_id"/>
+                       readonly="parent_id and not is_company"/>
             </xpath>
         </field>
     </record>
