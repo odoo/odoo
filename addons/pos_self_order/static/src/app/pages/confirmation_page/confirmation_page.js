@@ -170,6 +170,12 @@ export class ConfirmationPage extends Component {
         return {};
     }
 
+    onPageClick(ev) {
+        if (!this.state.continueDisabled && !ev.target.closest("button")) {
+            this.backToHome();
+        }
+    }
+
     backToHome() {
         if (!this.setDefautLanguage()) {
             this.router.navigate("default");
