@@ -177,6 +177,14 @@ class TestReports(odoo.tests.TransactionCase):
             'data-report-header-spacing': '46',
             'data-report-margin-bottom': '22',
         })
+        # The content of a header, like a localized header, can ask for more room than its layout
+        localized_header = etree.Element('div', {'data-report-margin-top': '44', 'data-report-header-spacing': '44'})
+        etree.SubElement(localized_header, 'div', {'data-report-margin-top': '50', 'data-report-header-spacing': '50'})
+        self.assertEqual(report._get_specific_paperformat_args([*headers, localized_header], etree.Element('html')), {
+            'data-report-margin-top': '50',
+            'data-report-header-spacing': '50',
+            'data-report-margin-bottom': '22',
+        })
         root = etree.Element('html', {'data-report-margin-top': '30', 'data-report-landscape': 'True'})
         self.assertEqual(report._get_specific_paperformat_args(headers, root), {
             'data-report-margin-top': '30',
