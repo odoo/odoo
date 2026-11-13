@@ -683,6 +683,25 @@ class TestAttendanceValidationTimeRules(TransactionCase):
         self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
 
     @freeze_time('2024-01-03 06:00:00')
+    def test_refuse_reset_validate_restores_overtime(self):
+        """Refusing an attendance, resetting it to draft and validating it again gives back
+        the same worked time and extra hours as before the refusal."""
+        attendance = self._create_9h_attendance()
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+        attendance.action_refuse()
+        self.assertAlmostEqual(self._get_overtime_hours(), 0.0)
+        attendance.action_reset_to_draft()
+        attendance.action_validate()
+
+        validated = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee.id),
+            ('state', '=', 'validated'),
+        ])
+        self.assertAlmostEqual(sum(validated.mapped('worked_hours')), 9.0)
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+    @freeze_time('2024-01-03 06:00:00')
     def test_overtime_rule_timezones(self):
         """The schedule of the local day is compared with the attendances of that day."""
         for tz in ('Asia/Tokyo', 'Pacific/Honolulu', 'Europe/Brussels'):
