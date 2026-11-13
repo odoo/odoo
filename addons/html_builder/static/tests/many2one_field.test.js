@@ -1,6 +1,7 @@
-import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe } from "@odoo/hoot";
-import { animationFrame, press } from "@odoo/hoot-dom";
+import { animationFrame, click, press } from "@odoo/hoot-dom";
+import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -12,6 +13,22 @@ test("should prevent edition in many2one field", async () => {
         </a>`
     );
     expect(":iframe a").toHaveProperty("isContentEditable", false);
+});
+
+test("should not display icon options in a contact field", async () => {
+    addBuilderOption({
+        selector: "i.oi",
+        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
+    });
+    const { waitSidebarUpdated } = await setupHTMLBuilder("", {
+        headerContent: `
+            <div data-oe-model="res.users" data-oe-id="2" data-oe-field="partner_id" data-oe-type="contact" data-oe-many2one-id="3" data-oe-many2one-model="res.partner" data-oe-contact-options="{}">
+                <address><i class="oi" data-icon="mail"></i> admin@example.com</address>
+            </div>`,
+    });
+    await click(":iframe [data-oe-type='contact'] i");
+    await waitSidebarUpdated();
+    expect(".options-container[data-container-title='Icon']").toHaveCount(0);
 });
 
 test.tags("desktop"); // NavigationItem only react to mouvemove which is not triggered in test for mobile
