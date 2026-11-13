@@ -694,6 +694,9 @@ Customs form No. 1, 9, etc for Vendor Bills""",
     def _l10n_my_edi_cancel_moves(self):
         """ Try to cancel the moves in self if allowed by the lock date. """
         for move in self:
+            if 'stock_valuation_layer_ids' in self.env['account.move.line']._fields and move.sudo().line_ids.stock_valuation_layer_ids:  # noqa: OLS03028
+                move.with_context(no_new_invoice=True).message_post(body=_('The invoice has been canceled on MyInvois. Please issue a credit note to reverse it.'))
+                continue
             try:
                 move._check_fiscal_lock_dates()
                 move.line_ids._check_tax_lock_date()
