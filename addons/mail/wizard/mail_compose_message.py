@@ -398,9 +398,19 @@ class MailComposeMessage(models.TransientModel):
             # update email_from first as it is the main used field currently
             if composer.template_id.email_from:
                 composer._set_value_from_template('email_from')
-            # switch to a template without email_from -> fallback on current user as default
+            # switch to a template without email_from -> fallback on record default
+            # author (current user, or record responsible for automated sending)
             elif composer.template_id:
-                composer.email_from = self.env.user.email_formatted
+                # The composer has a single email_from, so record responsible only works for single-record posts (no batch/mass mode);
+                # notes (e.g. tracking templates, automatic logs) keep the current user (e.g. OdooBot) as author
+                if rendering_mode and not composer.subtype_is_log and composer.model in self.env and composer.res_ids:
+                    record = self.env[composer.model].browse(composer._evaluate_res_ids()[0])
+                    author = record._mail_get_default_author()[record.id]
+                    composer.email_from = author.email_formatted
+                    updated_author_id = author.id
+                # batch / mass mode: keep current user, as no single responsible
+                else:
+                    composer.email_from = self.env.user.email_formatted
             # removing template or void from -> fallback on current user as default
             elif not composer.template_id or not composer.email_from:
                 if self.env.context.get('default_email_from'):

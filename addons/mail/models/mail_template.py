@@ -784,9 +784,13 @@ class MailTemplate(models.Model):
                 # delegate attachments after creation due to ACL check
                 attachments_list.append(values.pop('attachments', []))
 
-                # add a protection against void email_from
+                # void email_from: fallback on record default author (current
+                # user, or record responsible for automated sending)
                 if 'email_from' in values and not values.get('email_from'):
                     values.pop('email_from')
+                    if record and 'author_id' not in values:
+                        author = record._mail_get_default_author()[record.id]
+                        values.update(author_id=author.id, email_from=author.email_formatted)
 
                 # encapsulate body
                 if not sending_email_layout_xmlid:

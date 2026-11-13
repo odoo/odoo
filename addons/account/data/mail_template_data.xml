@@ -8,7 +8,6 @@
         <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
@@ -104,7 +103,6 @@
         <record id="email_template_edi_credit_note" model="mail.template">
             <field name="name">Credit Note: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})</field>
@@ -150,7 +148,6 @@
         <record id="email_template_edi_self_billing_invoice" model="mail.template">
             <field name="name">Self-billing invoice: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="subject">{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/a' }})</field>
@@ -203,7 +200,6 @@
         <record id="email_template_edi_self_billing_credit_note" model="mail.template">
             <field name="name">Self-billing credit note: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="subject">{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or 'n/a' }})</field>

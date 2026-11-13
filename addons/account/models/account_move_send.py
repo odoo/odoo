@@ -704,8 +704,16 @@ class AccountMoveSend(models.AbstractModel):
             # a bit too much stuff
             author_id = mail_params.pop('author_id', False)
             email_from = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
-            if email_from or not author_id:
+            if email_from:
                 author_id, email_from = move._message_compute_author(email_from=email_from)
+            else:
+                # Keep the user who asked for sending (e.g. async sending through cron),
+                # otherwise use record default author (current user, or invoice responsible for automated sending)
+                if not author_id or author_id == self.env.user.partner_id.id:
+                    author = move._mail_get_default_author()[move.id]
+                else:
+                    author = self.env['res.partner'].browse(author_id)
+                author_id, email_from = author.id, author.email_formatted
             model_description = move.with_context(lang=mail_lang).type_name
 
             self._send_mail(
