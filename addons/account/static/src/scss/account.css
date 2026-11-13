@@ -20,6 +20,17 @@
         outline: 0;
     }
 }
+/* .o_cp_buttons defaults to margin-right: auto (hugs the left, leaving */
+    /* room for a pager on the right - see control_panel.scss). Here there's */
+    /* no pager: stretch the group full width and spread the buttons evenly. */
+.o_cp_buttons {
+    width: 100%;
+
+    > button {
+        flex: 1 1 0;
+        white-space: nowrap;
+    }
+}
 /* Special class for the document tax mode in account_move, sale_order and purchase_order */
 /* Ensuring the margin rules applied in .o_notebook are not broken by the .overlap_badge_tab */
 .document_tax_mode + .o_field_widget .o_field_x2many.o_field_x2many_list .o_list_renderer{

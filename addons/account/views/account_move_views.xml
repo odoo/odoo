@@ -1251,6 +1251,7 @@
                                 </div>
                                 <field name="invoice_line_ids"
                                        widget="product_label_section_and_note_field_o2m"
+                                       class="o_cp_buttons"
                                        mode="list,kanban"
                                        context="{
                                            'default_move_type': context.get('default_move_type'),
@@ -1368,6 +1369,26 @@
                                         <field name="document_tax_mode" column_invisible="True"/> <!-- drives column_invisible on price_subtotal/price_total (parent.document_tax_mode) -->
                                     </list>
                                     <kanban class="o_kanban_mobile">
+                                        <field name="display_type"/>
+                                        <control>
+                                            <create string="Line" name="add_product_control"/>
+                                            <create
+                                                string="Section"
+                                                name="add_section_control"
+                                                context="{'default_display_type': 'line_section'}"
+                                            />
+                                            <create
+                                                string="Note"
+                                                name="add_note_control"
+                                                context="{'default_display_type': 'line_note'}"
+                                            />
+                                            <button
+                                                string="Catalog"
+                                                name="action_add_from_catalog"
+                                                type="object"
+                                                class="btn-secondary"
+                                                context="{'order_id': parent.id}"/>
+                                        </control>
                                         <!-- Displayed fields -->
                                         <templates>
                                             <t t-name="card">
@@ -1430,42 +1451,44 @@
                                     <form>
                                         <sheet>
                                             <field name="tax_calculation_rounding_method" invisible="1"/> <!-- read by the tax_totals widget / account_tax.js rounding helper -->
-                                            <field name="display_type" invisible="1"/> <!-- drives the section/note/description label invisibles in this mobile form -->
+                                            <field name="display_type" invisible="1"/> <!-- switches this mobile form between the product line fields and the lone section/note label -->
                                             <field name="company_id" invisible="1"/> <!-- feeds account/tax domains (company_ids, parent_of, company_id) in this mobile form -->
                                             <field name="partner_id" invisible="1"/> <!-- technical field kept for line onchange/tax context -->
-                                            <group>
-                                                <field name="product_id" widget="many2one_barcode"/>
-                                                <label for="name" string="Description" invisible="display_type in ('line_section', 'line_subsection', 'line_note')"/>
-                                                <label for="name" string="Section" invisible="display_type != 'line_section'"/>
-                                                <label for="name" string="Subsection" invisible="display_type != 'line_subsection'"/>
-                                                <label for="name" string="Note" invisible="display_type != 'line_note'"/>
-                                                <field name="name" widget="text" nolabel="1"/>
-                                                <field name="quantity"/>
-                                                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
-                                                <field name="price_unit"/>
-                                                <field name="discount" string="Disc.%"/>
-                                            </group>
-                                            <group>
-                                                <field name="account_id" domain="[('company_ids', 'parent_of', company_id)]" options="{'no_create': True}" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
-                                                <field name="tax_ids" widget="many2many_tax_tags"
-                                                    domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
-                                                    context="{
-                                                        'append_fields': not parent.invoice_filter_type_domain and ['type_tax_use'],
-                                                        'active_test': True,
-                                                        'dynamic_fiscal_position_id': parent.fiscal_position_id,
-                                                    }"
-                                                    options="{'no_create': True}"
-                                                />
-                                                <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
-                                            </group>
-                                            <group>
-                                                <field name="price_subtotal"
-                                                       invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
-                                                       string="Amount"/>
-                                                <field name="price_total"
-                                                       invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
-                                                       string="Amount"/>
-                                            </group>
+                                            <div invisible="display_type in ('line_section', 'line_subsection', 'line_note')">
+                                                <group>
+                                                    <field name="product_id" widget="many2one_barcode"/>
+                                                    <field name="name" string="Description" widget="text"/>
+                                                    <field name="quantity"/>
+                                                    <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
+                                                    <field name="price_unit"/>
+                                                    <field name="discount" string="Disc.%"/>
+                                                </group>
+                                                <group>
+                                                    <field name="account_id" domain="[('company_ids', 'parent_of', company_id)]" options="{'no_create': True}" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
+                                                    <field name="tax_ids" widget="many2many_tax_tags"
+                                                        domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                                        context="{
+                                                            'append_fields': not parent.invoice_filter_type_domain and ['type_tax_use'],
+                                                            'active_test': True,
+                                                            'dynamic_fiscal_position_id': parent.fiscal_position_id,
+                                                        }"
+                                                        options="{'no_create': True}"
+                                                    />
+                                                    <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
+                                                </group>
+                                                <group>
+                                                    <field name="price_subtotal"
+                                                           invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                                           string="Amount"/>
+                                                    <field name="price_total"
+                                                           invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                                           string="Amount"/>
+                                                </group>
+                                            </div>
+                                            <label for="name" string="Section" invisible="display_type != 'line_section'"/>
+                                            <label for="name" string="Subsection" invisible="display_type != 'line_subsection'"/>
+                                            <label for="name" string="Note" invisible="display_type != 'line_note'"/>
+                                            <field name="name" widget="text" nolabel="1" invisible="display_type not in ('line_section', 'line_subsection', 'line_note')"/>
                                         </sheet>
                                     </form>
                                 </field>
