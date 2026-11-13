@@ -108,6 +108,7 @@ class Holidays(models.Model):
                 work_hours_data = leave.employee_id._list_work_time_per_day(
                     leave.date_from,
                     leave.date_to,
+                    leave.resource_calendar_id,
                     domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None)[leave.employee_id.id]
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
