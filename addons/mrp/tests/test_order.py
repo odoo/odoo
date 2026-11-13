@@ -5552,6 +5552,54 @@ class TestMrpOrder(TestMrpCommon):
             mo_form.bom_id = self.env['mrp.bom']
             self.assertEqual(len(mo_form.workorder_ids), 0)
 
+    def test_workorder_move_start_preserves_duration(self):
+        """Moving only the start date of a planned work order (e.g. through the
+        gantt edit dialog) must keep its expected duration and shift the end date,
+        rather than recomputing - and drifting - the duration from the new dates.
+
+        Changing the start date triggers _onchange_date_start, which recomputes the
+        end date from start + duration. That cascades into _onchange_date_finished,
+        which used to recompute the duration from the dates. plan_hours and
+        get_work_duration_data are not exact inverses when the stored (UTC) dates do
+        not line up with the calendar working hours, so the duration drifted (e.g.
+        180 -> 270 minutes). A non-UTC timezone is required to expose the drift: at
+        UTC the round trip is exact and the bug does not reproduce.
+        """
+        # Continuous 8:00-16:00 calendar with no overhead.
+        self.workcenter_1.resource_id.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Continuous 8-16',
+            'tz': 'UTC',
+            'attendance_ids': [Command.create({
+                'name': str(day),
+                'dayofweek': str(day), 'hour_from': 8.0, 'hour_to': 16.0,
+            }) for day in range(5)],
+        })
+        self.workcenter_1.write({
+            'time_efficiency': 100, 'time_start': 0, 'time_stop': 0,
+            'resource_calendar_id': calendar.id,
+        })
+        self.workcenter_1.capacity_ids.write({'time_start': 0, 'time_stop': 0})
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_2.product_id.id,
+            'bom_id': self.bom_2.id,
+            'product_qty': 1,
+        })
+        mo.action_confirm()
+        wo = mo.workorder_ids[0]
+        wo.duration_expected = 180.0
+        wo.with_context(bypass_duration_calculation=True).write({
+            'date_start': datetime(2025, 6, 2, 8, 0, 0),  # 10:00 local
+            'date_finished': datetime(2025, 6, 2, 11, 0, 0),  # 13:00 local
+        })
+        # Move the start to a time that is not on the opening hour through the form.
+        with Form(wo) as wo_form:
+            wo_form.date_start = datetime(2025, 6, 2, 11, 30, 0)  # 13:30 local
+        self.assertEqual(wo.duration_expected, 180.0,
+                         "Moving the start date should not change the work order duration")
+        self.assertEqual(wo.date_finished, datetime(2025, 6, 3, 6, 30, 0),  # 8:30 local
+                         "End date should follow the start date for the same duration")
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
