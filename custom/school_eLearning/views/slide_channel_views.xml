@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit slide.channel form view from website_slides -->
+    <record id="view_slide_channel_form_inherit_school" model="ir.ui.view">
+        <field name="name">slide.channel.form.inherit.school</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='course']" position="after">
+                <group name="academic" string="Academic Information">
+                    <field name="subject_id" options="{'no_create_edit': False}"/>
+                    <field name="teacher_id" options="{'no_create_edit': False}"/>
+                    <field name="class_section_id"
+                           domain="subject_id and [('subject_id', '=', subject_id)] or []"
+                           options="{'no_create_edit': False}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit slide.channel search view -->
+    <record id="view_slide_channel_view_search_inherit_school" model="ir.ui.view">
+        <field name="name">slide.channel.view.search.inherit.school</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_search"/>
+        <field name="arch" type="xml">
+            <field name="slide_ids" position="after">
+                <field name="subject_id"/>
+                <field name="teacher_id"/>
+                <field name="class_section_id"/>
+            </field>
+            <filter name="inactive" position="after">
+                <group>
+                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Teacher" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                </group>
+            </filter>
+        </field>
+    </record>
+</odoo>

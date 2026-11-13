@@ -8,10 +8,10 @@ class UniversityProgram(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name"
 
-    name = fields.Char(string="Program Name", required=True, tracking=True)
-    code = fields.Char(string="Program Code", required=True, tracking=True)
+    name = fields.Char(string="Program Name", required=True, index=True, tracking=True)
+    code = fields.Char(string="Program Code", required=True, index=True, tracking=True)
     department_id = fields.Many2one(
-        "university.department", string="Department", required=True, tracking=True
+        "university.department", string="Department", required=True, index=True, tracking=True
     )
     faculty_id = fields.Many2one(
         "university.faculty",
@@ -30,6 +30,7 @@ class UniversityProgram(models.Model):
         string="Degree Type",
         default="bachelor",
         required=True,
+        index=True,
         tracking=True,
     )
     duration_years = fields.Integer(string="Duration (Years)", default=4, tracking=True)
@@ -84,7 +85,7 @@ class UniversityProgram(models.Model):
         string="Exam & Quiz Results",
         compute="_compute_exam_score_count",
     )
-    active = fields.Boolean(string="Active", default=True, tracking=True)
+    active = fields.Boolean(string="Active", default=True, index=True, tracking=True)
     color = fields.Integer(string="Color Index", default=0)
 
     @api.depends("subject_ids", "student_ids.status", "section_ids")

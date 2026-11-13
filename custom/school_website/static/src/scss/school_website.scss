@@ -124,6 +124,121 @@ header .o_nav_link_btn:hover {
 }
 
 /* ========================================================
+   NAVBAR DROPDOWN & USER MENU ENHANCEMENTS
+   ======================================================== */
+header .dropdown,
+.o_main_nav .dropdown,
+#o_main_nav .dropdown,
+.navbar-nav .dropdown {
+    position: relative;
+}
+
+/* Dropdown Toggle link */
+#top_menu .dropdown > a.dropdown-toggle,
+header .dropdown > a.dropdown-toggle {
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem;
+    padding: 0.5rem 0.85rem !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2b2b2b !important;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+#top_menu .dropdown > a.dropdown-toggle:hover,
+header .dropdown > a.dropdown-toggle:hover {
+    color: var(--harvard-crimson) !important;
+    background-color: rgba(165, 28, 48, 0.05);
+}
+
+/* Top menu dropdown menus (floating beneath toggle) */
+#top_menu .dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    margin-top: 0.25rem !important;
+    min-width: 220px !important;
+    padding: 0.5rem 0 !important;
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.15), 0 4px 10px -2px rgba(0, 0, 0, 0.06) !important;
+    z-index: 1050 !important;
+}
+
+/* Desktop hover activation for top menu (excludes extra items toggle) */
+@media (min-width: 992px) {
+    #top_menu > .nav-item.dropdown:not(.o_extra_menu_items):hover > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+}
+
+/* Dropdown menu items */
+#top_menu .dropdown-item,
+.dropdown-menu.js_usermenu .dropdown-item,
+header .dropdown-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #334155 !important;
+    transition: all 0.15s ease-in-out;
+    background: transparent;
+}
+
+#top_menu .dropdown-item:hover,
+.dropdown-menu.js_usermenu .dropdown-item:hover,
+header .dropdown-menu .dropdown-item:hover {
+    background-color: rgba(165, 28, 48, 0.08) !important;
+    color: var(--harvard-crimson) !important;
+    padding-left: 1.45rem;
+}
+
+/* Right-side user menu dropdown positioning */
+.dropdown-menu.js_usermenu {
+    position: absolute !important;
+    right: 0 !important;
+    left: auto !important;
+    min-width: 200px;
+    margin-top: 0.35rem;
+    padding: 0.5rem 0;
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.18);
+    z-index: 1050 !important;
+}
+
+.dropdown-menu.js_usermenu .dropdown-item i {
+    width: 20px;
+    margin-right: 0.65rem;
+    text-align: center;
+}
+
+/* Highlight Logout Button */
+.dropdown-menu.js_usermenu #o_logout,
+.dropdown-menu.js_usermenu a[href*='logout'],
+header a[href*='logout'] {
+    color: #dc2626 !important;
+    font-weight: 600 !important;
+}
+
+.dropdown-menu.js_usermenu #o_logout:hover,
+.dropdown-menu.js_usermenu a[href*='logout']:hover,
+header a[href*='logout']:hover {
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+}
+
+
+/* ========================================================
    HERO SECTION (Matching Mockup)
    ======================================================== */
 .harvard-hero-section {
@@ -481,4 +596,75 @@ header .o_nav_link_btn:hover {
 .harvard-veritas-card {
     border-left: 4px solid var(--harvard-crimson);
     background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
+
+
+/* ========================================================
+   SEARCH MODAL STYLING & POSITIONING
+   ======================================================== */
+#o_search_modal {
+    z-index: 1060 !important;
+}
+
+#o_search_modal.show {
+    display: block !important;
+    background-color: rgba(15, 23, 42, 0.65) !important;
+    backdrop-filter: blur(4px);
+}
+
+#o_search_modal .modal-dialog {
+    max-width: 650px;
+    margin: 5rem auto auto auto;
+}
+
+#o_search_modal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+#o_search_modal .modal-content .form-control {
+    font-size: 1.15rem;
+    padding: 0.85rem 1.25rem;
+    border: 1px solid #e2e8f0;
+}
+
+#o_search_modal .modal-content .form-control:focus {
+    border-color: var(--harvard-crimson) !important;
+    box-shadow: 0 0 0 3px rgba(165, 28, 48, 0.15);
+}
+
+#o_search_modal .modal-content .btn {
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    background-color: var(--harvard-crimson) !important;
+    color: #ffffff !important;
+    border: none;
+}
+
+/* ========================================================
+   LIVECHAT COMPOSER ENHANCEMENTS
+   ======================================================== */
+.o-mail-ChatWindow {
+    .o-mail-Composer {
+        background-color: #ffffff !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 0.4rem 0.6rem !important;
+
+        .o-mail-Composer-input {
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 18px !important;
+            padding: 0.45rem 0.85rem !important;
+            font-size: 0.9rem !important;
+            background-color: #f8fafc !important;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+            &:focus {
+                background-color: #ffffff !important;
+                border-color: var(--harvard-crimson) !important;
+                box-shadow: 0 0 0 2px rgba(165, 28, 48, 0.15) !important;
+            }
+        }
+    }
 }

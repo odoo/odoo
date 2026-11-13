@@ -42,19 +42,20 @@ class UniversityNoticeBoard(models.Model):
         string="Target Audience",
         default="all",
         required=True,
+        index=True,
     )
-    department_id = fields.Many2one("university.department", string="Issuing Department")
+    department_id = fields.Many2one("university.department", string="Issuing Department", index=True)
     academic_year_id = fields.Many2one(
         "university.academic.year",
         string="Academic Year",
         default=lambda self: self.env["university.academic.year"].search([("current", "=", True)], limit=1),
     )
     author_name = fields.Char(string="Issued By", default="Office of Academic Affairs")
-    pinned = fields.Boolean(string="Pin to Top", default=False, help="Sticky notice at the top of the campus board.")
+    pinned = fields.Boolean(string="Pin to Top", default=False, index=True, help="Sticky notice at the top of the campus board.")
     image_1920 = fields.Image(string="Cover Banner", max_width=1920, max_height=1080)
     color = fields.Integer(string="Color Index", default=0)
     content = fields.Html(string="Notice Content", sanitize=True)
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(string="Active", default=True, index=True)
 
     def action_toggle_pinned(self):
         for rec in self:

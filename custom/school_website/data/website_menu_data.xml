@@ -1,46 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <!-- Reuse and style standard Contact menu instead of creating a second one -->
-        <record id="website.menu_contactus" model="website.menu">
-            <field name="name">Contact</field>
-            <field name="sequence" type="int">30</field>
-        </record>
-
-        <!-- Custom Harvard University Navigation Menus with Fixed XML IDs -->
-        <record id="menu_jobs" model="website.menu">
-            <field name="name">Job</field>
-            <field name="url">/jobs</field>
+    <data noupdate="0">
+        <!-- 1. Academics Group -->
+        <record id="menu_academics_group" model="website.menu">
+            <field name="name">Academics</field>
+            <field name="url">#</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
         </record>
 
-        <record id="menu_about_us" model="website.menu">
-            <field name="name">About</field>
-            <field name="url">/aboutus</field>
-            <field name="parent_id" ref="website.main_menu"/>
+        <record id="menu_courses" model="website.menu">
+            <field name="name">Degree Programs</field>
+            <field name="url">/courses</field>
+            <field name="parent_id" ref="menu_academics_group"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+
+        <record id="menu_elearning_courses" model="website.menu">
+            <field name="name">elearning &amp; Online Courses</field>
+            <field name="url">/slides</field>
+            <field name="parent_id" ref="menu_academics_group"/>
             <field name="sequence" type="int">20</field>
         </record>
 
-        <record id="menu_events" model="website.menu">
-            <field name="name">Events</field>
-            <field name="url">/events</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">40</field>
-        </record>
-
-        <record id="menu_courses" model="website.menu">
-            <field name="name">Courses</field>
-            <field name="url">/courses</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">50</field>
-        </record>
-
+        <!-- 2. Admissions (Apply Online) -->
         <record id="menu_admissions" model="website.menu">
             <field name="name">Apply Online</field>
             <field name="url">/admission/apply</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">60</field>
+            <field name="sequence" type="int">20</field>
         </record>
+
+        <!-- 3. Campus Life Group -->
+        <record id="menu_campus_group" model="website.menu">
+            <field name="name">Campus Life</field>
+            <field name="url">#</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">30</field>
+        </record>
+
+        <record id="menu_events" model="website.menu">
+            <field name="name">Campus Events</field>
+            <field name="url">/events</field>
+            <field name="parent_id" ref="menu_campus_group"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+
+        <record id="menu_forum" model="website.menu">
+            <field name="name">Student Forum</field>
+            <field name="url">/forum</field>
+            <field name="parent_id" ref="menu_campus_group"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+
+        <record id="menu_news_blog" model="website.menu">
+            <field name="name">News &amp; Stories</field>
+            <field name="url">/blog</field>
+            <field name="parent_id" ref="menu_campus_group"/>
+            <field name="sequence" type="int">30</field>
+        </record>
+
+        <record id="menu_bookstore" model="website.menu">
+            <field name="name">Bookstore &amp; Shop</field>
+            <field name="url">/shop</field>
+            <field name="parent_id" ref="menu_campus_group"/>
+            <field name="sequence" type="int">40</field>
+        </record>
+
+        <!-- 4. About Group -->
+        <record id="menu_about_group" model="website.menu">
+            <field name="name">About</field>
+            <field name="url">#</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">40</field>
+        </record>
+
+        <record id="menu_about_us" model="website.menu">
+            <field name="name">About Harvard</field>
+            <field name="url">/aboutus</field>
+            <field name="parent_id" ref="menu_about_group"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+
+        <record id="menu_jobs" model="website.menu">
+            <field name="name">Careers &amp; Jobs</field>
+            <field name="url">/jobs</field>
+            <field name="parent_id" ref="menu_about_group"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+
+        <record id="menu_contact_us_sub" model="website.menu">
+            <field name="name">Contact Us</field>
+            <field name="url">/contactus</field>
+            <field name="parent_id" ref="menu_about_group"/>
+            <field name="sequence" type="int">30</field>
+        </record>
+
+        <!-- Automatic synchronization and reconciliation for all website menus -->
+        <function model="website.menu" name="sync_school_website_menus"/>
     </data>
 </odoo>
