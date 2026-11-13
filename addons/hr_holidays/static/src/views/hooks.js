@@ -1,6 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { formatFloatTime } from "@web/views/fields/formatters";
 import { TimeOffPlugin } from "./time_off_plugin";
 import { AllocationFormViewDialog } from "./view_dialog/allocation_form_view_dialog";
 
@@ -17,6 +18,13 @@ export function useMandatoryDays(props) {
             return [`hr_mandatory_day hr_mandatory_day_${mandatoryDay}`];
         }
         return [];
+    };
+}
+
+export function useExpectedHours(props) {
+    return (isoDate) => {
+        const hours = props.model.expectedHours?.[isoDate];
+        return hours > 0 ? formatFloatTime(hours) : "";
     };
 }
 
