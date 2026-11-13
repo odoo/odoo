@@ -4,6 +4,12 @@ from odoo import models
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    def _get_cogs_lines_vals(self):
+        # Session closing moves get their COGS from the stock moves, see pos.session
+        if self.pos_session_ids:
+            return []
+        return super()._get_cogs_lines_vals()
+
     def _get_invoiced_lot_values(self):
         self.ensure_one()
 
