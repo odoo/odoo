@@ -116,6 +116,17 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(payload['invoiceAmount'], "565.00")
         self.assertEqual([item['amount'] for item in payload['invoiceItems']], ["565.00"])
 
+    def test_values_too_long_for_the_bureau_are_not_issued(self):
+        invoice = self._create_posted_invoice()
+        invoice.partner_id.write({'name': "名" * 101, 'street': "路" * 141})
+        invoice.narration = "备" * 200
+
+        self.assertEqual(
+            self._issue(invoice),
+            "Too long for the tax bureau: Customer name (at most 100 characters), Customer address (at most 140 characters)",
+        )
+        self.assertNotIn('issue', [method for method, _args in self.client.calls])
+
     def test_issue_retry_reuses_the_serial_number(self):
         invoice = self._create_posted_invoice()
         self.responses['issue'] = UserError("Timeout")
