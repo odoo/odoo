@@ -20,6 +20,18 @@ export class HeaderFadeOut extends BaseHeaderSpecial {
         super.transformShow();
     }
 
+    /**
+     * @override
+     */
+    getCoveredBottom() {
+        // Shown or hidden by fading, and only moved once invisible: cover the
+        // page proportionally to the current opacity so that what is placed
+        // below follows the fading. The opacity is only considered once set
+        // by the interaction, so that a custom style does not reduce it.
+        const opacity = this.el.style.opacity ? parseFloat(getComputedStyle(this.el).opacity) : 1;
+        return super.getCoveredBottom() * opacity;
+    }
+
     transformHide() {
         this.el.style.opacity = 0;
         this.isVisible = false;
