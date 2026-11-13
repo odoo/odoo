@@ -1,5 +1,6 @@
 from odoo import _, models, Command
 from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import UNCL4461_PAYMENT_MEAN_CODE
 from odoo.addons.account_edi_ubl_cii.tools import CrossIndustryInvoice
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
 from odoo.tools.misc import str2bool
@@ -16,12 +17,6 @@ CII_NAMESPACES = {
     'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
     'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
     'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
-}
-
-# Imcomplete, full list on https://service.unece.org/trade/untdid/d16b/tred/tred4461.htm
-PAYMENT_MEAN_CODES = {
-    'Payment to bank account': 42,
-    'SEPA direct debit': 59
 }
 
 
@@ -264,9 +259,9 @@ class AccountEdiXmlCII(models.AbstractModel):
         template_values['tax_total_amount'] = tax_details['tax_amount_currency']
 
         if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.reconciled_payment_ids.sdd_mandate_id:
-            template_values['payment_means_code'] = PAYMENT_MEAN_CODES['SEPA direct debit']
+            template_values['payment_means_code'] = UNCL4461_PAYMENT_MEAN_CODE['sepa_direct_debit']
         else:
-            template_values['payment_means_code'] = PAYMENT_MEAN_CODES['Payment to bank account']
+            template_values['payment_means_code'] = UNCL4461_PAYMENT_MEAN_CODE['payment_to_bank_account']
 
         return template_values
 

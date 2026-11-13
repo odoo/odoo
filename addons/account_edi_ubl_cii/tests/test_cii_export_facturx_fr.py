@@ -652,6 +652,66 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_global_location_number')
 
+    def _create_partner_fr_iban(self):
+        return self.env['res.partner.bank'].create({
+            'acc_number': 'FR1420041010050500013M02606',
+            'partner_id': self.partner_fr.id,
+            'allow_out_payment': True,
+        })
+
+    def test_invoice_sepa_direct_debit(self):
+        """ An invoice collected by SEPA Direct Debit has the direct debit information [BG-19]. """
+        self._create_sdd_mandate(self._create_partner_fr_iban())
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_fr,
+            product_id=self.product,
+            tax_ids=self.tax_20,
+            post=True,
+        )
+        self._pay_with_sdd_mandate(invoice)
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_sepa_direct_debit')
+
+    def test_credit_note_sepa_direct_debit(self):
+        """ A credit note collected together with its invoice by SEPA Direct Debit has the direct debit information,
+        but not the creditor identifier [BT-90]: the company does not collect the amount of the credit note.
+        """
+        self._create_sdd_mandate(self._create_partner_fr_iban())
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_fr,
+            product_id=self.product,
+            price_unit=200.0,
+            tax_ids=self.tax_20,
+            post=True,
+        )
+        credit_note = self._create_invoice_one_line(
+            move_type='out_refund',
+            partner_id=self.partner_fr,
+            product_id=self.product,
+            price_unit=50.0,
+            tax_ids=self.tax_20,
+            post=True,
+        )
+        self._pay_with_sdd_mandate(invoice + credit_note)
+
+        self._generate_invoice_ubl_file(credit_note)
+        self._assert_invoice_ubl_file(credit_note, 'test_credit_note_sepa_direct_debit')
+
+    def test_credit_note_sepa_credit_transfer(self):
+        """ A credit note refunded in EUR to an IBAN of the SEPA zone uses the 'SEPA credit transfer' code (58). """
+        credit_note = self._create_invoice_one_line(
+            move_type='out_refund',
+            partner_id=self.partner_fr,
+            partner_bank_id=self._create_partner_fr_iban(),
+            product_id=self.product,
+            tax_ids=self.tax_20,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(credit_note)
+        self._assert_invoice_ubl_file(credit_note, 'test_credit_note_sepa_credit_transfer')
+
     def test_invoice_tax_withholding(self):
         self.ensure_installed("l10n_fr_pdp")
         tax_minus_10_67 = self.percent_tax(-10.67)

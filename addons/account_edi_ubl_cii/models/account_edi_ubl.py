@@ -1550,8 +1550,23 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_accounting_supplier_party_endpoint_id_node(self, vals):
         self._ubl_add_party_endpoint_id_node(vals)
 
+    def _ubl_add_party_identification_node_sepa_creditor(self, vals):
+        """ [BT-90] Add the bank assigned creditor identifier when the invoice is paid by SEPA Direct Debit. """
+        creditor_identifier = self._get_sepa_creditor_identifier(vals)
+        if not creditor_identifier:
+            return
+
+        nodes = vals['party_node']['cac:PartyIdentification']
+        nodes.append({
+            'cbc:ID': {
+                '_text': creditor_identifier,
+                'schemeID': 'SEPA',
+            },
+        })
+
     def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
         self._ubl_add_party_identification_nodes(vals)
+        self._ubl_add_party_identification_node_sepa_creditor(vals)
 
     def _ubl_add_accounting_supplier_party_name_node(self, vals):
         self._ubl_add_party_name_node(vals)
@@ -1850,6 +1865,21 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             'cbc:ID': {'_text': partner_bank.sanitized_acc_number},
             'cac:FinancialInstitutionBranch': self._ubl_get_payment_means_payee_financial_account_institution_branch_node_from_partner_bank(vals, partner_bank),
+        }
+
+    def _ubl_get_payment_means_payment_mandate_node(self, vals):
+        """ [BG-19] Direct debit information, when the invoice is paid by SEPA Direct Debit. """
+        sdd_mandate = self._get_sdd_mandate(vals)
+        if not sdd_mandate:
+            return None
+
+        return {
+            # [BT-89] Mandate reference identifier
+            'cbc:ID': {'_text': sdd_mandate.name},
+            # [BT-91] Debited account identifier
+            'cac:PayerFinancialAccount': {
+                'cbc:ID': {'_text': sdd_mandate.partner_bank_id.sanitized_acc_number},
+            },
         }
 
     def _ubl_add_payment_means_nodes(self, vals):

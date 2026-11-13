@@ -1095,6 +1095,59 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_out_of_scope')
 
+    def test_invoice_sepa_direct_debit(self):
+        """ An invoice collected by SEPA Direct Debit has the direct debit information [BG-19]. """
+        self._create_sdd_mandate(self.partner_be.bank_ids)
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_be,
+            invoice_date='2026-01-01',
+            post=True,
+        )
+        self._pay_with_sdd_mandate(invoice)
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_sepa_direct_debit')
+
+    def test_credit_note_sepa_direct_debit(self):
+        """ A credit note collected together with its invoice by SEPA Direct Debit has the direct debit information,
+        but not the creditor identifier [BT-90]: the company does not collect the amount of the credit note.
+        """
+        self._create_sdd_mandate(self.partner_be.bank_ids)
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            price_unit=200.0,
+            partner_id=self.partner_be,
+            invoice_date='2026-01-01',
+            post=True,
+        )
+        credit_note = self._create_invoice_one_line(
+            move_type='out_refund',
+            product_id=self.product_a,
+            price_unit=50.0,
+            partner_id=self.partner_be,
+            invoice_date='2026-01-01',
+            post=True,
+        )
+        self._pay_with_sdd_mandate(invoice + credit_note)
+
+        self._generate_invoice_ubl_file(credit_note)
+        self._assert_invoice_ubl_file(credit_note, 'test_credit_note_sepa_direct_debit')
+
+    def test_credit_note_sepa_credit_transfer(self):
+        """ A credit note refunded in EUR to an IBAN of the SEPA zone uses the 'SEPA credit transfer' code (58). """
+        credit_note = self._create_invoice_one_line(
+            move_type='out_refund',
+            product_id=self.product_a,
+            partner_id=self.partner_be,
+            invoice_date='2026-01-01',
+            partner_bank_id=self.partner_be.bank_ids,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(credit_note)
+        self._assert_invoice_ubl_file(credit_note, 'test_credit_note_sepa_credit_transfer')
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestBeExport(TestUblExportBis3BE):
