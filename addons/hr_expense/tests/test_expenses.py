@@ -1246,6 +1246,35 @@ class TestExpenses(TestExpenseCommon):
         self.assertFalse(expense.exists())
         self.assertFalse(attachment.exists())
 
+    def test_expense_paid_by_employee_with_linked_bill_other_company(self):
+        """ The payment entry of an expense paid by the employee whose bill is sent separately must use a bank journal
+        of the expense company, not of the current company
+        """
+        other_company = self.company_data_2['company']
+        other_company_employee = self.env['hr.employee'].sudo().create({
+            'name': 'other_company_employee',
+            'user_id': self.expense_user_employee.id,
+            'company_id': other_company.id,
+        })
+        vendor = self.env['res.partner'].create({'name': 'test partner'})
+        expense = self.create_expenses({
+            'name': 'Expense matched to bill',
+            'employee_id': other_company_employee.id,
+            'company_id': other_company.id,
+            'payment_mode': 'own_account',
+            'total_amount_currency': 100.0,
+            'has_existing_bill': True,
+            'vendor_id': vendor.id,
+        })
+
+        # The current company is the main one, the expense is approved at submission as the employee has no approver
+        expense.with_context(allowed_company_ids=(self.company_data['company'] + other_company).ids).action_submit()
+        self.assertEqual(expense.state, 'approved')
+        self.assertRecordValues(expense.account_move_id, [{
+            'company_id': other_company.id,
+            'journal_id': self.company_data_2['default_journal_bank'].id,
+        }])
+
     def test_expense_paid_by_employee_with_linked_bill(self):
         """
         Test the flow of an expense paid by the employee with a bill sent separately
