@@ -99,6 +99,11 @@ class IrHttp(models.AbstractModel):
             default=DEFAULT_MAX_CONTENT_LENGTH,
         ))
         is_internal_user = user._is_internal()
+        lang = user.lang
+        numbering_system = (
+            (IrConfigSudo.get_param(f'web.numbering_system_{lang}') or '').strip() or False
+            if lang else False
+        )
         session_info = {
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,
@@ -120,6 +125,7 @@ class IrHttp(models.AbstractModel):
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
+            "numbering_system": numbering_system,
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),
             'profile_params': request.session.get('profile_params'),
