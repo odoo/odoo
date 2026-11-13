@@ -275,3 +275,27 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                 invoice.attachment_ids.raw.startswith(b'%PDF-'),
                 "PDF attachment must contain decoded PDF bytes, not base64 text",
             )
+
+    def test_missing_mersis_and_trade_registry_blocks_send(self):
+        Category = self.env['res.partner.category']
+        mersis_code = Category.create({'name': '0-123456780100019', 'parent_id': self.env.ref('l10n_tr_nilvera_einvoice.res_partner_category_mersisno').id})
+        trade_registry_code = Category.create({'name': '12345', 'parent_id': self.env.ref('l10n_tr_nilvera_einvoice.res_partner_category_ticaretsicilno').id})
+        other_code = Category.create({'name': '123', 'parent_id': Category.create({'name': 'Other'}).id})
+        registry_exempt = self.env.ref('l10n_tr_nilvera_einvoice.res_partner_category_registry_exempt')
+        invoice = self.init_invoice('out_invoice', partner=self.einvoice_partner, amounts=[100], post=True)
+
+        for status, tags, expected_level in [
+            ('einvoice', Category, 'danger'),
+            ('einvoice', other_code, 'danger'),
+            ('einvoice', mersis_code, None),
+            ('einvoice', trade_registry_code, None),
+            ('einvoice', registry_exempt, 'danger'),
+            ('earchive', Category, 'danger'),
+            ('earchive', other_code, 'danger'),
+            ('earchive', mersis_code, None),
+            ('earchive', registry_exempt, None),
+        ]:
+            with self.subTest(status=status, tags=tags.mapped('display_name')):
+                self.company_data['company'].partner_id.write({'l10n_tr_nilvera_customer_status': status, 'category_id': tags})
+                alert = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=invoice.ids).create({}).alerts.get('tr_companies_missing_required_codes')
+                self.assertEqual(alert and alert['level'], expected_level)
