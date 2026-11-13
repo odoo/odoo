@@ -646,3 +646,30 @@ class TestSaleOrder(SaleManagementCommon):
 
         self.assertTrue(order.sale_order_template_id)
         self.assertEqual(order.order_line.discount, 50.0)
+
+    def test_save_as_template_keeps_productless_price_currency(self):
+        """A productless line price saved from a foreign currency order must be converted when the
+        template is applied to an order in another currency."""
+        other_currency = self.setup_other_currency("EUR", rates=[("2000-01-01", 2.0)])
+        eur_pricelist = self._create_pricelist(name="EUR", currency_id=other_currency.id)
+        usd_pricelist = self._create_pricelist(
+            name="USD",
+            currency_id=self.env.company.currency_id.id,
+        )
+        order = self._create_so(
+            pricelist_id=eur_pricelist.id,
+            order_line=[Command.create({"name": "Consulting", "price_unit": 200.0})],
+        )
+        self.assertEqual(order.currency_id, other_currency)
+
+        order.action_create_quotation_template()
+        template = order.sale_order_template_id
+
+        with Form(self.env["sale.order"]) as order_form:
+            order_form.partner_id = self.partner
+            order_form.pricelist_id = usd_pricelist
+            order_form.sale_order_template_id = template
+        new_order = order_form.save()
+
+        self.assertEqual(new_order.currency_id, self.env.company.currency_id)
+        self.assertEqual(new_order.order_line.price_unit, 100.0)
