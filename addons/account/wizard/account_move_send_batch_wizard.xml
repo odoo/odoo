@@ -21,8 +21,15 @@
                             data-hotkey="q"
                             name="action_send_and_print"
                             type="object"
-                            class="print btn-primary o_mail_send">
+                            class="print btn-primary o_mail_send"
+                            invisible="is_generate_only">
                     </button>
+                    <button string="Generate"
+                            data-hotkey="q"
+                            name="action_send_and_print"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not is_generate_only"/>
                     <button class="btn-secondary" data-hotkey="x" special="cancel"/>
                 </footer>
 

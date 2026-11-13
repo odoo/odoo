@@ -11,6 +11,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
 
     move_ids = fields.Many2many(comodel_name='account.move', required=True)
     summary_data = fields.Json(compute='_compute_summary_data')
+    is_generate_only = fields.Boolean(compute='_compute_summary_data')
     alerts = fields.Json(compute='_compute_alerts')
 
     # -------------------------------------------------------------------------
@@ -40,6 +41,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             moves = wizard.move_ids._origin
             summary_data = defaultdict(lambda: {'count': 0, 'label': '', 'moves': []})
             moves_without_email = []
+            wizard.is_generate_only = False
 
             if not moves:
                 wizard.summary_data = summary_data
@@ -74,14 +76,19 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                     summary_data[sending_method]['moves'].append(move_info)
                     if not summary_data[sending_method]['label']:
                         summary_data[sending_method]['label'] = sending_methods[sending_method]
-                if not applicable_methods and 'email' in sending_methods_for_move:
+                if not applicable_methods and not extra_edis_for_move and 'email' in sending_methods_for_move:
                     # The move would be sent by email only, but its partner has none
                     moves_without_email.append(move_info)
 
             if moves_without_email:
+                wizard.is_generate_only = len(moves_without_email) == len(moves)
                 summary_data['email_missing'] = {
                     'count': len(moves_without_email),
-                    'label': _("without email address"),
+                    'label': (
+                        self.env._("without email address, those will only be generated (no sending method)")
+                        if wizard.is_generate_only else
+                        self.env._("without email address, those will be skipped (no sending method)")
+                    ),
                     'moves': moves_without_email,
                     'is_error': True,
                 }
@@ -119,8 +126,14 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         self.ensure_one()
         if self.alerts:
             self._raise_danger_alerts(self.alerts)
+        moves = self.move_ids
+        custom_settings = {}
+        if self.is_generate_only:
+            custom_settings['sending_methods'] = []
+        elif email_missing := self.summary_data.get('email_missing'):
+            moves -= moves.browse([move['id'] for move in email_missing['moves']])
         if force_synchronous:
-            self.env['account.move.send']._generate_and_send_invoices(self.move_ids, allow_fallback_pdf=allow_fallback_pdf)
+            self.env['account.move.send']._generate_and_send_invoices(moves, allow_fallback_pdf=allow_fallback_pdf, **custom_settings)
             return
 
         account_move_send_cron = self.env.ref('account.ir_cron_account_move_send')
@@ -139,9 +152,10 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                 )
             raise UserError(_("Batch invoice sending is unavailable. Please, contact your system administrator to activate the cron to enable batch sending of invoices."))
 
-        self.move_ids.sending_data = {
+        moves.sending_data = {
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,
+            **custom_settings,
         }
         account_move_send_cron._trigger()
         return {
@@ -149,8 +163,8 @@ class AccountMoveSendBatchWizard(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'info',
-                'title': _('Sending invoices'),
-                'message': _('Invoices are being sent in the background.'),
+                'title': self.env._('Generating invoices') if self.is_generate_only else self.env._('Sending invoices'),
+                'message': self.env._('Invoices are being generated in the background.') if self.is_generate_only else self.env._('Invoices are being sent in the background.'),
                 'next': {'type': 'ir.actions.act_window_close'},
             },
         }

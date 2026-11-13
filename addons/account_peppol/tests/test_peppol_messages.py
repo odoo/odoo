@@ -435,7 +435,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             wizard = self.create_send_and_print(move_1 + move_2 + move_3)
         with mock_send_document():
             wizard.action_send_and_print()
-        self.assertEqual((move_1 + move_2 + move_3).mapped('is_being_sent'), [True, True, True])
+        # move_3 would be sent by email (invalid partner for company_2), but the partner has none: it is skipped
+        self.assertEqual((move_1 + move_2 + move_3).mapped('is_being_sent'), [True, True, False])
         # the cron is ran asynchronously and should be agnostic from the current self.env.company
         with (
             self.enter_registry_test_mode(),
@@ -446,7 +447,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertRecordValues((move_1 + move_2 + move_3), [
             {'peppol_move_state': 'processing', 'is_move_sent': True},
             {'peppol_move_state': 'processing', 'is_move_sent': True},
-            {'peppol_move_state': False, 'is_move_sent': True},  # only sent by email
+            {'peppol_move_state': False, 'is_move_sent': False},
         ])
 
     def test_available_peppol_sending_methods(self):
@@ -539,7 +540,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             },
             "email_missing": {
                 "count": 1,
-                "label": "without email address",
+                "label": "without email address, those will be skipped (no sending method)",
                 "moves": [{"id": no_email_move.id, "name": no_email_move.name, "partner_name": "partner_a"}],
                 "is_error": True,
             },

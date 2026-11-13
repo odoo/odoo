@@ -780,7 +780,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             },
             "email_missing": {
                 "count": 1,
-                "label": "without email address",
+                "label": "without email address, those will be skipped (no sending method)",
                 "moves": [
                     {"id": invoice1.id, "name": invoice1.name, "partner_name": "partner_a"},
                 ],
@@ -794,13 +794,30 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print()
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        # invoices are generated, but only partner_b got an email
-        self.assertTrue(invoice1.invoice_pdf_report_file)
-        self.assertFalse(self._get_mail_message(invoice1, limit=None).partner_ids)
-        # invoice1 has no applicable sending method (missing email), so it is flagged as generated but not sent
-        self.assertIn('Invoice generated but not sent.', self._get_mail_message(invoice1).body)
+        # invoice1 is skipped: neither generated nor marked as sent
+        self.assertFalse(invoice1.invoice_pdf_report_file)
+        self.assertFalse(invoice1.is_move_sent)
         self.assertTrue(invoice2.invoice_pdf_report_file)
         self.assertTrue(self._get_mail_message(invoice2, limit=None).partner_ids)
+
+    def test_invoice_multi_all_email_missing(self):
+        """ When no invoice can be sent, the batch wizard only generates them, like the single wizard without sending method. """
+        invoices = (
+            self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+            + self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        )
+        (self.partner_a + self.partner_b).email = None
+        wizard = self.create_send_and_print(invoices)
+        self.assertTrue(wizard.is_generate_only)
+        self.assertEqual(wizard.summary_data['email_missing']['label'], "without email address, those will only be generated (no sending method)")
+
+        wizard.action_send_and_print()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        for invoice in invoices:
+            self.assertTrue(invoice.invoice_pdf_report_id)
+            self.assertTrue(invoice.is_move_sent)
+        self.assertFalse(invoices.message_ids.filtered(lambda m: 'Invoice generated but not sent.' in (m.body or '')))
 
     def test_invoice_multi_cron_disabled_alert(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
