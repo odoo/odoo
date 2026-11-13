@@ -5680,6 +5680,54 @@ class TestMrpOrder(TestMrpCommon):
         action = mo_2.button_mark_done()
         self.assertEqual(action['res_model'], 'mrp.consumption.warning', "A consumption issue must be triggered when a component is missing.")
 
+    def test_consumption_issue_variant_specific_kit_component(self):
+        """No consumption issue should be triggered for a component of a kit's BoM that applies only to the kit
+        variant used in the MO."""
+        kit = self.env['product.template'].create({
+            'name': 'Kit',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.color_attribute.id,
+                'value_ids': [Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])],
+            })],
+        })
+        kit_red = kit.product_variant_ids[0]
+        red_ptav = kit.attribute_line_ids.product_template_value_ids[0]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_1.id, 'product_qty': 1, 'bom_product_template_attribute_value_ids': [Command.set(red_ptav.ids)]}),
+                Command.create({'product_id': self.product_2.id, 'product_qty': 1}),
+            ],
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': kit_red.id, 'product_qty': 1})],
+        })
+        mo = self.env['mrp.production'].create({'bom_id': bom.id})
+        self.assertEqual(mo.move_raw_ids.product_id, self.product_1 | self.product_2)
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "No consumption issue should be raised for the kit component of the red variant.")
+
+    def test_consumption_issue_no_variant_attribute_component(self):
+        """No consumption issue should be triggered for a component that applies only to a 'never' attribute value
+        of the produced product."""
+        self.product_4.product_tmpl_id.attribute_line_ids = [Command.create({
+            'attribute_id': self.no_variant_attribute.id,
+            'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
+        })]
+        extra_ptav = self.product_4.attribute_line_ids.product_template_value_ids[0]
+        self.bom_1.bom_line_ids[0].bom_product_template_attribute_value_ids = extra_ptav
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'never_product_template_attribute_value_ids': [Command.set(extra_ptav.ids)],
+        })
+        self.assertEqual(len(mo.move_raw_ids), 2)
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "No consumption issue should be raised for the component of the 'never' attribute value.")
+
     def test_mo_planning_after_toggling_bom_dependencies(self):
         """
         When a BOM's 'allow_operation_dependencies' field is toggled after an MO is created,
