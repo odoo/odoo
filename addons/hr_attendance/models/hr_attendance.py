@@ -323,6 +323,11 @@ class HrAttendance(models.Model):
         ).mapped(lambda l: (l.attendance_id.id, l.date)))
         all_overtime_lines.unlink()
 
+        # An attendance crossing midnight shares a day with attendances outside
+        # the domain, they are needed to compute that day but keep their overtimes
+        recomputed_attendance_ids = set(all_attendances.ids)
+        all_attendances |= self.env['hr.attendance'].search(all_attendances._get_overtimes_to_update_domain())
+
         start_check_in = min(all_attendances.mapped('check_in')).date() - relativedelta(days=1)  # for timezone
         min_check_in = datetime.combine(start_check_in, time.min).replace(tzinfo=UTC)
 
@@ -368,6 +373,7 @@ class HrAttendance(models.Model):
                     'status': 'to_approve'
                 } if (val['attendance_id'], val['date']) in manual_overtimes else val
                 for val in ruleset.rule_ids._generate_overtime_vals(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
+                if val['attendance_id'] in recomputed_attendance_ids
             ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
 
