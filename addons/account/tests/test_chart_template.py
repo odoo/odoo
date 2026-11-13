@@ -4,7 +4,7 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.exceptions import RedirectWarning
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.tests import tagged
 from odoo.addons.account.models.chart_template import code_translations, AccountChartTemplate, TEMPLATE_MODELS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -1214,3 +1214,60 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         ):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])
+
+    def test_try_loading_xmlids(self):
+        """ Only the given records are loaded. """
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['account.tax.group']['tax_group_new'] = {'name': "New Taxes"}
+            data['account.account']['test_account_new'] = _account_vals('new_tax_account', '444444', 'liability_current')
+            data['account.fiscal.position']['test_fiscal_position_new'] = {'name': "New Fiscal Position", 'country_id': 'base.be'}
+            data['account.tax']['test_tax_3_template'] = {
+                **_tax_vals('Tax 3', 16, fiscal_pos='test_fiscal_position_new', alt_taxes='test_tax_1_template'),
+                'tax_group_id': 'tax_group_new',
+            }
+            data['account.tax']['test_tax_3_template']['repartition_line_ids'][1][2]['account_id'] = 'test_account_new'
+            data['account.tax']['test_tax_4_template'] = _tax_vals('Tax 4', 17)
+            data['account.account']['test_account_unused'] = _account_vals('unused_account', '555555', 'expense')
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', self.company, xmlids={
+                'account.tax': {'test_tax_3_template'},
+                'account.tax.group': {'tax_group_new'},
+                'account.account': {'test_account_new'},
+                'account.fiscal.position': {'test_fiscal_position_new'},
+            })
+
+        tax_3 = self.ChartTemplate.ref('test_tax_3_template')
+        fiscal_position_new = self.ChartTemplate.ref('test_fiscal_position_new')
+        self.assertFalse(self.ChartTemplate.ref('test_tax_4_template', raise_if_not_found=False))
+        self.assertFalse(self.ChartTemplate.ref('test_account_unused', raise_if_not_found=False))
+        self.assertRecordValues(tax_3, [{
+            'name': 'Tax 3',
+            'amount': 16,
+            'tax_group_id': self.ChartTemplate.ref('tax_group_new').id,
+            'fiscal_position_ids': fiscal_position_new.ids,
+            'original_tax_ids': self.ChartTemplate.ref('test_tax_1_template').ids,
+        }])
+        self.assertEqual(tax_3.invoice_repartition_line_ids.account_id, self.ChartTemplate.ref('test_account_new'))
+
+    def test_try_loading_xmlids_invalid(self):
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True),
+            self.assertRaisesRegex(ValueError, "account.tax: unknown_tax"),
+        ):
+            self.env['account.chart.template'].try_loading('test', self.company, xmlids={'account.tax': {'test_tax_1_template', 'unknown_tax'}})
+
+        # Only on a company already using the chart template
+        company = self.env['res.company'].create({'name': 'Company without chart template'})
+        with self.assertRaisesRegex(UserError, "already using it"):
+            self.env['account.chart.template'].try_loading('test', company, xmlids={'account.tax': {'test_tax_1_template'}})
+
+    def test_try_loading_xmlids_branch_without_template(self):
+        """ A branch created after the chart template was loaded doesn't block loading records on its root. """
+        branch = self.env['res.company'].create({'name': 'Branch', 'parent_id': self.company.id})
+        self.assertFalse(branch.chart_template)
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', self.company, xmlids={'account.tax': {'test_tax_1_template'}})
+        self.assertEqual(branch.chart_template, 'test')
