@@ -378,6 +378,18 @@ export class PosTicketPrinterPlugin extends Plugin {
                     this.displayPrinterWarning(result, printer.name);
                 }
             }
+<<<<<<< e3cc2ee4d97df42f67459c01251af0bdb64c103f
+||||||| a4bbe04b454a87b93fe3e6539ae5be69a185d181
+
+            if (isPrinted && orderChanges) {
+                order.pushLastPrints(orderChanges);
+            }
+=======
+
+            if (isPrinted && orderChanges && !opts.prepOrderLines) {
+                order.pushLastPrints(orderChanges);
+            }
+>>>>>>> b4a28c666da893ddd7941843d5a57a5305115036
         }
 
         if (unsuccessfulPrints.length) {
