@@ -29,7 +29,7 @@
 
     function greetHref(employeeId, badgeId) {
         return '/my/recognition?recipient_id=' + encodeURIComponent(employeeId === null || employeeId === undefined ? '' : employeeId) +
-            '&amp;badge_id=' + encodeURIComponent(badgeId === null || badgeId === undefined ? '' : badgeId);
+            '&amp;badge_id=' + encodeURIComponent(badgeId ? badgeId : '');
     }
 
     function renderCelebrations(container, celebrations) {
