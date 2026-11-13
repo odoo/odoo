@@ -280,6 +280,113 @@ class ResourceCalendar(models.Model):
     # Computation API
     # --------------------------------------------------
 
+    def _get_flexible_attendance_interval(self, current_day, day_period_start, day_period_end, allocate_hours, leave_intervals, tz):
+        """Return the synthetic attendance interval for a flexible calendar.
+        Keep the current noon-centered interval when no leaves apply.
+        Otherwise, position the interval according to the leaves affecting
+        the current day, without changing its allocated duration.
+        """
+        duration = timedelta(hours=allocate_hours)
+        # Default behavior: center the interval around noon.
+        midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
+        start_time = midpoint - duration / 2
+        end_time = midpoint + duration / 2
+        # Preserve the existing behavior when the requested interval is
+        # partially outside the current day or requested period.
+        if start_time < day_period_start:
+            start_time = day_period_start
+            end_time = start_time + duration
+        elif end_time > day_period_end:
+            end_time = day_period_end
+            start_time = end_time - duration
+        # Get the leaves overlapping the current day.
+        day_leaves = []
+        multi_day_leave_starts = []
+        for leave_start, leave_stop, leaves in leave_intervals or []:
+            if leave_start >= day_period_end or leave_stop <= day_period_start:
+                continue
+            clipped_start = max(leave_start, day_period_start)
+            clipped_stop = min(leave_stop, day_period_end)
+            day_leaves.append((clipped_start, clipped_stop))
+            # Detect leaves spanning multiple local calendar days.
+            for leave in leaves:
+                original_start = string_to_datetime(leave.date_from).astimezone(tz)
+                original_stop = string_to_datetime(leave.date_to).astimezone(tz)
+                if original_start.date() < original_stop.date():
+                    multi_day_leave_starts.append(max(original_start, day_period_start))
+        if not day_leaves:
+            return start_time, end_time
+        # For multi-day leaves, use the beginning of the leave segment
+        # affecting this day as the reference.
+        if multi_day_leave_starts:
+            start_time = min(multi_day_leave_starts)
+        # If a single-day leave already covers the default interval,
+        # there is no need to reposition it.
+        elif any(leave_start <= start_time and leave_stop >= end_time for leave_start, leave_stop in day_leaves):
+            return start_time, end_time
+        else:
+            # Anchor the synthetic interval at the latest leave end.
+            latest_leave_end = max(leave_stop for _leave_start, leave_stop in day_leaves)
+            start_time = tz.normalize(latest_leave_end - duration)
+            # If this would place the interval too early compared with the
+            # default interval, use the beginning of the earliest leave.
+            if start_time < midpoint - duration / 2:
+                start_time = min(leave_start for leave_start, _leave_stop in day_leaves)
+        # Ensure that the interval remains inside the requested day period
+        # and retains exactly the allocated duration.
+        latest_start = tz.normalize(day_period_end - duration)
+        start_time = max(day_period_start, min(start_time, latest_start))
+        start_time = tz.normalize(start_time)
+        end_time = tz.normalize(start_time + duration)
+        return start_time, end_time
+
+    def _adjust_flexible_attendance_intervals(self, start_dt, end_dt, attendance_intervals, leave_intervals, resources=None, tz=None):
+        """Adjust synthetic attendance intervals according to leaves."""
+        self.ensure_one()
+        if not resources:
+            resources = self.env["resource.resource"]
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env["resource.resource"]]
+        resource_calendars = resources._get_calendar_at(start_dt, tz)
+        result = {}
+        for resource in resources_list:
+            resource_id = resource.id
+            calendar = resource_calendars.get(resource) if resource else self
+            # Keep the existing behavior for non-flexible and fully flexible
+            # resources without an assigned calendar.
+            if resource and not calendar:
+                result[resource_id] = attendance_intervals[resource_id]
+                continue
+            if not (self.flexible_hours or (resource and calendar.flexible_hours)):
+                result[resource_id] = attendance_intervals[resource_id]
+                continue
+            resource_leave_intervals = leave_intervals.get(resource_id)
+            if not resource_leave_intervals:
+                result[resource_id] = attendance_intervals[resource_id]
+                continue
+            resource_tz = tz or timezone((resource or self).tz)
+            start_datetime = start_dt.astimezone(resource_tz)
+            end_datetime = end_dt.astimezone(resource_tz)
+            intervals = []
+            for start, stop, meta in attendance_intervals[resource_id]:
+                current_day = start.astimezone(resource_tz).date()
+                day_start = resource_tz.localize(datetime.combine(current_day, time.min))
+                day_end = resource_tz.localize(datetime.combine(current_day, time.max))
+                day_period_start = max(start_datetime, day_start)
+                day_period_end = min(end_datetime, day_end)
+                start_time, end_time = self._get_flexible_attendance_interval(
+                    current_day,
+                    day_period_start,
+                    day_period_end,
+                    meta.duration_hours,
+                    resource_leave_intervals,
+                    resource_tz,
+                )
+                intervals.append((start_time, end_time, meta))
+            result[resource_id] = WorkIntervals(intervals)
+        return result
+
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
@@ -533,6 +640,14 @@ class ResourceCalendar(models.Model):
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz or self.env.context.get("employee_timezone"))
         if compute_leaves:
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
+            attendance_intervals = self._adjust_flexible_attendance_intervals(
+                start_dt,
+                end_dt,
+                attendance_intervals,
+                leave_intervals,
+                resources,
+                tz=tz or self.env.context.get("employee_timezone"),
+            )
             return {
                 r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
             }
