@@ -79,7 +79,7 @@ def _get_upgrade_test_modules(module):
 
         upg = importlib.import_module(module_name)
         for path in map(Path, upg.__path__):
-            for test in path.glob("tests/test_*.py"):
+            for test in sorted(path.glob("tests/test_*.py")):
                 spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
                 if not spec:
                     continue
