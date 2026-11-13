@@ -380,7 +380,7 @@ export class PosTicketPrinterPlugin extends Plugin {
                 }
             }
 
-            if (isPrinted && orderChanges) {
+            if (isPrinted && orderChanges && !opts.prepOrderLines) {
                 order.pushLastPrints(orderChanges);
             }
         }
