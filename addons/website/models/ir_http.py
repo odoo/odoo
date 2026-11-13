@@ -329,13 +329,17 @@ class IrHttp(models.AbstractModel):
         req_page = request.httprequest.path
         req_page_noslug = ir_http._UNSLUG_RE.sub(r'\2', req_page)
         req_page_with_qs = request.httprequest.environ['REQUEST_URI']
+        lang_prefix = f'/{request.lang.url_code}'
+        req_page_lang = lang_prefix + req_page
         domain = (
             Domain('redirect_type', 'in', ('301', '302'))
             # trailing / could have been removed by server_page
-            & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/', req_page_noslug])
+            & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/', req_page_noslug, req_page_lang, req_page_lang + '/'])
             & request.env.website.website_domain()
         )
-        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        redirects = request.env['website.rewrite'].sudo().search(domain, order='url_from DESC')
+        # This prioritizes redirects specific to the current lang
+        return redirects.sorted(lambda r: r.url_from.startswith(lang_prefix + '/'), reverse=True)[:1]
 
     @classmethod
     def _serve_fallback(cls):
