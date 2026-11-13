@@ -70,6 +70,31 @@ class IrQweb(models.AbstractModel):
                         atts['data-oe-translate-{}'.format(att.removesuffix('.translate'))] = value
                         atts[att] = match.group(1)
 
+    def _is_post_processing_att_needed(self, tagName, static_atts, dynamic_atts):
+        # The attributes are modified by `_post_process_website_att` when they
+        # hold a URL (rewritten for the language, the routing and the CDN), on
+        # images (lazy loading), on iframes and scripts, and on the containers
+        # of iframes (third-party trackers). The dynamic style and classes are
+        # only considered when their source mentions a background image or one
+        # of these containers.
+        if super()._is_post_processing_att_needed(tagName, static_atts, dynamic_atts):
+            return True
+        if tagName in ('img', 'iframe', 'script'):
+            return True
+        if url_attribute := self.URL_ATTRS.get(tagName):
+            names = static_atts.keys() | dynamic_atts.keys()
+            if url_attribute in names or f'data-{url_attribute}' in names:
+                return True
+        styles = (static_atts.get('style'), dynamic_atts.get('style'))
+        if any(style and 'background' in style for style in styles):
+            return True
+        classes = (static_atts.get('class'), dynamic_atts.get('class'))
+        if any(classes):
+            containers = self.env['website']._get_blocked_iframe_containers_classes()
+            if any(source and any(container in source for container in containers) for source in classes):
+                return True
+        return False
+
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
             return atts
