@@ -697,4 +697,23 @@ describe("animate text in toolbar", () => {
             `<p class="test">Your <span class="o_animated_text o_animate o_anim_fade_in o_animate_preview"><span class="o_text_highlight o_text_highlight_underline"><svg class="o_text_highlight_svg"></svg>section title</span></span></p>`
         );
     });
+
+    test("animating a word of an animated text keeps the spaces around it", async () => {
+        await setupWebsiteBuilder(
+            `<p class="test"><span class="o_animated_text o_animate o_anim_slide_in">Your section title</span></p>`
+        );
+        const textNode = queryOne(":iframe .o_animated_text").firstChild;
+        setSelection({
+            anchorNode: textNode,
+            anchorOffset: 5,
+            focusNode: textNode,
+            focusOffset: 12,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+        expect(queryOne(":iframe .test").outerHTML).toBe(
+            `<p class="test"><span class="o_animated_text o_animate o_anim_slide_in o_animate_preview">Your</span> <span class="o_animated_text o_animate o_anim_fade_in o_animate_preview">section</span> <span class="o_animated_text o_animate o_anim_slide_in o_animate_preview">title</span></p>`
+        );
+    });
 });
