@@ -151,6 +151,54 @@ class TestMailingListMerge(MassMailCommon):
         contact_2 = contact_1.with_context(default_list_ids=self.mailing_list_3.ids).copy()
         self.assertEqual(contact_1.list_ids, contact_2.list_ids, 'Should copy the existing mailing list(s)')
 
+    @users('user_marketing')
+    def test_mailing_list_merge_blacklist_does_not_delete_contacts_without_valid_email(self):
+        """ The "Merge" action must move source contacts lacking a valid email to the
+        destination list even when the blacklist is non-empty, instead of deleting them
+        (issue #299116). """
+        # A non-empty blacklist is required to trigger the bug: with `email_normalized
+        # NOT IN (...)`, a NULL `email_normalized` (no/invalid email) is excluded from the
+        # merge and then deleted as an unused source contact.
+        self.env['mail.blacklist'].create({'email': 'someone.else@example.com'})
+        dest_list = self.env['mailing.list'].create({
+            'name': 'DestList',
+            'contact_ids': [
+                (0, 0, {'name': 'D1', 'email': 'd1@example.com'}),
+                (0, 0, {'name': 'D2', 'email': 'd2@example.com'}),
+                (0, 0, {'name': 'D3', 'email': 'd3@example.com'}),
+                (0, 0, {'name': 'D4', 'email': 'd4@example.com'}),
+            ],
+        })
+        src_list = self.env['mailing.list'].create({
+            'name': 'SrcList',
+            'contact_ids': [
+                (0, 0, {'name': 'Valid', 'email': 'valid@example.com'}),
+                (0, 0, {'name': 'NoEmail'}),
+                (0, 0, {'name': 'BadEmail', 'email': 'not-an-email'}),
+            ],
+        })
+        src_contact_ids = src_list.contact_ids.ids
+        self.assertEqual(len(src_contact_ids), 3)
+
+        (dest_list | src_list).action_mailing_lists_merge()
+
+        # Every original source contact must survive the merge.
+        self.assertEqual(
+            self.env['mailing.contact'].search_count([('id', 'in', src_contact_ids)]),
+            len(src_contact_ids),
+            'No source contact must be deleted by the merge',
+        )
+        # The contacts without a valid email must be moved to the destination list.
+        moved = self.env['mailing.contact'].search([('name', 'in', ['NoEmail', 'BadEmail'])])
+        self.assertEqual(len(moved), 2, 'Contacts without a valid email must survive the merge')
+        self.assertTrue(all(list.id == dest_list.id for list in moved.list_ids))
+
+        self.assertEqual(dest_list.contact_count, 7, 'All source contacts must be moved to the destination list')
+
+        # The source list is archived and drained after the merge.
+        self.assertFalse(src_list.active)
+        self.assertEqual(src_list.contact_count, 0)
+
 
 @tagged('mailing_list')
 @tagged('at_install', '-post_install')  # LEGACY at_install
