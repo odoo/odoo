@@ -790,6 +790,12 @@ export class OdooPivotModel extends PivotModel {
                 case "max":
                     subGroup[measure] = Math.max(...subGroups.map((sg) => sg[measure]));
                     break;
+                case "bool_and":
+                    subGroup[measure] = subGroups.every((sg) => sg[measure]);
+                    break;
+                case "bool_or":
+                    subGroup[measure] = subGroups.some((sg) => sg[measure]);
+                    break;
                 case "avg": {
                     const totalCount = subGroups.reduce((sum, sg) => sum + (sg.__count || 0), 0);
                     if (totalCount === 0) {
