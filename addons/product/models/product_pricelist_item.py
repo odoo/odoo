@@ -2,7 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round, format_amount, format_datetime, formatLang
+from odoo.tools import SQL, float_round, format_amount, format_datetime, formatLang
 
 
 class ProductPricelistItem(models.Model):
@@ -161,6 +161,22 @@ class ProductPricelistItem(models.Model):
         compute='_compute_price_label',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
+
+    def _order_field_to_sql(self, table, field_expr, direction, nulls):
+        """
+        Rules on a child category must take precedence over the ones on its parent:
+        order by the category hierarchy only, not by the (translated) names.
+        The ids in parent_path are compared as integers ("5/6/" comes before "10/16/"),
+        and a parent's path is a prefix of its children's.
+        """
+        if field_expr == 'categ_id':
+            parent_path = table._with_model(self.sudo())._join('categ_id').parent_path
+            table._query._order_groupby.append(parent_path)
+            return SQL(
+                "STRING_TO_ARRAY(RTRIM(%s, '/'), '/')::int[] %s %s",
+                parent_path, direction, nulls,
+            )
+        return super()._order_field_to_sql(table, field_expr, direction, nulls)
 
     #=== COMPUTE METHODS ===#
 
