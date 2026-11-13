@@ -308,6 +308,18 @@ class User(models.Model):
     def _search_company_employee(self, operator, value):
         return [('employee_ids', operator, value)]
 
+    def _get_employee_by_user(self):
+        users = self.with_context(active_test=True)
+        # the same employee for every viewer: the one of the user's company, else the newest one
+        employee_by_user = {user: user.with_company(user.company_id).employee_id for user in users}
+        if users_without_employee := users.filtered(lambda user: not employee_by_user[user]):
+            employees = users.env["hr.employee"].search(
+                [("user_id", "in", users_without_employee.ids)],
+                order="id",
+            )
+            employee_by_user.update((employee.user_id, employee) for employee in employees)
+        return employee_by_user
+
     def action_create_employee(self):
         self.ensure_one()
         self.env['hr.employee'].create(dict(
