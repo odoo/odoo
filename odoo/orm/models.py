@@ -6266,7 +6266,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} + {other}")
             if other:
                 ids = self._ids + other._ids
-                return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids, other._prefetch_ids))
+                return self.__class__(self.env, ids, Prefetch.union(self._prefetch_ids, other._prefetch_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} + {other!r}")
         return self
@@ -6297,7 +6297,7 @@ class BaseModel(metaclass=MetaModel):
         if len(prefetch_ids_list) == 1:
             prefetch_ids = prefetch_ids_list[0]
         else:
-            prefetch_ids = Prefetch.union(ids, *prefetch_ids_list)
+            prefetch_ids = Prefetch.union(*prefetch_ids_list)
         return self.__class__(self.env, ids, prefetch_ids)
 
     def __sub__(self, other) -> Self:
@@ -6335,7 +6335,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} | {other}")
             if other:
                 ids = tuple(dict.fromkeys(self._ids + other._ids))
-                return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids, other._prefetch_ids))
+                return self.__class__(self.env, ids, Prefetch.union(self._prefetch_ids, other._prefetch_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} | {other!r}")
         return self
@@ -6366,7 +6366,7 @@ class BaseModel(metaclass=MetaModel):
         if len(prefetch_ids_list) == 1:
             prefetch_ids = prefetch_ids_list[0]
         else:
-            prefetch_ids = Prefetch.union(ids, *prefetch_ids_list)
+            prefetch_ids = Prefetch.union(*prefetch_ids_list)
         return self.__class__(self.env, ids, prefetch_ids)
 
     def __eq__(self, other):
