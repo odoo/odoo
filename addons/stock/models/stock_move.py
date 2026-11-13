@@ -977,8 +977,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 procurement_group = self.env['procurement.group'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 rule = procurement_group._search_rule(move.route_ids, move.product_packaging_id, move.product_id, False, domain)
-            # Make sure it is not returning the return
-            if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
+            # Make sure it is not returning the return, even if the returned move went to a sublocation
+            if rule and (not move.origin_returned_move_id or not move.origin_returned_move_id.location_dest_id._child_of(rule.location_dest_id)):
                 new_move = rule._run_push(move)
                 if new_move:
                     new_moves.append(new_move)
