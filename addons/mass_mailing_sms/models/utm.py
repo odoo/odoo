@@ -70,6 +70,8 @@ class UtmCampaign(models.Model):
     def _cron_process_mass_mailing_ab_testing(self):
         ab_testing_campaign = super()._cron_process_mass_mailing_ab_testing()
         for campaign in ab_testing_campaign:
+            if campaign.ab_testing_sms_winner_selection == 'manual':
+                continue
             ab_testing_mailings = campaign.mailing_sms_ids.filtered(lambda m: m.ab_testing_enabled)
             if not ab_testing_mailings.filtered(lambda m: m.state == 'done'):
                 continue
