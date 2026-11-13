@@ -8,5 +8,6 @@
     'license': 'LGPL-3',
     'category': 'Sales',
     'depends': ['sale_project', 'sale_stock', 'project_stock_account'],
+    'demo': ['data/sale_project_stock_demo.xml'],
     'auto_install': True,
 }
