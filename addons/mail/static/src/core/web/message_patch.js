@@ -110,8 +110,6 @@ patch(Message.prototype, {
     /** @returns {TranslatedString} */
     formatTrackingOrNone(trackingFieldInfo, trackingValue) {
         const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue);
-        return formattedValue
-            ? this.props.messageSearch?.highlight(formattedValue) ?? formattedValue
-            : _t("None");
+        return formattedValue ? this.props.messageSearch.highlight(formattedValue) : _t("None");
     },
 });
