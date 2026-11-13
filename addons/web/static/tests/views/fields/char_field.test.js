@@ -891,7 +891,7 @@ test("Form: placeholder_field shows as placeholder", async () => {
             <sheet>
                 <group>
                     <field name="placeholder_name" invisible="1" />
-                    <field name="name" options="{'placeholder_field': 'placeholder_name'}" />
+                    <field name="name" placeholder="Static" options="{'placeholder_field': 'placeholder_name'}" />
                 </group>
             </sheet>
         </form>`,
@@ -902,6 +902,26 @@ test("Form: placeholder_field shows as placeholder", async () => {
     expect("input").toHaveAttribute("placeholder", "Placeholder Name", {
         message: "placeholder_field should be the placeholder",
     });
+});
+
+test("Form: empty placeholder_field falls back on the placeholder attribute", async () => {
+    Partner._records[0].name = false;
+    Partner._records[0].placeholder_name = false;
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+        <form>
+            <sheet>
+                <group>
+                    <field name="placeholder_name" invisible="1" />
+                    <field name="name" placeholder="Static" options="{'placeholder_field': 'placeholder_name'}" />
+                </group>
+            </sheet>
+        </form>`,
+    });
+    expect("input").toHaveAttribute("placeholder", "Static");
 });
 
 test("char field: correct value is used to evaluate the modifiers", async () => {
