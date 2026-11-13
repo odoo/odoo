@@ -35,7 +35,7 @@ from odoo.fields import Domain
 from odoo.tools import (
     BinaryBytes,
     is_html_empty, html_escape, html2plaintext,
-    clean_context, split_every, SQL,
+    clean_context, groupby, split_every, SQL,
     OrderedSet, is_list_of,
 )
 from odoo.tools.mail import (
@@ -3486,6 +3486,15 @@ class MailThread(models.AbstractModel):
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
+        return self._notify_thread_batch(message, **kwargs)[message.id]
+
+    def _notify_thread_batch(self, messages, **kwargs):
+        """ Notify several messages, see ``_notify_thread()``. Each message is
+        linked to a record of self (possibly the same), or to no thread when
+        self is void (e.g. ``message_notify`` without record).
+
+        :return: dict ``{message ID: recipients data}``;
+        """
         # add lang to context immediately since it will be useful in various rendering later
         self = self._fallback_lang()
         self._raise_for_invalid_parameters(
@@ -3493,7 +3502,8 @@ class MailThread(models.AbstractModel):
             restricting_names=self._get_notify_valid_parameters()
         )
 
-        recipients_data = self._notify_get_recipients(message, **kwargs)
+        recipients_by_msg = self._notify_get_recipients_batch(messages, **kwargs)
+        recipients_data = [r for msg_recipients_data in recipients_by_msg.values() for r in msg_recipients_data]
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
         uid2pid = {uid: r['id'] for r in recipients_data if r['id'] for uid in r['uids']}
         users = self.env['res.users'].browse(uid2pid)
@@ -3501,44 +3511,80 @@ class MailThread(models.AbstractModel):
 
         # check for automated content (OOO), before shortcutting if no recipients
         # as OOO may include more people (parent message author, responsible)
-        self._notify_thread_with_out_of_office(message, recipients_data, **kwargs)
-
-        if not recipients_data:
-            return recipients_data
+        record_by_msg = self._notify_get_record_by_message(messages)
+        for message in messages:
+            record_by_msg[message.id]._notify_thread_with_out_of_office(message, recipients_by_msg[message.id], **kwargs)
 
         # if scheduled for later: add in queue instead of generating notifications
         scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
+        messages_to_notify = messages.filtered(lambda message: recipients_by_msg[message.id])
         if scheduled_date:
             # send the message notifications at the scheduled date
-            self.env['mail.message.schedule'].sudo().create({
+            self.env['mail.message.schedule'].sudo().create([{
                 'scheduled_datetime': scheduled_date,
                 'mail_message_id': message.id,
                 'notification_parameters': json.dumps(kwargs),
-            })
+            } for message in messages_to_notify])
         else:
             # generate immediately the <mail.notification>
             # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
-            self._notify_thread_by_inbox(message, recipients_data, **kwargs)
-            self._notify_thread_by_email(message, recipients_data, **kwargs)
-            self._notify_thread_by_web_push(message, recipients_data, **kwargs)
+            for messages_batch in self._notify_thread_split_batches(messages_to_notify, recipients_by_msg):
+                self._notify_thread_by_inbox_batch(messages_batch, recipients_by_msg, **kwargs)
+                self._notify_thread_by_email_batch(messages_batch, recipients_by_msg, **kwargs)
+                self._notify_thread_by_web_push_batch(messages_batch, recipients_by_msg, **kwargs)
 
-        return recipients_data
+        for message in messages:
+            record_by_msg[message.id]._notify_thread_post_hook(
+                message, recipients_by_msg[message.id], scheduled_date=scheduled_date, **kwargs,
+            )
+        return recipients_by_msg
 
-    def _notify_thread_by_inbox(self, message, recipients_data, **kwargs):
-        """ Notify recipients inbox of a message. It is done in two main steps
+    def _notify_thread_post_hook(self, message, recipients_data, **kwargs):
+        """ Called on the record of each notified message, even without
+        recipients, to add message-specific behavior. See ``_notify_thread()``
+        for parameters. """
+
+    def _notify_get_record_by_message(self, messages):
+        """ Return the record of self each message is notified on, as a dict
+        ``{message ID: record}``. A single record (or a void self, see
+        ``_notify_thread_batch()``) is used for all messages, even unsaved ones. """
+        if len(self) <= 1:
+            return {message.id: self for message in messages}
+        record_by_id = dict(zip(self.ids, self))
+        return {message.id: record_by_id.get(message.res_id, self.browse()) for message in messages}
+
+    def _notify_thread_split_batches(self, messages, recipients_by_msg):
+        """ Split messages in batches of at most 'mail.notify.batch.recipients_limit'
+        recipients (1000 by default), to keep memory and transaction size under
+        control. A message having more recipients is notified alone. """
+        if len(messages) <= 1:
+            if messages:
+                yield messages
+            return
+        limit = self.env['ir.config_parameter'].sudo().get_int('mail.notify.batch.recipients_limit') or 1000
+        batch_ids, batch_count = [], 0
+        for message in messages:
+            if batch_ids and batch_count + len(recipients_by_msg[message.id]) > limit:
+                yield messages.browse(batch_ids)
+                batch_ids, batch_count = [], 0
+            batch_ids.append(message.id)
+            batch_count += len(recipients_by_msg[message.id])
+        if batch_ids:
+            yield messages.browse(batch_ids)
+
+    def _notify_thread_by_inbox_batch(self, messages, recipients_by_msg, **kwargs):
+        """ Notify recipients inbox of messages. It is done in two main steps
 
           * create inbox notifications for users;
           * send bus notifications;
 
-        :param record message: <mail.message> record being notified.
-        :param list recipients_data: list of recipients data based on <res.partner>
-          records formatted like a list of dicts containing information. See
-          ``MailThread._notify_get_recipients()``;
+        :param messages: <mail.message> records being notified.
+        :param dict recipients_by_msg: ``{message ID: recipients data}``;
         """
-        inbox_pids_uids = sorted(
-            [(r["id"], r["uids"]) for r in recipients_data if r["id"] and r["notif"] == "inbox"]
-        )
-        if inbox_pids_uids:
+        inbox_pids_uids_by_msg = {message: sorted(
+            [(r["id"], r["uids"]) for r in recipients_by_msg[message.id] if r["id"] and r["notif"] == "inbox"]
+        ) for message in messages}
+        if any(inbox_pids_uids_by_msg.values()):
             notif_create_values = [
                 {
                     "author_id": message.author_id.id,
@@ -3547,26 +3593,31 @@ class MailThread(models.AbstractModel):
                     "notification_type": "inbox",
                     "res_partner_id": pid_uid[0],
                 }
+                for message, inbox_pids_uids in inbox_pids_uids_by_msg.items()
                 for pid_uid in inbox_pids_uids
             ]
             # sudo: mail.notification - creating notifications is the purpose of notify methods
             self.env["mail.notification"].sudo().create(notif_create_values)
-            users = self.env["res.users"].browse(uid for _pid, uids in inbox_pids_uids for uid in uids)
+            users_by_msg = {
+                message: self.env["res.users"].browse(uid for _pid, uids in inbox_pids_uids for uid in uids)
+                for message, inbox_pids_uids in inbox_pids_uids_by_msg.items()
+            }
+            users = self.env["res.users"].union(users_by_msg.values())
             followers = Store.LazyValue(
                 lambda: (
                     self.env["mail.followers"]
                     .sudo()
                     .search(
                         [
-                            ("res_model", "=", message.model),
-                            ("res_id", "=", message.res_id),
+                            ("res_model", "in", list({message.model for message in inbox_pids_uids_by_msg})),
+                            ("res_id", "in", list({message.res_id for message in inbox_pids_uids_by_msg})),
                             ("partner_id", "in", users.partner_id.ids),
                         ],
                     )
                 ),
             )
             batch_vals = {"inbox_fields": True, "followers": followers}
-            for user in users:
+            for message, user in [(message, user) for message, msg_users in users_by_msg.items() for user in msg_users]:
                 store = Store(
                     user,
                     notification_type="mail.message/notification",
@@ -3613,31 +3664,37 @@ class MailThread(models.AbstractModel):
         :param bool send_after_commit: if force_send, tells to send emails after
           the transaction has been committed using a post-commit hook;
         """
+        return self._notify_thread_by_email_batch(
+            message, {message.id: recipients_data},
+            mail_auto_delete=mail_auto_delete, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang,
+            force_record_name=force_record_name, subtitles=subtitles,
+            force_send=force_send, send_after_commit=send_after_commit, **kwargs,
+        )
+
+    def _notify_thread_by_email_prepare(self, message, recipients_data, *, mail_auto_delete=True,
+                                        model_description=False, force_email_company=False, force_email_lang=False,
+                                        force_record_name=False, subtitles=None, **kwargs):
+        """ Prepare emails notifications of a message, see ``_notify_thread_by_email()``.
+
+        :return: tuple ``(mail_create_values, notif_create_values)``, notification
+          'mail_mail_id' holding their mail values until created;
+        """
         partners_data = [r for r in recipients_data if r['notif'] == 'email']
         if not partners_data:
-            return True
+            return [], []
 
         additional_values = {'auto_delete': mail_auto_delete}
         if kwargs.get('mail_headers'):
-            additional_values['headers'] = kwargs['mail_headers']
+            additional_values['headers'] = dict(kwargs['mail_headers'])  # updated with message-specific headers
         base_mail_values = self._notify_by_email_get_base_mail_values(
             message, partners_data, additional_values=additional_values,
         )
         base_notification_values = self._notify_by_email_get_base_notification_values(message)
 
-        # Clean the context to get rid of residual default_* keys that could cause issues during
-        # the mail.mail creation.
-        # Example: 'default_state' would refer to the default state of a previously created record
-        # from another model that in turns triggers an assignation notification that ends up here.
-        # This will lead to a traceback when trying to create a mail.mail with this state value that
-        # doesn't exist.
-        SafeMail = self.env['mail.mail'].sudo().with_context(clean_context(self.env.context))
-        SafeNotification = self.env['mail.notification'].sudo().with_context(clean_context(self.env.context))
-        emails = self.env['mail.mail'].sudo()
-
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
         gen_batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 50  # be sure to not have 0, as otherwise no iteration is done
-        notif_create_values = []
+        mail_create_values, notif_create_values = [], []
         for _lang, render_values, recipients_group in self._notify_get_classified_recipients_iterator(
             message,
             partners_data,
@@ -3682,12 +3739,12 @@ class MailThread(models.AbstractModel):
                         additional_values={'body_html': mail_body},
                         recipient_cc_ids=[rid for rid in deduplicated_recipient_ids_chunk if rid in recipient_cc_ids_set],
                     )
-                    new_email = SafeMail.create(mail_values)
+                    mail_create_values.append(mail_values)
                 else:
-                    new_email = SafeMail.browse()
+                    mail_values = False
                 notif_create_values += [
                     {
-                        'mail_mail_id': new_email.id,
+                        'mail_mail_id': mail_values,
                         'res_partner_id': recipient_id,
                         'mail_email_address': recipients_to_emails.get(recipient_id),
                         **base_notification_values,
@@ -3701,7 +3758,6 @@ class MailThread(models.AbstractModel):
                     )
                     for recipient_id in recipients_ids_chunk
                 ]
-                emails += new_email
             # create MailMail for email-only recipients
             if recipients_emails:
                 deduplicated_email_addresses = OrderedSet(recipients_emails) - email_to_deduplicated_recipient_id.keys()
@@ -3711,12 +3767,12 @@ class MailThread(models.AbstractModel):
                         additional_values={'body_html': mail_body},
                     )
                     mail_values['email_to'] = ','.join(deduplicated_email_addresses)
-                    new_email = SafeMail.create(mail_values)
+                    mail_create_values.append(mail_values)
                 else:
-                    new_email = SafeMail.browse()
+                    mail_values = False
                 new_notif_create_values = [{
                     'mail_email_address': email,
-                    'mail_mail_id': new_email.id,
+                    'mail_mail_id': mail_values,
                     **base_notification_values,
                 } for email in recipients_emails]
                 # mark all but the first occurrence of a given normalized email as cancelled (duplicate)
@@ -3728,10 +3784,37 @@ class MailThread(models.AbstractModel):
                         notif['notification_status'] = 'canceled'
                         notif['failure_type'] = 'mail_dup'
                 notif_create_values += new_notif_create_values
-                emails += new_email
 
-        if notif_create_values:
-            SafeNotification.create(notif_create_values)
+        return mail_create_values, notif_create_values
+
+    def _notify_thread_by_email_batch(self, messages, recipients_by_msg, *, force_send=True, send_after_commit=True, **kwargs):
+        """ Send emails notifications of several messages, see ``_notify_thread_by_email()``.
+        Emails are prepared per message, then created at once. """
+        mail_create_values, notif_create_values = [], []
+        record_by_msg = self._notify_get_record_by_message(messages)
+        for message in messages:
+            msg_mail_values, msg_notif_values = record_by_msg[message.id]._notify_thread_by_email_prepare(
+                message, recipients_by_msg[message.id], **kwargs,
+            )
+            mail_create_values += msg_mail_values
+            notif_create_values += msg_notif_values
+        if not notif_create_values:
+            return True
+
+        # Clean the context to get rid of residual default_* keys that could cause issues during
+        # the mail.mail creation.
+        # Example: 'default_state' would refer to the default state of a previously created record
+        # from another model that in turns triggers an assignation notification that ends up here.
+        # This will lead to a traceback when trying to create a mail.mail with this state value that
+        # doesn't exist.
+        SafeMail = self.env['mail.mail'].sudo().with_context(clean_context(self.env.context))
+        SafeNotification = self.env['mail.notification'].sudo().with_context(clean_context(self.env.context))
+
+        emails = SafeMail.create(mail_create_values)
+        mail_ids = {id(values): mail.id for values, mail in zip(mail_create_values, emails, strict=True)}
+        for notif_values in notif_create_values:
+            notif_values['mail_mail_id'] = mail_ids.get(id(notif_values['mail_mail_id']), False)
+        SafeNotification.create(notif_create_values)
 
         # NOTE:
         #   1. for more than 50 followers, use the queue system
@@ -4121,9 +4204,14 @@ class MailThread(models.AbstractModel):
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like a list of dicts containing information. See
           ``MailThread._notify_get_recipients()``;
+        :param kwargs: ``web_push_parameters`` (see ``_notify_thread_by_web_push_batch()``);
         """
         partner_ids = self._notify_get_recipients_for_extra_notifications(message, recipients_data)
-        devices, private_key, public_key = self.env["mail.push.device"]._web_push_get_partners_parameters(partner_ids)
+        if web_push_parameters := kwargs.get('web_push_parameters'):
+            devices, private_key, public_key = web_push_parameters
+            devices = devices.filtered(lambda device: device.partner_id.id in partner_ids)
+        else:
+            devices, private_key, public_key = self.env["mail.push.device"]._web_push_get_partners_parameters(partner_ids)
         if not devices:
             return
         payload = devices._web_push_truncate_payload(
@@ -4132,6 +4220,23 @@ class MailThread(models.AbstractModel):
             )
         )
         devices._web_push_send_notification(private_key, public_key, payload=payload)
+
+    def _notify_thread_by_web_push_batch(self, messages, recipients_by_msg, **kwargs):
+        """ Send cloud notifications of several messages, see ``_notify_thread_by_web_push()``.
+        Devices are fetched at once for all messages. """
+        record_by_msg = self._notify_get_record_by_message(messages)
+        if len(messages) > 1:
+            partner_ids = set()
+            for message in messages:
+                partner_ids.update(record_by_msg[message.id]._notify_get_recipients_for_extra_notifications(
+                    message, recipients_by_msg[message.id],
+                ))
+            web_push_parameters = self.env["mail.push.device"]._web_push_get_partners_parameters(list(partner_ids))
+            if not web_push_parameters[0]:
+                return
+            kwargs['web_push_parameters'] = web_push_parameters
+        for message in messages:
+            record_by_msg[message.id]._notify_thread_by_web_push(message, recipients_by_msg[message.id], **kwargs)
 
     def _notify_by_push_get_title(self, message, force_record_name=False):
         return force_record_name or message.record_name or message.subject
@@ -4245,6 +4350,8 @@ class MailThread(models.AbstractModel):
             recipients i.e. in 'partner_ids';
           * ``notify_skip_followers``: skip followers fetch. Notification relies
             on message 'partner_ids' explicit recipients only;
+          * ``prefetched_recipient_data``: partner-based recipients data fetched
+            for several messages at once (see ``_notify_get_recipients_batch()``);
           * ``skip_existing``: check existing notifications and skip them in order
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
@@ -4292,7 +4399,9 @@ class MailThread(models.AbstractModel):
         # is it possible to have record but no subtype_id ?
         recipients_data = []
         # compute partner-based recipients data: followers, mentionned partner ids
-        res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)[self.id if self else 0]
+        res = kwargs.get('prefetched_recipient_data')
+        if res is None:
+            res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)[self.id if self else 0]
         # include optional additional emails
         outgoing_email_to_lst = email_split_and_normalize(msg_sudo.outgoing_email_to)
         if not res and not outgoing_email_to_lst:
@@ -4360,6 +4469,53 @@ class MailThread(models.AbstractModel):
                 ]
 
         return recipients_data
+
+    def _notify_get_recipients_batch(self, messages, **kwargs):
+        """ Compute recipients of several messages, see ``_notify_get_recipients()``.
+        Partner-based recipients data is fetched at once for messages sharing
+        type, subtype and partners, and ``skip_existing`` is checked at once.
+
+        :return: dict ``{message ID: recipients data}``;
+        """
+        record_by_msg = self._notify_get_record_by_message(messages)
+        prefetched_by_msg = {}
+        if len(messages) > 1:
+            def recipient_data_key(message):
+                # same parameters as in _notify_get_recipients
+                if kwargs.get('notify_skip_followers'):
+                    message_type = 'user_notification'
+                else:
+                    message_type = message.message_type
+                return message_type, message.subtype_id, message.partner_ids | message.partner_cc_ids
+
+            for (message_type, subtype, partners), group in groupby(messages.sudo(), recipient_data_key):
+                records = self.browse().union(record_by_msg[message.id] for message in group)
+                res = self.env['mail.followers']._get_recipient_data(records, message_type, subtype.id, partners.ids)
+                for message in group:
+                    record = record_by_msg[message.id]
+                    record_res = res[record.id if record else 0]
+                    # copy data, as it is updated per message
+                    prefetched_by_msg[message.id] = {pid: dict(pdata) for pid, pdata in record_res.items()}
+
+        # avoid double notification: checked once for all messages, instead of per message
+        skip_existing = len(messages) > 1 and kwargs.pop('skip_existing', False)
+        recipients_by_msg = {}
+        for message in messages:
+            recipients_by_msg[message.id] = record_by_msg[message.id]._notify_get_recipients(
+                message, prefetched_recipient_data=prefetched_by_msg.get(message.id), **kwargs,
+            )
+        if skip_existing:
+            pids = set()
+            for recipients_data in recipients_by_msg.values():
+                pids.update(r['id'] for r in recipients_data if r['id'])
+            notifications = self.env['mail.notification'].sudo().search_fetch(
+                [('res_partner_id', 'in', list(pids)), ('mail_message_id', 'in', messages.ids)],
+                ['mail_message_id', 'res_partner_id'],
+            )
+            existing = {(notif.mail_message_id.id, notif.res_partner_id.id) for notif in notifications}
+            for message_id, recipients_data in recipients_by_msg.items():
+                recipients_by_msg[message_id] = [r for r in recipients_data if (message_id, r['id']) not in existing]
+        return recipients_by_msg
 
     def _notify_get_recipients_groups(self, message, model_description):
         """ Return groups used to classify recipients of a notification email.

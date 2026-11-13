@@ -1490,8 +1490,8 @@ class DiscussChannel(models.Model):
         payload['options']['data']['action'] = 'mail.action_discuss'
         return payload
 
-    def _notify_thread_by_email(self, message, recipients_data, **kwargs):
-        # MailThread._notify_thread calls it whatever the recipients, and a channel has no email one
+    def _notify_thread_by_email_batch(self, messages, recipients_by_msg, **kwargs):
+        # MailThread._notify_thread_batch calls it whatever the recipients, and a channel has no email one
         return True
 
     def _notify_thread_by_web_push(self, message, recipients_data, **kwargs):
@@ -1658,15 +1658,33 @@ class DiscussChannel(models.Model):
         return MailThread._partner_find_from_emails_single(self, *args, **kwargs)
 
     # _notify_thread: DiscussChannel._notify_thread -> MailThread._notify_thread
-    # -> _is_notification_scheduled, then the inbox, out of office and web push
-    # groups below, on the recipients of _notify_get_recipients above.
+    # -> _notify_thread_batch -> _notify_get_recipients_batch (calling
+    # _notify_get_recipients above), _notify_get_record_by_message,
+    # _is_notification_scheduled, _notify_thread_split_batches and
+    # _notify_thread_post_hook, then the inbox, out of office and web push
+    # groups below.
+    def _notify_get_recipients_batch(self, *args, **kwargs):
+        return MailThread._notify_get_recipients_batch(self, *args, **kwargs)
+
+    def _notify_get_record_by_message(self, *args, **kwargs):
+        return MailThread._notify_get_record_by_message(self, *args, **kwargs)
+
     def _is_notification_scheduled(self, *args, **kwargs):
         return MailThread._is_notification_scheduled(self, *args, **kwargs)
 
-    # inbox: _notify_thread -> _notify_thread_by_inbox, for a mentioned
-    # internal partner (notif "inbox" in _notify_get_recipients).
-    def _notify_thread_by_inbox(self, *args, **kwargs):
-        return MailThread._notify_thread_by_inbox(self, *args, **kwargs)
+    def _notify_thread_batch(self, *args, **kwargs):
+        return MailThread._notify_thread_batch(self, *args, **kwargs)
+
+    def _notify_thread_post_hook(self, *args, **kwargs):
+        return MailThread._notify_thread_post_hook(self, *args, **kwargs)
+
+    def _notify_thread_split_batches(self, *args, **kwargs):
+        return MailThread._notify_thread_split_batches(self, *args, **kwargs)
+
+    # inbox: _notify_thread_batch -> _notify_thread_by_inbox_batch, for a
+    # mentioned internal partner (notif "inbox" in _notify_get_recipients).
+    def _notify_thread_by_inbox_batch(self, *args, **kwargs):
+        return MailThread._notify_thread_by_inbox_batch(self, *args, **kwargs)
 
     # out of office: _notify_thread -> _notify_thread_with_out_of_office for a
     # comment, -> _message_compute_real_author and
@@ -1682,7 +1700,8 @@ class DiscussChannel(models.Model):
     def _notify_thread_with_out_of_office_get_additional_users(self, *args, **kwargs):
         return MailThread._notify_thread_with_out_of_office_get_additional_users(self, *args, **kwargs)
 
-    # web push: DiscussChannel._notify_thread_by_web_push
+    # web push: _notify_thread_batch -> _notify_thread_by_web_push_batch
+    # -> DiscussChannel._notify_thread_by_web_push
     # -> MailThread._notify_thread_by_web_push
     #   -> _notify_get_recipients_for_extra_notifications
     #   -> DiscussChannel._notify_by_web_push_prepare_payload
@@ -1693,6 +1712,9 @@ class DiscussChannel(models.Model):
 
     def _notify_get_recipients_for_extra_notifications(self, *args, **kwargs):
         return MailThread._notify_get_recipients_for_extra_notifications(self, *args, **kwargs)
+
+    def _notify_thread_by_web_push_batch(self, *args, **kwargs):
+        return MailThread._notify_thread_by_web_push_batch(self, *args, **kwargs)
 
     # access: ThreadController._get_thread_with_access and
     # mail.message._get_with_access call _get_thread_with_access on the thread

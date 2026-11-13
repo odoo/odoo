@@ -7,6 +7,7 @@ import logging
 from datetime import datetime
 
 from odoo import api, fields, models
+from odoo.tools import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -63,25 +64,30 @@ class MailMessageSchedule(models.Model):
         """
         for model, schedules in self._group_by_model().items():
             if model:
-                records = self.env[model].browse(id_ for id_ in schedules.mapped('mail_message_id.res_id') if id_)
-                existing = records.exists()
+                existing = self.env[model].browse(schedules.mail_message_id.mapped('res_id')).exists()
+                existing_ids = set(existing.ids)
+                schedules = schedules.filtered(lambda schedule: schedule.mail_message_id.res_id in existing_ids)
             else:
-                records = [self.env['mail.thread']] * len(schedules)
-                existing = records
+                existing = self.env['mail.thread']
 
-            for record, schedule in zip(records, schedules):
-                if record not in existing:
-                    continue
+            # notify in batch messages sharing the same notification parameters
+            message_ids_by_parameters = {}
+            for schedule in schedules:
+                message_ids_by_parameters.setdefault(schedule.notification_parameters, []).append(schedule.mail_message_id.id)
+
+            for notification_parameters, message_ids in message_ids_by_parameters.items():
                 notify_kwargs = dict(default_notify_kwargs or {}, skip_existing=True)
                 try:
-                    schedule_notify_kwargs = json.loads(schedule.notification_parameters)
+                    schedule_notify_kwargs = json.loads(notification_parameters)
                 except Exception:
                     pass
                 else:
                     schedule_notify_kwargs.pop('scheduled_date', None)
                     notify_kwargs.update(schedule_notify_kwargs)
 
-                record._notify_thread(schedule.mail_message_id, **notify_kwargs)
+                messages = self.env['mail.message'].browse(message_ids)
+                records = existing.browse(OrderedSet(messages.mapped('res_id'))) if model else existing
+                records._notify_thread_batch(messages, **notify_kwargs)
 
         self.unlink()
         return True
