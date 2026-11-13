@@ -612,6 +612,7 @@
             </xpath>
             <field name="work_entry_type_id" position="attributes">
                 <attribute name="domain">[
+                    ('id', 'in', allowed_work_entry_type_ids),
                     '|',
                         ('requires_allocation', '=', False),
                         '&amp;',
