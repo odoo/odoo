@@ -38,18 +38,18 @@
     </BuilderRow>
     <BuilderRow t-if="!this.isActiveItem('no_input_opt')"
                 label.translate="Minimum" level="1">
-        <BuilderNumberInput step="1" action="'setMinimumAmount'"/>
+        <BuilderNumberInput step="1" action="'setMinimumAmount'" min="0"/>
     </BuilderRow>
     <t t-if="this.isActiveItem('slider_opt')">
         <BuilderRow label.translate="Maximum" level="1">
-            <BuilderNumberInput step="1" action="'setMaximumAmount'"/>
+            <BuilderNumberInput step="1" action="'setMaximumAmount'" min="0"/>
         </BuilderRow>
         <BuilderRow label.translate="Step" level="1">
             <BuilderNumberInput step="1" action="'setSliderStep'"/>
         </BuilderRow>
     </t>
     <BuilderRow label.translate="Default Amount">
-        <BuilderNumberInput step="1" default="25" dataAttributeAction="'defaultAmount'"/>
+        <BuilderNumberInput step="1" default="25" dataAttributeAction="'defaultAmount'" min="0"/>
     </BuilderRow>
 </t>
 
