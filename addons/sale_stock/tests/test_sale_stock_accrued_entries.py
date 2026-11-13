@@ -38,7 +38,6 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
         }
         if unit_cost:
             move_vals['value_manual'] = unit_cost * product_qty
-            move_vals['price_unit'] = unit_cost
         else:
             move_vals['value_manual'] = product.standard_price * product_qty
 

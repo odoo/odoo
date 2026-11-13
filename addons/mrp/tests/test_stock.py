@@ -252,7 +252,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertTrue(scrap_move_id.raw_material_production_id)
         self.assertEqual(scrap_move_id.location_dest_id.usage, 'inventory')
         self.assertTrue(scrap_move_id.is_scrap)
-        self.assertEqual(scrap_move_id.price_unit, scrap_move_id.product_id.standard_price)
 
         #Check scrap move is created for this production order.
         #TODO: should check with scrap objects link in between

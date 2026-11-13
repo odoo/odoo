@@ -854,7 +854,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 8.0,
-            'price_unit': 1,
             'state': 'done',
             'move_line_ids': [(0, 0, {
                 'product_id': product.id,
@@ -884,7 +883,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 60.0,
-            'price_unit': 15,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -902,7 +900,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 140.0,
-            'price_unit': 15.50,
         })
         move2._action_confirm()
         move2._action_assign()
@@ -936,7 +933,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 70.0,
-            'price_unit': 16.00,
         })
         move4._action_confirm()
         move4._action_assign()
@@ -970,7 +966,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
-            'price_unit': 99,
         })
         move6._action_confirm()
         move6._action_assign()
@@ -1058,7 +1053,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1073,7 +1067,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 3.0,
-            'price_unit': 5,
         })
         move2._action_confirm()
         move2._action_assign()
@@ -1095,7 +1088,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1119,7 +1111,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1132,7 +1123,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 5,
         })
         move2._action_confirm()
         move2._action_assign()
@@ -1160,7 +1150,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 5,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1.quantity = 5
@@ -1180,7 +1169,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10,
-            'price_unit': 20,
         })
         move2._action_confirm()
         move2.quantity = 10
@@ -1212,7 +1200,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1.quantity = 1
@@ -1228,7 +1215,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1,
-            'price_unit': 20,
         })
         move2._action_confirm()
         move2.quantity = 1
@@ -1243,7 +1229,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1,
-            'price_unit': 20,
         })
         move3._action_confirm()
         move3.quantity = 1
@@ -1264,7 +1249,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1.picked = True
@@ -1298,7 +1282,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1.picked = True
@@ -1328,7 +1311,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1434,7 +1416,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1455,7 +1436,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1474,7 +1454,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
-            'price_unit': 20,
         })
         move2._action_confirm()
         move2._action_assign()
@@ -1525,7 +1504,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 20.0,
-            'price_unit': 20,
         })
         move5._action_confirm()
         move5._action_assign()
@@ -1568,7 +1546,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 10.0,
-            'price_unit': 10,
         })
         move7._action_confirm()
         move7._action_assign()
@@ -1633,7 +1610,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -1656,7 +1632,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
         move1._action_assign()
@@ -2707,7 +2682,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': product.id,
             'uom_id': uom_dozen.id,
             'product_uom_qty': 1.0,
-            'price_unit': 10,
         })
         receipt.action_confirm()
         move.quantity = 1
@@ -2892,7 +2866,6 @@ class TestStockValuation(TestStockValuationCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': location.id,
             'product_uom_qty': 1,
-            'price_unit': 1,
         })
         move._action_confirm()
         move._action_assign()
@@ -3566,7 +3539,6 @@ class TestStockValuation(TestStockValuationCommon):
             'product_id': lot_product.id,
             'uom_id': self.uom.id,
             'product_uom_qty': 1.0,
-            'price_unit': 15.50,
             'lot_ids': [Command.set([lot.id])],
             'is_in': True,
         })

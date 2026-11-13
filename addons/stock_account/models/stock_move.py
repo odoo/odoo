@@ -40,9 +40,9 @@ class StockMove(models.Model):
         "Manual Value", currency_field='company_currency_id',
         compute="_compute_value_manual", inverse="_inverse_value_manual")
     standard_price = fields.Float(compute='_compute_standard_price', string='Standard Price')
-
-    # To remove and only use value
-    price_unit = fields.Float("Price Unit")
+    # Value per valued unit. Consigned, consumable and kit prices aren't per-move,
+    # so they can be accessed through `_get_price_unit()`.
+    price_unit = fields.Float("Price Unit", compute='_compute_price_unit', store=True)
     is_in = fields.Boolean(string='Is Incoming (valued)', compute='_compute_is_in', store=True)
     is_out = fields.Boolean(string='Is Outgoing (valued)', compute='_compute_is_out', store=True)
     is_dropship = fields.Boolean(string='Is Dropship', compute='_compute_is_dropship', store=True)
@@ -129,6 +129,12 @@ class StockMove(models.Model):
 
     def _compute_sql_order_partner_id(self, table):
         return SQL("%s", table.partner_id)
+
+    @api.depends('is_dropship', 'is_in', 'is_out', 'move_line_ids.owner_id', 'move_line_ids.picked',
+                 'move_line_ids.quantity_product_uom', 'state', 'value')
+    def _compute_price_unit(self):
+        for move in self:
+            move.price_unit = move._get_price_unit()
 
     def _compute_value_manual(self):
         for move in self:

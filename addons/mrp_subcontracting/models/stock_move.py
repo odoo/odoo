@@ -1,11 +1,8 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from collections import defaultdict
 
 from odoo import fields, models, api, _
 from odoo.exceptions import AccessError
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import OrderedSet
+from odoo.tools.misc import clean_context
 
 
 class StockMove(models.Model):
@@ -55,11 +52,21 @@ class StockMove(models.Model):
         return vals_list
 
     def write(self, vals):
-        """ If the initial demand is updated then also update the linked
-        subcontract order to the new quantity.
-        """
+        """If the initial demand is updated, then resupply the subcontractor with the difference."""
         self._check_access_if_subcontractor(vals)
-        res = super().write(vals)
+        if ('product_uom_qty' in vals
+           # Skip if the demand is only moved to another move (backorder split, failed quality check etc).
+           and not self.env.context.get('do_not_unreserve')
+           # `super().write()` and `_merge_moves()` will compare the change in demand and resupply
+           # the difference, so skip to avoid circular resupplies.
+           and self.env.context.get('subcontract_demand_before') is None
+           and self._get_subcontract_production()):
+            demand_before = self._get_subcontract_demand()
+            res = super(StockMove, self.with_context(subcontract_demand_before=demand_before)).write(vals)
+            self._procure_subcontract_demand_difference(demand_before)
+            self.filtered(lambda m: m.is_subcontract)._action_assign()
+        else:
+            res = super().write(vals)
         if 'date' in vals:
             for move in self:
                 if move.state in ('done', 'cancel') or not move.is_subcontract:
@@ -125,19 +132,18 @@ class StockMove(models.Model):
         return action
 
     def _action_cancel(self):
-        productions_to_cancel_ids = OrderedSet()
-        for move in self:
-            if move.is_subcontract:
-                active_productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
-                moves_todo = self.env.context.get('moves_todo')
-                not_todo_productions = active_productions.filtered(lambda p: p not in moves_todo.move_orig_ids.production_id) if moves_todo else active_productions
-                if not_todo_productions:
-                    productions_to_cancel_ids.update(not_todo_productions.ids)
-
-        if productions_to_cancel_ids:
-            productions_to_cancel = self.env['mrp.production'].browse(productions_to_cancel_ids)
+        if productions_to_cancel := self._get_subcontract_production().filtered(lambda p: p.state not in ('done', 'cancel')):
+            # Cancelling an MO only cancels its own resupplies, so we need to make sure to give back
+            # the demand in the resupplies it shares with others whilst the components are still
+            # linked. A PO decrease empties the receipt move before cancelling it, so we take # the
+            # demand from before then.
+            demand = self._get_subcontract_demand() | (self.env.context.get('subcontract_demand_before') or {})
+            delta_per_production = defaultdict(float)
+            for move in self:
+                if production := move._get_subcontract_demand_production():
+                    delta_per_production[production] -= demand[move.id][1]
+            self._procure_subcontract_production_differences(delta_per_production)
             productions_to_cancel.with_context(skip_activity=True).action_cancel()
-
         return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
@@ -158,7 +164,9 @@ class StockMove(models.Model):
                 move._assign_picking()
             move.write({
                 'production_group_id': False,
-                'is_subcontract': True,
+                # Negative moves only need the location set to get absorbed into the picking.
+                # Avoid marking returns as subcontracted.
+                'is_subcontract': move.uom_id.compare(move.product_uom_qty, 0) >= 0,
                 'location_id': subcontracting_location.id
             })
             move._action_assign()  # Re-reserve as the write on location_id will break the link
@@ -169,8 +177,9 @@ class StockMove(models.Model):
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
 
-        if subcontract_details_per_picking:
-            self.env['stock.picking'].concat(subcontract_details_per_picking).action_assign()
+        if pickings := self.env['stock.picking'].concat(subcontract_details_per_picking).filtered(
+                lambda p: p.state not in ('done', 'cancel')):
+            pickings.action_assign()
         return res
 
     def _get_subcontract_bom(self):
@@ -186,6 +195,12 @@ class StockMove(models.Model):
 
     def _get_subcontract_production(self):
         return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
+
+    def _get_subcontract_demand_production(self):
+        # A move linked to multiple productions (ie with a tracked product) has an MO per lot,
+        # so count its demand towards just one of them so we don't include it more than once.
+        self.ensure_one()
+        return self._get_subcontract_production().filtered(lambda p: p.state not in ('done', 'cancel'))[:1]
 
     def _prepare_move_split_vals(self, qty):
         vals = super(StockMove, self)._prepare_move_split_vals(qty)
@@ -229,6 +244,61 @@ class StockMove(models.Model):
     def _can_create_lot(self):
         return super()._can_create_lot() or self.env.context.get('force_lot_m2o')
 
+    def _merge_moves(self, merge_into=False):
+        # Merging a new move (eg from increased PO quantity) adds to the demand, but merging
+        # previously split moves shouldn't, so we compare the total demand instead of the writes
+        # and procure the difference.
+        demand_before = self._get_subcontract_demand()
+        res = super(StockMove, self.with_context(subcontract_demand_before=demand_before))._merge_moves(merge_into=merge_into)
+        res._procure_subcontract_demand_difference(demand_before)
+        return res
+
+    def _get_subcontract_demand(self):
+        """Return the outstanding demand of the subcontract receipts that have the same MOs as `self`.
+
+        :returns: A dict mapping move ids to the ids of MOs the moves' demands count towards and their demands.
+        :rtype: dict[int, tuple[int, float]]
+        """
+        demands = defaultdict(lambda: (0, 0.0))
+        for move in (self | self.picking_id.move_ids)._get_subcontract_production()._get_subcontract_move():
+            if move.state in ('draft', 'done', 'cancel'):
+                continue
+            if production := move._get_subcontract_demand_production():
+                demands[move.id] = (production.id, move.product_qty)
+        return demands
+
+    def _procure_subcontract_demand_difference(self, demand_before):
+        demand_after = self._get_subcontract_demand()
+        delta_per_production = defaultdict(float)
+        for move_id in demand_before | demand_after:
+            # Resupply through the MO the move currently counts towards. Changing the demand of a
+            # tracked move can delete the MO it counted towards before (+ its move lines). Moves
+            # merged away no longer have one, so we use the one from before. (Cancelled MOs already
+            # gave back their share in `_action_cancel()`.)
+            production_id = demand_after[move_id][0] or demand_before[move_id][0]
+            production = self.env['mrp.production'].browse(production_id).exists()
+            if production and production.state not in ('done', 'cancel'):
+                delta_per_production[production] += demand_after[move_id][1] - demand_before[move_id][1]
+        self._procure_subcontract_production_differences(delta_per_production)
+
+    def _procure_subcontract_production_differences(self, delta_per_production):
+        # Component moves use the received quantity rather than the demand, so we resupply as if the
+        # MO just grew by `delta`. `_run_procurement()` procures the moves' quantity minus their
+        # share of the MO's previous quantity.
+        moves, old_quantities = self.env['stock.move'], {}
+        for production, delta in delta_per_production.items():
+            if production.product_id.uom_id.is_zero(delta):
+                continue
+            factor = (production.product_uom_qty - delta) / production.product_uom_qty
+            raw_moves = production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+            old_quantities.update({m.id: m.product_uom_qty * factor for m in raw_moves})
+            moves |= raw_moves
+        if moves:
+            # We don't want the PO partner on the resupply picking.
+            ctx = clean_context(self.env.context)
+            ctx.pop('move_picking_partner_id', None)
+            moves.with_context(ctx)._run_procurement(old_quantities)
+
     def _sync_subcontracting_productions(self):
         """
             Enforce the relationship between subcontracting receipt moves and their respective subcontracting productions.
@@ -242,13 +312,15 @@ class StockMove(models.Model):
                 * We take care to always keep at least 1 subcontracting production linked to the subcontracting receipt.
                   This ensures there will always be a production available for splitting.
         """
+        # Do not resupply here. MOs use the received quantity, and resupplies use the demand instead.
+        qty_wizard = self.sudo().env['change.production.qty'].with_context(no_procurement=True, skip_activity=True)
         for move in self:
             productions = move._get_subcontract_production()
             if not productions:
                 continue
             if move.has_tracking not in ['lot', 'serial']:
                 if productions.uom_id.compare(productions.product_qty, move.quantity) != 0:
-                    self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
+                    qty_wizard.create([{
                         'mo_id': productions.id,
                         'product_qty': move.quantity or move.product_uom_qty,
                     }]).change_prod_qty()
@@ -264,7 +336,7 @@ class StockMove(models.Model):
                     if not lot_mo:
                         mos_to_create[lot_id] = ml_qty
                     elif lot_mo.uom_id.compare(lot_mo.product_qty, ml_qty) != 0:
-                        self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
+                        qty_wizard.create([{
                             'mo_id': lot_mo.id,
                             'product_qty': ml_qty
                         }]).change_prod_qty()

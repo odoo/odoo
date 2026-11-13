@@ -190,7 +190,6 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
             'location_dest_id': stock_loc.id,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
-            'price_unit': product.standard_price + 1,
             'picking_type_id': in_type.id,
         } for product, quantity in zip(
             [product_1, product_2],
