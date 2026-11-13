@@ -31,3 +31,40 @@ test("viva app payment blocked by a payment in progress on another order", async
         "There is already an electronic payment in progress.",
     ]);
 });
+
+async function setupVivaPaymentScreen({ useApp }) {
+    mockUserAgent("android");
+    window.localStorage.setItem("vivawallet_app_answer", String(useApp));
+    const store = await setupPosEnv();
+    const viva = store.models["pos.payment.method"].get(2);
+    viva.payment_provider = "viva_com";
+    viva.payment_method_type = "terminal";
+    const order = await getFilledOrder(store);
+    const line = createPaymentLine(store, order, viva, { payment_status: "waitingCard" });
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    const cancelled = [];
+    patchWithCleanup(line, {
+        async cancelPayment() {
+            cancelled.push(this.uuid);
+            return true;
+        },
+    });
+    return { order, line, comp, cancelled };
+}
+
+test("deleting a viva terminal payment line on android cancels it on the terminal", async () => {
+    const { order, line, comp, cancelled } = await setupVivaPaymentScreen({ useApp: false });
+    comp.deletePaymentLine(line.uuid);
+    await Promise.resolve();
+    expect(cancelled).toEqual([line.uuid]);
+    expect(order.payment_ids).toHaveLength(0);
+});
+
+test("deleting a viva app payment line does not send a cancel to the terminal", async () => {
+    const { order, line, comp, cancelled } = await setupVivaPaymentScreen({ useApp: true });
+    comp.deletePaymentLine(line.uuid);
+    expect(cancelled).toEqual([]);
+    expect(order.payment_ids).toHaveLength(0);
+});
