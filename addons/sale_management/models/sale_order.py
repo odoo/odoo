@@ -165,6 +165,7 @@ class SaleOrder(models.Model):
         return {
             "name": self.env._("Template from %s", self.name),
             "company_id": self.company_id.id,
+            "currency_id": self.currency_id.id,
             "journal_id": self.journal_id.id,
             "note": self.note,
             "require_signature": self.require_signature,
