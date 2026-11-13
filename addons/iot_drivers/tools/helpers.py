@@ -23,7 +23,7 @@ import time
 import zipfile
 from werkzeug.exceptions import Locked
 
-from odoo import http, release, service
+from odoo import http, release, service, tools
 from odoo.addons.iot_drivers.tools.system import (
     IOT_CHAR,
     IOT_RPI_CHAR,
@@ -680,3 +680,7 @@ def get_gateway():
     if gw:
         return gw[0]
     return None
+
+
+def get_log_path():
+    return tools.config['logfile'] or ("/var/log/odoo/odoo-server.log" if IS_RPI else str(path_file('odoo.log')))

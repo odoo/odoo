@@ -8,7 +8,7 @@ import time
 from werkzeug.exceptions import InternalServerError
 from zlib import adler32
 
-from odoo import http, tools
+from odoo import http
 
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.main import iot_devices
@@ -91,7 +91,7 @@ class DriverController(http.Controller):
         """
         Downloads the log file
         """
-        log_path = tools.config['logfile'] or "/var/log/odoo/odoo-server.log"
+        log_path = helpers.get_log_path()
         try:
             stat = os.stat(log_path)
         except FileNotFoundError:
