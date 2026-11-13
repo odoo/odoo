@@ -30,7 +30,7 @@
    <t t-name="project.MobileCombinedActionsDropdown">
         <t t-if="this.uiService.isSmall and this.embeddedPanelState.embeddedInfos.embeddedActions?.length">
             <Dropdown menuClass="'o_combined_mobile_dropdown'">
-                <button class="btn btn-secondary">
+                <button t-att-aria-label="this.taskOptionsTitle" class="btn btn-secondary">
                     <i class="oi oi-fw" data-icon="tune" t-att-data-tooltip="this.taskOptionsTitle" />
                 </button>
                 <t t-set-slot="content">

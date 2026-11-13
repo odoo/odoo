@@ -7,11 +7,11 @@
             </div>
             <div class="d-flex align-items-center justify-content-end gap-2 ">
                 <div class="me-3 d-flex">
-                    <button class="btn btn-lg lh-lg btn px-2" t-on-click="()=>this.floorPlanStore.undo()"
+                    <button aria-label="Undo" class="btn btn-lg lh-lg btn px-2" t-on-click="()=>this.floorPlanStore.undo()"
                             t-att-class="{'disabled': !this.floorPlanStore.canUndo()}">
                         <i class="oi oi-fw" data-icon="undo"/>
                     </button>
-                    <button class="btn btn-lg lh-lg btn px-2" t-on-click="()=>this.floorPlanStore.redo()"
+                    <button aria-label="Redo" class="btn btn-lg lh-lg btn px-2" t-on-click="()=>this.floorPlanStore.redo()"
                             t-att-class="{'disabled': !this.floorPlanStore.canRedo()}">
                         <i class="oi oi-fw" data-icon="redo"/>
                     </button>

@@ -39,11 +39,11 @@
                                                 Add
                                             </div>
                                             <div t-else="" class="btn-group">
-                                                <button type="button"
+                                                <button aria-label="Decrease quantity" type="button"
                                                     t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, -1)"
                                                     class="btn btn-secondary btn py-2 px-3 px-lg-2"><i class="oi oi-fw" data-icon="remove"/></button>
                                                 <div class="o-so-tabular-nums d-flex justify-content-center align-items-center m-0 py-2 px-3 text-bg-secondary fs-4 fw-bold" t-out="itemQty"/>
-                                                <button type="button"
+                                                <button aria-label="Increase quantity" type="button"
                                                     t-on-click="(evt) => this.changeItemQuantity(evt, comboItem, 1)"
                                                     t-att-disabled="!addItemEnabled"
                                                     class="btn btn-secondary btn py-2 px-3 px-lg-2" ><i class="oi oi-fw" data-icon="add"/></button>

@@ -45,18 +45,18 @@
                                     <div class="d-flex w-100 justify-content-between align-items-center mt-3 mt-md-4">
                                         <!-- Quantity -->
                                         <div t-if="display_change_quantity and !line.isDeliveryLine and !line.isServiceFeeLine()" class="btn-group" >
-                                            <button
+                                            <button aria-label="Decrease quantity"
                                                     t-if="this.canDeleteLine(line) &amp;&amp; this.getLineChangeQty(line) > 1"
                                                     type="button"
                                                     t-on-click="() => this.changeQuantity(line, false)"
                                                     class="btn btn-secondary py-1 px-2"><i class="oi oi-fw" data-icon="remove"/></button>
-                                            <button
+                                            <button aria-label="Delete"
                                                     t-else=""
                                                     type="button"
                                                     t-on-click="(e) => this.removeLine(line,e)"
                                                     class="btn btn-secondary py-1 px-2"><i class="oi oi-fw" data-icon="delete"/></button>
                                             <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder" t-out="this.getLineChangeQty(line)"/>
-                                            <button type="button"
+                                            <button aria-label="Increase quantity" type="button"
                                                     t-on-click="() => this.changeQuantity(line, true)"
                                                     class="btn btn-secondary py-1 px-2"
                                                     ><i class="oi oi-fw" data-icon="add"/></button>

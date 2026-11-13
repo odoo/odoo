@@ -18,7 +18,7 @@
                 <div t-if="this.credit" t-out="this.credit"/>
             </td>
             <td t-on-click="this.onClickToggle">
-                <button t-attf-class="btn btn_foldable#{this.props.sublines ? '' : '_empty'}"
+                <button aria-label="Toggle details" t-attf-class="btn btn_foldable#{this.props.sublines ? '' : '_empty'}"
                         t-att-tabindex="this.props.lines ? 0 : -1">
                     <i t-if="this.hasSublines"
                         class="oi"

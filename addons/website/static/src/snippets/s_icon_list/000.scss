@@ -16,6 +16,12 @@
 
             &:not(.oe-nested)::before {
                 content: var(--icon-list-icon-content);
+                // The icon is the bullet: screen readers should not read its
+                // name. Only where alternative text is supported, as a var()
+                // would void the whole declaration elsewhere.
+                @supports (content: "" / "") {
+                    content: var(--icon-list-icon-content) / "";
+                }
                 position: absolute;
                 display: flex;
                 align-items: center;

@@ -68,7 +68,7 @@
                     </span>
                 </div>
                 <Dropdown t-if="this.env.canCreateSections()" noClasses="true">
-                    <button
+                    <button aria-label="More options"
                         t-attf-class="o_section_dropdown_button btn border-0 bg-transparent rounded-start-0 px-2 {{this.props.id ? '' : 'opacity-0 pe-none'}}"
                         t-att-tabindex="this.props.id ? '0' : '-1'"
                     >

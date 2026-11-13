@@ -62,7 +62,7 @@
                         <span>Error <t t-out="this.state.response.status"/> while executing request</span>
                     </h5>
                     <div t-if="this.state.showTraceback">
-                        <button
+                        <button aria-label="Copy to clipboard"
                             class="btn bg-100 position-absolute top-0 end-0 p-1"
                             t-on-click="this.onClickClipboard"
                         >

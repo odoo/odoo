@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.MessagingMenuCallParticipants">
         <div class="o-mail-MessagingMenuCallParticipants rounded-bottom d-flex bg-inherit p-1">
-            <button class="o-mail-MessagingMenuCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-att-class="{ 'invisible': !this.canToggle() }" t-on-click.stop="this.toggleFn(this.expanded)">
+            <button aria-label="Toggle participants" class="o-mail-MessagingMenuCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-att-class="{ 'invisible': !this.canToggle() }" t-on-click.stop="this.toggleFn(this.expanded)">
                 <i class="oi o-xsmaller text-muted text-dark" t-att-data-icon="this.isExpanded() ? 'keyboard_arrow_down' : 'chevron_forward'" t-att-title="this.title"/>
             </button>
             <AvatarStack

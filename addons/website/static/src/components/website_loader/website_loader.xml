@@ -5,7 +5,7 @@
          class="o_website_loader_container position-fixed fixed-top fixed-left h-100 w-100 d-flex"
          t-attf-class="o_website_loader_container_{{ this.state.currentLoadingStep?.flag || this.state.flag }}">
         <div class="o_website_loader_container_content position-relative d-flex flex-column p-3 p-lg-5">
-            <a t-if="this.state.showCloseButton"
+            <a aria-label="Close" t-if="this.state.showCloseButton"
                href="#" class="btn" style="position: absolute; right: 0; top: 0; margin: 15px;"
                t-on-click="this.close">
                 <i class="oi oi-lg" data-icon="close_small" role="img" aria-hidden="true"/>

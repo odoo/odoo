@@ -53,7 +53,7 @@
             t-out="this.formatMonetary(this.data.bom_cost)"/>
         <td t-if="this.showAttachments" class="text-center">
             <span t-if="this.data.has_attachments">
-                <a href="#" role="button" t-on-click.prevent="this.goToAttachment" class="o_button_icon oi oi-fw" data-icon="content_copy"/>
+                <a aria-label="Attachments" href="#" role="button" t-on-click.prevent="this.goToAttachment" class="o_button_icon oi oi-fw" data-icon="content_copy"/>
             </span>
         </td>
     </tr>

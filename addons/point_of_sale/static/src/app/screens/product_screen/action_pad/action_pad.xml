@@ -14,10 +14,10 @@
                         <span t-if="this.currentOrder.preset_id?.name" t-out="this.currentOrder.preset_id?.name" />
                         <span t-else="">Preset</span>
                     </button>
-                    <button t-att-disabled="this.pos.getOrder().isEmpty()" class="btn btn-secondary btn-lg ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
+                    <button aria-label="Save order" t-att-disabled="this.pos.getOrder().isEmpty()" class="btn btn-secondary btn-lg ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
                         <i class="oi" data-icon="upload"/>
                     </button>
-                    <button class="button mobile-more-button btn btn-secondary btn-lg" t-on-click="() => this.props?.onClickMore?.()">
+                    <button aria-label="More options" class="button mobile-more-button btn btn-secondary btn-lg" t-on-click="() => this.props?.onClickMore?.()">
                         <i class="oi oi-fw" data-icon="more_vert" aria-hidden="true" />
                     </button>
                 </t>

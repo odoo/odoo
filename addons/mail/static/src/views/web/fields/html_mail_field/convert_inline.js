@@ -1060,7 +1060,12 @@ function isIconFilled(beforeStyle, content) {
 function fontToImg(element) {
     for (const font of element.querySelectorAll(".oi")) {
         const beforeStyle = getComputedStyle(font, "::before");
-        const content = beforeStyle["content"].trim().replace(/['"]/g, "");
+        // The icon rule gives the ligature an empty alternative text
+        // (`"name" / ""`): only the name is the icon.
+        const content = beforeStyle["content"]
+            .replace(/\s*\/\s*(""|'')\s*$/, "")
+            .trim()
+            .replace(/['"]/g, "");
         const icon = content.replace(/_f$/, "");
         const fill = isIconFilled(beforeStyle, content) ? 1 : 0;
 

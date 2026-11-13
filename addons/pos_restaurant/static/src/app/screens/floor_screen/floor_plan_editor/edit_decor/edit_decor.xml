@@ -225,17 +225,17 @@
 
         <div t-attf-class="{{ headerClass }} mb-2">Alignment</div>
         <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-outline-secondary"
+            <button aria-label="Align left" class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textAlign  === 'left'  }"
                     t-on-click="() => this.updateElement({textAlign:'left'})">
                 <i class="oi oi-fw" data-icon="format_align_left"/>
             </button>
-            <button class="btn btn-outline-secondary"
+            <button aria-label="Align center" class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textAlign  === 'center'  }"
                     t-on-click="() => this.updateElement({textAlign:'center'})">
                 <i class="oi oi-fw" data-icon="format_align_center"/>
             </button>
-            <button class="btn btn-outline-secondary"
+            <button aria-label="Align right" class="btn btn-outline-secondary"
                     t-att-class="{'active': this.element.textAlign  === 'right'  }"
                     t-on-click="() => this.updateElement({textAlign:'right'})">
                 <i class="oi oi-fw" data-icon="format_align_right"/>

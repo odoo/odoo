@@ -13,7 +13,7 @@
                         <DropdownItem class="'text-danger'" onSelected="() => this.onClickRemoveEmoji()" tag="'button'">Remove Emoji</DropdownItem>
                     </t>
                 </Dropdown>
-                <button t-else="" class="o-mail-CreatePollOptionDialog-emoji btn btn-outline-secondary p-0 rounded-3" type="button" t-ref="this.pickerRef" t-on-click="() => this.toggleEmojiPicker()"><i class="oi oi-lg" data-icon="sentiment_satisfied"/></button>
+                <button aria-label="Add an emoji" t-else="" class="o-mail-CreatePollOptionDialog-emoji btn btn-outline-secondary p-0 rounded-3" type="button" t-ref="this.pickerRef" t-on-click="() => this.toggleEmojiPicker()"><i class="oi oi-lg" data-icon="sentiment_satisfied"/></button>
                 <input type="text" t-model.proxy="this.props.model.label" class="form-control rounded o-py-1_5" placeholder="Type your option" t-ref="this.rootRef"/>
             </div>
             <button t-if="this.props.deletable" class="btn btn-outline-secondary" title="Delete option" t-on-click="this.props.onClickRemove"><i class="oi oi-filled" data-icon="delete"/></button>
