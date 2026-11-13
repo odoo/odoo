@@ -23,3 +23,4 @@ from . import test_stock_valuation
 from . import test_stockvaluation
 from . import test_supplier
 from . import test_uninstall
+from . import test_freight_quotation
