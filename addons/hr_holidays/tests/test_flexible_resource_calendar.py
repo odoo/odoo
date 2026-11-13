@@ -227,6 +227,55 @@ class TestFlexibleResourceCalendar(TransactionCase):
             "Employee should have unusual days on 4th, 5th and 6th February",
         )
 
+    def test_duration_multi_day_leave_fully_flexible_employee(self):
+        """A fully flexible employee is off every day of a multi-day request, except on the
+        public holidays when the type does not include them, and a half day off on its bounds."""
+        day_type, half_day_type = self.env['hr.work.entry.type'].create([{
+            'name': 'Days',
+            'count_as': 'absence',
+            'code': 'FLEXIDAYS',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        }, {
+            'name': 'Half Days',
+            'count_as': 'absence',
+            'code': 'FLEXIHALF',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+            'unit_of_measure': 'day',
+        }])
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': False,
+            'date_from': datetime(2025, 7, 23, 0, 0),
+            'date_to': datetime(2025, 7, 23, 23, 59, 59),
+        })
+        week_leave, week_with_holiday_leave, half_days_leave = self.env['hr.leave'].create([{
+            'name': 'Monday to Friday',
+            'work_entry_type_id': day_type.id,
+            'employee_id': self.fully_flex_employee.id,
+            'request_date_from': date(2025, 7, 14),
+            'request_date_to': date(2025, 7, 18),
+        }, {
+            'name': 'Monday to Friday, public holiday on Wednesday',
+            'work_entry_type_id': day_type.id,
+            'employee_id': self.fully_flex_employee.id,
+            'request_date_from': date(2025, 7, 21),
+            'request_date_to': date(2025, 7, 25),
+        }, {
+            'name': 'Monday afternoon to Friday morning',
+            'work_entry_type_id': half_day_type.id,
+            'employee_id': self.fully_flex_employee.id,
+            'request_date_from': date(2025, 7, 28),
+            'request_date_to': date(2025, 8, 1),
+            'request_date_from_period': 'pm',
+            'request_date_to_period': 'am',
+        }])
+        self.assertEqual(week_leave.number_of_days, 5)
+        self.assertEqual(week_with_holiday_leave.number_of_days, 4)
+        self.assertEqual(half_days_leave.number_of_days, 4)
+
     def test_flexible_resource_work_intervals_with_public_holiday(self):
         leave_type = self.env['hr.work.entry.type'].create({
             'name': 'Test Hourly Time Off',

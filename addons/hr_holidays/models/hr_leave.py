@@ -1057,7 +1057,7 @@ class HrLeave(models.Model):
 
             # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
             # sudo as is_flexible is on version model and employee does not have access to it.
-            elif calendar._is_flexible() and leave.request_date_to == leave.request_date_from:
+            elif calendar._is_fully_flexible() or (calendar._is_flexible() and leave.request_date_to == leave.request_date_from):
                 # Only subtract public holidays if the leave type does NOT include public holidays in duration.
                 # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
                 # the leave should count the full day even if it falls on a public holiday.
@@ -1066,8 +1066,20 @@ class HrLeave(models.Model):
                     h.company_id == leave.company_id
                 ) if not leave.work_entry_type_id.include_public_holidays_in_duration else self.env['resource.calendar.leaves']
                 hours = leave._subtract_public_holidays(filtered_public_holidays)
-                if leave.work_entry_type_request_unit != 'hour' and not public_holidays:
-                    days = 1 if leave.work_entry_type_request_unit != 'half_day' or leave.request_date_from_period != leave.request_date_to_period else 0.5
+                if leave.work_entry_type_request_unit != 'hour':
+                    total_days = (leave.request_date_to - leave.request_date_from).days + 1
+                    ph_days = set()
+                    for ph in filtered_public_holidays:
+                        ph_start = max(ph.date_from, leave.date_from).date()
+                        ph_end = min(ph.date_to, leave.date_to).date()
+                        ph_days.update(ph_start + timedelta(days=i) for i in range((ph_end - ph_start).days + 1))
+                    total_days -= len(ph_days)
+                    if leave.work_entry_type_request_unit == 'half_day':
+                        if leave.request_date_from_period == 'pm':
+                            total_days -= 0.5
+                        if leave.request_date_to_period == 'am':
+                            total_days -= 0.5
+                    days = max(0, total_days)
                 else:
                     days = hours / 24
             elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
