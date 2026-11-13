@@ -5,7 +5,7 @@
             <span t-out="this.formattedValue" />
         </t>
         <t t-else="">
-            <ModelFieldSelector t-props="this.selectorProps" />
+            <ModelFieldSelector t-props="this.selectorProps" t-key="this.state.selectorKey"/>
         </t>
     </t>
 </templates>
