@@ -6,6 +6,7 @@ from . import (
     account_move_reversal,
     account_move_send,
     account_tax,
+    ir_attachment,
     l10n_cn_edi_document,
     l10n_cn_edi_tax_category,
     product_template,
