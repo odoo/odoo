@@ -59,11 +59,13 @@ import {
     simulateTripleClickSelect,
     thirdClick,
 } from "./_helpers/selection";
+import { TAB_WIDTH, oeTab } from "./_helpers/tabs";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { insertText } from "./_helpers/user_actions";
 import { getIframeInput } from "./_helpers/iframe_input";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { queryAllAttributes } from "@odoo/hoot-dom";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -2497,6 +2499,81 @@ describe("history", () => {
         await waitFor(".btn[name='undo']:not(.disabled)");
         expect(".btn[name='undo']").not.toHaveClass("disabled");
         expect(".btn[name='redo']").toHaveClass("disabled");
+    });
+});
+
+describe.tags("mobile");
+describe("indentation", () => {
+    test("toolbar should have indentation buttons on mobile", async () => {
+        const { el } = await setupEditor("<p>[]ab</p>");
+        await expectElementCount(".o-we-toolbar", 1);
+        expect(".btn-group[name='indentationMobile']").toHaveCount(0);
+        await expandToolbar();
+        expect(".btn-group[name='indentationMobile']").toHaveCount(1);
+
+        const buttonGroups = queryAllAttributes(".o-we-toolbar .btn-group", "name");
+        expect(buttonGroups.indexOf("indentationMobile")).toBe(buttonGroups.indexOf("layout") + 1);
+        expect(".btn[name='indent'] .oi[data-icon='format_indent_increase']").toHaveCount(1);
+        expect(".btn[name='outdent'] .oi[data-icon='format_indent_decrease']").toHaveCount(1);
+
+        await click(".btn[name='indent']");
+        expect(getContent(el)).toBe(`<p>${oeTab(TAB_WIDTH, false)}[]ab</p>`);
+    });
+    test("indentation buttons should indent and outdent a list item on mobile", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <ul>
+                    <li>a</li>
+                    <li>[]b</li>
+                </ul>`)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
+        await expandToolbar();
+
+        await click(".btn[name='indent']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <ul>
+                    <li>
+                        <p>a</p>
+                        <ul>
+                            <li>[]b</li>
+                        </ul>
+                    </li>
+                </ul>`)
+        );
+
+        await click(".btn[name='outdent']");
+        expect(getContent(el)).toBe(
+            unformat(`
+                <ul>
+                    <li><p>a</p></li>
+                    <li>[]b</li>
+                </ul>`)
+        );
+    });
+    test("indentation buttons should move the cursor between table cells on mobile", async () => {
+        await setupEditor(
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[]ab</p></td><td><p>cd</p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
+        await expandToolbar();
+        const [firstTd, secondTd] = queryAll("td");
+
+        await click(".btn[name='indent']");
+        expect(getContent(firstTd)).toBe("<p>ab</p>");
+        expect(getContent(secondTd)).toBe("<p>cd[]</p>");
+
+        await click(".btn[name='outdent']");
+        expect(getContent(firstTd)).toBe("<p>ab[]</p>");
+        expect(getContent(secondTd)).toBe("<p>cd</p>");
     });
 });
 
