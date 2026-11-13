@@ -1036,24 +1036,27 @@ class IrActionsServer(models.Model):
         elif self.update_path:
             starting_record = self.env[self.model_id.model].browse(self.env.context.get('active_id'))
             path = self.update_path.split('.')
-            target_records = reduce(getitem, path[:-1], starting_record)
-            if self.update_property and starting_record.get_property_definition(self.update_field_id.name + "." + self.update_property):
-                value = vals[self.id]
-                property_value = starting_record._fields[self.update_field_id.name].convert_to_export(target_records, starting_record) or {}
-                if self.value_field_to_show == 'x2many':
-                    value = property_value.get(self.update_property) or []
-                    command = vals[self.id][0]
-                    if command[0] == Command.LINK:
-                        value.append(command[1])
-                    elif command[0] == Command.UNLINK:
-                        value = list(filter(lambda e: e != command[1], value))
-                    elif command[0] == Command.SET:
-                        value = command[2]
-                    value = [] if command[0] == Command.CLEAR else value
-                res[self.update_field_id.name] = {**property_value, self.update_property: value}
-                starting_record.write(res)
+            if self.update_property:
+                # the path ends with "<properties field>.<property>": move to
+                # the record holding the properties field
+                target_records = reduce(getitem, path[:-2], starting_record)
+                if target_records.get_property_definition(self.update_field_id.name + "." + self.update_property):
+                    value = vals[self.id]
+                    property_value = target_records._fields[self.update_field_id.name].convert_to_export(target_records[path[-2]], target_records) or {}
+                    if self.value_field_to_show == 'x2many':
+                        value = property_value.get(self.update_property) or []
+                        command = vals[self.id][0]
+                        if command[0] == Command.LINK:
+                            value.append(command[1])
+                        elif command[0] == Command.UNLINK:
+                            value = list(filter(lambda e: e != command[1], value))
+                        elif command[0] == Command.SET:
+                            value = command[2]
+                        value = [] if command[0] == Command.CLEAR else value
+                    res[self.update_field_id.name] = {**property_value, self.update_property: value}
             else:
-                target_records.write(res)
+                target_records = reduce(getitem, path[:-1], starting_record)
+            target_records.write(res)
 
     def _run_action_webhook(self, eval_context=None):
         """Send a post request with a read of the selected field on active_id."""
