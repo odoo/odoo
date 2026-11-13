@@ -7,10 +7,24 @@ from odoo.http import request
 class ProductWishlist(models.Model):
     _name = 'product.wishlist'
     _description = 'Product Wishlist'
+<<<<<<< f185efc07caae71d3eb0be13bdde7c0c4b733439
     _product_unique_partner_id = models.Constraint(
         'UNIQUE(product_id, partner_id)',
         'Duplicated wishlisted product for this partner.',
     )
+||||||| 5c4488a4e44e20d17d1ee76d1b42066ac12c8a24
+    _sql_constraints = [
+        ("product_unique_partner_id",
+         "UNIQUE(product_id, partner_id)",
+         "Duplicated wishlisted product for this partner."),
+    ]
+=======
+    _sql_constraints = [
+        ("product_unique_partner_id",
+         "UNIQUE(product_id, partner_id, website_id)",
+         "Duplicated wishlisted product for this partner."),
+    ]
+>>>>>>> 83fb36528bcb57de15a747df6ebc39f6b38f86f9
 
     partner_id = fields.Many2one('res.partner', string='Owner', index='btree_not_null')
     product_id = fields.Many2one('product.product', string='Product', required=True)
