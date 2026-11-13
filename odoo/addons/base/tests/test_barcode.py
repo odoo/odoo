@@ -31,3 +31,7 @@ class TestBarcode(TransactionCase):
             with self.subTest(encoding=encoding):
                 self.assertFalse(check_barcode_encoding('', encoding))
         self.assertTrue(check_barcode_encoding('', 'any'))
+
+    def test_unknown_barcode_encoding(self):
+        self.assertFalse(check_barcode_encoding('1234', 'invalid_encoding'))
+        self.assertFalse(check_barcode_encoding('', 'invalid_encoding'))
