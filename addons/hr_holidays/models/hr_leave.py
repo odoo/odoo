@@ -301,13 +301,13 @@ class HrLeave(models.Model):
             if self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
             else Domain('time_off_selectable', '=', True)
         )
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            domain=Domain.AND([selectable_domain, [('country_id', 'in', self.company_id.country_id.ids)]]),
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
         for leave in self:
-            country = leave.company_id.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(Domain.AND([selectable_domain, domain]))
+            leave.allowed_work_entry_type_ids = work_entry_types_by_country.get(leave.company_id.country_id, self.env['hr.work.entry.type'])
 
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):

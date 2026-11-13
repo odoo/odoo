@@ -21,7 +21,7 @@ class HrLeaveAccrualPlan(models.Model):
         "hr.work.entry.type", compute='_compute_allowed_work_entry_type_ids')
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id',
         export_string_translation=False)
-    company_id = fields.Many2one('res.company', string='Company', domain=lambda self: [('id', 'in', self.env.companies.ids)])
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, domain=lambda self: [('id', 'in', self.env.companies.ids)])
     transition_mode = fields.Selection([
         ('immediately', 'Immediately'),
         ('end_of_accrual', "After this accrual's period")],
@@ -64,19 +64,13 @@ class HrLeaveAccrualPlan(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        selectable_domain = [
+            ('requires_allocation', '=', True),
+            ('time_off_selectable', '=', True),
+        ]
         for accrual in self:
             country = accrual.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            domain = Domain.AND([
-                domain,
-                [
-                    ('requires_allocation', '=', True),
-                    ('time_off_selectable', '=', True),
-                ]
-            ])
+            domain = Domain.AND([selectable_domain, [('country_id', '=', country.id)]])
             accrual.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     @api.depends('level_ids')

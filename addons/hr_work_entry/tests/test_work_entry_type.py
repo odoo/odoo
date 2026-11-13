@@ -1,11 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2 import IntegrityError
+
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
+from odoo.tools import mute_logger
 
 
 @tagged('-at_install', 'post_install')
 class TestWorkEntryType(TransactionCase):
+
+    def test_default_country_is_current_company_country(self):
+        country = self.env.ref('base.be')
+        self.env.company.country_id = country
+
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'code': 'TEST_DEFAULT_COUNTRY',
+            'name': 'Test default country',
+        })
+
+        self.assertEqual(work_entry_type.country_id, country)
 
     def test_duplicate_work_entry_type_same_country(self):
         country_be = self.env.ref('base.be')
@@ -42,39 +56,42 @@ class TestWorkEntryType(TransactionCase):
                 },
             ])
 
-    def test_duplicate_work_entry_type_all_countries(self):
-        self.env['hr.work.entry.type'].create({
-            'code': 'test123',
-            'name': "Test we type",
-            'country_id': False,
-
-        })
-        with self.assertRaises(
-            UserError,
-            msg="It should not be possible to create two work entry types with the same code for all countries",
-        ):
+    def test_country_is_required(self):
+        self.env.company.country_id = False
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.env['hr.work.entry.type'].create({
                 'code': 'test123',
                 'name': "Test we type",
-                'country_id': False,
             })
 
-        with self.assertRaises(
-            UserError,
-            msg="It should not be possible to create two work entry types at the same time with the same code for all countries",
-        ):
-            self.env['hr.work.entry.type'].create([
-                {
-                    'code': 'test456',
-                    'name': "Test we type",
-                    'country_id': False,
-                },
-                {
-                    'code': 'test456',
-                    'name': "Test we type",
-                    'country_id': False,
-                },
-            ])
+    def test_default_work_entry_types_of_non_localized_country(self):
+        """ A company of a country without localized time types gets a working time type for
+        it, created once per country. """
+        country = self.env['res.country'].create({'name': 'Nolocland', 'code': 'QN'})
+        companies = self.env['res.company'].create([
+            {'name': 'Nolocland 1', 'country_id': country.id},
+            {'name': 'Nolocland 2', 'country_id': country.id},
+        ])
+        attendance = self.env['hr.work.entry.type'].search([('country_id', '=', country.id)])
+        self.assertRecordValues(attendance, [{'code': '002.00', 'count_as': 'working_time'}])
+        self.assertEqual(companies[0]._get_default_attendance_work_entry_type(), attendance)
+
+        self.env['res.company'].create({'name': 'Nolocland 3'}).country_id = country
+        self.assertEqual(self.env['hr.work.entry.type'].search([('country_id', '=', country.id)]), attendance)
+
+        # a localized country doesn't get any extra type
+        country_be = self.env.ref('base.be')
+        be_types = self.env['hr.work.entry.type'].search([('country_id', '=', country_be.id)])
+        self.env['res.company'].create({'name': 'Belgian company', 'country_id': country_be.id})
+        self.assertEqual(self.env['hr.work.entry.type'].search([('country_id', '=', country_be.id)]), be_types)
+
+    def test_default_work_entry_types_country_as_record(self):
+        """ The country can be written as a record. """
+        country = self.env['res.country'].create({'name': 'Nolocland', 'code': 'QN'})
+        self.env['res.company'].create({'name': 'Nolocland'}).write({'country_id': country})
+        self.assertRecordValues(self.env['hr.work.entry.type'].search([('country_id', '=', country.id)]), [
+            {'code': '002.00', 'count_as': 'working_time'},
+        ])
 
     def test_unique_work_entry_types(self):
         """
@@ -95,19 +112,9 @@ class TestWorkEntryType(TransactionCase):
             'name': "Test we type",
             'country_id': country_us.id,
         })
-        self.env['hr.work.entry.type'].create({
-            'code': 'test123',
-            'name': "Test we type",
-            'country_id': False
-        })
 
         # creating them in batch. `self` should have multiple records at once
         self.env['hr.work.entry.type'].create([
-            {
-                'code': 'test456',
-                'name': "Test we type",
-                'country_id': False,
-            },
             {
                 'code': 'test456',
                 'name': "Test we type",
@@ -140,17 +147,18 @@ class TestWorkEntryType(TransactionCase):
         """
         Search should match both the name and the payroll code
         """
+        country_us = self.env.ref('base.us')
         absence_type = self.env['hr.work.entry.type'].create({
             'code': 'ABS',
             'name': 'Absence Type',
             'count_as': 'absence',
-            'country_id': False,
+            'country_id': country_us.id,
         })
         working_type = self.env['hr.work.entry.type'].create({
             'code': 'WORK2',
             'name': 'Working Time',
             'count_as': 'working_time',
-            'country_id': False,
+            'country_id': country_us.id,
         })
 
         names = self.env['hr.work.entry.type'].name_search('Absence')
@@ -162,11 +170,11 @@ class TestWorkEntryType(TransactionCase):
     def test_get_default_attendance_ids_transfers_work_entry_type(self):
         """ Calendar copies built from a company's calendar must carry over the
         attendances' work_entry_type_id, not just their hours. """
-        company = self.add_company('base.test_company')
+        company = self.add_company('base.test_company', {'name': 'Test Co', 'country_id': self.env.ref('base.be').id})
         work_entry_type = self.env['hr.work.entry.type'].create({
             'code': 'TESTATT',
             'name': 'Test Attendance',
-            'country_id': False,
+            'country_id': company.country_id.id,
         })
         company.resource_calendar_id.attendance_ids.write({'work_entry_type_id': work_entry_type.id})
 

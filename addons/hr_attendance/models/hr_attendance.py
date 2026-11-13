@@ -168,30 +168,16 @@ class HrAttendance(models.Model):
     @api.depends('employee_id.company_id.country_id')
     def _compute_allowed_work_entry_type_ids(self):
         countries = self.employee_id.company_id.country_id
-        domain = self._get_work_entry_type_domain(
-            country_ids=countries.ids + [False])
-        # key on the country id: _read_group returns the "no country" group as
-        # an empty res.country recordset, whose id is False
-        types_by_country = {
-            country.id: work_entry_types
-            for country, work_entry_types in self.env['hr.work.entry.type']._read_group(
-                domain, ['country_id'], ['id:recordset'])
-        }
-        generic_types = types_by_country.get(False, self.env['hr.work.entry.type'])
+        types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            self._get_work_entry_type_domain(country_ids=countries.ids), ['country_id'], ['id:recordset']))
         for attendance in self:
-            country = attendance.employee_id.company_id.country_id
-            attendance.allowed_work_entry_type_ids = \
-                types_by_country.get(country.id, generic_types)
+            attendance.allowed_work_entry_type_ids = types_by_country.get(
+                attendance.employee_id.company_id.country_id, self.env['hr.work.entry.type'])
 
     def _get_work_entry_type_domain(self, country_ids=None):
         if country_ids is None:
-            country_ids = [self.employee_id.company_id.country_id.id]
-        domain = [('count_as', '=', 'working_time')]
-        if country_ids:
-            domain.append(('country_id', 'in', country_ids))
-        else:
-            domain.append(('country_id', '=', False))
-        return domain
+            country_ids = self.employee_id.company_id.country_id.ids
+        return [('count_as', '=', 'working_time'), ('country_id', 'in', country_ids)]
 
     @api.depends('check_in', 'check_out', 'break_duration')
     def _compute_worked_hours(self):

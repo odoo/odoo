@@ -11,8 +11,10 @@ class TestHrAttendanceSelfEdit(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us').id
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
+            'country_id': cls.env.ref('base.us').id,
         })
 
         cls.admin = new_test_user(cls.env, login='user_admin', groups='hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
@@ -71,7 +73,7 @@ class TestHrAttendanceSelfEditViews(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({'name': 'SweatChipChop Inc.'})
+        cls.company = cls.env['res.company'].create({'name': 'SweatChipChop Inc.', 'country_id': cls.env.ref('base.us').id})
         cls.user_self_edit = new_test_user(
             cls.env, login='user_self_edit_views', groups='hr_attendance.group_hr_attendance_own',
             company_id=cls.company.id)
