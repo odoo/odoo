@@ -721,6 +721,20 @@ class TestMailSchedule(EventMailCommon):
         self.assertFalse(event_prev_scheduler.mail_done)
         self.assertSchedulerCronTriggers(capture, [slot1_before_oneday])
 
+        # cron called again (render limit reached): remaining slot 1 attendee is contacted
+        self.execute_event_cron(freeze_date=slot1_before_oneday)
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertMailMailWEmails(
+            [formataddr((registrations_slot_1[4].name, registrations_slot_1[4].email))],
+            'outgoing',
+            content=None,
+            fields_values={'subject': f'Reminder for {test_event.name}: tomorrow'},
+        )
+        self.assertEqual(mail_slot_1.mail_count_done, 5)
+        self.assertTrue(mail_slot_1.mail_done)
+        self.assertEqual(event_prev_scheduler.mail_count_done, 5)
+        self.assertFalse(event_prev_scheduler.mail_done)
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
     def test_event_mail_schedule_many_registrations(self):
