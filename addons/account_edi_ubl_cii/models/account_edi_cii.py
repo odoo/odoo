@@ -580,7 +580,6 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_get_buyer_trade_party_node(self, vals):
         customer = vals['customer']
         commercial_partner = customer.commercial_partner_id
-        name = customer.display_name if customer.name else commercial_partner.display_name
         scheme_id = None
         siret = commercial_partner.company_registry
         if 'siret' in commercial_partner._fields and commercial_partner.siret:
@@ -589,11 +588,11 @@ class AccountEdiCii(models.AbstractModel):
         buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': customer.peppol_endpoint if customer.peppol_eas == '0088' else None,
-            'name': name,
+            'name': commercial_partner.name,
             'partner_specified_legal_organization': siret,
             'partner_specified_legal_organization_scheme': scheme_id,
             'contact_values': {
-                'name': name,
+                'name': customer.name or commercial_partner.name,
                 'phone': customer.phone or customer.mobile,
                 'email': customer.email,
             },
