@@ -543,7 +543,7 @@
                 decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
                 decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
                 <header>
-                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always" invisible="not context.get('show_certificate')"/>
+                    <button name="open_new_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always" invisible="not context.get('show_certificate')"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="skill_id" string="Certification"/>
