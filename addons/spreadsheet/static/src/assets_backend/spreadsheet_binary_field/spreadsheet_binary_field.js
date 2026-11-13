@@ -14,6 +14,11 @@ export class SpreadsheetBinaryField extends BinaryField {
 export const spreadsheetBinaryField = {
     ...binaryField,
     component: SpreadsheetBinaryField,
+    supportedOptions: [],
+    extractProps: () => ({
+        acceptedFileExtensions: ".json",
+        allowedMIMETypes: "application/json",
+    }),
 };
 
 registry.category("fields").add("binary_spreadsheet", spreadsheetBinaryField);
