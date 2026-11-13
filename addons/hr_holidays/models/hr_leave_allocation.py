@@ -143,6 +143,7 @@ class HrLeaveAllocation(models.Model):
     ], compute="_compute_type_request_unit")
     department_id = fields.Many2one('hr.department', compute='_compute_department_id', store=True, string='Department', readonly=False)
     is_officer = fields.Boolean(compute='_compute_is_officer')
+    is_manager = fields.Boolean(compute='_compute_is_manager')
     # max_leaves, leaves_taken and virtual_remaining_leaves are for display purpose only
     # Do not use them for computation, use the result of _process_accrual_plans instead !
     max_leaves = fields.Float(compute='_compute_leaves')
@@ -182,6 +183,13 @@ class HrLeaveAllocation(models.Model):
     @api.depends('accrual_plan_id')
     def _compute_is_officer(self):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
+
+    @api.depends_context('uid')
+    @api.depends('employee_id.leave_manager_id')
+    def _compute_is_manager(self):
+        is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
+        for allocation in self:
+            allocation.is_manager = is_officer or allocation.employee_id.leave_manager_id == self.env.user
 
     def _get_employee_hours_per_day(self, allocation_data={}):
         """Return the hours per day of the employee, to convert days into hours.
