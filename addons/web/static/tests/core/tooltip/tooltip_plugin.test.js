@@ -307,6 +307,19 @@ test("tooltip using touch enabled device", async () => {
     expect(".o_popover").toHaveText("hello");
 });
 
+test.tags("desktop");
+test("tooltip popover has the tooltip role", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button data-tooltip="hello">Action</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    await hover("button");
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveAttribute("role", "tooltip");
+});
+
 test.tags("mobile");
 test("touch rendering - hold-to-show", async () => {
     class MyComponent extends Component {
@@ -331,6 +344,43 @@ test("touch rendering - hold-to-show", async () => {
     await pointerDown(document.body);
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("touch rendering - do not show if moved", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button data-tooltip="hello">Action</button><div>Elsewhere</div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+    await pointerDown("button");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await hover("div");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("touch rendering - show if moved less than threshold", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button data-tooltip="hello" style="width: 50px; height: 50px;">Action</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+    await pointerDown("button", { position: { x: 10, y: 10 }, relative: true });
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await hover("button", { position: { x: 12, y: 12 }, relative: true });
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("hello");
 });
 
 test.tags("mobile");
