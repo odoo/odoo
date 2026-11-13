@@ -236,7 +236,7 @@ export const tooltipService = {
                         target,
                         Tooltip,
                         { tooltip, template, info },
-                        { position }
+                        { position, role: "tooltip" }
                     );
                 }
             }, timeoutDelay);
