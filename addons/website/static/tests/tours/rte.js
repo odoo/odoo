@@ -1,10 +1,11 @@
 import {
-    clickOnEditAndWaitEditModeInTranslatedPage,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     insertSnippet,
     goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import { setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { whenReady } from "@odoo/owl";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
@@ -247,10 +248,14 @@ registerWebsitePreviewTour('rte_translator', {
     trigger: ':iframe .js_language_selector a[data-url_code="en"]',
     run: "click",
 }, {
+    // Wait for the default language page. Else the "Edit" dropdown of the
+    // translated page can stay in the systray and send the user to the wrong
+    // page.
     content: "Check body",
-    trigger: ":iframe body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))",
+    trigger: ':iframe html[lang*="en-US"] body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))',
 },
-...clickOnEditAndWaitEditModeInTranslatedPage(),
+stepUtils.waitIframeIsReady(),
+...clickOnEditAndWaitEditMode(),
 {
     content: "select text",
     trigger: ':iframe #wrap p',
