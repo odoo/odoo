@@ -26,8 +26,9 @@ export class FieldChangeReplicationPlugin extends Plugin {
     handleMutations(mutations) {
         for (const mutation of mutations) {
             if (
-                mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
-                mutation.attributeName.startsWith("data-oe-t")
+                mutation.isAutomatic ||
+                (mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
+                    mutation.attributeName.startsWith("data-oe-t"))
             ) {
                 continue;
             }
