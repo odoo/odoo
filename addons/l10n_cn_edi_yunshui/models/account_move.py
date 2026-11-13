@@ -643,6 +643,17 @@ class AccountMove(models.Model):
         if bank.bank_name or bank.account_number:
             payload['sfzsgmfyhzh'] = 'Y'
         payload['bz'] = remark
+        limits = {
+            'payerName': (100, self.env._("Customer name")),
+            'payerAddress': (140, self.env._("Customer address")),
+            'bz': (200, self.env._("Terms and Conditions")),
+        }
+        if too_long := [
+            self.env._("%(field)s (at most %(limit)s characters)", field=label, limit=limit)
+            for key, (limit, label) in limits.items()
+            if len(payload.get(key, '')) > limit
+        ]:
+            raise UserError(self.env._("Too long for the tax bureau: %(fields)s", fields=", ".join(too_long)))
         return payload
 
     def _l10n_cn_edi_product_lines(self):
