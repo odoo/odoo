@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import html2plaintext
 
 from .l10n_cn_edi_document import (
     BUREAU_STATES,
@@ -601,7 +602,7 @@ class AccountMove(models.Model):
         # The buyer is the legal entity; the address and phone are the invoiced contact's.
         buyer = self.commercial_partner_id
         partner = self.partner_id
-        remark = str(self.narration) if self.narration else ''
+        remark = html2plaintext(self.narration or '')
         payload = {
             'fpqqlsh': document.serial_no,
             'nsrsbh': self.company_id.vat,

@@ -92,6 +92,14 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(sent['fpqqlsh'], doc.serial_no)
         self.assertEqual(sent['invoiceAmount'], f"{invoice.amount_total:.2f}")
 
+    def test_issue_sends_the_terms_as_plain_text(self):
+        invoice = self._create_posted_invoice()
+        invoice.narration = '<p>Pay within 30 days</p>'
+
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
+
+        self.assertEqual(payload['bz'], "Pay within 30 days")
+
     def test_issue_retry_reuses_the_serial_number(self):
         invoice = self._create_posted_invoice()
         self.responses['issue'] = UserError("Timeout")
