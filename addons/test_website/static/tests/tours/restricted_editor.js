@@ -154,6 +154,10 @@ registry.category("web_tour.tours").add("test_restricted_editor_test_admin", {
             trigger: ":iframe [data-oe-expression='record.website_description'] strong",
             run: "editor potentiel.",
         },
+        {
+            content: "Ensure the footer is not translatable",
+            trigger: ":iframe #footer:not(:has([data-oe-translation-source-sha]))",
+        },
         ...clickOnSave(),
     ],
 });

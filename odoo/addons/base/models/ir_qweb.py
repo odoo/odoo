@@ -719,7 +719,6 @@ class IrQweb(models.AbstractModel):
 
             * ``lang`` (str) used language to render the template
             * ``inherit_branding`` (bool) add the tag node branding
-            * ``inherit_branding_auto`` (bool) add the branding on fields
             * ``minimal_qcontext``(bool) To use the minimum context and options
               from ``_prepare_environment``
 
@@ -821,7 +820,16 @@ class IrQweb(models.AbstractModel):
 
                     # Fetch the compiled function and template options
                     if not render_template:
-                        template_functions, def_name, options, _code = irQweb._compile(params.view_ref)
+                        inherit_branding = irQweb.env.context.get('inherit_branding')
+                        edit_translations = irQweb.env.context.get('edit_translations')
+                        if (
+                            (inherit_branding or edit_translations)
+                            and isinstance(params.view_ref, (str, int))
+                            and not self._can_user_modify(self.env['ir.ui.view']._preload_views([params.view_ref])[params.view_ref]['view'].with_user(self.env.user))
+                        ):
+                            inherit_branding = False
+                            edit_translations = False
+                        template_functions, def_name, options, _code = irQweb.with_context(inherit_branding=inherit_branding, edit_translations=edit_translations)._compile(params.view_ref)
                         loaded_functions.update(template_functions)
                         loaded_options[params.view_ref] = options
                         render_template = template_functions[params.method or def_name]
@@ -993,7 +1001,7 @@ class IrQweb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile', 'preserve_comments']
+        return ['lang', 'inherit_branding', 'edit_translations', 'profile', 'preserve_comments']
 
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
@@ -2877,12 +2885,12 @@ class IrQweb(models.AbstractModel):
         field_options['tagName'] = tagName
         field_options['expression'] = expression
         field_options['type'] = field_options.get('widget', field.type)
-        inherit_branding = (
-                self.env.context['inherit_branding']
-                if 'inherit_branding' in self.env.context
-                else self.env.context.get('inherit_branding_auto') and record.has_access('write'))
-        field_options['inherit_branding'] = inherit_branding
+        inherit_branding = self.env.context.get('inherit_branding')
         translate = self.env.context.get('edit_translations') and values.get('translatable') and field.translate
+        if (inherit_branding or translate) and not self._can_user_modify(record):
+            inherit_branding = False
+            translate = False
+        field_options['inherit_branding'] = inherit_branding
         field_options['translate'] = translate
 
         # field converter
@@ -3120,6 +3128,9 @@ class IrQweb(models.AbstractModel):
                     if match := lazy_bundle_regex.search(fcontent):
                         bundles.add(match[2])
         return bundles
+
+    def _can_user_modify(self, record):
+        return record.has_access('write')
 
 
 def render(template_name: str | int, values: dict, load: Callable[[str], tuple[etree._Element, str]], **options) -> Markup:
