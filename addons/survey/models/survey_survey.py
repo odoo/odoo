@@ -778,6 +778,50 @@ class Survey(models.Model):
 
         return True
 
+    def _get_survey_last_triggering_answers(self, user_input, page_or_question, triggering_answers_by_question, triggered_questions_by_answer):
+        """Get IDs of answers on a potentially final page that trigger conditional questions.
+
+        Used by the frontend to switch the submit button between "Submit" and
+        "Continue" depending on the selected answers.
+
+        A page is "potentially last" when every following question is conditional
+        and none of its triggering answers were selected on another page. Answers
+        recorded on the current page itself are deliberately ignored: the user can
+        still change them (typically after navigating back), which is exactly the
+        case this data lets the frontend handle.
+
+        Not computed during the skipped questions flow, as conditional questions
+        are not handled there. Chained triggers between conditional questions are
+        not handled.
+
+        :return: list of suggested answer ids of the current page that trigger a
+            following question, or an empty list when the feature does not apply.
+        """
+        if user_input.survey_first_submitted or self.questions_layout == 'one_page':
+            return []
+
+        pages_or_questions = self._get_pages_or_questions(user_input)
+        following_questions = pages_or_questions.filtered(lambda p_or_q: p_or_q.sequence > page_or_question.sequence)
+        current_page_questions = page_or_question
+        if self.questions_layout == 'page_per_section':
+            following_questions = following_questions.question_ids
+            current_page_questions = page_or_question.question_ids
+        current_page_answers = current_page_questions.suggested_answer_ids
+        if not following_questions or not current_page_answers:
+            return []
+
+        current_page_answers = current_page_questions.suggested_answer_ids
+        other_pages_answers = user_input.user_input_line_ids.suggested_answer_id - current_page_answers
+        following_triggering_answer_ids = set()
+        for following_question in following_questions:
+            triggering_answers = triggering_answers_by_question.get(following_question)
+            if not triggering_answers or triggering_answers & other_pages_answers:
+                # A non-conditional question follows, or a conditional one already triggered from another page
+                return []
+            following_triggering_answer_ids.update(triggering_answers.ids)
+
+        return list(set(current_page_answers.ids) & following_triggering_answer_ids)
+
     def _get_survey_questions(self, answer=None, page_id=None, question_id=None):
         """ Returns a tuple containing: the survey question and the passed question_id / page_id
         based on the question_layout and the fact that it's a session or not.
