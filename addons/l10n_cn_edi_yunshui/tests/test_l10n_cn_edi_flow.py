@@ -945,6 +945,27 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             'l10n_cn_edi_state': 'issued',
         }])
 
+    def test_customer_red_form_matches_a_credit_note_at_another_rate(self):
+        usd = self.setup_other_currency('USD', rates=[('2019-01-01', 2.0), ('2020-01-01', 4.0)])
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_a, products=self.product_a, taxes=self.tax_sale_a, currency=usd, post=True,
+        )
+        invoice.l10n_cn_edi_fapiao_no = '24442000000071309399'
+        credit_note = self._reverse(invoice)
+        credit_note.invoice_date = '2021-01-01'
+        red_form = self.env['l10n_cn_edi.document'].create({
+            'move_id': invoice.id,
+            'kind': 'red_form',
+            'state': 'red_form_confirmed',
+            'red_form_uuid': 'in-9',
+            'fapiao_no': '24442000000071309400',
+            'amount_untaxed': -invoice.amount_untaxed_signed,
+            'amount_tax': -invoice.amount_tax_signed,
+        })
+
+        self.assertEqual(credit_note.amount_total_signed, -invoice.amount_total_signed / 2)
+        self.assertTrue(credit_note._l10n_cn_edi_matches_red_form(red_form))
+
     def test_red_fapiao_of_a_customer_red_form_goes_to_one_credit_note(self):
         invoice = self._create_posted_invoice(fapiao_no='24442000000071309399')
         self.env['l10n_cn_edi.document'].create({
