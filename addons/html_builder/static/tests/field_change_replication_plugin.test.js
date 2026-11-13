@@ -1,7 +1,9 @@
-import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { addBuilderPlugin, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { execCommand } from "@html_editor/../tests/_helpers/userCommands";
+import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
@@ -237,5 +239,40 @@ describe("replicate changes", () => {
         expect(":iframe .data_2 span").toHaveClass("text-danger");
         expect(":iframe .data_1 .btn").not.toHaveClass("text-danger");
         expect(":iframe .data_2 .btn").not.toHaveClass("text-danger");
+    });
+
+    test("mutations made by normalization should not be replicated", async () => {
+        addBuilderPlugin(
+            class extends Plugin {
+                static id = "testNormalizeMutation";
+                static dependencies = ["domObserver"];
+                resources = {
+                    normalize_processors: (root) => {
+                        for (const el of selectElements(root, ".test-1 b")) {
+                            el.dataset.counter = parseInt(el.dataset.counter || 0) + 1;
+                        }
+                        // `ignore` stages pending mutations, sending these automatic
+                        // ones to `on_pending_mutations_staged_handlers`.
+                        this.dependencies.domObserver.ignore(() => {});
+                        return root;
+                    },
+                };
+            }
+        );
+        const { getEditor } = await setupHTMLBuilder("", {
+            headerContent: `
+            <div class="test-1">
+                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db"><b>Hello</b></span>
+            </div>
+            <div class="test-2">
+                <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db"><b>Hello</b></span>
+            </div>
+        `,
+        });
+
+        queryOne(":iframe .test-1").dataset.changed = "true";
+        getEditor().shared.history.commit();
+        expect(":iframe .test-1 b").toHaveAttribute("data-counter");
+        expect(":iframe .test-2 b").not.toHaveAttribute("data-counter");
     });
 });
