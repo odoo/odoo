@@ -2,6 +2,7 @@ import { BuilderNumberInputBase } from "@html_builder/core/building_blocks/build
 import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
+    isSingleNumber,
     useBuilderComponent,
     useBuilderNumberInputUnits,
     useInputBuilderComponent,
@@ -72,12 +73,7 @@ export class BuilderNumberInput extends Component {
     }
 
     updateUnitVisibility(value) {
-        if (value === "") {
-            this.state.showUnit = false;
-        } else {
-            const numericValue = Number(value);
-            this.state.showUnit = !Number.isNaN(numericValue);
-        }
+        this.state.showUnit = isSingleNumber(value);
     }
 
     onChange(e) {

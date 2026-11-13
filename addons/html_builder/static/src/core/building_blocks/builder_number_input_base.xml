@@ -16,7 +16,7 @@
         <i t-if="this.props.prefixIcon" role="img" aria-hidden="true" class="o_hb_input_prefix align-self-center oi" t-att-data-icon="this.props.prefixIcon"/>
         <input
             t-ref="this.inputRef"
-            t-att-type="this.props.composable ? 'text' : 'number'"
+            type="text"
             t-att-autocomplete="this.props.composable ? 'chrome-off' : undefined"
             t-attf-class="{{ this.props.inputClasses + ( this.props.prefix ? ' o_hb_input_transparent ' : ' o_hb_input_base ' ) }}"
             t-att-placeholder="this.props.placeholder"

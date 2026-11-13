@@ -1,6 +1,8 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
+    normalizeDecimalSeparator,
+    toDecimalDisplay,
     useActionInfo,
     useBuilderComponent,
     useBuilderNumberInputUnits,
@@ -98,7 +100,9 @@ export class BuilderRange extends Component {
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
 
-        this.debouncedCommitRangeValue = useInputDebouncedCommit(this.inputRefRange, commit);
+        this.debouncedCommitRangeValue = useInputDebouncedCommit(this.inputRefRange, (value) =>
+            normalizeDecimalSeparator(commit(value))
+        );
 
         this.commit = commit;
         if (this.props.withNumberInput) {
@@ -115,7 +119,7 @@ export class BuilderRange extends Component {
                 } else {
                     ratio = this.convertToRatio(value);
                 }
-                this.inputRefNumber().value = ratio;
+                this.inputRefNumber().value = toDecimalDisplay(ratio);
                 // Syncronize the values of range and text inputs during preview
                 this.inputRefRange().value = value || this.props.min;
                 this.state.value = this.parseDisplayValue(value);
@@ -144,8 +148,7 @@ export class BuilderRange extends Component {
     }
 
     onChangeRange(e) {
-        const normalizedDisplayValue = this.commit(e.target.value);
-        e.target.value = normalizedDisplayValue;
+        e.target.value = normalizeDecimalSeparator(this.commit(e.target.value));
     }
 
     onInputRange(e) {
@@ -183,13 +186,14 @@ export class BuilderRange extends Component {
     }
 
     previewInput(ratio) {
-        this.preview(ratio, true);
+        this.preview(normalizeDecimalSeparator(ratio), true);
     }
 
     commitInput(value) {
+        value = normalizeDecimalSeparator(value);
         const originalValue = value ? this.convertToValue(value) : this.props.min.toString();
-        const committedValue = this.commit(originalValue);
-        return this.convertToRatio(committedValue);
+        const committedValue = normalizeDecimalSeparator(this.commit(originalValue));
+        return toDecimalDisplay(this.convertToRatio(committedValue));
     }
 
     /**
@@ -210,7 +214,7 @@ export class BuilderRange extends Component {
     }
 
     get inputValueRange() {
-        return this.formatRawValue(this.state.value || this.props.min);
+        return normalizeDecimalSeparator(this.formatRawValue(this.state.value || this.props.min));
     }
 
     get displayValueNumber() {

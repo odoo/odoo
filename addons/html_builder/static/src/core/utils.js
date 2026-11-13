@@ -877,6 +877,30 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
     return userInputValue;
 }
 
+const SINGLE_NUMBER_REGEX = /^[+-]?(?:\d+(?:[.,٫]\d*)?|[.,٫]\d+)(?:e[+-]?\d+)?$/i;
+
+/** One number, with "." or "," as decimal separator. */
+export function isSingleNumber(value) {
+    return SINGLE_NUMBER_REGEX.test(String(value).trim());
+}
+
+/**
+ * Show a dot-decimal value with the browser's separator
+ * ("," in French, "." in English etc).
+ */
+export function toDecimalDisplay(value) {
+    const text = String(value);
+    const decimalPoint =
+        new Intl.NumberFormat().formatToParts(1.1).find((part) => part.type === "decimal")?.value ||
+        ".";
+    return decimalPoint === "." ? text : text.replaceAll(".", decimalPoint);
+}
+
+/** Normalize "," and "٫" to ".". */
+export function normalizeDecimalSeparator(value) {
+    return String(value).replace(/[,٫]/g, ".");
+}
+
 /**
  * @param {DefaultBuilderProps} props
  */
@@ -915,8 +939,8 @@ export function useBuilderNumberInputUnits(props) {
                     getHtmlStyle(env.getEditingElement().ownerDocument)
                 );
             }
-            // Put *at most* 3 decimal digits
-            return parseFloat(parseFloat(value).toFixed(3)).toString();
+            // Put *at most* 3 decimal digits, shown with the browser decimal separator.
+            return toDecimalDisplay(parseFloat(parseFloat(value).toFixed(3)));
         });
 
     const clampValue = (value) => {
@@ -924,6 +948,9 @@ export function useBuilderNumberInputUnits(props) {
             return value;
         }
         value = parseFloat(value);
+        if (Number.isNaN(value)) {
+            return "";
+        }
         if (value < props.min) {
             return `${props.min}`;
         }
@@ -937,13 +964,14 @@ export function useBuilderNumberInputUnits(props) {
         if (!displayValue) {
             return displayValue;
         }
+        displayValue = normalizeDecimalSeparator(displayValue).trim();
         if (props.composable) {
             displayValue = displayValue
-                .trim()
-                .replace(/,/g, ".")
                 .replace(/[^0-9.-\s]/g, "")
                 // Only accept "-" at the start or after a space
                 .replace(/(?<!^|\s)-/g, "");
+        } else if (!isSingleNumber(displayValue)) {
+            displayValue = "";
         }
         displayValue =
             displayValue.split(" ").map(clampValue.bind(this)).join(" ") || props.default;

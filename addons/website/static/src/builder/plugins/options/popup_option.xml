@@ -39,14 +39,15 @@
     </BuilderRow>
     <BuilderRow level="1" label.translate="Delay">
         <BuilderNumberInput t-if="this.isActiveItem('show_delay')"
-                action="'setPopupDelay'" unit="'s'" saveUnit="''"/>
+                action="'setPopupDelay'" unit="'s'" saveUnit="''" min="0"/>
     </BuilderRow>
     <BuilderRow label.translate="Hide For" t-if="!this.isActiveItem('onclick_opt')">
         <BuilderNumberInput tooltip.translate="Once the user closes the popup, it won't be shown again for that period of time."
                 dataAttributeAction="'consentsDuration'"
                 default="7"
                 unit.translate="days"
-                saveUnit="''"/>
+                saveUnit="''"
+                min="0"/>
     </BuilderRow>
     <ShowOnOption />
 </t>
