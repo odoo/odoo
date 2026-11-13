@@ -1,9 +1,9 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { _t } from "@web/core/l10n/translation";
 import { clamp } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { getAccessibleName } from "@website/js/utils";
 
 export class FacebookPage extends Interaction {
     static selector = ".o_facebook_page";
@@ -51,7 +51,7 @@ export class FacebookPage extends Interaction {
 
             const iframeEl = document.createElement("iframe");
             iframeEl.setAttribute("style", "border: none; overflow: hidden;");
-            iframeEl.setAttribute("aria-label", _t("Facebook"));
+            iframeEl.setAttribute("title", getAccessibleName(this.el));
             iframeEl.height = params.height;
             iframeEl.width = params.width;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="website.locationSelector.map">
-        <div class="o_location_selector_map w-100 flex-grow-1" t-ref="this.mapRef"/>
+        <div class="o_location_selector_map w-100 flex-grow-1" t-ref="this.mapRef" role="region" t-att-aria-label="this.props.accessibleName"/>
     </t>
 
     <t t-name="website.locationSelector.map.marker">

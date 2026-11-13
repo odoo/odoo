@@ -4,6 +4,7 @@
         <div class="d-flex flex-column h-100 w-100">
             <Map
                 t-if="this.state.shouldLoadMap"
+                accessibleName="this.props.accessibleName"
                 locations="this.props.locations"
                 pressControlToZoom="this.props.pressControlToZoom"
                 showDetailsTooltip="this.props.showDetailsTooltip"

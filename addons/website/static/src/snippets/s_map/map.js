@@ -1,7 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
-import { generateGMapLink } from "@website/js/utils";
+import { generateGMapLink, getAccessibleName } from "@website/js/utils";
 
 /**
  * Bootstraps an "empty" Google Maps iframe.
@@ -18,14 +17,18 @@ export function generateGMapIframe() {
     iframeEl.setAttribute("marginheight", "0");
     iframeEl.setAttribute("marginwidth", "0");
     iframeEl.setAttribute("src", "about:blank");
-    iframeEl.setAttribute("aria-label", _t("Map"));
     return iframeEl;
 }
 
 export class Map extends Interaction {
     static selector = ".s_map";
+    dynamicContent = {
+        ".s_map_embedded": {
+            "t-att-title": () => getAccessibleName(this.el),
+        },
+    };
 
-    start() {
+    setup() {
         if (!this.el.querySelector(".s_map_embedded")) {
             // The iframe is not found inside the snippet. This is probably due
             // to the sanitization of a field during the save, like in a product

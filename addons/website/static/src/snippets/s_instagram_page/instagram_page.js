@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { _t } from "@web/core/l10n/translation";
+import { getAccessibleName } from "@website/js/utils";
 
 // Note that Instagram can automatically detect the language of the user and
 // translate the embed.
@@ -22,7 +22,7 @@ export class InstagramPage extends Interaction {
     setup() {
         this.iframeEl = document.createElement("iframe");
         this.iframeEl.setAttribute("scrolling", "no");
-        this.iframeEl.setAttribute("aria-label", _t("Instagram"));
+        this.iframeEl.setAttribute("title", getAccessibleName(this.el));
         this.iframeEl.classList.add("w-100");
         this.insert(this.iframeEl, this.el.querySelector(".o_instagram_container"));
 
@@ -51,7 +51,7 @@ export class InstagramPage extends Interaction {
         ) {
             return;
         }
-        if (typeof ev.data === 'object') {
+        if (typeof ev.data === "object") {
             // Ignore messages that have object data instead of string (eg. internal
             // iOS chrome message)
             return;

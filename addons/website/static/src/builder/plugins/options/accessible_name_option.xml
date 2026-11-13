@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AccessibleNameOption">
+    <BuilderRow label.translate="Description" tooltip.translate="Add context for screen readers">
+        <BuilderTextInput dataAttributeAction="'accessibleName'" placeholder="this.state.defaultName"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <accessible_name_option selector=".s_map, .o_facebook_page, .s_instagram_page, .s_store_locator"/>
+    </xpath>
+</t>
+
+</templates>

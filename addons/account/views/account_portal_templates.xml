@@ -197,7 +197,7 @@
                         <div class="o_portal_html_loader text-center">
                             <i class="oi oi-fw oi-spin oi-2x text-black-50" data-icon="autorenew"></i>
                         </div>
-                        <iframe id="invoice_html" class="position-relative d-block" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
+                        <iframe id="invoice_html" class="position-relative d-block" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')" t-att-title="invoice.type_name if invoice.name == '/' else '%s %s' % (invoice.type_name, invoice.name)"/>
                     </div>
                     <!-- chatter -->
                     <div id="invoice_communication" class="mt-4">
