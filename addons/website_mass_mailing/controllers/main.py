@@ -5,6 +5,7 @@ import werkzeug.exceptions
 
 from odoo import tools, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.http import route, request
 from odoo.addons.mass_mailing.controllers import main
 
@@ -65,10 +66,9 @@ class MassMailController(main.MassMailController):
             }
 
         fname = self._get_fname(subscription_type)
-        self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
         # TODO in master: we no longer display the toast on success, so update
         # the return.
-        return {
+        return self.subscribe_to_newsletter(subscription_type, value, list_id, fname) or {
             'toast_type': 'success',
             'toast_content': _("Thanks for subscribing!"),
         }
@@ -80,13 +80,11 @@ class MassMailController(main.MassMailController):
         MailingList = request.env['mailing.list'].sudo()
 
         if subscription_type == 'email':
-            name, value = tools.parse_contact_from_email(value)
+            name, _email_normalized = tools.parse_contact_from_email(value)
             if not name:
                 name = address_name
-            fname_normalized = 'email_normalized'
         elif subscription_type == 'mobile':
             name = value
-            fname_normalized = 'phone_sanitized'
         else:
             raise werkzeug.exceptions.BadRequest(_('Invalid subscription type'))
 
@@ -102,21 +100,23 @@ class MassMailController(main.MassMailController):
 
         subscription = ContactSubscription.search(
             [('list_id', '=', mailing_list.id), (f'contact_id.{fname}', '=', value)], limit=1)
+
         if not subscription:
-            if not request.env.user.is_public and request.env.user.partner_id[fname_normalized] == value:
-                partner_id = request.env.user.partner_id.id
-                contacts = mailing_list.sudo()._update_subscription_from_email(value, opt_out=False)
-                contact_id = contacts[:1]
-                if contact_id:
-                    if not contact_id.partner_id:
-                        contact_id.partner_id = partner_id
-                    return
-            else:
-                contact_id = Contacts.search([(fname, '=', value)], limit=1)
-                partner_id = False
-            if not contact_id:
-                contact_id = Contacts.create({'name': name, fname: value, 'partner_id': partner_id})
+            contacts = Contacts.search(Domain(fname, '=', value))
+            if not contacts:
+                if request.env.user.is_public:
+                    contacts = Contacts.create({'name': name, fname: value})
+                else:
+                    partner = request.env.user.partner_id
+                    contacts = request.env['mailing.contact'].sudo().create({
+                        **request.env['mailing.contact']._from_partners_get_create_vals(partner),
+                        fname: value,
+                    })
             if mailing_list:
-                ContactSubscription.create({'contact_id': contact_id.id, 'list_id': mailing_list.id})
+                contact = contacts[:1]
+                ContactSubscription.create({
+                    'contact_id': contact.id,
+                    'list_id': mailing_list.id,
+                })
         elif subscription.opt_out:
             subscription.opt_out = False
