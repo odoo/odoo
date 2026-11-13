@@ -28,7 +28,8 @@ def _to_local_date(employee, value):
 class HrTimeRuleSourceMixin(models.AbstractModel):
     """Make a model a source of the time rule pipeline (``hr.time.rule``).
 
-    Inherited by ``hr.attendance`` and ``hr.leave``. Creating a source, or writing its employee,
+    Inherited by ``hr.leave`` and ``hr.attendance`` (in ``hr_holidays_attendance``, where the
+    rules only run from the crons and write their outputs as time off). Creating a source, or writing its employee,
     span or the fields of :meth:`_get_write_source_extra_source_fields`, triggers the rules
     (:meth:`_trigger_time_rules`) unless the context has ``skip_time_rules``. The rules then
     reclassify the source in place and/or create output records of the same model, linked to
@@ -39,9 +40,8 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     ``NotImplementedError``:
 
     - ``_time_rule_source_field``: many2one from an output record to its source
-      (``source_attendance_id``, ``source_leave_id``);
-    - ``_time_rule_output_field``: the inverse one2many (``overtime_attendance_ids``,
-      ``output_leave_ids``);
+      (``source_leave_id``);
+    - ``_time_rule_output_field``: the inverse one2many (``output_leave_ids``);
     - ``_time_rule_span_start_field`` / ``_time_rule_span_end_field``: datetime fields (UTC)
       holding the span (``check_in``/``check_out``, ``date_from``/``date_to``);
     - ``_time_rule_write_ctx``: context used for the pipeline's own writes.

@@ -12,7 +12,6 @@
                 string="Employee attendances"
                 decoration-success="color == 10"
                 decoration-danger="color == 1"
-                decoration-it="time_rule_id"
                 duplicate="false">
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="check_in"/>
@@ -36,14 +35,6 @@
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
                 <field name="color" column_invisible="1"/> <!-- drives decoration-success/decoration-danger of the list -->
-                <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list and invisible of the Mark as Reviewed button -->
-                <field name="source_stale" column_invisible="1"/> <!-- drives invisible of the Mark as Reviewed button -->
-                <button name="action_mark_reviewed" type="object"
-                        icon="warning"
-                        title="Source changed — click to mark as reviewed"
-                        class="text-warning p-0"
-                        invisible="not source_stale or not time_rule_id"
-                        groups="hr_attendance.group_hr_attendance_officer"/>
             </list>
         </field>
     </record>
@@ -55,8 +46,6 @@
             <kanban class="o_kanban_mobile" sample="1">
                 <field name="check_in"/>
                 <field name="check_out"/>
-                <field name="source_stale"/>
-                <field name="time_rule_id"/>
                 <templates>
                     <t t-name="card">
                         <field name="employee_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" class="fs-5 fw-bold mb-2"/>
@@ -64,10 +53,6 @@
                         <div>
                             <i class="oi oi-filled me-1" data-icon="calendar_today" aria-label="Period" role="img" title="Period"></i>
                             <field name="check_in" /> - <field name="check_out" />
-                        </div>
-                        <div t-if="record.source_stale.raw_value and record.time_rule_id.raw_value"
-                             class="text-warning small mt-1">
-                            <i class="oi me-1" data-icon="warning" role="img" aria-label="Warning" title="Warning"/>Source changed
                         </div>
                     </t>
                 </templates>
@@ -95,29 +80,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
                 </header>
                 <sheet>
-                    <!-- invisible fields needed for the stale-source warning -->
-                    <field name="source_stale" invisible="1"/> <!-- drives invisible of the stale source warning below -->
-                    <field name="source_attendance_id" invisible="1"/> <!-- drives invisible of the deleted/modified wording of the stale source warning -->
-                    <field name="time_rule_id" invisible="1"/> <!-- drives invisible of the stale source warning below -->
-                    <div class="alert alert-warning mb-3 d-flex align-items-center gap-3" role="alert"
-                         invisible="not source_stale or not time_rule_id">
-                        <div class="flex-grow-1">
-                            <i class="oi me-1" data-icon="warning" role="img" aria-label="Warning" title="Warning"/>
-                            <strong invisible="source_attendance_id">Source attendance deleted -</strong>
-                            <strong invisible="not source_attendance_id">Source attendance modified -</strong>
-                            this record may be outdated and should be reviewed.
-                        </div>
-                        <button name="action_mark_reviewed" type="object"
-                                icon="check" title="Mark as Reviewed"
-                                class="btn btn-success btn-sm"
-                                groups="hr_attendance.group_hr_attendance_officer"/>
-                    </div>
                     <field name="employee_tz" widget="attendance_tz_warning" class="d-block"/>
-                    <div class="alert alert-info mb-3 d-flex gap-2" role="status"
-                         invisible="not time_rule_split_preview">
-                        <i class="oi mt-1" data-icon="info" role="img" aria-label="Info" title="Info"/>
-                        <field name="time_rule_split_preview" readonly="1" nolabel="1"/>
-                    </div>
                     <group>
                         <group colspan="2">
                             <group col="1" name="group_employee">
@@ -320,19 +283,9 @@
                 <field name="work_entry_type_id" filters="1" color="color"/>
                 <field name="worked_hours" widget="float_time"/>
                 <field name="break_duration" widget="float_time"/>
-                <field name="source_stale" invisible="1"/>
-                <field name="source_attendance_id" invisible="1"/>
                 <popover>
-                    <field name="source_stale"/>
-                    <field name="source_attendance_id"/>
                     <templates>
                         <t t-name="popover-body" class="gap-3">
-                            <div class="alert alert-warning py-1 px-2 mb-0 small" role="status" invisible="not source_stale">
-                                <i class="oi oi-fw me-1" data-icon="warning" role="img"
-                                   aria-label="Warning" title="Warning"/>
-                                <span invisible="source_attendance_id">Source deleted</span>
-                                <span invisible="not source_attendance_id">Source modified</span>
-                            </div>
                             <div class="d-flex align-items-baseline gap-2" invisible="not work_entry_type_id">
                                 <i class="oi oi-fw text-400" data-icon="label" aria-hidden="true" title="Time Type"/>
                                 <field name="work_entry_type_id" widget="many2one_work_entry_type"/>
@@ -652,13 +605,5 @@
         action="hr_work_entry.hr_work_entry_type_action"
         groups="hr_attendance.group_hr_attendance_manager"
         sequence="10"/>
-
-    <menuitem
-        id="menu_hr_attendance_time_rules"
-        name="Automatic Rules"
-        parent="menu_hr_attendance_configuration"
-        action="hr_work_entry.hr_time_rule_action"
-        groups="hr_attendance.group_hr_attendance_manager"
-        sequence="30"/>
 
 </odoo>
