@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
-from odoo.fields import Date
+from odoo.fields import Command, Date
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 from odoo.addons.hr_holidays.tests.common import TestHolidayContract
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -276,6 +276,39 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(1, len(leave_work_entry))
         self.assertTrue(leave_work_entry[0]['work_entry_type_id'] == self.hours_work_entry_type)
         self.assertEqual(2.0, leave_work_entry[0]['duration'])
+
+    def test_time_off_keeps_non_working_schedule_period(self):
+        """ Check that a time off over a day whose afternoon is unpaid in the working schedule
+        only replaces the working morning in the work entries. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'attendance_ids': [
+                Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type_unpaid.id}),
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+            'date_version': date(2024, 9, 1),
+            'contract_date_start': date(2024, 9, 1),
+            'contract_date_end': date(2024, 9, 30),
+            'wage': 5000.0,
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'work_entry_type_id': self.hours_work_entry_type.id,
+            'request_date_from': date(2024, 9, 2),
+            'request_date_to': date(2024, 9, 2),
+        })
+        leave.action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2, 23, 59, 59))
+        self.assertDictEqual(
+            {vals['work_entry_type_id']: vals['duration'] for vals in work_entries_vals},
+            {self.hours_work_entry_type: 4.0, self.work_entry_type_unpaid: 4.0},
+        )
 
     def test_create_work_entry_for_flexible_employee_leave(self):
         work_entry_type_paid = self.env['hr.work.entry.type'].create([
