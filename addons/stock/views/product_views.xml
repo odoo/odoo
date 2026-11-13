@@ -550,25 +550,23 @@
                 <list sample="1" js_class="stock_report_list_view" duplicate="0" default_order="is_favorite desc, default_code, name, id">
                     <header/> <!-- inherited in other module -->
                     <field name="id" column_invisible="True"/> <!-- used by the buttons' context (default_product_id/search_default_product_id) below -->
-                    <field name="display_name" string="Product"/>
+                    <field name="display_name" string="Product" options="{'allow_order': true}"/>
                     <field name="categ_id" optional="hide"/>
                     <!-- <button name="%(action_view_inventory_tree)d" type="action" class="btn-link"
                             context="{'search_default_product_id': id, 'default_product_id': id}"> -->
                     <field name="qty_available" string="On Hand"
                            sum="Total On Hand" widget="stock_action_field"
-                           options="{ 'action_name': 'stock.action_view_quants', 'mute_empty': true }"
+                           options="{ 'action_name': 'stock.action_view_quants', 'mute_empty': true, 'allow_order': true }"
                            context="{ 'search_default_product_id': id, 'default_product_id': id }"/>
-                    <field name="free_qty" string="Free to Use" sum="Total Free to Use" decoration-muted="free_qty == 0"/>
-                    <field name="incoming_qty" optional="show" sum="Total Incoming" decoration-muted="incoming_qty == 0"/>
-                    <field name="outgoing_qty" optional="show" sum="Total Outgoing" decoration-muted="outgoing_qty == 0"/>
-                    <field name="virtual_available" string="Forecasted" optional="hide" sum="Total Forecasted"/>
+                    <field name="free_qty" string="Free to Use" options="{'allow_order': true}" sum="Total Free to Use" decoration-muted="free_qty == 0"/>
+                    <field name="incoming_qty" optional="show" options="{'allow_order': true}" sum="Total Incoming" decoration-muted="incoming_qty == 0"/>
+                    <field name="outgoing_qty" optional="show" options="{'allow_order': true}" sum="Total Outgoing" decoration-muted="outgoing_qty == 0"/>
+                    <field name="virtual_available" string="Forecasted" optional="hide" options="{'allow_order': true}" sum="Total Forecasted"/>
                     <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" options="{'no_create': True}"/>
                     <button name="%(stock_move_line_action)d" string="History" type="action" class="btn-link"
                         icon="history" context="{'search_default_product_id': id, 'default_product_id': id}"/>
                     <button name="action_view_orderpoints" string="Replenishment" type="object" class="btn-link"
                         icon="refresh" context="{'search_default_product_id': id, 'is_stock_report': True}" />
-                    <button name="%(action_view_quants)d" string="Locations" type="action" class="btn-link" groups="stock.group_stock_multi_locations"
-                        icon="inventory_2" context="{'search_default_product_id': id, 'default_product_id': id}" invisible="qty_available == 0"/>
                     <button name="action_product_forecast_report" string="Forecast" type="object" class="btn-link"
                         icon="area_chart" context="{'default_product_id': id}" invisible="incoming_qty == 0 and outgoing_qty == 0"/>
                 </list>
@@ -587,6 +585,13 @@
                 </filter>
                 <filter name="goods" position="attributes">
                     <attribute name="invisible">1</attribute>
+                </filter>
+                <filter name="combo" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </filter>
+                <filter name="is_storable" position="replace">
+                    <filter name="real_stock_available" position="move"/>
+                    <filter name="real_stock_negative" position="move"/>
                 </filter>
                 <filter name="real_stock_negative" position="after">
                     <searchpanel>

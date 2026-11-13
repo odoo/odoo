@@ -48,7 +48,7 @@ class ProductProduct(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        inverse='_inverse_qty_available', digits='Product Unit', compute_sudo=False, store=False,
+        inverse='_inverse_qty_available', digits='Product Unit', compute_sudo=False, store=False, aggregator=None,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -60,6 +60,7 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     virtual_available = fields.Float(
+        aggregator=None,
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
              "In a context with a single Stock Location, this includes "
@@ -71,7 +72,7 @@ class ProductProduct(models.Model):
              "with 'internal' type.")
     free_qty = fields.Float(
         'Free To Use Quantity ', compute='_compute_quantities', search='_search_free_qty',
-        digits='Product Unit', compute_sudo=False,
+        digits='Product Unit', compute_sudo=False, aggregator=None,
         help="Available quantity (computed as Quantity On Hand "
              "- reserved quantity)\n"
              "In a context with a single Stock Location, this includes "
@@ -82,6 +83,7 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     incoming_qty = fields.Float(
+        aggregator=None,
         help="Quantity of planned incoming products.\n"
              "In a context with a single Stock Location, this includes "
              "goods arriving to this Location, or any of its children.\n"
@@ -91,6 +93,7 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods arriving to any Stock "
              "Location with 'internal' type.")
     outgoing_qty = fields.Float(
+        aggregator=None,
         help="Quantity of planned outgoing products.\n"
              "In a context with a single Stock Location, this includes "
              "goods leaving this Location, or any of its children.\n"
@@ -459,6 +462,35 @@ class ProductProduct(models.Model):
             dest_loc_domain_done & ~loc_domain,
             loc_domain & ~dest_loc_domain_done,
         )
+
+    def _get_sorting_computed_fields(self):
+        """ Computed fields (not stored) that can still be used to sort the products, see `search_fetch`.
+        """
+        return {'display_name', 'qty_available', 'free_qty', 'incoming_qty', 'outgoing_qty', 'virtual_available'}
+
+    @api.model
+    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
+        """ Allow to sort on a computed field of `_get_sorting_computed_fields` when it is the first order term.
+        """
+        sorting_fields = self._get_sorting_computed_fields()
+        terms = [term.split() for term in (order or '').split(',') if term.strip()]
+        # if the order-by fields are none of our wanted computed fields, then call super normally
+        if not any(term[0] in sorting_fields for term in terms):
+            return super().search_fetch(domain, field_names, offset, limit, order)
+        first_term, *other_terms = terms
+        other_order = ', '.join(' '.join(term) for term in other_terms if term[0] not in sorting_fields)
+        # if the first order-by is not in our wanted computed fields (but it's in the order-by list), remove it so it's not used as a tie-breaker
+        if first_term[0] not in sorting_fields:
+            order = ', '.join(filter(None, [' '.join(first_term), other_order]))
+            return super().search_fetch(domain, field_names, offset, limit, order)
+        # get all products in the other fields order first (tie-breakers), then use our computed field to order by it
+        products = self.search(domain, order=other_order or None)
+        descending = len(first_term) > 1 and first_term[1].lower() == 'desc'
+        products = products.sorted(first_term[0], reverse=descending)
+        products = products[offset:offset + limit] if limit else products[offset:]
+        if field_names:
+            products.fetch(field_names)
+        return products
 
     def _search_qty_available(self, operator, value):
         # In the very specific case we want to retrieve products with stock available, we only need

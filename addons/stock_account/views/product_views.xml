@@ -40,6 +40,7 @@
                             'currency_field': 'company_currency_id',
                             'action_name': 'stock_account.stock_avco_report_action',
                             'disabled': 'cost_method == \'fifo\'',
+                            'allow_order': true,
                         }" context="{
                             'active_id': id,
                             'cost_method': cost_method,
@@ -49,6 +50,7 @@
                         widget='stock_action_field' options="{
                             'currency_field': 'company_currency_id',
                             'action_name': 'stock_account.stock_move_valuation_action',
+                            'allow_order': true,
                         }" context=" {
                             'search_default_product_id': id,
                             'search_default_incoming': 1,

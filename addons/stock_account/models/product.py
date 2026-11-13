@@ -84,7 +84,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     avg_cost = fields.Monetary(
-        string="Average Cost", compute='_compute_value',
+        string="Average Cost", compute='_compute_value', aggregator=None,
         compute_sudo=True, currency_field='company_currency_id')
     total_value = fields.Monetary(
         string="Total Value", compute='_compute_value',
@@ -182,6 +182,56 @@ class ProductProduct(models.Model):
         for product in self:
             product.total_value = sum(c.currency_id._convert(total_value_by_company_id[c.id].get(product.id, 0), self.env.company.currency_id) for c in self.env.companies)
             product.avg_cost = product.total_value / product._with_valuation_context().qty_available if product._with_valuation_context().qty_available else std_price_by_company_id[self.env.company.id].get(product.id, product.standard_price)
+
+    def _get_sorting_computed_fields(self):
+        return super()._get_sorting_computed_fields() | {'avg_cost', 'total_value'}
+
+    def _get_total_value_aggregates(self):
+        return {'total_value:sum', 'total_value:sum_currency', 'company_currency_id:array_agg_distinct'}
+
+    def _read_group_select(self, table, aggregate_spec):
+        # flag these aggregates as supported (so `total_value` gets its 'sum' aggregator), see `_read_group`
+        if aggregate_spec in self._get_total_value_aggregates():
+            return SQL("NULL")
+        return super()._read_group_select(table, aggregate_spec)
+
+    @api.model
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        """ Group then compute the aggregates of `_get_python_aggregates` on the products of each group
+        sorting the groups by `total_value`.
+        """
+        total_value_aggregates = self._get_total_value_aggregates()
+        order_terms = [term.split() for term in (order or '').split(',') if term.strip()]
+        sql_order_terms = [term for term in order_terms if term[0] not in total_value_aggregates]
+        if total_value_aggregates.isdisjoint(aggregates) and len(sql_order_terms) == len(order_terms):
+            return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
+        sql_aggregates = [aggregate for aggregate in aggregates if aggregate not in total_value_aggregates]
+        # we get the groups and check if there is an order-by for them (other than the sql_order_terms). if so, we get
+        # them all, sort them by total_value then apply the offset and limit by ourselves, otherwise call the super normally.
+        sort_by_value = order_terms and order_terms[0][0] in total_value_aggregates
+        groups = super()._read_group(
+            domain, groupby, [*sql_aggregates, 'id:recordset'], having,
+            0 if sort_by_value else offset, None if sort_by_value else limit,
+            ', '.join(' '.join(term) for term in sql_order_terms) or None,
+        )
+        # compute the value of the products of all the groups at once
+        self._fields['total_value'].compute_value(self.browse().union(group[-1] for group in groups))
+        total_value_groups = [(sum(group[-1].mapped('total_value')), group) for group in groups]
+        if sort_by_value:
+            descending = len(order_terms[0]) > 1 and order_terms[0][1].lower() == 'desc'
+            total_value_groups.sort(key=lambda total_value_group: total_value_group[0], reverse=descending)
+            total_value_groups = total_value_groups[offset:offset + limit] if limit else total_value_groups[offset:]
+        result = []
+        for total_value, (*values, products) in total_value_groups:
+            group_values, sql_values = values[:len(groupby)], iter(values[len(groupby):])
+            total_value_values_by_agg = {
+                'total_value:sum': total_value,
+                'total_value:sum_currency': total_value,
+                'company_currency_id:array_agg_distinct': products.company_currency_id.ids,
+            }
+            aggregate_values = [total_value_values_by_agg[aggregate] if aggregate in total_value_values_by_agg else next(sql_values) for aggregate in aggregates]
+            result.append((*group_values, *aggregate_values))
+        return result
 
     @api.model_create_multi
     def create(self, vals_list):
