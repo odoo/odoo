@@ -1125,7 +1125,7 @@ class TestTimesheet(TestCommonTimesheet):
     def test_archive_employee_timesheet_handling(self):
         """ Test how registering departure via wizard affects employee timesheets based on departure date. """
         Timesheet = self.env['account.analytic.line']
-        today = fields.Date.context_today(self.env.user)
+        today = fields.Date.today()
         yesterday = today - timedelta(days=1)
         two_days_ago = today - timedelta(days=2)
         tomorrow = today + timedelta(days=1)
