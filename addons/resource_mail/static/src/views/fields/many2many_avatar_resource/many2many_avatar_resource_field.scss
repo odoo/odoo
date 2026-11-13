@@ -1,4 +1,27 @@
+<<<<<<< 353fc6a34d343d1a5ed925da09f323127d8384a9
 .o_material_resource {
+||||||| 06b1d4ce67c253929c939b017d419c2dada27e5a
+.o_field_many2many_avatar_resource .o_avatar.o_avatar_many2x_autocomplete > i.o_material_resource {
+    height: var(--Avatar-size, #{$o-avatar-size});
+    width: var(--Avatar-size, #{$o-avatar-size});
+}
+
+.o_m2o_avatar .o_material_resource {
+=======
+.o_avatar > i.o_material_resource {
+    height: var(--Avatar-size, #{$o-avatar-size});
+    width: var(--Avatar-size, #{$o-avatar-size});
+}
+
+.o_tag > i.o_material_resource::before {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+}
+
+.o_m2o_avatar .o_material_resource {
+>>>>>>> 0c92fb8e02862eee0f9673fd3d37546f70736b80
     height: var(--Avatar-size, #{$o-avatar-size});
     width: var(--Avatar-size, #{$o-avatar-size});
 }

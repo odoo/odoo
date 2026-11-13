@@ -309,3 +309,27 @@ test("many2many_avatar_resource widget in kanban view", async () => {
     await contains(".o-mail-ChatWindow");
     expect(".o-mail-ChatWindow-moreActions > .text-truncate:first").toHaveText("Pierre");
 });
+
+test("many2many_avatar_resource widget: click material resource in edit popover", async () => {
+    await start();
+    await openKanbanView("resource.task", {
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name"/>
+                        <field name="resource_ids" widget="many2many_avatar_resource"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    await webContains(
+        ".o_kanban_record:nth-child(1) .o_field_many2many_avatar_resource .o_quick_assign",
+        { visible: false }
+    ).click();
+    await animationFrame();
+    expect(".o-overlay-container .o_tag i.fa-wrench").toHaveCount(1);
+    await click(".o-overlay-container .o_tag i.fa-wrench");
+    await contains(".o_avatar_card", { count: 0 });
+});
