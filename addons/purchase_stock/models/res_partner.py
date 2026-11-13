@@ -38,14 +38,14 @@ class ResPartner(models.Model):
             ],
             field_names=['purchase_line_id', 'date', 'quantity'],
         )
-        moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
+        moves = moves.filtered(lambda m: not m._is_purchase_return() and m.date.date() <= m.purchase_line_id.date_planned.date())
         for move in moves:
             lines_quantity[move.purchase_line_id.id] += move.quantity
         partner_dict = {}
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += lines_quantity[line.id]
+            on_time += min(lines_quantity[line.id], line.product_uom_qty)
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():

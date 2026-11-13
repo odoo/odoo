@@ -30,13 +30,15 @@ SELECT pol.id                   AS id,
        Min(pc.id)               AS category_id,
        pol.partner_id           AS partner_id,
        pol.product_uom_qty      AS qty_total,
-       Sum(CASE
-             WHEN (m.state = 'done' and pol.date_planned::date >= m.date::date) THEN (ml.quantity / ml_uom.factor * pt_uom.factor)
+       Least(Sum(CASE
+             WHEN (m.state = 'done' and pol.date_planned::date >= m.date::date and sl_dest.usage != 'supplier') THEN (ml.quantity / ml_uom.factor * pt_uom.factor)
              ELSE 0
-           END)                 AS qty_on_time
+           END), pol.product_uom_qty) AS qty_on_time
 FROM   stock_move m
        JOIN purchase_order_line pol
          ON pol.id = m.purchase_line_id
+       JOIN stock_location sl_dest
+         ON sl_dest.id = m.location_dest_id
        JOIN product_product p
          ON p.id = m.product_id
        JOIN product_template pt
