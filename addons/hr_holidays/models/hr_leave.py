@@ -68,21 +68,30 @@ class HrLeave(models.Model):
     }
 
     @api.model
+    def _get_default_work_entry_type_domain(self, defaults):
+        """ The time types a new time off can be prefilled with, the first one by sequence being chosen.
+
+        :param dict defaults: the default values of the new time off, its employee included
+        :rtype: Domain
+        """
+        employee = self.env['hr.employee'].browse(defaults.get('employee_id'))
+        country = employee.company_id.country_id or self.env.company.country_id
+        return Domain([
+            ('country_id', '=', country.id),
+            ('time_off_selectable', '=', True),
+            '|',
+                ('requires_allocation', '=', False),
+                ('has_valid_allocation', '=', True),
+        ])
+
+    @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
         defaults = self._default_get_request_dates(defaults)
         if self.env.context.get('work_entry_type_display_name', True) and 'work_entry_type_id' in fields and not defaults.get('work_entry_type_id'):
-            employee = defaults.get('employee_id')
-            country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
-            domain = [
-                ('country_id', '=', country.id),
-                ('time_off_selectable', '=', True),
-                '|',
-                    ('requires_allocation', '=', False),
-                    ('has_valid_allocation', '=', True)
-            ]
             defaults['work_entry_type_id'] = False
-            work_entry_types = self.env['hr.work.entry.type'].search(domain, order='sequence')
+            work_entry_types = self.env['hr.work.entry.type'].search(
+                self._get_default_work_entry_type_domain(defaults), order='sequence')
             selected_work_entry_type = next(
                 (
                     work_entry_type for work_entry_type in work_entry_types
