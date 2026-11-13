@@ -34,6 +34,32 @@ class StockMove(models.Model):
             )
         )
 
+<<<<<<< 1421ba92d4811c6cb09545a6e55d3b09c1f5c103
+||||||| ab175e36cb757f6e8f6b2cb8fd61ca756628b36c
+    def _is_resupply_dropship(self):
+        subcontracting_path = self.partner_id.property_stock_subcontractor.parent_path
+        return bool(
+            subcontracting_path
+            and subcontracting_path in self.location_dest_id.parent_path
+            and self.location_id.usage == "supplier"
+        )
+
+=======
+    def _is_resupply_dropship(self):
+        subcontracting_path = self.partner_id.property_stock_subcontractor.parent_path
+        return bool(
+            subcontracting_path
+            and subcontracting_path in self.location_dest_id.parent_path
+            and self.location_id.usage == "supplier"
+        )
+
+    def _is_resupply_dropship_of_dropshipped_production(self):
+        """ Whether this component feeds a subcontracting production whose finished product is
+        itself dropshipped from the subcontractor to a customer, i.e. never enters the stock. """
+        productions = self.move_dest_ids.raw_material_production_id
+        return any(m._is_dropshipped() for m in productions.move_finished_ids.move_dest_ids)
+
+>>>>>>> 472320b00692d0262b3b8362a8e7b21aadf12673
     def _is_dropshipped_returned(self):
         res = super()._is_dropshipped_returned()
         return res or (

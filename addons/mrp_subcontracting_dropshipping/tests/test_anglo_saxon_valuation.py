@@ -294,3 +294,97 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         self.assertEqual(avco_product_2.standard_price, 0)
         for move in dropship_transfer.move_ids:
             self.assertEqual(move._get_value(), 400)
+<<<<<<< 1421ba92d4811c6cb09545a6e55d3b09c1f5c103
+||||||| ab175e36cb757f6e8f6b2cb8fd61ca756628b36c
+
+    def test_resupply_dropship_bill_accounts(self):
+        """
+        A component dropshipped by its vendor to the subcontractor lands in the valued
+        subcontracting location: its bill must hit the stock valuation account, unless
+        the component is not storable.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto.id,
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id})],
+        })
+        accounts = self.product_b.product_tmpl_id.get_product_accounts()
+        for is_storable, account in [(True, accounts['stock_valuation']), (False, accounts['expense'])]:
+            self.product_b.is_storable = is_storable
+            self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({'product_id': self.product_a.id})],
+            }).button_confirm()
+            resupply_po = self.env['purchase.order'].search([
+                ('product_id', '=', self.product_b.id),
+                ('state', '=', 'draft'),
+            ])
+            resupply_po.button_confirm()
+            resupply_po.picking_ids.button_validate()
+            resupply_po.action_create_invoice()
+            self.assertEqual(resupply_po.invoice_ids.invoice_line_ids.account_id, account)
+=======
+
+    def test_resupply_dropship_bill_accounts(self):
+        """
+        A component dropshipped by its vendor to the subcontractor lands in the valued
+        subcontracting location: its bill must hit the stock valuation account, unless
+        the component is not storable.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto.id,
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id})],
+        })
+        accounts = self.product_b.product_tmpl_id.get_product_accounts()
+        for is_storable, account in [(True, accounts['stock_valuation']), (False, accounts['expense'])]:
+            self.product_b.is_storable = is_storable
+            self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({'product_id': self.product_a.id})],
+            }).button_confirm()
+            resupply_po = self.env['purchase.order'].search([
+                ('product_id', '=', self.product_b.id),
+                ('state', '=', 'draft'),
+            ])
+            resupply_po.button_confirm()
+            resupply_po.picking_ids.button_validate()
+            resupply_po.action_create_invoice()
+            self.assertEqual(resupply_po.invoice_ids.invoice_line_ids.account_id, account)
+
+    def test_resupply_dropship_bill_account_subcontracted_product_dropshipped(self):
+        """
+        A component dropshipped by its vendor to the subcontractor, for a subcontracted product
+        that is itself dropshipped from the subcontractor to a customer: the finished product
+        never enters the stock, so, as for any dropship, the component bill is expensed.
+        Capitalizing it would leave the component value in stock valuation with no stock.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto.id,
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id})],
+        })
+        self.product_a.categ_id = self.categ_avco_auto
+        dropship_picking_type = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('default_location_src_id.usage', '=', 'supplier'),
+            ('default_location_dest_id.usage', '=', 'customer'),
+        ], limit=1, order='sequence')
+        self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'picking_type_id': dropship_picking_type.id,
+            'dest_address_id': self.env['res.partner'].create({'name': 'Customer'}).id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        }).button_confirm()
+        resupply_po = self.env['purchase.order'].search([
+            ('product_id', '=', self.product_b.id),
+            ('state', '=', 'draft'),
+        ])
+        resupply_po.button_confirm()
+        resupply_po.picking_ids.button_validate()
+        resupply_po.action_create_invoice()
+        self.assertEqual(
+            resupply_po.invoice_ids.invoice_line_ids.account_id,
+            self.product_b.product_tmpl_id.get_product_accounts()['expense'],
+        )
+>>>>>>> 472320b00692d0262b3b8362a8e7b21aadf12673
