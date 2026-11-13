@@ -800,6 +800,7 @@ class IrQWeb(models.AbstractModel):
 
         code_lines = ['code = None']
         code_lines.append(f'template = {(document if isinstance(template, etree._Element) else template)!r}')
+        code_lines.append('_qweb_template = template')
         code_lines.append('template_functions = {}')
 
         for lines in compile_context['template_functions'].values():
@@ -2386,8 +2387,10 @@ class IrQWeb(models.AbstractModel):
                 except QWebException:
                     raise
                 except Exception as e:
+                    if isinstance(e, TransactionRollbackError):
+                        raise
                     raise QWebException("Error while render the template",
-                        self, template, ref={compile_context['ref']!r}, code=code) from e
+                        self, _qweb_template, ref={compile_context['ref']!r}, code=code) from e
             """, 1))
         compile_context['template_functions'][def_name] = def_code
 
