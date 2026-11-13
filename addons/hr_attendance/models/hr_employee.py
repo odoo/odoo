@@ -311,6 +311,57 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
+    def _get_attendance_tolerance_intervals(self, date_from, date_to):
+        """Return the planned work of the employee between two datetimes, the reference of the
+        check-in/out tolerance: the working schedule, unless it is flexible. Overridden to use
+        the planning shifts of the employee.
+
+        :param datetime.datetime date_from: timezone-aware start
+        :param datetime.datetime date_to: timezone-aware end
+        :return: the planned work as ``(start, stop)`` timezone-aware datetimes
+        :rtype: list[tuple]
+        """
+        self.ensure_one()
+        version = self.sudo()._get_version((date_from + (date_to - date_from) / 2).date())
+        if not version or version._is_flexible():
+            return []
+        return [(start, stop) for start, stop, _attendance in self._get_expected_attendances(date_from, date_to)]
+
+    def _get_attendance_tolerance_time(self, action_date, check):
+        """Return the time to record for a check-in or a check-out of the employee.
+
+        With the check-in/out tolerance of the company, a time close enough to the start (check-in)
+        or the end (check-out) of the planned work is recorded at that planned time, see
+        :meth:`_get_attendance_tolerance_intervals`. Otherwise the time is kept as it is.
+
+        :param datetime.datetime action_date: naive UTC time of the check-in or the check-out
+        :param str check: ``'in'`` or ``'out'``
+        :return: naive UTC time to record
+        :rtype: datetime.datetime
+        """
+        self.ensure_one()
+        company = self.company_id
+        if not company.attendance_tolerance:
+            return action_date
+        if check == 'in':
+            before, after = company.attendance_tolerance_early_check_in, company.attendance_tolerance_late_check_in
+        else:
+            before, after = company.attendance_tolerance_early_check_out, company.attendance_tolerance_late_check_out
+        if before <= 0 and after <= 0:
+            return action_date
+        moment = action_date.replace(tzinfo=datetime.UTC)
+        intervals = self._get_attendance_tolerance_intervals(
+            moment - datetime.timedelta(days=1), moment + datetime.timedelta(days=1))
+        planned_times = [start if check == 'in' else stop for start, stop in intervals]
+        candidates = [
+            planned for planned in planned_times
+            if planned - datetime.timedelta(minutes=max(before, 0)) <= moment <= planned + datetime.timedelta(minutes=max(after, 0))
+        ]
+        if not candidates:
+            return action_date
+        planned = min(candidates, key=lambda planned: abs(planned - moment))
+        return planned.astimezone(datetime.UTC).replace(tzinfo=None)
+
     def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
         """Check the employee in or out, now.
 
@@ -337,6 +388,10 @@ class HrEmployee(models.Model):
                 'employee_id': self.id,
                 'check_in': action_date,
             }
+            check_in = self._get_attendance_tolerance_time(action_date, 'in')
+            # An early arrival is only moved to the planned time at the check-out: the attendance is open until then
+            if check_in < action_date:
+                vals['check_in'] = check_in
             if geo_information:
                 vals.update({'in_%s' % key: geo_information[key] for key in geo_information})
 
@@ -371,15 +426,18 @@ class HrEmployee(models.Model):
                 if self.env.context.get('is_from_systray_check_in_out', False):  # throw user error if user tries to checkout from systray.
                     raise exceptions.UserError(self.env._("You've already checked in."))
                 return notification  # no need to checkout the user if single checkin enabled.
+            out_vals = {'check_out': action_date}
+            check_in = attendance.check_in
+            # An early arrival, recorded at the planned time once the attendance is closed
+            planned_check_in = self._get_attendance_tolerance_time(check_in, 'in')
+            if check_in < planned_check_in < action_date:
+                out_vals['check_in'] = check_in = planned_check_in
+            check_out = self._get_attendance_tolerance_time(action_date, 'out')
+            if check_out != action_date and check_out > check_in:
+                out_vals['check_out'] = check_out
             if geo_information:
-                attendance.write({
-                    'check_out': action_date,
-                    **{'out_%s' % key: geo_information[key] for key in geo_information}
-                })
-            else:
-                attendance.write({
-                    'check_out': action_date
-                })
+                out_vals.update({'out_%s' % key: geo_information[key] for key in geo_information})
+            attendance.write(out_vals)
             self._notify_employee_presence_status()
         else:
             raise exceptions.UserError(_(
