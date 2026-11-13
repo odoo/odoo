@@ -129,9 +129,10 @@ def expand_ids(id0, ids):
 
 class PrefetchRelational(Reversible):  # noqa: PLW1641
     """ A prefetch object for the values of a relational field. """
-    __slots__ = ('_field', '_records')
+    __slots__ = ('_fallback', '_field', '_records')
 
-    def __init__(self, field, records):
+    def __init__(self, field, records, fallback=()):
+        self._fallback = fallback
         self._field = field
         self._records = records
 
@@ -147,6 +148,9 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
 
     def __iter__(self):
         field_cache = self._field._get_cache(self._records.env)
+        if not field_cache:
+            yield from self._fallback
+            return
         if self._field.type == 'many2one':
             for id_ in self._records._prefetch_ids:
                 if (coid := field_cache.get(id_)) is not None:
@@ -158,6 +162,9 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
 
     def __reversed__(self):
         field_cache = self._field._get_cache(self._records.env)
+        if not field_cache:
+            yield from self._fallback
+            return
         if self._field.type == 'many2one':
             for id_ in reversed(self._records._prefetch_ids):
                 if (coid := field_cache.get(id_)) is not None:
