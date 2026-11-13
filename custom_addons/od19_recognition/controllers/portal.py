@@ -10,6 +10,16 @@ RECOGNITION_SUMMARY_CACHE = {}
 RECOGNITION_SUMMARY_TTL = 60
 
 
+def _od19_optional_int(value):
+    """Best-effort int conversion for query-string values (never raises)."""
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
 class Od19RecognitionPortal(http.Controller):
 
     # ------------------------------------------------------------------
@@ -22,10 +32,15 @@ class Od19RecognitionPortal(http.Controller):
         website=True,
         sitemap=False,
     )
-    def my_recognition(self, given=None, error=None, **kwargs):
+    def my_recognition(self, given=None, error=None, recipient_id=None, badge_id=None, **kwargs):
         return request.render(
             "od19_recognition.portal_recognition_page",
-            self._od19_page_data(given=given, error=error),
+            self._od19_page_data(
+                given=given,
+                error=error,
+                recipient_id=recipient_id,
+                badge_id=badge_id,
+            ),
         )
 
     # ------------------------------------------------------------------
@@ -116,10 +131,12 @@ class Od19RecognitionPortal(http.Controller):
         feed = self._od19_feed(limit=5)
         return {"feed": feed, "celebrations": self._od19_celebrations()}
 
-    def _od19_page_data(self, given=None, error=None):
+    def _od19_page_data(self, given=None, error=None, recipient_id=None, badge_id=None):
         return {
             "given": given,
             "error": error,
+            "prefill_recipient_id": _od19_optional_int(recipient_id),
+            "prefill_badge_id": _od19_optional_int(badge_id),
             "feed": self._od19_feed(limit=30),
             "celebrations": self._od19_celebrations(),
             "employees": request.env["hr.employee"]
@@ -165,9 +182,17 @@ class Od19RecognitionPortal(http.Controller):
             for record in records
         ]
 
+    def _od19_celebration_badge_id(self, xmlid):
+        badge = request.env.ref(
+            "od19_recognition.%s" % xmlid, raise_if_not_found=False
+        )
+        return badge.id if badge else False
+
     def _od19_celebrations(self):
         """Birthdays (only if shared) and work anniversaries for this month."""
         today = fields.Date.context_today(request.env.user)
+        birthday_badge = self._od19_celebration_badge_id("badge_birthday")
+        anniversary_badge = self._od19_celebration_badge_id("badge_anniversary")
         brothers = request.env["hr.employee"].sudo().search(
             [("user_id", "!=", False), ("company_id", "in", request.env.companies.ids)]
         )
@@ -186,6 +211,7 @@ class Od19RecognitionPortal(http.Controller):
                         "employee_id": employee.id,
                         "name": employee.name,
                         "day": employee.birthday.day,
+                        "badge_id": birthday_badge,
                     }
                 )
             start = employee.contract_date_start or employee.date_start
@@ -196,6 +222,7 @@ class Od19RecognitionPortal(http.Controller):
                         "name": employee.name,
                         "day": start.day,
                         "years": today.year - start.year,
+                        "badge_id": anniversary_badge,
                     }
                 )
         return {"birthdays": birthdays, "anniversaries": anniversaries}

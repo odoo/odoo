@@ -59,7 +59,7 @@
                                     <select name="recipient_id" class="form-control" required="required">
                                         <option value="">-- เลือกเพื่อนร่วมงาน --</option>
                                         <t t-foreach="employees" t-as="emp">
-                                            <option t-att-value="emp.id" t-esc="emp.name"/>
+                                            <option t-att-value="emp.id" t-att-selected="'selected' if prefill_recipient_id and prefill_recipient_id == emp.id else None" t-esc="emp.name"/>
                                         </t>
                                     </select>
                                 </div>
@@ -68,7 +68,7 @@
                                     <select name="badge_id" class="form-control">
                                         <option value="">-- ไม่ระบุ --</option>
                                         <t t-foreach="badges" t-as="badge">
-                                            <option t-att-value="badge.id" t-esc="badge.name"/>
+                                            <option t-att-value="badge.id" t-att-selected="'selected' if prefill_badge_id and prefill_badge_id == badge.id else None" t-esc="badge.name"/>
                                         </t>
                                     </select>
                                 </div>
@@ -94,7 +94,7 @@
                                 <div class="od19-celebration-title">วันเกิด</div>
                                 <ul class="list-unstyled mb-2">
                                     <t t-foreach="celebrations['birthdays']" t-as="b">
-                                        <li><i class="fa fa-birthday-cake me-1" style="color:#e91e63;"/><span t-esc="b['name']"/> · วันที่ <span t-esc="b['day']"/></li>
+                                        <li><i class="fa fa-birthday-cake me-1" style="color:#e91e63;"/><span t-esc="b['name']"/> · วันที่ <span t-esc="b['day']"/><a class="od19-celebration-greet" t-attf-href="/my/recognition?recipient_id=#{b['employee_id']}&amp;badge_id=#{b['badge_id'] or ''}">อวยพร</a></li>
                                     </t>
                                 </ul>
                             </t>
@@ -102,7 +102,7 @@
                                 <div class="od19-celebration-title">ครบรอบการทำงาน</div>
                                 <ul class="list-unstyled mb-0">
                                     <t t-foreach="celebrations['anniversaries']" t-as="a">
-                                        <li><i class="fa fa-trophy me-1" style="color:var(--od19-secondary);"/><span t-esc="a['name']"/> · <span t-esc="a['years']"/> ปี</li>
+                                        <li><i class="fa fa-trophy me-1" style="color:var(--od19-secondary);"/><span t-esc="a['name']"/> · <span t-esc="a['years']"/> ปี<a class="od19-celebration-greet" t-attf-href="/my/recognition?recipient_id=#{a['employee_id']}&amp;badge_id=#{a['badge_id'] or ''}">อวยพร</a></li>
                                     </t>
                                 </ul>
                             </t>

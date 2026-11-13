@@ -27,14 +27,19 @@
         }).join('');
     }
 
+    function greetHref(employeeId, badgeId) {
+        return '/my/recognition?recipient_id=' + encodeURIComponent(employeeId === null || employeeId === undefined ? '' : employeeId) +
+            '&amp;badge_id=' + encodeURIComponent(badgeId === null || badgeId === undefined ? '' : badgeId);
+    }
+
     function renderCelebrations(container, celebrations) {
         if (!container || !celebrations) return;
         var parts = [];
         (celebrations.birthdays || []).forEach(function (b) {
-            parts.push('<span class="od19-celebration-pill"><i class="fa fa-birthday-cake me-1" style="color:#e91e63;"></i>' + esc(b.name) + '</span>');
+            parts.push('<a class="od19-celebration-pill" href="' + greetHref(b.employee_id, b.badge_id) + '"><i class="fa fa-birthday-cake me-1" style="color:#e91e63;"></i>' + esc(b.name) + '</a>');
         });
         (celebrations.anniversaries || []).forEach(function (a) {
-            parts.push('<span class="od19-celebration-pill"><i class="fa fa-trophy me-1" style="color:#f39200;"></i>' + esc(a.name) + ' ' + esc(a.years) + ' ปี</span>');
+            parts.push('<a class="od19-celebration-pill" href="' + greetHref(a.employee_id, a.badge_id) + '"><i class="fa fa-trophy me-1" style="color:#f39200;"></i>' + esc(a.name) + ' ' + esc(a.years) + ' ปี</a>');
         });
         if (parts.length) {
             container.innerHTML = '<div class="od19-celebration-title">เดือนนี้</div>' + parts.join('');

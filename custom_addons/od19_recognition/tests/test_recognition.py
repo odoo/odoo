@@ -1,4 +1,4 @@
-from odoo import Command, http
+from odoo import Command, fields, http
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, TransactionCase, tagged
 
@@ -357,3 +357,48 @@ class TestRecognitionInjection(HttpCase):
             "/od19_recognition/static/src/js/od19_recognition_wall.js", urls
         )
         self.assertIn("/od19_recognition/static/src/css/od19_recognition.css", urls)
+
+    def test_birthday_greet_link_prefilled(self):
+        today = fields.Date.context_today(self.env.user)
+        colleague_user = self.env["res.users"].create(
+            {
+                "name": "Birthday Colleague",
+                "login": "birthday_colleague",
+                "password": "birthday_colleague",
+                "group_ids": [Command.link(self.env.ref("base.group_user").id)],
+            }
+        )
+        colleague = self.env["hr.employee"].create(
+            {
+                "name": "Birthday Colleague",
+                "user_id": colleague_user.id,
+                "birthday": today.replace(day=15),
+                "birthday_public_display": True,
+            }
+        )
+        self.authenticate("wall_tester", "wall_tester")
+        html = self.url_open("/my/recognition").text
+        self.assertIn("อวยพร", html)
+        self.assertIn("recipient_id=%s" % colleague.id, html)
+
+    def test_greet_prefill_marks_selected(self):
+        colleague_user = self.env["res.users"].create(
+            {
+                "name": "Prefill Colleague",
+                "login": "prefill_colleague",
+                "password": "prefill_colleague",
+                "group_ids": [Command.link(self.env.ref("base.group_user").id)],
+            }
+        )
+        colleague = self.env["hr.employee"].create(
+            {"name": "Prefill Colleague", "user_id": colleague_user.id}
+        )
+        badge = self.env.ref("od19_recognition.badge_birthday")
+        self.authenticate("wall_tester", "wall_tester")
+        response = self.url_open(
+            "/my/recognition?recipient_id=%s&badge_id=%s" % (colleague.id, badge.id)
+        )
+        self.assertEqual(response.status_code, 200)
+        html = response.text
+        self.assertIn('value="%s" selected="selected"' % colleague.id, html)
+        self.assertIn('value="%s" selected="selected"' % badge.id, html)
