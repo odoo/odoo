@@ -131,3 +131,90 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+const brokenLinkRow = (label) =>
+    `.oe_seo_configuration .row.align-items-center:has(label[title='${label}'])`;
+
+const mockLinkChecks = () => [
+    {
+        content: "Mock the link checks, the test server refuses requests without session",
+        trigger: "body",
+        run() {
+            const fetch = window.fetch;
+            window.fetch = (url, options) => {
+                if (options?.credentials !== "omit") {
+                    return fetch(url, options);
+                }
+                const { pathname } = new URL(url, window.location.origin);
+                const status = pathname.startsWith("/broken") ? 404 : 200;
+                return Promise.resolve(new Response("", { status }));
+            };
+        },
+    },
+];
+
+registerWebsitePreviewTour(
+    "seo_broken_links_multilang",
+    // The broken links and their French translation are set up server side.
+    {},
+    () => [
+        ...mockLinkChecks(),
+        ...openSeoModal(),
+        {
+            content: "The broken links are checked on the French page too",
+            trigger: `${brokenLinkRow("lien texte")} input.is-invalid`,
+        },
+        {
+            content: "Only the broken links are listed: the text link and the image link",
+            trigger: ".oe_seo_configuration",
+            run() {
+                const rows = this.anchor.querySelectorAll(".row.align-items-center:has(.btn-danger)");
+                if (rows.length !== 2) {
+                    throw new Error(`Expected 2 broken links, found ${rows.length}`);
+                }
+            },
+        },
+        {
+            content: "The stored href is proposed, not the one of the French URL",
+            trigger: `${brokenLinkRow("lien texte")} input`,
+            run() {
+                if (this.anchor.value !== "/broken-text") {
+                    throw new Error(`Expected '/broken-text', got '${this.anchor.value}'`);
+                }
+            },
+        },
+        {
+            content: "Replace the text link",
+            trigger: `${brokenLinkRow("lien texte")} input`,
+            run: "edit /contactus",
+        },
+        {
+            content: "Check the new link",
+            trigger: `${brokenLinkRow("lien texte")} button.btn-primary:enabled`,
+            run: "click",
+        },
+        {
+            content: "The new link is valid",
+            trigger: `${brokenLinkRow("lien texte")} input.is-valid`,
+        },
+        {
+            content: "Remove the image link",
+            trigger:
+                ".oe_seo_configuration .row.align-items-center:has(label .oi[data-icon='image']) .btn-danger",
+            run: "click",
+        },
+        {
+            content: "The image link is not listed anymore",
+            trigger: ".oe_seo_configuration:not(:has(label .oi[data-icon='image']))",
+        },
+        ...saveSeoModal(),
+        {
+            content: "The text link is fixed on the French page",
+            trigger: ":iframe #wrap a[href='/contactus']:contains('lien texte')",
+        },
+        {
+            content: "The image link is removed but the image is kept",
+            trigger: ":iframe #wrap:not(:has(a[href='/broken-image'])) img[alt='alt image']",
+        },
+    ]
+);

@@ -812,9 +812,7 @@ export class SeoChecks extends Component {
             }
         });
         onMounted(() => {
-            if (this.props.isDefaultLang) {
-                this.getBrokenLinks();
-            }
+            this.getBrokenLinks();
         });
     }
 
@@ -1154,18 +1152,18 @@ export class OptimizeSEODialog extends Component {
             },
         });
 
-        const rpcCalls = [];
-        if (
-            seoContext.brokenLinks.some(
-                (link) => link.oldLink !== link.newLink || link.remove === true
-            )
-        ) {
-            rpcCalls.push(
-                rpc("/website/update_broken_links", {
-                    links: seoContext.brokenLinks,
-                })
-            );
+        const modifiedLinks = seoContext.brokenLinks.filter(
+            (link) => link.oldLink !== link.newLink || link.remove === true
+        );
+        if (modifiedLinks.length) {
+            // Not in parallel with the alt translations below: both write the
+            // same field of the same record, which would conflict.
+            await rpc("/website/update_broken_links", {
+                links: modifiedLinks,
+                lang: currentLang,
+            });
         }
+        const rpcCalls = [];
         if (!this.isDefaultLang) {
             const translationsByRecord = {};
             for (const img of seoContext.updatedAlts || []) {
