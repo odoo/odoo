@@ -61,6 +61,10 @@ class TestPhCommon(AccountTestInvoicingCommon):
             'parent_id': cls.partner_b.id,
         })
 
+    def _render(self, invoice, report='account.report_invoice'):
+        html, _ = self.env['ir.actions.report']._render_qweb_html(report, invoice.ids)
+        return html.decode()
+
     def _test_xlsx_file(self, file_content, expected_values):
         """ Takes in the binary content of a xlsx file and a dict of expected values.
         It will then parse the file in order to compare the values with the expected ones.

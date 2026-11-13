@@ -18,16 +18,13 @@ class TestCasInvoiceReport(TestPhCommon):
         cls.tax_withholding = chart_template.ref('l10n_ph_tax_sale_10_wi011')
         cls.tax_percentage = chart_template.ref('l10n_ph_tax_sale_3_pt010')
 
-    def _render(self, invoice, report='account.report_invoice'):
-        html, _ = self.env['ir.actions.report']._render_qweb_html(report, invoice.ids)
-        return html.decode()
-
     def test_commercial_invoice_uses_the_standard_document(self):
         invoice = self._create_invoice(
             partner_id=self.partner_a,
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
         html = self._render(invoice, report='l10n_ph.report_commercial_invoice')
+        self.assertNotIn('Sold To:', html)
         self.assertNotIn('Total Amount Due', html)
         self.assertNotIn('VATable Sales', html)
 
@@ -51,6 +48,7 @@ class TestCasInvoiceReport(TestPhCommon):
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
         html = self._render(invoice)
+        self.assertIn('Sold To:', html)
         self.assertIn('VAT REG TIN', html)
         self.assertNotIn('NON VAT REG TIN', html)
 
@@ -70,8 +68,9 @@ class TestCasInvoiceReport(TestPhCommon):
         self.assertEqual(invoice._l10n_ph_cas_get_invoice_report_values()['category'], 'mixed')
         html = self._render(invoice)
         self.assertIn('VATable Sales', html)
-        self.assertIn('Total Sales (VAT-Inclusive)', html)
+        self.assertIn('Gross Sales', html)
         self.assertIn('Add: VAT', html)
+        self.assertNotIn('VAT-Inclusive', html)
 
     def test_vat_exempt_invoice(self):
         invoice = self._create_invoice(
@@ -86,9 +85,9 @@ class TestCasInvoiceReport(TestPhCommon):
         html = self._render(invoice)
         self.assertIn('VAT-EXEMPT SALES', html)
         self.assertIn('NOT VALID FOR CLAIM', html)
+        self.assertIn('Gross Sales', html)
         self.assertIn('Less: Withholding Tax', html)
-        self.assertNotIn('VAT-Inclusive', html)
-        self.assertNotIn('Net of VAT', html)
+        self.assertNotIn('Add: VAT', html)
 
     def test_zero_rated_invoice(self):
         invoice = self._create_invoice(
@@ -101,9 +100,8 @@ class TestCasInvoiceReport(TestPhCommon):
         self.assertIn('ZERO-RATED SALES', html)
         self.assertNotIn('NOT VALID FOR CLAIM', html)
         # No 12% on the invoice: the VAT rows are reserved for mixed and pure VAT sales
-        self.assertNotIn('Amount: Net of VAT', html)
+        self.assertIn('Gross Sales', html)
         self.assertNotIn('Add: VAT', html)
-        self.assertNotIn('VAT-Inclusive', html)
 
     def test_non_vat_invoice(self):
         self.company_data['company'].l10n_ph_is_vat_registered = False
@@ -119,9 +117,7 @@ class TestCasInvoiceReport(TestPhCommon):
         html = self._render(invoice)
         self.assertIn('Sales Subject to Percentage Tax', html)
         self.assertIn('NOT VALID FOR CLAIM', html)
-        self.assertIn('Total Sales', html)
-        self.assertNotIn('VAT-Inclusive', html)
-        self.assertNotIn('Net of VAT', html)
+        self.assertIn('Gross Sales', html)
         self.assertNotIn('Add: VAT', html)
         self.assertNotIn('name="th_taxes"', html)
 
