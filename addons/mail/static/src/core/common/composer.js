@@ -715,8 +715,16 @@ export class Composer extends Component {
         return (
             !this.state.active ||
             (this.props.composer.isComposerHtmlEmpty && attachments.length === 0) ||
-            attachments.some(({ uploading }) => Boolean(uploading))
+            (!this.canPostWhileUploading && attachments.some(({ uploading }) => uploading))
         );
+    }
+
+    /**
+     * Whether the message can be posted before its attachments are uploaded, as
+     * a pending message waiting for them.
+     */
+    get canPostWhileUploading() {
+        return Boolean(this.thread?.channel) && !this.props.composer.message;
     }
 
     /**
@@ -989,7 +997,10 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
+        if (
+            !this.canPostWhileUploading &&
+            this.props.composer.attachments.some(({ uploading }) => uploading)
+        ) {
             this.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
@@ -1112,6 +1123,7 @@ export class Composer extends Component {
      * @property {boolean} isNote
      * @property {number} parentId
      * @property {integer[]} mentionedPartnerIds
+     * @property {Promise<import("models").Attachment|undefined>[]} [attachmentUploadPromises]
      */
 
     /**
@@ -1120,6 +1132,11 @@ export class Composer extends Component {
      * @param {extraData} extraData Message extra meta data info needed by other modules
      */
     async _sendMessage(value, postData, extraData) {
+        if (this.thread.channel && postData.attachments?.some(({ uploading }) => uploading)) {
+            // Before `post` overrides await: a finished upload forgets its promise.
+            postData.attachmentUploadPromises =
+                this.attachmentUploader.attachmentUploadService.detachUploads(postData.attachments);
+        }
         const post = this.thread.post.bind(this.thread, value, postData, extraData);
         this.deleteSavedContent();
         let message;

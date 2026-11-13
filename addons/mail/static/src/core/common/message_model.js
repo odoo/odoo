@@ -134,6 +134,10 @@ export class Message extends Record {
     postFailRedo = undefined;
     /** @type {string|undefined} */
     postFailMessage = undefined;
+    /** @type {Object|undefined} params to post this pending message (again) */
+    postParams = undefined;
+    /** @type {(message?: Message) => void} resolves the `post` of this pending message */
+    resolvePost = undefined;
     reactions = fields.Many("MessageReactions", { inverse: "message" });
     sortedReactions = this.computedShallowEqual(() =>
         [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence)
@@ -258,14 +262,14 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (this.isEmpty || !this.allowsEdition || this.poll) {
+        if (this.isEmpty || !this.allowsEdition || this.poll || this.isBeingPosted) {
             return false;
         }
         return this.message_type === "comment";
     }
 
     get deletable() {
-        if (this.isEmpty || !this.allowsEdition) {
+        if (this.isEmpty || !this.allowsEdition || this.isBeingPosted) {
             return false;
         }
         return this.message_type === "comment";
@@ -351,9 +355,46 @@ export class Message extends Record {
     );
 
     isPending = false;
+    /** Whether this pending message waits for its uploads or a previous message to be posted. */
+    isWaitingToPost = false;
+    storeAsUnposted = fields.One("Store", {
+        compute() {
+            return this.isWaitingToPost || this.hasPostFailed ? this.store : null;
+        },
+        eager: true,
+        inverse: "unpostedMessages",
+    });
+
+    /** Whether this pending message failed to be posted, to retry, edit or delete it. */
+    get hasPostFailed() {
+        return this.isPending && Boolean(this.postFailRedo);
+    }
+
+    /** Whether this pending message is on its way to the server. */
+    get isBeingPosted() {
+        return this.isPending && !this.postFailRedo;
+    }
+
+    /** Upload progress (between 0 and 1) of this pending message, if uploading */
+    uploadProgress = this.computed(() => {
+        if (!this.isPending || !this.attachment_ids.some(({ uploading }) => uploading)) {
+            return undefined;
+        }
+        const progressOf = ({ uploading, uploadProgress }) => (uploading ? uploadProgress ?? 0 : 1);
+        const weights = this.attachment_ids.map(({ file_size }) => file_size);
+        if (weights.some((weight) => !weight)) {
+            const progresses = this.attachment_ids.map(progressOf);
+            return progresses.reduce((sum, progress) => sum + progress, 0) / progresses.length;
+        }
+        const uploaded = this.attachment_ids.reduce(
+            (sum, attachment, index) => sum + progressOf(attachment) * weights[index],
+            0
+        );
+        return uploaded / weights.reduce((sum, weight) => sum + weight, 0);
+    });
 
     get hasActions() {
-        return !this.is_transient;
+        return !this.is_transient && !this.isBeingPosted;
     }
 
     /** Email or template-generated body, isolated from the webclient's styles. */
@@ -727,6 +768,10 @@ export class Message extends Record {
      *   `undefined` if the edit was a no-op (body and attachments unchanged).
      */
     async edit(body, attachments = [], { mentionedPartners = [], mentionedRoles = [] } = {}) {
+        if (this.hasPostFailed) {
+            await this.editFailedPost(body, attachments, { mentionedPartners, mentionedRoles });
+            return;
+        }
         const messageBodyEl = createElementWithContent("div", this.body);
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
@@ -742,20 +787,11 @@ export class Message extends Record {
         ) {
             return;
         }
-        const validMentions = this.store.getMentionsFromText(body, {
+        const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
+        const { updateData } = await this._prepareContentData(body, attachments, {
             mentionedPartners,
             mentionedRoles,
-            thread: this.thread,
         });
-        const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
-        const updateData = {
-            attachment_ids: attachments.map((attachment) => attachment.id),
-            attachment_tokens: attachments.map((attachment) => attachment.ownership_token),
-            body: await generateEmojisOnHtml(body),
-            partner_ids: validMentions?.partners?.map((partner) => partner.id),
-            role_ids: validMentions?.roles?.map((role) => role.id),
-        };
-        this.store.fillPartnersMentionToken(updateData);
         const data = await rpc("/mail/message/update_content", {
             message_id: this.id,
             update_data: updateData,
@@ -766,6 +802,59 @@ export class Message extends Record {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
         return data;
+    }
+
+    /**
+     * Change what this message that failed to be posted posts, then post it
+     * again.
+     *
+     * @param {string} body
+     * @param {import("models").Attachment[]} attachments
+     * @param {Object} param2
+     * @param {import("models").ResPartner[]} param2.mentionedPartners
+     * @param {import("models").ResRole[]} param2.mentionedRoles
+     */
+    async editFailedPost(body, attachments, { mentionedPartners, mentionedRoles }) {
+        const { updateData, specialMentions } = await this._prepareContentData(body, attachments, {
+            mentionedPartners,
+            mentionedRoles,
+        });
+        const removedAttachments = this.attachment_ids.filter((attachment) =>
+            attachment.notIn(attachments)
+        );
+        this.body = updateData.body;
+        this.attachment_ids = attachments;
+        Object.assign(this.postParams.post_data, updateData, {
+            special_mentions: specialMentions,
+        });
+        this.store.removeAttachments(removedAttachments);
+        this.thread.repostMessage(this);
+    }
+
+    /**
+     * @param {string} body
+     * @param {import("models").Attachment[]} attachments
+     * @param {Object} param2
+     * @param {import("models").ResPartner[]} param2.mentionedPartners
+     * @param {import("models").ResRole[]} param2.mentionedRoles
+     * @returns {Promise<{ updateData: Object, specialMentions: string[] }>} the data to save
+     *  this content, and its special mentions, which only a post takes
+     */
+    async _prepareContentData(body, attachments, { mentionedPartners, mentionedRoles }) {
+        const validMentions = this.store.getMentionsFromText(body, {
+            mentionedPartners,
+            mentionedRoles,
+            thread: this.thread,
+        });
+        const updateData = {
+            attachment_ids: attachments.map((attachment) => attachment.id),
+            attachment_tokens: attachments.map((attachment) => attachment.ownership_token),
+            body: await generateEmojisOnHtml(body),
+            partner_ids: validMentions?.partners?.map((partner) => partner.id),
+            role_ids: validMentions?.roles?.map((role) => role.id),
+        };
+        this.store.fillPartnersMentionToken(updateData);
+        return { updateData, specialMentions: validMentions?.specialMentions ?? [] };
     }
 
     get fromFullComposer() {
@@ -787,7 +876,11 @@ export class Message extends Record {
             attachments: [...this.attachment_ids],
             composerHtml: prepareBodyForEditing(this.body),
             isEditComposerVisible: true,
-            mentionedPartners: this.partner_ids,
+            mentionedPartners: this.isPending
+                ? (this.postParams.post_data.partner_ids ?? [])
+                      .map((id) => this.store["res.partner"].get(id))
+                      .filter(Boolean)
+                : this.partner_ids,
             mentionedRoles: validRoles,
             restoredFromFullComposer: this.fromFullComposer,
         };
@@ -893,7 +986,20 @@ export class Message extends Record {
         );
     }
 
+    delete() {
+        this.resolvePost?.();
+        super.delete();
+    }
+
     async remove({ removeFromThread = false } = {}) {
+        if (this.isPending) {
+            // Not posted: discard it, with the files uploaded for it.
+            const attachments = [...this.attachment_ids];
+            this.composer = undefined;
+            this.delete();
+            await this.store.removeAttachments(attachments);
+            return;
+        }
         let data;
         if (this.poll) {
             await rpc("/mail/poll/delete", { poll_id: this.poll.id });

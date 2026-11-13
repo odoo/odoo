@@ -234,6 +234,15 @@ export class MessageAction extends Action {
         this.threadFn = typeof thread === "function" ? thread : () => thread;
     }
 
+    /** @param {MessageActionParams} params */
+    _condition({ message }) {
+        if (message.isPending && !["delete", "edit"].includes(this.id)) {
+            // only editing and deleting apply to a message that is not posted
+            return false;
+        }
+        return super._condition(...arguments);
+    }
+
     get params() {
         const thread = this.threadFn();
         return Object.assign(super.params, {

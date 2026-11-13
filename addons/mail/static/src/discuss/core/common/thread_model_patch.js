@@ -194,7 +194,7 @@ const threadPatch = {
         return super.open(...arguments);
     },
     /** @param {string} body */
-    async post(body) {
+    async post(body, postData) {
         const textContent = createElementWithContent("div", body).textContent.trim();
         if (this.channel && textContent.startsWith("/")) {
             const [firstWord] = textContent.substring(1).split(/\s/);
@@ -204,6 +204,13 @@ const threadPatch = {
                 (!command.condition ||
                     command.condition({ store: this.store, channel: this.channel }))
             ) {
+                // Not posted: cancel the uploads `Composer._sendMessage` waits for.
+                const uploadService = this.store.env.services["mail.attachment_upload"];
+                uploadService.cancelUploads(
+                    (postData?.attachments ?? []).filter(({ id }) =>
+                        uploadService.uploadingAttachmentIds.has(id)
+                    )
+                );
                 await this.channel.executeCommand(command, textContent);
                 return;
             }
