@@ -38,7 +38,9 @@ class AccountMove(models.Model):
         elif period_type == "day":
             fiscal_day = company.fiscalyear_last_day
             fiscal_month = int(company.fiscalyear_last_month)
-            end = date(year, month, day)
+            # e.g. 29 February shifted to a non-leap year by a year offset
+            max_day = calendar.monthrange(year, month)[1]
+            end = date(year, month, min(day, max_day))
             start, _ = date_utils.get_fiscal_year(end, fiscal_day, fiscal_month)
         return start, end
 

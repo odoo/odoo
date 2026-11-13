@@ -538,6 +538,45 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             [{"credit": 555, "debit": 1055}],
         )
 
+    def test_day_date_period_leap_day_shifted_to_non_leap_year(self):
+        """ODOO.BALANCE("...", DATE(2024, 2, 29), -1) asks for "2023-02-29"."""
+        self.env["account.move"].create(
+            {
+                "company_id": self.company_data["company"].id,
+                "move_type": "entry",
+                "date": "2023-02-28",
+                "line_ids": [
+                    Command.create(
+                        {
+                            "name": "line_debit_c1",
+                            "account_id": self.account_revenue_c1.id,
+                            "debit": 228,
+                        },
+                    ),
+                    Command.create(
+                        {
+                            "name": "line_credit_c1",
+                            "account_id": self.account_expense_c1.id,
+                            "credit": 228,
+                        },
+                    ),
+                ],
+            },
+        )
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {"range_type": "day", "year": 2023, "month": 2, "day": 29},
+                        "codes": [self.account_revenue_c1.code],
+                        "company_id": None,
+                        "include_unposted": True,
+                    },
+                ],
+            ),
+            [{"credit": 0, "debit": 228}],
+        )
+
     def test_first_fiscal_day_date_period(self):
         self.company_data["company"].fiscalyear_last_day = 3
         self.company_data["company"].fiscalyear_last_month = "2"
