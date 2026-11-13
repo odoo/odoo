@@ -276,8 +276,11 @@ class IrActionsReport(models.Model):
         return bodies, res_ids, header, footer, specific_paperformat_args
 
     def _get_specific_paperformat_args(self, headers, root):
-        '''Get the margins set on the headers by the external layout, and the paperformat arguments
-        set on the root html tag. They are prioritized over paperformat-record arguments.
+        '''Get the margins set in the headers, and the paperformat arguments set on the root html
+        tag. They are prioritized over paperformat-record arguments.
+
+        A margin can be set on the header by the external layout, or on an element inside it by
+        the content that replaces the layout's own, such as a localized header.
 
         The headers only replace the default margins of the paperformat, so margins that were
         customized are kept. Documents printed together share their margins, so the largest one
@@ -287,9 +290,10 @@ class IrActionsReport(models.Model):
         paperformat = self.get_paperformat()
         if (paperformat.margin_top, paperformat.header_spacing, paperformat.margin_bottom) == DEFAULT_PAPERFORMAT_MARGINS:
             for header in headers:
-                for name in ('data-report-margin-top', 'data-report-header-spacing', 'data-report-margin-bottom'):
-                    if value := header.get(name):
-                        specific_paperformat_args[name] = max(value, specific_paperformat_args.get(name, value), key=float)
+                for node in header.iter(etree.Element):
+                    for name in ('data-report-margin-top', 'data-report-header-spacing', 'data-report-margin-bottom'):
+                        if value := node.get(name):
+                            specific_paperformat_args[name] = max(value, specific_paperformat_args.get(name, value), key=float)
         for name, value in root.items():
             if name.startswith('data-report-'):
                 specific_paperformat_args[name] = value
