@@ -1,3 +1,5 @@
+import { closestBlock } from "@html_editor/utils/blocks";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     Component,
     onWillDestroy,
@@ -141,18 +143,36 @@ export class EditorOverlay extends Component {
             this.lastSelection.rect ||
             range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
-            // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
-            // because if another mutation uses the target that is not observed, that mutation can never be applied
-            // again (when undo/redo and in collaboration).
-            this.props.shared.ignoreDOMMutations(() => {
-                const clonedRange = range.cloneRange();
-                const shadowCaret = doc.createTextNode("|");
-                clonedRange.insertNode(shadowCaret);
-                clonedRange.selectNode(shadowCaret);
-                rect = clonedRange.getBoundingClientRect();
-                shadowCaret.remove();
-                clonedRange.detach();
-            });
+            const clonedRange = range.cloneRange();
+            let targetRect;
+            // At this point in execution, the range is collapsed to a single point "between" nodes, and its coordinates are nullified.
+            // We seek the most accurate rect for overlay positionning calculations.
+            if (clonedRange.startOffset > 0) {
+                // If the selected point has a previous sibling, we extend the range to it and correct the resulting rect
+                clonedRange.setStart(clonedRange.startContainer, clonedRange.startOffset - 1);
+                targetRect = clonedRange.getBoundingClientRect();
+                rect = new DOMRect(
+                    targetRect.x + targetRect.width,
+                    targetRect.y,
+                    0,
+                    targetRect.height
+                );
+            } else {
+                // If the selected point is before the first child or has no siblings
+                //  we use the rect of the closest element, corrected by padding and border width.
+                const closestEl = closestBlock(selection.focusNode);
+                targetRect = closestEl.getBoundingClientRect();
+                const additionalPadding =
+                    this.props.editable.getAttribute("dir") !== "rtl"
+                        ? parseFloat(getComputedStyle(closestEl).paddingLeft) + closestEl.clientLeft
+                        : parseFloat(getComputedStyle(closestEl).paddingRight) + closestEl.clientRight;
+                rect = new DOMRect(
+                    targetRect.x + additionalPadding,
+                    targetRect.y,
+                    0,
+                    targetRect.height
+                );
+            }
         }
         // Html element with a patched getBoundingClientRect method. It
         // represents the range as a (HTMLElement) target for the usePosition
