@@ -192,7 +192,17 @@ export class TourAction {
                 if (doc.elementsFromPoint(ev.clientX, ev.clientY).includes(dropTarget)) {
                     return true;
                 }
+                // If the user did not drop on the target, do not continue
                 const rect = dropTarget.getBoundingClientRect();
+                const tolerance = 1;
+                if (
+                    ev.clientX < rect.left - tolerance ||
+                    ev.clientX > rect.right + tolerance ||
+                    ev.clientY < rect.top - tolerance ||
+                    ev.clientY > rect.bottom + tolerance
+                ) {
+                    return false;
+                }
                 const x = Math.min(Math.max(ev.clientX, rect.left + 1), rect.right - 1);
                 const y = Math.min(Math.max(ev.clientY, rect.top + 1), rect.bottom - 1);
                 return doc.elementsFromPoint(x, y).includes(dropTarget);

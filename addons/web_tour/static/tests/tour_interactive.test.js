@@ -1114,6 +1114,7 @@ test("failed drop goes back to the drag action", async () => {
         static template = xml`
             <div class="drag-src" style="width: 50px; height: 50px;">Drag</div>
             <div class="drop-zone" t-att-style="'width: 100px; height: 100px;' + (this.state.blocked ? 'pointer-events: none;' : '')">Zone</div>
+            <div class="other-zone" style="width: 100px; height: 100px;">Other</div>
             <button class="done w-100">Done</button>
         `;
         setup() {
@@ -1130,9 +1131,18 @@ test("failed drop goes back to the drag action", async () => {
     await dragActions.moveTo("button.done");
     await dragActions.drop();
     await waitUntil(() => pointerState.trigger === queryFirst(".drag-src"));
+    expect(".o_tour_pointer").toHaveCount(1);
 
+    // dropping on another visible element must not validate the step either
     state.blocked = false;
     await animationFrame();
+    dragActions = await contains(".drag-src").drag();
+    await waitUntil(() => pointerState.trigger === queryFirst(".drop-zone"));
+    await dragActions.moveTo(".other-zone");
+    await dragActions.drop();
+    await waitUntil(() => pointerState.trigger === queryFirst(".drag-src"));
+    expect(".o_tour_pointer").toHaveCount(1);
+
     dragActions = await contains(".drag-src").drag();
     await waitUntil(() => pointerState.trigger === queryFirst(".drop-zone"));
     await dragActions.moveTo(".drop-zone");
