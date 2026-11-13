@@ -42,6 +42,27 @@
                                 </div>
                             </div>
                         </setting>
+                        <setting string="Check-In/Out Tolerance" company_dependent="1" help="When registering time from the kiosk or the systray, a check-in or a check-out within the tolerance is recorded at the planned time: the planning shift if any, else the working schedule.">
+                            <field name="attendance_tolerance"/>
+                            <div invisible="not attendance_tolerance" class="mt-2">
+                                <div class="row">
+                                    <label for="attendance_tolerance_early_check_in" string="Early Arrivals" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_early_check_in" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                                <div class="row">
+                                    <label for="attendance_tolerance_late_check_in" string="Late Arrivals" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_late_check_in" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                                <div class="row">
+                                    <label for="attendance_tolerance_early_check_out" string="Early Departures" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_early_check_out" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                                <div class="row">
+                                    <label for="attendance_tolerance_late_check_out" string="Late Departures" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_late_check_out" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                            </div>
+                        </setting>
                         <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report. Does not apply to employees with a flexible working schedule.">
                             <field name="absence_management"/>
                         </setting>

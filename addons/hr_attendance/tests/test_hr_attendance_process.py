@@ -426,6 +426,72 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(att.worked_hours, 8)
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
 
+    def test_check_in_out_tolerance(self):
+        """ Within the tolerance, a check-in or a check-out is recorded at the planned time, the time of the
+        check-in stays the creation date of the attendance. Default tolerance: 15 minutes for an early arrival or
+        an early departure, none when late. """
+        self.company.attendance_tolerance = True
+        employee = self.employee
+
+        def last_attendance():
+            return self.env['hr.attendance'].search([('employee_id', '=', employee.id)], order='check_in desc', limit=1)
+        monday = datetime(2026, 11, 16, tzinfo=UTC)
+        intervals = employee._get_attendance_tolerance_intervals(monday, monday + timedelta(days=1))
+        self.assertTrue(intervals)
+        start = intervals[0][0].astimezone(UTC).replace(tzinfo=None)
+        stop = intervals[-1][1].astimezone(UTC).replace(tzinfo=None)
+
+        # Early arrival and early departure within the tolerance
+        with freeze_time(start - timedelta(minutes=10)):
+            employee._attendance_action_change()
+        attendance = last_attendance()
+        # The attendance is open from the time of the check-in, then recorded from the planned time once closed
+        self.assertEqual(attendance.check_in, start - timedelta(minutes=10))
+        self.assertEqual(employee.attendance_state, 'checked_in')
+        with freeze_time(stop - timedelta(minutes=5)):
+            employee._attendance_action_change()
+        self.assertEqual((attendance.check_in, attendance.check_out), (start, stop))
+
+        # Late arrival and late departure are not tolerated by default, nor an early arrival beyond the tolerance
+        tuesday_start, tuesday_stop = start + timedelta(days=1), stop + timedelta(days=1)
+        with freeze_time(tuesday_start + timedelta(minutes=2)):
+            employee._attendance_action_change()
+        attendance = last_attendance()
+        self.assertEqual(attendance.check_in, tuesday_start + timedelta(minutes=2))
+        with freeze_time(tuesday_stop + timedelta(minutes=3)):
+            employee._attendance_action_change()
+        self.assertEqual(attendance.check_out, tuesday_stop + timedelta(minutes=3))
+        wednesday_start = start + timedelta(days=2)
+        with freeze_time(wednesday_start - timedelta(minutes=20)):
+            employee._attendance_action_change()
+        self.assertEqual(last_attendance().check_in, wednesday_start - timedelta(minutes=20))
+
+        # A late arrival is tolerated once configured
+        self.company.attendance_tolerance_late_check_in = 5
+        with freeze_time(wednesday_start + timedelta(hours=2)):
+            employee._attendance_action_change()
+        thursday_start = start + timedelta(days=3)
+        with freeze_time(thursday_start + timedelta(minutes=4)):
+            employee._attendance_action_change()
+        self.assertEqual(last_attendance().check_in, thursday_start)
+
+        # Checked out before the planned time the check-in would be recorded at: the times are kept
+        friday_start = start + timedelta(days=4)
+        with freeze_time(thursday_start + timedelta(hours=2)):
+            employee._attendance_action_change()
+        with freeze_time(friday_start - timedelta(minutes=10)):
+            employee._attendance_action_change()
+        attendance = last_attendance()
+        with freeze_time(friday_start - timedelta(minutes=5)):
+            employee._attendance_action_change()
+        self.assertEqual(
+            (attendance.check_in, attendance.check_out),
+            (friday_start - timedelta(minutes=10), friday_start - timedelta(minutes=5)))
+
+        # Without the tolerance, the time of the check-in or the check-out is recorded
+        self.company.attendance_tolerance = False
+        self.assertEqual(employee._get_attendance_tolerance_time(friday_start - timedelta(minutes=5), 'in'), friday_start - timedelta(minutes=5))
+
 
 @tagged('attendance_process')
 class TestAbsenceDetectionCron(TransactionCase):
