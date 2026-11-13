@@ -3,6 +3,8 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { Plugin, usePlugin } from "@odoo/owl";
+import { services } from "@web/core/services";
 
 /**
  * Configuration depending on the granularity, using Luxon DateTime objects:
@@ -36,7 +38,7 @@ export const GRANULARITY_TABLE = {
     week: {
         startOf: (x) => x.startOf("week"),
         cycle: 1,
-        cyclePos: (x) => 1,
+        cyclePos: (_x) => 1,
     },
     month: {
         startOf: (x) => x.startOf("month"),
@@ -51,7 +53,7 @@ export const GRANULARITY_TABLE = {
     year: {
         startOf: (x) => x.startOf("year"),
         cycle: 1,
-        cyclePos: (x) => 1,
+        cyclePos: (_x) => 1,
     },
 };
 
@@ -66,7 +68,7 @@ export const GRANULARITY_TABLE = {
  */
 export class FillTemporalPeriod {
     /**
-     * This constructor is meant to be used only by the FillTemporalService (see below)
+     * This constructor is meant to be used only by the FillTemporalPlugin (see below)
      *
      * @param {string} modelName directly taken from model.loadParams.modelName.
      *                           this is the `res_model` from the action (i.e. `crm.lead`)
@@ -240,65 +242,78 @@ export class FillTemporalPeriod {
 }
 
 /**
- * fill_temporal Service
+ * fill_temporal plugin
  *
- * This service will be used to generate or retrieve fill_temporal periods
+ * This plugin will be used to generate or retrieve fill_temporal periods
  *
  * A specific fill_temporal period configuration will always refer to the same instance
  * unless forceRecompute is true
  */
-export const fillTemporalService = {
+export class FillTemporalPlugin extends Plugin {
+    /** @type {Record<string, Record<string, Record<string, FillTemporalPeriod>>>} */
+    #fillTemporalPeriods = {};
+
+    /**
+     * Get a fill_temporal period according to the configuration.
+     * The default initial fill_temporal period is the number of [granularity] from [start]
+     * to the end of the [cycle] reached after adding [minGroups]
+     * i.e. we are in october 2020 :
+     *      [start] = 2020-10-01
+     *      [granularity] = 'month',
+     *      [cycle] = 12 (one year)
+     *      [minGroups] = 4,
+     *      => fillTemporalPeriod = 15 months (until the end of december 2021)
+     * Once created, a fill_temporal period for a specific configuration will be stored
+     * until requested again. This allows to manipulate the period and store the changes
+     * to it. This also allows to keep the configuration when switching to another view
+     *
+     * @param {Object} configuration
+     * @param {string} configuration.modelName directly taken from model.loadParams.modelName.
+     *                             this is the `res_model` from the action (i.e. `crm.lead`)
+     * @param {Object} configuration.field a dictionary with keys "name" and "type".
+     * @param {string} configuration.field.name name of the field on which the fill_temporal should apply
+     *                              (i.e. 'date_deadline')
+     * @param {string} configuration.field.type date field type: 'date' or 'datetime'
+     * @param {string} configuration.granularity can either be : hour, day, week, month, quarter, year
+     * @param {number} [configuration.minGroups=4] optional minimal amount of desired groups
+     * @param {boolean} [configuration.forceRecompute=false] optional whether the fill_temporal period should be
+     *                                         reinstancied
+     * @returns {FillTemporalPeriod}
+     */
+    getFillTemporalPeriod(configuration) {
+        const { modelName, field, granularity, minGroups = 4, forceRecompute = false } = configuration;
+
+        if (!(modelName in this.#fillTemporalPeriods)) {
+            this.#fillTemporalPeriods[modelName] = {};
+        }
+        if (!(field.name in this.#fillTemporalPeriods[modelName])) {
+            this.#fillTemporalPeriods[modelName][field.name] = {};
+        }
+        if (!(granularity in this.#fillTemporalPeriods[modelName][field.name]) || forceRecompute) {
+            this.#fillTemporalPeriods[modelName][field.name][granularity] = new FillTemporalPeriod(
+                modelName,
+                field,
+                granularity,
+                minGroups
+            );
+        } else if (this.#fillTemporalPeriods[modelName][field.name][granularity].minGroups != minGroups) {
+            this.#fillTemporalPeriods[modelName][field.name][granularity].setMinGroups(minGroups);
+        }
+        return this.#fillTemporalPeriods[modelName][field.name][granularity];
+    }
+}
+
+services.add(FillTemporalPlugin);
+
+/**
+ * ----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * Temporary - to remove when all uses of the "fillTemporalService" service are
+ * removed
+ * ----------------------------------------------------------------------------
+ */
+registry.category("services").add("fillTemporalService", {
     start() {
-        const _fillTemporalPeriods = {};
-
-        /**
-         * Get a fill_temporal period according to the configuration.
-         * The default initial fill_temporal period is the number of [granularity] from [start]
-         * to the end of the [cycle] reached after adding [minGroups]
-         * i.e. we are in october 2020 :
-         *      [start] = 2020-10-01
-         *      [granularity] = 'month',
-         *      [cycle] = 12 (one year)
-         *      [minGroups] = 4,
-         *      => fillTemporalPeriod = 15 months (until the end of december 2021)
-         * Once created, a fill_temporal period for a specific configuration will be stored
-         * until requested again. This allows to manipulate the period and store the changes
-         * to it. This also allows to keep the configuration when switching to another view
-         *
-         * @param {Object} configuration
-         * @param {string} [modelName] directly taken from model.loadParams.modelName.
-         *                             this is the `res_model` from the action (i.e. `crm.lead`)
-         * @param {Object} [field] a dictionary with keys "name" and "type".
-         * @param {string} [field.name] name of the field on which the fill_temporal should apply
-         *                              (i.e. 'date_deadline')
-         * @param {string} [field.type] date field type: 'date' or 'datetime'
-         * @param {string} [granularity] can either be : hour, day, week, month, quarter, year
-         * @param {integer} [minGroups=4] optional minimal amount of desired groups
-         * @param {boolean} [forceRecompute=false] optional whether the fill_temporal period should be
-         *                                         reinstancied
-         * @returns {FillTemporalPeriod}
-         */
-        const getFillTemporalPeriod = ({ modelName, field, granularity, minGroups = 4, forceRecompute = false }) => {
-            if (!(modelName in _fillTemporalPeriods)) {
-                _fillTemporalPeriods[modelName] = {};
-            }
-            if (!(field.name in _fillTemporalPeriods[modelName])) {
-                _fillTemporalPeriods[modelName][field.name] = {};
-            }
-            if (!(granularity in _fillTemporalPeriods[modelName][field.name]) || forceRecompute) {
-                _fillTemporalPeriods[modelName][field.name][granularity] = new FillTemporalPeriod(
-                    modelName,
-                    field,
-                    granularity,
-                    minGroups
-                );
-            } else if (_fillTemporalPeriods[modelName][field.name][granularity].minGroups != minGroups) {
-                _fillTemporalPeriods[modelName][field.name][granularity].setMinGroups(minGroups);
-            }
-            return _fillTemporalPeriods[modelName][field.name][granularity];
-        };
-        return { getFillTemporalPeriod };
+        return usePlugin(FillTemporalPlugin);
     },
-};
-
-registry.category("services").add("fillTemporalService", fillTemporalService);
+});
