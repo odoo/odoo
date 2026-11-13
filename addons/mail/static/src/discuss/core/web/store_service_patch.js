@@ -2,6 +2,7 @@ import { Store } from "@mail/core/common/store_plugin";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { compareDatetime } from "@mail/utils/common/misc";
 
+import { getPopoverForTarget } from "@web/core/popover/popover";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
@@ -24,12 +25,17 @@ const StorePatch = {
     },
     /**
      * @override
-     * @param {MouseEvent} ev
-     * @param {number} id
+     * @param {HTMLAnchorElement} link
+     * @param {import("models").Message} [message]
      */
-    onClickPartnerMention(ev, id) {
-        this.popover.add(ev.target, AvatarCard, {
-            id,
+    onClickPartnerMention(link, message) {
+        // a click inside the mention does not close its card
+        if (getPopoverForTarget(link)) {
+            return;
+        }
+        this.popover.add(link, AvatarCard, {
+            id: Number(link.dataset.oeId),
+            message,
             model: "res.partner",
         });
     },

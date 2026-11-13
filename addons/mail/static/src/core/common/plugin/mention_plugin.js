@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { generatePartnerMentionElement } from "@mail/utils/common/format";
+import { generatePartnerMentionElement, PARTNER_MENTION_SELECTOR } from "@mail/utils/common/format";
 
 export const MENTION_SELECTOR = "a.o_mail_redirect, a.o-discuss-mention";
 /** Fields needed to know whether a record can be mentioned. */
@@ -193,9 +193,7 @@ export class MentionPlugin extends Plugin {
      */
     syncPartnerMentions(getMention) {
         let hasChanged = false;
-        const elements = this.editable.querySelectorAll(
-            ".o_mail_redirect, .o-discuss-readonly-mention"
-        );
+        const elements = this.editable.querySelectorAll(PARTNER_MENTION_SELECTOR);
         for (const el of elements) {
             const mention = getMention(Number(el.dataset.oeId));
             if (mention && mention.readonly === (el.tagName === "A")) {

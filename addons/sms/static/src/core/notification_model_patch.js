@@ -4,6 +4,12 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Notification} */
 const notificationPatch = {
+    deliveryMessage() {
+        if (this.notification_type === "sms") {
+            return _t("Delivered via SMS");
+        }
+        return super.deliveryMessage();
+    },
     get failureMessage() {
         switch (this.failure_type) {
             case "sms_number_missing":

@@ -394,7 +394,7 @@ $o-mail-utilities: map-merge(
     }
 }
 
-a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed, a.o_record_redirect_transformed {
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed, a.o_record_redirect_transformed, .o-discuss-readonly-mention {
     user-select: none;
     border-radius: var(--o-bs-btn-border-radius-lg);
     padding: 0rem 0.25rem;
@@ -409,9 +409,52 @@ a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed, a.o_r
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
 }
 
-a.o-discuss-mention {
+a.o-discuss-mention, .o-discuss-readonly-mention {
     @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
     cursor: default !important;
+}
+
+@mixin o-partner-mention-variant($color, $text-color, $hover-text-color) {
+    @include o-mention-variant(
+        $background: rgba($color, .15),
+        $outline: rgba($color, .3),
+        $color: $text-color,
+        $hover-background: rgba($color, .25),
+        $hover-outline: rgba($color, .45),
+        $hover-color: $hover-text-color
+    );
+}
+
+$o-mail-partnerMention-padding-x: .5rem;
+
+.o_mail_redirect, .o-discuss-readonly-mention {
+    &.o-mail-partnerMention {
+        @include o-partner-mention-variant($gray-600, $gray-900, $gray-900);
+        border-radius: $border-radius-pill;
+        padding-inline: $o-mail-partnerMention-padding-x;
+    }
+    &.o-mail-partnerMention-sent {
+        @include o-partner-mention-variant($success, darken($success, 10%), darken($success, 15%));
+    }
+    &.o-mail-partnerMention-failed {
+        @include o-partner-mention-variant($danger, darken($danger, 10%), darken($danger, 15%));
+    }
+}
+
+// inline and still rendered, so that it stays in the text of the mention
+.o-mail-partnerMention-at {
+    font-size: 0;
+}
+
+.o-mail-partnerMention-avatar {
+    width: 1.25em;
+    height: 1.25em;
+    --o-mail-partnerMention-avatar-gap: calc((1lh - 1.25em) / 2);
+    // centered in the line: "middle" puts it on the x-height, against the bottom of the mention
+    margin-block: var(--o-mail-partnerMention-avatar-gap);
+    // same gap at the start, so that it follows the rounded end of the mention
+    margin-inline-start: calc(var(--o-mail-partnerMention-avatar-gap) - #{$o-mail-partnerMention-padding-x});
+    vertical-align: top;
 }
 
 .o-discuss-inCallIcon {
