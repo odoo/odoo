@@ -611,7 +611,8 @@ class TestPrivateReadGroup(common.TransactionCase):
         records = Model.create([
             {'datetime': False, 'value': 13},
             {'datetime': '1916-08-18 12:30:00', 'value': 1},
-            {'datetime': '1916-08-18 12:50:00', 'value': 3},
+            {'datetime': '1916-08-18 12:50:00', 'value': 2},
+            {'datetime': '1916-08-18 12:50:45', 'value': 1},
             {'datetime': '1916-08-19 01:30:00', 'value': 7},
             {'datetime': '1916-10-18 23:30:00', 'value': 5},
         ])
@@ -653,6 +654,31 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ),
                 (
                     fields.Datetime.to_datetime('1916-10-18 23:00:00'),
+                    5,
+                ),
+                (
+                    False,
+                    13,
+                ),
+            ],
+        )
+        self.assertEqual(
+            Model._read_group([('id', 'in', records.ids)], ['datetime:minute'], ['value:sum']),
+            [
+                (
+                    fields.Datetime.to_datetime('1916-08-18 12:30:00'),
+                    1,
+                ),
+                (
+                    fields.Datetime.to_datetime('1916-08-18 12:50:00'),
+                    3,
+                ),
+                (
+                    fields.Datetime.to_datetime('1916-08-19 01:30:00'),
+                    7,
+                ),
+                (
+                    fields.Datetime.to_datetime('1916-10-18 23:30:00'),
                     5,
                 ),
                 (
