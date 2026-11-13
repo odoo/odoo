@@ -1,6 +1,7 @@
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formatFloatTime } from "@web/views/fields/formatters";
+import { localization } from "@web/core/l10n/localization";
 import { parseTime } from "@web/core/l10n/time";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -48,17 +49,22 @@ export class EventSlotCalendarController extends CalendarController {
         const newEventStart = DateTime.min(earliestSlotStart, eventStartDatetime);
         const newEventEnd = DateTime.max(latestSlotEnd, eventEndDatetime);
         return await new Promise((resolve) => {
+            const timeFormat = localization.timeFormat.replace(":ss", "");
             this.dialogService.add(ConfirmationDialog, {
                 title: _t("Confirmation"),
                 body: _t(
                     "Adding these slots will automatically adjust the event's time range to include them.\n\n" +
-                    "From:\t%(start)s - %(end)s\n" +
-                    "To:\t\t%(new_start)s - %(new_end)s\n"
+                    "From:\t%(start_date)s, %(start_time)s - %(end_date)s, %(end_time)s\n" +
+                    "To:\t\t%(new_start_date)s, %(new_start_time)s - %(new_end_date)s, %(new_end_time)s\n"
                 , {
-                    start: eventStartDatetime.toLocaleString(DateTime.DATETIME_MED),
-                    end: eventEndDatetime.toLocaleString(DateTime.DATETIME_MED),
-                    new_start: newEventStart.toLocaleString(DateTime.DATETIME_MED),
-                    new_end: newEventEnd.toLocaleString(DateTime.DATETIME_MED),
+                    start_date: eventStartDatetime.toLocaleString(DateTime.DATE_MED),
+                    start_time: eventStartDatetime.toFormat(timeFormat),
+                    end_date: eventEndDatetime.toLocaleString(DateTime.DATE_MED),
+                    end_time: eventEndDatetime.toFormat(timeFormat),
+                    new_start_date: newEventStart.toLocaleString(DateTime.DATE_MED),
+                    new_start_time: newEventStart.toFormat(timeFormat),
+                    new_end_date: newEventEnd.toLocaleString(DateTime.DATE_MED),
+                    new_end_time: newEventEnd.toFormat(timeFormat),
                 }),
                 confirmLabel: _t("Update Event"),
                 confirm: async () => {

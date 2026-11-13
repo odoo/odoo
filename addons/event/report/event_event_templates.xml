@@ -214,17 +214,17 @@
                                         <i class="oi oi-2x oi-fw oi-filled me-2 mt-1" data-icon="calendar_today"/>
                                         <div t-if="attendee">
                                             <span t-field="attendee.event_begin_date" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/><br/>
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "hide_seconds": "true"}'/><br/>
                                             <span class="me-1">to</span><span t-field="attendee.event_end_date" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "format": "short"}'/>
+                                                t-options='{"widget": "datetime", "tz_name": event.date_tz, "hide_seconds": "true"}'/>
                                         </div>
                                         <div t-elif="event.is_one_day">
                                             <span t-field="event.date_begin" class="text-nowrap"
                                                 t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'/><br/>
                                             <span class="me-1">from</span><span t-field="event.date_begin" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
+                                                t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                                             <span class="me-1">to</span><span t-field="event.date_end" class="text-nowrap"
-                                                t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz, "format": "short"}'/>
+                                                t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
                                         </div>
                                         <div t-else="">
                                             <span t-field="event.date_begin" class="text-nowrap"
