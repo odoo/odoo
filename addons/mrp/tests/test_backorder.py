@@ -1212,6 +1212,41 @@ class TestMrpWorkorderBackorder(TransactionCase):
             {'state': 'cancel', 'qty_remaining': 0.0, 'duration': 0.0}
         ])
 
+    def test_mrp_backorder_cancelled_operation_reset_and_done(self):
+        """
+        An operation fully processed in the original MO is cancelled in the
+        backorder. Setting it back to 'To Do' and marking it as done (or marking
+        the backorder as done) should not crash.
+        """
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.picking_type_id.create_backorder = 'always'
+        mo.action_confirm()
+        op_1, op_2 = mo.workorder_ids
+        with Form(mo) as fmo:
+            fmo.qty_producing = 10
+        op_1.button_finish()
+        with Form(mo) as fmo:
+            fmo.qty_producing = 4
+        op_2.button_finish()
+        mo.button_mark_done()
+        backorder = mo.production_group_id.production_ids - mo
+        bo_op_1, bo_op_2 = backorder.workorder_ids
+        self.assertEqual(bo_op_1.state, 'cancel')
+
+        bo_op_1.set_state('ready')
+        bo_op_1.set_state('done')
+        self.assertRecordValues(bo_op_1, [{'state': 'done', 'qty_produced': 6.0}])
+
+        backorder.button_mark_done()
+        self.assertEqual(backorder.state, 'done')
+        self.assertEqual(bo_op_2.state, 'done')
+
     def test_kit_bom_order_splitting(self):
         self.env.ref('base.group_user').implied_ids += (
             self.env.ref('mrp.group_mrp_routings')
