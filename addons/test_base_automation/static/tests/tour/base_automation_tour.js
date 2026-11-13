@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Open update select",
-            trigger: '.modal .modal-content .o_form_renderer div[name="value"] textarea',
+            trigger: '.modal .modal-content .o_form_renderer div[name="update_char_value"] input',
             run: "edit Test",
         },
         {
@@ -178,7 +178,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "click",
         },
         {
-            trigger: '.modal .modal-content .o_form_renderer div[name="value"] textarea',
+            trigger: '.modal .modal-content .o_form_renderer div[name="update_char_value"] input',
             run: "edit Test",
         },
         {

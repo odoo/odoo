@@ -722,7 +722,7 @@ export class MockServer {
                 action.groups_id ||= [];
                 action.sequence ??= 5;
                 action.state ??= "object_write";
-                action.update_boolean_value ??= "true";
+                action.update_boolean_value ??= true;
                 action.update_m2m_operation ??= "add";
                 action.usage ??= "ir_actions_server";
                 action.webhook_field_ids ||= [];
