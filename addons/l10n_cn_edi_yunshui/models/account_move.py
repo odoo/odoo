@@ -328,9 +328,16 @@ class AccountMove(models.Model):
         if self.move_type != 'out_refund' or not (doc.amount_untaxed or doc.amount_tax):
             return True
         return not (
-            self.company_currency_id.compare_amounts(abs(doc.amount_untaxed), abs(self.amount_untaxed_signed))
-            or self.company_currency_id.compare_amounts(abs(doc.amount_tax), abs(self.amount_tax_signed))
+            self.company_currency_id.compare_amounts(abs(doc.amount_untaxed), self._l10n_cn_edi_amount_on_fapiao('amount_untaxed'))
+            or self.company_currency_id.compare_amounts(abs(doc.amount_tax), self._l10n_cn_edi_amount_on_fapiao('amount_tax'))
         )
+
+    def _l10n_cn_edi_amount_on_fapiao(self, field):
+        """Return this credit note's ``field`` in CNY at the rate of the fapiao it reverses, not at its own."""
+        original = self.reversed_entry_id
+        if self.currency_id == self.company_currency_id or not original[field]:
+            return abs(self[f'{field}_signed'])
+        return abs(original[f'{field}_signed']) * self[field] / original[field]
 
     def _l10n_cn_edi_matching_inbound_red_form(self):
         self.ensure_one()
