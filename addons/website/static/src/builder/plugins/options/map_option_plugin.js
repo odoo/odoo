@@ -1,7 +1,22 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { generateGMapLink } from "@website/js/utils";
+import { getMapZoomLevels } from "../map_zoom_utils";
+
+export class MapOption extends BaseOptionComponent {
+    static id = "map_option";
+    static template = "website.mapOption";
+
+    setup() {
+        super.setup();
+        this.mapZoomLevels = getMapZoomLevels(useService("website").currentWebsite.distance_unit);
+    }
+}
+
+registry.category("website-options").add(MapOption.id, MapOption);
 
 export class MapOptionPlugin extends Plugin {
     static id = "mapOption";

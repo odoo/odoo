@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, mockService } from "@web/../tests/web_test_helpers";
 import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import {
     defineWebsiteModels,
@@ -38,4 +38,15 @@ test("test description option", async () => {
     );
     await contains(hexInputEl).edit("#E4F641");
     expect(":iframe .s_map .description").toHaveStyle({ "background-color": "rgb(228, 246, 65)" });
+});
+
+test("zoom option shows imperial distances when the website uses miles", async () => {
+    await setupWebsiteBuilderWithSnippet("s_map", { loadIframeBuilderTemplates: true });
+    mockService("website", {
+        get currentWebsite() {
+            return { ...super.currentWebsite, distance_unit: "mi" };
+        },
+    });
+    await contains(":iframe .s_map").click();
+    expect("[data-label='Zoom'] .dropdown-toggle").toHaveText("10 mi");
 });

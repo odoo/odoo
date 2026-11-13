@@ -8,7 +8,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
 import { getFullAddress, LOCATION_LIST } from "../utils";
 
-const OSM_MAX_ZOOM = 19;
+export const OSM_MAX_ZOOM = 19;
 
 export class Map extends Component {
     static template = "website.locationSelector.map";

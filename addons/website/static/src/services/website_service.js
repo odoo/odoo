@@ -308,6 +308,7 @@ export const websiteService = {
                             default_lang_id: { fields: { code: {} } },
                             cookies_bar: {},
                             company_id: {},
+                            distance_unit: {},
                         },
                     })
                 ).records;
