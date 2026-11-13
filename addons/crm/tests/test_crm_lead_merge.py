@@ -429,7 +429,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         this test leads are ordered as
 
         lead_w_partner_company ---opp----seq=1 (ID greater)
-        lead_w_contact -----------lead---seq=3
+        lead_w_contact -----------lead---seq=3----------------done activity
         lead_w_email -------------lead---seq=3----------------attachments
         lead_1 -------------------lead---seq=1----------------activity+meeting
         lead_w_partner -----------lead---seq=False
@@ -444,6 +444,12 @@ class TestLeadMerge(TestLeadMergeCommon):
              'res_id': self.lead_w_email.id,
             } for idx in range(4)
         ])
+
+        # done activities are archived, they should be moved too
+        lead_w_contact = self.env['crm.lead'].browse(self.lead_w_contact.ids)
+        done_activity = lead_w_contact.activity_schedule('crm.lead_test_activity_1', user_id=self.user_sales_manager.id)
+        done_activity.action_done()
+
         lead_1 = self.env['crm.lead'].browse(self.lead_1.ids)
         activity = lead_1.activity_schedule('crm.lead_test_activity_1', user_id=self.user_sales_manager.id)
         calendar_event = self.env['calendar.event'].create({
@@ -474,8 +480,10 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertEqual(calendar_event.opportunity_id, master_lead)
         self.assertEqual(calendar_event.res_id, master_lead.id)
         self.assertTrue(all(att.res_id == master_lead.id for att in attachments))
+        self.assertEqual(done_activity.res_id, master_lead.id)
         # 2many accessors updated
         self.assertEqual(master_lead.activity_ids, activity)
+        self.assertEqual(master_lead.with_context(active_test=False).activity_ids, activity + done_activity)
         self.assertEqual(master_lead.calendar_event_ids, calendar_event)
 
     @users('user_sales_manager')
