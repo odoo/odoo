@@ -1,4 +1,5 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { useSearchHighlight } from "@mail/core/common/message_search_plugin";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { groupAttachments } from "@mail/utils/common/attachments";
@@ -33,6 +34,7 @@ export class ScheduledMessage extends Component {
         this.toggleFn = toggleFn;
         this.avatarCard = usePopover(AvatarCard);
         this.dialogService = useService("dialog");
+        this.highlightSearch = useSearchHighlight();
     }
 
     get isShort() {
