@@ -127,6 +127,14 @@ class TestImage(TransactionCase):
         image = img_open(tools.image_process(self.img_1920x1080_jpeg, quality=95))
         self.assertEqual(image.size, (1920, 1080), "OK return the image")
 
+    def test_image_process_thin_image(self):
+        for original_size, target_size in (((1000, 1), (1, 0)), ((1, 1000), (0, 1))):
+            for expand in (False, True):
+                with self.subTest(original_size=original_size, expand=expand):
+                    source = tools.image_apply_opt(Image.new('RGB', original_size), 'PNG')
+                    resized = tools.image_process(source, size=target_size, expand=expand)
+                    self.assertEqual(img_open(resized).size, (1, 1))
+
     def test_11_image_process_size(self):
         """Test the size parameter of image_process."""
 
