@@ -2,13 +2,25 @@
 
 import re
 from contextlib import contextmanager
+from datetime import datetime, timezone
 
 from odoo.http.router import root
 from odoo.tests.common import TransactionCase, tagged
 
+from odoo.addons.base.models.ir_qweb import QWebError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.controllers.main import Website
 from odoo.addons.website.tests.common import set_url_code
+
+VISIBILITY_TIMESTAMP = 1577836800  # POSIX timestamp of 01/01/2020 00:00 UTC
+VISIBILITY_SECTIONS = f'''
+    <section class="past" data-visibility="conditional" data-visibility-until="{VISIBILITY_TIMESTAMP - 3600}">past</section>
+    <section class="current" data-visibility="conditional" data-visibility-from="{VISIBILITY_TIMESTAMP - 3600}" data-visibility-until="{VISIBILITY_TIMESTAMP + 3600}">current</section>
+    <section class="future" data-visibility="conditional" data-visibility-from="{VISIBILITY_TIMESTAMP + 3600}">future</section>
+    <section class="invalid" data-visibility="conditional" data-visibility-from="not-a-timestamp">invalid</section>
+    <section class="not-conditional" data-visibility-until="{VISIBILITY_TIMESTAMP - 3600}">not conditional</section>
+'''
 
 
 class TestQweb(TransactionCaseWithUserDemo):
@@ -16,6 +28,30 @@ class TestQweb(TransactionCaseWithUserDemo):
     def setUpClass(cls):
         super().setUpClass()
         cls.user_demo.group_ids = cls.env.ref('base.group_user')
+
+    def mock_visibility_now(self, timestamp):
+        return self.mock_datetime_and_now(datetime.fromtimestamp(timestamp, timezone.utc).replace(tzinfo=None))
+
+    def assert_visibility_datetime_range(self, render, keep_all_keys):
+        """ Check the rendering of `VISIBILITY_SECTIONS` at
+        `VISIBILITY_TIMESTAMP`. ``render`` gets a context and returns the
+        rendered HTML. With an empty context, the out-of-range elements must
+        not be in the HTML. For each key of ``keep_all_keys``, set this key to
+        True in the context: all the elements must be in the HTML. """
+        with self.mock_visibility_now(VISIBILITY_TIMESTAMP):
+            # Without branding, the past and future elements are not in the HTML
+            rendered = render({})
+            self.assertNotIn('class="past"', rendered)
+            self.assertIn('class="current"', rendered)
+            self.assertNotIn('class="future"', rendered)
+            self.assertIn('class="invalid"', rendered)
+            self.assertIn('class="not-conditional"', rendered)
+
+            for key in keep_all_keys:
+                with self.subTest(key=key):
+                    rendered = render({key: True})
+                    for name in ('past', 'current', 'future', 'invalid', 'not-conditional'):
+                        self.assertIn(f'class="{name}"', rendered)
 
     def test_qweb_post_processing_att(self):
         website = self.env.ref('base.default_website')
@@ -61,6 +97,159 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         rendered = self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))._render(template.id)
         self.assertEqual(rendered.strip(), result.strip(), 'Fourth rendering (with website_id=default)')
+
+    def test_render_visibility_datetime_range(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': f'<t t-name="visibility-datetime-range"><div>{VISIBILITY_SECTIONS}</div></t>',
+        })
+        QWeb = self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))
+        # Keep all the elements when branding is active, when the view is
+        # rendered as a snippet for the snippets panel, or when the view is
+        # rendered as the source of a new page (custom page template).
+        self.assert_visibility_datetime_range(
+            lambda context: QWeb.with_context(**context)._render(view.id),
+            ['inherit_branding', 'edit_translations', 'rendering_bundle', 'keep_visibility_datetime_range'],
+        )
+
+    def test_render_visibility_datetime_range_with_condition(self):
+        QWeb = self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))
+        cases = [
+            f'<section data-visibility="conditional" data-visibility-until="{VISIBILITY_TIMESTAMP - 3600}" t-if="True"/>',
+            f'<t t-if="False"/><section data-visibility="conditional" data-visibility-until="{VISIBILITY_TIMESTAMP - 3600}" t-elif="True"/>',
+            f'<t t-if="False"/><section data-visibility="conditional" data-visibility-until="{VISIBILITY_TIMESTAMP - 3600}" t-else=""/>',
+        ]
+        for node in cases:
+            view = self.env['ir.ui.view'].create({
+                'name': 'test',
+                'type': 'qweb',
+                'arch_db': f'<t t-name="visibility-datetime-range-condition"><div>{node}</div></t>',
+            })
+            for context in ({}, {'inherit_branding': True}):
+                with self.subTest(node=node, context=context):
+                    with self.assertRaises(QWebError) as error:
+                        QWeb.with_context(**context)._render(view.id)
+                    self.assertIsInstance(error.exception.__cause__, SyntaxError)
+
+    def test_html_field_visibility_datetime_range_tail(self):
+        r = f'data-visibility="conditional" data-visibility-from="{VISIBILITY_TIMESTAMP - 3600}" data-visibility-until="{VISIBILITY_TIMESTAMP + 3600}"'
+        # A list of possible combinations to check if tails are preserved or dropped correctly
+        # (html, expected when outside range, expected when inside range)
+        cases = [
+            # first child, parent without text
+            (
+                f'<p><b {r}>x</b>tail</p>',
+                '<p>tail</p>',
+                f'<p><b {r}>x</b>tail</p>',
+            ),
+            # first child, parent with text
+            (
+                f'<p>text<b {r}>x</b>tail</p>',
+                '<p>texttail</p>',
+                f'<p>text<b {r}>x</b>tail</p>',
+            ),
+            # previous sibling without tail
+            (
+                f'<p><i>i</i><b {r}>x</b>tail</p>',
+                '<p><i>i</i>tail</p>',
+                f'<p><i>i</i><b {r}>x</b>tail</p>',
+            ),
+            # previous sibling with tail
+            (
+                f'<p><i>i</i>text<b {r}>x</b>tail</p>',
+                '<p><i>i</i>texttail</p>',
+                f'<p><i>i</i>text<b {r}>x</b>tail</p>',
+            ),
+            # previous sibling is a comment
+            (
+                f'<p><!-- c --><b {r}>x</b>tail</p>',
+                '<p><!-- c -->tail</p>',
+                f'<p><!-- c --><b {r}>x</b>tail</p>',
+            ),
+            # no tail
+            (
+                f'<p><i>i</i><b {r}>x</b></p>',
+                '<p><i>i</i></p>',
+                f'<p><i>i</i><b {r}>x</b></p>',
+            ),
+            # consecutive elements with a range
+            (
+                f'<p>text<b {r}>x</b>one<b {r}>y</b>two</p>',
+                '<p>textonetwo</p>',
+                f'<p>text<b {r}>x</b>one<b {r}>y</b>two</p>',
+            ),
+            # element with a range directly in the field value
+            (
+                f'<section {r}>x</section><p>after</p>',
+                '<p>after</p>',
+                f'<section {r}>x</section><p>after</p>',
+            ),
+            # element with a range inside an element with a range
+            (
+                f'<p>text<span {r}>a<b {r}>x</b>inner</span>tail</p>',
+                '<p>texttail</p>',
+                f'<p>text<span {r}>a<b {r}>x</b>inner</span>tail</p>',
+            ),
+            # element with a range inside an element without a range
+            (
+                f'<p><span>a<b {r}>x</b>inner</span>tail</p>',
+                '<p><span>ainner</span>tail</p>',
+                f'<p><span>a<b {r}>x</b>inner</span>tail</p>',
+            ),
+        ]
+        HtmlConverter = self.env['ir.qweb.field.html']
+        for value, expected_if_outside_range, expected_if_inside_range in cases:
+            with self.subTest(value=value):
+                with self.mock_visibility_now(VISIBILITY_TIMESTAMP + 7200):
+                    self.assertEqual(HtmlConverter.value_to_html(value, {}), expected_if_outside_range)
+                with self.mock_visibility_now(VISIBILITY_TIMESTAMP):
+                    self.assertEqual(HtmlConverter.value_to_html(value, {}), expected_if_inside_range)
+
+    def test_render_html_field_visibility_datetime_range(self):
+        menu = self.env['website.menu'].create({
+            'name': 'Mega menu',
+            'website_id': self.ref('base.default_website'),
+            'mega_menu_content': VISIBILITY_SECTIONS,
+        })
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '<t t-name="visibility-datetime-range-field"><div t-field="menu.mega_menu_content"/></t>',
+        })
+        QWeb = self.env['ir.qweb'].with_context(website_id=self.ref('base.default_website'))
+        # Keep all the elements when branding is active. With
+        # `inherit_branding_auto`, the field is branded because the user can
+        # write on the record.
+        self.assert_visibility_datetime_range(
+            lambda context: QWeb.with_context(**context)._render(view.id, {'menu': menu}),
+            ['inherit_branding', 'inherit_branding_auto', 'edit_translations'],
+        )
+
+    def test_custom_page_template_visibility_datetime_range(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'Custom Page Template Visibility',
+            'type': 'qweb',
+            'key': 'test.custom_page_template_visibility',
+            'arch_db': f'<t t-name="test.custom_page_template_visibility"><div id="wrap">{VISIBILITY_SECTIONS}</div></t>',
+        })
+        self.env['website.page'].create({
+            'view_id': view.id,
+            'url': '/custom-page-template-visibility',
+            'is_new_page_template': True,
+        })
+        with self.mock_visibility_now(VISIBILITY_TIMESTAMP), \
+                MockRequest(self.env, website=self.env.ref('base.default_website')):
+            groups = Website().get_new_page_templates()
+        custom_group = next(group for group in groups if group['id'] == 'custom')
+        template = next(
+            template for template in custom_group['templates']
+            if template['key'] == 'test.custom_page_template_visibility'
+        )
+        # The new page must get also the elements that are out of their
+        # visibility datetime range.
+        for name in ('past', 'current', 'future', 'invalid', 'not-conditional'):
+            self.assertIn(f'class="{name}"', template['template'].decode())
 
     def test_render_query_count(self):
         """

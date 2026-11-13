@@ -219,6 +219,18 @@ def add_form_signature(html_fragment, env_sudo):
         form_values['email_to'].addnext(hash_node)
 
 
+def parse_visibility_timestamp(value):
+    """ Convert ``value`` to a POSIX timestamp in seconds. The
+    BuilderDateTimePicker keeps the date and time in this format. Return None
+    if ``value`` is empty or not valid. """
+    if not value:
+        return None
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
+
 def create_image_attachment(env, image_path, image_name):
     """
     Creates an image attachment.
