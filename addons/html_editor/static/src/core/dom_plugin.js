@@ -39,10 +39,10 @@ import {
     baseContainerGlobalSelector,
     createBaseContainer,
 } from "@html_editor/utils/base_container";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "@html_editor/utils/dom_state";
 import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
+import { weakMemoize } from "@html_editor/utils/functions";
 
 const IS_MARKER = Symbol("isMarker");
 /** @typedef {Text & { isMarker: true }} MarkerNode */
@@ -95,6 +95,7 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
  * @property { DomPlugin['canSetBlock'] } canSetBlock
  * @property { DomPlugin['setBlock'] } setBlock
  * @property { DomPlugin['setTagName'] } setTagName
+ * @property { DomPlugin['supportsHtmlContent'] } supportsHtmlContent
  * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
  * @property { DomPlugin['wrapInlinesInBlocks'] } wrapInlinesInBlocks
  */
@@ -134,6 +135,7 @@ export class DomPlugin extends Plugin {
         "canSetBlock",
         "setBlock",
         "setTagName",
+        "supportsHtmlContent",
         "removeSystemProperties",
         "wrapInlinesInBlocks",
     ];
@@ -143,7 +145,7 @@ export class DomPlugin extends Plugin {
             {
                 id: "setTag",
                 run: this.setBlock.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.supportsHtmlContent.bind(this),
             },
         ],
         /** Handlers */
@@ -200,6 +202,9 @@ export class DomPlugin extends Plugin {
         this.createBaseContainer = this.dependencies.baseContainer.createBaseContainer.bind(this);
         const systemNodeSelector = this.getResource("system_node_selectors").join(",");
         this.isSystemNode = (node) => systemNodeSelector && node.matches?.(systemNodeSelector);
+        this.supportsHtmlContentMemoized = weakMemoize(
+            (selection) => !this.dependencies.properties.get(selection.startContainer, "plaintext")
+        );
     }
 
     // Shared
@@ -760,6 +765,15 @@ export class DomPlugin extends Plugin {
             el.replaceWith(newEl);
         }
         return newEl;
+    }
+
+    /**
+     *
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     * @returns {boolean} whether html content can be inserted at the selection
+     */
+    supportsHtmlContent(selection) {
+        return this.supportsHtmlContentMemoized(selection);
     }
 
     /**

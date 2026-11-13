@@ -36,7 +36,6 @@ import {
 } from "../utils/dom_traversal";
 import { FORMATTABLE_TAGS, removeStyle } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const NOT_A_NUMBER = /[^\d]/g;
 
@@ -87,7 +86,7 @@ const NOT_A_NUMBER = /[^\d]/g;
 
 export class FormatPlugin extends Plugin {
     static id = "format";
-    static dependencies = ["selection", "history", "input", "split", "delete", "properties"];
+    static dependencies = ["dom", "selection", "history", "input", "split", "delete", "properties"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "areSimilarElements",
@@ -137,7 +136,7 @@ export class FormatPlugin extends Plugin {
                         : _t("Selection has no format"),
                 icon: "ink_eraser",
                 run: this.removeAllFormats.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         shortcuts: [
@@ -846,7 +845,9 @@ export class FormatPlugin extends Plugin {
     onBeforeInput(ev) {
         if (
             ev.inputType.startsWith("format") &&
-            !isHtmlContentSupported(this.dependencies.selection.getEditableSelection())
+            !this.dependencies.dom.supportsHtmlContent(
+                this.dependencies.selection.getEditableSelection()
+            )
         ) {
             ev.preventDefault();
         }
@@ -942,13 +943,13 @@ export class FormatPlugin extends Plugin {
     canFormatContent(selection) {
         const predicatesResult = this.checkPredicates("can_format_content_predicates", selection);
         if (predicatesResult !== undefined) {
-            return predicatesResult && isHtmlContentSupported(selection);
+            return predicatesResult && this.dependencies.dom.supportsHtmlContent(selection);
         }
         const { anchorNode, focusNode } = selection;
         if (anchorNode === focusNode && !isContentEditable(anchorNode)) {
             return false;
         }
-        return isHtmlContentSupported(selection);
+        return this.dependencies.dom.supportsHtmlContent(selection);
     }
 
     /**

@@ -4,7 +4,6 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { removeStyle } from "@html_editor/utils/dom";
@@ -19,7 +18,7 @@ const alignmentItems = [
 
 export class AlignPlugin extends Plugin {
     static id = "align";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["dom", "history", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -91,7 +90,9 @@ export class AlignPlugin extends Plugin {
     setup() {
         this.alignment = proxy({ displayName: "" });
         this.canSetAlignmentMemoized = weakMemoize(
-            (selection) => isHtmlContentSupported(selection) && this.getBlocksToAlign().length > 0
+            (selection) =>
+                this.dependencies.dom.supportsHtmlContent(selection) &&
+                this.getBlocksToAlign().length > 0
         );
     }
 

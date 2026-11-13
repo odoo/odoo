@@ -1,7 +1,6 @@
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { extractUnmappedAttachmentsIds } from "@html_editor/main/media/media_plugin";
@@ -383,7 +382,6 @@ export class HtmlField extends Component {
                         description: _t("Code view"),
                         icon: "code",
                         run: this.toggleCodeView.bind(this),
-                        isAvailable: isHtmlContentSupported,
                     },
                 ],
                 toolbar_groups: withSequence(100, {

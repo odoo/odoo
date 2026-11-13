@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Plugin } from "../../plugin";
 import { ImageCrop } from "./image_crop";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 
 /**
@@ -12,7 +11,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
-    static dependencies = ["selection", "history", "imagePostProcess"];
+    static dependencies = ["dom", "selection", "history", "imagePostProcess"];
     static shared = ["openCropImage"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -22,7 +21,6 @@ export class ImageCropPlugin extends Plugin {
                 run: this.openCropImage.bind(this),
                 description: _t("Crop image"),
                 icon: "crop",
-                isAvailable: isHtmlContentSupported,
             },
         ],
         toolbar_items: [

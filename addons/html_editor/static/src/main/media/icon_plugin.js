@@ -2,7 +2,6 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import {
     ICON_SELECTOR,
     ICON_SIZE_CLASS_REGEX,
@@ -14,7 +13,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "color", "dialog"];
+    static dependencies = ["history", "selection", "color", "dialog", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -22,44 +21,37 @@ export class IconPlugin extends Plugin {
                 id: "resizeIcon1",
                 description: _t("Resize icon 1x"),
                 run: () => this.resizeIcon({ size: "1" }),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "resizeIcon2",
                 description: _t("Resize icon 2x"),
                 run: () => this.resizeIcon({ size: "2" }),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "resizeIcon3",
                 description: _t("Resize icon 3x"),
                 run: () => this.resizeIcon({ size: "3" }),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "resizeIcon4",
                 description: _t("Resize icon 4x"),
                 run: () => this.resizeIcon({ size: "4" }),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "resizeIcon5",
                 description: _t("Resize icon 5x"),
                 run: () => this.resizeIcon({ size: "5" }),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "toggleSpinIcon",
                 description: _t("Toggle icon spin"),
                 icon: "play_arrow",
                 run: this.toggleSpinIcon.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "replaceIcon",
                 description: _t("Replace icon"),
                 run: this.openIconDialog.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
         ],
         properties: [{ predicate: isIconElement, toolbar: "icon" }],
