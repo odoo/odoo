@@ -262,7 +262,7 @@ class TooltipPlugin extends Plugin {
                     this.#target,
                     Tooltip,
                     { tooltip, template, info },
-                    { position }
+                    { position, role: "tooltip" }
                 );
             }
         }, timeoutDelay);
