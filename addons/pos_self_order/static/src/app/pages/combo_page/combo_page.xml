@@ -71,7 +71,7 @@
                         </div>
                         <!-- Attributes -->
                         <div class="">
-                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="this.onAttributeSelection" isCombo="true"/>
+                            <AttributeSelection t-if="product.attribute_line_ids.length" t-key="this.currentChoiceState.displayAttributesOfItem.id" productTemplate="product" onSelection="this.onAttributeSelection" isCombo="true"/>
                         </div>
                         <t t-if="this.hasMissingAttributeValues(this.currentChoiceState.displayAttributesOfItem) and this.shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
                     </div>
