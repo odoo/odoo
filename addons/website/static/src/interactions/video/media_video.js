@@ -64,6 +64,12 @@ export class MediaVideo extends Interaction {
             return;
         }
 
+        // Only iframes are named by their title: a video would show it as a
+        // tooltip.
+        if (playerEl && !playerEl.title) {
+            playerEl.title = _t("Media video");
+        }
+
         if (playerEl?.hasAttribute("src")) {
             const promise = setupAutoplay(
                 playerEl.getAttribute("src"),

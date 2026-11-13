@@ -174,27 +174,93 @@ test("toolbar closes when selection leaves editor", async () => {
 });
 
 test.tags("desktop");
-test("focus should be trap in toolbar on tab", async () => {
+test("Tab should move the focus between toolbar button groups", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await expandToolbar();
+    const firstButtons = queryAll(".o-we-toolbar > .btn-group")
+        .map((group) => group.querySelector("button:not([disabled])"))
+        .filter(Boolean);
+    expect(firstButtons.length).toBeGreaterThan(2);
+    // First button should be focused after expanding toolbar
+    expect(firstButtons[0]).toBeFocused();
+
+    for (let i = 1; i < firstButtons.length; i++) {
+        await press("Tab");
+        expect(firstButtons[i]).toBeFocused();
+    }
+
+    // Tab on last group should cycle back to first
+    await press("Tab");
+    expect(firstButtons[0]).toBeFocused();
+
+    // Shift+Tab on first group should cycle back to last
+    await press(["shift", "tab"]);
+    expect(firstButtons.at(-1)).toBeFocused();
+
+    // Shift+Tab from a button which is not the first of its group should go
+    // to the first button of the previous group
+    const secondGroupBtns = queryAll(".o-we-toolbar > .btn-group")
+        .find((group) => group.contains(firstButtons[1]))
+        .querySelectorAll("button:not([disabled])");
+    expect(secondGroupBtns.length).toBeGreaterThan(1);
+    await press("Tab");
+    await press("Tab");
+    expect(firstButtons[1]).toBeFocused();
+    await press("ArrowRight");
+    expect(secondGroupBtns[1]).toBeFocused();
+    await press(["shift", "tab"]);
+    expect(firstButtons[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("Home and End should move the focus to the first and last toolbar buttons", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
     await expandToolbar();
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    // First button should be focused after expanding toolbar
     expect(toolbarBtns[0]).toBeFocused();
 
-    for (let i = 1; i < toolbarBtns.length; i++) {
-        await press("Tab");
-        expect(toolbarBtns[i]).toBeFocused();
+    await press("End");
+    expect(toolbarBtns.at(-1)).toBeFocused();
+    await press("ArrowLeft");
+    expect(toolbarBtns.at(-2)).toBeFocused();
+    await press("Home");
+    expect(toolbarBtns[0]).toBeFocused();
+});
+
+test("toolbar should have the toolbar role and a label", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("role", "toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("aria-label", "HTML editor toolbar");
+});
+
+test("toolbar button groups should have the group role", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const groups = queryAll(".o-we-toolbar > .btn-group");
+    expect(groups.length).toBeGreaterThan(1);
+    for (const group of groups) {
+        expect(group).toHaveAttribute("role", "group");
+        expect(group).toHaveAttribute("data-group-id");
+        expect(group).not.toHaveAttribute("name");
     }
+});
 
-    // Tab on last button should cycle back to first
-    await press("Tab");
-    expect(toolbarBtns[0]).toBeFocused();
-
-    // Shift+Tab on first button should cycle back to last
-    await press(["shift", "tab"]);
-    expect(toolbarBtns[toolbarBtns.length - 1]).toBeFocused();
+test("toolbar separators between button groups should have the separator role", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const separators = queryAll(".o-we-toolbar > .o-we-toolbar-vertical-separator");
+    expect(separators.length).toBeGreaterThan(1);
+    // The first one is hidden, as it precedes the first button group
+    expect(separators[0]).not.toHaveAttribute("role");
+    for (const separator of separators.slice(1)) {
+        expect(separator).toHaveAttribute("role", "separator");
+        expect(separator).toHaveAttribute("aria-orientation", "vertical");
+    }
 });
 
 test.tags("desktop");
@@ -222,15 +288,101 @@ test("focus should be trap in toolbar on arrow left/right keys", async () => {
 });
 
 test.tags("desktop");
-test("Alt+F should move focus to the first toolbar button when focus is not on the toolbar", async () => {
+test("Alt+F10 should move focus to the first toolbar button when focus is not on the toolbar", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
     expect(el).toBeFocused();
 
-    // Alter + F should move focus to first toolbar button
-    await press(["alt", "f"]);
+    // Alt + F10 should move focus to first toolbar button
+    await press(["alt", "f10"]);
     const toolbarBtns = queryAll(".o-we-toolbar button");
     expect(toolbarBtns[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("Alt+F should move focus to the first toolbar button as an alias of Alt+F10", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(el).toBeFocused();
+
+    await press(["alt", "f"]);
+    expect(queryAll(".o-we-toolbar button")[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("pressing Alt should display the toolbar shortcut overlay", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await keyDown("alt");
+    expect(".o-we-toolbar .o_web_hotkey_overlay").toHaveCount(1);
+    expect(".o-we-toolbar .o_web_hotkey_overlay").toHaveText("F10");
+    await keyUp("alt");
+    expect(".o_web_hotkey_overlay").toHaveCount(0);
+
+    // No overlay once the focus is in the toolbar, as the shortcut is not
+    // available there
+    await press(["alt", "f10"]);
+    expect(".o-we-toolbar button[name='font_type']").toBeFocused();
+    await keyDown("alt");
+    expect(".o_web_hotkey_overlay").toHaveCount(0);
+    await keyUp("alt");
+});
+
+test.tags("desktop");
+test("should display the title of the focused toolbar button as a tooltip", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-tooltip", 0);
+
+    await press(["alt", "f10"]);
+    expect(".o-we-toolbar button[name='font_type']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Select text style')");
+
+    await press("ArrowRight");
+    const focusedTitle = document.activeElement.title;
+    expect(focusedTitle).not.toBe("Select text style");
+    await waitFor(`.o-tooltip:contains('${focusedTitle}')`);
+    await expectElementCount(".o-tooltip", 1);
+
+    await press("Escape");
+    expect(el).toBeFocused();
+    await expectElementCount(".o-tooltip", 0);
+});
+
+test.tags("desktop");
+test("should not display a tooltip when a toolbar button is focused by a click", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar button[name='font_type']").click();
+    await expectElementCount(".o_font_type_selector_menu", 1);
+    await expectElementCount(".o-tooltip", 0);
+});
+
+test.tags("desktop");
+test("should display the title of the focused toolbar dropdown item as a tooltip", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+
+    await click("button[name='list_selector']");
+    await expectElementCount(".o-we-toolbar-dropdown button[name='bulleted_list']", 1);
+    await expectElementCount(".o-tooltip", 0);
+
+    await press("Tab");
+    expect("button[name='bulleted_list']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Bulleted list')");
+
+    await press("Tab");
+    expect("button[name='numbered_list']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Numbered list')");
+    await expectElementCount(".o-tooltip", 1);
+
+    // Escape moves the focus back to the toolbar button
+    await press("Escape");
+    expect("button[name='list_selector']").toBeFocused();
+    await waitFor(".o-tooltip:contains('Toggle List')");
+    await expectElementCount(".o-tooltip", 1);
 });
 
 test.tags("desktop");
@@ -383,8 +535,8 @@ test("bold shortcut should work when focus is on a toolbar button", async () => 
     setContent(el, "<p>[test]</p>");
     await expectElementCount(".o-we-toolbar", 1);
 
-    // Move focus to toolbar button by pressing Alt + F
-    await press(["alt", "f"]);
+    // Move focus to toolbar button by pressing Alt + F10
+    await press(["alt", "f10"]);
     expect(queryOne(".o-we-toolbar button[name='font_type']")).toBeFocused();
 
     // Format bold shortcut operation should be performed
@@ -819,7 +971,7 @@ test("toolbar works: show the correct text alignment", async () => {
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_left"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_left"> </i>`
     );
     await click("button[name='text_align']");
     await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_right']").click();
@@ -827,7 +979,7 @@ test("toolbar works: show the correct text alignment", async () => {
         `<p style="text-align: end;">[test</p><p style="text-align: end;"><br>]</p>`
     );
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_right"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_right"> </i>`
     );
 });
 
@@ -836,25 +988,25 @@ test("toolbar works: show the correct text alignment after undo/redo", async () 
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_left"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_left"> </i>`
     );
     await click("button[name='text_align']");
     await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_center']").click();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_center"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_center"> </i>`
     );
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p>[test]</p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_left"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_left"> </i>`
     );
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_center"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_center"> </i>`
     );
 });
 
@@ -1595,9 +1747,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
         `<div class="test_namespace">[<section><p>abc</p></section><div>d]ef</div></div>`,
         { config: { includePlugins: [TestPlugin] } }
     );
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
+    await expectElementCount(".o-we-toolbar .btn-group[data-group-id='test_group']", 1);
     setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
+    await expectElementCount(".o-we-toolbar .btn-group[data-group-id='test_group']", 0);
 });
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
@@ -1815,8 +1967,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(1);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(1);
+    expect(".o-we-toolbar .btn-group[data-group-id='font']").toHaveCount(1);
+    expect(".o-we-toolbar .btn-group[data-group-id='decoration']").toHaveCount(1);
     setContent(
         el,
         `<p>[
@@ -1825,8 +1977,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     );
     await waitFor(".o-we-toolbar[data-namespace='image']");
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "image");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(0);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(0);
+    expect(".o-we-toolbar .btn-group[data-group-id='font']").toHaveCount(0);
+    expect(".o-we-toolbar .btn-group[data-group-id='decoration']").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -2495,8 +2647,8 @@ test("toolbar update should be run only once", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
     counter = 0;
-    click(".o-we-toolbar .btn[name='bold']");
-    await waitFor(".btn[name='bold'].active");
+    click(".o-we-toolbar .btn[name='bold'][aria-pressed='false']");
+    await waitFor(".btn[name='bold'][aria-pressed='true'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
     expect(counter).toBe(1);
 });
@@ -2506,16 +2658,16 @@ test("toolbar strikethrough buttons should not be active when checked list is st
         '<ul class="o_checklist"><li class="o_checked">[test]</li></ul>'
     );
     await expandToolbar();
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='strikethrough'][aria-pressed='false']").toHaveCount(1);
     expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough'].active");
+    await waitFor(".btn[name='strikethrough'][aria-pressed='true'].active");
     expect(getContent(el)).toBe(
         '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
     );
     expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough']:not(.active)");
+    await waitFor(".btn[name='strikethrough'][aria-pressed='false']:not(.active)");
     expect(getContent(el)).toBe('<ul class="o_checklist"><li class="o_checked">[test]</li></ul>');
     expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
 });
@@ -2635,22 +2787,22 @@ test("should highlight text color button on color picker opened", async () => {
     await setupEditor(`<div><p>[abc]</p></div>`);
     await waitFor(".o-we-toolbar");
     await expandToolbar();
-    expect(".o-select-color-foreground").not.toHaveClass("active");
+    expect(".o-select-color-foreground[aria-expanded='false']").not.toHaveClass("active");
     await click(".o-select-color-foreground");
     await waitFor(".o_font_color_selector");
-    expect(".o-select-color-foreground").toHaveClass("active");
+    expect(".o-select-color-foreground[aria-expanded='true']").toHaveClass("active");
 });
 
 test("formats should be enabled when inline code selected", async () => {
     await setupEditor(`<div class="o-paragraph">[ab<code class="o_inline_code">code</code>]</div>`);
     await expectElementCount(".o-we-toolbar", 1);
     await click(`[name="bold"]`);
-    await waitFor(`[name="bold"].active`);
+    await waitFor(`[name="bold"][aria-pressed="true"].active`);
 
     expect("strong").toHaveCount(1);
 
     await click(`[name="bold"].active`);
-    await waitFor(`[name="bold"]:not(.active)`);
+    await waitFor(`[name="bold"][aria-pressed="false"]:not(.active)`);
 
     expect("strong").toHaveCount(0);
 });
@@ -2697,4 +2849,231 @@ test("font-size should be preserved when replacing HTML element text", async () 
     await insertText(editor, "a");
     await animationFrame();
     expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">a[]</span></p>`);
+});
+
+/**
+ * Checks the `aria-pressed` and `aria-expanded` attributes of every button
+ * currently displayed in the toolbar, based on the toolbar items declared by
+ * the plugins:
+ * - buttons opening a popup (dropdowns, color selectors) rely on
+ *   `aria-expanded` instead of `aria-pressed`: it must match whether the popup
+ *   is open (`show` class for dropdowns, `active` class for color selectors),
+ *   they must have `aria-haspopup`, and `aria-controls` must reference the
+ *   popup while it is open, whose role must match `aria-haspopup`,
+ * - buttons whose item defines `isActive` are toggle buttons: they must have
+ *   `aria-pressed` matching their `active` state,
+ * - other buttons are not toggle buttons and must not have `aria-pressed`.
+ *
+ * @param {import("@html_editor/editor").Editor} editor
+ */
+function expectConsistentAriaStates(editor) {
+    const toggleButtonIds = new Set(
+        editor
+            .getResource("toolbar_items")
+            .filter((item) => !item.Component && "isActive" in item)
+            .map((item) => item.id)
+    );
+    const buttons = queryAll(".o-we-toolbar .btn");
+    expect(buttons.length).toBeGreaterThan(0, { message: "toolbar should have buttons" });
+    for (const el of buttons) {
+        const name = el.getAttribute("name");
+        const label = name || el.className;
+        if (el.hasAttribute("aria-expanded")) {
+            const isOpen = el.classList.contains("show") || el.classList.contains("active");
+            expect(el).toHaveAttribute("aria-expanded", isOpen ? "true" : "false", {
+                message: `"${label}" popup should be ${isOpen ? "open" : "closed"}`,
+            });
+            expect(el).not.toHaveAttribute("aria-pressed", undefined, {
+                message: `"${label}" opens a popup and is not a toggle button`,
+            });
+            expect(el).toHaveAttribute("aria-haspopup", undefined, {
+                message: `"${label}" should announce its popup`,
+            });
+            if (isOpen) {
+                const popupId = el.getAttribute("aria-controls");
+                const popupEl = popupId && document.getElementById(popupId);
+                expect(!!popupEl).toBe(true, {
+                    message: `"${label}" aria-controls should reference its open popup`,
+                });
+                expect(popupEl).toHaveAttribute("role", el.getAttribute("aria-haspopup"), {
+                    message: `"${label}" popup role should match its aria-haspopup`,
+                });
+                if (popupEl.role === "dialog") {
+                    expect(popupEl).toHaveAttribute("aria-label", el.getAttribute("aria-label"), {
+                        message: `"${label}" dialog should be named after its button`,
+                    });
+                }
+            } else {
+                expect(el).not.toHaveAttribute("aria-controls", undefined, {
+                    message: `"${label}" should not reference a closed popup`,
+                });
+            }
+        } else if (toggleButtonIds.has(name)) {
+            expect(el).toHaveAttribute(
+                "aria-pressed",
+                el.classList.contains("active") ? "true" : "false",
+                { message: `"${label}" is a toggle button` }
+            );
+        } else {
+            expect(el).not.toHaveAttribute("aria-pressed", undefined, {
+                message: `"${label}" is not a toggle button`,
+            });
+        }
+    }
+}
+
+/**
+ * Checks that every button currently displayed in the toolbar has an
+ * `aria-label`:
+ * - it starts with the button's `title`, possibly followed by its current
+ *   value (e.g. "Select text style: Paragraph"),
+ * - it contains the button's visible text, if any,
+ * - the button's icons are hidden from screen readers.
+ * Every iframe of the toolbar (e.g. the font size input) must also have a
+ * `title`, which names the input it contains, and every button of the
+ * toolbar and of its open dropdowns must have the `button` type.
+ */
+function expectAccessibleLabels() {
+    const buttons = queryAll(".o-we-toolbar .btn");
+    expect(buttons.length).toBeGreaterThan(0, { message: "toolbar should have buttons" });
+    for (const el of buttons) {
+        const label = el.getAttribute("name") || el.className;
+        const ariaLabel = el.getAttribute("aria-label");
+        expect(!!ariaLabel).toBe(true, { message: `"${label}" should have an aria-label` });
+        const title = el.getAttribute("title");
+        expect(ariaLabel === title || ariaLabel.startsWith(`${title}: `)).toBe(true, {
+            message: `"${label}" aria-label "${ariaLabel}" should be based on title "${title}"`,
+        });
+        const text = el.textContent.trim();
+        expect(ariaLabel.includes(text)).toBe(true, {
+            message: `"${label}" aria-label "${ariaLabel}" should contain its text "${text}"`,
+        });
+        for (const icon of el.querySelectorAll(".oi, svg")) {
+            expect(icon).toHaveAttribute("aria-hidden", "true", {
+                message: `"${label}" icon should be hidden from screen readers`,
+            });
+        }
+    }
+    for (const el of queryAll(".o-we-toolbar button, .o-we-toolbar-dropdown button")) {
+        expect(el).toHaveAttribute("type", "button", {
+            message: `"${el.getAttribute("name") || el.className}" should have the button type`,
+        });
+    }
+    for (const iframe of queryAll(".o-we-toolbar iframe")) {
+        const label = iframe.className;
+        const title = iframe.getAttribute("title");
+        expect(!!title).toBe(true, { message: `"${label}" iframe should have a title` });
+        const input = iframe.contentDocument.querySelector("input");
+        if (input) {
+            expect(input).toHaveAttribute("aria-label", title, {
+                message: `"${label}" iframe input should be named after its title`,
+            });
+        }
+    }
+}
+
+test("text toolbar items should have consistent aria states", async () => {
+    const { editor } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+
+    await expandToolbar();
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+
+    // Toggling a button should update aria-pressed
+    await click(".o-we-toolbar .btn[name='bold']");
+    await waitFor(".btn[name='bold'][aria-pressed='true'].active");
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+
+    // Opening a dropdown should update aria-expanded
+    await click(".o-we-toolbar .btn[name='list_selector']");
+    await waitFor(".btn[name='list_selector'][aria-expanded='true'].show");
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+
+    // Opening a color selector should update aria-expanded
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await waitFor(".o-select-color-foreground[aria-expanded='true'].active");
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+});
+
+test("table toolbar items should have consistent aria states", async () => {
+    const table = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[a<br></p></td><td><p>b]<br></p></td>
+                </tr>
+            </tbody>
+        </table>`);
+    const { editor } = await setupEditor(table);
+    await waitFor(".o-we-toolbar");
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+
+    await expandToolbar();
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+});
+
+test("image toolbar items should have consistent aria states", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => {
+        await delay(50);
+        return {
+            original: { image_src: base64Image },
+        };
+    });
+
+    const { editor } = await setupEditor(`<p>[<img src="${base64Image}">]</p>`);
+    await waitFor(".o-we-toolbar");
+    expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
+
+    // Be ready if an expanded image toolbar appears
+    if (queryAll(".o-we-toolbar .btn[name='expand_toolbar']").length) {
+        await expandToolbar();
+        expectConsistentAriaStates(editor);
+        expectAccessibleLabels();
+        expectAccessibleLabels();
+    }
+});
+
+test("non toggle toolbar buttons should not have aria-pressed", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='remove_format']").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='remove_format']").not.toHaveAttribute("aria-pressed");
+});
+
+test("toolbar selectors aria-label should include their current value", async () => {
+    await setupEditor("<h1>[test]</h1>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='font_type']").toHaveAttribute(
+        "aria-label",
+        "Select text style: Header 1"
+    );
+    expect(".o-we-toolbar .btn[name='text_align']").toHaveAttribute(
+        "aria-label",
+        "Align text: Left align"
+    );
+
+    await contains(".o-we-toolbar [name='font_type'].dropdown-toggle").click();
+    await contains(".o_font_type_selector_menu .dropdown-item:contains('Paragraph')").click();
+    await waitFor(
+        ".o-we-toolbar .btn[name='font_type'][aria-label='Select text style: Paragraph']"
+    );
+
+    await contains(".o-we-toolbar [name='text_align'].dropdown-toggle").click();
+    await contains(".o-we-toolbar-dropdown .btn[aria-label='Center align']").click();
+    await waitFor(".o-we-toolbar .btn[name='text_align'][aria-label='Align text: Center align']");
 });

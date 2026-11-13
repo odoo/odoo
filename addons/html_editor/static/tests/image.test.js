@@ -35,22 +35,22 @@ test("Can change an image size", async () => {
     await waitFor(".o-we-toolbar");
     expect(queryOne("img").style.width).toBe("");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('50%')");
     expect(queryOne("img").style.width).toBe("50%");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('25%')");
     expect(queryOne("img").style.width).toBe("25%");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('Default')");
     expect(queryOne("img").style.width).toBe("");
@@ -105,7 +105,7 @@ test("Can undo the image sizing", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
@@ -122,7 +122,7 @@ test("The image size shown in the toolbar updates with undo and redo", async () 
     await waitFor(".o-we-toolbar");
     const sizeToggle = ".o-we-toolbar .dropdown-toggle[title='Resize image']";
 
-    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
+    await click(".o-we-toolbar [data-group-id='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     await animationFrame();
@@ -505,7 +505,7 @@ test("test order of image options in image toolbar", async () => {
 
     const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
     expect(toolbarGroups).toHaveCount(5);
-    expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
+    expect(toolbarGroups.map((g) => g.dataset.groupId)).toEqual([
         "image_modifiers",
         "image_actions",
         "image_link",
@@ -514,13 +514,13 @@ test("test order of image options in image toolbar", async () => {
     ]);
 
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='image_modifiers'] .btn").map((b) =>
+        queryAll(".o-we-toolbar .btn-group[data-group-id='image_modifiers'] .btn").map((b) =>
             b.getAttribute("title")
         )
     ).toMatchObject(["Set image alignment", "Set image padding", "Crop image"]);
 
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='image_actions'] .btn").map((b) =>
+        queryAll(".o-we-toolbar .btn-group[data-group-id='image_actions'] .btn").map((b) =>
             b.getAttribute("title")
         )
     ).toMatchObject(["Resize image", "Preview image"]);
