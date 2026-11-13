@@ -153,6 +153,12 @@ class SaleOrder(models.Model):
                     or order.partner_id.parent_id.user_id.id
                 )
 
+    def _compute_prepayment_percent(self):
+        website_orders = self.filtered("website_id")
+        super(SaleOrder, self - website_orders)._compute_prepayment_percent()
+        for order in website_orders:
+            order.prepayment_percent = 1.0
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
