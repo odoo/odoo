@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.KanbanPhoneField">
+        <div class="o_hr_employee_kanban_phone d-flex align-items-baseline w-100">
+            <span class="text-truncate flex-grow-1" t-out="this.value"/>
+            <span t-if="this.props.displayButtons" class="d-flex flex-nowrap ms-auto">
+                <t t-foreach="this.actionButtons" t-as="btn" t-key="btn.name">
+                    <t
+                        t-tag="btn.href ? 'a' : 'button'"
+                        t-if="this.value"
+                        t-att-href="btn.href"
+                        t-att-title="btn.name"
+                        t-att-aria-label="btn.name"
+                        t-on-click.prevent.stop="btn.onSelected"
+                        class="o_hr_employee_kanban_phone_action btn btn-light btn-sm d-inline-flex align-items-center py-0 ms-1"
+                    >
+                        <i class="oi oi-filled" t-att-data-icon="btn.icon"/>
+                    </t>
+                </t>
+            </span>
+        </div>
+    </t>
+
+</templates>
