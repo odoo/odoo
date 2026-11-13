@@ -596,30 +596,75 @@ class AccountMove(models.Model):
     # Fapiao content
     # ------------------------------------------------------------------
 
+    def _l10n_cn_edi_check_invoice(self):
+        """Return why the tax bureau would refuse this invoice's fapiao, checked before contacting it."""
+        self.ensure_one()
+        errors = []
+        product_lines = self._l10n_cn_edi_product_lines()
+        negative_lines = product_lines.filtered(lambda line: line.price_subtotal < 0)
+        for line in product_lines:
+            name = line.name or line.product_id.name
+            tax = line.tax_ids
+            if len(tax) > 1 or tax.filtered(lambda tax: tax.amount_type != 'percent'):
+                errors.append(self.env._("Only one percentage tax is supported per line for e-Fapiao: %(line)s", line=name))
+                continue
+            if line in negative_lines:
+                continue
+            if not line.l10n_cn_tax_category_id:
+                errors.append(self.env._("Missing Tax Category Code on line: %(line)s", line=name))
+            if tax.l10n_cn_vat_special_policy or tax.l10n_cn_reduced_tax_code:
+                errors.append(self.env._("Yunshui simple issuance does not support special VAT treatment (line %(line)s).", line=name))
+            elif tax._l10n_cn_edi_rate() not in TAX_RATES:
+                errors.append(self.env._("Yunshui does not accept a %(rate)s%% tax rate (line %(line)s).", rate=abs(tax.amount), line=name))
+            if line.discount >= 100:
+                errors.append(self.env._("100% line discounts are not supported for e-Fapiao. Use an explicit negative line instead."))
+        if negative_lines and len({(line.tax_ids.amount, line.tax_ids.price_include) for line in product_lines}) > 1:
+            errors.append(self.env._(
+                "Global negative lines spanning multiple tax groups are not supported for e-Fapiao. "
+                "Please split by tax group before issuing.",
+            ))
+        buyer_values = self._l10n_cn_edi_prepare_buyer_values()
+        limits = {
+            'payerName': (100, self.env._("Customer name")),
+            'payerAddress': (140, self.env._("Customer address")),
+            'bz': (200, self.env._("Terms and Conditions")),
+        }
+        if too_long := [
+            self.env._("%(field)s (at most %(limit)s characters)", field=label, limit=limit)
+            for key, (limit, label) in limits.items()
+            if len(buyer_values.get(key, '')) > limit
+        ]:
+            errors.append(self.env._("Too long for the tax bureau: %(fields)s", fields=", ".join(too_long)))
+        return errors
+
     def _l10n_cn_edi_prepare_issue_payload(self, document):
         """Return the simpleInvoiceIssue payload (2.1.2) of this invoice's fapiao, sent with ``document``."""
         self.ensure_one()
-        # The buyer is the legal entity; the address and phone are the invoiced contact's.
-        buyer = self.commercial_partner_id
-        partner = self.partner_id
-        remark = html2plaintext(self.narration or '')
         payload = {
             'fpqqlsh': document.serial_no,
             'nsrsbh': self.company_id.vat,
             'invoiceKind': INVOICE_KIND[self.l10n_cn_edi_invoice_type_code],
             'invoiceType': '1',
-            'businessType': '1' if buyer.vat else '0',
+            'businessType': '1' if self.commercial_partner_id.vat else '0',
             'invoiceAmount': f"{self.amount_total_signed:.2f}",
-            'payerName': buyer.name or '',
             'deliverType': '0',
+            **self._l10n_cn_edi_prepare_buyer_values(),
             'invoiceItems': self._l10n_cn_edi_prepare_lines(),
         }
         if self.company_id.l10n_cn_edi_drawer:
             payload['invoicer'] = self.company_id.l10n_cn_edi_drawer
+        return payload
+
+    def _l10n_cn_edi_prepare_buyer_values(self):
+        # The buyer is the legal entity; the address and phone are the invoiced contact's.
+        buyer = self.commercial_partner_id
+        partner = self.partner_id
+        remark = html2plaintext(self.narration or '')
+        values = {'payerName': buyer.name or ''}
         if buyer.vat:
-            payload['payerRegisterNo'] = buyer.vat
+            values['payerRegisterNo'] = buyer.vat
         if address := ' '.join(filter(None, [partner.street, partner.street2, partner.city])):
-            payload['payerAddress'] = address
+            values['payerAddress'] = address
         if partner.phone:
             phone = phone_format(
                 partner.phone,
@@ -629,32 +674,21 @@ class AccountMove(models.Model):
                 raise_exception=False,
             ) or ''
             if phone.startswith('+86'):
-                payload['payerPhone'] = phone[3:]
+                values['payerPhone'] = phone[3:]
             else:
                 # The fapiao only has room for a mainland number; keep the others readable in the remark.
                 remark = f"{remark} | Phone: {partner.phone}".strip(' |')
-        if 'payerAddress' in payload or 'payerPhone' in payload:
-            payload['sfzsgmfdzdh'] = 'Y'
+        if 'payerAddress' in values or 'payerPhone' in values:
+            values['sfzsgmfdzdh'] = 'Y'
         bank = self.l10n_cn_buyer_bank_id
         if bank.bank_name:
-            payload['payerBank'] = bank.bank_name
+            values['payerBank'] = bank.bank_name
         if bank.account_number:
-            payload['payerBankaccount'] = bank.account_number
+            values['payerBankaccount'] = bank.account_number
         if bank.bank_name or bank.account_number:
-            payload['sfzsgmfyhzh'] = 'Y'
-        payload['bz'] = remark
-        limits = {
-            'payerName': (100, self.env._("Customer name")),
-            'payerAddress': (140, self.env._("Customer address")),
-            'bz': (200, self.env._("Terms and Conditions")),
-        }
-        if too_long := [
-            self.env._("%(field)s (at most %(limit)s characters)", field=label, limit=limit)
-            for key, (limit, label) in limits.items()
-            if len(payload.get(key, '')) > limit
-        ]:
-            raise UserError(self.env._("Too long for the tax bureau: %(fields)s", fields=", ".join(too_long)))
-        return payload
+            values['sfzsgmfyhzh'] = 'Y'
+        values['bz'] = remark
+        return values
 
     def _l10n_cn_edi_product_lines(self):
         return self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
@@ -667,12 +701,6 @@ class AccountMove(models.Model):
         被折扣行 (rowType '2') it reduces. Amounts include the tax.
         """
         product_lines = self._l10n_cn_edi_product_lines()
-        for line in product_lines:
-            if len(line.tax_ids) > 1 or line.tax_ids.filtered(lambda tax: tax.amount_type != 'percent'):
-                raise UserError(self.env._(
-                    "Only one percentage tax is supported per line for e-Fapiao: %(line)s",
-                    line=line.name,
-                ))
         positive_lines = product_lines.filtered(lambda line: line.price_subtotal >= 0)
         negative_lines = product_lines - positive_lines
         # The fapiao is in CNY: send the amounts as posted in the company currency.
@@ -682,11 +710,6 @@ class AccountMove(models.Model):
             tax_details = base_line['tax_details']
             subtotals[base_line['record']] = tax_details['total_excluded'] + tax_details['delta_total_excluded']
             taxes[base_line['record']] = sum(tax_data['tax_amount'] for tax_data in tax_details['taxes_data'])
-        if negative_lines and len({(line.tax_ids.amount, line.tax_ids.price_include) for line in product_lines}) > 1:
-            raise UserError(self.env._(
-                "Global negative lines spanning multiple tax groups are not supported for e-Fapiao. "
-                "Please split by tax group before issuing.",
-            ))
         total_discount = sum(subtotals[line] for line in negative_lines)
         total_discount_tax = sum(taxes[line] for line in negative_lines)
         total_positive = sum(subtotals[line] for line in positive_lines)
@@ -694,21 +717,6 @@ class AccountMove(models.Model):
         items = []
         for index, line in enumerate(positive_lines):
             name = (line.name or line.product_id.name or '').replace('\n', ' ')[:100]
-            if not line.l10n_cn_tax_category_id:
-                raise UserError(self.env._("Missing Tax Category Code on line: %(line)s", line=name))
-            tax = line.tax_ids
-            if tax.l10n_cn_vat_special_policy or tax.l10n_cn_reduced_tax_code:
-                raise UserError(self.env._(
-                    "Yunshui simple issuance does not support special VAT treatment (line %(line)s).",
-                    line=name,
-                ))
-            rate = f"{abs(tax.amount) / 100.0:.8f}".rstrip('0').rstrip('.')
-            if rate not in TAX_RATES:
-                raise UserError(self.env._(
-                    "Yunshui does not accept a %(rate)s%% tax rate (line %(line)s).",
-                    rate=abs(tax.amount),
-                    line=name,
-                ))
             amount = round(subtotals[line], 2)
             amount_tax = round(taxes[line], 2)
             discount, discount_tax = 0.0, 0.0
@@ -721,10 +729,6 @@ class AccountMove(models.Model):
                     remaining_discount -= discount
                     remaining_discount_tax -= discount_tax
             if line.discount:
-                if line.discount >= 100:
-                    raise UserError(self.env._(
-                        "100% line discounts are not supported for e-Fapiao. Use an explicit negative line instead.",
-                    ))
                 factor = line.discount / 100.0
                 gross, gross_tax = round(amount / (1.0 - factor), 2), round(amount_tax / (1.0 - factor), 2)
                 discount += amount - gross
@@ -732,11 +736,11 @@ class AccountMove(models.Model):
                 amount, amount_tax = gross, gross_tax
             item = {
                 'itemName': name,
-                'taxRate': rate,
+                'taxRate': line.tax_ids._l10n_cn_edi_rate(),
                 'itemNo': line.l10n_cn_tax_category_id.code,
             }
-            if tax.l10n_cn_free_tax_mark:
-                item['zeroRateFlag'] = tax.l10n_cn_free_tax_mark
+            if line.tax_ids.l10n_cn_free_tax_mark:
+                item['zeroRateFlag'] = line.tax_ids.l10n_cn_free_tax_mark
             is_discounted = discount < 0
             row = {**item, 'rowType': LINE_DISCOUNTED if is_discounted else LINE_NORMAL, 'amount': f"{amount + amount_tax:.2f}"}
             if line.quantity:

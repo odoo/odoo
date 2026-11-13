@@ -25,6 +25,23 @@ class AccountMoveSend(models.AbstractModel):
         }
         return res
 
+    def _get_alerts(self, moves, moves_data):
+        # EXTENDS 'account'
+        alerts = super()._get_alerts(moves, moves_data)
+        cn_moves = moves.filtered(lambda move: 'cn_edi' in moves_data[move]['extra_edis'])
+        errors = {move: move_errors for move in cn_moves if (move_errors := move._l10n_cn_edi_check_invoice())}
+        if len(cn_moves) == 1 and errors:
+            alerts['l10n_cn_edi_invalid_invoices'] = {'message': "\n".join(errors[cn_moves])}
+        elif errors:
+            invalid_moves = cn_moves.filtered(lambda move: move in errors)
+            alerts['l10n_cn_edi_invalid_invoices'] = {
+                'message': self.env._("The e-Fapiao of these invoices can't be issued as they are: %(invoices)s",
+                                      invoices=", ".join(invalid_moves.mapped('name'))),
+                'action_text': self.env._("View Invoice(s)"),
+                'action': invalid_moves._get_records_action(name=self.env._("Check Invoice(s)")),
+            }
+        return alerts
+
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
@@ -61,7 +78,10 @@ class AccountMoveSend(models.AbstractModel):
         Return ``{invoice: error message}`` for those that couldn't be issued.
         """
         errors = {}
-        for company, company_invoices in invoices.grouped('company_id').items():
+        for invoice in invoices:
+            if invoice_errors := invoice._l10n_cn_edi_check_invoice():
+                errors[invoice] = "\n".join(invoice_errors)
+        for company, company_invoices in invoices.filtered(lambda invoice: invoice not in errors).grouped('company_id').items():
             if not company._l10n_cn_edi_is_ready():
                 errors.update(dict.fromkeys(company_invoices, self.env._(
                     "E-Fapiao is not set up for %(company)s. Please go to Settings.", company=company.name,

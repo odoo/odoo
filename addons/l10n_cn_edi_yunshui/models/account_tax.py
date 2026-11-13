@@ -51,3 +51,6 @@ class AccountTax(models.Model):
         string="Reduced Tax Code",
         help="减按征税标识",
     )
+
+    def _l10n_cn_edi_rate(self):
+        return f"{abs(self.amount) / 100.0:.8f}".rstrip('0').rstrip('.')
