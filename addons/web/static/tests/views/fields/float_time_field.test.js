@@ -135,3 +135,22 @@ test("float_time field does not have an inputmode attribute", async () => {
 
     expect(".o_field_widget[name='qux'] input").not.toHaveAttribute("inputmode");
 });
+
+test("FloatTimeField preserves the sign of a pasted duration", async () => {
+    onRpc("partner", "web_save", ({ args }) => {
+        expect(args[1].qux).toBe(-0.5);
+        expect.step("saved");
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="qux" widget="float_time"/></form>`,
+        resId: 5,
+    });
+
+    await contains(".o_field_float_time[name=qux] input").edit(" -0:30 ");
+    expect(".o_field_float_time[name=qux] input").toHaveValue("-00:30");
+    await clickSave();
+    expect.verifySteps(["saved"]);
+    expect(".o_field_float_time[name=qux] input").toHaveValue("-00:30");
+});

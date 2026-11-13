@@ -47,6 +47,10 @@ test("parseFloatTime", () => {
     expect(parseFloatTime("100.00")).toBe(100);
     expect(parseFloatTime("7:15")).toBe(7.25);
     expect(parseFloatTime("-4:30")).toBe(-4.5);
+    expect(parseFloatTime(" -4:30 ")).toBe(-4.5);
+    expect(parseFloatTime("\t-0:30\n")).toBe(-0.5);
+    expect(parseFloatTime(" 7:15 ")).toBe(7.25);
+    expect(parseFloatTime(" -1.5 ")).toBe(-1.5);
     expect(parseFloatTime(":")).toBe(0);
     expect(parseFloatTime("1:")).toBe(1);
     expect(parseFloatTime(":12")).toBe(0.2);

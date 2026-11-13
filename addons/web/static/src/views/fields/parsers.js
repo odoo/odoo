@@ -96,6 +96,7 @@ export function parseFloat(value) {
  * @returns {number} a float
  */
 export function parseFloatTime(value) {
+    value = value.trim();
     let sign = 1;
     if (value[0] === "-") {
         value = value.slice(1);
