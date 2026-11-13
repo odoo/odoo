@@ -417,6 +417,8 @@ class AccountDocumentImportMixin(models.AbstractModel):
         valid_attachments = self._from_files_data(valid_files_data).filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
         extra_attachments = self._from_files_data(extra_files_data).filtered(lambda a: a.res_model == self._name and not a.res_field)
         valid_attachments.write({'res_model': self._name, 'res_id': self.id})
+        for fname in self._attachment_fields_to_clear():
+            self[fname] -= extra_attachments
         extra_attachments.write({'res_model': False, 'res_id': 0})
 
     def _should_attach_to_record(self, attachment):

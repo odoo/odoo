@@ -1078,6 +1078,16 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         self.assertEqual(main.mimetype, 'application/pdf')
         self.assertEqual(main.res_id, invoice.id)
 
+    def test_email_image_not_set_as_main_attachment(self):
+        """ The images of an e-mail are detached from the bill, so they must not
+            become its main attachment.
+        """
+        for origin in ('mail_alias', 'chatter_email'):
+            with self.subTest(origin=origin):
+                attachment, _messages, bill = self._upload_and_import_attachments(origin, [self.gif1_vals])
+                self.assertFalse(attachment.res_model)
+                self.assertFalse(bill.message_main_attachment_id)
+
     def test_import_with_traceback(self):
         # Verify that even an Exception does not cause the import to fail, and that we log the attachment in the chatter
         attachment = self.env['ir.attachment'].create(self.xml1_vals)
