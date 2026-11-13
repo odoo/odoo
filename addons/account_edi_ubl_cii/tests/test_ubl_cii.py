@@ -273,18 +273,19 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             'peppol_endpoint': 'DE123456788',
         }])
 
-        partner.vat = 'FR23334175221'
+        # Avoid the localization-specific SIREN fallback for French VAT numbers.
+        partner.vat = 'LU12345613'
 
         self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
+            'peppol_eas': '9938',
+            'peppol_endpoint': 'LU12345613',
         }])
 
-        partner.vat = '23334175221'
+        partner.vat = '12345613'
 
         self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
+            'peppol_eas': '9938',
+            'peppol_endpoint': 'LU12345613',
         }])
 
         partner.write({
