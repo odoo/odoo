@@ -24,7 +24,7 @@ MIMETYPE_HEAD_SIZE = 2048
 # discriminants for zip-based file formats
 _ooxml_dirs = {
     'word/': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'pt/': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'ppt/': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'xl/': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 }
 def _check_ooxml(data):
@@ -36,7 +36,7 @@ def _check_ooxml(data):
             return False
 
         # then there is a directory whose name denotes the type of the file:
-        # word, pt (powerpoint) or xl (excel)
+        # word, ppt (powerpoint) or xl (excel)
         for dirname, mime in _ooxml_dirs.items():
             if any(entry.startswith(dirname) for entry in filenames):
                 return mime
