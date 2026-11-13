@@ -4,6 +4,7 @@ from contextlib import contextmanager
 
 from lxml import html
 
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -53,6 +54,43 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
         email_tree = html.fromstring(emails[0].body_html)
         price_span = email_tree.find('.//span[@class="oe_currency_value"]')
         self.assertEqual(price_span.text.strip(), "115.00")
+
+    def test_back_in_stock_notification_variant_price(self):
+        """The price shown in the back-in-stock email must be the price of the variant, extra price
+        of its attribute values included."""
+        size = self.env['product.attribute'].create({
+            'name': "Size",
+            'value_ids': [Command.create({'name': "S"}), Command.create({'name': "XL"})],
+        })
+        template = self.env['product.template'].create({
+            'name': "Shirt",
+            'list_price': 100.0,
+            'taxes_id': False,
+            'is_storable': True,
+            'allow_out_of_stock_order': False,
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': size.id,
+                    'value_ids': [Command.set(size.value_ids.ids)],
+                }),
+            ],
+        })
+        xl_ptav = template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.name == "XL",
+        )
+        xl_ptav.price_extra = 20.0
+        xl_variant = template._get_variant_for_combination(xl_ptav)
+        xl_variant.stock_notification_partner_ids += self.partner
+        self._add_product_qty_to_wh(xl_variant.id, 10.0, self.warehouse.lot_stock_id.id)
+        website = self.env['website'].get_current_website()
+        website.company_id.partner_id.email = "test@test.com"
+        with self.setup_cron_env() as env:
+            env['product.product']._send_availability_email()
+        emails = self.env['mail.mail'].search([('email_to', '=', self.partner.email_formatted)])
+        email_tree = html.fromstring(emails[0].body_html)
+        price_span = email_tree.find('.//span[@class="oe_currency_value"]')
+        self.assertEqual(price_span.text.strip(), "120.00")
 
     @contextmanager
     def setup_cron_env(self):
