@@ -323,3 +323,44 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         expense_form.company_id = company_1
         self.assertEqual(expense_form.employee_id, employee)
         self.assertTrue(expense_form.is_editable)
+
+    def test_expense_split_with_attachment_access_rights(self):
+        """ Test that an admin can split their own submitted expense with an attachment without an AccessError. """
+
+        admin_user = self.env.ref('base.user_admin')
+        admin_user.company_ids |= self.env.company
+
+        admin_employee = self.env['hr.employee'].sudo().create({
+            'name': 'Admin Employee',
+            'user_id': admin_user.id,
+            'work_contact_id': admin_user.partner_id.id,
+            'company_id': self.env.company.id,
+        })
+
+        expense = self.env['hr.expense'].with_user(admin_user).create({
+            'name': 'Test expense',
+            'employee_id': admin_employee.id,
+            'product_id': self.product_a.id,
+            'total_amount_currency': 200.0,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['ir.attachment'].with_user(admin_user).create({
+            'name': 'receipt.png',
+            'raw': b'receipt content',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+
+        expense.with_user(admin_user).action_submit()
+
+        wizard_action = expense.with_user(admin_user).action_split_wizard()
+        wizard = self.env['hr.expense.split.wizard'].with_user(admin_user).browse(wizard_action['res_id'])
+
+        with Form(wizard) as form:
+            with form.expense_split_line_ids.edit(0) as line:
+                line.total_amount_currency = 100.0
+            with form.expense_split_line_ids.new() as line:
+                line.total_amount_currency = 100.0
+
+        wizard.with_user(admin_user).action_split_expense()

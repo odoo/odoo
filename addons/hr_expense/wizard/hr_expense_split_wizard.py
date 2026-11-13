@@ -51,7 +51,7 @@ class HrExpenseSplitWizard(models.TransientModel):
                 for split in self.expense_split_line_ids:
                     copied_expenses |= self.expense_id.with_context({'from_split_wizard': True}).copy(split._get_values())
 
-                attachment_ids = self.env['ir.attachment'].search([
+                attachment_ids = self.env['ir.attachment'].sudo().search([
                     ('res_model', '=', 'hr.expense'),
                     ('res_id', '=', self.expense_id.id)
                 ])
