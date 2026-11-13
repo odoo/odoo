@@ -450,9 +450,7 @@ export class FormOptionPlugin extends Plugin {
                 // mutations to the original field stored in the registry
                 const _field = { ...field, formatInfo };
                 _field.type = getDefaultFieldType(_field);
-                const locationEl = el.querySelector(
-                    ".s_website_form_submit, .s_website_form_recaptcha"
-                );
+                const locationEl = el.querySelector(this.fieldAnchorSelectors.join(", "));
                 locationEl.insertAdjacentElement(
                     "beforebegin",
                     renderField(_field, this.dependencies.websiteBridge.renderToElement)
@@ -547,15 +545,16 @@ export class FormOptionPlugin extends Plugin {
             }
         });
     }
+    get fieldAnchorSelectors() {
+        return [".s_website_form_submit", ".s_website_form_recaptcha"];
+    }
     addField(editingElement) {
         const formEl = editingElement.closest("form");
         const field = getCustomField("char", this.dependencies.websiteBridge._t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field, this.dependencies.websiteBridge.renderToElement);
         if (editingElement === formEl) {
-            const locationEl = formEl.querySelector(
-                ".s_website_form_submit, .s_website_form_recaptcha"
-            );
+            const locationEl = formEl.querySelector(this.fieldAnchorSelectors.join(", "));
             if (locationEl) {
                 locationEl.insertAdjacentElement("beforebegin", fieldEl);
             } else {
