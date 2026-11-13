@@ -7,7 +7,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.sql import column_exists, create_column
 
-JOFOTARA_URL = "https://backend.jofotara.gov.jo/core/invoices/"
+# MoDEE only lets whitelisted static IPs reach JoFotara, so invoices go through Odoo's IAP server.
+DEFAULT_IAP_ENDPOINT = "https://iap-services.odoo.com"
 
 
 class AccountMove(models.Model):
@@ -161,20 +162,41 @@ class AccountMove(models.Model):
         }
 
     def _send_l10n_jo_edi_request(self, params, headers):
+        url = self.env['ir.config_parameter'].sudo().get_param('l10n_jo_edi.iap_endpoint', DEFAULT_IAP_ENDPOINT) + '/api/l10n_jo_edi/1/submit'
+        payload = {
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'id': uuid.uuid4().hex,
+            'params': {
+                'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                'client_id': headers['Client-Id'],
+                'secret_key': headers['Secret-Key'],
+                'json_payload': params,
+            },
+        }
         try:
-            response = requests.post(JOFOTARA_URL, json=params, headers=headers, timeout=50)
+            # Longer than the proxy's own 50 seconds timeout towards JoFotara.
+            response = requests.post(url, json=payload, timeout=60)
+            response.raise_for_status()
+            rpc_response = response.json()
         except requests.exceptions.Timeout:
             return {'error': _("Request timeout! Please try again.")}
         except requests.exceptions.RequestException as e:
             return {'error': _("Invalid request: %s", e)}
 
-        if not response.ok:
-            content = response.content.decode()
-            if response.status_code == 403:
-                content = _("Access forbidden. Please verify your JoFotara credentials.")
-            return {'error': _("Request failed: %s", content)}
-        dict_response = response.json()
-        return dict_response
+        result = rpc_response.get('result')
+        if not result:
+            return {'error': _("The JoFotara proxy server could not process the request. Please try again later.")}
+        error = result.get('error')
+        if not error:
+            return result
+        # The IAP server refuses some databases with a bare code, e.g. 'not_enterprise'.
+        if isinstance(error, str):
+            return {'error': _("Request failed: %s", error)}
+        content = error['message']
+        if error.get('status_code') == 403:
+            content = _("Access forbidden. Please verify your JoFotara credentials.")
+        return {'error': _("Request failed: %s", content)}
 
     def _submit_to_jofotara(self):
         self.ensure_one()
