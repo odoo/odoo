@@ -118,7 +118,7 @@ class TestPrefecth(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
             result = partners.browse()
             for partner in partners:
                 result += partner.with_prefetch()
-            main_size = RECORDS * 2  # current ids + prefetched ids
+            main_size = RECORDS  # prefetched ids
             self.assertEqual(len(list(result._prefetch_ids)), main_size)
 
             # get the children
@@ -128,20 +128,20 @@ class TestPrefecth(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
 
             # union with all children
             children |= children.parent_id.child_ids
-            main_size *= 2  # because PrefetchUnion has both prefetch and ids
-            self.assertEqual(len(list(children._prefetch_ids)), main_size + CHILDREN)
+            main_size *= 2  # because PrefetchUnion has both prefetch
+            self.assertEqual(len(list(children._prefetch_ids)), main_size)
 
             # now incrementally build
             result = partners.browse()
             for child in children:
                 result += child
-            self.assertEqual(len(list(result._prefetch_ids)), main_size + CHILDREN)
+            self.assertEqual(len(list(result._prefetch_ids)), main_size)
 
             # country of first child (harder case)
             result = partners.country_id.browse()
             for partner in partners[:11]:
                 result += partner.child_ids[0].country_id
-            main_size = RECORDS * CHILDREN + 11
+            main_size = RECORDS * CHILDREN
             self.assertEqual(len(list(result._prefetch_ids)), main_size)
 
         # when building subsets of large recordsets, prefetch in priority the
