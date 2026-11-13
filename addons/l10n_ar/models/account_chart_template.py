@@ -18,7 +18,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
         return match.get(chart_template)
 
-    def _load(self, template_code, company, install_demo,force_create=True):
+    def _load(self, template_code, company, install_demo, force_create=True, xmlids=None):
         """ Set companies ARCA Responsibility and Country if AR CoA is installed, also set tax calculation rounding
         method required in order to properly validate match ARCA invoices.
 
@@ -33,7 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_calculation_rounding_method': 'round_globally',
             })
 
-        res = super()._load(template_code, company, install_demo,force_create)
+        res = super()._load(template_code, company, install_demo, force_create, xmlids=xmlids)
 
         # If Responsable Monotributista remove the default purchase tax
         if template_code in ('ar_base', 'ar_ex'):
@@ -41,7 +41,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         return res
 
-    def try_loading(self, template_code, company, install_demo=False, force_create=True):
+    def try_loading(self, template_code, company, install_demo=False, force_create=True, xmlids=None):
         # During company creation load template code corresponding to the ARCA Responsibility
         if not company:
             return
@@ -54,4 +54,4 @@ class AccountChartTemplate(models.AbstractModel):
                 self.env.ref('l10n_ar.res_IVARI'): 'ar_ri',
             }
             template_code = match.get(company.l10n_ar_afip_responsibility_type_id, template_code)
-        return super().try_loading(template_code, company, install_demo, force_create)
+        return super().try_loading(template_code, company, install_demo, force_create=force_create, xmlids=xmlids)

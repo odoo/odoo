@@ -170,7 +170,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=False, force_create=True):
+    def try_loading(self, template_code, company, install_demo=False, force_create=True, xmlids=None):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
@@ -184,6 +184,8 @@ class AccountChartTemplate(models.AbstractModel):
         :param force_create: Determines the loading behavior. If True, forces the creation of new entries;
             if False, prevents new creations and performs updates on existing data where applicable.
         :type force_create: bool
+        :param xmlids: only load these records of the chart template, as {model: {xmlid, ...}}.
+        :type xmlids: dict
         """
         if not company:
             return
@@ -201,9 +203,9 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
             raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
-        return self._load(template_code, company, install_demo, force_create)
+        return self._load(template_code, company, install_demo, force_create=force_create, xmlids=xmlids)
 
-    def _load(self, template_code, company, install_demo, force_create=True ):
+    def _load(self, template_code, company, install_demo, force_create=True, xmlids=None):
         """Install this chart of accounts for the current company.
 
         :param template_code: code of the chart template to be loaded.
@@ -215,6 +217,8 @@ class AccountChartTemplate(models.AbstractModel):
         # Ensure that the context is the correct one, even if not called by try_loading
         if not (self.env.su or self.env.user._is_system()):
             raise AccessError(_("Only administrators can install chart templates"))
+        if xmlids is not None and not company.parent_id and template_code != company.chart_template:
+            raise UserError(self.env._("Specific records of a chart template can only be loaded on a company already using it."))
         self = self.sudo()  # noqa: PLW0642
         chart_template_mapping = self._get_chart_template_mapping()[template_code]
         if not company.country_id:
@@ -256,6 +260,20 @@ class AccountChartTemplate(models.AbstractModel):
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
+        if xmlids is not None:
+            if unknown := sorted(
+                f"{model}: {xmlid}"
+                for model, model_xmlids in xmlids.items()
+                for xmlid in model_xmlids
+                if xmlid not in data.get(model, {})
+            ):
+                raise ValueError(f"Unknown chart template records: {', '.join(unknown)}")
+            data = {
+                model: records if model == 'res.company' else {
+                    xmlid: values for xmlid, values in records.items() if xmlid in xmlids.get(model, ())
+                }
+                for model, records in data.items()
+            }
         if company.parent_id:
             data = {
                 'res.company': data['res.company'],
@@ -280,7 +298,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
-            self._load(template_code, subsidiary, install_demo, force_create)
+            self._load(template_code, subsidiary, install_demo, force_create=force_create, xmlids=xmlids)
 
     @api.model
     def _install_demo(self, companies):

@@ -167,7 +167,7 @@ class AccountChartTemplate(models.AbstractModel):
                     AccountChartTemplate.company_xmlid('purchase'): journal_data['purchase'],
                 }})
 
-    def _load(self, template_code, company, install_demo, force_create=True):
+    def _load(self, template_code, company, install_demo, force_create=True, xmlids=None):
         # Both fields use `ondelete='restrict'`, so the chart template cannot be changed while either account is set.
         # Clear them from the cash rounding configuration before changing the chart template.
         is_indian_template = template_code and template_code.startswith('in')
@@ -178,7 +178,7 @@ class AccountChartTemplate(models.AbstractModel):
         ):
             cash_rounding.write({'profit_account_id': False, 'loss_account_id': False})
 
-        res = super()._load(template_code, company, install_demo, force_create)
+        res = super()._load(template_code, company, install_demo, force_create, xmlids=xmlids)
         if is_indian_template:
             if company.l10n_in_tds_feature:
                 company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
