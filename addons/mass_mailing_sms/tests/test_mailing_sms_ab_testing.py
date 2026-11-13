@@ -33,3 +33,19 @@ class TestMailingSMSABTesting(MassSMSCommon, TestMailingABTestingCommon):
             self.env['mailing.mailing'].search(compare_version.get('domain')),
             self.ab_testing_mailing_sms_1 + self.ab_testing_mailing_sms_2
         )
+
+    def test_mailing_sms_ab_testing_manual_cron(self):
+        """ With a 'Manual' SMS winner selection, the A/B testing cron must not
+        pick and send a winner by itself, even once the schedule date passed. """
+        campaign = self.ab_testing_mailing_sms_1.campaign_id
+        campaign.write({
+            'ab_testing_schedule_datetime': datetime(2024, 1, 1),
+            'ab_testing_sms_winner_selection': 'manual',
+        })
+        self.assertEqual(self.ab_testing_mailing_sms_2.campaign_id, campaign)
+        (self.ab_testing_mailing_sms_1 + self.ab_testing_mailing_sms_2).write({'state': 'done'})
+
+        self.env['utm.campaign']._cron_process_mass_mailing_ab_testing()
+        self.assertFalse(campaign.ab_testing_completed)
+        self.assertFalse(campaign.ab_testing_winner_mailing_id)
+        self.assertEqual(campaign.mailing_sms_ids, self.ab_testing_mailing_sms_1 + self.ab_testing_mailing_sms_2)
