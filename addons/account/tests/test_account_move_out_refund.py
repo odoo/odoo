@@ -961,6 +961,31 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
              'currency_id': self.other_currency.id,
          })
 
+    def test_out_refund_reverse_storno(self):
+        # The product lines of a credit note made from an invoice, and the negative lines of an invoice,
+        # should be storno as the other lines
+        self.env.company.account_storno = True
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_line_ids': [
+                Command.create({'name': 'positive', 'price_unit': 1000.0, 'tax_ids': []}),
+                Command.create({'name': 'negative', 'price_unit': -100.0, 'tax_ids': []}),
+            ],
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'is_storno': False, 'debit': 0.0, 'credit': 1000.0},
+            {'is_storno': True, 'debit': 0.0, 'credit': -100.0},
+        ])
+
+        credit_note = invoice._reverse_moves()
+        self.assertRecordValues(credit_note.invoice_line_ids, [
+            {'is_storno': True, 'debit': 0.0, 'credit': -1000.0},
+            {'is_storno': True, 'debit': -100.0, 'credit': 0.0},
+        ])
+
     def test_out_refund_reverse_caba(self):
         tax_waiting_account = self.env['account.account'].create({
             'name': 'TAX_WAIT',
