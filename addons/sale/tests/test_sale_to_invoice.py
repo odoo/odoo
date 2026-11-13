@@ -2198,6 +2198,36 @@ class TestSaleToInvoice(TestSaleCommon):
             ],
         )
 
+    def test_productless_sol_delivery_policy_amount_to_invoice(self):
+        """The untaxed amount to invoice of a productless line follows the company invoicing policy,
+        like its quantity to invoice."""
+        self.env.company.sale_invoice_policy = "delivery"
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "name": "Productless SOL",
+                    "product_uom_qty": 5,
+                    "price_unit": 100,
+                    "tax_ids": False,
+                }),
+            ],
+        })
+        order.action_confirm()
+        line = order.order_line
+        self.assertEqual(line.invoice_policy, "delivery")
+        self.assertRecordValues(line, [{"qty_to_invoice": 0.0, "untaxed_amount_to_invoice": 0.0}])
+
+        line.qty_delivered = 2
+        self.assertRecordValues(line, [{"qty_to_invoice": 2.0, "untaxed_amount_to_invoice": 200.0}])
+
+        order._create_invoices().action_post()
+        self.assertRecordValues(line, [{
+            "qty_invoiced": 2.0,
+            "untaxed_amount_invoiced": 200.0,
+            "untaxed_amount_to_invoice": 0.0,
+        }])
+
     def test_invoice_line_name_partner_specific_code_not_duplicated(self):
         """When a customer has their own product code (product.supplierinfo),
         the sale order line description uses it (e.g. "[CUSTOM-CODE] Product").
