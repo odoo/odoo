@@ -45,7 +45,9 @@ function computeDerivedOptions(options, fields, currentSelection, { excludeGroup
     // filter options to display, derived from the current value and the model fields
     const derivedOptions = [];
     for (const [value, label] of options) {
-        const { group, triggers } = OPT_GROUPS.find((g) => g.triggers.includes(value));
+        const { group, triggers } =
+            OPT_GROUPS.find((g) => g.triggers.includes(value)) ??
+            OPT_GROUPS.find((g) => g.group.key === "custom");
         if (
             (group.key === "deprecated" && !triggers.includes(currentSelection)) ||
             excludeGroups.includes(group.key)
