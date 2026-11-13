@@ -36,8 +36,7 @@ export class SelectLayoutAction extends BuilderAction {
     apply({ editingElement, value: layout }) {
         const savedSelectors = this.dependencies.CookiesBarOptionPlugin.getSavedSelectors();
         const templateEl = this.dependencies.websiteBridge.renderToElement(
-            `website.cookies_bar.${layout}`,
-            { websiteId: this.services.website.currentWebsite.id }
+            `website.cookies_bar.${layout}`
         );
         const contentEl = editingElement.querySelector(".modal-content");
 
