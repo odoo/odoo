@@ -643,7 +643,7 @@ class SaleOrder(models.Model):
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
-    @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
+    @api.depends('invoice_ids.state', 'currency_id', 'amount_total', 'order_line.qty_delivered', 'order_line.qty_invoiced')
     def _compute_amount_to_invoice(self):
         for order in self:
             # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
@@ -655,12 +655,23 @@ class SaleOrder(models.Model):
             # Note: A negative amount can happen, since we can invoice more than the sales order amount.
             # Care has to be taken when summing amount_to_invoice of multiple orders.
             # E.g. consider one invoiced order with -100 and one uninvoiced order of 100: 100 + -100 = 0
-            order.amount_to_invoice = order.amount_total - invoices._get_sale_order_invoiced_amount(order)
+            order.amount_to_invoice = order.amount_total - invoices._get_sale_order_invoiced_amount(order) - order._get_undeliverable_amount()
 
     @api.depends('amount_total', 'amount_to_invoice')
     def _compute_amount_invoiced(self):
         for order in self:
-            order.amount_invoiced = order.amount_total - order.amount_to_invoice
+            order.amount_invoiced = order.amount_total - order.amount_to_invoice - order._get_undeliverable_amount()
+
+    def _get_undeliverable_amount(self):
+        """ Return the amount (tax included) of the order lines that will never be delivered,
+        hence never invoiced. See `sale.order.line._get_undeliverable_qty`.
+        """
+        self.ensure_one()
+        return sum(
+            line.price_total * line._get_undeliverable_qty() / line.product_uom_qty
+            for line in self.order_line
+            if line.product_uom_qty
+        )
 
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
