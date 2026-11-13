@@ -23,10 +23,18 @@ export function initElementForEdition(element, options = {}) {
     for (const img of element.querySelectorAll("img[width], img[height]")) {
         const width = img.getAttribute("width");
         const height = img.getAttribute("height");
-        img.removeAttribute("height");
-        img.removeAttribute("width");
-        img.style.setProperty("width", isNaN(width) ? width : `${width}px`);
-        img.style.setProperty("height", isNaN(height) ? height : `${height}px`);
+        // If the attributes are numbers without units, then they are not
+        // meant to signify the rendered width and height of the image but
+        // its intrisic dimensions, so the browser can reserve the correct
+        // space before the image is downloaded, so those are not converted.
+        if (isNaN(width)) {
+            img.style.setProperty("width", width);
+            img.removeAttribute("width");
+        }
+        if (isNaN(height)) {
+            img.style.setProperty("height", height);
+            img.removeAttribute("height");
+        }
     }
 }
 
