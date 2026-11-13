@@ -464,7 +464,7 @@ class AccountWithholdingLine(models.AbstractModel):
         new_base_lines = []
         for base_line in base_lines:
             new_base_lines.append(AccountTax._prepare_base_line_for_taxes_computation(
-                base_line,
+                AccountTax._prepare_withholding_base_line(base_line, company),
                 calculate_withholding_taxes=True,
                 manual_tax_line_name=base_line.get('manual_tax_line_name'),
                 filter_tax_function=None,
