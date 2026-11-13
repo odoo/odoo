@@ -195,16 +195,10 @@ class OriginIds(Reversible):  # noqa: PLW1641
 
 
 class PrefetchUnion(Reversible):
-    """ A prefetch object for the concatenation/union of recordsets.
-    The constructor takes the ids of the concatenation/union and the prefetch
-    ids of the recordsets in the concatenation/union.  The given ids are
-    redundant but have priority when iterating, which makes them prioritary
-    when prefetching.
-    """
-    __slots__ = ('_ids', '_prefetches')
+    """ A prefetch object for the concatenation/union of recordsets. """
+    __slots__ = ('_prefetches',)
 
-    def __init__(self, ids: tuple, *prefetches: Reversible):
-        self._ids = ids
+    def __init__(self, *prefetches: Reversible):
         self._prefetches = prefetches
 
     class __AlwaysHash:
@@ -227,11 +221,9 @@ class PrefetchUnion(Reversible):
             return id(self.obj)
 
     def __iter__(self):
-        it = self._ids
-        yield from it
         # flatten out prefetches in order to avoid recursion errors
         stack = list(reversed(self._prefetches))
-        seen = {self.__AlwaysHash(it)}
+        seen = set()
         while stack:
             it = stack.pop()
             h = self.__AlwaysHash(it)
@@ -244,11 +236,9 @@ class PrefetchUnion(Reversible):
             yield from it
 
     def __reversed__(self):
-        it = self._ids
-        yield from it
         # flatten out prefetches in order to avoid recursion errors
         stack = list(self._prefetches)
-        seen = {self.__AlwaysHash(it)}
+        seen = set()
         while stack:
             it = stack.pop()
             h = self.__AlwaysHash(it)
