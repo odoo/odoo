@@ -403,7 +403,16 @@ class ProductProduct(models.Model):
         if (
             message_operation == "create"
             and not self.env.user._is_internal()
+<<<<<<< fa6459c5759e2e0d3d068fef3f432deb8d3ef154
             and not self.env["website"].is_view_active("website_sale.product_comment")
+||||||| 3f3941c6741ebc708be7fe36e93ffd2cc69f7be6
+            and not self.env['website'].is_view_active('website_sale.product_comment')
+=======
+            and (
+                self.env.user._is_public()
+                or not self.env['website'].is_view_active('website_sale.product_comment')
+            )
+>>>>>>> f98928a48c2ed122cb80a3960b910a579cf780ee
         ):
             return [(Domain.TRUE, "write")]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
