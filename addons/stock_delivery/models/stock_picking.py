@@ -262,6 +262,10 @@ class StockPicking(models.Model):
             weight += move.product_qty * move.product_id.weight
         return weight
 
+    def _get_delivery_pricelist(self):
+        self.ensure_one()
+        return self.sale_id.pricelist_id if self.sale_id else None
+
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id

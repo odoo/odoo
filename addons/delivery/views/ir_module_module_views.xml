@@ -54,15 +54,6 @@
         <field name="mode">primary</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <filter name="not_installed" position="after">
-                <separator/>
-                <filter
-                    name="archived"
-                    string="Archived"
-                    domain="[]"
-                    context="{'legacy_delivery_providers': True}"
-                />
-            </filter>
             <searchpanel position="replace"/>
         </field>
     </record>

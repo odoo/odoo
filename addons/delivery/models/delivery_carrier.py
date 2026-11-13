@@ -7,11 +7,8 @@ import psycopg2
 
 from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
-from odoo.modules.module import get_module_icon
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import expr_eval
-
-from odoo.addons.delivery import const
 
 
 class DeliveryCarrier(models.Model):
@@ -37,7 +34,7 @@ class DeliveryCarrier(models.Model):
 
     name = fields.Char(string="Delivery Method", translate=True, required=True)
     active = fields.Boolean(default=True)
-    sequence = fields.Integer(help="Determine the display order", default=10)
+    sequence = fields.Integer(help="Determine the display order", default=100)
     # This field will be overwritten by internal shipping providers by adding their own type.
     delivery_type = fields.Selection(
         string="Provider",
@@ -46,7 +43,6 @@ class DeliveryCarrier(models.Model):
         required=True,
     )
     provider_icon = fields.Char(string="Provider Icon", compute="_compute_provider_icon")
-    available_delivery_types = fields.Char(compute="_compute_available_delivery_types")
     supports_cash_on_delivery = fields.Boolean(compute="_compute_supports_cash_on_delivery")
     allow_cash_on_delivery = fields.Boolean(
         string="Cash on Delivery",
@@ -241,50 +237,12 @@ class DeliveryCarrier(models.Model):
 
     @api.depends("delivery_type")
     def _compute_provider_icon(self):
-        """Use the icon of the module that adds the delivery type."""
-        module_by_type = self._get_module_by_delivery_type()
         for carrier in self:
-            module = module_by_type.get(carrier.delivery_type)
-            carrier.provider_icon = module and get_module_icon(module)
-
-    @api.depends("delivery_type")
-    def _compute_available_delivery_types(self):
-        """Hide the delivery types of legacy providers, unless already used by the carrier."""
-        legacy_types = {
-            delivery_type
-            for delivery_type, module in self._get_module_by_delivery_type().items()
-            if module in const.LEGACY_DELIVERY_PROVIDERS
-        }
-        delivery_types = self._fields["delivery_type"].get_values(self.env)
-        for carrier in self:
-            carrier.available_delivery_types = ",".join(
-                delivery_type
-                for delivery_type in delivery_types
-                if delivery_type not in legacy_types or delivery_type == carrier.delivery_type
+            carrier.provider_icon = (
+                "/delivery/static/description/icon.png"
+                if carrier.delivery_type == "in_house"
+                else False
             )
-
-    @api.model
-    def _get_module_by_delivery_type(self):
-        """Return the name of the module that adds each delivery type.
-
-        :return: The module names, by delivery type.
-        :rtype: dict[str, str]
-        """
-        selections = (
-            self
-            .env["ir.model.fields.selection"]
-            .sudo()
-            .search([
-                ("field_id.model", "=", "delivery.carrier"),
-                ("field_id.name", "=", "delivery_type"),
-            ])
-        )
-        xmlids = selections._get_external_ids()
-        return {
-            selection.value: xmlids[selection.id][0].split(".")[0]
-            for selection in selections
-            if xmlids.get(selection.id)
-        }
 
     @api.depends("delivery_type")
     def _compute_supports_cash_on_delivery(self):
@@ -309,7 +267,7 @@ class DeliveryCarrier(models.Model):
         # replace it by `stock_delivery` (with additional condition on `group_stock_picking_batch` ?)
         exclude_apps = ["delivery_barcode", "delivery_stock_picking_batch", "delivery_iot"]
         return {
-            "name": self.env._("Shipping Providers"),
+            "name": self.env._("Delivery Providers"),
             "res_model": "ir.module.module",
             "view_mode": "kanban,list",
             "views": [
@@ -323,7 +281,6 @@ class DeliveryCarrier(models.Model):
                 ["name", "=like", "delivery_%"],
                 ["name", "not in", exclude_apps],
             ],
-            "context": {"legacy_delivery_providers": False},
             "type": "ir.actions.act_window",
             "help": self.env._("""<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
@@ -367,15 +324,8 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if not self.pricelist_ids:
             return True
-        if source._name == "sale.order":
-            pricelist = source.pricelist_id
-        elif source._name == "stock.picking":
-            if not source.sale_id:
-                return True
-            pricelist = source.sale_id.pricelist_id
-        else:
-            raise UserError(self.env._("Invalid source document type"))
-        return pricelist in self.pricelist_ids
+        pricelist = source._get_delivery_pricelist()
+        return pricelist is None or pricelist in self.pricelist_ids
 
     def _match_must_have_tags(self, source):
         self.ensure_one()
@@ -596,16 +546,6 @@ class DeliveryCarrier(models.Model):
                 ),
                 "warning_message": False,
             }
-        return self._get_in_house_rate(order)
-
-    def _get_in_house_rate(self, order):
-        """Compute the rate of the order shipment from the first matching pricing rule, or from the
-        price if no pricing rule matches.
-
-        :param sale.order order: The order to compute the rate for.
-        :return: The rate, as returned by `rate_shipment`.
-        :rtype: dict
-        """
         price = self._get_price_available(order)
         if price is None:
             price = order.pricelist_id._get_product_price(self.product_id, 1.0)

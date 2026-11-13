@@ -35,7 +35,10 @@
         <field name="model">delivery.price.rule</field>
         <field name="arch" type="xml">
             <list string="Price Rules">
-                <field name="sequence" widget="handle" />
+                <control>
+                    <create string="Add a rule"/>
+                </control>
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </list>
         </field>
