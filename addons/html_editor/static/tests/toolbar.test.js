@@ -37,6 +37,7 @@ import {
     patchTranslations,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
 import { range } from "@web/core/utils/numbers";
 import { fontSizeItems } from "../src/main/font/font_size_plugin";
 import { Plugin } from "../src/plugin";
@@ -156,6 +157,21 @@ test("toolbar is also visible when selection is empty in mobile", async () => {
     setContent(el, "<h1>test[</h1><p>]text</p>");
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
+});
+
+test.tags("mobile");
+test("toolbar remains visible while a button tooltip is shown in mobile", async () => {
+    const { el } = await setupEditor("<p>test</p>");
+    setContent(el, "<p>[test]</p>");
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+
+    await pointerDown(".o-we-toolbar button[name='bold']");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover[role=tooltip]").toHaveCount(1);
+    expect(".o-toolbar-above-keyboard").toBeVisible();
+    expect(".o-we-toolbar button[name='bold']").toBeVisible();
 });
 
 test("toolbar closes when selection leaves editor", async () => {
