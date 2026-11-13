@@ -15,12 +15,18 @@ function isResizable(el) {
  * @property { BuilderOverlayPlugin['showOverlayPreview'] } showOverlayPreview
  * @property { BuilderOverlayPlugin['hideOverlayPreview'] } hideOverlayPreview
  * @property { BuilderOverlayPlugin['refreshOverlays'] } refreshOverlays
+ * @property { BuilderOverlayPlugin['toggleOverlayName'] } toggleOverlayName
  */
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["builderOptions", "localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
+    static shared = [
+        "showOverlayPreview",
+        "hideOverlayPreview",
+        "refreshOverlays",
+        "toggleOverlayName",
+    ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_committed_to_history_handlers: this.refreshOverlays.bind(this),
@@ -146,6 +152,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 const parentOverlay = this.overlays[i];
                 if (parentOverlay.hasOverlayOptions) {
                     parentOverlay.toggleOverlay(true);
+                    parentOverlay.overlayElement.classList.add("o_hb_overlay_parent");
                     break;
                 }
             }
@@ -233,6 +240,17 @@ export class BuilderOverlayPlugin extends Plugin {
         }
         overlayToShow.toggleOverlayPreview(true);
         overlayToShow.toggleOverlayVisibility(true);
+    }
+
+    /**
+     * Shows or hides the name of the overlay of the given element.
+     *
+     * @param {HTMLElement} el
+     * @param {Boolean} show
+     */
+    toggleOverlayName(el, show) {
+        const overlay = this.overlays.find((overlay) => overlay.overlayTarget === el);
+        overlay?.overlayElement.classList.toggle("o_hb_overlay_show_name", show);
     }
 
     hideOverlayPreview(el) {

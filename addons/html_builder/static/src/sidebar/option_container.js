@@ -96,6 +96,10 @@ export class OptionsContainer extends BaseOptionComponent {
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
     }
 
+    toggleOverlayName(show) {
+        this.env.editor.shared.builderOverlay.toggleOverlayName(this.props.editingElement, show);
+    }
+
     /** @param {PointerEvent | FocusEvent} ev */
     updateOverlayPreview(ev) {
         const shouldShow = this.rootRef()?.contains(ev.target);

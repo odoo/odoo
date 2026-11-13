@@ -7,6 +7,14 @@
         z-index: var(--o-we-dropzone-z-index);
     }
 
+    &.oe_grid_zone {
+        border: 0;
+        outline-style: solid;
+        background: color-mix(
+            in srgb, var(--o-we-handles-accent-color) 10%, transparent
+        );
+    }
+
     &.o_dropzone_highlighted {
         filter: brightness(1.2);
     }
@@ -67,7 +75,9 @@
     position: relative;
 }
 
-:not(.oe_structure):not([data-oe-type="html"]) {
+:not(.oe_structure):not([data-oe-type="html"]),
+.o_drop_inner_empty:not(.oe_structure),
+.o_drop_inner_empty:has(> .o_inner_dropzone) {
     /* "Inner content" drop zones. */
     > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
         height: var(--o-we-inner-content-dropzone-size);
@@ -79,11 +89,21 @@
         /* Make sure no drop zone is on top of another when one is placed before
            a paragraph and the next is its first child. */
         + p > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone):first-child {
-            margin-top: var(--o-we-inner-content-dropzone-size);
+            margin-top: 8px;
         }
 
         &:not(.oe_vertical) {
-            border-bottom: var(--o-we-inner-content-dropzone-border);
+            height: 8px;
+            min-height: 8px;
+            margin: -4px 0;
+            border-radius: 0;
+            background:
+                linear-gradient(var(--o-we-handles-accent-color) 0 0)
+                    left / var(--o-we-handle-border-width) 8px no-repeat,
+                linear-gradient(var(--o-we-handles-accent-color) 0 0)
+                    right / var(--o-we-handle-border-width) 8px no-repeat,
+                linear-gradient(var(--o-we-handles-accent-color) 0 0)
+                    center / 100% var(--o-we-handle-border-width) no-repeat;
         }
 
         &.oe_vertical {
@@ -103,6 +123,29 @@
             &:not(:has(> :not(.oe_drop_zone, .btn))) {
                 line-height: 0;
             }
+        }
+    }
+}
+
+.o_drop_inner_empty:not(.oe_structure)
+> .oe_drop_zone.oe_insert[data-editor-message] {
+    &:not(.oe_vertical):not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 24px;
+        margin: 4px 0;
+        color: var(--o-we-dropzone-text-color);
+
+        &::before {
+            content: "+\00a0" attr(data-editor-message);
+            border-radius: var(--o-we-item-border-radius);
+            padding: 0 calc(var(--o-we-item-spacing) * 1.5);
+            background-color: var(--o-we-handles-accent-color);
+            font-family: var(--o-we-font-family);
+            font-size: var(--o-we-font-size-lg);
+            line-height: 24px;
+            text-shadow: 0 0 8px rgba(9, 89, 97, .6);
         }
     }
 }
