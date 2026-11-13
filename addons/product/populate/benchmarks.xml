@@ -295,4 +295,99 @@
             </create>
         </field>
     </record>
+
+    <!--
+        ==========================================================
+        BENCHMARK 9: Pricelist Rules — rules restricted to products
+        ==========================================================
+        Many rules restricted to a variant, a product or a category in
+        the same pricelist, and pricelists chained on it. Stresses the
+        resolution of the rule applied to each product.
+    -->
+    <record id="benchmark_pricelist_rules" model="populate.blueprint">
+        <field name="name">Benchmark: Pricelist Rules</field>
+        <field name="definition_xml" type="xml">
+            <create model="product.category" count="3" scale="False" id="category_roots">
+                <field name="name" generator="fake.catch_phrase"/>
+            </create>
+            <create model="product.category" count="80" id="categories">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="parent_id" ref="category_roots"/>
+            </create>
+            <create model="product.attribute.value" count="3" scale="False" id="attribute_values">
+                <field name="attribute_id" eval="env.ref('product.pa_size').id"/>
+                <value name="number" generator="misc.counter" start="1" unique="True"/>
+                <field name="name" eval="'Catalog size %s' % number"/>
+            </create>
+            <create model="product.template" count="600" id="single_templates" context="{'tracking_disable': True}">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="categ_id" ref="categories"/>
+                <field name="list_price" start="20.0" end="500.0"/>
+            </create>
+            <create model="product.template" count="200" id="multi_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="categ_id" ref="categories"/>
+                <field name="list_price" start="20.0" end="500.0"/>
+            </create>
+            <!-- Create one attribute line per template without random unique sampling. -->
+            <write model="product.template" ref="multi_templates" batched="True">
+                <value name="attribute" eval="env.ref('product.pa_size').id"/>
+                <value name="sizes" generator="relation.many" comodel_name="product.attribute.value" ref="attribute_values" count="3"/>
+                <field name="attribute_line_ids" eval="[(0, 0, {'attribute_id': attribute, 'value_ids': sizes})]"/>
+            </write>
+            <create model="product.pricelist" count="1" scale="False" id="base_pricelist">
+                <field name="name" eval="'Catalog base prices'"/>
+            </create>
+            <create model="product.pricelist.item" count="400" id="template_rules">
+                <field name="pricelist_id" ref="base_pricelist"/>
+                <field name="product_tmpl_id" ref="single_templates"/>
+                <field name="compute_price" eval="'fixed'"/>
+                <field name="fixed_price" start="10.0" end="300.0"/>
+                <field name="min_quantity" values="{0: 8, 5: 1, 10: 1}"/>
+                <field name="date_start" start="today -1y" end="today -1m" null_ratio="0.5"/>
+                <field name="date_end" start="today +1m" end="today +1y" null_ratio="0.5"/>
+            </create>
+            <create model="product.pricelist.item" count="550" id="variant_rules">
+                <field name="pricelist_id" ref="base_pricelist"/>
+                <field name="product_id" ref="multi_templates.product_variant_ids"/>
+                <field name="compute_price" eval="'fixed'"/>
+                <field name="fixed_price" start="10.0" end="300.0"/>
+                <field name="date_start" start="today -1y" end="today -1m" null_ratio="0.5"/>
+                <field name="date_end" start="today +1m" end="today +1y" null_ratio="0.5"/>
+            </create>
+            <create model="product.pricelist.item" count="3" scale="False" id="category_fallbacks">
+                <field name="pricelist_id" ref="base_pricelist"/>
+                <field name="categ_id" ref="category_roots" unique="True"/>
+                <field name="compute_price" eval="'discount'"/>
+                <field name="price_discount" start="5.0" end="20.0"/>
+            </create>
+            <create model="product.pricelist" count="30" scale="False" id="chained_pricelists">
+                <field name="name" generator="fake.company"/>
+                <field name="item_ids" eval="[]"/>
+            </create>
+            <write model="product.pricelist" ref="chained_pricelists" batched="True">
+                <value name="base_pricelist" generator="relation.one" comodel_name="product.pricelist" ref="base_pricelist"/>
+                <field name="item_ids" eval="[(0, 0, {'compute_price': 'discount', 'base': 'pricelist', 'base_pricelist_id': base_pricelist, 'price_discount': 10})]"/>
+            </write>
+            <create model="product.pricelist" count="1" scale="False" id="category_pricelist">
+                <field name="name" eval="'Catalog category discounts'"/>
+            </create>
+            <create model="product.pricelist.item" count="300" id="category_rules">
+                <field name="pricelist_id" ref="category_pricelist"/>
+                <field name="categ_id" ref="categories"/>
+                <field name="compute_price" eval="'discount'"/>
+                <field name="price_discount" start="5.0" end="30.0"/>
+                <field name="min_quantity" values="{0: 8, 5: 1, 10: 1}"/>
+            </create>
+            <create model="product.pricelist" count="1" scale="False" id="small_pricelist">
+                <field name="name" eval="'Catalog promotions'"/>
+            </create>
+            <create model="product.pricelist.item" count="64" id="promotion_rules">
+                <field name="pricelist_id" ref="small_pricelist"/>
+                <field name="product_id" ref="single_templates.product_variant_ids"/>
+                <field name="compute_price" eval="'discount'"/>
+                <field name="price_discount" start="5.0" end="30.0"/>
+            </create>
+        </field>
+    </record>
 </odoo>
