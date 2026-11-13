@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_time_rule_view_form_inherit_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.time.rule.form.inherit.hr.attendance</field>
+        <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timing_stop']/ancestor::div[2]" position="after">
+                <label for="automatic_break" string="Automatic Break" invisible="not can_use_automatic_break"
+                       help="Deduct a break from the attendances when the scheduled work time of the day is within the range. The break is also added to the automatic check-out time."/>
+                <div invisible="not can_use_automatic_break">
+                    <field name="can_use_automatic_break" invisible="1"/> <!-- drives the visibility of the automatic break -->
+                    <field name="automatic_break" nolabel="1"/>
+                    <div class="d-flex flex-wrap gap-1 align-items-baseline mt-1" invisible="not automatic_break">
+                        <span class="text-muted me-1">Between</span>
+                        <field name="break_min_work_hours" widget="float_time" nolabel="1" style="width:8ch"
+                               required="automatic_break"/>
+                        <span class="text-muted mx-1">and</span>
+                        <field name="break_max_work_hours" widget="float_time" nolabel="1" style="width:8ch"
+                               required="automatic_break"/>
+                        <span class="text-muted mx-1">of work time, give</span>
+                        <field name="automatic_break_duration" widget="float_time" nolabel="1" style="width:8ch"
+                               required="automatic_break"/>
+                        <span class="text-muted mx-1">break time</span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

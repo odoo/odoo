@@ -159,6 +159,10 @@ export class ActivityMenu extends Component {
             checkOut,
             inLocation: attendance.in_location || false,
             outLocation: attendance.out_location || false,
+            automaticBreakLabel:
+                !attendance.check_out && this.state.employee?.automatic_break_duration
+                    ? formatFloatTime(this.state.employee.automatic_break_duration, { numeric: true })
+                    : false,
             breakDurationLabel: attendance.break_duration
                 ? formatFloatTime(attendance.break_duration, { numeric: true })
                 : false,
@@ -171,6 +175,10 @@ export class ActivityMenu extends Component {
             }),
             sessions,
         };
+    }
+
+    formatAutomaticBreak(hours) {
+        return formatFloatTime(hours, { numeric: true });
     }
 
     get todayDateLabel() {

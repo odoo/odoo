@@ -311,6 +311,15 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
+    def _get_automatic_break_duration(self, check_in=None):
+        """Return the automatic break of the employee for the day of ``check_in`` (now by
+        default), see ``hr.time.rule._get_automatic_break_duration``.
+
+        :rtype: float
+        """
+        self.ensure_one()
+        return self.env['hr.time.rule'].sudo()._get_automatic_break_duration(self, check_in)
+
     def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
         """Check the employee in or out, now.
 

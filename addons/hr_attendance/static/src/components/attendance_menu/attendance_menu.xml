@@ -120,13 +120,17 @@
                                                         <t t-out="attendanceReviewDetails.outLocation"/>
                                                     </div>
                                                 </div>
-                                                <div t-if="this.state.breakManagementEnabled" class="col-12">
+                                                <div t-if="this.state.breakManagementEnabled or attendanceReviewDetails.breakDurationLabel or attendanceReviewDetails.automaticBreakLabel"
+                                                    class="col-12">
                                                     <label class="small fw-semibold text-muted mb-1">
                                                         Break
                                                     </label>
                                                     <div class="fw-semibold text-muted">
                                                         <t t-if="attendanceReviewDetails.breakDurationLabel"
                                                             t-out="attendanceReviewDetails.breakDurationLabel"/>
+                                                        <t t-elif="attendanceReviewDetails.automaticBreakLabel">
+                                                            Automatic break: <t t-out="attendanceReviewDetails.automaticBreakLabel"/>
+                                                        </t>
                                                         <t t-else="">No break</t>
                                                     </div>
                                                 </div>
@@ -145,6 +149,11 @@
                             <span t-else="">Check out</span>
                             <i class="oi ms-1" t-attf-data-icon="{{ this.state.checkedIn ? 'logout' : 'login' }}"/>
                         </button>
+                        <div t-if="this.state.checkedIn and this.state.employee?.automatic_break_duration"
+                            name="attendance_automatic_break" class="small text-muted text-nowrap">
+                            Automatic break:
+                            <t t-out="this.formatAutomaticBreak(this.state.employee.automatic_break_duration)"/>
+                        </div>
                         <t t-set="attendanceTotals"
                             t-value="this.state.attendances.length > 1 and attendanceReviewDetails"/>
                         <div t-if="attendanceTotals" name="attendance_totals" class="text-end text-nowrap ms-auto">
@@ -154,8 +163,7 @@
                                     <t t-out="attendanceTotals.totalDisplay"/>
                                 </strong>
                             </div>
-                            <div t-if="this.state.breakManagementEnabled and attendanceTotals.breakDisplay"
-                                class="small text-muted">
+                            <div t-if="attendanceTotals.breakDisplay" class="small text-muted">
                                 Break: <t t-out="attendanceTotals.breakDisplay"/>
                             </div>
                         </div>

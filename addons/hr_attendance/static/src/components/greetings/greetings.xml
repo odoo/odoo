@@ -55,6 +55,14 @@
                                         <strong><t t-out="this.hoursToday()"/></strong>
                                     </t>
                                 </div>
+                                <div t-if="this.isCheckOut and this.recordedBreak()"
+                                    name="kiosk_break" class="alert alert-info text-center mb-0 p-2" role="status">
+                                    Break: <strong><t t-out="this.recordedBreak()"/></strong>
+                                </div>
+                                <div t-elif="!this.isCheckOut and this.automaticBreak()"
+                                    name="kiosk_automatic_break" class="alert alert-info text-center mb-0 p-2" role="status">
+                                    Automatic break: <strong><t t-out="this.automaticBreak()"/></strong>
+                                </div>
                                 <div t-if="this.attendance.check_out and this.overtimeToday()"
                                     class="alert alert-warning d-flex flex-column gap-2 mb-0
                                     p-2 p-xl-2 border border-warning text-center">

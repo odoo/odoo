@@ -43,8 +43,9 @@ class HrAttendance(http.Controller):
             ``has_attendance_check_in_ability``)
         :return: ``{}`` without employee, else ``id``, ``name``, ``hours_today``,
             ``hours_previously_today``, ``today_attendance_ids`` (list of dicts),
-            ``last_attendance_worked_hours``, ``last_check_in``, ``attendance_state`` and the
-            settings
+            ``last_attendance_worked_hours``, ``last_check_in``, ``attendance_state``,
+            ``automatic_break_duration`` (hours, the automatic break of the current attendance
+            or of today) and the settings
         :rtype: dict
         """
         response = {}
@@ -66,6 +67,9 @@ class HrAttendance(http.Controller):
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
+                'automatic_break_duration': employee._get_automatic_break_duration(
+                    employee.last_attendance_id.check_in if employee.attendance_state == 'checked_in' else None
+                ),
             }
             if include_attendance_settings:
                 response.update({
@@ -99,6 +103,7 @@ class HrAttendance(http.Controller):
                     'id': employee.last_attendance_id.id,
                     'check_in': employee.last_attendance_id.check_in,
                     'check_out': employee.last_attendance_id.check_out,
+                    'break_duration': employee.last_attendance_id.break_duration,
                 },
                 'overtime_today': sum(request.env['hr.attendance'].sudo().search([
                     ('employee_id', '=', employee.id),
