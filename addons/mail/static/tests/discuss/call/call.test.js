@@ -1827,6 +1827,19 @@ test("Cross tab calls: opening the fullscreen URL joins when no tab hosts the ca
     await expect.waitForSteps(["join_call"]);
 });
 
+test("Join Call of the welcome page starts the call of an empty meeting in Discuss", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        default_display_mode: "video_full_screen",
+        name: "Meeting",
+    });
+    redirect(`/odoo/action-mail.action_discuss?active_id=${channelId}&fullscreen=1&call=join`);
+    await start();
+    await waitFor(
+        ".o-mail-Meeting .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)"
+    );
+});
+
 test("automatically cancel incoming call after some time", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
