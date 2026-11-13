@@ -5,7 +5,9 @@ from uuid import uuid4
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_compare, float_is_zero, format_amount
+from odoo.tools import float_compare, float_is_zero, float_round, format_amount
+
+from odoo.addons.loyalty.const import LOYALTY_PAYMENT_CODES
 
 
 class LoyaltyCard(models.Model):
@@ -279,6 +281,106 @@ class LoyaltyCard(models.Model):
             "target": "new",
             "context": {"default_card_id": self.id},
         }
+
+    # === PAYMENT METHODS === #
+
+    @api.model
+    def _get_payment_cards(self, program_type, partner=None, company=None):
+        """Return the cards of the given type that can currently be used to pay.
+
+        :param str program_type: The type of program of the cards: `gift_card` or `ewallet`.
+        :param res.partner partner: The partner owning the cards; required for eWallets.
+        :param res.company company: The company in which the payment is made.
+        :return: The usable cards, the ones with the highest balance first.
+        :rtype: loyalty.card
+        """
+        domain = Domain("program_type", "=", program_type) & Domain("points", ">", 0)
+        if company:
+            domain &= Domain("company_id", "in", [False, *company.parent_ids.ids])
+        if partner:
+            domain &= Domain("partner_id", "child_of", partner.commercial_partner_id.id)
+        elif program_type == "ewallet":
+            return self.browse()
+        cards = self.sudo().search(domain)
+        return cards.filtered(lambda c: c._is_usable_for_payment()).sorted(
+            lambda c: c.points, reverse=True
+        )
+
+    def _is_usable_for_payment(self):
+        """Return whether the card can be used to pay, regardless of its balance.
+
+        :return: Whether the card can be used to pay.
+        :rtype: bool
+        """
+        self.ensure_one()
+        return bool(
+            self.active
+            and self.program_id.active
+            and self.program_type in LOYALTY_PAYMENT_CODES
+            and (
+                not self.expiration_date
+                or self.expiration_date >= fields.Date.context_today(self)
+            )
+        )
+
+    def _get_point_value(self):
+        """Return the monetary value of one point of the card, in the currency of its program.
+
+        :return: The value of one point.
+        :rtype: float
+        """
+        self.ensure_one()
+        reward = self.program_id.reward_ids.filtered(
+            lambda r: r.reward_type == "discount" and r.discount_mode == "per_point"
+        )[:1]
+        return reward.discount or 1.0
+
+    def _get_card_currency(self):
+        self.ensure_one()
+        return self.currency_id or self.company_id.currency_id or self.env.company.currency_id
+
+    def _get_payment_balance(self, currency=None, company=None, date=None):
+        """Return the monetary value left on the card, converted in the given currency.
+
+        :param res.currency currency: The currency to express the balance in.
+        :param res.company company: The company used for the conversion.
+        :param date date: The date used for the conversion.
+        :return: The balance of the card.
+        :rtype: float
+        """
+        self.ensure_one()
+        balance = max(self.points, 0.0) * self._get_point_value()
+        return self._convert_from_card_currency(balance, currency, company, date)
+
+    def _convert_from_card_currency(self, amount, currency, company=None, date=None):
+        self.ensure_one()
+        card_currency = self._get_card_currency()
+        if not currency or currency == card_currency:
+            return card_currency.round(amount)
+        return card_currency._convert(
+            amount, currency, company or self.env.company, date or fields.Date.context_today(self)
+        )
+
+    def _amount_to_points(self, amount, currency=None, company=None, date=None):
+        """Convert a monetary amount into points of the card.
+
+        :param float amount: The amount to convert.
+        :param res.currency currency: The currency of the amount.
+        :param res.company company: The company used for the conversion.
+        :param date date: The date used for the conversion.
+        :return: The number of points matching the amount.
+        :rtype: float
+        """
+        self.ensure_one()
+        card_currency = self._get_card_currency()
+        if currency and currency != card_currency:
+            amount = currency._convert(
+                amount,
+                card_currency,
+                company or self.env.company,
+                date or fields.Date.context_today(self),
+            )
+        return float_round(amount / self._get_point_value(), precision_digits=2)
 
     def _adjust_points(self, diff, description, order_model=False, order_id=False):
         """Create the loyalty history lines needed to change the balance of the given cards.

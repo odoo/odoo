@@ -4,7 +4,7 @@ from datetime import date
 
 from freezegun import freeze_time
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 from odoo.tools.float_utils import float_compare
@@ -136,8 +136,8 @@ class TestLoyalty(TestSaleCouponCommon):
         claimable_rewards = order._get_claimable_rewards()
         self.assertEqual(
             len(claimable_rewards),
-            2,
-            "Now that the ewallet has some points they should both be applicable.",
+            1,
+            "The ewallet is a payment method, it should never be claimable as a reward.",
         )
 
     def test_cancel_order_with_coupons(self):
@@ -725,7 +725,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 90)
 
     def test_points_awarded_ewallet(self):
-        """Check the calculation for point awarded when using ewallet."""
+        """eWallets are payment methods: they don't reduce the amount on which points are given."""
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()["loyalty"])
         loyalty_card = self.env["loyalty.card"].create({
@@ -744,13 +744,13 @@ class TestLoyalty(TestSaleCouponCommon):
 
         self.assertEqual(order.amount_total, 100)
         order._update_programs_and_rewards()
-        self._claim_reward(order, self.ewallet_program, coupon=self.ewallet)
-        self.assertEqual(order.amount_total, 90)
+        self.assertNotIn(self.ewallet, order._get_claimable_rewards())
+        self.assertEqual(order.amount_total, 100)
         order.action_confirm()
         self.assertEqual(loyalty_card.points, 100)
 
     def test_points_awarded_giftcard(self):
-        """Check the calculation for point awarded when using a gift card."""
+        """Gift cards are payment methods: their code can't be applied on the order."""
         LoyaltyProgram = self.env["loyalty.program"]
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()["loyalty"])
         loyalty_card = self.env["loyalty.card"].create({
@@ -790,10 +790,11 @@ class TestLoyalty(TestSaleCouponCommon):
         )
 
         self.assertEqual(order.amount_total, 100)
-        self._apply_promo_code(order, gift_card.code)
-        self.assertEqual(order.amount_total, 50)
+        self.assertIn("error", order._try_apply_code(gift_card.code))
+        self.assertEqual(order.amount_total, 100)
         order.action_confirm()
         self.assertEqual(loyalty_card.points, 100)
+        self.assertEqual(gift_card.points, 50)
 
     def test_multiple_discount_specific(self):
         """Check the discount calculation if it is based on the remaining amount."""
@@ -1215,29 +1216,18 @@ class TestLoyalty(TestSaleCouponCommon):
         order = self.env["sale.order"].create({
             "partner_id": self.partner.id,
             "order_line": [
+                Command.create({"product_id": self.product_a.id, "product_uom_qty": 1}),
                 Command.create({
-                    "product_id": self.product_a.id,
-                    "points_cost": 100,
+                    "product_id": self.env.ref("loyalty.ewallet_product_50").id,
                     "product_uom_qty": 1,
                 }),
-                ewallet_top_up,
             ],
         })
         order._update_programs_and_rewards()
-        self._claim_reward(order, self.ewallet_program, coupon=self.ewallet)
+        self.assertFalse(order.order_line.filtered("is_reward_line"))
         order.action_confirm()
 
-        self.assertEqual(self.ewallet.points, 50)
-
-        # Case 2: eWallet top-up should be excluded from the discountable amount
-        #         when paying with an eWallet
-        order = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [ewallet_top_up],
-        })
-        order._update_programs_and_rewards()
-        with self.assertRaisesRegex(UserError, "There is nothing to discount"):
-            self._claim_reward(order, self.ewallet_program, coupon=self.ewallet)
+        self.assertEqual(self.ewallet.points, 60, "The top-up is added, nothing is consumed.")
 
     def test_discount_reward_claimable_only_once(self):
         """Check that discount rewards already applied won't be shown in the claimable rewards

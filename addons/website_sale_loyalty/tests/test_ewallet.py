@@ -80,5 +80,8 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
             )
             order = request.cart
             self.assertEqual(order.amount_total, 20)
+            # eWallets are payment methods: they can't be claimed as a reward on the cart.
+            self.assertFalse(order._get_claimable_and_showable_rewards())
             self.WebsiteSaleController.claim_reward(self.ewallet_program.reward_ids[0].id)
-            self.assertEqual(order.amount_total, 10)
+            self.assertEqual(order.amount_total, 20)
+            self.assertFalse(order.order_line.filtered("is_reward_line"))
