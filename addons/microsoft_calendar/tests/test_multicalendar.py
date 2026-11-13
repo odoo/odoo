@@ -97,3 +97,28 @@ class TestMultiCalendar(TestCommon, MailCase):
         # Event was not inserted again
         mock_insert.assert_called_once()
         self.assertEqual(event.need_sync_m, False)
+
+    @users('mike@organizer.com')
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_confirming_draft_event_in_secondary_calendar_does_not_insert_it(self, mock_insert):
+        """ Outlook sync only covers the primary calendar: confirming a draft event of a secondary calendar
+        must not insert it in Outlook, while it must for the primary calendar. """
+        mock_insert.return_value = ("123", "456")
+        event = self.env["calendar.event"].create(
+            dict(self.simple_event_values, calendar_id=self.secondary_calendar.id, is_draft=True),
+        )
+        self.call_post_commit_hooks()
+        mock_insert.assert_not_called()
+
+        event.action_confirm()
+        self.call_post_commit_hooks()
+        event.invalidate_recordset()
+        mock_insert.assert_not_called()
+        self.assertFalse(event.microsoft_id)
+
+        primary_event = self.env["calendar.event"].create(dict(self.simple_event_values, is_draft=True))
+        self.call_post_commit_hooks()
+        mock_insert.assert_not_called()
+        primary_event.action_confirm()
+        self.call_post_commit_hooks()
+        mock_insert.assert_called_once()
