@@ -718,6 +718,14 @@ class SaleOrderLine(models.Model):
 
         # Compute the combo product's price.
         combo_line = self._get_linked_line()
+        combo = self.combo_item_id.combo_id.sudo()
+        if combo not in combo_line.product_template_id.sudo().combo_ids:
+            raise UserError(_(
+                "%(product)s no longer includes the choice %(choice)s. Please reconfigure or remove"
+                " it. A confirmed order must first be cancelled and reset to draft.",
+                product=combo_line.product_id.display_name,
+                choice=combo.display_name,
+            ))
         combo_product_price = combo_line._get_display_price_ignore_combo()
         # Compute the combos' base prices.
         combo_base_prices = {

@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from datetime import timedelta
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_compare, mute_logger, float_round
@@ -1216,6 +1217,34 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(show_discount_line.price_unit, 100)
         self.assertEqual(show_discount_line.price_subtotal, show_discount_line.price_unit * 0.81)
         self.assertEqual(show_discount_line.discount, 19)
+
+    def test_combo_item_of_removed_combo_choice(self):
+        products = self._create_product(name="Burger") + self._create_product(name="Drink")
+        combos = self.env['product.combo'].create([{
+            'name': product.name,
+            'combo_item_ids': [Command.create({'product_id': product.id})],
+        } for product in products])
+        product_combo = self._create_product(
+            name="Meal", list_price=20, type='combo', combo_ids=[Command.set(combos.ids)],
+        )
+        combo_line = self.env['sale.order.line'].create({
+            'order_id': self.empty_order.id,
+            'product_id': product_combo.id,
+        })
+        burger_line, drink_line = self.env['sale.order.line'].create([{
+            'order_id': self.empty_order.id,
+            'product_id': combo.combo_item_ids.product_id.id,
+            'linked_line_id': combo_line.id,
+            'combo_item_id': combo.combo_item_ids.id,
+        } for combo in combos])
+
+        product_combo.combo_ids = [Command.unlink(combos[1].id)]
+        with self.assertRaisesRegex(UserError, "Meal no longer includes the choice Drink"):
+            self.empty_order._recompute_prices()
+
+        drink_line.unlink()
+        self.empty_order._recompute_prices()
+        self.assertEqual(burger_line.price_unit, 20)
 
     def test_combo_product_discount(self):
         """Ensure that pricelist discounts for combo products get applied to combo items"""
