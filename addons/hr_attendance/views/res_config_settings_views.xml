@@ -60,7 +60,7 @@
                         </setting>
                         <setting string="Attendance Work Entry Type" company_dependent="1"
                                  help="Default work entry type assigned to attendance records. Used by the time rule engine.">
-                            <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>
+                            <field name="attendance_work_entry_type_id" widget="many2one_work_entry_type" options="{'no_create': True}"/>
                         </setting>
                     </block>
                     <block title="Kiosk Settings">
