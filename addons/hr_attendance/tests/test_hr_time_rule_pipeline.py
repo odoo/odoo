@@ -738,11 +738,15 @@ class TestAttendanceSplitCheckOut(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({'name': 'Split Check-Out Company'})
+        cls.company = cls.env['res.company'].create({
+            'name': 'Split Check-Out Company',
+            'country_id': cls.env.ref('base.us').id,
+        })
         cls.att_type = cls.company.attendance_work_entry_type_id
         cls.ot_type = cls.env['hr.work.entry.type'].create({
             'name': 'Check-Out Test Overtime',
             'code': 'OT_CHECKOUT_TEST',
+            'country_id': cls.company.country_id.id,
         })
         cls.env['hr.time.rule'].search([]).write({'active': False})
         cls.env['hr.time.rule'].create({

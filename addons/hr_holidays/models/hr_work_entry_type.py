@@ -63,10 +63,6 @@ class HrWorkEntryType(models.Model):
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
     is_used = fields.Boolean(compute="_compute_is_used")
-    country_id = fields.Many2one('res.country', string='Country',
-                                 default=lambda self: self.env.company.country_id,
-                                 tracking=True,
-                                 domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
     country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     leave_validation_type = fields.Selection([
         ('no_validation', 'None'),
@@ -225,14 +221,12 @@ been taken for this time type. Changing it now would affect existing employee ba
 
     @api.model
     def _get_types_by_country(self, countries):
-        """Map any country to its types, or to the country-less ones when it ships none."""
-        types_by_country = self.search(
-            [('country_id', 'in', countries.ids + [False])]).grouped('country_id')
-        countryless_types = types_by_country.get(self.env['res.country'], self.browse())
+        """Map any country to its types; no country (a company without one) has none."""
+        types_by_country = self.search([('country_id', 'in', countries.ids)]).grouped('country_id')
         return {
-            country: types_by_country.get(country, countryless_types)
+            country: types_by_country.get(country, self.browse())
             for country in countries
-        } | {self.env['res.country']: countryless_types}
+        } | {self.env['res.country']: self.browse()}
 
     def _get_allowed_request_durations(self):
         if self.request_unit == 'half_day':

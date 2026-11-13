@@ -5,6 +5,15 @@ from odoo.exceptions import ValidationError
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    @api.model
+    def _get_default_work_entry_type_values(self):
+        vals_list = super()._get_default_work_entry_type_values()
+        for vals in vals_list:
+            if vals['count_as'] == 'working_time':
+                # like the working time types of the data files (see hr_work_entry_type_data.xml)
+                vals.update(requires_allocation=False, time_off_selectable=False, request_unit='hour')
+        return vals_list
+
     @api.constrains('country_id')
     def _check_country_change_holidays(self):
         if tools.config['test_enable'] or modules.module.current_test:

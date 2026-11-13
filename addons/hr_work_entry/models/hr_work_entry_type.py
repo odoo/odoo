@@ -44,7 +44,9 @@ class HrWorkEntryType(models.Model):
     country_id = fields.Many2one(
         'res.country',
         string="Country",
+        required=True,
         tracking=True,
+        default=lambda self: self.env.company.country_id,
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
     )
     country_code = fields.Char(related='country_id.code')
@@ -75,12 +77,12 @@ class HrWorkEntryType(models.Model):
             if len(grouped_duplicates[code, country_id]) > 1:
                 raise UserError(self.env._(
                     'You cannot create more than one time type of code "%(code)s" for the same country (%(country)s)',
-                    code=code, country=(country_id.name if country_id else self.env._("All")),
+                    code=code, country=country_id.name,
                 ))
 
         related_we_types = self.search([
             ('code', 'in', self.mapped('code')),
-            ('country_id', 'in', self.country_id.ids + [False]),
+            ('country_id', 'in', self.country_id.ids),
             ('id', 'not in', self.ids),
         ]).grouped(lambda wt: (wt.code, wt.country_id))
 
@@ -89,25 +91,15 @@ class HrWorkEntryType(models.Model):
                 continue  # no duplicate work entry type
             # we're not supposed to have more than one duplicate
             duplicate = related_we_types[we_type.code, we_type.country_id][:1]
-            if we_type.country_id:
-                raise UserError(self.env._(
-                    """
+            raise UserError(self.env._(
+                """
 Cannot insert "%(insert_name)s":
 Time type "%(name)s" of code "%(code)s" already exists for country "%(country)s".
-                    """,
-                    insert_name=we_type.name,
-                    name=duplicate.name,
-                    code=duplicate.code,
-                    country=duplicate.country_id.name,
-                ))
-            raise UserError(self.env._(
-                    """
-Cannot insert "%(insert_name)s":
-Time type "%(name)s" of code "%(code)s", with no country assigned, already exists.
-                    """,
+                """,
                 insert_name=we_type.name,
                 name=duplicate.name,
                 code=duplicate.code,
+                country=duplicate.country_id.name,
             ))
 
     @api.constrains('country_id')

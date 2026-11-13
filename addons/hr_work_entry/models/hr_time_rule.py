@@ -316,29 +316,25 @@ class HrTimeRule(models.Model):
                 rule.country_id = rule.company_id.country_id
 
     @api.depends('country_id', 'company_id')
+    @api.depends_context('allowed_company_ids')
     def _compute_country_work_entry_type_ids(self):
+        """Time types of the rule's country; a rule without country applies to every country,
+        so it may use the time types of any of the current companies' countries."""
         rule_country = {rule: rule.country_id or rule.company_id.country_id for rule in self}
-        all_country_ids = list({c.id for c in rule_country.values() if c})
-
-        # which of those countries actually have localized WETs
-        countries_with_wets = {
-            country.id
-            for country, in self.env['hr.work.entry.type']._read_group(
-                [('country_id', 'in', all_country_ids)],
-                groupby=['country_id'],
-            )
-        }
-        generic_wets = self.env['hr.work.entry.type'].search([('country_id', '=', False)])
+        countries = self.env['res.country'].union(*rule_country.values())
         wets_by_country = self.env['hr.work.entry.type'].search(
-            [('country_id', 'in', list(countries_with_wets))]
-        ).grouped(lambda w: w.country_id.id)
+            [('country_id', 'in', (countries | self.env.companies.country_id).ids)]
+        ).grouped('country_id')
+        companies_wets = self.env['hr.work.entry.type'].union(
+            *(wets_by_country.get(country, self.env['hr.work.entry.type']) for country in self.env.companies.country_id)
+        )
 
         for rule in self:
             country = rule_country[rule]
-            if country and country.id in countries_with_wets:
-                rule.country_work_entry_type_ids = wets_by_country[country.id]
+            if country:
+                rule.country_work_entry_type_ids = wets_by_country.get(country, self.env['hr.work.entry.type'])
             else:
-                rule.country_work_entry_type_ids = generic_wets
+                rule.country_work_entry_type_ids = companies_wets
 
     @api.depends('work_entry_type_id.amount_rate')
     def _compute_amount_rate(self):
