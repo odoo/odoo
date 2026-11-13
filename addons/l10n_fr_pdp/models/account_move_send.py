@@ -46,6 +46,12 @@ class AccountMoveSend(models.AbstractModel):
                 })
         return edi_user, document
 
+    def _get_document_description(self):
+        # EXTENDS 'account_edi_ubl_cii'
+        super()._get_document_description()
+
+        return 'LISIBLE'
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------

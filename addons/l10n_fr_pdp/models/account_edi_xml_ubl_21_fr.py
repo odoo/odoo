@@ -302,3 +302,8 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         # EXTENDS account.edi.ubl
         # TODO: Remove this when french enforces stricter rules
         return self._import_fix_line_price_unit_quantity_discount(quantity, discount, price_unit, line_extension_amount, currency)
+
+    def _get_document_description(self):
+        super()._get_document_description()
+
+        return 'LISIBLE'
