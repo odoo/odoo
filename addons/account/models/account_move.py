@@ -7280,6 +7280,8 @@ class AccountMove(models.Model):
                     }
                     super(AccountMove, invoice.with_context(no_document=True))._message_post_after_hook(sub_new_message, sub_message_values)
                 invoice._fix_attachments_on_record_from_files_data(file_data_group, extra_files_data)
+                # The extra attachments are detached from the invoice, so they can't be its main attachment.
+                invoice.message_main_attachment_id -= self._from_files_data(extra_files_data)
 
             for invoice, file_data_group in zip(invoices, file_data_groups):
                 if file_data_group:
