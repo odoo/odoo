@@ -378,12 +378,17 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """ Return a list of fields that should be cleared when an attachment is unattached from the record. """
         return []
 
-    def _fix_attachments_on_record_from_files_data(self, valid_files_data, extra_files_data):
+    def _link_attachments_to_record(self, files_data):
+        """ Link the attachments of `files_data` to the record, so that they are displayed on it. """
         self.ensure_one()
-        valid_attachments = self._from_files_data(valid_files_data).filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
-        extra_attachments = self._from_files_data(extra_files_data).filtered(lambda a: a.res_model == self._name and not a.res_field)
-        valid_attachments.write({'res_model': self._name, 'res_id': self.id})
-        extra_attachments.write({'res_model': False, 'res_id': 0})
+        attachments = self._from_files_data(files_data).filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
+        attachments.write({'res_model': self._name, 'res_id': self.id})
+
+    def _detach_attachments_from_record(self, files_data):
+        """ Detach the attachments of `files_data` from the record, so that they are not displayed on it. """
+        self.ensure_one()
+        attachments = self._from_files_data(files_data).filtered(lambda a: a.res_model == self._name and a.res_id == self.id and not a.res_field)
+        attachments.write({'res_model': False, 'res_id': 0})
 
     def _should_attach_to_record(self, attachment):
         """ Indicate whether a given attachment should be displayed in the record's attachments. """
