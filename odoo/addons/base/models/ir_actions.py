@@ -1031,12 +1031,18 @@ class IrActionsServer(models.Model):
         elif self.update_path:
             starting_record = self.env[self.model_id.model].browse(self.env.context.get('active_id'))
             path = self.update_path.split('.')
-            target_records = reduce(getitem, path[:-1], starting_record)
-            if self.update_property and starting_record.get_property_definition(self.update_field_id.name + "." + self.update_property):
-                res[self.update_field_id.name] = {**target_records, self.update_property: vals[self.id]}
-                starting_record.write(res)
+            if self.update_property:
+                # the path ends with "<properties field>.<property>": move to
+                # the record holding the properties field
+                target_records = reduce(getitem, path[:-2], starting_record)
+                if target_records.get_property_definition(self.update_field_id.name + "." + self.update_property):
+                    res[self.update_field_id.name] = {
+                        **target_records[self.update_field_id.name],
+                        self.update_property: vals[self.id],
+                    }
             else:
-                target_records.write(res)
+                target_records = reduce(getitem, path[:-1], starting_record)
+            target_records.write(res)
 
     def _run_action_webhook(self, eval_context=None):
         """Send a post request with a read of the selected field on active_id."""
