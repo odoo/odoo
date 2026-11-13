@@ -1,6 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { LocationSelectorComponent } from "@website/components/location_selector/location_selector_component/location_selector_component";
+import { getAccessibleName } from "@website/js/utils";
 
 export class StoreLocator extends Interaction {
     static selector = ".s_store_locator";
@@ -8,6 +9,7 @@ export class StoreLocator extends Interaction {
     setup() {
         this.dataset = this.el.dataset;
         this.props = {
+            accessibleName: getAccessibleName(this.el),
             mapZoom: this.dataset.mapZoom,
             hideOffscreenLocations: this.dataset.mapHideOffscreenLocations === "true",
             locationsList: this.dataset.locationsList,

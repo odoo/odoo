@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { getFacebookPageId } from "@website/js/utils";
 
 export class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
@@ -103,7 +104,7 @@ export class CheckFacebookLinkAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         editingElement.dataset.id = "";
-        const id = this.idFromFacebookLink(value);
+        const id = getFacebookPageId(value);
         if (id) {
             editingElement.dataset.id = id;
             this.checkFacebookId(id).then((ok) => {
@@ -125,28 +126,6 @@ export class CheckFacebookLinkAction extends BuilderAction {
             );
         }
     }
-    idFromFacebookLink(url) {
-        // Patterns matched by the regex (all relate to existing pages,
-        // in spite of the URLs containing "profile.php" or "people"):
-        // - https://www.facebook.com/<pagewithaname>
-        // - http://www.facebook.com/<page.with.a.name>
-        // - www.facebook.com/<fbid>
-        // - facebook.com/profile.php?id=<fbid>
-        // - www.facebook.com/<name>-<fbid>  - NB: the name doesn't matter
-        // - www.fb.com/people/<name>/<fbid>  - same
-        // - m.facebook.com/p/<name>-<fbid>  - same
-        // The regex is kept as a huge one-liner for performance as it is
-        // compiled once on script load. The only way to split it on several
-        // lines is with the RegExp constructor, which is compiled on runtime.
-        const match = url
-            .trim()
-            .match(
-                /^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/([^/?#]+\/)?|(p\/)?[^/?#]+-)(?<id>[0-9]{12,16}))|(?<nameid>[\w.]+))($|[/?# ])/
-            );
-
-        return match?.groups.nameid || match?.groups.id;
-    }
-
     async checkFacebookId(id) {
         const res = await fetch(`https://graph.facebook.com/${id}/picture`);
         return res.ok;

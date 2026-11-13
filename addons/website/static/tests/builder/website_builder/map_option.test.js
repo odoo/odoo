@@ -1,4 +1,6 @@
 import { expect, test } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import {
@@ -38,4 +40,28 @@ test("test description option", async () => {
     );
     await contains(hexInputEl).edit("#E4F641");
     expect(":iframe .s_map .description").toHaveStyle({ "background-color": "rgb(228, 246, 65)" });
+});
+
+test("iframe description option", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_map", {
+        loadIframeBuilderTemplates: true,
+    });
+    // The snippet's address comes from the company, which depends on the data
+    delete queryOne(":iframe .s_map").dataset.mapAddress;
+    getEditor().shared.history.commit();
+    await contains(":iframe .s_map").click();
+    const inputSelector = "[data-label='Description'] input[type='text']";
+    expect(inputSelector).toHaveValue("");
+    expect(inputSelector).toHaveAttribute("placeholder", "Map");
+
+    await contains(inputSelector).edit("Our Brussels office");
+    expect(":iframe .s_map").toHaveAttribute("data-accessible-name", "Our Brussels office");
+
+    await contains(inputSelector).clear();
+    expect(":iframe .s_map").not.toHaveAttribute("data-accessible-name");
+
+    queryOne(":iframe .s_map").dataset.mapAddress = "Rue de la Loi, Brussels";
+    getEditor().shared.history.commit();
+    await animationFrame();
+    expect(inputSelector).toHaveAttribute("placeholder", "Map of Rue de la Loi, Brussels");
 });
