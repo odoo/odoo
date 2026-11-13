@@ -4527,7 +4527,9 @@ test("kanban with color attribute", async () => {
             </kanban>`,
     });
 
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_record_colored");
     expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_5");
+    expect(getKanbanRecord({ index: 1 })).toHaveClass("o_kanban_record_colored");
     expect(getKanbanRecord({ index: 1 })).toHaveClass("o_kanban_color_6");
 });
 
