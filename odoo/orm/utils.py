@@ -201,6 +201,33 @@ class PrefetchUnion(Reversible):
     def __init__(self, *prefetches: Reversible):
         self._prefetches = prefetches
 
+    def __iter__(self):
+        for it in self._prefetches:
+            yield from it
+
+    def __reversed__(self):
+        for it in reversed(self._prefetches):
+            yield from reversed(it)
+
+
+class Prefetch:
+    relational = PrefetchRelational
+    origin = OriginIds
+
+    @staticmethod
+    def union(*prefetches: Reversible) -> Reversible:
+        """ A prefetch object for the concatenation/union of recordsets. """
+        if not prefetches:
+            return ()
+        ps = {
+            Prefetch.__AlwaysHash(p): p
+            for prefetch in prefetches
+            for p in (prefetch._prefetches if isinstance(prefetch, PrefetchUnion) else (prefetch,))
+        }
+        if len(ps) == 1:
+            return next(iter(ps.values()))
+        return PrefetchUnion(*ps.values())
+
     class __AlwaysHash:
         __slots__ = ('obj',)
 
@@ -219,42 +246,6 @@ class PrefetchUnion(Reversible):
 
         def __hash__(self):
             return id(self.obj)
-
-    def __iter__(self):
-        # flatten out prefetches in order to avoid recursion errors
-        stack = list(reversed(self._prefetches))
-        seen = set()
-        while stack:
-            it = stack.pop()
-            h = self.__AlwaysHash(it)
-            if h in seen:
-                continue
-            seen.add(h)
-            if isinstance(it, PrefetchUnion):
-                stack.extend(reversed(it._prefetches))
-                continue
-            yield from it
-
-    def __reversed__(self):
-        # flatten out prefetches in order to avoid recursion errors
-        stack = list(self._prefetches)
-        seen = set()
-        while stack:
-            it = stack.pop()
-            h = self.__AlwaysHash(it)
-            if h in seen:
-                continue
-            seen.add(h)
-            if isinstance(it, PrefetchUnion):
-                stack.extend(it._prefetches)
-                continue
-            yield from reversed(it)
-
-
-class Prefetch:
-    relational = PrefetchRelational
-    origin = OriginIds
-    union = PrefetchUnion
 
 
 @functools.total_ordering
