@@ -199,6 +199,17 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(self._issue(invoice), f"Missing Tax Category Code on line: {invoice.invoice_line_ids.product_id.name}")
         self.assertFalse(self.client.calls)
 
+    def test_special_fapiao_needs_the_customer_tax_id(self):
+        invoice = self._create_posted_invoice()
+        invoice.l10n_cn_edi_invoice_type_code = '01'
+        self.assertEqual(
+            invoice._l10n_cn_edi_check_invoice(),
+            [f"A special fapiao (专票) needs the customer's Tax ID: {self.partner_a.name} has none."],
+        )
+
+        self.partner_a.vat = '91310115MA1K39423D'
+        self.assertEqual(invoice._l10n_cn_edi_check_invoice(), [])
+
     def test_send_dialog_shows_the_invoice_errors(self):
         invoice = self._create_posted_invoice()
         invoice.invoice_line_ids.l10n_cn_tax_category_id = False
