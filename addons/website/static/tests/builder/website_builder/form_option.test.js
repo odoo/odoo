@@ -368,25 +368,41 @@ test("Set 'Message' as form success action and show/hide the message preview", a
     expect(":iframe .o_show_form_success_message").toHaveCount(0);
 });
 
-test("Undo change of default value of a text field", async () => {
+test("Undo/redo change of default value of a text field", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const builder = await setupWebsiteBuilderWithSnippet("s_website_form");
 
     const questionInputSelector = ":iframe .s_website_form_field:contains(Your Question) textarea";
     expect(questionInputSelector).toHaveProperty("value", "");
+    expect(questionInputSelector).toHaveProperty("textContent", "");
     await contains(questionInputSelector).click();
     await contains('[data-label="Default Value"] input').fill("hello");
     expect(questionInputSelector).toHaveProperty("value", "hello");
+    expect(questionInputSelector).toHaveProperty("textContent", "hello");
     undo(builder.getEditor());
     expect(questionInputSelector).toHaveProperty("value", "");
+    expect(questionInputSelector).toHaveProperty("textContent", "");
+
+    redo(builder.getEditor());
+    expect(questionInputSelector).toHaveProperty("value", "hello");
+    expect(questionInputSelector).toHaveProperty("textContent", "hello");
+    undo(builder.getEditor());
+    expect(questionInputSelector).toHaveProperty("value", "");
+    expect(questionInputSelector).toHaveProperty("textContent", "");
 
     const subjectInputSelector = ":iframe .s_website_form_field:contains(Subject) input";
     expect(subjectInputSelector).toHaveProperty("value", "");
+    expect(subjectInputSelector).not.toHaveAttribute("value");
     await contains(subjectInputSelector).click();
     await contains('[data-label="Default Value"] input').fill("hello");
     expect(subjectInputSelector).toHaveProperty("value", "hello");
+    expect(subjectInputSelector).toHaveAttribute("value", "hello");
     undo(builder.getEditor());
     expect(subjectInputSelector).toHaveProperty("value", "");
+    expect(subjectInputSelector).not.toHaveAttribute("value");
+    redo(builder.getEditor());
+    expect(subjectInputSelector).toHaveProperty("value", "hello");
+    expect(subjectInputSelector).toHaveAttribute("value", "hello");
 });
 
 const formWithCondition = `

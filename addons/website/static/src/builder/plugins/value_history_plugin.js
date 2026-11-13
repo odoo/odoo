@@ -8,12 +8,12 @@ import { registry } from "@web/core/registry";
 
 export class ValueHistoryPlugin extends Plugin {
     static id = "valueHistory";
-    static dependencies = ["domObserver"];
+    static dependencies = ["history"];
     static shared = ["setValue"];
 
     setValue(el, value) {
         const oldValue = el.value;
-        this.dependencies.domObserver.applyCustomMutation({
+        this.dependencies.history.stageCustomOperation({
             apply: () => (el.value = value),
             revert: () => (el.value = oldValue),
         });

@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { addBuilderOption } from "@html_builder/../tests/helpers";
+import { addBuilderOption, dummyBase64Img } from "@html_builder/../tests/helpers";
 import {
     contains,
     onRpc,
@@ -16,6 +16,7 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { ToggleBodyBgImageAction } from "@website/builder/plugins/customize_website_plugin";
+import { patchDragImage } from "../image_test_helpers";
 
 defineWebsiteModels();
 
@@ -476,6 +477,219 @@ test("theme background image is properly set", async () => {
     await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
     await animationFrame();
     await expect.verifySteps(["scss_customization", "bundle_reload"]);
+});
+
+test("undo/redo website theme variables", async () => {
+    const variable = "test-size";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            const value = changes[variable];
+            // Simulate the CSS variable change.
+            queryOne(":iframe").documentElement.style.setProperty(`--${variable}`, value);
+            expect.step(value);
+        }
+    }
+    defineModels([WebsiteAssets]);
+
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("bundle_reload");
+        return { success: true };
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButton action="'customizeWebsiteVariable'"
+                           actionParam="'${variable}'" actionValue="'20px'"
+                           preview="false">Medium</BuilderButton>
+        `,
+    });
+
+    const initialSize = "10px";
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="test-options-target">Text</section>`,
+        {
+            styleContent: `
+                :root { --${variable}: ${initialSize}; }
+                .test-options-target { font-size: var(--${variable}); }`,
+        }
+    );
+    const editor = getEditor();
+
+    // Select the target.
+    const target = queryOne(`:iframe .test-options-target`);
+    await contains(target).click();
+    expect(target).toHaveStyle({ fontSize: initialSize });
+
+    // Change font size to 20px.
+    const changedSize = "20px";
+    await contains(`[data-action-value="${changedSize}"]`).click();
+    await expect.waitForSteps([changedSize, "bundle_reload"]);
+    await animationFrame(); // Wait for action completion so there is a commit to undo.
+    expect(target).toHaveStyle({ fontSize: changedSize });
+
+    // Undo -> back to 10px.
+    undo(editor);
+    await expect.waitForSteps([initialSize, "bundle_reload"]);
+    expect(target).toHaveStyle({ fontSize: initialSize });
+
+    // Redo -> back to 20px.
+    redo(editor);
+    await expect.waitForSteps([changedSize, "bundle_reload"]);
+    expect(target).toHaveStyle({ fontSize: changedSize });
+});
+
+test("undo/redo body background image removal", async () => {
+    const variable = "body-image";
+    const typeVariable = "body-image-type";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            // Simulate the CSS variable change.
+            const style = queryOne(":iframe").documentElement.style;
+            for (const [key, value] of Object.entries(changes)) {
+                // The server treats "null" as an SCSS reset. Model the
+                // resulting empty CSS string explicitly.
+                style.setProperty(`--${key}`, value === "null" ? "''" : value);
+            }
+            expect(changes[typeVariable]).toBe("'image'");
+            expect.step(changes[variable]);
+        }
+    }
+    defineModels([WebsiteAssets]);
+
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("bundle_reload");
+        return { success: true };
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'removeBodyBgImage'" preview="false">Remove image</BuilderButton>`,
+    });
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="test-options-target">Text</section>`,
+        {
+            styleContent: `
+                :root {
+                    --${variable}: "${dummyBase64Img}";
+                    --${typeVariable}: "image";
+                }`,
+        }
+    );
+    const editor = getEditor();
+    const getImage = () => editor.shared.customizeWebsite.getWebsiteVariableValue(variable);
+
+    // Select the target.
+    await contains(":iframe .test-options-target").click();
+
+    // We start with a body background image.
+    expect(getImage()).toBe(dummyBase64Img);
+
+    // Remove the body background image.
+    await contains("button[data-action-id='removeBodyBgImage']").click();
+    await expect.waitForSteps(["null", "bundle_reload"]);
+    await animationFrame(); // Wait for action completion so there is a commit to undo.
+    expect(getImage()).toBe("");
+
+    // Undo -> restore the body background image.
+    undo(editor);
+    await expect.waitForSteps([`'${dummyBase64Img}'`, "bundle_reload"]);
+    expect(getImage()).toBe(dummyBase64Img);
+
+    // Redo -> remove the body background image again.
+    redo(editor);
+    await expect.waitForSteps(["null", "bundle_reload"]);
+    expect(getImage()).toBe("");
+});
+
+test("preview/undo/redo body background position", async () => {
+    const variable = "body-image-background-position";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            const value = changes[variable];
+            // Simulate the CSS variable change.
+            queryOne(":iframe").documentElement.style.setProperty(`--${variable}`, value);
+            expect.step(value);
+        }
+    }
+    defineModels([WebsiteAssets]);
+
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("bundle_reload");
+        return { success: true };
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'bodyBgPositionOverlay'">Position image</BuilderButton>`,
+    });
+    const initialValue = "10% 20%";
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="test-options-target"
+                  style="background-image: url('/web/image/123/transparent.png'); width: 500px; height: 300px"
+         >Text</section>`,
+        {
+            styleContent: `
+                :root { --${variable}: ${initialValue}; }
+                .test-options-target { background-position: var(--${variable}); }
+            `,
+        }
+    );
+    const editor = getEditor();
+    patch(editor.shared.backgroundPositionOption, { getDelta: () => ({ x: 100, y: 100 }) });
+
+    // Select the target.
+    const target = queryOne(":iframe .test-options-target");
+    await contains(target).click();
+    // The theme stylesheet provides the initial position: (10%, 20%).
+    expect(target.style.backgroundPosition).toBe("");
+    expect(target).toHaveStyle({ backgroundPosition: initialValue });
+
+    // Move body background image by (30%, 40%): (10%, 20%) -> (40%, 60%).
+    const { startDrag, endDrag } = patchDragImage(
+        ".o_we_overlay_dragger",
+        { x: 100, y: 100 },
+        { x: 130, y: 140 }
+    );
+    await contains("button[data-action-id='bodyBgPositionOverlay']").click();
+    await endDrag(await startDrag());
+    // Dragging adds an inline style preview.
+    const changedValue = "40% 60%";
+    expect(target.style.backgroundPosition).toBe(changedValue);
+    expect(target).toHaveStyle({ backgroundPosition: changedValue });
+
+    // Discard the change -> back to (10%, 20%).
+    await contains(".o_we_image_position_overlay .o_btn_discard").click();
+    // The inline style preview is removed when the change is discarded.
+    expect(target.style.backgroundPosition).toBe("");
+    expect(target).toHaveStyle({ backgroundPosition: initialValue });
+
+    // Move body background image by (30%, 40%): (10%, 20%) -> (40%, 60%).
+    await contains("button[data-action-id='bodyBgPositionOverlay']").click();
+    await endDrag(await startDrag());
+    // Dragging adds an inline style preview.
+    expect(target.style.backgroundPosition).toBe(changedValue);
+    expect(target).toHaveStyle({ backgroundPosition: changedValue });
+
+    // Apply the change: (40%, 60%).
+    await contains(".o_we_image_position_overlay .o_btn_apply").click();
+    await expect.waitForSteps([changedValue, "bundle_reload"]);
+    await animationFrame(); // Wait for action completion so there is a commit to undo.
+    // The inline style preview is removed when the change is applied.
+    expect(target.style.backgroundPosition).toBe("");
+    expect(target).toHaveStyle({ backgroundPosition: changedValue });
+
+    // Undo -> back to (10%, 20%).
+    undo(editor);
+    await expect.waitForSteps([initialValue, "bundle_reload"]);
+    expect(target.style.backgroundPosition).toBe("");
+    expect(target).toHaveStyle({ backgroundPosition: initialValue });
+
+    // Redo -> restore the applied position: (40%, 60%).
+    redo(editor);
+    await expect.waitForSteps([changedValue, "bundle_reload"]);
+    expect(target.style.backgroundPosition).toBe("");
+    expect(target).toHaveStyle({ backgroundPosition: changedValue });
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {
