@@ -311,6 +311,13 @@ class TestPage(common.TransactionCase):
             with self.assertRaises(werkzeug.exceptions.Forbidden):
                 empty_password_view._handle_visibility(do_raise=True)
 
+    def test_update_field_translations_empty_url(self):
+        """ Test that clearing a translated page URL falls back to the source URL. """
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        self.page_1.update_field_translations('url', {lang_fr.code: None})
+
+        self.assertEqual(self.page_1.with_context(lang=lang_fr.code).url, self.page_1.url)
+
 
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
