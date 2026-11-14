@@ -1,6 +1,8 @@
 from odoo import models
 from odoo.http import request
 
+from ..tools import markdown2
+
 CONTEXT_KEYS = ['editable', 'edit_translations', 'translatable']
 
 
@@ -25,3 +27,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_translation_frontend_modules_name(cls):
         return ['html_editor', *super()._get_translation_frontend_modules_name()]
+
+    def session_info(self):
+        result = super().session_info()
+        result['markdown_paste_available'] = bool(markdown2) and self.env.user._is_internal()
+        return result
