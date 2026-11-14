@@ -534,6 +534,7 @@ class AccountMove(models.Model):
             invoice_number = get_value(invoice_node, '{*}P_2')
             currency_code = get_value(invoice_node, '{*}KodWaluty')
             move_line_nodes = invoice_node.findall("{*}FaWiersz")
+            mpp_value = get_value(invoice_node, '{*}Adnotacje/{*}P_18A')
 
             lines = []
             for line_node in move_line_nodes:
@@ -572,6 +573,7 @@ class AccountMove(models.Model):
                 'invoice_number': invoice_number,
                 'currency_code': currency_code,
                 'lines': lines,
+                'l10n_pl_mpp': 'mpp' if mpp_value == '1' else 'no_mpp',
             }
 
         def get_ksef_bill_vals(data):
@@ -613,6 +615,7 @@ class AccountMove(models.Model):
                 'invoice_date_due': data['invoice_date_due'],
                 'ref': data['invoice_number'],
                 'currency_id': currency.id,
+                'l10n_pl_mpp': data['l10n_pl_mpp'],
                 'invoice_line_ids': [],
             }
 
