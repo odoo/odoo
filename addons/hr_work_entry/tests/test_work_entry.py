@@ -576,3 +576,21 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertEqual(len(work_entries), 2)
         self.assertEqual(work_entries.mapped('date'), [date(2025, 9, 1), date(2025, 9, 2)])
         self.assertEqual(work_entries.mapped('duration'), [8.0, 8.0])
+
+    def test_fully_flexible_dst_fallback_duration(self):
+        """ On a DST fall-back day (25 elapsed hours), a fully flexible employee's daily
+            work entry duration should not exceed 24 hours. """
+        self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
+        employee = self.env['hr.employee'].create({
+            'name': 'Fully Flexible Employee',
+            'tz': 'Europe/Brussels',
+            'resource_calendar_id': False,
+            'date_version': date(2026, 1, 1),
+            'contract_date_start': date(2026, 1, 1),
+        })
+
+        # 2026-10-25 is the DST fall-back date in Europe/Brussels (clocks go back 1 hour)
+        work_entries = employee.generate_work_entries(date(2026, 10, 24), date(2026, 10, 26)).sorted('date')
+        self.assertEqual(len(work_entries), 3)
+        self.assertEqual(work_entries.mapped('date'), [date(2026, 10, 24), date(2026, 10, 25), date(2026, 10, 26)])
+        self.assertEqual(work_entries.mapped('duration'), [24.0, 24.0, 24.0])
