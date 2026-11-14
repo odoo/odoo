@@ -2,9 +2,10 @@
 
 from itertools import chain
 
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests.common import HttpCase, tagged, warmup
+
+from odoo.addons.mail.tests.common import MailCommon
 
 
 @tagged("post_install", "-at_install", "is_query_count")
@@ -20,7 +21,6 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #   - sometimes could occur depending on the routing cache (website_rewrite, ir_config_parameter, res.lang flag_image)
         #   - _xmlid_lookup (_get_public_users)
         #   - fetch website (_get_cached_values)
-        #   - user authentication(_get_lock_timeouts)
         #   4 _message_fetch:
         #       2 _search_needaction:
         #           - fetch res_users (current user)
@@ -28,7 +28,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search ir_rule (_get_rules)
         #       - search mail_message
         #   - search bus_bus (_bus_last_id in bus.py)
-        #   31 message _to_store:
+        #   26 message _to_store:
         #       - fetch mail_message (_to_store_defaults)
         #       - search mail_message_schedule
         #       - search mail_followers
@@ -53,9 +53,6 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - fetch res_partner
         #           - search res_users
         #           - fetch res_users
-        #       - compute message_needaction for hr.employee
-        #       2 compute message_needaction for slide.channel (one query per record due to the lack of batching)
-        #       2 compute message_needaction for product.template (one query per record due to the lack of batching)
         #       - search mail_tracking_value
         #       5 compute rating stats
         #           - search ir_rule (_get_rules for rating.rating)
@@ -63,7 +60,22 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - read group rating_rating (_compute_rating_stats for slide.channel)
         #           - read group rating_rating (_rating_get_stats_per_record for product.template)
         #           - read group rating_rating (_compute_rating_stats for product.template)
-
+        #   12 _thread_to_store loop:
+        #       2 hr.employee:
+        #           - _compute_message_needaction
+        #           - select ir_rule (_get_allowed_models for has_access "write")
+        #       5 slide.channel:
+        #           - _compute_message_needaction
+        #           - select ir_rule (_get_allowed_models for has_access "read")
+        #           - select res_company (_get_company_ids for has_access "read")
+        #           - select res_groups (_compute_all_group_ids for has_access "read")
+        #           - select res_groups join res_groups_privilege (for has_access "read")
+        #           - select ir_rule (_compute_domain for has_access "read")
+        #       5 product.template:
+        #           - _compute_message_needaction
+        #           - select ir_rule (_compute_domain for has_access "read")
+        #           - select res_groups join res_groups_privilege (for has_access "read")
+        #           - select ir_rule (_compute_domain for has_access "read")
         # rating stats enabled
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
@@ -83,5 +95,13 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(42):
+
+        def fn():
             self.make_jsonrpc_request("/mail/inbox/messages")
+
+        with self.assertQueryCount(48):
+            if self.warm:
+                with self.env.cr._enable_logging():
+                    fn()
+            else:
+                fn()
