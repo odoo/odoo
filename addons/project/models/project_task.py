@@ -156,7 +156,7 @@ class ProjectTask(models.Model):
         ('1', 'Medium priority'),
         ('2', 'High priority'),
         ('3', 'Urgent'),
-    ], default='0', index=True, string="Priority", tracking=2)
+    ], default='0', index=True, string="Priority", tracking=2, required=True)
     sequence = fields.Integer(string='Sequence', default=10, export_string_translation=False)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
        store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
@@ -1205,8 +1205,6 @@ class ProjectTask(models.Model):
         if is_portal_user:
             child_ids_list = []
         for vals, additional_vals in zip(vals_list, additional_vals_list):
-            if 'priority' in vals and not vals['priority']:
-                vals['priority'] = '0'
             project_id = vals.get('project_id') or default_project_id
 
             if vals.get('user_ids'):
