@@ -1,5 +1,10 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { pasteHtml, pasteText, tripleClick } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    insertSpace,
+    pasteHtml,
+    pasteText,
+    tripleClick,
+} from "@html_editor/../tests/_helpers/user_actions";
 
 import {
     SIZES,
@@ -41,7 +46,13 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { edit, press, queryFirst, waitFor } from "@odoo/hoot-dom";
+import {
+    edit,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryFirst,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { getIndexedDB } from "../mail_test_helpers";
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
@@ -646,6 +657,89 @@ test("post message on channel with 'Enter' keyboard shortcut", async () => {
     await press("Enter", { isComposing: true });
     await animationFrame();
     await contains(".o-mail-Message");
+});
+
+test.tags("html composer");
+test("Shift+Enter adds a list item or leaves the list from an empty one, Enter posts the list", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    const pressShiftEnter = async () => {
+        await press("shift+Enter");
+        // the browser follows a Shift+Enter keydown with this input
+        await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+            inputType: "insertLineBreak",
+        });
+    };
+    await htmlInsertText(editor, "-");
+    await insertSpace(editor);
+    await htmlInsertText(editor, "Apple");
+    await waitFor(".o-mail-Composer-html ul > li:only-child:text('Apple')");
+    await pressShiftEnter();
+    await htmlInsertText(editor, "Banana");
+    await waitFor(".o-mail-Composer-html ul > li:first-child:text('Apple')");
+    await waitFor(".o-mail-Composer-html ul > li:last-child:text('Banana')");
+    await pressShiftEnter();
+    await pressShiftEnter();
+    await htmlInsertText(editor, "Total");
+    await waitFor(".o-mail-Composer-html ul + *:text('Total')");
+    await press("Enter");
+    await waitFor(".o-mail-Message-body ul > li:first-child:text('Apple')");
+    await waitFor(".o-mail-Message-body ul > li:last-child:text('Banana')");
+    await waitFor(".o-mail-Message-body ul + *:text('Total')");
+});
+
+test.tags("html composer");
+test("a list can start on a new line after some text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Groceries:");
+    await press("shift+Enter");
+    await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+        inputType: "insertLineBreak",
+    });
+    await htmlInsertText(editor, "-");
+    await insertSpace(editor);
+    await htmlInsertText(editor, "pepper");
+    await waitFor(".o-mail-Composer-html *:text('Groceries:') + ul > li:only-child:text('pepper')");
+});
+
+test.tags("html composer");
+test("Backspace right after a list shorthand keeps the typed text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "-");
+    await insertSpace(editor);
+    await waitFor(".o-mail-Composer-html ul > li:only-child");
+    await press("Backspace");
+    await htmlInsertText(editor, "not a list");
+    await waitFor(".o-mail-Composer-html > .o-paragraph:only-child:text('- not a list')");
 });
 
 test("Can handle leave notification from unknown member", async () => {

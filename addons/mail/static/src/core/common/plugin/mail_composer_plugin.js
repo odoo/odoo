@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
-import { childNodes } from "@html_editor/utils/dom_traversal";
+import { childNodes, closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
 const ALLOWED_TAGS = [
@@ -29,7 +29,9 @@ const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection", "split"];
+    /** @type {HTMLLIElement|null} */
+    listItemFromShorthand = null;
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
@@ -54,7 +56,14 @@ export class MailComposerPlugin extends Plugin {
                 return [];
             }
         },
-        on_input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        on_input_handlers: [
+            this.config.composerPluginDependencies.onInput.bind(this),
+            // after the shorthands, which turn "- " into a list
+            withSequence(20, this.rememberListItemFromShorthand.bind(this)),
+        ],
+        insert_line_break_element_overrides: this.splitListItemOnLineBreak.bind(this),
+        // before the list plugin, which removes the bullet
+        delete_backward_overrides: withSequence(5, this.undoListFromShorthand.bind(this)),
     };
 
     setup() {
@@ -114,6 +123,52 @@ export class MailComposerPlugin extends Plugin {
         flattenStructuralDivWrappers(sanitizedFragment);
         this.dependencies.dom.insert(sanitizedFragment);
         this.dependencies.history.commit();
+        return true;
+    }
+
+    /**
+     * Enter can send the message, so Shift+Enter in a list item acts as Enter does in a document:
+     * it adds an item, or leaves the list when the item is empty.
+     *
+     * @param {{ targetNode: Node, targetOffset: number }} params
+     */
+    splitListItemOnLineBreak({ targetNode, targetOffset }) {
+        if (!closestElement(targetNode, "LI")) {
+            return;
+        }
+        this.dependencies.split.splitBlockNode({ targetNode, targetOffset });
+        return true;
+    }
+
+    /**
+     * A space that leaves the caret in an empty item has just turned a shorthand into a list.
+     *
+     * @param {InputEvent} ev
+     */
+    rememberListItemFromShorthand(ev) {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const li = closestElement(anchorNode, "LI");
+        this.listItemFromShorthand = ev.data === " " && li && !li.textContent ? li : null;
+    }
+
+    /**
+     * Backspace right after a list shorthand gives back the typed text, e.g. to start with "- ".
+     *
+     * @param {{ startContainer: Node, startOffset: number, endContainer: Node, endOffset: number }} range
+     */
+    undoListFromShorthand({ startContainer, startOffset, endContainer, endOffset }) {
+        const li = this.listItemFromShorthand;
+        this.listItemFromShorthand = null;
+        if (
+            !li?.isConnected ||
+            li.textContent ||
+            startContainer !== endContainer ||
+            startOffset !== endOffset ||
+            closestElement(startContainer, "LI") !== li
+        ) {
+            return;
+        }
+        this.dependencies.history.undo();
         return true;
     }
 }
