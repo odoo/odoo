@@ -61,13 +61,14 @@ patch(OrderPaymentValidation.prototype, {
         // the isAnySettleLine() is only available if enterprise:pos_settle_due module is installed
         const settleLineCount = order.lines.filter((line) => line.isAnySettleLine?.()).length;
         if (settleLineCount && settleLineCount !== order.lines.length) {
-            return this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(AlertDialog, {
                 title: _t("Settlement Error"),
                 body: _t(
                     "Please remove the new order lines from the order to proceed with the settlement."
                 ),
             });
+            return false;
         }
-        await super.validateOrder(...arguments);
+        return await super.validateOrder(...arguments);
     },
 });

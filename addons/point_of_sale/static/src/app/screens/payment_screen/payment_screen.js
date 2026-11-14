@@ -316,7 +316,7 @@ export class PaymentScreen extends Component {
         if (!pLine || tipAmount === currentTipAmount) {
             this.notification.add(
                 _t(
-                    "The tip has been added to the order. However,the selected payment line does not allow tips to be added."
+                    "The tip has been added to the order. However, the selected payment line does not allow tips to be added."
                 )
             );
             return;
