@@ -89,9 +89,3 @@ class ResCompany(models.Model):
                 company.l10n_cz_relationship_person_authorized = person_authorized.function
             else:
                 company.l10n_cz_relationship_person_authorized = None
-
-
-class BaseDocumentLayout(models.TransientModel):
-    _inherit = 'base.document.layout'
-
-    account_fiscal_country_id = fields.Many2one(related="company_id.account_fiscal_country_id")
