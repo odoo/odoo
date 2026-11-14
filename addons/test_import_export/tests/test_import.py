@@ -234,6 +234,14 @@ class TestMatchHeadersSingle(TransactionCase):
         match = self.env['base_import.import']._get_mapping_suggestion('some field', [{'name': 'bob', 'string': "Some Field"}], [], {})
         self.assertEqual(match, {'field_path': ['bob'], 'distance': 0})
 
+    def test_match_by_name_before_string(self):
+        fields_tree = [
+            {'name': 'website_id', 'string': "Website", 'model_name': 'base_import.import'},
+            {'name': 'website', 'string': "Website Link", 'model_name': 'base_import.import'},
+        ]
+        match = self.env['base_import.import']._get_mapping_suggestion('website', fields_tree, [], {})
+        self.assertEqual(match, {'field_path': ['website'], 'distance': 0})
+
     def test_nomatch(self):
         match = self.env['base_import.import']._get_mapping_suggestion('should not be', [{'name': 'bob', 'string': "wheee", 'model_name': 'base_import.import'}], [], {})
         self.assertEqual(match, {})
