@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 from .hr_employee_location import DAYS
 
@@ -32,8 +33,8 @@ class HrWorkLocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_by_employee(self):
-        domains = [(day, 'in', self.ids) for day in DAYS]
-        employee_uses_location = self.env['hr.employee'].search_count(domains, limit=1)
+        domain = Domain.OR(Domain(day, 'in', self.ids) for day in DAYS)
+        employee_uses_location = self.env['hr.employee'].search_count(domain, limit=1)
         if employee_uses_location:
             raise UserError(self.env._("You cannot delete locations that are being used by your employees"))
         exceptions_using_location = self.env['hr.employee.location'].search([('work_location_id', 'in', self.ids)])

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from freezegun import freeze_time
 
+from odoo.exceptions import UserError
 from odoo.tests import common, new_test_user
 
 
@@ -97,3 +98,16 @@ class TestHrEmployeeHomeworking(common.TransactionCase):
         self.employee_1.wednesday_location_id = False
         self.assertFalse(self.employee_1.work_location_type)
         self.assertEqual(self.employee_1.hr_icon_display, f'presence_{self.employee_1.hr_presence_state}')
+
+    def test_cannot_delete_location_used_by_employee(self):
+        """A work location used by an employee on some days only can't be deleted."""
+        with self.assertRaises(UserError):
+            self.work_office_1.unlink()
+        self.assertEqual(self.employee_1.tuesday_location_id, self.work_office_1)
+
+        unused_location = self.env['hr.work.location'].create({
+            'name': "Unused Office",
+            'address_id': self.env.ref('base.main_partner').id,
+        })
+        unused_location.unlink()
+        self.assertFalse(unused_location.exists())
