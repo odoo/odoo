@@ -6,7 +6,9 @@ import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_se
 import { BuilderNumberInput } from "@html_builder/core/building_blocks/builder_number_input";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
+import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import {
@@ -44,6 +46,7 @@ export class ButtonStyleOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
         this.state = useDomState(async (el) => {
             const currentButtonType = getButtonType(el);
             const buttonStyles = await this.getButtonStyles(el);
@@ -61,10 +64,14 @@ export class ButtonStyleOption extends BaseOptionComponent {
         });
     }
 
-    goToThemeTab() {
-        this.env.editColorCombination(
-            parseInt(this.state.buttonCombinationClass.replace("o_cc", ""))
-        );
+    getEditAction(buttonType) {
+        return {
+            onClick: () =>
+                this.highlightThemeRow.openThemeOption({
+                    presetId: parseInt(this.state.buttonCombinationClass.replace("o_cc", "")),
+                    targetRowId: `btn-${buttonType}`,
+                }),
+        };
     }
 
     async getButtonStyles(el) {
