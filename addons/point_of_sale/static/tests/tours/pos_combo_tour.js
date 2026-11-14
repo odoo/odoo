@@ -10,6 +10,7 @@ import { inLeftSide, scan_barcode } from "@point_of_sale/../tests/tours/utils/co
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 
 registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
     steps: () =>
@@ -295,5 +296,64 @@ registry.category("web_tour.tours").add("test_combo_price_unchanged_with_lot_tra
                 },
             ]),
             ProductScreen.totalAmountIs("8.05"),
+        ].flat(),
+});
+
+const payOrder = () =>
+    [
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickValidate(),
+        ReceiptScreen.isShown(),
+        ReceiptScreen.clickNextOrder(),
+    ].flat();
+
+const refundOneComboAndCheck = () =>
+    [
+        ...ProductScreen.clickRefund(),
+        TicketScreen.selectOrder("-0001"),
+        ProductScreen.clickNumpad("1"),
+        TicketScreen.confirmRefund(),
+        ProductScreen.isShown(),
+        { ...ProductScreen.back(), isActive: ["mobile"] },
+        {
+            content: "each refund combo line only has the combo lines of its own order",
+            trigger: "body",
+            run: () => {
+                const refundComboLines = posmodel.models["pos.order.line"].filter(
+                    (line) => line.refunded_orderline_id?.combo_line_ids.length
+                );
+                for (const line of refundComboLines) {
+                    const childOrders = line.combo_line_ids.map((child) => child.order_id);
+                    const otherOrders = childOrders.filter((order) => order !== line.order_id);
+                    if (childOrders.length !== 3 || otherOrders.length) {
+                        throw new Error(
+                            `the refund combo line has ${childOrders.length} combo lines, ` +
+                                `${otherOrders.length} of another order`
+                        );
+                    }
+                }
+            },
+        },
+    ].flat();
+
+registry.category("web_tour.tours").add("test_combo_second_partial_refund", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            inLeftSide([
+                Numpad.click("2"),
+                ...Order.hasLine({ productName: "Combo Product 4", quantity: "2" }),
+            ]),
+            payOrder(),
+            refundOneComboAndCheck(),
+            payOrder(),
+            refundOneComboAndCheck(),
         ].flat(),
 });
