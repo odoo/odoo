@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<div t-name="website_builder.DraftDialog">
+    <Dialog title="this.title" size="'md'">
+        <p>
+            <t t-out="this.body" />
+            <br/>
+            <br/>
+            Would you like to proceed?
+        </p>
+        <t t-set-slot="footer">
+            <div class="d-flex flex-column">
+                <div>
+                    <button class="btn" t-att-class="this.props.isPublishing ? 'btn-primary' : 'btn-danger'" t-on-click="this.onConfirmClick.bind(this)" data-hotkey="q">
+                        <t t-if="this.props.isPublishing">Publish draft</t>
+                        <t t-else="">Delete draft</t>
+                    </button>
+                    <button class="btn btn-secondary ms-2" t-on-click="this.props.close" data-hotkey="x">
+                        Cancel
+                    </button>
+                </div>
+                <CheckBox t-if="this.props.isPublishing" value="!this.state.shouldShowAgain" onChange.bind="this.toggleShouldShowAgain" className="'mt-1 small'">
+                    Don't show it again
+                </CheckBox>
+            </div>
+        </t>
+    </Dialog>
+</div>
+</templates>

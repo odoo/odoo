@@ -94,6 +94,7 @@
             'data-can-optimize-seo': 'website_meta_description' in main_object._fields,
             'data-can-publish': 'can_publish' in main_object._fields and main_object.sudo(False).can_publish,
             'data-editable-in-backend': edit_in_backend or ('website_published' in main_object._fields and main_object._name != 'website.page'),
+            'data-draft-preview': '1' if env.context.get('draft_preview') else None,
         })"/>
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,

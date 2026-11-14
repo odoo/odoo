@@ -418,6 +418,13 @@ export class EditCustomCodeAction extends BuilderAction {
         this.canTimeout = false;
     }
     apply() {
+        if (this.services.website.isDraftPreview) {
+            this.services.notification.add(
+                _t("Code injection is saved on the live website, it can't be changed in draft mode."),
+                { type: "warning" }
+            );
+            return;
+        }
         this.services.dialog.add(EditHeadBodyDialog);
     }
 }

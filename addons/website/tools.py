@@ -260,3 +260,15 @@ def add_seo_rels_to_links(html_template):
     result = html.tostring(tree, encoding="unicode")
     result = result[10:-11]
     return type(html_template)(result)
+
+
+def is_draft_active(record):
+    """Effective active state in draft preview: ``active_draft`` when set, else ``active``."""
+    return bool(record.active_draft) if record.active_draft != -1 else record.active
+
+
+def url_without_lang(env, path):
+    """Strip the language prefix from a frontend path (``/fr/shop`` -> ``/shop``)."""
+    first, _, rest = path.lstrip('/').partition('/')
+    url_codes = {lang.url_code for lang in env['res.lang']._get_active_by('code').values()}
+    return f'/{rest}' if first in url_codes else path

@@ -192,12 +192,17 @@ export class ResourceEditor extends Component {
 
     async loadResources() {
         const resources = await this.keepLast.add(
-            rpc("/website/get_assets_editor_resources", {
-                key: this.viewKey,
-                bundles: this.state.xmlFilter === "all",
-                bundles_restriction: BUNDLES_RESTRICTION,
-                only_user_custom_files: this.state.scssFilter === "custom",
-            })
+            rpc(
+                `/website/get_assets_editor_resources${
+                    this.website.isDraftPreview ? "?draft_preview=1" : ""
+                }`,
+                {
+                    key: this.viewKey,
+                    bundles: this.state.xmlFilter === "all",
+                    bundles_restriction: BUNDLES_RESTRICTION,
+                    only_user_custom_files: this.state.scssFilter === "custom",
+                }
+            )
         );
         this.state.resources = { xml: {}, js: {}, scss: {} };
         this.processResources(resources.views || [], "xml");
@@ -308,9 +313,12 @@ export class ResourceEditor extends Component {
             throw new Error(_t("Reseting views is not supported yet"));
         }
         const resource = this.state.currentResource;
-        await this.orm.call("website.assets", "reset_asset", [resource.url, resource.bundle], {
-            context: this.context,
-        });
+        await this.orm.call(
+            "website.assets",
+            "reset_asset",
+            [resource.url, resource.bundle, this.website.isDraftPreview],
+            { context: this.context }
+        );
         await this.loadResources();
         this.website.contentWindow.location.reload();
     }
@@ -377,7 +385,7 @@ export class ResourceEditor extends Component {
             ? this.state.resources.js[url].bundle
             : this.state.resources.scss[url].bundle;
         const fileType = isJSFile ? "js" : "scss";
-        const params = [url, bundle, arch, fileType];
+        const params = [url, bundle, arch, fileType, this.website.isDraftPreview];
         await this.orm.call("website.assets", "save_asset", params, { context: this.context });
         delete resource.dirty;
     }
@@ -393,6 +401,7 @@ export class ResourceEditor extends Component {
         await rpc("/website/save_xml", {
             view_id: id,
             arch: arch,
+            draft: this.website.isDraftPreview,
         });
         delete resource.dirty;
     }

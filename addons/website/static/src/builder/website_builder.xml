@@ -4,19 +4,37 @@
 <t t-name="website.WebsiteBuilder">
     <Builder t-props="this.builderProps">
         <t t-set-slot="extraActions">
-            <div class="o_website_discard_save_buttons d-flex">
+            <div class="o_website_discard_save_buttons d-flex"
+                t-att-class="{ 'o_website_draft_actions': this.websiteService.isDraftPreview }">
                 <button type="button" t-on-click="this.discard"
                     class="o_hb_btn btn" data-action="cancel"
                     data-tooltip="Tip: Esc to preview" accesskey="j">
                     <span class="d-inline-block mw-100 align-bottom"
                         data-text-truncate-tooltip="">Discard</span>
                 </button>
-                <button type="button" t-on-click="this.save"
-                    class="o_hb_btn btn btn-success px-3" data-action="save"
-                    accesskey="s">
-                    <span class="d-inline-block mw-100 align-bottom"
-                        data-text-truncate-tooltip="">Save</span>
-                </button>
+                <div class="btn-group o_website_save_group">
+                    <button type="button" t-on-click="this.save"
+                        class="o_hb_btn btn btn-success" data-action="save"
+                        t-att-class="this.websiteService.isDraftPreview ? 'px-2' : 'px-3'"
+                        accesskey="s">
+                        <span class="d-inline-block mw-100 align-bottom"
+                            data-text-truncate-tooltip="">Save</span>
+                    </button>
+                    <Dropdown t-if="this.websiteService.isDraftPreview" position="'bottom-end'">
+                        <button type="button" class="o_hb_btn o_website_draft_toggle btn btn-success px-1"
+                            data-action="draft_actions" title="Draft actions" aria-label="Draft actions">
+                            <i class="oi oi-fw" data-icon="keyboard_arrow_down"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <DropdownItem onSelected.bind="this.publishDraft" class="'o_website_publish_draft'">
+                                <i class="oi oi-fw me-2" data-icon="cloud_upload"/>Publish draft
+                            </DropdownItem>
+                            <DropdownItem onSelected.bind="this.deleteDraft" class="'o_website_delete_draft text-danger'">
+                                <i class="oi oi-fw oi-filled me-2" data-icon="delete"/>Delete draft
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </div>
             </div>
         </t>
     </Builder>
