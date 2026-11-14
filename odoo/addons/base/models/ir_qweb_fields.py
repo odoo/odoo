@@ -596,7 +596,9 @@ class TimeConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if value < 0:
             raise ValueError(_("The value (%s) passed should be positive", value))
-        hours, minutes = divmod(int(abs(value) * 60), 60)
+        # round before truncating to absorb float errors (4.1 * 60 = 245.99999999999997)
+        minutes = int(float_utils.float_round(abs(value) * 60, precision_digits=6))
+        hours, minutes = divmod(minutes, 60)
         if hours > 23:
             raise ValueError(_("The hour must be between 0 and 23"))
         t = time(hour=hours, minute=minutes)
