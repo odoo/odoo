@@ -9,7 +9,7 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 from email.parser import BytesParser
-from email.utils import make_msgid
+from email.utils import getaddresses, make_msgid
 from socket import gaierror, timeout
 
 import idna
@@ -46,6 +46,29 @@ SMTP_TIMEOUT = 60
 
 class MailDeliveryException(Exception):
     """Specific exception subclass for mail delivery errors"""
+
+
+def _formataddr_ascii(pair):
+    """``formataddr`` in ascii, falling back to the address as given."""
+    try:
+        return formataddr(pair, charset='ascii')
+    except idna.IDNAError:
+        # as extract_rfc2822_addresses does, a malformed domain must not make
+        # the whole message undeliverable
+        _logger.warning("Could not punycode the domain of %r", pair, exc_info=True)
+        return formataddr(pair)
+
+
+def idna_encode_header_domains(value):
+    """Punycode the domain of every address of an address header value.
+
+    An encoded-word is not allowed in the domain part of an address, so an
+    internationalized domain has to be IDNA-encoded before the header is folded.
+
+    >>> idna_encode_header_domains('test@\xe9\xe9\xe9.com')
+    'test@xn--9caaa.com'
+    """
+    return ', '.join(_formataddr_ascii(pair) for pair in getaddresses([value]))
 
 
 # Python 3: patch SMTP's internal printer/debugger
@@ -676,6 +699,12 @@ class IrMail_Server(models.Model):
         # alter message
         self._alter_message__(message, smtp_from, smtp_to_list)
 
+        # rfc2047 section 5 - an encoded-word is not allowed in the domain part
+        # of an address, punycode it before the header gets folded
+        for header in ('From', 'To', 'Cc', 'Reply-To'):
+            if (value := message[header]) and not value.isascii():
+                message.replace_header(header, idna_encode_header_domains(value))
+
         # Check if it's still possible to put the bounce address as smtp_from
         if self._match_from_filter(bounce_address, from_filter):
             # Mail headers FROM will be spoofed to be able to receive bounce notifications
@@ -751,7 +780,9 @@ class IrMail_Server(models.Model):
         # emails may create fake emails using extract_rfc2822_addresses, e.g.
         # '"Bike@Home" <email@domain.com>' which can be considered as containing
         # 2 emails by extract_rfc2822_addresses
-        validated_to = self.env.context.get('send_validated_to') or []
+        # normalized addresses are not punycoded, the addresses they are
+        # compared to are: bring both sides to the same form
+        validated_to = extract_rfc2822_addresses(', '.join(self.env.context.get('send_validated_to') or []))
 
         # Support optional skip To list
         skip_to_lst = self.env.context.get('send_smtp_skip_to') or []
