@@ -119,7 +119,7 @@
             selector=".o_animable, section .row > div, img, .oi, .btn, .s_card"
             t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.oi, .s_share i.oi, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
-        <visibility_option selector="section, .s_hr"/>
+        <visibility_option selector="section, .s_hr" exclude=".s_dynamic_snippet_instagram section"/>
         <device_visibility_option
             template="website.DeviceVisibilityOption"
             t-att-selector="this.deviceVisibilityOptionSelector"

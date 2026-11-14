@@ -8,6 +8,16 @@
         <field name="interval_type">weeks</field>
     </record>
     <!--
+        Static cron used together with ir.cron.trigger to refresh Instagram
+        access tokens: it only runs when a token is about to expire.
+    -->
+    <record id="website_instagram_account_refresh_access_tokens" model="ir.cron">
+        <field name="name">Website: Refresh Instagram access tokens</field>
+        <field name="interval_type">never</field>
+        <field name="model_id" ref="model_website_instagram_account"/>
+        <field name="code">model._cron_refresh_access_tokens()</field>
+    </record>
+    <!--
         Static cron used together with ir.cron.trigger to publish scheduled
         content (website pages, blog posts, products, ...).
         The interval is deliberately large as triggers define the actual
