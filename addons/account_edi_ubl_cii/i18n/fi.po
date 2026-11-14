@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 19:35+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-12 12:44+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_edi_ubl_cii/fi/>\n"
@@ -117,7 +117,7 @@ msgstr "Andorran ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "At least one Invoice Line is required [IBR-016]."
-msgstr ""
+msgstr "Vaaditaan vähintään yksi laskurivi [IBR-016]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -174,7 +174,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "CII-perusapuvälineet"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -210,25 +210,25 @@ msgstr "Yritysrekisteriverkosto"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Country Code is missing [IBR-011]."
-msgstr ""
+msgstr "Ostajan maakoodi puuttuu [IBR-011]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
-msgstr ""
+msgstr "Ostajan sähköinen osoite / päätepisteen tunnus puuttuu [IBR-080]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
-msgstr ""
+msgstr "Ostajan sähköisen osoitejärjestelmän tunniste puuttuu [IBR-063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Name is missing [IBR-007]."
-msgstr ""
+msgstr "Ostajan nimi puuttuu [IBR-007]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -244,9 +244,10 @@ msgstr "Alkuperätiedostoa ei löydy, yritä tuoda se uudelleen"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
-msgstr ""
+msgstr "Veloitus"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -292,6 +293,14 @@ msgstr "Määritä"
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
 msgid "Contact"
 msgstr "Yhteystiedot"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -365,7 +374,7 @@ msgstr "Kroatian ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Currency Code is missing [IBR-005]."
-msgstr ""
+msgstr "Valuuttakoodi puuttuu [IBR-005]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9928
@@ -404,6 +413,7 @@ msgstr "Euroopan komission pääosastot"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "Alennus"
@@ -441,6 +451,8 @@ msgstr "Näyttönimi"
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
 msgstr ""
+"Asiakirjan sallittu määrä %(charge)s rivillä %(line)s: Määrä puuttuu "
+"[IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -449,6 +461,8 @@ msgid ""
 "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-033]."
 msgstr ""
+"Asiakirjan sallittu määrä %(charge)s rivillä %(line)s: Syy tai syykoodi "
+"vaaditaan [IBR-033]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -456,6 +470,7 @@ msgstr ""
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
 msgstr ""
+"Asiakirjan veloitus %(charge)s rivillä %(line)s: Määrä puuttuu [IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -464,6 +479,8 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
+"Asiakirjan veloitus %(charge)s rivillä %(line)s: Syy tai syykoodi vaaditaan "
+"[IBR-038]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -554,7 +571,7 @@ msgstr "Vienti EU:n ulkopuolelle"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -673,7 +690,7 @@ msgstr "Yleinen lisämyynti"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Generated by Odoo"
-msgstr ""
+msgstr "Odoon luoma"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0246
@@ -781,7 +798,7 @@ msgstr "Yhteisömyynti"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Invoice Issue Date is missing [IBR-003]."
-msgstr ""
+msgstr "Laskun päivämäärä puuttuu [IBR-003]."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -881,43 +898,43 @@ msgstr "Liechtensteinin ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoice line net amount is missing [IBR-024]."
-msgstr ""
+msgstr "Rivi %s: Laskun rivin nettosumma puuttuu [IBR-024]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity is missing [IBR-022]."
-msgstr ""
+msgstr "Rivi %s: Laskutettu määrä puuttuu [IBR-022]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity unit of measure code is missing [IBR-023]."
-msgstr ""
+msgstr "Rivi %s: Laskutetun määrän mittayksikkökoodi puuttuu [IBR-023]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item name is missing [IBR-025]."
-msgstr ""
+msgstr "Rivi %s: Kohteen nimi puuttuu [IBR-025]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr ""
+msgstr "Rivi %s: Kohteen nettohinta EI SAA olla negatiivinen [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price is missing [IBR-026]."
-msgstr ""
+msgstr "Rivi %s: Kohteen nettohinta puuttuu [IBR-026]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr ""
+msgstr "Rivi %s: Kohteen veroluokan koodi puuttuu [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0200
@@ -1075,6 +1092,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Käänteinen veloitus: Jos asiakas ei esitä kirjallista vastalausetta yhden "
+"kuukauden kuluessa laskun vastaanottamisesta, hänen katsotaan ymmärtävänsä "
+"olevan verovelvollinen, jonka on täytettävä veroilmoitus säännöllisesti. Jos "
+"tätä ehtoa ei täytetä, asiakas on velvollinen maksamaan tästä ehdosta "
+"johtuvat verot, korot ja sakot."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1154,25 +1176,25 @@ msgstr "San Marinon ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Country Code is missing [IBR-009]."
-msgstr ""
+msgstr "Myyjän maakoodi puuttuu [IBR-009]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
-msgstr ""
+msgstr "Myyjän sähköinen osoite / päätepisteen tunnus puuttuu [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
-msgstr ""
+msgstr "Myyjän sähköisen osoitejärjestelmän tunniste puuttuu [IBR-063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Name is missing [IBR-006]."
-msgstr ""
+msgstr "Myyjän nimi puuttuu [IBR-006]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
@@ -1468,6 +1490,16 @@ msgstr "UN/ECE-koodi"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
 msgid "USA EIN"
 msgstr "Yhdysvaltojen EIN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason
@@ -2253,7 +2285,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F - Käytettyjen tavaroiden myynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2263,12 +2295,12 @@ msgstr "VATEX-FR-FRANCHISE - Ranskan kotimainen ALV (franchise in base)"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I – Taideteosten myynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J - Antiikkiesineiden myynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953

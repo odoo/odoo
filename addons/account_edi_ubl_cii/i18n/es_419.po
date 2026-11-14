@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:39+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
 "PO-Revision-Date: 2026-10-29 19:26+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -252,6 +252,7 @@ msgstr "No encontramos el archivo de origen, intenta importarlo de nuevo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
 msgstr "Cargo"
@@ -301,6 +302,14 @@ msgstr "Configurar"
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -419,6 +428,7 @@ msgstr "Direcciones de la Comisión Europea"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "Descuento"
@@ -456,8 +466,8 @@ msgstr "Nombre en pantalla"
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
 msgstr ""
-"Cargo de documento %(charge)s de la línea %(line)s: falta el importe [IBR-"
-"031]."
+"Cargo de documento %(charge)s de la línea %(line)s: falta el importe "
+"[IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -475,8 +485,8 @@ msgstr ""
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
 msgstr ""
-"Cargo de documento %(charge)s de la línea %(line)s: falta el importe [IBR-"
-"036]."
+"Cargo de documento %(charge)s de la línea %(line)s: falta el importe "
+"[IBR-036]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -946,7 +956,8 @@ msgstr "Línea %s: falta el precio neto del artículo [IBR-026]."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr "Línea %s: falta el código de categoría fiscal del artículo [IBR-SR-58]."
+msgstr ""
+"Línea %s: falta el código de categoría fiscal del artículo [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0200
@@ -1527,6 +1538,16 @@ msgstr "Código UN/ECE"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
 msgid "USA EIN"
 msgstr "Estados Unidos - EIN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason

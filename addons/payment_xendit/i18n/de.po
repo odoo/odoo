@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 13:42+0000\n"
+"PO-Revision-Date: 2026-11-10 15:23+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment_xendit/de/>\n"
@@ -244,6 +244,9 @@ msgid ""
 "The payment requires authentication from the customer, which isn't possible "
 "for this unattended transaction. Please ask the customer to pay manually."
 msgstr ""
+"Die Zahlung erfordert eine Authentifizierung durch den Kunden, was bei "
+"dieser unbeaufsichtigten Transaktion nicht möglich ist. Bitten Sie den "
+"Kunden, die Zahlung manuell vorzunehmen."
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
@@ -254,7 +257,7 @@ msgstr "Der technische Code dieses Zahlungsanbieters."
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Die Transaktion ist nicht mit einem Token verknüpft."
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_touch_n_go
@@ -280,7 +283,7 @@ msgstr "United Overseas Bank"
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Update the Xendit webhook configuration"
-msgstr ""
+msgstr "Xendit-Webhook-Konfiguration aktualisieren"
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_visa
@@ -331,7 +334,7 @@ msgstr "Xendit"
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Xendit Dashboard"
-msgstr ""
+msgstr "Xendit-Dashboard"
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -357,6 +360,10 @@ msgid ""
 "(dashboard_link)s before %(deadline)s to keep receiving payment and card "
 "token status updates."
 msgstr ""
+"Xendit hat das einzelne Webhook-Feld, das vom Zahlungsanbieter %(provider)s "
+"verwendet wurde, durch separate v3-Ereignisgruppen ersetzt. Aktualisieren "
+"Sie %(webhook_link)s auf dem %(dashboard_link)s vor dem %(deadline)s, um "
+"weiterhin Status-Updates zu Zahlungen und Kartentokens zu erhalten."
 
 #. module: payment_xendit
 #: model:payment.method,name:payment_xendit.payment_method_zalopay
@@ -367,7 +374,7 @@ msgstr "Zalopay"
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "webhook configuration"
-msgstr ""
+msgstr "Webhook-Konfiguration"
 
 #~ msgid "Card Code"
 #~ msgstr "Kartencode"
