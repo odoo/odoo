@@ -55,6 +55,21 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
+    def _get_amount_precision(self, currency, *, payment_method_code=None, **kwargs):
+        """Override of `payment` to return the amount precision for Nuvei.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :param str|None payment_method_code: The code of the payment method of the transaction.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        precision = super()._get_amount_precision(currency, **kwargs)
+        if self.code != "nuvei":
+            return precision
+
+        is_mandatory_integer_pm = payment_method_code in const.INTEGER_METHODS
+        return 0 if is_mandatory_integer_pm else precision
+
     def _nuvei_get_api_url(self):
         if self.is_live:
             return "https://secure.safecharge.com/ppp/purchase.do"
