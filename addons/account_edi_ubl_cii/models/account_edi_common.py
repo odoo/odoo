@@ -141,6 +141,20 @@ EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     'IS', 'LI', 'NO',
 }
 
+# -------------------------------------------------------------------------
+# Payment means codes (UNCL4461)
+# -------------------------------------------------------------------------
+
+# Incomplete on purpose: only the codes we use. Full list on https://service.unece.org/trade/untdid/d16b/tred/tred4461.htm
+UNCL4461_PAYMENT_MEAN_CODE = {
+    'credit_transfer': 30,
+    'payment_to_bank_account': 42,
+    'standing_agreement': 57,
+    'sepa_credit_transfer': 58,
+    'sepa_direct_debit': 59,
+    'mutually_defined': 'ZZZ',
+}
+
 COCONTRACTANT_DEFAULT_NOTE = _lt('Reverse charge: In the absence of a written objection within one month of receipt of the invoice, '
                               'the customer is deemed to acknowledge that they are a taxable person required to file periodic returns. '
                               'If this condition is not met, the customer will be liable for the payment of the tax, interest, '
@@ -197,6 +211,40 @@ class AccountEdiCommon(models.AbstractModel):
     def _vals_to_etree(self, vals):
         document_node = vals['document_node']
         return dict_to_xml(document_node, nsmap=document_node['_nsmap'], template=document_node['_template'])
+
+    def _get_sdd_mandate(self, vals):
+        """ Return the SEPA Direct Debit mandate used to pay the invoice, if any.
+        The 'sdd_mandate_id' field is only available when 'account_sepa_direct_debit' is installed.
+
+        :return: A sdd.mandate record (possibly empty), or None if SEPA Direct Debit is not installed.
+        """
+        if 'sdd_mandate_id' not in self.env['account.payment']._fields:
+            return None
+        return vals['invoice'].reconciled_payment_ids.sdd_mandate_id[:1]
+
+    def _get_sepa_creditor_identifier(self, vals):
+        """ [BT-90] Return the bank assigned creditor identifier of the seller, when the invoice is collected by
+        SEPA Direct Debit. The identifier is the company's, so it only applies when the company is the seller and
+        actually collects the amount, i.e. for invoices: never for credit notes nor self-billed documents.
+
+        :return: The SEPA creditor identifier, or None.
+        """
+        if not self._is_document(vals, 'invoice') or not self._get_sdd_mandate(vals):
+            return None
+        return vals['invoice'].company_id.sdd_creditor_identifier or None
+
+    def _is_sepa_credit_note(self, vals):
+        """ Whether the document is a credit note to be refunded by SEPA Credit Transfer,
+        i.e. in EUR, to an IBAN of the SEPA zone.
+
+        :return: True if the credit note can be refunded by SEPA Credit Transfer.
+        """
+        invoice = vals['invoice']
+        partner_bank = invoice.partner_bank_id
+        if not self._is_document(vals, 'credit_note') or invoice.currency_id.name != 'EUR' or partner_bank.acc_type != 'iban':
+            return False
+        sepa_zone = self.env.ref('base.sepa_zone', raise_if_not_found=False)
+        return bool(sepa_zone) and partner_bank.sanitized_acc_number[:2] in sepa_zone.country_ids.mapped('code')
 
     def _etree_to_string(self, tree):
         return etree.tostring(tree, xml_declaration=True, encoding='UTF-8')

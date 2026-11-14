@@ -4,7 +4,7 @@ import textwrap
 import uuid
 from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
 from odoo.tools.pdf import OdooPdfFileWriter
@@ -210,6 +210,47 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw)
 
         self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=subfolder)
+
+    # -------------------------------------------------------------------------
+    # SEPA DIRECT DEBIT HELPERS
+    # -------------------------------------------------------------------------
+
+    def _create_sdd_mandate(self, partner_bank, one_off=False):
+        """ Create a valid SEPA Direct Debit mandate on the customer's bank account and let the company collect it.
+        The test is skipped if 'account_sepa_direct_debit' is not installed.
+
+        :param partner_bank: The res.partner.bank of the customer to debit.
+        :param one_off: Whether the mandate can be used only once.
+        :return: The validated sdd.mandate.
+        """
+        self.ensure_installed('account_sepa_direct_debit')
+        company = self.env.company
+        company.sdd_creditor_identifier = 'BE30ZZZ300D000000042'
+        bank_journal = self.company_data['default_journal_bank']
+        bank_journal.bank_acc_number = 'BE71096123456769'
+        bank_journal.bank_account_id.bank_id = self.env['res.bank'].create({'name': 'ING', 'bic': 'BBRUBEBB'})
+        sdd_method_line = bank_journal.inbound_payment_method_line_ids.filtered(lambda line: line.code == 'sdd')
+        sdd_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
+
+        mandate = self.env['sdd.mandate'].create({
+            'name': 'MANDATE-001',
+            'partner_id': partner_bank.partner_id.id,
+            'partner_bank_id': partner_bank.id,
+            'one_off': one_off,
+            'start_date': fields.Date.today(),
+            'company_id': company.id,
+        })
+        mandate.action_validate_mandate()
+        return mandate
+
+    def _pay_with_sdd_mandate(self, moves):
+        """ Register a single SEPA Direct Debit payment for `moves`, using the customer's mandate. """
+        bank_journal = self.company_data['default_journal_bank']
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=moves.ids).create({
+            'journal_id': bank_journal.id,
+            'payment_method_line_id': bank_journal.inbound_payment_method_line_ids.filtered(lambda line: line.code == 'sdd').id,
+            'group_payment': True,
+        })._create_payments()
 
     # -------------------------------------------------------------------------
     # IMPORT HELPERS

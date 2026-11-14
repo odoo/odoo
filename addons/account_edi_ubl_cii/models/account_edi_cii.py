@@ -3,15 +3,11 @@ from odoo.tools import formatLang, frozendict, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
 from datetime import datetime
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
+    UNCL4461_PAYMENT_MEAN_CODE,
     FloatFmt,
 )
 
 DEFAULT_CII_DATE_FORMAT = '%Y%m%d'
-
-PAYMENT_MEAN_CODES = {
-    'Payment to bank account': 42,
-    'SEPA direct debit': 59
-}
 
 
 class AccountEdiCii(models.AbstractModel):
@@ -23,6 +19,20 @@ class AccountEdiCii(models.AbstractModel):
     # NEW EXPORT : helpers
     # -------------------------------------------------------------------------
 
+    def _cii_add_values_document_type(self, vals):
+        invoice = vals['invoice']
+
+        if invoice.move_type == 'out_invoice':
+            document_type = 'invoice'
+        elif invoice.move_type == 'out_refund':
+            document_type = 'credit_note'
+        elif invoice.move_type == 'in_invoice':
+            document_type = 'self_invoice'
+        elif invoice.move_type == 'in_refund':
+            document_type = 'self_credit_note'
+
+        self._define_document_type(vals, document_type)
+
     def _cii_add_invoice_config_vals(self, vals):
         invoice = vals['invoice']
         vals['currency_id'] = invoice.currency_id
@@ -31,6 +41,7 @@ class AccountEdiCii(models.AbstractModel):
         vals['customer'] = invoice.partner_id
         vals['partner_shipping'] = invoice.partner_shipping_id or invoice.partner_id
         vals['company'] = invoice.company_id
+        self._cii_add_values_document_type(vals)
 
         if invoice.is_purchase_document():
             vals['supplier'], vals['customer'] = vals['customer'], vals['supplier']
@@ -643,14 +654,25 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_applicable_header_trade_settlement_node(self, vals):
         invoice = vals['invoice']
+        sdd_mandate = self._get_sdd_mandate(vals)
+        creditor_identifier = self._get_sepa_creditor_identifier(vals)
+        if sdd_mandate:
+            payment_means_key = 'sepa_direct_debit'
+        elif self._is_sepa_credit_note(vals):
+            payment_means_key = 'sepa_credit_transfer'
+        else:
+            payment_means_key = 'payment_to_bank_account'
         return {
+            # [BT-90] Bank assigned creditor identifier
+            'ram:CreditorReferenceID': {'_text': creditor_identifier} if creditor_identifier else None,
             'ram:PaymentReference': {'_text': invoice.payment_reference},
             'ram:InvoiceCurrencyCode': {'_text': vals['currency_id'].name},
             'ram:SpecifiedTradeSettlementPaymentMeans': {
-                'ram:TypeCode': {'_text': PAYMENT_MEAN_CODES['SEPA direct debit']
-                    if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.reconciled_payment_ids.sdd_mandate_id
-                    else PAYMENT_MEAN_CODES['Payment to bank account'],
-                },
+                'ram:TypeCode': {'_text': UNCL4461_PAYMENT_MEAN_CODE[payment_means_key]},
+                # [BT-91] Debited account identifier
+                'ram:PayerPartyDebtorFinancialAccount': {
+                    'ram:IBANID': {'_text': sdd_mandate.partner_bank_id.sanitized_acc_number},
+                } if sdd_mandate else None,
                 'ram:PayeePartyCreditorFinancialAccount': self._cii_get_payee_party_creditor_financial_account_node(vals),
             },
             'ram:ApplicableTradeTax': self._cii_get_applicable_trade_tax_nodes(vals),
@@ -723,11 +745,14 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_specified_trade_payment_terms_node(self, vals):
         invoice = vals['invoice']
+        sdd_mandate = self._get_sdd_mandate(vals)
         return {
             'ram:Description': {
                 '_text': invoice.invoice_payment_term_id.name,
             } if invoice.invoice_payment_term_id else None,
             'ram:DueDateDateTime': self._cii_get_date_time_string_node(vals, invoice.invoice_date_due) if invoice.invoice_date_due else None,
+            # [BT-89] Mandate reference identifier
+            'ram:DirectDebitMandateID': {'_text': sdd_mandate.name} if sdd_mandate else None,
             'ram:ApplicableTradePaymentDiscountTerms': {
                 'ram:BasisPeriodMeasure': {
                     '_text': invoice.invoice_payment_term_id.discount_days,

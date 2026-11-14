@@ -1,7 +1,7 @@
 from odoo import _, models
 from odoo.tools import formatLang, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import UNCL4461_PAYMENT_MEAN_CODE, FloatFmt
 
 
 class AccountEdiUBLPint(models.AbstractModel):
@@ -252,21 +252,26 @@ class AccountEdiUBLPint(models.AbstractModel):
         invoice = vals['invoice']
         nodes = vals['document_node']['cac:PaymentMeans']
 
-        if invoice.move_type == 'out_invoice':
+        if self._get_sdd_mandate(vals):
+            payment_means_key, payment_name = 'sepa_direct_debit', 'SEPA Direct Debit'
+        elif self._is_document(vals, 'invoice'):
             if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = 30, 'credit transfer'
+                payment_means_key, payment_name = 'credit_transfer', 'credit transfer'
             else:
-                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
+                payment_means_key, payment_name = 'mutually_defined', 'mutually defined'
+        elif self._is_sepa_credit_note(vals):
+            payment_means_key, payment_name = 'sepa_credit_transfer', 'SEPA Credit Transfer'
         else:
-            payment_means_code, payment_means_name = 57, 'standing agreement'
+            payment_means_key, payment_name = 'standing_agreement', 'standing agreement'
 
         partner_bank = invoice.partner_bank_id
         payment_means_node = {
             'cbc:PaymentMeansCode': {
-                '_text': payment_means_code,
-                'name': payment_means_name,
+                '_text': UNCL4461_PAYMENT_MEAN_CODE[payment_means_key],
+                'name': payment_name,
             },
             'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
+            'cac:PaymentMandate': self._ubl_get_payment_means_payment_mandate_node(vals),
         }
 
         if partner_bank:
