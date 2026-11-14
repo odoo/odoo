@@ -57,9 +57,6 @@ export class MapUpdateSrcAction extends BuilderAction {
             embedded.setAttribute("src", "about:blank");
         }
         embedded.classList.toggle("d-none", !editingElement.dataset.mapAddress);
-        editingElement
-            .querySelector(".missing_option_warning")
-            .classList.toggle("d-none", !!editingElement.dataset.mapAddress);
     }
 }
 

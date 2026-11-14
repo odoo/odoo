@@ -16,7 +16,7 @@
 
 <template id="contact">
     <address t-ignore="true" class="o_portal_address mb-0">
-        <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
+        <div t-if="options.get('inherit_branding') and not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-out="name"/>--
         </div>
         <t t-if="object.country_id.name_position != 'after'">
