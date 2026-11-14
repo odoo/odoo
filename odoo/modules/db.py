@@ -327,6 +327,26 @@ class DatabaseExists(UserError, ValueError):
     pass
 
 
+def _superuser_commands(dbname: str, *queries: str) -> str:
+    """ Return the shell commands an administrator can run to execute
+    ``queries`` as superuser in the current database and in the template
+    database, so that new databases inherit the result.
+    """
+    template = config['db_template']
+    template_cmds = [(template, query) for query in queries]
+    if template == 'template0':
+        # template0 refuses connections by default: open it temporarily, then
+        # lock it again. Other templates accept connections and must not be
+        # locked afterwards.
+        template_cmds = [
+            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS true"),
+            *template_cmds,
+            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS false"),
+        ]
+    cmds = [(dbname, query) for query in queries] + template_cmds
+    return "\n".join(f"sudo -u postgres psql -d {db} -c '{query}'" for db, query in cmds)
+
+
 def _create_empty_database(db_name: str) -> None:
     db_system_name = config['db_system']
     try:
@@ -363,14 +383,29 @@ def _create_empty_database(db_name: str) -> None:
         db = odoo.sql_db.db_connect(db_name)
         with db.cursor() as cr:
             try_install_extension(cr, 'pg_trgm')
-            if odoo.tools.config['unaccent'] and try_install_extension(cr, 'unaccent'):
+            if (
+                odoo.tools.config['unaccent']
+                and try_install_extension(cr, 'unaccent')
+                and has_unaccent(cr) != FunctionStatus.INDEXABLE
+            ):
                 # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
                 # because it depends on external data - see
                 # https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
                 # But in the case of Odoo, we consider that those data don't
                 # change in the lifetime of a database. If they do change, all
                 # indexes created with this function become corrupted!
-                cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE")
+                # Its functions are owned by the superuser that ran the extension
+                # script, so only an administrator can make it IMMUTABLE.
+                _logger.warning(
+                    "Function 'unaccent' is not IMMUTABLE, so it cannot be used in indexes. "
+                    "Fix this database, and the template so that new databases inherit "
+                    "it, as a database administrator:\n%s",
+                    _superuser_commands(
+                        cr.dbname,
+                        "CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public",
+                        "ALTER FUNCTION unaccent(text) IMMUTABLE",
+                    ),
+                )
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
     _check_faketime_mode(db_name)
@@ -402,35 +437,17 @@ def try_install_extension(cr: Cursor, extension_name: str) -> bool:
             cr.execute(create_extension, log_exceptions=False)
         return True
     except psycopg2.errors.InsufficientPrivilege:
-        pass
+        _logger.warning(
+            "PostgreSQL extension %r is required but not installed, and creating it "
+            "needs a superuser. Enable it as a database administrator:\n%s",
+            extension_name,
+            _superuser_commands(cr.dbname, cr.mogrify(create_extension).decode()),
+        )
     except psycopg2.Error as e:
         _logger.warning(
             "PostgreSQL extension %r is required but could not be created: %s",
             extension_name, str(e).strip(),
         )
-        return False
-
-    create_extension_str = cr.mogrify(create_extension).decode()
-    template = config['db_template']
-    cmds = [(cr.dbname, create_extension_str)]
-    if template == 'template0':
-        # template0 refuses connections by default: open it temporarily so that
-        # future databases inherit the extension, then lock it again. Other
-        # templates accept connections and must not be locked afterwards.
-        cmds += [
-            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS true"),
-            (template, create_extension_str),
-            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS false"),
-        ]
-    else:
-        cmds.append((template, create_extension_str))
-
-    _logger.warning(
-        "PostgreSQL extension %r is required but not installed, and creating it "
-        "needs a superuser. Enable it as a database administrator:\n%s",
-        extension_name,
-        "\n".join(f"sudo -u postgres psql -d {db} -c '{sql}'" for db, sql in cmds),
-    )
     return False
 
 
