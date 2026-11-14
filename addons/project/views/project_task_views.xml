@@ -353,8 +353,6 @@
                     <field name="recurrence_id" invisible="1" /> <!-- drives invisible of the action_recurring_tasks button -->
                     <field name="allow_task_dependencies" invisible="1" /> <!-- drives invisible of the action_dependent_tasks button, the task_dependencies page -->
                     <field name="rating_last_value" invisible="1"/> <!-- read by the task analysis renderer and the rating stat button -->
-                    <field name="rating_count" invisible="1"/> <!-- drives invisible of the action_open_ratings button -->
-                    <field name="allow_milestones" invisible="1" /> <!-- drives invisible of milestone_id -->
                     <field name="parent_id" invisible="1"/> <!-- drives invisible of the action_open_parent_task button, recurring_task and required of project_id -->
                     <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of partner_id, project_id, user_ids -->
                     <field name="is_closed" invisible="1"/> <!-- read by the project_task_form js class and the task calendar/gantt renderers -->
@@ -378,8 +376,6 @@
                         <span id="button_worksheet" invisible="1"/>
                         <!-- Dummy tag used to organize buttons, englobing the 3 buttons modifies the width of the button -->
                         <span id="start_rating_buttons" invisible="1"/>
-                        <field name="rating_avg" invisible="1"/> <!-- drives invisible of the Happy i, the Neutral i and 1 more -->
-                        <field name="rating_active" invisible="1"/> <!-- drives invisible of the action_open_ratings button -->
                         <button name="action_open_ratings" type="object" invisible="rating_count == 0 or not rating_active or has_template_ancestor or has_project_template" class="oe_stat_button">
                             <i class="oi oi-fw o_button_icon" data-icon="sentiment_satisfied" invisible="rating_avg &lt; 3.66" title="Happy"/>
                             <i class="oi oi-fw o_button_icon" data-icon="sentiment_neutral" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Neutral"/>
@@ -500,7 +496,6 @@
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
                                     <field name="active" column_invisible="True"/> <!-- drives invisible of the action_recurring_tasks button, the web_ribbon widget and 3 more -->
                                     <field name="is_template" column_invisible="True"/> <!-- drives invisible of personal_stage_type_id, the web_ribbon widget and 6 more and required of project_id -->
-                                    <field name="allow_milestones" column_invisible="True"/> <!-- drives invisible of milestone_id -->
                                     <field name="display_in_project" column_invisible="True" force_save="1"/> <!-- read by the project_task_model_mixin js, force_save to keep the value set when a subtask changes project -->
                                     <field name="sequence" widget="handle"/>
                                     <field name="id" optional="hide" options="{'enable_formatting': False}"/>
@@ -549,10 +544,7 @@
                                    }"
                                    widget="notebook_task_one2many">
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
-                                    <field name="allow_milestones" column_invisible="True"/> <!-- drives invisible of milestone_id -->
                                     <field name="parent_id" column_invisible="True" /> <!-- drives invisible of the action_open_parent_task button, recurring_task and required of project_id -->
-                                    <field name="subtask_count" column_invisible="True"/> <!-- drives invisible of the action_open_subtasks button -->
-                                    <field name="closed_subtask_count" column_invisible="True"/> <!-- used in the context of child_ids -->
                                     <field name="id" optional="hide" options="{'enable_formatting': False}"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px"/>
                                     <field name="name" widget="name_with_subtask_count"/>

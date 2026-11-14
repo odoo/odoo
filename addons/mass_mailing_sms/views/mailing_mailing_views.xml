@@ -38,7 +38,6 @@
             </xpath>
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">
-                <field name="sms_has_insufficient_credit" invisible="1"/> <!-- drives invisible of the alert block -->
                 <div class="alert alert-warning text-center o-hidden-ios" invisible="not sms_has_insufficient_credit" role="alert">
                     <button class="btn-link py-0"
                             name="action_buy_sms_credits"
@@ -48,7 +47,6 @@
                         </strong>
                     </button>
                 </div>
-                <field name="sms_has_unregistered_account" invisible="1"/> <!-- drives invisible of the alert block -->
                 <div class="alert alert-warning text-center o-hidden-ios" invisible="not sms_has_unregistered_account" role="alert">
                     <button class="btn-link py-0"
                             name="action_buy_sms_credits"

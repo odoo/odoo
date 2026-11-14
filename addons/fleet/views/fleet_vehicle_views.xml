@@ -6,7 +6,6 @@
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
             <form string="Vehicle" js_class="fleet_form">
-                <field name="service_activity" invisible="1"/> <!-- drives invisible of the return_action_to_open button -->
                 <header>
                     <button string="Apply New Driver"
                         class="btn btn-primary"
@@ -85,7 +84,6 @@
                     <group col="2">
                         <group string="Driver">
                             <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
-                            <field name="vehicle_type" invisible="1"/> <!-- drives invisible of seats, doors and 5 more -->
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="future_driver_id" widget="many2one_avatar_user"/>
                             <field name="next_assignation_date" placeholder="Available"/>
@@ -200,8 +198,6 @@
                 <field name="acquisition_date" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
-                <field name="contract_renewal_due_soon" invisible="1"/> <!-- drives decoration-warning of the Vehicle list -->
-                <field name="contract_renewal_overdue" invisible="1"/> <!-- drives decoration-danger/warning of the Vehicle list -->
                 <field name="vehicle_properties"/>
                 <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
                     decoration-success="contract_state == 'done'"

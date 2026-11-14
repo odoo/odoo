@@ -7,9 +7,7 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list editable="bottom">
-                <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of location_dest_id, location_id, lot_id -->
                 <field name="owner_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                <field name="tracking" column_invisible="True"/> <!-- drives invisible of lot_id and required of lot_id -->
                 <field name="package_id" column_invisible="True"/> <!-- used in the python-declared domain of result_package_id -->
                 <field name="result_package_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="location_id" column_invisible="True"/> <!-- used in the python-declared domain of package_id, result_package_id -->
@@ -83,7 +81,6 @@
                     <field name="location_id" invisible="1"/> <!-- passed as default_location_id in the context of move_line_ids -->
                     <field name="picking_id" invisible="1" readonly="state == 'done'"/> <!-- passed as default_picking_id in the context of move_line_ids -->
                     <field name="location_dest_id" invisible="1"/> <!-- used in the context of move_line_ids -->
-                    <field name="has_tracking" invisible="1"/> <!-- drives invisible of lot_id -->
                     <field name="uom_id" invisible="1"/> <!-- passed as default_uom_id in the context of move_line_ids -->
                     <field name="product_uom_qty" invisible="1" readonly="state == 'done'"/> <!-- demand kept loaded with its readonly expression though it is only shown in the list -->
                     <group>
@@ -94,9 +91,6 @@
                         readonly="state in ['done', 'cancel']"
                         context="{'default_uom_id': uom_id, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}">
                         <list editable="bottom" decoration-muted="state in ('done', 'cancel')">
-                            <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of bom_line_id, byproduct_id, consume_unbuild_id -->
-                            <field name="state" column_invisible="True"/> <!-- drives readonly of product_id, picking_id and 2 more -->
-                            <field name="tracking" column_invisible="True"/> <!-- drives required of lot_id -->
                             <field name="uom_id" column_invisible="True"/> <!-- passed as default_uom_id in the context of move_line_ids -->
                             <field name="picking_id" column_invisible="True"/> <!-- passed as default_picking_id in the context of move_line_ids -->
                             <field name="move_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
