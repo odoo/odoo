@@ -24,6 +24,11 @@ class StockPackageType(models.Model):
     packaging_length = fields.Float('Length', help="Packaging Length")
     base_weight = fields.Float(string='Weight', help='Weight of the package type')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
+    max_volume = fields.Float(
+        'Max Volume', digits='Volume',
+        help="Maximum volume of the content of a package of this type. With the max weight, it is used to put "
+             "move lines in as many packages of this type as needed.")
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
     barcode = fields.Char('Barcode', copy=False)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', default=_get_default_weight_uom)
     length_uom_name = fields.Char(string='Length unit of measure label', compute='_compute_length_uom_name', default=_get_default_length_uom)
@@ -120,6 +125,17 @@ class StockPackageType(models.Model):
             if seq_to_todo_ids:
                 self.env['ir.sequence'].browse(list(seq_to_todo_ids)).sudo().write(seq_vals)
         return super().write(vals)
+
+    def _compute_volume_uom_name(self):
+        self.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+
+    def _get_volume(self):
+        """ Volume of one package of this type, in the unit of the product volumes (m³ or ft³). """
+        self.ensure_one()
+        volume = self.packaging_length * self.width * self.height
+        if self.env['product.template']._get_length_uom_id_from_ir_config_parameter() == self.env.ref('uom.product_uom_millimeter'):
+            volume /= 1000.0 ** 3
+        return volume
 
     def _get_next_name_by_sequence(self):
         if len(self) == 1 and self.sequence_id:

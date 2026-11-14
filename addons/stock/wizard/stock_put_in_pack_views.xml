@@ -7,8 +7,10 @@
             <form string="Put in Pack">
                 <group>
                     <field name="package_type_id" placeholder="Select a Package Type" options="{'no_create': True}"/>
-                    <label for="package_capacity" invisible="not show_package_capacity"/>
-                    <div class="d-flex align-items-baseline gap-2" invisible="not show_package_capacity">
+                    <field name="package_type_has_capacity" invisible="1"/>
+                    <field name="split_by_capacity" invisible="not package_type_has_capacity or result_package_id"/>
+                    <label for="package_capacity" invisible="not show_package_capacity or split_by_capacity"/>
+                    <div class="d-flex align-items-baseline gap-2" invisible="not show_package_capacity or split_by_capacity">
                         <div style="width: 15%;">
                             <field
                                 name="package_capacity"
@@ -25,6 +27,7 @@
                            context="{'default_package_type_id': package_type_id, 'show_src_package': 1}"
                            widget="package_m2o"
                            placeholder="Leave empty to create new"
+                           invisible="split_by_capacity"
                     />
                     <field name="move_line_ids" invisible="1"/> <!-- Source recordset feeding the wizard's computes and passed to action_put_in_pack -->
                 </group>
