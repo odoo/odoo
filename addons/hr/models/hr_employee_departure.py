@@ -279,3 +279,8 @@ class HrEmployeeDeparture(models.Model):
         :rtype: hr.employee.departure
         """
         return self
+
+    def _is_departure_month_reached(self):
+        """Return whether the departure month has started."""
+        self.ensure_one()
+        return bool(self.departure_date) and fields.Date.context_today(self) >= self.departure_date.replace(day=1)
