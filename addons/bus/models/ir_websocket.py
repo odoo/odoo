@@ -7,8 +7,9 @@ from odoo.http import request
 from odoo.http.session import check
 from odoo.tools.misc import OrderedSet
 
-from odoo.addons.bus.bus_dispatcher import dispatch
+from odoo.addons.bus.bus_dispatcher import INTERNAL_CHANNEL, dispatch
 from odoo.addons.bus.models.bus import channel_with_db
+from odoo.addons.bus.tools.notifications import json_dump
 from odoo.addons.bus.websocket import wsrequest
 
 _logger = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ class IrWebsocket(models.AbstractModel):
         """
         req = request or wsrequest
         channels.append('broadcast')
+        channels.append(INTERNAL_CHANNEL)
         channels.extend(self.env.user.all_group_ids)
         if req.session.uid:
             channels.append(self.env.user.partner_id)
@@ -93,7 +95,19 @@ class IrWebsocket(models.AbstractModel):
             # Last was outdated, ask the worker to update its local state to the last
             # known server id.
             wsrequest.ws.send_worker_internal_message("bus/last_id_reset", data["last"])
-        dispatch.subscribe(data["channels"], data["last"], wsrequest.ws)
+        # The subscription changes this transaction sees, as the channels were read in
+        # it: the older ones are all committed, see ``ChannelTopic._history``.
+        seen_until = dispatch.changes_last_fetched_id(self.env.cr.dbname)
+        if seen_until is None:
+            seen_until = data["last"]
+        # sudo - bus.bus: reading the ids of the subscription changes is acceptable.
+        seen = self.env["bus.bus"].sudo().search([
+            ("channel", "=", json_dump(channel_with_db(self.env.cr.dbname, INTERNAL_CHANNEL))),
+            ("id", ">", seen_until),
+        ])
+        dispatch.subscribe(
+            data["channels"], data["last"], wsrequest.ws, (seen_until, frozenset(seen.ids)),
+        )
 
     def _on_websocket_closed(self, cookies):
         """Function invoked upon WebSocket termination.

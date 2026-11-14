@@ -11,11 +11,10 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { describe, expect, setInputFiles, test } from "@odoo/hoot";
+import { describe, setInputFiles, test } from "@odoo/hoot";
 import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
 
-import { Command, getService, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -76,36 +75,6 @@ test("Thread description update", async () => {
     await waitFor(
         `${env2.selector} .o-mail-DiscussContent-threadDescription[title='The very best channel']:count(1)`
     );
-});
-
-test.skip("Channel subscription is renewed when channel is added from invite", async () => {
-    const now = luxon.DateTime.now();
-    mockDate(`${now.year}-${now.month}-${now.day} ${now.hour}:${now.minute}:${now.second}`);
-    const pyEnv = await startServer();
-    const [, channelId] = pyEnv["discuss.channel"].create([
-        { name: "R&D" },
-        { name: "Sales", channel_member_ids: [] },
-    ]);
-    // Patch the date to consider those channels as already known by the server
-    // when the client starts.
-    const later = now.plus({ seconds: 10 });
-    mockDate(
-        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
-    );
-    await start();
-    mockService("bus_service", {
-        forceUpdateChannels() {
-            expect.step("update-channels");
-        },
-    });
-    await openDiscuss();
-    await waitFor(".o-mail-MessagingMenuItem:count(1)");
-    getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
-        channel_id: channelId,
-        user_ids: [serverState.userId],
-    });
-    await waitFor(".o-mail-MessagingMenuItem:count(2)");
-    await expect.waitForSteps(["update-channels"]); // FIXME: sometimes 1 or 2 update-channels
 });
 
 test("Adding attachments", async () => {

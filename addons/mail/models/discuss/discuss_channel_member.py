@@ -323,6 +323,14 @@ class DiscussChannelMember(models.Model):
         # help the ORM to detect changes
         res.partner_id.invalidate_recordset(["channel_ids"])
         res.guest_id.invalidate_recordset(["channel_ids"])
+        for channel, members in res.grouped("channel_id").items():
+            members.partner_id._bus_channels()._bus_join(channel)
+            members.guest_id._bus_join(channel)
+            # sudo: res.users - the internal users of the members listen to the channel's
+            # internal sub-channel, as in `ir.websocket._build_bus_channel_list`
+            members.partner_id.sudo().with_context(active_test=True).user_ids.filtered(
+                lambda user: not user.share,
+            )._bus_join((channel, "internal_users"))
         # Always link members to parent channels as well. Member list should be
         # kept in sync.
         for member in res:
@@ -417,6 +425,9 @@ class DiscussChannelMember(models.Model):
         members_by_channel = {
             channel: self.filtered(lambda m: m.channel_id == channel) for channel in self.channel_id
         }
+        for channel, members in members_by_channel.items():
+            members.partner_id._bus_channels()._bus_leave(channel)
+            members.guest_id._bus_leave(channel)
         res = super().unlink()
         stores = Store.Stores()
         for channel, members in name_members_by_channel.items():

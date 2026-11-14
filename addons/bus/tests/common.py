@@ -27,7 +27,7 @@ from odoo.tests.common import (
     _registry_test_lock,
 )
 
-from odoo.addons.bus.bus_dispatcher import BusDispatcher
+from odoo.addons.bus.bus_dispatcher import INTERNAL_CHANNEL, BusDispatcher
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
@@ -185,6 +185,7 @@ class BusResult:
 class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        self.env.cr.precommit.data.get("bus.bus.subscriptions", []).clear()
         self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextlib.contextmanager
@@ -216,7 +217,8 @@ class BusCase(BaseCase):
         :param notifications: expected notifications as :class:`BusResult`, list,
             or callable returning one of those forms.
 
-        Expected notifications must appear in order.
+        Expected notifications must appear in order. The internal notifications, applied by
+        the dispatcher instead of being sent, are left out.
         """
         self.maxDiff = None
         notifications = notifications() if callable(notifications) else notifications
@@ -236,9 +238,10 @@ class BusCase(BaseCase):
                     notif.payload,
                 ),
             )
+        internal_channel = json_dump(channel_with_db(self.cr.dbname, INTERNAL_CHANNEL))
         received_list = [
             BusResult(notif.channel, **json.loads(notif.message))
-            for notif in self.env["bus.bus"].sudo().search([])
+            for notif in self.env["bus.bus"].sudo().search([("channel", "!=", internal_channel)])
         ]
         for expected_notif, actual_notif in zip_longest(expected_list, received_list):
             if expected_notif is not None and actual_notif is not None:
@@ -363,6 +366,23 @@ class WebsocketCase(HttpCase, BusCase):
         self._websockets.add(ws)
         return ws
 
+    def connect_and_subscribe(self, login=None, password=None, channels=None):
+        """Open a websocket as ``login``, or as a visitor without it, subscribed to
+        ``channels`` and to the channels of its user from the last bus id on."""
+        self._reset_bus()
+        session = self.authenticate(login, password)
+        websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
+        self.subscribe(websocket, channels, self.env["bus.bus"]._bus_last_id())
+        return websocket
+
+    def recv_types_until(self, websocket, notification_type):
+        """Receive frames until one holds ``notification_type``, return the types
+        received."""
+        types = []
+        while notification_type not in types:
+            types += [notif["message"]["type"] for notif in json.loads(websocket.recv())]
+        return types
+
     def subscribe(self, websocket, channels=None, last=None, check_outdated=False, wait_for_dispatch=True):
         """ Subscribe the websocket to the given channels.
 
@@ -385,14 +405,14 @@ class WebsocketCase(HttpCase, BusCase):
         # `subscribe`` call to be able to wait for the initial dispatch.
         subscribing_websocket = None
 
-        def _mocked_subscribe(self, channels, last_fetched_id, websocket):
+        def _mocked_subscribe(self, channels, last_fetched_id, websocket, *args):
             nonlocal subscribing_websocket
-            original_subscribe(self, channels, last_fetched_id, websocket)
+            original_subscribe(self, channels, last_fetched_id, websocket, *args)
             subscribing_websocket = websocket
             subscribed.set()
 
         def _mocked_dispatch(self, topics, notifications):
-            original_dispatch(self, topics, notifications)
+            changes = original_dispatch(self, topics, notifications)
             if subscribed.is_set() and any(
                 subscribing_websocket in topic._websockets
                 or subscribing_websocket in topic._waiting_room
@@ -400,6 +420,7 @@ class WebsocketCase(HttpCase, BusCase):
                 for topic in topics
             ):
                 dispatch_bus_notification_done.set()
+            return changes
 
         with patch.object(BusDispatcher, 'subscribe', _mocked_subscribe), \
              patch.object(BusDispatcher, '_dispatch', _mocked_dispatch):

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import chain
+
 from odoo import models
 
 
@@ -23,3 +25,23 @@ class BusListenerMixin(models.AbstractModel):
 
     def _bus_channels(self):
         return self
+
+    def _bus_join(self, *channels):
+        """Make the websockets listening to these records join ``channels`` (records or
+        ``(record, subchannel)`` tuples)."""
+        self._assert_bus_channels_validity(channels)
+        self.env["bus.bus"]._update_subscriptions(self, channels, join=True)
+
+    def _bus_leave(self, *channels):
+        """Make the websockets listening to these records leave ``channels`` (records or
+        ``(record, subchannel)`` tuples)."""
+        self._assert_bus_channels_validity(channels)
+        self.env["bus.bus"]._update_subscriptions(self, channels, join=False)
+
+    def _assert_bus_channels_validity(self, channels):
+        """Raise unless both sides of the join are the channels ``_bus_send`` delivers
+        to: ``_bus_channels()`` resolves to themselves."""
+        for channel in chain(self, channels):
+            record = channel[0] if isinstance(channel, tuple) else channel
+            if record._bus_channels() != record:
+                raise ValueError(f"{record} is not a bus channel, use its _bus_channels()")
