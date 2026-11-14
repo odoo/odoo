@@ -5212,6 +5212,8 @@ class MailThread(models.AbstractModel):
         if body is not None:
             if body or not message._filter_empty():
                 tree = html.fragment_fromstring(escape(body), create_parent="div")
+                for edited_span in tree.xpath('.//span[@class="o-mail-Message-edited"]'):
+                    edited_span.drop_tree()
                 children = tree.getchildren()
                 if len(children) > 0:  # body is a valid html
                     # If the last element is a div or p, add the edited span inside it to avoid the edit markup
@@ -5232,8 +5234,9 @@ class MailThread(models.AbstractModel):
                         (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
                     )
                 else:  # body is plain text
-                    # keep html if already Markup, otherwise escape
-                    msg_values["body"] = escape(body) + Markup("<span class='o-mail-Message-edited' data-o-datetime='%s'/>") % fields.Datetime.to_string(fields.Datetime.now())
+                    msg_values["body"] = escape(tree.text or "") + Markup(
+                        "<span class='o-mail-Message-edited' data-o-datetime='%s'/>"
+                    ) % fields.Datetime.to_string(fields.Datetime.now())
             else:
                 msg_values["body"] = ""
         if attachment_ids is not None:  # None means "no update"
