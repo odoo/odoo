@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="stock_purchase_order_portal_content" inherit_id="purchase.purchase_order_portal_content">
+        <xpath expr="//t[@t-if='order.dest_address_id']" position="after">
+            <t t-else="">
+                <div t-if="order.picking_type_id and order.picking_type_id.warehouse_id">
+                    <strong class="d-block mb-1">Shipping address:</strong>
+                    <div t-field="order.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
