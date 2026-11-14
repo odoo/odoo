@@ -229,7 +229,7 @@
 
     <!-- /shop/address route -->
     <template id="website_sale.address" name="Address Management">
-        <t t-call="website_sale.checkout_layout">
+        <t t-call="website_sale.checkout_layout" additional_title.translate="Address Management">
             <div class="o_customer_address_fill">
                 <div>
                     <t t-if="not is_anonymous_cart">
