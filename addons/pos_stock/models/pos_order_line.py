@@ -19,11 +19,14 @@ class PosOrderLine(models.Model):
         return self.qty
 
     def write(self, vals):
-        if vals.get('pack_lot_line_ids'):
-            for pl in vals.get('pack_lot_ids'):
-                if pl[2].get('server_id'):
-                    pl[2]['id'] = pl[2]['server_id']
-                    del pl[2]['server_id']
+        if vals.get('pack_lot_ids'):
+            existing = {lot.uuid: lot.id for lot in self.pack_lot_ids}
+            vals['pack_lot_ids'] = [
+                Command.update(existing[cmd[2]['uuid']], cmd[2])
+                if len(cmd) == 3 and cmd[0] == Command.CREATE and cmd[2].get('uuid') in existing
+                else cmd
+                for cmd in vals['pack_lot_ids']
+            ]
         return super().write(vals)
 
     @api.model

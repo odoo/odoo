@@ -8,15 +8,18 @@ patch(TicketScreen.prototype, {
             .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
             .flatMap((item) => item.pack_lot_ids)
             .map((pack_lot) => pack_lot.lot_name);
-        const options = refundLine.pack_lot_ids
-            .map((p) => p.lot_name)
-            .filter((lotName) => !alreadyRefundedLots.includes(lotName));
+        const options = refundLine.pack_lot_ids.filter(
+            (p) => !alreadyRefundedLots.includes(p.lot_name)
+        );
         return {
             ...super.getRefundLinesDetails(refundDetail, destinationOrder),
-            // Only include as many pack_lot_ids as the refunded quantity requires.
-            pack_lot_ids: options
-                .slice(0, refundDetail.qty)
-                .map((lotName) => ["create", { lot_name: lotName }]),
+            pack_lot_ids: options.slice(0, refundDetail.qty).map((p) => [
+                "create",
+                {
+                    lot_name: p.lot_name,
+                    expiration_date: p.expiration_date || false,
+                },
+            ]),
         };
     },
 });
