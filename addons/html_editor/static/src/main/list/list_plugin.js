@@ -155,6 +155,9 @@ export class ListPlugin extends Plugin {
                 props: {
                     getButtons: () => this.listSelectorButtons,
                     getListMode: this.getListMode.bind(this),
+                    previewableOperation: this.dependencies.history.makePreviewableOperation((item) =>
+                        item.run()
+                    ),
                 },
                 isAvailable: this.canToggleList.bind(this),
             }),
