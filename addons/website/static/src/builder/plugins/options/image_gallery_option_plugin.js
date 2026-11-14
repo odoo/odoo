@@ -8,6 +8,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { uuid } from "@web/core/utils/strings";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef { Object } ImageGalleryOptionShared
@@ -35,17 +36,27 @@ export class ImageGalleryOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             AddImageAction,
-            RemoveAllImagesAction,
+            ReplaceAllImagesAction,
             SetImageGalleryLayoutAction,
             SetImageGalleryColumnsAction,
             IndicatorsStyleClassAction,
         },
-        system_classes: ["o_empty_gallery_alert"],
+        remove_disabled_reason_providers: (el) => {
+            const galleryEl = el.closest(".s_image_gallery");
+            if (galleryEl && el !== galleryEl) {
+                const mediaEls = galleryEl.querySelectorAll(
+                    ":is(img, a.o_link_readonly, span.oi.object-fit-cover, div.media_iframe_video):not(.o_carousel_controllers *)"
+                );
+                // Protect columns containing all media in grid or float mode.
+                if (mediaEls.length && [...mediaEls].every((mediaEl) => el.contains(mediaEl))) {
+                    return _t("You cannot remove the last image. Replace it instead.");
+                }
+            }
+        },
         gallery_items_providers: this.getGalleryItems.bind(this),
         reorder_items_processors: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
-        clean_for_save_processors: this.cleanForSave.bind(this),
         on_media_replaced_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
         on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
@@ -333,15 +344,18 @@ export class ImageGalleryOptionPlugin extends Plugin {
         this.dependencies.builderOptions.updateContainers(activeImageEl);
     }
 
-    async processImages(editingElement, newImages = []) {
+    async processImages(editingElement, newImages = [], { replaceAll = false } = {}) {
         await this.transformImagesToWebp(newImages);
-        this.setImageProperties(editingElement, newImages);
+        this.setImageProperties(editingElement, newImages, { replaceAll });
+        if (replaceAll) {
+            return { images: newImages };
+        }
         const { clonedImgs, imageToSelect } = await this.cloneContainerImages(editingElement);
         return { images: [...clonedImgs, ...newImages], imageToSelect };
     }
 
-    setImageProperties(imageGalleryElement, images) {
-        const lastImage = this.getImages(imageGalleryElement).at(-1);
+    setImageProperties(imageGalleryElement, images, { replaceAll = false } = {}) {
+        const lastImage = !replaceAll && this.getImages(imageGalleryElement).at(-1);
         let lastIndex = lastImage ? this.getIndex(lastImage) : -1;
         for (const image of images) {
             image.classList.add(
@@ -466,19 +480,6 @@ export class ImageGalleryOptionPlugin extends Plugin {
         }
     }
 
-    cleanForSave(rootEl) {
-        // A gallery emptied through "Remove all" is kept during edition (to let
-        // the user add media back) but must not be saved as an empty snippet.
-        const mediaSelector =
-            "img, a.o_link_readonly, span.oi.object-fit-cover, div.media_iframe_video";
-        for (const galleryEl of rootEl.querySelectorAll(".s_image_gallery")) {
-            if (!galleryEl.querySelector(mediaSelector)) {
-                galleryEl.remove();
-            }
-        }
-        return rootEl;
-    }
-
     updateCarouselThumbnail(mediaEl) {
         if (mediaEl.matches(".s_image_gallery img")) {
             forwardToThumbnail(mediaEl);
@@ -509,11 +510,11 @@ export class ImageGalleryOptionPlugin extends Plugin {
 
 export class AddImageAction extends BuilderAction {
     static id = "addImage";
-    static dependencies = ["media", "imageGalleryOption"];
+    static dependencies = ["media", "imageGalleryOption", "builderOptions"];
     setup() {
         this.canTimeout = false;
     }
-    async apply({ editingElement }) {
+    async apply({ editingElement, params: { replaceAll = false } = {} }) {
         await this.dependencies.media.openMediaDialog({
             onlyImages: true,
             multiImages: true,
@@ -521,26 +522,28 @@ export class AddImageAction extends BuilderAction {
                 const { images: processedImages } =
                     await this.dependencies.imageGalleryOption.processImages(
                         editingElement,
-                        images
+                        images,
+                        { replaceAll }
                     );
-                if (processedImages && processedImages.length) {
+                if (processedImages.length) {
                     const mode = this.dependencies.imageGalleryOption.getMode(editingElement);
                     this.dependencies.imageGalleryOption.setImages(
                         editingElement,
                         mode,
                         processedImages
                     );
+                    if (replaceAll) {
+                        this.dependencies.builderOptions.setNextTarget(editingElement);
+                    }
                 }
             },
         });
     }
 }
-export class RemoveAllImagesAction extends BuilderAction {
-    static id = "removeAllImages";
-    static dependencies = ["imageGalleryOption"];
-    apply({ editingElement: el }) {
-        const mode = this.dependencies.imageGalleryOption.getMode(el);
-        this.dependencies.imageGalleryOption.setImages(el, mode, []);
+export class ReplaceAllImagesAction extends AddImageAction {
+    static id = "replaceAllImages";
+    apply(context) {
+        return super.apply({ ...context, params: { replaceAll: true } });
     }
 }
 export class SetImageGalleryLayoutAction extends BuilderAction {

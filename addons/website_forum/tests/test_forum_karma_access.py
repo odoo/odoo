@@ -195,7 +195,7 @@ class TestForumKarma(TestForumCommon):
 
         # check karma done on right forum, using context values
         self.user_portal.karma = KARMA['post']
-        post = Post.with_user(self.user_portal).with_context(default_content='<p>Super <a href="www.link.com">Link</a></p>').create({
+        post = Post.with_user(self.user_portal).with_context(default_content='<p>Super <a href="https://www.link.com">Link</a></p>').create({
             'name': "Bypass",
             'forum_id': self.forum.id,
         })
@@ -206,7 +206,7 @@ class TestForumKarma(TestForumCommon):
 
         post = Post.with_user(self.user_portal).with_context(default_forum_id=self.forum.id).create({
             'name': "Bypass",
-            'content': '<p>Super <a href="www.link.com">Link</a></p>',
+            'content': '<p>Super <a href="https://www.link.com">Link</a></p>',
         })
         self.assertTrue("nofollow" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
         self.assertTrue("noopener" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
