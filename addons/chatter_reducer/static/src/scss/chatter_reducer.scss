@@ -1,0 +1,23 @@
+body.o-chatter-reducer-hidden .o-mail-Form-chatter.o-aside,
+body.o-chatter-reducer-hidden .o-mail-ChatterContainer.o-aside {
+    display: none !important;
+}
+
+.o_chatter_reducer_tab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: var(--o-brand-primary, #714B67);
+    color: #fff;
+    padding: 10px 6px;
+    border-radius: 6px 0 0 6px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: -2px 0 6px rgba(0, 0, 0, 0.15);
+    transition: padding-right 0.15s ease;
+
+    &:hover {
+        padding-right: 10px;
+    }
+}
