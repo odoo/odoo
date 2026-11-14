@@ -15,4 +15,5 @@ from . import test_sale_stock_multicompany
 from . import test_sale_stock_accrued_entries
 from . import test_sale_stock_access_rights
 from . import test_create_perf
+from . import test_sale_stock_margin
 from . import test_packaging_tours

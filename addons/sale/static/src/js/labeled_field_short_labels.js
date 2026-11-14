@@ -18,6 +18,8 @@ export const shortLabels = {
             price_total: _t("TI:"),
             price_subtotal: _t("TE:"),
             qty_delivered_percent: _t("D%:"),
+            margin: _t("M:"),
+            margin_percent: _t("M%:"),
         };
     },
 };
