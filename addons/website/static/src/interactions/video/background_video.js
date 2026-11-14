@@ -36,7 +36,7 @@ export class BackgroundVideo extends Interaction {
 
     setup() {
         this.hideVideoContainer = false;
-        this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.videoSrc = this.getVideoSrc();
         this.iframeID = uniqueId("o_bg_video_iframe_");
         this.iframeEl = null;
         this.bgVideoContainer = null;
@@ -53,6 +53,33 @@ export class BackgroundVideo extends Interaction {
         // both inner and outer element are observed for any resizing.
         resizeObserver.observe(this.el.parentElement);
         resizeObserver.observe(this.el);
+    }
+
+    /**
+     * Returns the source of the video, fixing the saved source of Vimeo
+     * background videos added while their embed URL was badly built:
+     * - the privacy hash of unlisted videos was kept in the path (e.g.
+     *   `/video/<id>/<hash>`), which Vimeo does not accept, instead of the `h`
+     *   parameter;
+     * - the parameters ensuring that videos do not track visitors and do not
+     *   pause each other (background videos always autoplay) were missing.
+     *
+     * @returns {string}
+     */
+    getVideoSrc() {
+        const src = this.el.dataset.bgVideoSrc;
+        if (!/^(https?:)?\/\/player\.vimeo\.com\//.test(src)) {
+            return src;
+        }
+        const url = new URL(src, window.location.href);
+        const [, videoId, hash] = url.pathname.match(/^\/video\/([^/]+)\/([^/]+)\/?$/) || [];
+        if (hash) {
+            url.pathname = `/video/${videoId}`;
+            url.searchParams.set("h", hash);
+        }
+        url.searchParams.set("dnt", "1");
+        url.searchParams.set("autopause", "0");
+        return url.href;
     }
 
     adjustIframe() {
