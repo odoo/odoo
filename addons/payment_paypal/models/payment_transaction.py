@@ -22,7 +22,7 @@ class PaymentTransaction(models.Model):
     def _get_specific_processing_values(self, processing_values):
         """Override of `payment` to return the Paypal-specific processing values.
 
-        This is used by the Card, Venmo, and PayPal Pay Later payment methods.
+        This is used by the Card, Venmo, PayPal Pay Later, Apple/Google Pay payment methods.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -219,8 +219,9 @@ class PaymentTransaction(models.Model):
     def _paypal_prepare_payment_source_payload(self, invoice_address_vals, has_shipping):
         """Prepare the payment source of the create order request payload.
 
-        Card payments send the billing address and the verification requirements, while wallet
-        payments configure the checkout experience on PayPal.
+        Card payments send the billing address and the verification requirements, Google Pay
+        payments send the verification requirements, and PayPal payments configure the checkout
+        experience on PayPal.
 
         :param dict invoice_address_vals: The formatted invoice address
         :param bool has_shipping: Whether a shipping address is sent with the order
@@ -233,6 +234,12 @@ class PaymentTransaction(models.Model):
                 "card": self._paypal_prepare_card_payment_source_payload(
                     return_url, cancel_url, invoice_address_vals
                 )
+            }
+        if self.payment_method_code == "google_pay":
+            return {
+                "google_pay": {
+                    "attributes": {"verification": {"method": self._get_paypal_3ds_policy()}}
+                }
             }
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
 
