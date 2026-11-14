@@ -12,7 +12,7 @@ from werkzeug.urls import url_quote_plus, url_encode
 
 from odoo import _, api, fields, models
 from odoo.addons.certificate.tools import CertificateAdapter
-from odoo.addons.l10n_es_edi_verifactu.const import VERIFACTU_REGIME_CODES_IGIC, VERIFACTU_REGIME_CODES_IVA
+from odoo.addons.l10n_es_edi_verifactu.const import VERIFACTU_INSTALLATION_SALT_PARAM, VERIFACTU_REGIME_CODES_IGIC, VERIFACTU_REGIME_CODES_IVA
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, float_round, frozendict, zeep, BinaryBytes
 
@@ -872,7 +872,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
     @api.model
     def _get_db_identifier(self):
         database_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-        return _sha256(database_uuid)
+        installation_salt = self.env['ir.config_parameter'].sudo().get_str(VERIFACTU_INSTALLATION_SALT_PARAM)
+        if not installation_salt:
+            return _sha256(database_uuid)
+        return _sha256(f'{database_uuid}-{installation_salt}')
 
     @api.model
     def _render_vals_SistemaInformatico(self, vals):

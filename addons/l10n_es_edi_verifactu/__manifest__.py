@@ -26,6 +26,8 @@
             'l10n_es_edi_verifactu/static/src/css/warning.scss',
         ],
     },
+    'post_init_hook': '_post_init_hook',
+    'uninstall_hook': '_uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
