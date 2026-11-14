@@ -1,5 +1,5 @@
-import { test, expect } from "@odoo/hoot";
-import { setupPosEnv } from "../utils";
+import { test, expect, getFixture } from "@odoo/hoot";
+import { setupPosEnv, createTestProduct, createComboTemplate } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { prepareRoundingVals, getSingleProductOrder } from "../accounting/utils";
 import { imageDataUri } from "@point_of_sale/utils";
@@ -777,4 +777,56 @@ test("test_printed_receipt_tour: basic receipt hides totals and prices", async (
     expect(Boolean(ticket.querySelector('div[name="prices"]'))).toBe(false);
     expect(Boolean(ticket.querySelector(".price-incl"))).toBe(false);
     expect(Boolean(ticket.querySelector(".price-unit"))).toBe(false);
+});
+
+test("ticket data renders unit prices", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const { template: chair } = createTestProduct(store, {
+        name: "Conference Chair",
+        price: 45.31,
+    });
+    const { template: drawer } = createTestProduct(store, { name: "Drawer Black", price: 28.75 });
+    const comboItem = (name, price) => ({
+        product: createTestProduct(store, { name, price }).variant,
+    });
+    const { template: officeCombo, combos } = createComboTemplate(store, {
+        name: "Office Combo",
+        price: 150,
+        combos: [
+            { name: "Stands", items: [comboItem("Monitor Stand", 40)] },
+            { name: "Desks", items: [comboItem("Corner Desk", 60)] },
+            { name: "Chairs", items: [comboItem("Office Chair Black", 50)] },
+        ],
+    });
+
+    await store.addLineToOrder({ product_tmpl_id: chair, qty: 3 }, order);
+    await store.addLineToOrder({ product_tmpl_id: drawer, qty: 1 }, order);
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: officeCombo,
+            payload: [combos.map((combo) => ({ combo_item_id: combo.combo_item_ids[0], qty: 1 }))],
+            qty: 3,
+        },
+        order
+    );
+    order.setOrderPrices();
+
+    const { ticket } = renderReceipt(store, order);
+    getFixture().append(ticket);
+
+    const standardLine = (name) => `tr[name='standard-line']:has(.name:contains('${name}'))`;
+
+    // Quantity 3: unit price displayed
+    expect(`${standardLine("Conference Chair")} .price-unit`).toHaveCount(1);
+    expect(`${standardLine("Conference Chair")} .price-unit`).toHaveText(/45\.31/);
+    // Quantity 1: no unit price
+    expect(`${standardLine("Drawer Black")} .price-unit`).toHaveCount(0);
+    // Combo parent: unit price is the combo total divided by its quantity
+    expect(`${standardLine("Office Combo")} .price-incl`).toHaveText(/450\.00/);
+    expect(`${standardLine("Office Combo")} .price-unit`).toHaveCount(1);
+    expect(`${standardLine("Office Combo")} .price-unit`).toHaveText(/150\.00/);
+    // Combo items: no unit price
+    expect("tr[name='combo-child-line']").toHaveCount(3);
+    expect("tr[name='combo-child-line'] .price-unit").toHaveCount(0);
 });

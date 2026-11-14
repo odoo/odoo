@@ -182,8 +182,12 @@ class PosOrderReceipt(models.AbstractModel):
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
 
             # Compute line unit price
-            taxes = line._compute_amount_line_all(1)
-            line_unit_price = taxes['price_subtotal_incl'] if display_price_incl else taxes['price_subtotal']
+            if line.combo_line_ids and line.qty:
+                combo_total = sum(line.combo_line_ids.mapped('price_subtotal_incl' if display_price_incl else 'price_subtotal'))
+                line_unit_price = combo_total / line.qty
+            else:
+                taxes = line._compute_amount_line_all(1)
+                line_unit_price = taxes['price_subtotal_incl'] if display_price_incl else taxes['price_subtotal']
             data['unit_price'] = self._order_receipt_format_currency(line_unit_price)
 
             # Compute product unit price
