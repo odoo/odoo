@@ -474,3 +474,32 @@ class TestArWithholdingArRi(TestArCommon):
         line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == tax_wth_0.id)
         self.assertEqual(-100.0, line_1.balance)
         self.assertEqual(0.0, line_2.balance)
+
+    def test_earnings_withholding_non_taxable_amount_foreign_currency(self):
+        tax = self.tax_wth_test_2
+        tax.write({
+            'l10n_ar_non_taxable_amount': 50000,
+            'amount': 10,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'partner_id': self.res_partner_adhoc.id,
+            'currency_id': self.other_currency.id,
+            'l10n_latam_document_number': '0001-00000001',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000,
+                }),
+            ],
+        })
+        taxes = [{'id': tax.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        # Taxable: 1000 USD * 100 ARS/USD - 50000 ARS = 50000 ARS = 500 USD.
+        # Tax: 10% * Taxable = 50 ARS
+        self.assertEqual(wizard.amount, 1210.0)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.base_amount, 1000.0)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 50.0)
+        self.assertEqual(wizard.l10n_ar_net_amount, 1160.0)

@@ -30,9 +30,17 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
         # Computes the withholding tax amount provided a base and a tax
         # It is equivalent to: amount = self.base * self.tax_id.amount / 100
 
+        # ARCA scales amounts are in ARS, explicitly convert amount to it to avoid summing apples and pears
+        ars_currency = self.env.ref('base.ARS')
+        to_date = self.payment_register_id.payment_date or datetime.date.today()
+        net_amount = self.currency_id._convert(
+            from_amount=self.base_amount,
+            to_currency=ars_currency,
+            company=self.company_id,
+            date=to_date,
+        )
         # if it is earnings withholding, then we accumulate the tax base for the period
         if self.tax_id.l10n_ar_tax_type in ['earnings', 'earnings_scale']:
-            to_date = self.payment_register_id.payment_date or datetime.date.today()
             from_date = to_date + relativedelta(day=1)
             # We search for the payments in the same month of the same regimen and the same code.
             domain_same_period_withholdings = [
@@ -57,13 +65,17 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
                 same_period_base = abs(same_period_partner_base[0][1])
             else:
                 same_period_base = 0.0
-            net_amount = self.base_amount + same_period_base
-        else:
-            net_amount = self.base_amount
+            same_period_base_ars = self.currency_id._convert(
+                from_amount=same_period_base,
+                to_currency=ars_currency,
+                company=self.company_id,
+                date=to_date,
+            )
+            net_amount = net_amount + same_period_base_ars
         net_amount = max(0, net_amount - self.tax_id.l10n_ar_non_taxable_amount)
         taxes_res = self.tax_id.compute_all(
             net_amount,
-            currency=self.payment_register_id.currency_id,
+            currency=ars_currency,
             quantity=1.0,
             product=False,
             partner=False,
@@ -89,6 +101,13 @@ class l10nArPaymentRegisterWithholding(models.TransientModel):
         l10n_ar_minimum_threshold = self.tax_id.l10n_ar_minimum_threshold
         if l10n_ar_minimum_threshold > tax_amount:
             tax_amount = 0.0
+        # Convert back to the expected currency
+        tax_amount = ars_currency._convert(
+            from_amount=tax_amount,
+            to_currency=self.currency_id,
+            company=self.company_id,
+            date=to_date,
+        )
         return tax_amount, tax_account_id, tax_repartition_line_id
 
     @api.depends('base_amount', 'tax_id')
