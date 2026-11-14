@@ -103,7 +103,7 @@ test("text should align to the start for RTL language", async () => {
     await setupEditor("<p>[Hello]</p>", {
         config: { includePlugins: [TranslatePlugin] },
     });
-    onRpc("/html_editor/google_translate", () => ({ translated_text: "أهلاً", isError: false }));
+    onRpc("/html_editor/google_translate", () => ({ translated_html: "أهلاً", isError: false }));
 
     // Select Translate button in the toolbar.
     await expandToolbar();
@@ -126,7 +126,7 @@ test("insert the response from Google translate", async () => {
     const { editor, el } = await setupEditor("<p>[Hello]</p>", {
         config: { includePlugins: [TranslatePlugin] },
     });
-    onRpc("/html_editor/google_translate", () => ({ translated_text: "Bonjour", isError: false }));
+    onRpc("/html_editor/google_translate", () => ({ translated_html: "Bonjour", isError: false }));
 
     // Select Translate button in the toolbar.
     await expandToolbar();
@@ -152,6 +152,61 @@ test("insert the response from Google translate", async () => {
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });
 
+test("translating a heading keeps it a heading", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
+    const { el } = await setupEditor("<h1>[Hello]</h1>", {
+        config: { includePlugins: [TranslatePlugin] },
+    });
+    onRpc("/html_editor/google_translate", () => ({ translated_html: "Bonjour", isError: false }));
+
+    await expandToolbar();
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await translateDropdownFromToolbar();
+
+    await waitFor(".o-translator-translated");
+    await contains("footer button.btn").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(`<h1>Bonjour[]</h1>`);
+});
+
+test("translating several blocks sends clean html and keeps the blocks", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
+    const { el } = await setupEditor("<h1>[Hello</h1><p><strong>World</strong>]</p>", {
+        config: { includePlugins: [TranslatePlugin] },
+    });
+    onRpc("/html_editor/google_translate", async (request) => {
+        const { params } = await request.json();
+        expect.step(params.originalHtml);
+        return {
+            translated_html: "<h1>Bonjour</h1><p><strong>Monde</strong></p>",
+            isError: false,
+        };
+    });
+
+    await expandToolbar();
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await translateDropdownFromToolbar();
+
+    // The preview renders the translated markup.
+    await waitFor(".o-translator-translated h1");
+    expect(".o-translator-translated strong").toHaveText("Monde");
+    expect.verifySteps(["<h1>Hello</h1><p><strong>World</strong></p>"]);
+
+    await contains("footer button.btn").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(`<h1>Bonjour</h1><p><strong>Monde[]</strong></p>`);
+});
+
 test("insert the response from ChatGPT translate in debug mode", async () => {
     loadLanguages.installedLanguages = false;
     serverState.debug = "1";
@@ -163,7 +218,7 @@ test("insert the response from ChatGPT translate in debug mode", async () => {
         config: { includePlugins: [TranslatePlugin] },
     });
     onRpc("/html_editor/google_translate", () => ({
-        translated_text: "Google's' Bonjour",
+        translated_html: "Google's' Bonjour",
         isError: false,
     }));
     onRpc("/html_editor/generate_text", () => `GPT's Bonjour`);
