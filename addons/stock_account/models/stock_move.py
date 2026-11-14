@@ -458,15 +458,53 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if (self.state == 'done' and self.is_in) or (self.state != 'done' and self._is_in()):
-            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if (self.state == 'done' and self.is_out) or (self.state != 'done' and self._is_out()):
-            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
-        if self.is_dropship:
-            if lot:
-                return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
-            return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
-        return 0
+        return self._get_valued_qty_batch().get(self._origin.id, {}).get(lot or False, 0.0)
+
+    def _get_valued_qty_batch(self):
+        """Return {move.id: {False: total_valued_qty, lot: lot_valued_qty}} for each move.
+
+        The False key holds the total across all lots; lot keys hold per-lot quantities.
+        Uses location conditions directly (same logic as _get_in/out_move_lines) so results
+        are correct regardless of whether the move's stored is_in/is_out fields have been
+        recomputed yet (they depend on state='done' which may not be set at call time).
+        """
+        valued_qty_by_move_by_lot = defaultdict(lambda: defaultdict(float))
+
+        for company, moves_by_company in self.grouped('company_id').items():
+            base_domain = (
+                Domain([('picked', '=', True)])
+                & (
+                    Domain([('owner_id', '=', False)])
+                    |
+                    Domain([('owner_id', '=', company.partner_id.id)])
+                )
+            )
+
+            for lot_valuated, moves in moves_by_company.grouped(lambda m: m.product_id.lot_valuated).items():
+                in_domain = base_domain & Domain([
+                    ('location_id.is_valued_internal', '=', False),
+                    ('location_dest_id.is_valued_internal', '=', True),
+                ])
+                out_domain = base_domain & Domain([
+                    ('location_id.is_valued_internal', '=', True),
+                    ('location_dest_id.is_valued_internal', '=', False),
+                ])
+
+                groupby = ['move_id'] + (['lot_id'] if lot_valuated else [])
+
+                for direction_domain in (in_domain, out_domain):
+                    for *keys, qty in self.env['stock.move.line']._read_group(
+                        domain=Domain([('move_id', 'in', moves.ids)]) & direction_domain,
+                        groupby=groupby,
+                        aggregates=['quantity_product_uom:sum'],
+                    ):
+                        move = keys[0]
+                        lot = keys[1] if lot_valuated else None
+                        valued_qty_by_move_by_lot[move.id][False] += qty
+                        if lot:
+                            valued_qty_by_move_by_lot[move.id][lot] = qty
+
+        return valued_qty_by_move_by_lot
 
     def _get_manual_value(self, quantity, at_date=None):
         valuation_data = dict(VALUATION_DICT)
@@ -710,7 +748,10 @@ class StockMove(models.Model):
         dropshipped and non dropshipped moves.
         """
         dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
-        dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
+        dropship_quantity = sum(
+            m.product_uom._compute_quantity(m.quantity, m.product_id.uom_id)
+            for m in dropship_moves
+        )
         dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
         regular_moves = (self - dropship_moves).filtered(lambda m: m.is_out)
         regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
@@ -726,7 +767,27 @@ class StockMove(models.Model):
         return (dropship_quantity * dropship_price_unit + regular_value) / total_quantity
 
     def _get_price_unit_dropshipped(self):
-        """ Returns the unit price to value the dropshipped moves."""
-        total_value = sum(m._get_value() for m in self)
-        total_qty = sum(m._get_valued_qty() for m in self)
+        """ Returns the unit price to value the dropshipped moves, as a weighted average of
+        each move's own reference price (see `_get_dropshipped_price_unit`). """
+        total_value = 0.0
+        total_qty = 0.0
+        for move in self:
+            qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+            if not qty:
+                continue
+            total_value += move._get_dropshipped_price_unit() * qty
+            total_qty += qty
         return total_value / total_qty if total_qty else 0
+
+    def _get_dropshipped_price_unit(self):
+        """ Price to value a single dropshipped move. Overridden in purchase_stock to prefer
+        the linked purchase order line. Falls back to the vendor's current price, then cost. """
+        self.ensure_one()
+        seller = self.product_id._select_seller(
+            partner_id=self.partner_id, quantity=self.product_uom_qty, date=self.date, uom_id=self.product_uom)
+        if seller:
+            price_unit = seller.product_uom_id._compute_price(seller.price, self.product_id.uom_id)
+            if seller.currency_id != self.company_id.currency_id:
+                price_unit = seller.currency_id._convert(price_unit, self.company_id.currency_id, self.company_id, self.date)
+            return price_unit
+        return self.product_id.standard_price
