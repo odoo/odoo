@@ -6,10 +6,14 @@ import {
     click,
     contains,
     defineMailModels,
+    dragenterFiles,
+    dropFiles,
     focus,
     hover,
+    inputFiles,
     insertText,
     listenStoreFetch,
+    mailModels,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -27,8 +31,9 @@ import { mail_store } from "@mail/../tests/mock_server/mail_mock_server";
 import { MailMessage } from "@mail/../tests/mock_server/mock_models/mail_message";
 import { Gif } from "@mail/core/common/gif";
 import { Message } from "@mail/core/common/message";
+import { MailComposerAttachmentSelector } from "@mail/core/web/mail_composer_attachment_selector";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
-import { describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
     leave,
@@ -384,6 +389,108 @@ test("Full composer opens with the message's live edited content", async () => {
     await click(".dropdown-item:contains('Edit in Full Composer')");
     await contains(".modal .odoo-editor-editable .o-paragraph:text('new text')");
     await contains(".modal .odoo-editor-editable:not(:text('original message'))");
+});
+
+test("Full composer opens with the attachments of the inline edit composer", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    const defaultAttachmentNames = [];
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model === "mail.compose.message") {
+                for (const id of action.context.default_attachment_ids) {
+                    defaultAttachmentNames.push(pyEnv["ir.attachment"].browse(id)[0].name);
+                }
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-mail-Message .o-mail-Composer");
+    await inputFiles(".o-mail-Message .o-mail-Composer .o_input_file", [
+        new File(["hello, world"], "text.txt", { type: "text/plain" }),
+    ]);
+    await contains(
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)"
+    );
+    await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
+    await click(".dropdown-item:contains('Edit in Full Composer')");
+    await contains(".modal .o_form_view");
+    expect(defaultAttachmentNames).toEqual(["text.txt"]);
+});
+
+test("Files added in the full composer of an edited message stay out of the chatter composer", async () => {
+    const { promise: isUploaded, resolve: resolveUpload } = Promise.withResolvers();
+    patchWithCleanup(MailComposerAttachmentSelector.prototype, {
+        async onFileUploaded() {
+            await super.onFileUploaded(...arguments);
+            resolveUpload();
+        },
+    });
+    const originalViews = mailModels.MailComposeMessage._views;
+    mailModels.MailComposeMessage._views = {
+        "form,false": `
+            <form js_class="mail_composer_form">
+                <field name="model" invisible="1"/>
+                <field name="res_ids" invisible="1"/>
+                <field name="body" widget="html_composer_message"/>
+                <field name="attachment_ids" widget="mail_composer_attachment_list"/>
+                <footer>
+                    <button name="action_update_message" type="object" string="Save"/>
+                    <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
+                </footer>
+            </form>
+        `,
+    };
+    after(() => (mailModels.MailComposeMessage._views = originalViews));
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model === "mail.compose.message") {
+                action.context.default_res_ids = JSON.stringify(action.context.default_res_ids);
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
+    await click(".dropdown-item:contains('Edit in Full Composer')");
+    await inputFiles(".modal .o_field_mail_composer_attachment_selector .o_input_file", [
+        new File(["hello, world"], "text.txt", { type: "text/plain" }),
+    ]);
+    await isUploaded;
+    await contains(".modal [name='attachment_ids'] a:text('text.txt')");
+    // same with a file dropped on the full composer
+    const droppedFile = new File(["dropped"], "dropped.txt", { type: "text/plain" });
+    await dragenterFiles(".modal .o_form_view", [droppedFile]);
+    await dropFiles(".o-Dropzone", [droppedFile]);
+    await contains(".modal [name='attachment_ids'] a:text('dropped.txt')");
+    await click(".modal button:contains('Save')");
+    await contains(".modal", { count: 0 });
+    await click(".o-mail-Chatter-sendMessage");
+    await contains(".o-mail-Chatter .o-mail-Composer");
+    await contains(".o-mail-Chatter .o-mail-Composer .o-mail-AttachmentContainer", { count: 0 });
 });
 
 test("Editing a message written with the full composer offers to reopen it", async () => {

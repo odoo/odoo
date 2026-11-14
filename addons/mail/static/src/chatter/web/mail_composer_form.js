@@ -107,9 +107,11 @@ export class MailComposerFormRenderer extends formView.Renderer {
                     for (const thread of getActiveMailThreads()) {
                         // Use an isolated composer object instead of thread.composer to
                         // avoid pushing into the main thread's composer.attachments list,
-                        // which is observed by the chatter.
+                        // which is observed by the chatter. Same when editing a message:
+                        // the files belong to that message, not to the next one posted.
                         const composer =
-                            this.props.record.resModel === "mail.scheduled.message"
+                            this.props.record.resModel === "mail.scheduled.message" ||
+                            this.props.record.context.default_message_id
                                 ? { attachments: [] }
                                 : thread.composer;
                         for (const file of event.dataTransfer.files) {
