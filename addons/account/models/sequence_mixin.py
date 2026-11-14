@@ -225,7 +225,7 @@ class SequenceMixin(models.AbstractModel):
         ))
 
     def _validate_fiscalyear_difference(self, start_year, end_year):
-        return self._truncate_year_to_length(int(start_year) + 1, len(start_year)) == int(end_year)
+        return self._truncate_year_to_length(int(start_year) + 1, len(end_year)) == int(end_year)
 
     def _make_regex_non_capturing(self, regex):
         r""" Replace the "named capturing group" found in the regex by
