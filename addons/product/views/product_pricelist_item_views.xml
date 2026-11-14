@@ -145,12 +145,49 @@
                                 groups="product.group_product_pricelist"
                             />
                             <label for="fixed_price" invisible="compute_price != 'fixed'"/>
-                            <div class="o_row" invisible="compute_price != 'fixed'" style="width: 60% !important;">
-                                <field name="fixed_price"
-                                    widget="monetary"
-                                    options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                <span class="d-flex gap-2 p-0" invisible="not product_uom_name">per<field
-                                        name="product_uom_name"/></span>
+                            <div invisible="compute_price != 'fixed'">
+                                <span class="d-flex gap-2">
+                                    <field
+                                        name="packaging_price"
+                                        widget="monetary"
+                                        class="w-auto"
+                                        options="{
+                                            'currency_field': 'currency_id',
+                                            'field_digits': True
+                                        }"
+                                    />
+                                </span>
+                                <span
+                                    class="d-flex gap-1 text-muted"
+                                    invisible="
+                                        not product_tmpl_id
+                                        or not ( min_quantity or relative_uom_name)
+                                    "
+                                >
+                                    (
+                                    <field
+                                        name="fixed_price"
+                                        widget="monetary"
+                                        class="text-truncate"
+                                        style="width:15% !important;"
+                                        options="{
+                                            'currency_field': 'currency_id',
+                                            'field_digits': True
+                                        }"
+                                    />
+                                    per
+                                    <field
+                                        name="product_uom_name"
+                                        class="w-auto"
+                                        invisible="relative_uom_name"
+                                    />
+                                    <field
+                                        name="relative_uom_name" 
+                                        invisible="not relative_uom_name"
+                                        class="w-auto"
+                                    />
+                                    )
+                                </span>
                             </div>
                         </group>
                         <div name="pricelist_rule_limits">
