@@ -787,6 +787,9 @@ export class SeoChecks extends Component {
     };
     props = useProps({
         isDefaultLang: t.boolean(),
+        // Opened from the builder: list the images of the live DOM, which may
+        // hold unsaved edits, instead of the ones of the saved arch.
+        liveImages: t.boolean().optional(),
     });
 
     async setup() {
@@ -825,9 +828,11 @@ export class SeoChecks extends Component {
 
     async getAltAttributes() {
         const uniqueRecords = new Set();
+        const liveImgEls = [];
 
         // Select all relevant <img> elements in the editable page.
-        const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+        const imgEls =
+            this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img[src]");
 
         imgEls.forEach((el) => {
             // Find the closest ancestor element containing Odoo metadata.
@@ -846,9 +851,14 @@ export class SeoChecks extends Component {
                 return;
             }
 
+            liveImgEls.push(el);
             // Build a unique signature string to avoid duplicates.
             uniqueRecords.add(`${model}||${id}||${field}||${type}`);
         });
+
+        if (this.props.liveImages) {
+            return this.getLiveAltAttributes(liveImgEls);
+        }
 
         // Transform the Set of unique strings back into structured objects.
         const models = Array.from(uniqueRecords).map((entry) => {
@@ -856,9 +866,37 @@ export class SeoChecks extends Component {
             return { model, id: parseInt(id), field, type };
         });
 
-        const results = await rpc("/website/get_alt_images", { models });
+        return rpc("/website/get_alt_images", { models });
+    }
 
-        return JSON.parse(results);
+    /**
+     * List the images from the live DOM rather than from the saved arch, so
+     * that the unsaved edits of the builder (new or duplicated images) show
+     * up. Each entry keeps its <img>, so that the edit is applied to that
+     * exact element, even when the same image appears several times on the
+     * page. These entries are never sent to the server.
+     *
+     * @param {HTMLImageElement[]} imgEls
+     * @returns {Object[]} entries shaped like the ones of `get_alt_images`,
+     *      with the element they stand for as `imgEl`
+     */
+    getLiveAltAttributes(imgEls) {
+        const results = [];
+        for (const imgEl of imgEls) {
+            // Like the server, skip images already marked as decorative.
+            if (imgEl.getAttribute("role") === "presentation" && imgEl.hasAttribute("alt")) {
+                continue;
+            }
+            results.push({
+                id: `live-${results.length}`,
+                imgEl,
+                src: imgEl.getAttribute("src"),
+                alt: (imgEl.getAttribute("alt") || "").trim(),
+                decorative: false,
+                updated: false,
+            });
+        }
+        return results;
     }
 
     async getBrokenLinks() {
@@ -964,6 +1002,63 @@ export class SeoChecks extends Component {
     }
 }
 
+/**
+ * Fetch the SEO data of the record the current page stands for.
+ *
+ * @param {Object} website the website service
+ * @returns {Promise<{ object: { model: string, id: number }, data: Object }>}
+ */
+export async function fetchSeoData(website) {
+    const { mainObject, seoObject } = website.currentWebsite.metadata;
+    const object = seoObject || mainObject;
+    const data = await rpc("/website/get_seo_data", {
+        res_id: object.id,
+        res_model: object.model,
+    });
+    return { object, data };
+}
+
+/**
+ * Prepare the values to write the title, description and keywords of a page,
+ * keeping only the fields its record can hold.
+ *
+ * @param {Object} data the SEO data of the record, see `fetchSeoData`
+ * @param {{ title: string, description: string, keywords: string[] }} metadata
+ * @param {string} lang the language the values are written in
+ * @returns {Object} the values to write on the record
+ */
+export function prepareSeoMetadataValues(data, { title, description, keywords }, lang) {
+    const values = {};
+    if (data.can_edit_seo && "website_meta_title" in data) {
+        values.website_meta_title = title;
+    }
+    if (data.can_edit_seo && "website_meta_description" in data) {
+        values.website_meta_description = description;
+    }
+    if ("website_meta_keywords" in data) {
+        values.website_meta_keywords = keywords.join(",");
+    }
+    // Avoid using translated SEO fields as fallback/base values when the
+    // default language is empty.
+    const defaultLang = data.default_lang_code;
+    for (const [fieldName, value] of Object.entries(values)) {
+        if (value && lang !== defaultLang && !data[`default_${fieldName}`]) {
+            values[fieldName] = {
+                [defaultLang]: "",
+                [lang]: value,
+            };
+        }
+    }
+    return values;
+}
+
+export const optimizeSEODialogProps = {
+    close: t.function(),
+    // Opened from the builder: skip the reload on save to keep unsaved edits.
+    reloadOnSave: t.boolean().optional(),
+    applyImageAlts: t.function().optional(),
+};
+
 export class OptimizeSEODialog extends Component {
     static template = "website.OptimizeSEODialog";
     static components = {
@@ -974,9 +1069,7 @@ export class OptimizeSEODialog extends Component {
         SeoChecks,
         BrokenLink,
     };
-    props = useProps({
-        close: t.function(),
-    });
+    props = useProps(optimizeSEODialogProps);
 
     setup() {
         this.website = useService("website");
@@ -992,14 +1085,8 @@ export class OptimizeSEODialog extends Component {
             // Wait for the preview iframe because this dialog reads directly
             // from the iframe DOM.
             await this.waitForIframe();
-            const {
-                metadata: { mainObject, seoObject, path, langName },
-            } = this.website.currentWebsite;
-            this.object = seoObject || mainObject;
-            this.data = await rpc("/website/get_seo_data", {
-                res_id: this.object.id,
-                res_model: this.object.model,
-            });
+            const { path, langName } = this.website.currentWebsite.metadata;
+            ({ object: this.object, data: this.data } = await fetchSeoData(this.website));
 
             if (this.data.multi_lang) {
                 this.title += ` — ${langName || this.data.lang.name}`;
@@ -1107,16 +1194,8 @@ export class OptimizeSEODialog extends Component {
     }
 
     async save() {
-        const data = {};
-        if (this.canEditTitle) {
-            data.website_meta_title = seoContext.title;
-        }
-        if (this.canEditDescription) {
-            data.website_meta_description = seoContext.description;
-        }
-        if (this.canEditKeywords) {
-            data.website_meta_keywords = seoContext.keywords.join(",");
-        }
+        const currentLang = this.website.currentWebsite.metadata.lang;
+        const data = prepareSeoMetadataValues(this.data, seoContext, currentLang);
         if (this.canEditUrl) {
             if (seoContext.seoName !== this.previousSeoName) {
                 data.seo_name = seoContext.seoName;
@@ -1124,27 +1203,6 @@ export class OptimizeSEODialog extends Component {
         }
         if (seoContext.metaImage !== this.previousMetaImage) {
             data.website_meta_og_img = seoContext.metaImage;
-        }
-
-        const currentLang = this.website.currentWebsite.metadata.lang;
-        const defaultLang = this.data.default_lang_code;
-        // Avoid using translated SEO fields as fallback/base values when the
-        // default language is empty.
-        for (const fieldName of [
-            "website_meta_title",
-            "website_meta_description",
-            "website_meta_keywords",
-        ]) {
-            if (
-                data[fieldName] &&
-                currentLang !== defaultLang &&
-                !this.data[`default_${fieldName}`]
-            ) {
-                data[fieldName] = {
-                    [defaultLang]: "",
-                    [currentLang]: data[fieldName],
-                };
-            }
         }
 
         await this.orm.write(this.object.model, [this.object.id], data, {
@@ -1191,14 +1249,23 @@ export class OptimizeSEODialog extends Component {
                 );
             }
         } else if (seoContext.updatedAlts?.length) {
-            rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
-                })
-            );
+            if (this.props.applyImageAlts) {
+                this.props.applyImageAlts(seoContext.updatedAlts);
+            } else {
+                rpcCalls.push(
+                    rpc("/website/update_alt_images", {
+                        imgs: seoContext.updatedAlts,
+                    })
+                );
+            }
         }
 
         await Promise.all(rpcCalls);
+
+        if (this.props.reloadOnSave === false) {
+            // Reloading here would discard unsaved builder edits.
+            return;
+        }
 
         this.website.goToWebsite({
             path: this.url.replace(
