@@ -63,8 +63,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     consolidated_billing = fields.Boolean(
         string="Consolidated Billing",
         default=True,
-        help="Create one invoice for all orders related to same customer, same invoicing address"
-        " and same delivery address.",
+        help="Create one invoice for all orders related to same customer, same invoicing address,"
+        " same delivery address and same tax mode (Tax Excl. / Tax Incl.).",
     )
 
     # === COMPUTE METHODS ===#

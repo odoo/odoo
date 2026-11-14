@@ -91,3 +91,58 @@ class TestSaleOrderTaxMode(TestDocumentTaxModeCommon):
 
         self.assertEqual(combo_item_line.price_unit, 60.0)
         self.assertRecordValues(combo_item_line, [{"price_subtotal": 54.55, "price_total": 60.0}])
+
+    def test_invoice_grouping_different_tax_modes(self):
+        order1 = self._create_sale_order_one_line(
+            product_id=self.test_product_a,
+            company_id=self.env.company.id,
+            confirm=False,
+            document_tax_mode="tax_excluded",
+        )
+        order1.action_confirm()
+        order2 = self._create_sale_order_one_line(
+            product_id=self.test_product_a,
+            company_id=self.env.company.id,
+            confirm=False,
+            document_tax_mode="tax_included",
+        )
+        order2.action_confirm()
+
+        invoices = (order1 + order2)._create_invoices()
+        self.assertEqual(len(invoices), 2)
+        invoice1 = invoices.filtered(lambda m: order1 in m.line_ids.sale_line_ids.order_id)
+        invoice2 = invoices.filtered(lambda m: order2 in m.line_ids.sale_line_ids.order_id)
+        self.assertRecordValues(
+            invoice1, [{"document_tax_mode": "tax_excluded", "amount_total": order1.amount_total}]
+        )
+        self.assertRecordValues(
+            invoice2, [{"document_tax_mode": "tax_included", "amount_total": order2.amount_total}]
+        )
+
+    def test_invoice_grouping_same_tax_mode(self):
+        order1 = self._create_sale_order_one_line(
+            product_id=self.test_product_a,
+            company_id=self.env.company.id,
+            confirm=False,
+            document_tax_mode="tax_excluded",
+        )
+        order1.action_confirm()
+        order2 = self._create_sale_order_one_line(
+            product_id=self.test_product_a,
+            company_id=self.env.company.id,
+            confirm=False,
+            document_tax_mode="tax_excluded",
+        )
+        order2.action_confirm()
+
+        invoice = (order1 + order2)._create_invoices()
+        self.assertEqual(len(invoice), 1)
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    "document_tax_mode": "tax_excluded",
+                    "amount_total": order1.amount_total + order2.amount_total,
+                }
+            ],
+        )
