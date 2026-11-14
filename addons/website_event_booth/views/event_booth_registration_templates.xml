@@ -28,7 +28,7 @@
                             <span> *</span>
                         </label>
                         <div class="col-sm">
-                            <input type="text" class="form-control" name="contact_name" required="True"
+                            <input type="text" class="form-control" name="contact_name" autocomplete="name" required="True"
                                    t-att-value="default_contact.get('name', '')"/>
                         </div>
                     </div>
@@ -38,14 +38,14 @@
                             <span> *</span>
                         </label>
                         <div class="col-sm">
-                            <input type="email" class="form-control" name="contact_email" required="True"
+                            <input type="email" class="form-control" name="contact_email" autocomplete="email" required="True"
                                    t-att-value="default_contact.get('email', '')"/>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label class="col-form-label col-sm-auto">Phone</label>
                         <div class="col-sm">
-                            <input type="tel" class="form-control" name="contact_phone"
+                            <input type="tel" class="form-control" name="contact_phone" autocomplete="tel"
                                    t-att-value="default_contact.get('phone', '')"/>
                         </div>
                     </div>
