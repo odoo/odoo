@@ -485,7 +485,7 @@ test("implied groups rendering (debug)", async () => {
     );
 
     await contains(".o_inner_group:eq(1) .o_group_info_button:eq(0)").click();
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(queryAllTexts(".o_popover table td")).toEqual([
         "Project",
         "Project Manager",
@@ -493,7 +493,7 @@ test("implied groups rendering (debug)", async () => {
         "- Administration/Settings\n- Helpdesk/Helpdesk Administrator",
     ]);
     await contains(".o_inner_group:eq(1) .o_group_info_button:eq(1)").click();
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(queryAllTexts(".o_popover table td")).toEqual([
         "Helpdesk",
         "Helpdesk Administrator",
@@ -505,7 +505,7 @@ test("implied groups rendering (debug)", async () => {
 
     expect(".o_inner_group:eq(2) .o_is_implied input").not.toBeChecked();
     await contains(".o_inner_group:eq(2) .o_group_info_button").click();
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(queryAllTexts(".o_popover table td")).toEqual([
         "Group",
         "Internal user",
@@ -541,7 +541,7 @@ test("implied groups rendering: exclusive (debug)", async () => {
     );
 
     await contains(".o_inner_group:eq(1) .o_group_info_button:eq(0)").click();
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(queryAllTexts(".o_popover table td")).toEqual([
         "Project",
         "Project Manager",
@@ -549,7 +549,7 @@ test("implied groups rendering: exclusive (debug)", async () => {
         "- Helpdesk/Helpdesk Administrator",
     ]);
     await contains(".o_inner_group:eq(1) .o_group_info_button:eq(1)").click();
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(queryAllTexts(".o_popover table td")).toEqual([
         "Helpdesk",
         "Helpdesk Administrator",
@@ -714,7 +714,7 @@ test("disjoint groups", async () => {
     expect(".o_is_disjoint").toHaveCount(2);
 
     await contains(".o_inner_group:eq(3) .o_group_info_button").click();
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover:not(.visually-hidden)").toHaveCount(1);
     expect(queryAllTexts(".o_popover table td")).toEqual([
         "Group",
         "Portal user",
