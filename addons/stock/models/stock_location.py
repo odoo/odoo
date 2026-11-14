@@ -229,8 +229,12 @@ class StockLocation(models.Model):
                 if location.company_id.id != values['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'usage' in values and values['usage'] == 'view':
-            if self.mapped('quant_ids'):
-                raise UserError(_("This location's usage cannot be changed to view as it contains products."))
+            for location in self.filtered('quant_ids'):
+                raise UserError(self.env._(
+                    "%(name)s still has stocks.\n"
+                    "1. Empty/transfer the stock to its sublocations.\n"
+                    "2. Set %(name)s as \"Virtual\".",
+                    name=location.complete_name))
         if 'usage' in values:
             modified_locations = self.filtered(lambda l: l.usage != values['usage'])
             reserved_quantities = self.env['stock.quant'].search_count([
@@ -290,6 +294,21 @@ class StockLocation(models.Model):
         res = super().create(vals_list)
         self.invalidate_model(['warehouse_id'])
         return res
+
+    def action_open_sublocations(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_location_form')
+        action['context'] = {
+            'search_default_sublocations': 1,
+            'default_location_id': self.id,
+        }
+        return action
+
+    def has_sublocations(self):
+        self.ensure_one()
+        self.check_access('read')
+        # Count children in companies the user can't see too.
+        return bool(self.sudo().search_count([('location_id', '=', self.id)], limit=1))
 
     def _get_putaway_strategy(
         self, product, quantity=0, package=None, packaging=None, additional_qty=None,

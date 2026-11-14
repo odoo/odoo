@@ -15,6 +15,9 @@
                         </group>
                     </div>
                 </xpath>
+                <field name="usage" position="after">
+                  <field name="is_valuation_location" invisible="usage not in ('customer', 'internal', 'transit')"/>
+                </field>
             </field>
         </record>
     </data>
