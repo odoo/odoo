@@ -10,6 +10,9 @@ test("clickPrintBill syncs the order so it isn't lost on a data reload", async (
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     patchWithCleanup(store.ticketPrinter, {
+        async selectPrinter() {
+            return this.receiptPrinters[0];
+        },
         async generateIframe() {
             return document.createElement("iframe");
         },
