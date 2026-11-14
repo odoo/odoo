@@ -479,7 +479,7 @@ class TestMailingControllers(TestMailingControllersCommon):
         test_feedback = "My feedback"
         portal_user = mail_new_test_user(
             self.env,
-            email=tools.formataddr(("Déboulonneur", "fleurus@example.com")),
+            email='fleurus@example.com',
             groups='base.group_portal',
             login='user_portal_fleurus',
             name='Déboulonneur User',

@@ -593,6 +593,12 @@ class Users(models.Model):
                         _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
                     )
 
+    @api.constrains('email', 'share')
+    def _check_email(self):
+        for user in self:
+            if user.share and user.email and not tools.single_email_re.match(user.email):
+                raise ValidationError(_('Invalid Email! Please enter a valid email address.'))
+
 
     @api.constrains('groups_id')
     def _check_one_user_type(self):

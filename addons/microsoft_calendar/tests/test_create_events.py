@@ -455,8 +455,8 @@ class TestCreateEvents(TestCommon):
         # In Odoo, this event will be created (behind the screens) by a synced Odoo user as attendee (self.attendee_user).
         portal_group = self.env.ref('base.group_portal')
         portal_user = self.env['res.users'].create({
-            'login': 'portal@user',
-            'email': 'portal@user',
+            'login': 'portal@user.com',
+            'email': 'portal@user.com',
             'name': 'PortalUser',
             'groups_id': [Command.set([portal_group.id])],
             })
