@@ -2,11 +2,13 @@
 import uuid
 import logging
 
+from werkzeug.urls import url_encode
+
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools.misc import clean_context
-from odoo.tools import split_every
+from odoo.tools.misc import clean_context, hash_sign
+from odoo.tools import email_normalize, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -69,8 +71,22 @@ class CalendarAttendee(models.Model):
         return attendees
 
     def write(self, vals):
+        state = vals.get('state')
+        undeclined = self.browse()
+        if state and state != 'declined':
+            undeclined = self.filtered(lambda attendee: attendee.state == 'declined')
         attendees = super().write(vals)
         self.event_id.check_access('write')
+        # declining a meeting ends the invitation to its video call, answering it again renews it
+        if state == 'declined':
+            with_channel = self.filtered('event_id.videocall_channel_id')
+            for declined in with_channel.grouped(lambda attendee: attendee.event_id.videocall_channel_id).values():
+                declined.event_id._remove_videocall_channel_attendees(declined.partner_id, invited_only=True)
+        for event, answered in undeclined.filtered('event_id.videocall_channel_id').grouped('event_id').items():
+            # sudo: discuss.channel: an attendee cannot add themselves back to the channel of
+            # a meeting they declined; its organizer does, so they show as invited again.
+            organizer = event.user_id or self.env.ref('base.user_root')
+            event.with_user(organizer).sudo()._add_videocall_channel_attendees(answered.partner_id)
         return attendees
 
     def unlink(self):
@@ -88,6 +104,22 @@ class CalendarAttendee(models.Model):
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
+
+    def _get_videocall_email_token(self):
+        """ Token letting an attendee without a user join as the guest of their email. """
+        self.ensure_one()
+        email = email_normalize(self.partner_id.email)
+        if self.event_id.videocall_source != 'discuss' or self.partner_id.user_ids or not email:
+            return False
+        return hash_sign(self.env(su=True), "mail.invite_email", email)
+
+    def _get_videocall_location(self):
+        """ The link the attendee joins the video call of the meeting through. """
+        self.ensure_one()
+        location = self.event_id.videocall_location
+        if email_token := self._get_videocall_email_token():
+            return f"{location}?{url_encode({'email_token': email_token})}"
+        return location
 
     @api.model
     def _mail_template_default_values(self):
