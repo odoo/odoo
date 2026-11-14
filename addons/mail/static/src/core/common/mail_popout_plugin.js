@@ -25,8 +25,6 @@ class OverlayWrapper extends Component {
     }
 }
 
-export const POLL_CLOSE_WINDOW_TIMEOUT = 1000;
-
 /**
  * Manages one external window (popup or picture-in-picture) identified by `id`.
  * Obtained from `MailPopoutPlugin.createManager`.
@@ -109,6 +107,8 @@ export class PopoutManager {
                 await this.#addAssets(this.#openedWindow);
             } else {
                 doc.write(window.document.head.outerHTML);
+                // Rewriting the document erases the listeners of its window.
+                this.#watchClose();
             }
             doc.body = doc.createElement("body");
         }
@@ -119,17 +119,24 @@ export class PopoutManager {
     }
 
     /**
-     * Poll the external window to detect when it is closed.
-     * The afterPopoutClosed hook is then called after the window is closed.
+     * Calls the afterPopoutClosed hook when the external window is closed.
      */
-    async #pollClosedWindow() {
-        while (this.#openedWindow) {
-            await new Promise((r) => setTimeout(r, POLL_CLOSE_WINDOW_TIMEOUT));
-            if (this.#openedWindow?.closed) {
-                this.#hooks.afterPopoutClosed?.();
+    #watchClose() {
+        const win = this.#openedWindow;
+        win.addEventListener(
+            "pagehide",
+            () => {
+                if (win !== this.#openedWindow) {
+                    return; // An older window, closed after this one replaced it.
+                }
                 this.#openedWindow = null;
-            }
-        }
+                // Also fired when the window reloads or navigates away, which
+                // discards the mounted content: close it in that case too.
+                win.close();
+                this.#hooks.afterPopoutClosed?.();
+            },
+            { once: true }
+        );
     }
 
     /**
@@ -145,7 +152,8 @@ export class PopoutManager {
      * @param {number} [param1.options.height] - The height of the popout window.
      * @param {number} [param1.options.aspectRatio=16/9] - The aspect ratio of the popout window.
      * @param {boolean} [param1.options.useAlternativeAssets]
-     * @returns {Promise<Window>} The external window. Rejects if the window could not be opened.
+     * @returns {Promise<Window|null>} The external window, or null if it was
+     *      closed while loading. Rejects if the window could not be opened.
      */
     async pip(
         component,
@@ -172,9 +180,12 @@ export class PopoutManager {
                 );
             }
             this.#openedWindow = externalWindow;
-            this.#pollClosedWindow();
+            this.#watchClose();
         }
         await this.reset({ useAlternativeAssets });
+        if (this.#openedWindow !== externalWindow) {
+            return null;
+        }
         externalWindow.document.host = { ...externalWindow.document.host, id: this.#id };
         const rootEnv = Object.assign({}, this.#env, {
             /**
@@ -216,7 +227,7 @@ export class PopoutManager {
                 }
             });
             this.#openedWindow = externalWindow;
-            this.#pollClosedWindow();
+            this.#watchClose();
         }
         this.reset();
         this.#root = this.#createRoot(component, { props });

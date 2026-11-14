@@ -668,9 +668,10 @@ export function mockPipWindow() {
     const popoutIframe = document.createElement("iframe");
     const outsideArea = document.createElement("div");
     getFixture().appendChild(outsideArea);
+    const eventTarget = new EventTarget();
     const popoutWindow = {
-        addEventListener: () => {},
-        removeEventListener: () => {},
+        addEventListener: (...args) => eventTarget.addEventListener(...args),
+        removeEventListener: (...args) => eventTarget.removeEventListener(...args),
         closed: false,
         get document() {
             const doc = popoutIframe.contentDocument;
@@ -689,8 +690,12 @@ export function mockPipWindow() {
             return doc;
         },
         close() {
+            if (popoutWindow.closed) {
+                return;
+            }
             popoutWindow.closed = true;
             popoutIframe.remove();
+            eventTarget.dispatchEvent(new Event("pagehide"));
         },
     };
     patch(window, { documentPictureInPicture: false });

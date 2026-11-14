@@ -40,6 +40,9 @@ export const callPipService = {
                 props: { isPip: true },
                 options: { useAlternativeAssets: isShadowRoot },
             });
+            if (!pipWindow) {
+                return;
+            }
             pipWindow.addEventListener("keydown", (ev) => {
                 rtc.onKeyDown(ev);
             });
