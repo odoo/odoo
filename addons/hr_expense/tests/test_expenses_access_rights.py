@@ -272,6 +272,32 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         user_attachment.sudo().unlink()
         self.assertEqual(len(expense.attachment_ids), 0)
 
+    def test_expense_move_attachment_of_approved_expense(self):
+        """ Once an expense is approved, its attachments can only be moved to another record by the users
+        able to edit the expense and to create journal entries, e.g. to create a bill from the receipt. """
+        expense = self.create_expenses({'name': 'Approved expense', 'approval_state': 'approved'})
+        attachment = self.env['ir.attachment'].create({
+            'name': 'receipt.pdf',
+            'raw': b'receipt',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+        move = self.env['account.move'].create({'move_type': 'in_invoice'})
+
+        expense_manager = self.expense_user_manager  # Can edit the expense, cannot create journal entries
+        invoicing_user = new_test_user(  # Can create journal entries, cannot edit the expense
+            self.env, login='expense_invoicing_user', groups='base.group_user,account.group_account_invoice',
+        )
+        for user in (expense_manager, invoicing_user):
+            with self.subTest(user=user.login), self.assertRaises(AccessError):
+                attachment.with_user(user).write({'res_model': 'account.move', 'res_id': move.id})
+
+        accountant = new_test_user(  # Can edit the expense and create journal entries
+            self.env, login='expense_accountant', groups='hr_expense.group_hr_expense_manager,account.group_account_invoice',
+        )
+        attachment.with_user(accountant).write({'res_model': 'account.move', 'res_id': move.id})
+        self.assertRecordValues(attachment, [{'res_model': 'account.move', 'res_id': move.id}])
+
     def test_expense_filter(self):
         """ Tests '_search_filter_for_expense' domain filtering per user role.
             - Expense Manager: Sees all employees across the company.

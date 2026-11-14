@@ -25,8 +25,14 @@ class IrAttachment(models.Model):
         ).ids)
         blocked_expense_ids = []
         if operation != 'read' and not self.env.su:
+            can_create_moves = self.env['account.move'].has_access('create')
             blocked_expense_ids = expenses.filtered(  # Attachments cannot be added/modified once an expense has been posted
-                lambda e: not (e.id in accessible_user_expense_ids or (e.state in {'draft', 'submitted'} and e.has_access('write'))),
+                lambda e: not (
+                    e.id in accessible_user_expense_ids
+                    # Users able to create journal entries can move the attachments of the expenses they can edit
+                    or (e.state in {'draft', 'submitted'} or (operation == 'write' and can_create_moves))
+                    and e.has_access('write')
+                ),
             ).ids
             for expense_id in blocked_expense_ids:
                 yield 'hr.expense', expense_id
