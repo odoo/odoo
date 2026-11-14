@@ -387,6 +387,61 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                 invoice_edi_format='my_myinvois',
             )
 
+    def test_13_invalid_bill_with_price_difference(self):
+        """
+        A bill whose price difference was applied to the stock valuation is not cancelled when it becomes invalid,
+        as its valuation layers and their journal entries would be left behind.
+        """
+        if self.env.ref('base.module_purchase_stock').state != 'installed':
+            self.skipTest("This test requires the purchase_stock module to be installed.")
+
+        stock_in, stock_out, stock_valuation = self.env['account.account'].create([{
+            'name': code,
+            'code': code,
+            'reconcile': True,
+            'account_type': 'asset_current',
+        } for code in ('STOCKIN', 'STOCKOUT', 'STOCKVAL')])
+        product = self.env['product.product'].create({
+            'name': 'Storable product',
+            'is_storable': True,
+            'categ_id': self.env['product.category'].create({
+                'name': 'AVCO automated',
+                'property_valuation': 'real_time',
+                'property_cost_method': 'average',
+                'property_stock_valuation_account_id': stock_valuation.id,
+                'property_stock_account_input_categ_id': stock_in.id,
+                'property_stock_account_output_categ_id': stock_out.id,
+            }).id,
+        })
+        purchase_order = self.env['purchase.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_qty': 10.0, 'price_unit': 100.0})],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.button_validate()
+
+        bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_date = self.fakenow.date()
+        bill.invoice_line_ids.price_unit = 110.0
+        bill.action_post()
+
+        # Technically this would have been done at submission
+        bill.write({
+            'l10n_my_edi_state': 'in_progress',
+            'l10n_my_edi_external_uuid': '123458974513518',
+        })
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_13_mock):
+            bill.action_l10n_my_edi_update_status()
+
+        self.assertRecordValues(
+            bill,
+            [{
+                'l10n_my_edi_state': 'invalid',
+                'state': 'posted',
+            }]
+        )
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
@@ -709,6 +764,18 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     'success': False,
                     'errors': [{'reference': 'document_too_large', 'data': {'size': 350, 'max_size': 250}}],
                 }],
+            }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_13_mock(self, endpoint, params):
+        """ Basic mocked method that simulate what the proxy would return depending on the endpoint. """
+        if endpoint == 'api/l10n_my_edi/1/get_status':
+            return {
+                'status': 'invalid',
+                'status_reason': '',
+                'long_id': '',
+                'valid_datetime': '',
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
