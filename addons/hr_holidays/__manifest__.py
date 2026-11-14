@@ -66,6 +66,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'data/public_holidays/public_holidays_be.csv',
         'data/public_holidays/public_holidays_ch.csv',
         'data/public_holidays/public_holidays_eg.csv',
+        'data/public_holidays/public_holidays_fr.csv',
         'data/public_holidays/public_holidays_hk.csv',
         'data/public_holidays/public_holidays_in.csv',
         'data/public_holidays/public_holidays_jo.csv',
