@@ -185,6 +185,9 @@ class SurveyInvite(models.TransientModel):
             ('email', 'in', emails)
         ])
         partners_done, emails_done, answers = self._get_done_partners_emails(existing_answers)
+        if answers and self.deadline:
+            # the same token is sent again: it should follow the new deadline
+            answers.sudo().deadline = self.deadline
 
         for new_partner in partners - partners_done:
             answers |= self.survey_id._create_answer(partner=new_partner, check_attempts=False, **self._get_answers_values())
