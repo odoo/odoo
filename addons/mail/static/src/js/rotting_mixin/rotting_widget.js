@@ -24,6 +24,15 @@ export function getRottingDaysTitle(modelName, rotDays) {
     });
 }
 
+/**
+ * While a record is being moved to another kanban column, its new group value is only a pending
+ * change and the rotting values are still the ones of the previous stage until the save finishes.
+ */
+export function isRecordRotting(record) {
+    const groupByField = record.model.root.groupByField;
+    return Boolean(record.data.is_rotting) && !(groupByField?.name in record._changes);
+}
+
 export function getRottingDaysCount(numberOfDays) {
     return _t("%(numberOfDays)sd", { numberOfDays });
 }
@@ -42,6 +51,10 @@ export class KanbanRottingField extends Component {
             this.props.record.model.config.resModel,
             this.props.record.data.rotting_days
         );
+    }
+
+    get isRotting() {
+        return isRecordRotting(this.props.record);
     }
 }
 
