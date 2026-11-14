@@ -103,6 +103,9 @@
             <attribute name="din5008_address_block">din5008_address_block</attribute>
             <attribute name="din5008_document_title">din5008_document_title</attribute>
         </t>
+    </template>
+
+    <template id="report_saleorder_document_table" inherit_id="sale.report_saleorder_document_table">
         <!-- Insert Position Column as the First Column in the Table Header -->
         <xpath expr="//th[@name='th_description']" position="before">
             <t t-if="doc.company_id.has_position_column">
