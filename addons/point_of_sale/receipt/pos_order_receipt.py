@@ -117,7 +117,7 @@ class PosOrderReceipt(models.AbstractModel):
         payment_fields = self.env['pos.payment']._load_pos_data_fields(self.config_id)
 
         payments = []
-        for line in self.payment_ids:
+        for line in self.payment_ids.filtered(lambda p: not p.is_change):
             data = line.read(payment_fields, load=False)[0]
             data['payment_method_data'] = {'name': line.payment_method_id.name}
             currency = line.foreign_currency_id or self.currency_id
@@ -125,6 +125,14 @@ class PosOrderReceipt(models.AbstractModel):
             payments.append(data)
 
         return payments
+
+    def _order_receipt_generate_change_amount(self):
+        change_line = self.payment_ids.filtered('is_change')[:1]
+        if not change_line:
+            return False
+        if change_line.foreign_currency_id:
+            return self._order_receipt_format_currency(abs(change_line.amount_currency), change_line.foreign_currency_id)
+        return self._order_receipt_format_currency(abs(change_line.amount))
 
     def _order_receipt_generate_line_data(self):
         lines_fields = self.env['pos.order.line']._load_pos_data_fields(self.config_id)
@@ -240,6 +248,7 @@ class PosOrderReceipt(models.AbstractModel):
                     for p in tip_percentage
                 ] if tip_percentage else False,
                 'total_item_count': self._get_total_item_count(),
+                'change_amount': self._order_receipt_generate_change_amount(),
             },
         }
 

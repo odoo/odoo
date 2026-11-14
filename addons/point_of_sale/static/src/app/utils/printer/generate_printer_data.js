@@ -200,11 +200,13 @@ export class GeneratePrinterData {
     }
 
     generatePaymentData() {
-        return this.order.payment_ids.map((line) => ({
-            ...line.raw,
-            payment_method_data: { name: line.payment_method_id?.name || "" },
-            amount: this.formatCurrency(line.amount_currency || line.amount, line.currency),
-        }));
+        return this.order.payment_ids
+            .filter((line) => !line.is_change)
+            .map((line) => ({
+                ...line.raw,
+                payment_method_data: { name: line.payment_method_id?.name || "" },
+                amount: this.formatCurrency(line.amount_currency || line.amount, line.currency),
+            }));
     }
 
     generateReceiptData() {
@@ -239,8 +241,16 @@ export class GeneratePrinterData {
 
         const order = this.order.raw;
         let amount_return_currency = 0;
+        // amount_return is negative before the sync and positive after it
+        let change_amount = order.amount_return
+            ? this.formatCurrency(Math.abs(order.amount_return))
+            : false;
         if (this.order.payment_ids[0]?.isDifferentCurrency) {
             amount_return_currency = this.order.amount_return * this.order.orderCurrency.rate;
+            change_amount = this.formatCurrency(
+                Math.abs(amount_return_currency),
+                this.order.orderCurrency
+            );
         }
         return {
             order: { ...order, amount_return_currency: amount_return_currency },
@@ -274,6 +284,7 @@ export class GeneratePrinterData {
                 formated_date_order: this.order.formatDateOrTime("date_order", "datetime"),
                 service_fee: serviceFee,
                 total_item_count: this.order.totalItemQuantity,
+                change_amount: change_amount,
             },
         };
     }
