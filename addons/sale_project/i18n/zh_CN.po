@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
+# * sale_project
 #
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2025
 # Wil Odoo, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
 # Chloe Wang, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 12:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
+"PO-Revision-Date: 2026-11-14 09:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/sale_project/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -82,8 +82,8 @@ msgid ""
 "'cancel'\"/>"
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"与此任务相关"
-"的销售订单已取消。我们建议在取消销售订单的同时更新销售订单行或取消这项任务"
-"。\" invisible=\"sale_order_state != 'cancel' \"/>"
+"的销售订单已取消。我们建议在取消销售订单的同时更新销售订单行或取消这项任务。"
+"\" invisible=\"sale_order_state != 'cancel' \"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -210,6 +210,12 @@ msgid "Config Settings"
 msgstr "配置设置"
 
 #. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid "Confirmation Required"
+msgstr "需要确认"
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
@@ -244,7 +250,8 @@ msgstr "创建新报价是新销售的第一步！"
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
-msgstr "为订单创建一个项目，为每个销售订单明细创建一个任务，以追踪所花费的时间。"
+msgstr ""
+"为订单创建一个项目，为每个销售订单明细创建一个任务，以追踪所花费的时间。"
 
 #. module: sale_project
 #. odoo-python
@@ -401,6 +408,17 @@ msgstr "日记账项目"
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Load more"
 msgstr "加载更多"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid ""
+"Making this project non-billable will unlink it from any products that "
+"create tasks in it or use it as a template. Are you sure you want to "
+"continue?"
+msgstr ""
+"将此项目设为不可计费，会解除其与所有在此项目中创建任务或将其用作模板的产品的"
+"链接。确定要继续吗？"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type

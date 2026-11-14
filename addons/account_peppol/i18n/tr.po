@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-11-03 16:39+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-14 10:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/tr/>\n"
@@ -58,7 +58,7 @@ msgstr " ( %(eas)s eksik)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Previously sent)"
-msgstr ""
+msgstr " (Daha önce gönderildi)"
 
 #. module: account_peppol
 #. odoo-python
@@ -527,7 +527,7 @@ msgstr "Hata"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
-msgstr ""
+msgstr "Belgesi içe aktarılırken hata oluştu %(proxy_type)s (UUID: %(uuid)s):"
 
 #. module: account_peppol
 #. odoo-python
@@ -897,7 +897,7 @@ msgstr "Peppol EAS ve/veya Uç nokta tanımlayıcısı"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol Eas"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1560,13 +1560,13 @@ msgstr "Neden Fransız e-Faturalamayı kullanmalıyım?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use Peppol?"
-msgstr ""
+msgstr "Neden Peppol kullanmalıyım?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should you use it?"
-msgstr ""
+msgstr "Neden kullanmalısınız?"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
@@ -1653,11 +1653,21 @@ msgstr ""
 "kullanılan yevmiye defterini değiştirin."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move.py:0
+msgid ""
+"You cannot delete an entry that has already been sent via Electronic "
+"Invoicing."
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
 "You confirm that you are authorized to register this company on the Peppol "
 "network as a legal representative."
 msgstr ""
+"Bu şirketi Peppol ağında yasal temsilci olarak kaydettirmeye yetkili "
+"olduğunuzu onaylıyorsunuz."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1818,7 +1828,7 @@ msgstr "faturalar ve alacak notları"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "aracılığıyla gönderildi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol

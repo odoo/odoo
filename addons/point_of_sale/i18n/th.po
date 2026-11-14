@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-10-28 04:38+0000\n"
+"PO-Revision-Date: 2026-11-07 19:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/th/>\n"
@@ -106,7 +106,7 @@ msgstr "%(product_name)s: ปริมาณที่สั่งซื้อ: %
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
-msgstr ""
+msgstr "%(refunded_order)s คืนเงิน"
 
 #. module: point_of_sale
 #. odoo-python
@@ -351,7 +351,7 @@ msgstr "<strong>บันทึกการเปิดเซสชั่น:</s
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice</strong>"
-msgstr ""
+msgstr "<strong>ใบแจ้งหนี้ต้นทาง</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -387,7 +387,7 @@ msgstr "มีบันทึกที่มีชื่อนี้อยู่
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "มีการชำระเงินด้วย uuid นี้อยู่แล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -555,7 +555,7 @@ msgstr "จำเป็นต้องดำเนินการ"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Action cancelled (%(ACTION)s)"
-msgstr ""
+msgstr "ยกเลิกการดำเนินการ (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -670,7 +670,7 @@ msgstr "เพิ่มในการสั่งซื้อ"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Added %(payment_method)s with %(amount)s"
-msgstr ""
+msgstr "เพิ่ม %(payment_method)s ด้วย %(amount)s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -880,12 +880,12 @@ msgstr "การระบุภายในของเครื่องพิ
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "มีบรรทัดรายการคำสั่งซื้อที่มี uuid นี้อยู่แล้ว"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "มีคำสั่งซื้อที่มี uuid นี้อยู่แล้ว"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1039,7 +1039,7 @@ msgstr "พร้อม"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__available_payment_method_ids
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "วิธีการชำระเงินที่มีอยู่"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -1129,7 +1129,7 @@ msgstr "ธนาคาร"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Bank App (QR Code)"
-msgstr ""
+msgstr "แอปธนาคาร (QR โค้ด)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
@@ -1230,7 +1230,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
 msgid "Brand of card"
-msgstr ""
+msgstr "ยี่ห้อของบัตร"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_breads
@@ -1345,12 +1345,12 @@ msgstr "การ์ด"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_no
 msgid "Card Number(Last 4 Digit)"
-msgstr ""
+msgstr "หมายเลขบัตร (4 หลักสุดท้าย)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 msgid "Card Owner name"
-msgstr ""
+msgstr "ชื่อเจ้าของบัตร"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_form
@@ -1403,7 +1403,7 @@ msgstr "เงินสดของร้านเสื้อผ้า"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Cash Count"
-msgstr ""
+msgstr "การนับเงินสด"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1421,7 +1421,7 @@ msgstr "เงินสดเข้า"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Cash In / Out"
-msgstr ""
+msgstr "เงินสดเข้า/ออก"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1471,7 +1471,7 @@ msgstr "การปัดเศษเงินสด (PoS)"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "การปัดเศษเงินสด:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2417,7 +2417,7 @@ msgstr "แดชบอร์ด"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Database Connection Lost"
-msgstr ""
+msgstr "การเชื่อมต่อฐานข้อมูลขาดหาย"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2847,7 +2847,7 @@ msgstr "แก้ไขแล้ว"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Edited order(s) during the session:%s"
-msgstr ""
+msgstr "คำสั่งซื้อที่แก้ไขระหว่างเซสชัน:%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_electronic_scale
@@ -2882,7 +2882,7 @@ msgstr "พนักงาน"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
 msgid "Employee who uses the cash register."
-msgstr ""
+msgstr "พนักงานผู้ใช้เครื่องบันทึกเงินสด"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3322,7 +3322,7 @@ msgstr "มีการควบคุมเงินสด"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_deleted_line
 msgid "Has Deleted Line"
-msgstr ""
+msgstr "มีรายการที่ถูกลบ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__has_image
@@ -3497,7 +3497,7 @@ msgstr "ที่อยู่สำหรับจัดส่งไม่ถู
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Information about your product."
-msgstr ""
+msgstr "ข้อมูลเกี่ยวกับสินค้าของคุณ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__message
@@ -3865,7 +3865,7 @@ msgstr "สถานะการพิมพ์ครั้งสุดท้า
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Launch fake tours"
-msgstr ""
+msgstr "เปิดใช้งานทัวร์จำลอง"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leather_jacket_product_template
@@ -3983,6 +3983,8 @@ msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
 msgstr ""
+"สิทธิ์การเข้าถึง Local Network Access ถูกปฏิเสธ อุปกรณ์ฮาร์ดแวร์บางอย่างอาจทำงานไม่ถูกต้อง โ"
+"ปรดอนุญาต Local Network Access ในการตั้งค่าเบราว์เซอร์ของคุณ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

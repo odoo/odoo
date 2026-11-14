@@ -7,13 +7,14 @@
 # Manon Rondou, 2025
 #
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 12:31+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
+"PO-Revision-Date: 2026-11-14 09:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/"
 "sale_project/fr/>\n"
 "Language: fr\n"
@@ -98,8 +99,8 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Commande(s)"
-"\n"
+"                            <span class=\"o_stat_value\">0</span> "
+"Commande(s)\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Rendre facturable(s)\n"
@@ -216,6 +217,12 @@ msgstr "Annulé"
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
 msgstr "Paramètres de configuration"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid "Confirmation Required"
+msgstr "Confirmation requise"
 
 #. module: sale_project
 #. odoo-python
@@ -417,6 +424,18 @@ msgstr "Écriture comptable"
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Load more"
 msgstr "Charger plus"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid ""
+"Making this project non-billable will unlink it from any products that "
+"create tasks in it or use it as a template. Are you sure you want to "
+"continue?"
+msgstr ""
+"Rendre ce projet non facturable le dissociera de tous les produits qui y "
+"créent des tâches ou qui l’utilisent comme modèle. Êtes-vous sûr de vouloir "
+"continuer ?"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -882,8 +901,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"Vous ne pouvez pas lier la ligne de la commande %(order_id)s - %(product_id)"
-"s à cette tâche car il s'agit d'une dépense refacturée."
+"Vous ne pouvez pas lier la ligne de la commande %(order_id)s - %"
+"(product_id)s à cette tâche car il s'agit d'une dépense refacturée."
 
 #. module: sale_project
 #. odoo-python

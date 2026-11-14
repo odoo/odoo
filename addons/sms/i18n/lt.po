@@ -25,13 +25,14 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-11-05 17:10+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-11-09 09:38+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/sms/"
 "lt/>\n"
 "Language: lt\n"
@@ -39,19 +40,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
+": n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "# Neteisingi gavėjai"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "# Tinkami gavėjai"
 
 #. module: sms
 #. odoo-python
@@ -73,13 +74,13 @@ msgstr "%s (kopija)"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "%s invalid recipients"
-msgstr ""
+msgstr "%s neteisingi gavėjai"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid ", fits in"
-msgstr ""
+msgstr ", telpa į"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -87,6 +88,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Įvyko klaida su jūsų paskyra. Norėdami gauti "
+"daugiau informacijos, susisiekite su palaikymo tarnyba..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -112,6 +115,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Nustatyti siuntėjo vardą"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -120,11 +125,14 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text\">Pridėti</span>\n"
+"                                <span class=\"o_stat_text\">Konteksto "
+"veiksmas</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Peržiūra</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -133,12 +141,16 @@ msgid ""
 "                                <span class=\"o_stat_text\">Context Action</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text\">Pašalinti</span>\n"
+"                                <span class=\"o_stat_text\">Konteksto "
+"veiksmas</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">Nėra įrašų</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -162,11 +174,27 @@ msgid ""
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                Pranešimas bus išsiųstas kaip SMS šablono "
+"gavėjams\n"
+"                                ir nebus rodomas susirašinėjimo istorijoje.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'note'\">\n"
+"                                SMS nebus išsiųstas, jis bus tik paskelbtas "
+"kaip\n"
+"                                vidinė pastaba susirašinėjimo istorijoje.\n"
+"                            </span>\n"
+"                            <span invisible=\"sms_method != 'comment'\">\n"
+"                                SMS bus išsiųstas kaip SMS šablono gavėjams\n"
+"                                ir taip pat bus paskelbtas kaip vidinė "
+"pastaba\n"
+"                                susirašinėjimo istorijoje.\n"
+"                            </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span> or to specify the country code.</span>"
-msgstr ""
+msgstr "<span> arba nurodyti šalies kodą.</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -174,11 +202,13 @@ msgid ""
 "<strong>Invalid number:</strong>\n"
 "                        <span> make sure to set a country on the </span>"
 msgstr ""
+"<strong>Netinkamas numeris:</strong>\n"
+"                        <span> įsitikinkite, kad nurodėte šalį </span>"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
 msgid "A record for this UUID already exists"
-msgstr ""
+msgstr "Įrašas su šiuo UUID jau egzistuoja"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -198,23 +228,27 @@ msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
 msgstr ""
+"Pridėti kontekstinį veiksmą susijusiame modelyje, kad atidarytumėte SMS "
+"rengyklę su šiuo šablonu"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
 msgstr ""
+"Alternatyvus SMS įrašo identifikavimo būdas, naudojamas pristatymo "
+"ataskaitoms"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "Siunčiant SMS įvyko klaida"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS on “%(record_name)s”"
-msgstr ""
+msgstr "Siunčiant SMS „%(record_name)s“ įvyko klaida"
 
 #. module: sms
 #. odoo-python
@@ -223,6 +257,8 @@ msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"Įvyko nežinoma klaida. Jei ši klaida kartojasi, susisiekite su „Odoo“ "
+"palaikymo komanda."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -236,6 +272,8 @@ msgid ""
 "Are you sure you want to reset these sms templates to their original "
 "configuration? Changes and translations will be lost."
 msgstr ""
+"Ar tikrai norite atstatyti šiuos SMS šablonus į pradinę konfigūraciją? "
+"Pakeitimai ir vertimai bus prarasti."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -250,17 +288,17 @@ msgstr "Bazė"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
-msgstr ""
+msgstr "Įtraukta į juodąjį sąrašą"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Juodajame sąraše esantis telefonas yra mobilusis"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Į juodąjį sąrašą įtrauktas telefonas yra telefonas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -278,17 +316,17 @@ msgstr "Įsigyti kreditų"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Buy credits."
-msgstr ""
+msgstr "Įsigyti kreditų"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "Gali atšaukti"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "Gali išsiųsti pakartotinai"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
@@ -341,7 +379,7 @@ msgstr "Įmonės"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
 msgid "Composition Mode"
-msgstr ""
+msgstr "Kūrimo režimas"
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
@@ -358,13 +396,13 @@ msgstr "Turinys"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
 msgid "Country Not Supported"
-msgstr ""
+msgstr "Šalis nepalaikoma"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "Reikalinga registracija pagal šalį"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -399,7 +437,7 @@ msgstr "Sukurta"
 #. module: sms
 #: model:iap.service,unit_name:sms.iap_service_sms
 msgid "Credits"
-msgstr ""
+msgstr "Kreditai"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
@@ -409,12 +447,12 @@ msgstr "Klientas"
 #. module: sms
 #: model:sms.template,name:sms.sms_template_demo_0
 msgid "Customer: automated SMS"
-msgstr ""
+msgstr "Klientas: automatinė SMS žinutė"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
 msgid "Dear {{ object.display_name }} this is an automated SMS."
-msgstr ""
+msgstr "Gerb. {{ object.display_name }}, tai yra automatinė SMS žinutė."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
@@ -454,12 +492,12 @@ msgstr "Dokumento ID"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
 msgid "Document IDs"
-msgstr ""
+msgstr "Dokumentų ID"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
 msgid "Document Model Description"
-msgstr ""
+msgstr "Dokumento modelio aprašymas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
@@ -485,12 +523,12 @@ msgstr "El. pašto diskusija"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/phone_field/phone_field.js:0
 msgid "Enable SMS"
-msgstr ""
+msgstr "Įjungti SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "Įveskite telefono numerį, kad gautumėte SMS su patvirtinimo kodu."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -523,11 +561,13 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Laukas, naudojamas išvalytam telefono numeriui saugoti. Padeda pagreitinti "
+"paieškas ir palyginimus."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
 msgid "File from where the template originates. Used to reset broken template."
-msgstr ""
+msgstr "Failas, iš kurio kyla šablonas. Naudojamas pažeistam šablonui atkurti."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
@@ -543,12 +583,12 @@ msgstr "Sekėjai (partneriai)"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Following numbers are not correctly encoded: %s"
-msgstr ""
+msgstr "Šie numeriai užkoduoti neteisingai: %s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
 msgid "Has Insufficient Credit"
-msgstr ""
+msgstr "Nepakanka kreditų"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
@@ -559,12 +599,12 @@ msgstr "Turi žinutę"
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
 msgid "Has SMS error"
-msgstr ""
+msgstr "Turi SMS klaidą"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "Turi neregistruotą paskyrą"
 
 #. module: sms
 #: model:ir.model,name:sms.model_iap_account
@@ -632,11 +672,13 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
+"Jei sutvarkytas telefono numeris yra juodajame sąraše, kontaktas nebegaus "
+"masinių SMS žinučių iš jokio sąrašo"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Ignore all"
-msgstr ""
+msgstr "Ignoruoti visus"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -650,6 +692,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Nurodo, ar juodajame sąraše esantis sutvarkytas telefono numeris yra "
+"mobiliojo ryšio numeris. Padeda atskirti, kuris numeris yra įtrauktas į "
+"juodąjį sąrašą, kai modelyje yra ir mobiliojo, ir paprasto telefono laukelis."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -658,22 +703,25 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Nurodo, ar juodajame sąraše esantis sutvarkytas telefono numeris yra "
+"paprasto telefono numeris. Padeda atskirti, kuris numeris yra įtrauktas į "
+"juodąjį sąrašą, kai modelyje yra ir mobiliojo, ir paprasto telefono laukelis."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
+msgstr "Nurodo, ar SMS rengyklė skirta vienam konkrečiam gavėjui"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "Nepakankamas kreditas"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
 msgid "Invalid Destination"
-msgstr ""
+msgstr "Netinkama paskirtis"
 
 #. module: sms
 #. odoo-python
@@ -683,12 +731,15 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"Netinkamas telefono numeris. Būtinai naudokite tarptautinį formatą: pliuso "
+"ženklas (+), šalies kodas, miesto kodas ir vietinis telefono numeris. "
+"Pavyzdys: +1 555-555-555"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "Netinkamas gavėjo numeris. Prašome jį atnaujinti."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -698,12 +749,12 @@ msgstr "Yra sekėjas"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "Yra galiojantis"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
 msgid "Keep a note on document"
-msgstr ""
+msgstr "Pridėti pastabą dokumente"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__lang
@@ -743,27 +794,27 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "Susieti SMS su laių siuntimo / SMS stebėjimo modeliais"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
 msgid "Mail Message"
-msgstr ""
+msgstr "El. laiško pranešimas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
 msgid "Mail Notification"
-msgstr ""
+msgstr "El. pašto pranešimas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
 msgid "Mail Thread SMS"
-msgstr ""
+msgstr "El. pašto gijos SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__to_delete
 msgid "Marked for deletion"
-msgstr ""
+msgstr "Pažymėta trinti"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -792,7 +843,7 @@ msgstr "Žinutės"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "Trūkstamas numeris"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
@@ -807,12 +858,12 @@ msgstr "Pavadinimas"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "Nėra įrašo"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_allowed
 msgid "Not Allowed"
-msgstr ""
+msgstr "Neleidžiama"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_delivered
@@ -822,7 +873,7 @@ msgstr "Nepristatyta"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
 msgid "Note only"
-msgstr ""
+msgstr "Tik pastaba"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -830,6 +881,8 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"Atminkite, kad tai nėra būtina; jei nenustatysite siuntėjo vardo, jūsų SMS "
+"bus išsiųsta naudojant trumpąjį numerį."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -839,7 +892,7 @@ msgstr "Pranešimas"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Pranešimo tipas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
@@ -849,7 +902,7 @@ msgstr "Įrašo numeris"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "Skaičiaus laukas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -877,11 +930,13 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without "
 "applying the Active Domain value"
 msgstr ""
+"Gavėjų skaičius, kurie gaus SMS žinutę, jei ji bus siunčiama masiniu režimu, "
+"netaikant aktyvaus domeno vertės"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Atsisakė"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -891,11 +946,15 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
+"Pasirenkama vertimo kalba (ISO kodas), kuri bus parinkta siunčiant el. "
+"laišką. Jei nenustatyta, bus naudojama angliška versija. Tai paprastai "
+"turėtų būti vietos ženklo išraiška, nurodanti tinkamą kalbą, pvz., {{ "
+"object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "Išeinančios SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
@@ -905,7 +964,7 @@ msgstr "Partneris"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Telefono numeris juodajame sąraše"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__phone_number
@@ -919,16 +978,17 @@ msgid ""
 "Phone number of the recipient. If changed, it will be recorded on "
 "recipient's profile."
 msgstr ""
+"Gavėjo telefono numeris. Jei jį pakeisite, jis bus įrašytas gavėjo profilyje."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "Telefonas / mobilusis"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "Paskelbti dokumente"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -943,12 +1003,12 @@ msgstr "Tęsti"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__process
 msgid "Processing"
-msgstr ""
+msgstr "Apdorojama"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Put in queue"
-msgstr ""
+msgstr "Įtraukti į eilę"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
@@ -969,12 +1029,12 @@ msgstr "Gavėjas"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 msgid "Recipient Name"
-msgstr ""
+msgstr "Gavėjo vardas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "Gavėjo numeris"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -984,17 +1044,17 @@ msgstr "Gavėjai"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
 msgid "Recipients (Numbers)"
-msgstr ""
+msgstr "Gavėjai (numeriai)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
 msgid "Recipients (Partners)"
-msgstr ""
+msgstr "Gavėjai (partneriai)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
 msgid "Record reference"
-msgstr ""
+msgstr "Įrašo nuoroda"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
@@ -1027,12 +1087,12 @@ msgstr "Susijusio dokumento modelis"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Remove the contextual action of the related model"
-msgstr ""
+msgstr "Pašalinti susijusio modelio kontekstinį veiksmą"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Atvaizdavimo modelis"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1042,17 +1102,17 @@ msgstr "Siųsti pakartotinai"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
 msgid "Resend Notification"
-msgstr ""
+msgstr "Siųsti pranešimą pakartotinai"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr ""
+msgstr "Atstatyti SMS šabloną"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Reset Template"
-msgstr ""
+msgstr "Atstatyti šabloną"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1077,22 +1137,22 @@ msgstr "SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
-msgstr ""
+msgstr "SMS ("
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "SMS (with note)"
-msgstr ""
+msgstr "SMS (su pastaba)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__sms
 msgid "SMS (without note)"
-msgstr ""
+msgstr "SMS (be pastabos)"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "SMS paskyros registracijos telefono numerio vedlys"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
@@ -1102,7 +1162,7 @@ msgstr "SMS paskyros siuntėjo vardo vedlys"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "SMS paskyros patvirtinimo kodo vedlys"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1148,22 +1208,22 @@ msgstr "SMS klaida: %(modelName)s"
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
-msgstr ""
+msgstr "SMS triktys"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id_int
 msgid "SMS ID"
-msgstr ""
+msgstr "SMS ID"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
-msgstr ""
+msgstr "SMS numeris"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr ""
+msgstr "SMS peržiūra"
 
 #. module: sms
 #. odoo-javascript
@@ -1174,12 +1234,12 @@ msgstr "SMS kainodara"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend
 msgid "SMS Resend"
-msgstr ""
+msgstr "SMS pakartotinis siuntimas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__state
 msgid "SMS Status"
-msgstr ""
+msgstr "SMS būsena"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
@@ -1191,12 +1251,12 @@ msgstr "SMS šablonas"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
 msgid "SMS Template Preview"
-msgstr ""
+msgstr "SMS šablono peržiūra"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
 msgid "SMS Template Reset"
-msgstr ""
+msgstr "SMS šablono atstatymas"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -1205,61 +1265,61 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
 msgid "SMS Templates"
-msgstr ""
+msgstr "SMS šablonai"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_template_reset.py:0
 msgid "SMS Templates have been reset"
-msgstr ""
+msgstr "SMS šablonai buvo atstatyti"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
 msgid "SMS Trackers"
-msgstr ""
+msgstr "SMS sekimo priemonės"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
-msgstr ""
+msgstr "SMS turinys"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "SMS template model of %(action_name)s does not match action model."
-msgstr ""
+msgstr "SMS šablono modelis %(action_name)s neatitinka veiksmo modelio."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
 msgid "SMS trackers"
-msgstr ""
+msgstr "SMS sekimo priemonės"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__sms_uuid
 msgid "SMS uuid"
-msgstr ""
+msgstr "SMS UUID"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
 msgid "SMS: SMS Queue Manager"
-msgstr ""
+msgstr "SMS: SMS eilių tvarkytuvė"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Išvalytas numeris"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr ""
+msgstr "Ieškoti SMS šablonų"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Send & Close"
-msgstr ""
+msgstr "Siųsti ir uždaryti"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1283,28 +1343,28 @@ msgstr "Siųsti SMS"
 #. odoo-python
 #: code:addons/sms/models/sms_template.py:0
 msgid "Send SMS (%s)"
-msgstr ""
+msgstr "Siųsti SMS (%s)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send SMS As"
-msgstr ""
+msgstr "Siųsti SMS kaip"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "SMS siuntimo vedlys"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
 msgid "Send SMS in batch"
-msgstr ""
+msgstr "Siųsti SMS paketu"
 
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "Siųskite SMS savo kontaktams tiesiai iš savo duomenų bazės."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1314,34 +1374,34 @@ msgstr "Siųsti SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
 msgid "Send directly"
-msgstr ""
+msgstr "Siųsti tiesiogiai"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
 msgid "Send to numbers"
-msgstr ""
+msgstr "Siųsti numeriais"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "Siųsti patvirtinimo kodą"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "Siuntėjo vardas"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
 msgid "Sending Failures"
-msgstr ""
+msgstr "Siuntimo klaidos"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Sending SMS can only be done on a not transient mail.thread model"
-msgstr ""
+msgstr "SMS siuntimas galimas tik netiesioginiame mail.thread modelyje"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
@@ -1367,7 +1427,7 @@ msgstr "Nustatyti siuntėjo vardą"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "Nustatyti paskyrą"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1386,27 +1446,27 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "Vieno režimas"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "Praleisti"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
 msgid "Sms Resend"
-msgstr ""
+msgstr "SMS pakartotinis siuntimas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
 msgid "Sms Template"
-msgstr ""
+msgstr "SMS šablonas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "Išsaugotas gavėjo numeris"
 
 #. module: sms
 #. odoo-python
@@ -1446,30 +1506,32 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"SMS paslauga šiuo metu nepasiekiama naujiems vartotojams, o naujų paskyrų "
+"registracija laikinai sustabdyta."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "The SMS Text Messages could not be resent."
-msgstr ""
+msgstr "Nepavyko pakartotinai išsiųsti SMS žinuų."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The content of the message violates rules applied by our providers."
-msgstr ""
+msgstr "Pranešimo turinys pažeidžia mūsų paslaugų teikėjų taikomas taisykles."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The destination country is not supported."
-msgstr ""
+msgstr "Paskirties šalis nepalaikoma."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr ""
+msgstr "Numeris, kuriuo bandote susisiekti, yra neteisingai suformatuotas."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1481,48 +1543,50 @@ msgstr "Dokumento tipas, su kuriuo gali būti naudojamas šis šablonas"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "Patvirtinimo kodas neteisingas."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "There are no SMS Text Messages to resend."
-msgstr ""
+msgstr "Nėra SMS žinučių, kurias būtų galima išsiųsti pakartotinai."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This SMS has been removed as the number was already used."
-msgstr ""
+msgstr "Ši SMS žinutė buvo pašalinta, nes numeris jau buvo panaudotas."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "Ši paskyra jau turi siuntėjo vardą ir jo pakeisti negalima."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "Tai vardas, kuris bus rodomas kaip SMS siuntėjas."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"Šis telefono numeris yra įtrauktas į SMS rinkodaros juodąjį sąrašą. "
+"Spustelėkite, norėdami pašalinti iš juodojo sąrašo."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "Šis telefono numeris / paskyra buvo užblokuota mūsų paslaugoje."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 msgid "Try Again"
-msgstr ""
+msgstr "Bandyti dar kartą"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1549,6 +1613,19 @@ msgid ""
 "- 'Execute Existing Actions': define an action that triggers several other "
 "server actions\n"
 msgstr ""
+"Serverio veiksmo tipas. Galimos tokios vertės:\n"
+"- 'Atnaujinti įrašą': atnaujinti įrašo vertes\n"
+"- 'Sukurti veiklą': sukurti veiklą (Aptarti)\n"
+"- 'Siųsti el. laišką': paskelbti pranešimą, pastabą arba siųsti el. laišką "
+"(Aptarti)\n"
+"- 'Siųsti SMS': siųsti SMS, registruoti jas dokumentuose (SMS)- 'Pridėti / "
+"pašalinti sekėjus': pridėti arba pašalinti įrašo sekėjus (Aptarti)\n"
+"- 'Sukurti įrašą': sukurti naują įrašą su naujomis vertėmis\n"
+"- 'Vykdyti kodą': Python kodo blokas, kuris bus vykdomas\n"
+"- 'Siųsti pranešimą apie internetinę užkabinimo funkciją (Webhook)': siųsti "
+"POST užklausą išorinei sistemai, taip pat žinomą kaip Webhook\n"
+"- 'Vykdyti esamus veiksmus': apibrėžti veiksmą, kuris suaktyvina kelis kitus "
+"serverio veiksmus\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1558,7 +1635,7 @@ msgstr "UUID"
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_sms_uuid_unique
 msgid "UUID must be unique"
-msgstr ""
+msgstr "UUID turi būti unikalus"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
@@ -1574,12 +1651,12 @@ msgstr "Neregistruota paskyra"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
 msgid "Use Template"
-msgstr ""
+msgstr "Naudoti šabloną"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
 msgid "Use blacklist"
-msgstr ""
+msgstr "Naudoti juodąjį sąrašą"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -1594,16 +1671,27 @@ msgid ""
 "acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"Naudojamas pranešimų generatoriui kategorizuoti\n"
+"'email' (el. paštas): sugeneruotas gaunamo el. laiško, pvz., el. pašto "
+"šliuzo\n"
+"'comment' (komentaras): sugeneruotas vartotojo įvesties, pvz., per „Aptarti“ "
+"(discuss) arba pranešimų rengyklę\n"
+"'email_outgoing' (siunčiamas el. laiškas): sugeneruotas siunčiant paštu\n"
+"'notification' (pranešimas): sugeneruotas sistemos, pvz., stebint "
+"pranešimus\n"
+"'auto_comment' (automatinis komentaras): sugeneruotas automatinio pranešimo "
+"mechanizmo, pvz., patvirtinimo\n"
+"'user_notification' (vartotojo pranešimas): sugeneruotas konkrečiam gavėjui"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__verification_code
 msgid "Verification Code"
-msgstr ""
+msgstr "Patvirtinimo kodas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
-msgstr ""
+msgstr "Matomų įrašų skaičius"
 
 #. module: sms
 #. odoo-python
@@ -1615,7 +1703,7 @@ msgstr "Įspėjimas"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "Mūsų duomenų bazėje neradome jūsų paskyros."
 
 #. module: sms
 #. odoo-python
@@ -1624,6 +1712,8 @@ msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"Nepavyko su jumis susisiekti nurodytu telefono numeriu. Jei pastaruoju metu "
+"prašėte kelių kodų, bandykite dar kartą vėliau."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1638,44 +1728,44 @@ msgstr "Svetainės komunikacijos istorija"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
 msgid "Whether this model supports messages and notifications through SMS"
-msgstr ""
+msgstr "Ar šis modelis palaiko pranešimus ir informavimą SMS žinutėmis"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__to_delete
 msgid ""
 "Will automatically be deleted, while notifications will not be deleted in "
 "any case."
-msgstr ""
+msgstr "Bus automatiškai ištrinta, o pranešimai nebus ištrinti jokiu atveju."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "Netinkamas numerio formatas"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_resend.py:0
 msgid "You do not have access to the message and/or related document."
-msgstr ""
+msgstr "Jūs neturite prieigos prie šio pranešimo ir (arba) susijusio dokumento."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have an eligible IAP account."
-msgstr ""
+msgstr "Neturite tinkamos IAP paskyros."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have enough credits on your IAP account."
-msgstr ""
+msgstr "Jūsų IAP paskyroje nepakanka kreditų."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "Bandėte per daug kartų. Bandykite vėliau."
 
 #. module: sms
 #. odoo-javascript
@@ -1683,6 +1773,8 @@ msgstr ""
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr ""
+"Jūsų SMS tekstiniame pranešime turi būti bent vienas simbolis, kuris nėra "
+"tarpas"
 
 #. module: sms
 #. odoo-python
@@ -1695,12 +1787,13 @@ msgstr "Jūsų SMS paskyra sėkmingai užregistruota."
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your country is not supported due to sender registration legislation"
 msgstr ""
+"Jūsų šalis nėra palaikoma dėl siuntėjo registracijos teisinių reikalavimų"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your database is not activated"
-msgstr ""
+msgstr "Jūsų duomenų bazė neaktyvinta"
 
 #. module: sms
 #. odoo-python
@@ -1709,6 +1802,8 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"Siuntėjo vardas turi būti nuo 3 iki 11 simbolių ilgio ir sudarytas tik iš "
+"raidžių bei skaičių."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1727,38 +1822,38 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "Jūsų SMS paskyra dar neaktyvinta."
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "characters"
-msgstr ""
+msgstr "simboliai"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "e.g. +1 415 555 0100"
-msgstr ""
+msgstr "pvz., +1 415 555 0100"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Calendar Reminder"
-msgstr ""
+msgstr "pvz., kalendoriaus priminimas"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "pvz., kontaktas"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. en_US or {{ object.partner_id.lang }}"
-msgstr ""
+msgstr "pvz., en_US arba {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr ""
+msgstr "iš"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1766,6 +1861,7 @@ msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
 msgstr ""
+"gavėjai nurodė netinkamą telefono numerį ir negaus šios tekstinės žinutės."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

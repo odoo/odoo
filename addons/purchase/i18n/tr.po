@@ -39,8 +39,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-10-20 12:38+0000\n"
+"POT-Creation-Date: 2026-11-13 17:37+0000\n"
+"PO-Revision-Date: 2026-11-14 10:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/purchase/"
 "tr/>\n"
@@ -2148,6 +2148,12 @@ msgstr ""
 
 #. module: purchase
 #. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Only a purchase manager can approve this purchase order."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Operation not supported"
 msgstr "Operasyon desteklenmiyor"
@@ -3300,7 +3306,7 @@ msgstr "Sipariş makbuzu %s tarafından reddedildi."
 #. odoo-python
 #: code:addons/purchase/models/res_partner.py:0
 msgid "The partner cannot be deleted because it is used as a dropship address"
-msgstr ""
+msgstr "İş ortağı, doğrudan teslimat adresi olarak kullanıldığından silinemez"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

@@ -7,13 +7,14 @@
 # Wil Odoo, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Bren Driesen <brdri@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-10-20 12:34+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
+"PO-Revision-Date: 2026-11-14 09:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/"
 "sale_project/nl/>\n"
 "Language: nl\n"
@@ -69,8 +70,8 @@ msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"De "
 "verkooporder voor dit project is geannuleerd. We raden aan om de "
 "verkooporderregel bij te werken of dit project te annuleren in lijn met de "
-"annulering van de verkooporder.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
+"annulering van de verkooporder.\" invisible=\"sale_order_state != 'cancel'\"/"
+">"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -84,8 +85,8 @@ msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"De "
 "verkooporder voor deze taak is geannuleerd. We raden aan om de "
 "verkooporderregel bij te werken of deze taak te annuleren in lijn met de "
-"annulering van de verkooporder.\" invisible=\"sale_order_state != "
-"'cancel'\"/>"
+"annulering van de verkooporder.\" invisible=\"sale_order_state != 'cancel'\"/"
+">"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -217,6 +218,12 @@ msgstr "Geannuleerd"
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
 msgstr "Configuratie-instellingen"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid "Confirmation Required"
+msgstr "Bevestiging vereist"
 
 #. module: sale_project
 #. odoo-python
@@ -419,6 +426,18 @@ msgstr "Boekingsregel"
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Load more"
 msgstr "Meer laden"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid ""
+"Making this project non-billable will unlink it from any products that "
+"create tasks in it or use it as a template. Are you sure you want to "
+"continue?"
+msgstr ""
+"Als je dit project als niet-factureerbaar markeert, wordt de koppeling "
+"verbroken met alle producten die hierin taken aanmaken of het als sjabloon "
+"gebruiken. Weet je zeker dat je door wilt gaan?"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -704,8 +723,8 @@ msgid ""
 msgstr ""
 "Verkooporderregel dat standaard zal worden gekozen op de taken en urenstaten "
 "van dit project, behalve indien de op de urenstaten vastgelegde werknemer "
-"uitdrukkelijk gerelateerd is aan een ander verkooporderregel op het project. "
-"\n"
+"uitdrukkelijk gerelateerd is aan een ander verkooporderregel op het "
+"project. \n"
 "Dit kan individueel worden gewijzigd op elke taak en urenstaat indien nodig."
 
 #. module: sale_project
