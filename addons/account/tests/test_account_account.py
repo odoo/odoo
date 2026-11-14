@@ -663,6 +663,25 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(account.with_user(user_2).sudo().placeholder_code, False)
         self.assertEqual(get_placeholder_code_via_sql(account.with_user(user_2).sudo()), None)
 
+    def test_search_placeholder_code(self):
+        account = self.env['account.account'].create({
+            'name': 'My account',
+            'company_ids': [Command.set(self.company_data_2['company'].ids)],
+            'code': '180001',
+        })
+        Account = self.env['account.account']
+        for operator, value in [
+            ('=', '180001 (company_2)'),
+            ('in', ['180001 (company_2)']),
+            ('like', '0001 (company'),
+            ('ilike', '0001 (COMPANY'),
+            ('=like', '18000_ (company_2)'),
+            ('=ilike', '18000_ (COMPANY_2)'),
+        ]:
+            with self.subTest(operator=operator):
+                self.assertEqual(Account.search([('placeholder_code', operator, value)]), account)
+        self.assertFalse(Account.search([('placeholder_code', 'like', '0001 (COMPANY')]))
+
     def test_account_accessible_by_search_in_sudo_mode(self):
         """ Test that even if an account isn't accessible by the current user, it is returned by a search in sudo mode. """
         account = self.env['account.account'].with_company(self.company_data_2['company']).create([{
