@@ -15,6 +15,7 @@ export class LocationSelectorComponent extends Component {
         // `LocationSelectorDialog` in `website_sale_stock`). Some props here
         // are defined as optional and then exposed by a getter to facilitate
         // the override.
+        accessibleName: t.string().optional(),
         mapZoom: t.string().optional(),
         showSidebar: t.boolean().optional(),
         showSearchbar: t.boolean().optional(),

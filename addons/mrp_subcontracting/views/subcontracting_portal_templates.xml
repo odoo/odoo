@@ -63,7 +63,7 @@
     </template>
 
     <template id="subcontracting" name="Subcontracting Portal View">
-        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/productions/{{ picking.id }}/subcontracting_portal" class="border rounded"/>
+        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/productions/{{ picking.id }}/subcontracting_portal" class="border rounded" t-attf-title="Production {{ picking.name }}"/>
     </template>
 
     <template id="subcontracting_portal_embed" name="Subcontracting Portal">

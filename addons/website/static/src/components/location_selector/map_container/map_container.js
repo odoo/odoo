@@ -9,6 +9,7 @@ export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
     static template = "website.locationSelector.mapContainer";
     props = useProps({
+        accessibleName: t.string().optional(),
         locations: LOCATION_LIST,
         pressControlToZoom: t.boolean().optional(false),
         selectedLocationId: t.string(),

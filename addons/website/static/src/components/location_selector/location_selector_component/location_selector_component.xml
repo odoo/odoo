@@ -31,6 +31,7 @@
                 <t
                     t-if="this.locations.length"
                     t-component="this.mobileComponent"
+                    accessibleName="this.props.accessibleName"
                     locations="this.locations"
                     selectedLocationId="this.state.selectedLocationId.toString()"
                     setSelectedLocation.bind="this.setSelectedLocation"
@@ -81,6 +82,7 @@
             <!-- Map view -->
             <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
                 <MapContainer
+                    accessibleName="this.props.accessibleName"
                     locations="this.locations"
                     mapZoom="this.mapZoom"
                     pressControlToZoom="this.pressControlToZoom"
