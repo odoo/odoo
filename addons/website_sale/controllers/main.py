@@ -401,7 +401,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # products
             sql = shop_query.select(
                 SQL(
-                    "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",  # noqa: E501
+                    "COALESCE(MIN(%(list_price)s), 0) * %(conversion_rate)s, COALESCE(MAX(%(list_price)s), 0) * %(conversion_rate)s",  # noqa: E501
+                    list_price=shop_query.table.list_price,
                     conversion_rate=conversion_rate,
                 )
             )

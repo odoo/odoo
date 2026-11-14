@@ -445,8 +445,8 @@ class TestSalePrices(SaleCommon):
 
         product_1_ctxt = product_1.with_user(user_in_other_company)
         product_2_ctxt = product_2.with_user(user_in_other_company)
-        self.assertEqual(product_1_ctxt.currency_id, main_curr)
-        self.assertEqual(product_2_ctxt.currency_id, main_curr)
+        self.assertEqual(product_1_ctxt.currency_id, other_curr)
+        self.assertEqual(product_2_ctxt.currency_id, other_curr)
         self.assertEqual(product_1_ctxt.cost_currency_id, other_curr)
         self.assertEqual(product_2_ctxt.cost_currency_id, other_curr)
 
@@ -479,7 +479,7 @@ class TestSalePrices(SaleCommon):
 
         # CASE 1:
         # company currency = so currency
-        # product_1.currency != so currency
+        # product_1.currency = so currency
         # product_2.cost_currency_id = so currency
         sales_order = product_1_ctxt.env["sale.order"].create({
             "partner_id": user_in_other_company.partner_id.id,
@@ -493,13 +493,13 @@ class TestSalePrices(SaleCommon):
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 50.0)
+        self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 10)
 
         # CASE 2
         # company currency != so currency
-        # product_1.currency == so currency
+        # product_1.currency != so currency
         # product_2.cost_currency_id != so currency
         pricelist.currency_id = main_curr
         sales_order = product_1_ctxt.env["sale.order"].create({
@@ -515,7 +515,7 @@ class TestSalePrices(SaleCommon):
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 100.0)
+        self.assertEqual(so_line_1.price_unit, 200.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 20)
 

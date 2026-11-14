@@ -509,11 +509,11 @@ class DeliveryCarrier(models.Model):
     @api.depends("product_id.list_price", "product_id.product_tmpl_id.list_price")
     def _compute_fixed_price(self):
         for carrier in self:
-            carrier.fixed_price = carrier.product_id.list_price
+            carrier.fixed_price = carrier.product_id.with_company(carrier.company_id).list_price
 
     def _set_product_fixed_price(self):
         for carrier in self:
-            carrier.product_id.list_price = carrier.fixed_price
+            carrier.product_id.with_company(carrier.company_id).list_price = carrier.fixed_price
 
     def fixed_rate_shipment(self, order):
         carrier = self._match_address(order.partner_shipping_id)

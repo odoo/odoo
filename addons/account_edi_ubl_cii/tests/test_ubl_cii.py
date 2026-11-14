@@ -127,6 +127,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             },
         ]
         company = self.company_data_2['company']
+        (self.place_prdct + self.displace_prdct + products).with_company(company).lst_price = 1.0
         company.country_id = self.env['res.country'].search([('code', '=', 'FR')])
         company.vat = 'FR23334175221'
         company.email = 'company@site.ext'
