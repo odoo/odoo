@@ -71,6 +71,8 @@ class ProductImage(models.Model):
         if not self.env.context.get("skip_update_main_image"):
             images.product_tmpl_id._set_main_image_from_extra_images()
             images.product_tmpl_id.product_variant_ids._set_main_image_from_extra_images()
+        for image_type in ("primary", "secondary"):
+            images.filtered(lambda i: i.type == image_type)._reset_duplicate_types(image_type)
         return images
 
     def write(self, vals):
@@ -82,6 +84,8 @@ class ProductImage(models.Model):
         ):
             self.product_tmpl_id._set_main_image_from_extra_images()
             self.product_tmpl_id.product_variant_ids._set_main_image_from_extra_images()
+        if new_type := vals.get("type"):
+            self._reset_duplicate_types(new_type)
         return res
 
     def unlink(self):
@@ -93,3 +97,7 @@ class ProductImage(models.Model):
         product_templates._set_main_image_from_extra_images()
         product_variants._set_main_image_from_extra_images()
         return res
+
+    def _reset_duplicate_types(self, image_type):
+        other_images = self.product_tmpl_id.product_template_image_ids - self
+        other_images.filtered(lambda i: i.type == image_type).write({"type": False})
