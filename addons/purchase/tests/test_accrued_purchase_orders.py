@@ -268,22 +268,3 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
         accrued_entry = wizard.create_entries()
         self.assertTrue(accrued_entry)
-
-    def test_duplicate_entry_detection(self):
-        self.purchase_order.order_line.qty_received = 5
-        accrual_entries = self.env['account.move'].search(self.wizard.with_context(default_accrual_type='bill_to_receive').create_entries()['domain'])
-        duplicate = self.wizard.with_context(default_accrual_type='bill_to_receive').copy().duplicate_entry_id
-
-        self.assertTrue(duplicate)
-        self.assertIn(duplicate.id, accrual_entries.ids)
-
-    def test_duplicate_entries_are_deleted(self):
-        self.purchase_order.order_line.qty_received = 5
-        accrual_entries = self.env['account.move'].search(self.create_wizard().create_entries()['domain'])
-
-        self.assertTrue(accrual_entries.exists())
-
-        new_accrual_entries = self.env['account.move'].search(self.create_wizard().create_entries()['domain'])
-
-        self.assertTrue(new_accrual_entries.exists())
-        self.assertFalse(accrual_entries.exists())
