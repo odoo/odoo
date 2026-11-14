@@ -119,7 +119,7 @@ export function doCashMove(amount, reason) {
 }
 export function snoozeServiceForHours(hour) {
     return {
-        trigger: `.modal-body .btn-group .form-check-input[id="${hour}hour"]`,
+        trigger: `.modal-body .o_snooze_option:contains("${hour} Hour")`,
         run: "click",
     };
 }
