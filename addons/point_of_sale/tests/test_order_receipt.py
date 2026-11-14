@@ -603,3 +603,67 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         })
         names = [line['product_data']['display_name'] for line in order._order_receipt_generate_line_data()]
         self.assertEqual(names, [f"{product.name} (40)", product.display_name])
+
+    def _create_receipt_combo_order(self):
+        product_b = self.env['product.product'].create({
+            'name': 'Combo Child B',
+            'available_in_pos': True,
+            'list_price': 6.0,
+            'taxes_id': False,
+        })
+        product_c = self.env['product.product'].create({
+            'name': 'Combo Child C',
+            'available_in_pos': True,
+            'list_price': 4.0,
+            'taxes_id': False,
+        })
+        combo = self.env['product.combo'].create({
+            'name': 'Receipt Combo',
+            'combo_item_ids': [
+                Command.create({'product_id': product_b.id}),
+                Command.create({'product_id': product_c.id}),
+            ],
+        })
+        combo_product = self.env['product.template'].create({
+            'name': 'Receipt Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.link(combo.id)],
+            'list_price': 10.0,
+            'taxes_id': False,
+        }).product_variant_id
+
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': combo_product.id, 'qty': 1, 'price_unit': 0},
+                {'product_id': product_b.id, 'qty': 1},
+                {'product_id': product_c.id, 'qty': 1},
+            ],
+        })
+        parent_line = order.lines.filtered(lambda l: l.product_id == combo_product)
+        (order.lines - parent_line).write({'combo_parent_id': parent_line.id})
+        return order, parent_line
+
+    def test_receipt_combo_parent_line_shows_combo_total(self):
+        """
+        The combo price is spread over the child lines, the parent line is at 0.
+        The receipt must show the combo total on the parent line.
+        """
+        order, parent_line = self._create_receipt_combo_order()
+
+        lines = {line['id']: line for line in order._order_receipt_generate_line_data()}
+        self.assertEqual(lines[parent_line.id]['price_subtotal_incl'], order._order_receipt_format_currency(10.0))
+
+    def test_receipt_combo_refund_parent_line_shows_combo_total(self):
+        """
+        A backend refund must link the refunded combo child lines to the refunded
+        parent line, so the refund receipt shows the combo total on the parent line.
+        """
+        order, parent_line = self._create_receipt_combo_order()
+
+        refund = order._refund()
+        refund_parent_line = refund.lines.filtered(lambda l: l.refunded_orderline_id == parent_line)
+        self.assertEqual(refund_parent_line.combo_line_ids, refund.lines - refund_parent_line)
+
+        lines = {line['id']: line for line in refund._order_receipt_generate_line_data()}
+        self.assertEqual(lines[refund_parent_line.id]['price_subtotal_incl'], refund._order_receipt_format_currency(10.0))
