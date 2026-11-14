@@ -66,7 +66,8 @@ class PaymentTransaction(models.Model):
                 # Therefore, no sensitive information is sent through it, only a
                 # notification to invite the local browser to do a safe RPC to
                 # the server to check the new state of the order.
-                pos_order.config_id._notify('ONLINE_PAYMENTS_NOTIFICATION', {'id': pos_order.id})
+                session = pos_order.config_id.current_session_id.id
+                pos_order.config_id.notify_synchronisation(session, 0)
 
     def action_view_pos_order(self):
         """ Return the action for the view of the pos order linked to the transaction.
