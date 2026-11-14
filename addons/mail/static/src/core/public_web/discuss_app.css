@@ -13,52 +13,17 @@
     --mail-DiscussApp-sidebarFade: 120ms ease;
     max-width: 30vw;
 
-    /* Collapsed, the list is hidden: only the tabs remain, and hovering them shows it. */
+    /* Collapsed, the list is hidden: only the tabs remain. */
     &.o-collapsed {
         width: var(--mail-DiscussApp-sidebarTabsWidth) !important;
-    }
 
-    /* Peeking, it spans the list without pushing the content, so that its handle resizes the list. */
-    &.o-collapsed:has(.o-mail-MessagingMenu-container.o-peek) {
-        width: var(--mail-DiscussApp-sidebarExpandedWidth) !important;
-        margin-inline-end: calc(
-            var(--mail-DiscussApp-sidebarTabsWidth) - var(--mail-DiscussApp-sidebarExpandedWidth)
-        );
-
-        /* At the edge of the list, inset by `m-1`, as it is at the edge of the docked list. */
-        .o_resizable_panel_outer_handle_end {
-            left: calc(100% - var(--o-bs-spacer-1));
+        .o_resizable_panel_handle {
+            display: none;
         }
-    }
-
-    &.o-collapsed:not(:has(.o-mail-MessagingMenu-container.o-peek)) .o_resizable_panel_handle {
-        display: none !important;
     }
 
     &.o-toggling {
         transition: width var(--mail-Discuss-transition);
-    }
-
-    .o-mail-MessagingMenu-container {
-        width: 100%;
-    }
-
-    /* Out of the flow so the list shows over the content, instead of pushing it. */
-    &:is(.o-collapsed, .o-toggling) .o-mail-MessagingMenu-container {
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        transition: width var(--mail-Discuss-transition);
-    }
-
-    &.o-toggling:not(.o-collapsed) .o-mail-MessagingMenu-container,
-    .o-mail-MessagingMenu-container.o-peek {
-        width: var(--mail-DiscussApp-sidebarExpandedWidth);
-    }
-
-    /* Shown at once at its full width, so that the pointer heading to it is never ahead of it. */
-    &.o-collapsed .o-mail-MessagingMenu-container.o-peek {
-        transition-duration: 0s;
     }
 
     /* The list keeps its expanded width while the sidebar narrows: it is clipped, not reflowed. */
@@ -69,27 +34,13 @@
         );
     }
 
-    /* Peeking, it floats inset in that width and fills the rest of it, edged stronger than the card under it. */
-    &.o-collapsed .o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu {
-        --mail-DiscussApp-peekCardOffset: calc(-1 * var(--o-bs-spacer-1));
-        flex-shrink: 1;
-        width: auto;
-        border-color: var(--gray-400) !important;
-        /* Its shadow stays on that card, `m-1` around it, and spreads over the conversation. */
-        clip-path: inset(
-            var(--mail-DiscussApp-peekCardOffset) -100vw var(--mail-DiscussApp-peekCardOffset)
-                var(--mail-DiscussApp-peekCardOffset) round var(--border-radius-xl) 0 0
-                var(--border-radius-xl)
-        );
-    }
-
     /* It fades in once the sidebar has started to widen, and out at once. */
     .o-mail-MessagingMenu {
         transition: opacity var(--mail-DiscussApp-sidebarFade) 60ms,
             visibility var(--mail-DiscussApp-sidebarFade) 60ms;
     }
 
-    &.o-collapsed .o-mail-MessagingMenu-container:not(.o-peek) .o-mail-MessagingMenu {
+    &.o-collapsed .o-mail-MessagingMenu {
         opacity: 0;
         visibility: hidden;
         transition-delay: 0s;
@@ -105,7 +56,7 @@
 }
 
 .o-mail-DiscussContent {
-    /* Its own stacking context: nothing inside goes over the list shown above it. */
+    /* Its own stacking context: what is stacked inside, like the resize handle of the panel, stays in it. */
     isolation: isolate;
     /* What is painted inside on the view color blends with the surface. */
     --o-view-background-color: var(--o-mail-discussMainBgColor);
@@ -165,6 +116,8 @@
         justify-content: flex-end;
         min-width: 0;
         overflow: clip;
+        /* Not on the part of its resize handle over the separation next to it. */
+        overflow-clip-margin: 0.125rem;
         background-color: var(--o-webclient-background-color);
         transition: width var(--mail-Discuss-transition);
 
@@ -190,12 +143,6 @@
                 var(--o-mail-DiscussContent-headerHeight) - 1rem + 2 * var(--border-width)
             );
             padding-inline-end: var(--o-mail-DiscussContent-panelActionsWidth, 0px);
-        }
-
-        /* Inside, clear of the scrollbar of the thread next to it. */
-        .o_resizable_panel_outer_handle_start {
-            right: auto;
-            left: 0;
         }
     }
 

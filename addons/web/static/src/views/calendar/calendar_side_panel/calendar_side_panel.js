@@ -1,6 +1,7 @@
 import { Component, proxy, useProps } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
@@ -10,6 +11,7 @@ export class CalendarSidePanel extends Component {
         DatePicker: DateTimePicker,
         FilterSection: CalendarFilterSection,
         ScheduleSection: CalendarScheduleSection,
+        ResizablePanel,
     };
     static template = "web.CalendarSidePanel";
     props = useProps(["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"]);
@@ -20,6 +22,11 @@ export class CalendarSidePanel extends Component {
             this.state.isDragging = detail.dragging;
         });
         this.uiService = useService("ui");
+        this.width = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+                "--o-datetime-picker-reduced-width"
+            )
+        );
     }
 
     get datePickerProps() {

@@ -17,12 +17,10 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { PEEK_TAB_DELAY } from "@mail/core/public_web/messaging_menu/messaging_menu";
-import { PEEK_CLOSE_DELAY, PEEK_DELAY } from "@mail/utils/common/hooks";
+import { PEEK_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, mockTouch, test, waitFor } from "@odoo/hoot";
 import {
     animationFrame,
-    freezeTime,
     leave,
     manuallyDispatchProgrammaticEvent,
     press,
@@ -756,296 +754,35 @@ test("Muted group chats show notification counter from mentions-only", async () 
     );
 });
 
-test("sidebar list hides and shows back", async () => {
+test("clicking the active tab collapses the sidebar, clicking a tab expands it", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed button[title='Expand sidebar']:count(1)");
-    await click("button[title='Expand sidebar']");
-    await waitFor(
-        ".o-mail-DiscussApp-sidebar:not(.o-collapsed) button[title='Collapse sidebar']:count(1)"
-    );
-});
-
-test("the sidebar toggle does not show the hidden sidebar list, unlike the tabs", async () => {
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await hover("button[title='Collapse sidebar']");
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed button[title='Expand sidebar']:count(1)");
-    await advanceTime(PEEK_DELAY);
-    await animationFrame();
-    expect(".o-mail-MessagingMenu-container:not(.o-peek)").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
-    await hover(".o-mail-DiscussContent");
-    await hover("button[title='Expand sidebar']");
-    await advanceTime(PEEK_DELAY);
-    await animationFrame();
-    expect(".o-mail-MessagingMenu-container:not(.o-peek)").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-});
-
-test("hovering the tabs shows the hidden sidebar list until the pointer leaves", async () => {
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(
-        ".o-mail-DiscussApp-sidebar.o-collapsed .o-mail-MessagingMenu-container.o-peek:count(1)"
-    );
-    await hover(".o-mail-MessagingMenu .o-mail-SearchInput input");
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(
-        ".o-mail-DiscussApp-sidebar.o-collapsed .o-mail-MessagingMenu-container:not(.o-peek):count(1)"
-    );
-});
-
-test("hovering the tab navigation around the tabs does not show the hidden sidebar list", async () => {
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-navbar");
-    await advanceTime(PEEK_DELAY);
-    await animationFrame();
-    expect(".o-mail-MessagingMenu-container:not(.o-peek)").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await hover(".o-mail-MessagingMenu-navbar");
-    await advanceTime(PEEK_DELAY);
-    await animationFrame();
-    expect(".o-mail-MessagingMenu-container:not(.o-peek)").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
-    expect(".o-mail-MessagingMenu-tab[data-id='chat']:not(.o-peeked)").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(0);
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-});
-
-test("shown sidebar list hides once the pointer is around the tabs, unless it reaches another tab", async () => {
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
-    );
-    await hover(".o-mail-MessagingMenu-navbar");
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab[data-id='chat']:not(.o-peeked):count(1)"
-    );
-    expect(".o-mail-MessagingMenu-tab.o-peeked[data-id='channel']").toHaveCount(1);
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await advanceTime(PEEK_TAB_DELAY);
-    await waitFor(".o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)");
-    await hover(".o-mail-MessagingMenu-navbar");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container:not(.o-peek) .o-mail-MessagingMenu-tab[data-id='chat']:not(.o-peeked):count(1)"
-    );
-    expect(".o-mail-MessagingMenu-container.o-peek").toHaveCount(0);
-    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(0);
-});
-
-test("shown sidebar list changes to a hovered tab once the pointer rests on it, not on each tab passed", async () => {
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
-    );
-    freezeTime();
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await hover(".o-mail-MessagingMenu-tab[data-id='meeting']");
-    await advanceTime(PEEK_TAB_DELAY - 1);
-    await animationFrame();
-    expect(".o-mail-MessagingMenu-tab.o-peeked[data-id='chat']").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(1);
-    await advanceTime(1);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='meeting']:count(1)"
-    );
-    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(1);
-});
-
-test("shown sidebar list hides with the list of the hovered tab, not the one of the active tab", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const [channelId] = pyEnv["discuss.channel"].create([
-        { name: "General", channel_type: "channel" },
-        {
-            channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "chat",
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-NotificationItem:has(:text('Demo')):count(1)"
-    );
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container:not(.o-peek):count(1)");
-    expect(".o-mail-MessagingMenu button[title='New channel']").toHaveCount(0);
-    expect(".o-mail-MessagingMenu-tab.active[data-id='channel']").toHaveCount(1);
-    expect(".o-mail-MessagingMenu-tab.o-peeked").toHaveCount(0);
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-NotificationItem:has(:text('General')):count(1)"
-    );
-    expect(".o-mail-MessagingMenu button[title='New channel']").toHaveCount(1);
-    expect(".o-mail-NotificationItem:has(:text('Demo'))").toHaveCount(0);
-});
-
-test("shown sidebar list stays while the right-click menu of an item is open", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-    await rightClick(".o-mail-MessagingMenuItem:has(:text('General'))");
-    await waitFor(".o-mail-MessagingMenuItem[data-right-clicking]:count(1)");
-    await waitFor(".o-discuss-dropdownMenu:count(1)");
-    await hover(".o-discuss-dropdownMenu");
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-    await waitFor(".o-discuss-dropdownMenu:count(1)");
-    await click(".o-mail-DiscussContent");
-    await waitForNone(".o-discuss-dropdownMenu");
-    await waitFor(".o-mail-MessagingMenu-container:not(.o-peek):count(1)");
-});
-
-test("hovering a tab shows its list, the active tab staying the one of the conversation", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
-    await start();
-    await openDiscuss(channelId);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
-    );
-    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
-    await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(
-        ".o-mail-MessagingMenu-container:not(.o-peek) .o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)"
-    );
-});
-
-test("shown sidebar list stays while searching in it, until a conversation is opened from it and the pointer leaves, then shows again without the search", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_DELAY);
-    await insertText(".o-mail-MessagingMenu .o-mail-SearchInput input", "Gen");
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-    await hover(".o-mail-NotificationItem:has(:text('General'))");
-    await click(".o-mail-NotificationItem:has(:text('General'))");
-    await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container:not(.o-peek):count(1)");
-    await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await advanceTime(PEEK_DELAY);
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-    expect(".o-mail-MessagingMenu .o-mail-SearchInput input").toHaveValue("");
-});
-
-test("leaving the expanded sidebar keeps its search", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await hover(".o-mail-MessagingMenu .o-mail-SearchInput input");
-    await insertText(".o-mail-MessagingMenu .o-mail-SearchInput input", "Gen");
-    await waitFor(".o-mail-NotificationItem:has(:text('General')):count(1)");
-    await hover(".o-mail-DiscussContent");
-    await advanceTime(PEEK_CLOSE_DELAY);
-    await animationFrame();
-    expect(".o-mail-MessagingMenu .o-mail-SearchInput input").toHaveValue("Gen");
-});
-
-test("opening a conversation from the shown sidebar list without a mouse on it hides the list", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
-    await start();
-    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button[title='Collapse sidebar']");
+    await click(".o-mail-MessagingMenu-tab.active[data-id='channel']");
     await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
-    await click(".o-mail-NotificationItem:has(:text('General'))");
-    await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
-    await waitFor(".o-mail-MessagingMenu-container:not(.o-peek):count(1)");
+    await waitFor(".o-mail-DiscussApp-sidebar:not(.o-collapsed):count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
 });
 
-test("clicking a tab shows the hidden sidebar list of the tab, the conversation staying open", async () => {
+test("expanding the collapsed sidebar from another tab keeps the conversation open", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Collapse sidebar']");
+    await click(".o-mail-MessagingMenu-tab.active[data-id='channel']");
     await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
     await click(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await waitFor(
-        ".o-mail-DiscussApp-sidebar.o-collapsed .o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
-    );
-    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
-    await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
-    await click(".o-mail-DiscussContent");
-    await waitFor(
-        ".o-mail-MessagingMenu-container:not(.o-peek) .o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)"
-    );
+    await waitFor(".o-mail-DiscussApp-sidebar:not(.o-collapsed):count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='chat']:count(1)");
     await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
 });
 
-test("hidden sidebar list has no tab looking selected without a conversation", async () => {
+test("clicking another tab of the expanded sidebar selects it", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
-    await click("button[title='Collapse sidebar']");
-    await waitFor(".o-mail-DiscussApp-sidebar.o-collapsed:count(1)");
-    await waitForNone(".o-mail-MessagingMenu-tab.active");
-    await click("button[title='Expand sidebar']");
-    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='channel']:count(1)");
+    await click(".o-mail-MessagingMenu-tab[data-id='chat']");
+    await waitFor(".o-mail-MessagingMenu-tab.active[data-id='chat']:count(1)");
+    expect(".o-mail-DiscussApp-sidebar:not(.o-collapsed)").toHaveCount(1);
 });
 
 test("hovering a conversation of the sidebar shows a preview of its last message", async () => {

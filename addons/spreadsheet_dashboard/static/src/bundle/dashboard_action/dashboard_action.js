@@ -13,6 +13,7 @@ import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component
 import { DashboardShareButton } from "@spreadsheet_dashboard/bundle/dashboard_share_button/dashboard_share_button";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
 import { render } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -37,6 +38,7 @@ export class SpreadsheetDashboardAction extends Component {
         MobileFigureContainer,
         DashboardShareButton,
         DashboardSearchBar,
+        ResizablePanel,
     };
     static displayName = _t("Dashboards");
 
