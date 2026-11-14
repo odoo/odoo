@@ -24,6 +24,7 @@ import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
     CROSS_TAB_INIT_TIMEOUT,
+    Rtc,
 } from "@mail/discuss/call/common/rtc_service";
 
 import {
@@ -31,6 +32,7 @@ import {
     after,
     animationFrame,
     beforeEach,
+    Deferred,
     describe,
     expect,
     freezeTime,
@@ -1487,6 +1489,94 @@ test("losing the microphone keeps sharing the screen audio", async () => {
     await contains("video");
     rtc.state.micAudioTrack.dispatchEvent(new Event("ended"));
     await waitUntil(() => rtc.state.audioTrack === screenAudioTracks[0]);
+});
+
+/** Makes camera and microphone requests pending until their deferred is resolved. */
+function mockPendingGetUserMedia() {
+    const requests = { audio: [], video: [] };
+    patchWithCleanup(browser.navigator.mediaDevices, {
+        getUserMedia(constraints) {
+            const deferred = new Deferred();
+            requests[constraints.audio ? "audio" : "video"].push(deferred);
+            return deferred;
+        },
+    });
+    return requests;
+}
+
+test("turning the camera on twice while it starts keeps only the latest camera stream", async () => {
+    const requests = mockPendingGetUserMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains("[title='Unmute']");
+    await click("[title='Turn camera on']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    const firstStream = createVideoStream();
+    const latestStream = createVideoStream();
+    requests.video[0].resolve(firstStream);
+    requests.video[1].resolve(latestStream);
+    await contains("[title='Stop camera']");
+    expect(firstStream.getVideoTracks()[0].readyState).toBe("ended");
+    expect(latestStream.getVideoTracks()[0].readyState).toBe("live");
+});
+
+test("turning the camera on twice while its background blur starts keeps the blur enabled", async () => {
+    const requests = mockPendingGetUserMedia();
+    const blurredStreams = [];
+    patchWithCleanup(Rtc.prototype, {
+        async applyBlurEffect() {
+            const stream = new Deferred();
+            blurredStreams.push(stream);
+            return { close: () => stream.reject(new Error("blur closed")), stream };
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.setUseBlur(true);
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains("[title='Unmute']");
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 1);
+    const firstStream = createVideoStream();
+    requests.video[0].resolve(firstStream);
+    await waitUntil(() => blurredStreams.length === 1);
+    await click("[title='Turn camera on']");
+    await waitUntil(() => requests.video.length === 2);
+    const latestStream = createVideoStream();
+    requests.video[1].resolve(latestStream);
+    await waitUntil(() => blurredStreams.length === 2);
+    blurredStreams[1].resolve(latestStream);
+    await contains("[title='Stop camera']");
+    expect(store.settings.useBlur).toBe(true);
+    expect(firstStream.getVideoTracks()[0].readyState).toBe("ended");
+    expect(latestStream.getVideoTracks()[0].readyState).toBe("live");
+});
+
+test("unmuting while the microphone starts keeps only the latest microphone stream", async () => {
+    const requests = mockPendingGetUserMedia();
+    const audioContext = new AudioContext();
+    after(() => audioContext.close());
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Unmute']");
+    await waitUntil(() => requests.audio.length === 2);
+    const firstStream = audioContext.createMediaStreamDestination().stream;
+    const latestStream = audioContext.createMediaStreamDestination().stream;
+    requests.audio[0].resolve(firstStream);
+    requests.audio[1].resolve(latestStream);
+    await contains("[title='Mute']");
+    expect(firstStream.getAudioTracks()[0].readyState).toBe("ended");
+    expect(latestStream.getAudioTracks()[0].readyState).toBe("live");
 });
 
 test("Show connecting state on cards", async () => {
