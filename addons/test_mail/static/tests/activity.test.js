@@ -540,7 +540,7 @@ test("activity view: activity widget", async () => {
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "feedback2"
     );
-    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Schedule Next']");
     await expect.waitForSteps(["action_feedback_schedule_next", "serverGeneratedAction"]);
 });
 

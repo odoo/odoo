@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("mail_activity_date_format", {
             run: "edit Go Party",
         },
         {
-            trigger: "button:contains('Save')",
+            trigger: "button[name='action_schedule_activities']",
             run: "click",
         },
         {

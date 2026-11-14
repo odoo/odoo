@@ -174,12 +174,9 @@ test("activity mark done popover buttons do not overlap (mobile)", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity-markDone.btn:text('Done'):count(1)").click();
-    await waitFor(".o-mail-ActivityMarkAsDone button:count(3)");
-    await waitFor(
-        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']:count(1)"
-    );
+    await waitFor(".o-mail-ActivityMarkAsDone button:count(2)");
+    await waitFor(".o-mail-ActivityMarkAsDone button[aria-label='Schedule Next']:count(1)");
     await waitFor(".o-mail-ActivityMarkAsDone button[aria-label='Done']:count(1)");
-    await waitFor(".o-mail-ActivityMarkAsDone button:text('Discard'):count(1)");
     const rects = queryAllRects(".o-mail-ActivityMarkAsDone button");
     for (let i = 1; i < rects.length; i++) {
         if (Math.round(rects[i].top) === Math.round(rects[i - 1].top)) {

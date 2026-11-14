@@ -152,6 +152,8 @@ access_mail_activity_plan_user,mail.activity.plan.user,mail.activity.plan,base.g
 mail_activity_plan_rule_admin,Administrators can access all activity plans.,mail.activity.plan,base.group_system,crud,
 access_mail_activity_plan_template_user,mail.activity.plan.template.user,mail.activity.plan.template,base.group_user,r,
 mail_activity_plan_template_rule_admin,Administrators can access all activity plan templates.,mail.activity.plan.template,base.group_system,crud,
+mail_activity_plan_rule_user_ids,Users can manage the activity plans of which they are the only user.,mail.activity.plan,base.group_user,cud,"[('user_ids', 'in', user.id), ('user_ids', 'not any', [('id', '!=', user.id)])]"
+mail_activity_plan_template_rule_user_ids,Users can manage the plan templates of the activity plans they can edit.,mail.activity.plan.template,base.group_user,cud,"[('plan_id', 'access', 'write')]"
 access_mail_activity_schedule_user,mail.activity.schedule.user,mail.activity.schedule,base.group_user,cru,
 access_mail_activity_schedule_line_user,mail.activity.schedule.line.user,mail.activity.schedule.line,base.group_user,cru,
 access_mail_activity_type_user,mail.activity.type.user,mail.activity.type,base.group_user,r,

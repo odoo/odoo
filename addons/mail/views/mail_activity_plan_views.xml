@@ -20,8 +20,9 @@
             <field name="arch" type="xml">
                 <list string="Planning" sample="1">
                     <field name="name"/>
+                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                     <field name="res_model_id" optional="hide"/>
-                    <field name="steps_count"/>
+                    <field name="steps_count" string="Activities"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 </list>
             </field>
@@ -59,9 +60,10 @@
                         <group name="group_plan_fields">
                             <group>
                                 <field name="res_model"/>
-                            </group>
-                            <group name="company_id">
                                 <field name="company_id" placeholder="Visible to all"/>
+                            </group>
+                            <group>
+                                <field name="user_ids" widget="many2many_avatar_user" placeholder="Everyone"/>
                             </group>
                         </group>
                         <notebook>
