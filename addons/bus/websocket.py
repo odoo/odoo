@@ -140,6 +140,8 @@ class ControlCommand(IntEnum):
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
 CTRL_OP = {Opcode.CLOSE, Opcode.PING, Opcode.PONG}
 HEARTBEAT_OP = {Opcode.PING, Opcode.PONG}
+# Application-level ping/pong payload (browsers don't expose websocket ping/pong).
+PING_PONG_MESSAGE = b'\x00'
 
 VALID_CLOSE_CODES = {
     code for code in CloseCode if code is not CloseCode.ABNORMAL_CLOSURE
@@ -966,8 +968,8 @@ class WebsocketConnectionHandler:
             # worker version.
             websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
-            if message == b'\x00':
-                # Ignore internal sentinel message used to detect dead/idle connections.
+            if message == PING_PONG_MESSAGE:
+                websocket._enqueue_control_command(ControlCommand.SEND, PING_PONG_MESSAGE)
                 continue
             req = WebsocketRequest(db, httprequest, websocket)
             req_reset = wsrequest_var.set(req)
