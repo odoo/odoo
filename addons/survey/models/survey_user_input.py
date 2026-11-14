@@ -237,6 +237,10 @@ class SurveyUserInput(models.Model):
         - The user succeeded the test
         3. Notify survey subtype subscribers of the newly completed input
         Will also run challenge Cron to give the certification badge if any."""
+        # Update predefined_question_id to remove inactive questions, before checking the scoring
+        for user_input in self:
+            user_input.predefined_question_ids -= user_input._get_inactive_conditional_questions()
+
         self.write({
             'end_datetime': fields.Datetime.now(),
             'state': 'done',
@@ -251,9 +255,6 @@ class SurveyUserInput(models.Model):
                     user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, email_layout_xmlid="mail.mail_notification_light")
                 if user_input.survey_id.certification_give_badge:
                     badge_ids.append(user_input.survey_id.certification_badge_id.id)
-
-            # Update predefined_question_id to remove inactive questions
-            user_input.predefined_question_ids -= user_input._get_inactive_conditional_questions()
 
         if badge_ids:
             challenges = Challenge_sudo.search([('reward_id', 'in', badge_ids)])
