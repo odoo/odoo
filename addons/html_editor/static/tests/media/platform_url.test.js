@@ -1,9 +1,10 @@
 import { describe, expect, mockFetch, test } from "@odoo/hoot";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { VIDEO_URLS } from "../_helpers/video";
 
 for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
     describe(platform, () => {
-        for (const [type, url] of Object.entries(platformClass.exampleUrls)) {
+        for (const [type, url] of Object.entries(VIDEO_URLS[platform])) {
             test(`"${type}" URL should be accepted`, async () => {
                 mockFetch(() => '{"data": "mockFetch api result data"}');
                 const urlMatch = platformClass.isValidVideoUrl(url);

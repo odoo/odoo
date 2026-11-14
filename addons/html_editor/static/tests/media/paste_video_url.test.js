@@ -8,6 +8,7 @@ import { expectElementCount } from "../_helpers/ui_expectations";
 import { getContent } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { VIDEO_URLS } from "../_helpers/video";
 
 import {
     EMBEDDED_COMPONENT_PLUGINS,
@@ -22,9 +23,9 @@ const EMBEDDED_COMPONENTS_CONFIG = {
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
 
-for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
+for (const platform of Object.keys(PLATFORMS)) {
     describe(`paste ${platform} url`, () => {
-        const videoUrl = platformClass.exampleUrls.base;
+        const videoUrl = VIDEO_URLS[platform].base;
         test(`should transform a ${platform} URL`, async () => {
             const { editor } = await setupEditor("<p>ab[]cd</p>", {
                 config: NO_EMBEDDED_COMPONENTS_CONFIG,

@@ -7,6 +7,7 @@ import { setupEditor } from "../_helpers/editor";
 import { insertText } from "../_helpers/user_actions";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { VIDEO_URLS } from "../_helpers/video";
 import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 
 import {
@@ -29,8 +30,8 @@ const getEmbededComponentHtml = (videoId) =>
 
 describe("media dialog video", () => {
     describe("without embeded Components", () => {
-        for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
-            const videoUrl = platformClass.exampleUrls.base;
+        for (const platform of Object.keys(PLATFORMS)) {
+            const videoUrl = VIDEO_URLS[platform].base;
             test(`should accept a ${platform} URL`, async () => {
                 const { editor } = await setupEditor("<p>ab[]cd</p>", {
                     config: NO_EMBEDDED_COMPONENTS_CONFIG,
@@ -177,8 +178,8 @@ describe("media dialog video", () => {
     });
 
     describe("with embeded Components", () => {
-        for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
-            const videoUrl = platformClass.exampleUrls.base;
+        for (const platform of Object.keys(PLATFORMS)) {
+            const videoUrl = VIDEO_URLS[platform].base;
             test(`should accept a ${platform} URL`, async () => {
                 const { editor } = await setupEditor("<p>ab[]cd</p>", {
                     config: EMBEDDED_COMPONENTS_CONFIG,
