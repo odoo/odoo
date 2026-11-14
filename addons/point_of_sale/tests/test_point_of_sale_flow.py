@@ -2983,6 +2983,50 @@ class TestPointOfSaleFlow(CommonPosTest):
         data = session.load_data([])
         self.assertTrue(set(ptavs.ids) <= {v['id'] for v in data['product.template.attribute.value']})
 
+    def test_incremental_load_product_moved_out_of_pos(self):
+        """A product cached by the client and then moved out of the PoS domain
+        must come back on incremental load, so the client stops displaying it."""
+        shown_categ, hidden_categ = self.env['pos.category'].create([{'name': 'Shown'}, {'name': 'Hidden'}])
+        self.pos_config_usd.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.set(shown_categ.ids)],
+        })
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        now = fields.Datetime.now()
+
+        removed, moved, kept, never_cached = self.env['product.template'].create([
+            {'name': name, 'available_in_pos': True, 'pos_categ_ids': [Command.set(shown_categ.ids)]}
+            for name in ('Removed from PoS', 'Moved to hidden category', 'Still in PoS', 'Never cached')
+        ])
+        products = removed | moved | kept | never_cached
+        # All products were loaded by the client before the last sync.
+        products.flush_model()
+        self.env.cr.execute(
+            "UPDATE product_template SET write_date = %s WHERE id IN %s",
+            (now - timedelta(days=30), tuple(products.ids)),
+        )
+        products.invalidate_recordset(['write_date'])
+        last_server_date = fields.Datetime.to_string(now - timedelta(days=10))
+
+        removed.available_in_pos = False
+        moved.pos_categ_ids = hidden_categ
+        never_cached.available_in_pos = False
+
+        local_ids = [removed.id, moved.id, kept.id]
+        data = session.with_context(
+            pos_last_server_date=last_server_date,
+            pos_local_product_tmpl_ids=local_ids,
+        ).load_data([])
+        loaded = {t['id']: t for t in data['product.template']}
+
+        self.assertIn(removed.id, loaded, "the client must receive the product it can no longer display")
+        self.assertFalse(loaded[removed.id]['available_in_pos'])
+        self.assertIn(moved.id, loaded, "the client must receive the product it can no longer display")
+        self.assertEqual(loaded[moved.id]['pos_categ_ids'], hidden_categ.ids)
+        self.assertNotIn(kept.id, loaded, "unchanged products are not part of the incremental load")
+        self.assertNotIn(never_cached.id, loaded, "products unknown to the client are not sent")
+
     def test_sequence_dynamic_prefix_suffix(self):
         """Test that sequence_number is correctly extracted when sequence has dynamic prefix/suffix."""
         self.pos_config_usd.open_ui()

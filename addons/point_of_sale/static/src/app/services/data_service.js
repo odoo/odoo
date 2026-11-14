@@ -369,6 +369,9 @@ export class PosData {
                         context: {
                             pos_last_server_date: serverDateTime > lastConfigChange && serverDate,
                             pos_limited_loading: limitedLoading,
+                            pos_local_product_tmpl_ids: (localData["product.template"] || []).map(
+                                (r) => r.id
+                            ),
                         },
                     }
                 );
