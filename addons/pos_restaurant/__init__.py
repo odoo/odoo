@@ -5,12 +5,12 @@ from . import receipt
 from . import models
 
 
-def _auto_install_pos_urban_piper_with_demo(env):
-    """If pos_restaurant is installed with demo data, also install pos_urban_piper."""
-    module_pos_urban_piper = env['ir.module.module']._get('pos_urban_piper')
+def _auto_install_pos_food_delivery_urbanpiper_with_demo(env):
+    """If pos_restaurant is installed with demo data, also install pos_food_delivery_urbanpiper."""
+    module_pos_food_delivery_urbanpiper = env['ir.module.module']._get('pos_food_delivery_urbanpiper')
     module_pos_restaurant = env['ir.module.module']._get('pos_restaurant')
-    if module_pos_restaurant.demo and module_pos_urban_piper and module_pos_urban_piper.state == 'uninstalled':
-        module_pos_urban_piper.button_install()
+    if module_pos_restaurant.demo and module_pos_food_delivery_urbanpiper and module_pos_food_delivery_urbanpiper.state == 'uninstalled':
+        module_pos_food_delivery_urbanpiper.button_install()
 
 
 def uninstall_hook(env):
