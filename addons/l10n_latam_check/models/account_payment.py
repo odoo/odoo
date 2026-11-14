@@ -36,6 +36,8 @@ class AccountPayment(models.Model):
             checks = rec.l10n_latam_new_check_ids if rec._is_latam_check_payment(check_subtype='new_check') else rec.l10n_latam_move_check_ids
             if checks:
                 rec.amount = sum(checks.mapped('amount'))
+            elif rec._is_latam_check_payment():
+                rec.amount = 0.0
 
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
