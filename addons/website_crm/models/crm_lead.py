@@ -59,6 +59,6 @@ class CrmLead(models.Model):
         if values.get('team_id'):
             values['type'] = 'lead' if self.env['crm.team'].sudo().browse(values['team_id']).use_leads else 'opportunity'
         else:
-            values['type'] = 'lead' if self.env.user.has_group('crm.group_use_lead') else 'opportunity'
+            values['type'] = 'lead' if self.env['res.groups']._is_feature_enabled('crm.group_use_lead') else 'opportunity'
 
         return values
