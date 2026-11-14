@@ -14,9 +14,9 @@ class WebsiteControllerPage(models.Model):
     _check_inherits_access = False
     _description = 'Model Page'
     _order = 'website_id, id DESC'
-    _unique_name_slugified = models.Constraint(
-        'UNIQUE(name_slugified)',
-        'url should be unique',
+    _name_slugified_website_unique = models.UniqueIndex(
+        '(name_slugified, COALESCE(website_id, 0))',
+        'The URL of a model page must be unique per website.',
     )
 
     view_id = fields.Many2one('ir.ui.view', string='Listing view', required=True, index=True, ondelete="cascade")
