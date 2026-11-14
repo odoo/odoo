@@ -66,6 +66,17 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             # Check the access token against the invoice values. Done after fetching the invoice
             # as we need the invoice fields to check the access token.
+            if payment_utils.check_access_token(
+                access_token,
+                invoice_sudo.partner_id.id,
+                amount,
+                invoice_sudo.currency_id.id,
+                invoice_sudo._name,
+                invoice_sudo.id,
+            ):
+                access_token = payment_utils.generate_access_token(
+                    invoice_sudo.partner_id.id, amount, invoice_sudo.currency_id.id
+                )
             if not payment_utils.check_access_token(
                 access_token, invoice_sudo.partner_id.id, amount, invoice_sudo.currency_id.id
             ):
