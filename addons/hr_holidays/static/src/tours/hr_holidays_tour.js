@@ -93,7 +93,8 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         {
             isActive: ["auto"],
             trigger: `tr.o_data_row:first:not(:has(button[name="action_approve"])),table tbody:not(tr.o_data_row)`,
-            content: "Verify leave has been automatically approved as it has been created by an admin",
+            content:
+                "Verify leave has been automatically approved as it has been created by an admin",
         },
     ],
 });
