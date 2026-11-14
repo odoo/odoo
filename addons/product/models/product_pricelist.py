@@ -221,6 +221,9 @@ class ProductPricelist(models.Model):
     ) -> dict[int, tuple[float, list[int]]]:
         """Pick the first applicable rule per product and optionally compute its price.
 
+        Each product is only checked against the candidates that may apply to it, see
+        ``product.pricelist.item._get_applicability_key``.
+
         :param product.pricelist.item rule_candidates: Candidate rules, already pre-filtered and
             ordered by precedence.
         :param product.product|product.template products: Products/templates to price.
@@ -237,13 +240,38 @@ class ProductPricelist(models.Model):
         """
         results = {}
         products_by_rule = defaultdict(list)
+
+        # A rule restricted to a variant, a product or a category may only apply to some products:
+        # index the candidates by the key of these products, so that each product is only checked
+        # against the rules that may apply to it, in their order of precedence.
+        PricelistItem = self.env['product.pricelist.item']
+        candidates = list(rule_candidates)
+        unrestricted_indexes = []
+        restricted_indexes_by_key = defaultdict(list)
+        for index, rule in enumerate(candidates):
+            if key := rule._get_applicability_key():
+                restricted_indexes_by_key[key].append(index)
+            else:
+                unrestricted_indexes.append(index)
+        key_models = {model for model, _record_id in restricted_indexes_by_key}
+
         for product in products:
-            suitable_rule = self.env['product.pricelist.item']
+            suitable_rule = PricelistItem.browse()
 
             # If no uom is specified, fallback on the product uom
             quantity_uom = uom or product._get_main_uom()
 
-            for rule in rule_candidates:
+            candidate_indexes = unrestricted_indexes
+            if key_models:
+                restricted_indexes = [
+                    index
+                    for key in PricelistItem._get_applicability_keys(product, key_models)
+                    for index in restricted_indexes_by_key.get(key, ())
+                ]
+                if restricted_indexes:
+                    candidate_indexes = sorted(restricted_indexes + unrestricted_indexes)
+            for index in candidate_indexes:
+                rule = candidates[index]
                 if rule._is_applicable_for(product, quantity, uom=quantity_uom, **kwargs):
                     suitable_rule = rule
                     break

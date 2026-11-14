@@ -499,9 +499,7 @@ class ProductPricelistItem(models.Model):
         """
         self.ensure_one()
         product.ensure_one()
-        res = True
 
-        is_product_template = product._name == 'product.template'
         product_uom = product.uom_id
         uom = uom or product_uom
 
@@ -516,32 +514,66 @@ class ProductPricelistItem(models.Model):
             qty_to_consider = uom._compute_quantity(quantity, product_uom)
 
         if self.min_quantity and qty_to_consider < self.min_quantity:
-            res = False
-        elif self.applied_on == "2_product_category":
-            if not product.categ_id or (
-                product.categ_id != self.categ_id
-                and not product.categ_id.parent_path.startswith(self.categ_id.parent_path)
-            ):
-                res = False
-        # Applied on a specific product template/variant
-        elif is_product_template:
-            if self.applied_on == "1_product" and product.id != self.product_tmpl_id.id:
-                res = False
-            elif self.applied_on == "0_product_variant" and not (
-                product.product_variant_count == 1
-                and product.product_variant_id.id == self.product_id.id
-            ):
-                # product self acceptable on template if has only one variant
-                res = False
-        elif (
-            self.applied_on == "1_product"
-            and product.product_tmpl_id.id != self.product_tmpl_id.id
-        ) or (
-            self.applied_on == "0_product_variant" and product.id != self.product_id.id
-        ):
-            res = False
+            return False
 
-        return res
+        # Applied on a specific product variant/template/category
+        key = self._get_applicability_key()
+        return not key or key in self._get_applicability_keys(product, (key[0],))
+
+    def _get_applicability_key(self):
+        """Return the key of the products the rule may apply to, if it is restricted to some.
+
+        A rule restricted to a variant, a product or a category only applies to the products
+        whose `_get_applicability_keys` contain its key. Override both methods to apply a rule
+        to other products.
+
+        Note: self.ensure_one()
+
+        :returns: a `(model name, record id)` pair, or `False` if the rule may apply to any
+            product
+        :rtype: tuple[str, int] | bool
+        """
+        self.ensure_one()
+        if self.applied_on == "0_product_variant":
+            return "product.product", self.product_id.id
+        if self.applied_on == "1_product":
+            return "product.template", self.product_tmpl_id.id
+        if self.applied_on == "2_product_category":
+            return "product.category", self.categ_id.id
+        return False
+
+    @api.model
+    def _get_applicability_keys(self, product, key_models):
+        """Return the keys of the restricted rules that may apply to the given product.
+
+        See `_get_applicability_key`.
+
+        :param product: product record (product.product/product.template)
+        :param Collection[str] key_models: the models of the keys of the candidate rules, to only
+            read the fields needed for them
+        :returns: the `(model name, record id)` keys
+        :rtype: list[tuple[str, int]]
+        """
+        keys = []
+        is_product_template = product._name == "product.template"
+        if "product.product" in key_models:
+            if not is_product_template:
+                variant = product
+            elif product.product_variant_count == 1:
+                # A variant rule applies to the template of a single variant
+                variant = product.product_variant_id
+            else:
+                variant = self.env["product.product"]
+            if variant:
+                keys.append(("product.product", variant.id))
+        if "product.template" in key_models:
+            template = product if is_product_template else product.product_tmpl_id
+            keys.append(("product.template", template.id))
+        if "product.category" in key_models and product.categ_id:
+            # A category rule applies to the products of the category and of its children
+            category_path_ids = map(int, product.categ_id.parent_path.split("/")[:-1])
+            keys.extend(("product.category", categ_id) for categ_id in category_path_ids)
+        return keys
 
     def _compute_prices(self, products, quantity, uom, *, currency=None, depth=0, **kwargs):
         base_prices_and_rules = {}
