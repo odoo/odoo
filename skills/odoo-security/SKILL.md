@@ -43,6 +43,7 @@ The audit is complete when every pattern has been swept and every hit judged.
 | `==` comparing a secret/token | [Timing attacks](#timing-attacks) |
 | `def f(..., x=[])` / `x={}` | [Mutable default arguments](#mutable-default-arguments) |
 | methods returning rich objects | [Don't return complex objects](#dont-return-complex-objects-from-model-methods) |
+| a check on `vals` in `def create(` before `super().create(` | [Access control](#access-control) |
 
 ## Access control
 
@@ -61,6 +62,15 @@ the attacker's reading:
   only, never read). Cover **all** CRUD operations that need restricting.
 - Multi-company models need a company restriction row; sensitive models need
   domain restrictions, not just group permissions.
+- A check in a `create` override that reads `vals` before `super().create()`
+  misses what the ORM adds after it, in `_prepare_create_values`: the
+  `default_<field>` keys of the context, the `ir.default` records (an internal
+  user can add their own), what an override of `default_get` adds, and the
+  precomputed fields. The caller passes the field as `default_book_id` in the
+  context and skips the check. Check the records `super().create()` returns: a
+  raise there rolls back the transaction. The check then also sees the
+  `default=` of the field: judge the value, not whether the field is set.
+  `write` has no such gap: it adds no default.
 
 ## Field-level access
 
