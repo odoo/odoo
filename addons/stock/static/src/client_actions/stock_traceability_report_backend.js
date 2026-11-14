@@ -54,20 +54,28 @@ export class TraceabilityReport extends Component {
 
         const { active_id, active_model, auto_unfold, context, lot_name, ttype, url, lang } =
             this.props.action.context;
-        this.controllerUrl = url;
+        this.controllerUrl =
+            url || "/stock/output_format/stock?active_id=:active_id&active_model=:active_model";
 
         this.context = context || {};
         Object.assign(this.context, {
             active_id: active_id || this.props.action.params.active_id,
             auto_unfold: auto_unfold || false,
-            model: active_model || this.props.action.context.params?.active_model || false,
-            lot_name: lot_name || false,
+            model:
+                active_model ||
+                this.props.action.context.params?.active_model ||
+                this.props.action.params.active_model ||
+                false,
+            lot_name: lot_name || this.props.action.params.lot_name || false,
             ttype: ttype || false,
             lang: lang || false,
         });
 
         if (this.context.model) {
-            this.props.updateActionState({ active_model: this.context.model });
+            this.props.updateActionState({
+                active_model: this.context.model,
+                lot_name: this.context.lot_name,
+            });
         }
 
         this.display = {
