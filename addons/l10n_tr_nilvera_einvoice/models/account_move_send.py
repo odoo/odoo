@@ -26,11 +26,13 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         alerts = super()._get_alerts(moves, moves_data)
         moves_to_check = moves.filtered(self._is_tr_nilvera_applicable)
-        if tr_companies_missing_required_codes := moves_to_check.company_id.filtered(
-            lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())
-        ):
+        if tr_companies_missing_required_codes := moves_to_check.company_id._l10n_tr_nilvera_filter_missing_registry_codes():
+            if all(p.l10n_tr_nilvera_customer_status == 'earchive' for p in tr_companies_missing_required_codes.partner_id):
+                message = self.env._("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned, or the 'REGISTRY EXEMPT' tag if your E-Archive company does not need them.")
+            else:
+                message = self.env._("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned.")
             alerts["tr_companies_missing_required_codes"] = {
-                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "message": message,
                 "action_text": _("View Company(s)"),
                 "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
                 "level": "danger",
