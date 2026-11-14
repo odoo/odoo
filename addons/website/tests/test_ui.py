@@ -980,6 +980,50 @@ class TestUi(HttpCaseWithWebsiteUser):
         """
         self.start_tour(website.get_client_action_url("/fr"), "seo_multilang_alt_check", login="admin")
 
+    def _setup_seo_broken_links_homepage(self):
+        self.add_fr_language_to_website()
+        website = self.env.ref('base.default_website')
+        homepage = website.with_context(website_id=website.id).viewref('website.homepage')
+        homepage.arch = """
+            <t t-name="website.homepage">
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure">
+                        <section class="s_text_block">
+                            <p>a paragraph with a <a href="/broken-text">text link</a></p>
+                            <p><a href="/broken-image"><img src="/web/image/website.s_banner_default_image" alt="image alt"/></a></p>
+                            <p>a <a href="/contactus">valid link</a></p>
+                        </section>
+                    </div>
+                </t>
+            </t>
+        """
+        homepage.update_field_translations('arch_db', {'fr_FR': {
+            'a paragraph with a': 'un paragraphe avec un',
+            'text link': 'lien texte',
+            'image alt': 'alt image',
+            'a': 'un',
+            'valid link': 'lien valide',
+        }})
+        return website, homepage
+
+    def test_seo_broken_links_multilang(self):
+        website, homepage = self._setup_seo_broken_links_homepage()
+        self.start_tour(website.get_client_action_url("/fr"), "seo_broken_links_multilang", login="admin")
+        translations = homepage._get_stored_translations('arch_db')
+        self.assertEqual(sorted(translations), ['en_US', 'fr_FR'])
+        for value in translations.values():
+            self.assertNotIn('/broken-', value)
+        self.assertIn('<a href="/contactus">text link</a>', translations['en_US'])
+        self.assertIn('<a href="/contactus">lien texte</a>', translations['fr_FR'])
+        self.assertIn('alt="image alt"', translations['en_US'])
+        self.assertIn('alt="alt image"', translations['fr_FR'])
+
+    def test_seo_broken_links_stale(self):
+        website, homepage = self._setup_seo_broken_links_homepage()
+        self.start_tour(website.get_client_action_url("/fr"), "seo_broken_links_stale", login="admin")
+        for value in homepage._get_stored_translations('arch_db').values():
+            self.assertIn('href="/contactus?other_tab=1"', value)
+
     def test_header_bg_blur_option(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'header_bg_blur_option', login='admin')
 

@@ -804,17 +804,18 @@ export class SeoChecks extends Component {
             totalLinks: 0,
         });
         this.imgUpdated = this.imgUpdated.bind(this);
+        // Reset before any await: the changes of a discarded dialog must not
+        // be saved by this one, even if it is saved before being fully loaded.
+        this.seoContext.updatedAlts = [];
+        this.seoContext.brokenLinks = [];
         onWillStart(async () => {
             this.state.altAttributes = await this.getAltAttributes();
-            this.seoContext.updatedAlts = [];
             if (!this.props.isDefaultLang) {
                 this.hasDelayedTranslation = await fetchDelayedTranslations(path);
             }
         });
         onMounted(() => {
-            if (this.props.isDefaultLang) {
-                this.getBrokenLinks();
-            }
+            this.getBrokenLinks();
         });
     }
 
@@ -912,6 +913,7 @@ export class SeoChecks extends Component {
                 }
                 return {
                     link: path.pathname + path.search,
+                    rawHref: el.getAttribute("href").split("#")[0],
                     res_model: recordEl.dataset.resModel || recordEl.dataset.oeModel,
                     res_id: parseInt(recordEl.dataset.resId || recordEl.dataset.oeId, 10),
                     field: recordEl.dataset.oeField || null,
@@ -950,8 +952,8 @@ export class SeoChecks extends Component {
         // Keep links order in the DOM.
         brokenLinks.sort((a, b) => a.position - b.position);
         this.seoContext.brokenLinks = brokenLinks.map((link) => ({
-            oldLink: link.link,
-            newLink: link.link,
+            oldLink: link.rawHref,
+            newLink: link.rawHref,
             broken: true,
             remove: false,
             res_model: link.res_model,
@@ -982,6 +984,7 @@ export class OptimizeSEODialog extends Component {
         this.website = useService("website");
         this.dialogs = useService("dialog");
         this.orm = useService("orm");
+        this.notification = useService("notification");
 
         this.title = _t("Search Engine Optimization");
         this.saveButton = _t("Save");
@@ -1154,18 +1157,28 @@ export class OptimizeSEODialog extends Component {
             },
         });
 
-        const rpcCalls = [];
-        if (
-            seoContext.brokenLinks.some(
-                (link) => link.oldLink !== link.newLink || link.remove === true
-            )
-        ) {
-            rpcCalls.push(
-                rpc("/website/update_broken_links", {
-                    links: seoContext.brokenLinks,
-                })
-            );
+        const modifiedLinks = seoContext.brokenLinks.filter(
+            (link) => link.oldLink !== link.newLink || link.remove === true
+        );
+        if (modifiedLinks.length) {
+            // Not in parallel with the alt translations below: both write the
+            // same field of the same record, which would conflict.
+            const notUpdated = await rpc("/website/update_broken_links", {
+                links: modifiedLinks,
+                lang: currentLang,
+            });
+            if (notUpdated.length) {
+                // e.g. already fixed from another tab
+                this.notification.add(
+                    _t(
+                        "These links were not found on the page anymore, it may have been modified in the meantime: %s",
+                        notUpdated.map((index) => modifiedLinks[index].oldLink).join(", ")
+                    ),
+                    { type: "warning", sticky: true }
+                );
+            }
         }
+        const rpcCalls = [];
         if (!this.isDefaultLang) {
             const translationsByRecord = {};
             for (const img of seoContext.updatedAlts || []) {
