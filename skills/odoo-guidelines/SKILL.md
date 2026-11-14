@@ -25,6 +25,7 @@ touching instead of loading whole files.
 | [Imports](guidelines/python.md#imports) | writing Python anywhere in an addon |
 | [Naming and model layout](guidelines/python.md#naming-and-model-layout) | naming a model, field, method or variable; laying out a model class |
 | [Translate only static literals](guidelines/python.md#translate-only-static-literals) | user-facing strings in Python |
+| [Compare floats with the precision they are shown with](guidelines/python.md#compare-floats-with-the-precision-they-are-shown-with) | comparing, rounding or zero-testing amounts, prices or quantities |
 | [Recordsets, domains and context](guidelines/orm.md#recordsets-domains-and-context) | reading records, building domains, passing context |
 | [Computes, onchange and constraints](guidelines/orm.md#computes-onchange-and-constraints) | computes, onchange, constraints, indexes, `create` overrides |
 | [End `_order` on a unique field](guidelines/orm.md#end-_order-on-a-unique-field) | setting a model's `_order`, or fixing records that come back in a random order |
