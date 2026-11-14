@@ -1,16 +1,16 @@
-import { useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
-import { Component, onMounted, useListener } from "@odoo/owl";
+import { Component, onMounted, useListener, usePlugin } from "@odoo/owl";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export class SubcontractingPortalWebClient extends Component {
     static components = { ActionContainer, MainComponentsContainer };
     static template = "mrp_subcontracting.SubcontractingPortalWebClient";
     setup() {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body
-        this.actionService = useService('action');
+        this.actionService = usePlugin(ActionPlugin);
         useOwnDebugContext({ categories: ["default"] });
         onMounted(() => {
             this._showView();

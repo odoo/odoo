@@ -1,10 +1,11 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { useBus } from "@web/core/utils/hooks";
 import { BomOverviewControlPanel } from "../bom_overview_control_panel/mrp_bom_overview_control_panel";
 import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
-import { Component, EventBus, onWillStart, proxy, useProps } from "@odoo/owl";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { Component, EventBus, onWillStart, proxy, useProps, usePlugin } from "@odoo/owl";
+import { standardActionServiceProps, ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
 
 export class BomOverviewComponent extends Component {
     static template = "mrp.BomOverviewComponent";
@@ -14,9 +15,9 @@ export class BomOverviewComponent extends Component {
     };
     props = useProps(standardActionServiceProps);
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.context = this.props.action.context;
-        this.actionService = useService("action");
+        this.actionService = usePlugin(ActionPlugin);
 
         this.variants = [];
         this.warehouses = [];

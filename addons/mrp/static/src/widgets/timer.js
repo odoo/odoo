@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { parseFloatTime } from "@web/views/fields/parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -13,7 +12,9 @@ import {
     untrack,
     useOnChange,
     useProps,
+    usePlugin,
 } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
 
 function formatMinutes(value) {
     if (value === false) {
@@ -105,7 +106,7 @@ class MrpTimerField extends Component {
     numpadDecimalRef = signal.ref();
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         useInputField({
             getValue: () => this.durationFormatted,
             ref: this.numpadDecimalRef,
