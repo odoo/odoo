@@ -1422,23 +1422,27 @@ export class SelectionPlugin extends Plugin {
         // Skip elements inside a protected node (e.g. the icons of an
         // embedded component).
         if (element && this.editable.contains(element) && !isProtected(element)) {
-            this.selectElement(element);
+            this.selectElement(element, { normalize: false });
             this.focusEditable();
         }
     }
 
     /**
      * @param {Element} element
+     * @param {Object} [options]
      */
-    selectElement(element) {
+    selectElement(element, { normalize = true } = {}) {
         const [anchorNode, anchorOffset] = leftPos(element);
         const [focusNode, focusOffset] = rightPos(element);
-        this.setSelection({
-            anchorNode,
-            anchorOffset,
-            focusNode,
-            focusOffset,
-        });
+        this.setSelection(
+            {
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            },
+            { normalize }
+        );
     }
 
     // =======
