@@ -10,18 +10,17 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
-        <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="1">
-            <BuilderRange
-                action="'setCarouselDuration'"
-                unit="'s'"
-                saveUnit="'ms'"
-                step="0.1"
-                min="0.1"
-                max="5"
-                withNumberInput="true"/>
-        </BuilderRow>
-    </t>
+    <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="true"
+        t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
+        <BuilderRange
+            action="'setCarouselDuration'"
+            unit="'s'"
+            saveUnit="'ms'"
+            step="0.1"
+            min="0.1"
+            max="5"
+            withNumberInput="true"/>
+    </BuilderRow>
 
     <BuilderRow label.translate="Autoplay">
         <BuilderSelect action="'setAutoplay'">
@@ -31,8 +30,8 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
-        <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen" level="1">
+    <BuilderContext t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')" level="true">
+        <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen">
             <BuilderNumberInput
                 action="'setCarouselTimespan'"
                 unit="'s'"
@@ -42,10 +41,10 @@
                 applyWithUnit="false"/>
         </BuilderRow>
 
-        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the carousel" level="1">
+        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the carousel">
             <BuilderCheckbox classAction="'o_carousel_pause_btn_hidden'" inverseAction="true"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 <t t-name="website.CarouselOption">
@@ -60,30 +59,32 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Control" level="1">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="''">Indicators Inside</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators Outside</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow label.translate="Control">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">Indicators Inside</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators Outside</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 
-    <BuilderRow label.translate="Arrows" level="1">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="'s_carousel_default'">Default</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_boxed'">Boxed</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_rounded'">Rounded</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_arrows_hidden'">Hidden</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
+        <BuilderRow label.translate="Arrows">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'s_carousel_default'">Default</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_boxed'">Boxed</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_rounded'">Rounded</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_arrows_hidden'">Hidden</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 
-    <BuilderRow label.translate="Indicators" applyTo="'.carousel-indicators'" level="1">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="''">Bars</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_indicators_dots'">Dots</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_indicators_numbers'">Numbers</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_carousel_indicators_hidden'">Hidden</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
+        <BuilderRow label.translate="Indicators" applyTo="'.carousel-indicators'">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">Bars</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_indicators_dots'">Dots</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_indicators_numbers'">Numbers</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_carousel_indicators_hidden'">Hidden</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
 
     <t t-call="website.CarouselAnimationOption"/>
 </t>

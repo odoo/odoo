@@ -9,9 +9,9 @@
         </BuilderButtonGroup>
         <SelectNumberColumn t-if="this.isActiveItem('column_mode')"/>
     </BuilderRow>
-    <t t-if="this.isActiveItem('grid_mode')">
-        <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
-    </t>
+    <BuilderContext t-if="this.isActiveItem('grid_mode')" level="true">
+        <SpacingOption applyTo="'.o_grid_mode'"/>
+    </BuilderContext>
 </t>
 
 <t t-name="website.LayoutGridOption">
