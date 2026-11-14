@@ -5041,6 +5041,61 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             }
         ])
 
+    def test_tax_recomputed_when_changing_base_lines_and_currency(self):
+        percent_tax = self.company_data['default_tax_sale']
+        eur = self.setup_other_currency('EUR', rates=[('2025-01-01', 0.5)])
+
+        invoice = self.init_invoice('out_invoice', self.partner_a, '2025-01-01', amounts=[100.0, 200.0], taxes=[percent_tax], currency=eur)
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+
+        self.assertRecordValues(tax_line, [
+            {
+                'tax_base_amount': 600.0,
+                'balance': -90.0,
+                'amount_currency': -45.0,
+                'tax_line_id': percent_tax.id,
+            },
+        ])
+
+        with Form(invoice) as move_form:
+            move_form.invoice_line_ids.remove(1)
+            move_form.invoice_currency_rate = 0.25
+            move_form.save()
+
+        self.assertRecordValues(tax_line, [
+            {
+                'tax_base_amount': 400.0,
+                'balance': -60,
+                'amount_currency': -15.0,
+                'tax_line_id': percent_tax.id,
+            },
+        ])
+
+    def test_tax_manual_amount_kept_when_changing_base_lines_and_currency(self):
+        """
+        Ensure that tax amounts are not recomputed and that new rate is applied if tax amounts are manualy changed
+        """
+        percent_tax = self.company_data['default_tax_sale']
+        eur = self.setup_other_currency('EUR', rates=[('2025-01-01', 0.5)])
+
+        invoice = self.init_invoice('out_invoice', self.partner_a, '2025-01-01', amounts=[100.0, 200.0], taxes=[percent_tax], currency=eur)
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+
+        invoice.write({
+            'invoice_currency_rate': 0.25,
+            'line_ids': [
+                Command.delete(invoice.invoice_line_ids[1].id),
+                Command.update(tax_line.id, {'amount_currency': -16.0}),
+            ],
+        })
+
+        self.assertRecordValues(tax_line, [
+            {
+                'balance': -64,
+                'amount_currency': -16.0,
+            },
+        ])
+
     def test_out_invoice_custom_currency_rate(self):
         ''' Check the invoice_date will be set automatically at the post date. '''
         move = self.env['account.move'].create({
