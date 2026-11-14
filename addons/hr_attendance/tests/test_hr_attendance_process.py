@@ -15,6 +15,10 @@ class TestHrAttendance(HttpCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHrAttendance, cls).setUpClass()
+
+        # isolate the created rules from existing time rule data
+        cls.env['hr.time.rule'].search([]).sudo().write({'active': False})
+
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user')
         cls.user_no_pin = new_test_user(cls.env, login='gru', groups='base.group_user')
         cls.test_employee = cls.env['hr.employee'].create({
