@@ -87,7 +87,7 @@ test("record push: message already read in inbox", async () => {
         {
             mail_message_id: readMessageId,
             notification_type: "inbox",
-            is_read: true,
+            read_date: "2019-01-01 10:30:00",
             res_partner_id: serverState.partnerId,
         },
         {

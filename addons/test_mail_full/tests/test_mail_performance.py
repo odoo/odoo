@@ -160,12 +160,10 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 ],
                 'notification_ids': [
                     (0, 0, {
-                        'is_read': False,
                         'notification_type': 'inbox',
                         'res_partner_id': cls.customers[(msg_idx * 2)].id,
                     }),
                     (0, 0, {
-                        'is_read': True,
                         'notification_type': 'email',
                         'notification_status': 'sent',
                         'res_partner_id': cls.customers[(msg_idx * 2) + 1].id,
