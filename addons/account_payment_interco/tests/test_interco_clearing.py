@@ -323,3 +323,35 @@ class TestIntercoClearingPurchase(TestIntercoClearing):
                 transaction_sudo._set_done()
                 transaction_sudo._post_process()
                 self._verify_asserts(self.purchase_order_ke, self.bill, self.company_ke.account_interco_payable_id, -1)
+
+
+@tagged('post_install', '-at_install')
+class TestIntercoClearingReconciledPayment(TestIntercoClearing):
+
+    def test_interco_invoice_paid_by_reconciled_payment(self):
+        """ The payment of the other company is already reconciled (e.g. matched with the
+        bank) when the invoice is posted: it must still be cleared against the invoice. """
+        self._check_accounting_installed(expected=False)
+        self._setup_outstanding_account(active=True, direction='inbound')
+        invoice = self.env['account.move'].with_company(self.company_ke).create({
+            'move_type': 'out_invoice',
+            'company_id': self.company_ke.id,
+            'partner_id': self.kenyian_partner.id,
+            'currency_id': self.usd.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'quantity': 1,
+                'price_unit': 100.0,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        self._create_payment(invoice, 'inbound', {'invoice_ids': [Command.set(invoice.ids)]})
+        self.payment_be.memo = 'Reconciled interco payment'
+        self.payment_be.action_post()
+        self.payment_transaction_be.sudo()._set_done()
+        self.payment_be.action_validate()
+        self.assertEqual(self.payment_be.state, 'reconciled')
+
+        invoice.action_post()
+        self.assertEqual(invoice.payment_state, 'paid')
