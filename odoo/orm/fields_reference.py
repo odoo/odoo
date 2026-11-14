@@ -27,6 +27,7 @@ class Reference(Selection):
     type = 'reference'
 
     _column_type = ('varchar', 'varchar')
+    _clean_supported = False
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return Field.convert_to_column(self, value, record, values, validate)
@@ -94,6 +95,7 @@ class Many2oneReference(Integer):
 
     """
     type = 'many2one_reference'
+    _clean_supported = False
 
     model_field = None
     aggregator = None

@@ -34,6 +34,7 @@ _schema = logging.getLogger('odoo.schema')
 class _Relational[C](Field[BaseModel, C]):
     """ Abstract class for relational fields. """
     relational: typing.Literal[True] = True
+    _clean_supported = False
     comodel_name: str = ''
     domain: DomainType | Callable[[BaseModel], DomainType] = Domain.TRUE  # domain for searching values
     ui_domain: str | DomainType | Callable[[BaseModel], str | DomainType] | None = None  # domain used in views

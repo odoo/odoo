@@ -30,8 +30,9 @@ class Binary(Field[BinaryValue, BinaryValue]):
         or in a column of the model's table (default: ``True``).
     """
     type = 'binary'
+    _clean_supported = False
 
-    prefetch = False                    # not prefetched by default
+    prefetch = False                   # not prefetched by default
     attachment = True                   # whether value is stored in attachment
 
     @functools.cached_property

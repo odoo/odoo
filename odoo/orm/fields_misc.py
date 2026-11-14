@@ -22,6 +22,7 @@ class Boolean(Field[bool, bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     _column_type = ('bool', 'bool')
+    _clean_supported = False
     falsy_value = False
 
     def convert_to_column(self, value: bool | None, record, values=None, validate=True) -> bool:
@@ -97,6 +98,7 @@ class Id(Field[IdType | typing.Literal[False], typing.Any]):
     # Note: This field type is not necessarily an integer!
     type = 'integer'  # note this conflicts with Integer
     column_type = ('int4', 'int4')
+    _clean_supported = False
 
     string = 'ID'
     store = True
