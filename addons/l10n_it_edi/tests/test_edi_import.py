@@ -457,6 +457,24 @@ class TestItEdiImport(TestItEdi):
         ])
         self.assertEqual(len(attachments), 1)
 
+    def test_receive_bill_on_invoice_with_lines(self):
+        """ Posting a FatturaPA file in the chatter of an invoice that already has lines must not decode it """
+        bill = self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
+            'amount_untaxed': 5.0,
+        }])
+        existing_lines = bill.invoice_line_ids
+
+        with tools.file_open(f'{self.module}/tests/import_xmls/IT01234567890_FPR01.xml', mode='rb') as fd:
+            attachment = self.env['ir.attachment'].create({
+                'name': 'IT01234567890_FPR01.xml',
+                'raw': fd.read(),
+            })
+        bill.message_post(message_type='comment', attachment_ids=attachment.ids)
+
+        self.assertEqual(bill.invoice_line_ids, existing_lines)
+        self.assertTrue(bill.message_ids.filtered(lambda m: m.body and "The invoice already contains lines." in m.body))
+
     def test_receive_bill_with_global_discount(self):
         applied_xml = """
             <xpath expr="//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento" position="inside">
