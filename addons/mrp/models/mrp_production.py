@@ -939,12 +939,11 @@ class MrpProduction(models.Model):
             del vals['move_byproduct_ids']
         if 'bom_id' in vals and 'move_byproduct_ids' in vals and 'move_finished_ids' in vals:
             # If byproducts are given, they take precedence over move_finished for byproduts definition
-            bom = self.env['mrp.bom'].browse(vals.get('bom_id'))
-            bom_product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            product_id = vals.get('product_id') or self.product_id.id
             joined_move_ids = vals.get('move_byproduct_ids', [])
             for move_finished in vals.get('move_finished_ids', []):
                 # Remove CREATE lines from finished_ids as they do not reflect the form current state (nor the byproduct vals)
-                if move_finished[0] == Command.CREATE and move_finished[2].get('product_id') != bom_product.id:
+                if move_finished[0] == Command.CREATE and move_finished[2].get('product_id') != product_id:
                     continue
                 joined_move_ids.append(move_finished)
             vals['move_finished_ids'] = joined_move_ids
