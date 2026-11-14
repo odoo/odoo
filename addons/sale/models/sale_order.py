@@ -2323,6 +2323,91 @@ class SaleOrder(models.Model):
             .action_capture()
         )
 
+    def action_register_payment(self):
+        """Open the payment registration wizard on the invoices of the order with an amount due.
+
+        If there are none, a draft invoice of what can be invoiced is created first.
+        """
+        self.ensure_one()
+        invoices = self._get_invoices_with_amount_due(self.invoice_ids)
+        if not invoices and self.invoice_status != "invoiced":
+            invoices = self._get_invoices_with_amount_due(self._create_invoices(final=True))
+        if not invoices:
+            raise UserError(self.env._("There is nothing left to pay on this order."))
+        action = invoices.action_force_register_payment()
+        action["context"]["dont_redirect_to_payments"] = True
+        # The wizard only deducts the online payments that are already reconciled with the invoice
+        if len(invoices) == 1 and self.amount_paid:
+            action["context"]["default_amount"] = self._get_invoice_amount_due(invoices)
+        return action
+
+    def _get_invoices_with_amount_due(self, invoices):
+        """Return the given customer invoices that have an amount left to pay."""
+        return invoices.filtered(
+            lambda move: (
+                move.move_type == "out_invoice"
+                and move.state in ("draft", "posted")
+                and move.currency_id.compare_amounts(self._get_invoice_amount_due(move), 0) > 0
+            )
+        )
+
+    def _get_invoice_amount_due(self, invoice):
+        """Return the amount left to pay on an invoice, in the currency of the invoice."""
+        # Done transactions have no payment until they are post-processed
+        pending_transactions = self.transaction_ids.filtered(
+            lambda tx: tx.state == "done" and not tx.is_post_processed
+        )
+        return (
+            invoice.amount_residual
+            - sum(
+                payment.currency_id._convert(
+                    payment.amount, invoice.currency_id, invoice.company_id, payment.date
+                )
+                for payment in self._get_invoice_unreconciled_payments(invoice)
+            )
+            - sum(
+                tx.currency_id._convert(
+                    tx.amount, invoice.currency_id, invoice.company_id, tx.last_state_change
+                )
+                for tx in pending_transactions
+            )
+        )
+
+    def _get_invoice_unreconciled_payments(self, invoice):
+        """Return the payments of an invoice that are not deducted from its residual amount."""
+        # Payments without journal entry have nothing to reconcile, online payments are only
+        # reconciled when the invoice they are linked to is posted
+        return invoice.matched_payment_ids.filtered(
+            lambda payment: not payment.move_id and payment.state == "paid"
+        ) | self.sudo().transaction_ids.payment_id.filtered(
+            lambda payment: payment.state == "paid" and not payment.is_reconciled
+        )
+
+    def _get_invoices_collected_amount(self):
+        """Return the amount collected on the invoices of the order, in the order currency.
+
+        Payments from online transactions are excluded as `amount_paid` already includes them.
+        """
+        collected_amount = 0.0
+        # In sudo mode as sales users may not have access to all the invoices of their orders
+        for invoice in self.sudo().invoice_ids.filtered(
+            lambda move: move.move_type == "out_invoice" and move.state != "cancel"
+        ):
+            for partial in invoice._get_all_reconciled_invoice_partials():
+                if (
+                    not partial["is_exchange"]
+                    and not partial["aml"].payment_id.payment_transaction_id
+                ):
+                    collected_amount += partial["currency"]._convert(
+                        partial["amount"], self.currency_id, self.company_id, partial["aml"].date
+                    )
+            for payment in self._get_invoice_unreconciled_payments(invoice):
+                if not payment.payment_transaction_id:
+                    collected_amount += payment.currency_id._convert(
+                        payment.amount, self.currency_id, self.company_id, payment.date
+                    )
+        return collected_amount
+
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.sudo().transaction_ids._get_last()
@@ -2357,7 +2442,12 @@ class SaleOrder(models.Model):
             # Suggest the amount needed to confirm the quote.
             suggested_amount = max(prepayment_amount - self.amount_paid, 0)
         else:  # The order is confirmed or doesn't require payment.
-            suggested_amount = max(self.amount_total - self.amount_paid, 0.0)
+            suggested_amount = max(
+                self.currency_id.round(
+                    self.amount_total - self.amount_paid - self._get_invoices_collected_amount()
+                ),
+                0.0,
+            )
         return {
             "currency_id": self.currency_id.id,
             "partner_id": self.partner_invoice_id.id,
