@@ -6019,7 +6019,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} + {other}")
             if other:
                 ids = self._ids + other._ids
-                return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids, other._prefetch_ids))
+                return self.__class__(self.env, ids, Prefetch.union([self._prefetch_ids, other._prefetch_ids]))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} + {other!r}")
         return self
@@ -6045,12 +6045,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        ids = tuple(ids)
-        if len(prefetch_ids_list) == 1:
-            prefetch_ids = prefetch_ids_list[0]
-        else:
-            prefetch_ids = Prefetch.union(ids, *prefetch_ids_list)
-        return self.__class__(self.env, ids, prefetch_ids)
+        return self.__class__(self.env, tuple(ids), Prefetch.union(prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -6061,7 +6056,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
             ids = tuple(id_ for id_ in self._ids if id_ not in other_ids)
-            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
+            return self.__class__(self.env, ids, self._prefetch_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -6074,7 +6069,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
             ids = tuple({id_: None for id_ in self._ids if id_ in other_ids})
-            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
+            return self.__class__(self.env, ids, self._prefetch_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
@@ -6087,7 +6082,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} | {other}")
             if other:
                 ids = tuple(dict.fromkeys(self._ids + other._ids))
-                return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids, other._prefetch_ids))
+                return self.__class__(self.env, ids, Prefetch.union([self._prefetch_ids, other._prefetch_ids]))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} | {other!r}")
         return self
@@ -6113,12 +6108,7 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
-        ids = tuple(dict.fromkeys(ids))
-        if len(prefetch_ids_list) == 1:
-            prefetch_ids = prefetch_ids_list[0]
-        else:
-            prefetch_ids = Prefetch.union(ids, *prefetch_ids_list)
-        return self.__class__(self.env, ids, prefetch_ids)
+        return self.__class__(self.env, tuple(dict.fromkeys(ids)), Prefetch.union(prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
@@ -6203,11 +6193,9 @@ class BaseModel(metaclass=MetaModel):
             return self._fields[key].__get__(self)
         if isinstance(key, slice):
             ids = self._ids[key]
-            prefetch_ids = Prefetch.union(ids, self._prefetch_ids)
         else:
             ids = (self._ids[key],)
-            prefetch_ids = self._prefetch_ids
-        return self.__class__(self.env, ids, prefetch_ids)
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
