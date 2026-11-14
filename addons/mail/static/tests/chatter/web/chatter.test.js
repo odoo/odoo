@@ -79,7 +79,6 @@ test("simple chatter on a record", async () => {
         [
             "mail.thread",
             {
-                access_params: {},
                 request_list: [
                     "activities",
                     "attachments",
