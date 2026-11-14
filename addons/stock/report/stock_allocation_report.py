@@ -200,6 +200,7 @@ class StockAllocationReport(models.AbstractModel):
             'quantity': out_move.product_qty,
             'source': source_info,
             'uom': out_move.product_id.uom_id.read(['display_name', 'factor'])[0],
+            'assign_at_confirm': out_move._should_assign_at_confirm(),
         }
 
     # ACTIONS
@@ -478,3 +479,42 @@ class StockAllocationReport(models.AbstractModel):
             move.product_uom_qty *= original_uom.factor / product_uom.factor
             move.packaging_uom_id = original_uom
         return original_uom
+
+    @api.model
+    def _auto_allocate(self, pickings):
+        """ Allocate the free incoming quantities of the given pickings to the needs listed in their
+        allocation report (by priority), as long as the needs' reservation method allows to reserve
+        them now.
+        """
+        for picking in pickings:
+            for product_line in self._get_product_lines(picking).values():
+                product_uom = self.env['product.product'].browse(product_line['id']).uom_id
+                free_qty = product_line['free_qty']
+                allocation_data = []
+                for need in product_line['needs']:
+                    if not need['assign_at_confirm'] or need['is_reserved']:
+                        continue
+                    if product_uom.compare(free_qty, 0) <= 0:
+                        break
+                    quantity = min(free_qty, need['quantity'])
+                    allocation_data.append(([need['id']], quantity))
+                    free_qty -= quantity
+                if allocation_data:
+                    # Prevent moves confirmed during the allocation (split moves) to trigger a new allocation.
+                    self.with_context(skip_auto_allocation=True).action_assign_all(
+                        [(product_line['move_ids'], allocation_data)]
+                    )
+
+    @api.model
+    def _run_auto_allocation(self, company_id=False):
+        """ Called by the stock scheduler to allocate incoming quantities to the needs whose
+        reservation date was reached since the receipts confirmation."""
+        pickings = self.env['stock.picking'].search([
+            ('company_id', '=?', company_id),
+            ('state', 'not in', ('draft', 'done', 'cancel')),
+            ('picking_type_id.code', '=', 'incoming'),
+            ('picking_type_id.auto_show_allocation_report', '=', True),
+            ('picking_type_id.allocation_mode', '=', 'automatic'),
+        ], order='scheduled_date, id')
+        if pickings:
+            self._auto_allocate(pickings)
