@@ -21,7 +21,16 @@ class PurchaseOrder(models.Model):
             purchase.mrp_production_count = len(purchase._get_mrp_productions())
 
     def _get_mrp_productions(self, **kwargs):
-        return (self.order_line.move_dest_ids | self.order_line.move_ids.move_dest_ids).raw_material_production_id
+        productions = (self.order_line.move_dest_ids | self.order_line.move_ids.move_dest_ids).raw_material_production_id
+        # MTSO: the PO line only shares the references, no move chain reaches it
+        mtso_products = self.order_line.filtered(
+            lambda line: line.state != 'cancel'
+            and not (line.move_dest_ids | line.move_ids.move_dest_ids).raw_material_production_id
+        ).product_id
+        productions |= self.reference_ids.production_ids.filtered(
+            lambda production: production.move_raw_ids.product_id & mtso_products
+        )
+        return productions
 
     def action_view_mrp_productions(self):
         self.ensure_one()
