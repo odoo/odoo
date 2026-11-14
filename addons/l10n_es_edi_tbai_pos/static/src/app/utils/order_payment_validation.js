@@ -1,6 +1,5 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
-import { qrCodeSrc } from "@point_of_sale/utils";
 
 patch(OrderPaymentValidation.prototype, {
     async afterOrderValidation() {
@@ -10,9 +9,7 @@ patch(OrderPaymentValidation.prototype, {
                 "get_l10n_es_pos_tbai_qrurl",
                 [this.order.id]
             );
-            this.order.uiState.l10n_es_pos_tbai_qrsrc = l10n_es_pos_tbai_qrurl
-                ? qrCodeSrc(l10n_es_pos_tbai_qrurl)
-                : undefined;
+            this.order.uiState.l10n_es_pos_tbai_qrsrc = l10n_es_pos_tbai_qrurl;
         }
         return super.afterOrderValidation(...arguments);
     },
