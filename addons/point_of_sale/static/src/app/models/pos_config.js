@@ -2,7 +2,10 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { PosOrderlineAccounting } from "./accounting/pos_order_line_accounting";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
-import { imageDataUri } from "@point_of_sale/utils";
+import { imageDataUri, resizeImageDataUrl } from "@point_of_sale/utils";
+import { logPosMessage } from "../utils/pretty_console_log";
+
+const CONSOLE_COLOR = "#F5B427";
 
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
@@ -99,8 +102,37 @@ export class PosConfig extends Base {
         return this.module_pos_restaurant;
     }
 
+    // Large logos are not rendered on the first receipt print on iOS (WebKit decodes
+    // them asynchronously). The logo is printed at most ~256px wide, so we cache a
+    // downscaled version.
+    async cacheReceiptLogo() {
+        if (!this.logo) {
+            return;
+        }
+        const content = this.logo.content;
+        try {
+            const dataUrl = await resizeImageDataUrl(imageDataUri(content), 256);
+            this.uiState.receiptLogo = { content, dataUrl };
+        } catch (error) {
+            logPosMessage(
+                "PosConfig",
+                "cacheReceiptLogo",
+                "Error while caching receipt logo",
+                CONSOLE_COLOR,
+                [error]
+            );
+        }
+    }
+
     get receiptLogoUrl() {
-        return this.logo ? imageDataUri(this.logo.content) : false;
+        if (!this.logo) {
+            return false;
+        }
+        const cached = this.uiState.receiptLogo;
+        if (cached?.content === this.logo.content) {
+            return cached.dataUrl;
+        }
+        return imageDataUri(this.logo.content);
     }
 
     get availablePricelists() {
