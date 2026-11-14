@@ -2,6 +2,7 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestCiiFacturXCommon, T
 from odoo.tests import tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -203,6 +204,62 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_partner_info')
+
+    def test_invoice_buyer_contact_person(self):
+        """ When the customer is a contact of a company, the Buyer name (BT-44) is the company name and the
+        contact name is only used as the Buyer contact point (BT-56).
+        """
+        contact = self.env['res.partner'].create({
+            'name': 'FR Partner Contact',
+            'parent_id': self.partner_fr.id,
+            'phone': '+33 499 12 34 56',
+            'email': 'contact@partner_fr.com',
+        })
+
+        invoice = self._create_invoice_one_line(
+            product_id=self.product,
+            tax_ids=self.tax_20,
+            partner_id=contact,
+            partner_bank_id=self.recipient_bank,
+            post=True,
+        )
+
+        # set_param(key, False) would unlink the parameter and fall back to its True default, hence str().
+        for use_new_dict_to_xml_helpers in (False, True):
+            self.env['ir.config_parameter'].sudo().set_param(
+                'account_edi_ubl_cii.use_new_dict_to_xml_helpers', str(use_new_dict_to_xml_helpers))
+            with self.subTest(use_new_dict_to_xml_helpers=use_new_dict_to_xml_helpers):
+                xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+                buyer = xml_tree.find('.//{*}BuyerTradeParty')
+                self.assertEqual(buyer.findtext('{*}Name'), self.partner_fr.name)
+                self.assertEqual(buyer.findtext('{*}DefinedTradeContact/{*}PersonName'), contact.name)
+
+    def test_invoice_buyer_unnamed_address(self):
+        """ When the customer is an unnamed address of a company, the commercial partner's name is used. """
+        invoice_address = self.env['res.partner'].create({
+            'type': 'invoice',
+            'parent_id': self.partner_fr.id,
+        })
+
+        invoice = self._create_invoice_one_line(
+            product_id=self.product,
+            tax_ids=self.tax_20,
+            partner_id=invoice_address,
+            partner_bank_id=self.recipient_bank,
+            post=True,
+        )
+
+        # set_param(key, False) would unlink the parameter and fall back to its True default, hence str().
+        for use_new_dict_to_xml_helpers in (False, True):
+            self.env['ir.config_parameter'].sudo().set_param(
+                'account_edi_ubl_cii.use_new_dict_to_xml_helpers', str(use_new_dict_to_xml_helpers))
+            with self.subTest(use_new_dict_to_xml_helpers=use_new_dict_to_xml_helpers):
+                xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+                buyer = xml_tree.find('.//{*}BuyerTradeParty')
+                self.assertEqual(buyer.findtext('{*}Name'), self.partner_fr.name)
+                if use_new_dict_to_xml_helpers:
+                    # The legacy template has never had this fallback: it outputs no PersonName.
+                    self.assertEqual(buyer.findtext('{*}DefinedTradeContact/{*}PersonName'), self.partner_fr.name)
 
     def test_invoice_partner_siret(self):
         self.partner_fr.write({
