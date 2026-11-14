@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from uuid import uuid4
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.sms.tools.sms_api import SmsApi
@@ -257,7 +256,7 @@ class SmsSms(models.Model):
         months_limit = self.env['ir.config_parameter'].sudo().get_int("mass_mailing.cancelled_mails_months_limit", 6)
         conditions = Domain('state', 'in', 'sent')  # remove sent SMS directly
         if months_limit > 0:
-            history_deadline = datetime.utcnow() - relativedelta(months=months_limit)
+            history_deadline = fields.Datetime.now() - relativedelta(months=months_limit)
             conditions |= (Domain('state', '!=', 'outgoing') & Domain('write_date', '<=', history_deadline))
         to_remove = self.with_context(active_test=False).search(
             Domain('to_delete', '=', True) & conditions,
