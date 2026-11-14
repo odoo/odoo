@@ -4,7 +4,7 @@ export function partnerListTrigger(name = "") {
     return `.modal .partner-list b:contains(${name})`;
 }
 
-export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
+export function clickPartner(name = "", { expectUnloadPage = false, pressEnter = true } = {}) {
     if (!name) {
         return [
             {
@@ -25,7 +25,7 @@ export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
         {
             content: `Search for partner "${name}"`,
             trigger: `.modal-dialog .input-group input`,
-            run: `edit ${name}`,
+            run: `edit ${name}${pressEnter ? " && press Enter" : ""}`,
         },
         {
             content: `click partner '${name}' from partner list screen`,
