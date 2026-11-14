@@ -1634,14 +1634,16 @@ export class ListRenderer extends Component {
     applyCellKeydownEditModeGroup(hotkey, _cell, group, record) {
         const { editable } = this.props;
         const groupIndex = group.list.records.indexOf(record);
+        const isFirstOfGroup = groupIndex === 0;
         const isLastOfGroup = groupIndex === group.list.records.length - 1;
         const isDirty = record.dirty || this.lastIsDirty;
         const isEnterBehavior = hotkey === "enter" && (isDirty || !record.canBeAbandoned);
         const isTabBehavior = hotkey === "tab" && isDirty;
+        const isBoundaryOfGroup = editable === "top" ? isFirstOfGroup && record.isNew : isLastOfGroup;
         if (
-            isLastOfGroup &&
+            isBoundaryOfGroup &&
             this.canCreate &&
-            editable === "bottom" &&
+            editable &&
             (isEnterBehavior || isTabBehavior)
         ) {
             this.add({ group });
