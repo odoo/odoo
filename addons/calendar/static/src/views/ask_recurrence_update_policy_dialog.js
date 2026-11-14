@@ -10,6 +10,7 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
     static props = {
         confirm: Function,
         close: Function,
+        excludeFutureEvents: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -27,6 +28,9 @@ export class AskRecurrenceUpdatePolicyDialog extends Component {
                 label: _t("All events"),
             },
         };
+        if (this.props.excludeFutureEvents) {
+            delete this.possibleValues.future_events;
+        }
     }
 
     get selected() {
