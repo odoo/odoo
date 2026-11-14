@@ -11,7 +11,7 @@ class FleetVehicle(models.Model):
     account_move_ids = fields.One2many('account.move', compute='_compute_move_ids')
 
     def _compute_move_ids(self):
-        if not self.env.user.has_group('account.group_account_readonly'):
+        if not self.env.user.has_group('account.group_account_readonly') and not self.env.user.has_group('account.group_account_invoice'):
             self.account_move_ids = False
             self.bill_count = 0
             return
