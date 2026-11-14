@@ -105,6 +105,13 @@
         <field name="context">{
             'search_default_month': 'custom_last_365_days',
         }</field>
+        <!-- The COGS of a customer invoice is a stock -> expense transfer: only its expense side is a project cost -->
+        <field name="domain">[
+            '!', '&amp;', '&amp;',
+                ('move_line_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']),
+                ('move_line_id.display_type', '=', 'cogs'),
+                ('general_account_id.internal_group', '!=', 'expense'),
+        ]</field>
     </record>
 
     <record id="action_view_analytic_reporting_inherit_sale_project_pivot" model="ir.actions.act_window.view">
