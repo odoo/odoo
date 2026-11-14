@@ -664,13 +664,7 @@ class AccountMove(models.Model):
     is_self_billing = fields.Boolean(related='journal_id.is_self_billing')
 
     # === Fiduciary mode fields === #
-    quick_edit_mode = fields.Boolean(compute='_compute_quick_edit_mode')
-    quick_edit_total_amount = fields.Monetary(
-        string='Total (Tax inc.)',
-        help='Use this field to encode the total amount of the invoice.\n'
-             'Odoo will automatically create one invoice line with default values to match it.',
-    )
-    quick_encoding_vals = fields.Json(compute='_compute_quick_encoding_vals', exportable=False)
+    accounting_date_editable = fields.Boolean(related='company_id.accounting_date_editable')
     document_sequence_editable = fields.Boolean(related='company_id.document_sequence_editable')
     set_to_review_documents = fields.Boolean(related='company_id.set_to_review_documents')
 
@@ -2145,24 +2139,6 @@ class AccountMove(models.Model):
                 'Total amount due: %(total_credit)s',
                 total_credit=total_credit_formatted
             )
-
-    @api.depends('journal_id.type', 'company_id')
-    def _compute_quick_edit_mode(self):
-        move_with_quick_edit_enabled = self.filtered('company_id.quick_edit_mode_enabled')
-        (self - move_with_quick_edit_enabled).quick_edit_mode = False
-        for move in move_with_quick_edit_enabled:
-            quick_edit_mode = move.company_id.quick_edit_mode
-            if move.journal_id.type == 'sale':
-                move.quick_edit_mode = quick_edit_mode in ('out_invoices', 'out_and_in_invoices')
-            elif move.journal_id.type == 'purchase':
-                move.quick_edit_mode = quick_edit_mode in ('in_invoices', 'out_and_in_invoices')
-            else:
-                move.quick_edit_mode = False
-
-    @api.depends('quick_edit_total_amount', 'invoice_line_ids.price_total', 'tax_totals')
-    def _compute_quick_encoding_vals(self):
-        for move in self:
-            move.quick_encoding_vals = move._get_quick_edit_suggestions()
 
     @api.depends(lambda self: self._duplicated_ref_ids_depends())
     def _compute_duplicated_ref_ids(self):
@@ -3831,7 +3807,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_default_read_fields(self):
-        weirdos = {'needed_terms', 'quick_encoding_vals', 'payment_term_details'}
+        weirdos = {'needed_terms', 'payment_term_details'}
         return [fname for fname in self.fields_get(attributes=()) if fname not in weirdos]
 
     def read(self, fields=None, load='_classic_read'):
@@ -4512,154 +4488,6 @@ class AccountMove(models.Model):
     # QUICK ENCODING
     # -------------------------------------------------------------------------
     @api.model
-    def _get_frequent_account_and_taxes(self, company_id, partner_id, move_type):
-        """
-        Returns the most used accounts and taxes for a given partner and company,
-        eventually filtered according to the move type.
-        """
-        if not partner_id:
-            return 0, False, False
-        domain = [
-            *self.env['account.move.line']._check_company_domain(company_id),
-            ('partner_id', '=', partner_id),
-            ('date', '>=', date.today() - timedelta(days=365 * 2)),
-        ]
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'income'))
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'expense'))
-
-        query = self.env['account.move.line']._search(domain, bypass_access=True)
-        account_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
-        rows = self.env.execute_query(SQL("""
-            SELECT COUNT(foo.id), foo.account_id, foo.taxes
-              FROM (
-                         SELECT account_move_line__account_id.id AS account_id,
-                                %(account_code)s AS code,
-                                account_move_line.id,
-                                ARRAY_AGG(tax_rel.account_tax_id) FILTER (WHERE tax_rel.account_tax_id IS NOT NULL) AS taxes
-                           FROM %(from_clause)s
-                      LEFT JOIN account_move_line_account_tax_rel tax_rel ON account_move_line.id = tax_rel.account_move_line_id
-                          WHERE %(where_clause)s
-                       GROUP BY account_move_line__account_id.id,
-                                %(account_code)s,
-                                account_move_line.id
-                   ) AS foo
-          GROUP BY foo.account_id, foo.taxes
-          ORDER BY COUNT(foo.id) DESC, taxes ASC NULLS LAST
-             LIMIT 1
-            """,
-            account_code=account_code,
-            from_clause=query.from_clause,
-            where_clause=query.where_clause or SQL("TRUE"),
-        ))
-        return rows[0] if rows else (0, False, False)
-
-    def _get_quick_edit_suggestions(self):
-        """
-        Returns a dictionnary containing the suggested values when creating a new
-        line with the quick_edit_total_amount set. We will compute the price_unit
-        that has to be set with the correct that in order to match this total amount.
-        If the vendor/customer is set, we will suggest the most frequently used account
-        for that partner as the default one, otherwise the default of the journal.
-        """
-        self.ensure_one()
-        if not self.quick_edit_mode or not self.quick_edit_total_amount:
-            return False
-        count, account_id, tax_ids = self._get_frequent_account_and_taxes(
-            self.company_id.id,
-            self.partner_id.id,
-            self.move_type,
-        )
-        if count:
-            taxes = self.env['account.tax'].browse(tax_ids)
-        else:
-            account_id = self.journal_id.default_account_id.id
-            if self.is_sale_document(include_receipts=True):
-                taxes = self.journal_id.default_account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
-            else:
-                taxes = self.journal_id.default_account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
-            if not taxes:
-                taxes = (
-                    self.journal_id.company_id.account_sale_tax_id
-                    if self.journal_id.type == 'sale' else
-                    self.journal_id.company_id.account_purchase_tax_id
-                )
-            taxes = self.fiscal_position_id.map_tax(taxes)
-
-        # When a payment term has an early payment discount with the epd computation set to 'mixed', recomputing
-        # the untaxed amount should take in consideration the discount percentage otherwise we'd get a wrong value.
-        # We check that we have only one percentage tax as computing from multiple taxes with different types can get complicated.
-        # In one example: let's say: base = 100, discount = 2%, tax = 21%
-        # the total will be calculated as: total = base + (base * (1 - discount)) * tax
-        # If we manipulate the equation to get the base from the total, we'll have base = total / ((1 - discount) * tax + 1)
-        term = self.invoice_payment_term_id
-        discount_percentage = term.discount_percentage if term.early_discount else 0
-        remaining_amount = self.quick_edit_total_amount - self.tax_totals['total_amount_currency']
-
-        if (
-                discount_percentage
-                and term.early_pay_discount_computation == 'mixed'
-                and len(taxes) == 1
-                and taxes.amount_type == 'percent'
-        ):
-            price_untaxed = self.currency_id.round(
-                remaining_amount / (((1.0 - discount_percentage / 100.0) * (taxes.amount / 100.0)) + 1.0))
-        else:
-            price_untaxed = taxes.with_context(force_price_include=True).compute_all(remaining_amount)['total_excluded']
-        return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
-
-    @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
-    def _quick_edit_mode_suggest_invoice_date(self):
-        """Suggest the Customer Invoice/Vendor Bill date based on previous invoice and lock dates"""
-        for record in self:
-            if record.quick_edit_mode and not record.invoice_date:
-                invoice_date = fields.Date.context_today(self)
-                prev_move = self.search([('state', '=', 'posted'),
-                                         ('journal_id', '=', record.journal_id.id),
-                                         ('company_id', '=', record.company_id.id),
-                                         ('invoice_date', '!=', False)],
-                                        limit=1)
-                if prev_move:
-                    invoice_date = self._get_accounting_date(prev_move.invoice_date, False)
-                record.invoice_date = invoice_date
-
-    @api.onchange('quick_edit_total_amount', 'partner_id')
-    def _onchange_quick_edit_total_amount(self):
-        """
-        Creates a new line with the suggested values (for the account, the price_unit,
-        and the tax) such that the total amount matches the quick total amount.
-        """
-        if (
-            not self.quick_edit_total_amount
-            or not self.quick_edit_mode
-            or len(self.invoice_line_ids) > 0
-        ):
-            return
-        suggestions = self.quick_encoding_vals
-        self.invoice_line_ids = [Command.clear()]
-        self.invoice_line_ids += self.env['account.move.line'].new({
-            'partner_id': self.partner_id,
-            'account_id': suggestions['account_id'],
-            'currency_id': self.currency_id.id,
-            'price_unit': suggestions['price_unit'],
-            'tax_ids': [Command.set(suggestions['tax_ids'])],
-        })
-        self._check_total_amount(self.quick_edit_total_amount)
-
-    @api.onchange('invoice_line_ids')
-    def _onchange_quick_edit_line_ids(self):
-        quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
-        if (
-            not self.quick_edit_total_amount
-            or not self.quick_edit_mode
-            or not self.invoice_line_ids
-            or not quick_encode_suggestion
-            or not quick_encode_suggestion['price_unit'] == self.invoice_line_ids[-1].price_unit
-        ):
-            return
-        self._check_total_amount(self.quick_edit_total_amount)
-
     def _check_total_amount(self, amount_total):
         """
         Verifies that the total amount corresponds to the expected total amount chosen as some
@@ -6150,17 +5978,6 @@ class AccountMove(models.Model):
         validation_msgs = set()
 
         for invoice in self.filtered(lambda move: move.is_invoice(include_receipts=True)):
-            if (
-                invoice.quick_edit_mode
-                and invoice.quick_edit_total_amount
-                and invoice.currency_id.compare_amounts(invoice.quick_edit_total_amount, invoice.amount_total) != 0
-            ):
-                validation_msgs.add(_(
-                    "The current total is %(current_total)s but the expected total is %(expected_total)s. In order to post the invoice/bill, "
-                    "you can adjust its lines or the expected Total (tax inc.).",
-                    current_total=formatLang(self.env, invoice.amount_total, currency_obj=invoice.currency_id),
-                    expected_total=formatLang(self.env, invoice.quick_edit_total_amount, currency_obj=invoice.currency_id),
-                ))
             if invoice.partner_bank_id and not invoice.partner_bank_id.active:
                 validation_msgs.add(_(
                     "The recipient bank account linked to this invoice is archived.\n"
@@ -7176,7 +6993,7 @@ class AccountMove(models.Model):
 
             if move_form.is_purchase_document(include_receipts=True):
                 move_form.ref = False
-            elif move_form.is_sale_document(include_receipts=True) and move_form.quick_edit_mode:
+            elif move_form.is_sale_document(include_receipts=True) and move_form.accounting_date_editable:
                 move_form.name = False
 
             move_form.payment_reference = False

@@ -167,9 +167,8 @@ class ResConfigSettings(models.TransientModel):
     # Allows for the use of a different delivery address
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 
-    # Quick encoding (fiduciary mode)
-    quick_edit_mode_enabled = fields.Boolean(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode_enabled')
-    quick_edit_mode = fields.Selection(readonly=False, related='company_id.quick_edit_mode')
+    # Fiduciary mode
+    accounting_date_editable = fields.Boolean(readonly=False, related='company_id.accounting_date_editable')
     document_sequence_editable = fields.Boolean(string="Editable Document Sequence", readonly=False, related='company_id.document_sequence_editable')
     set_to_review_documents = fields.Boolean(string="Review data", readonly=False, related='company_id.set_to_review_documents')
 

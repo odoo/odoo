@@ -2282,7 +2282,7 @@ class AccountEdiUBL(models.AbstractModel):
         tree = collected_values['tree']
         odoo_document_type = collected_values['odoo_document_type']
         if ref := tree.findtext('./{*}ID'):
-            if odoo_document_type == 'sale' and collected_values['invoice'].quick_edit_mode:
+            if odoo_document_type == 'sale' and collected_values['invoice'].accounting_date_editable:
                 collected_values['to_write']['name'] = ref
             else:
                 collected_values['to_write']['ref'] = ref

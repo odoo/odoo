@@ -1317,7 +1317,7 @@ class AccountMoveLine(models.Model):
             account_taxes = all_account_taxes.filtered(lambda tax: tax.type_tax_use == 'sale')
             tax_ids = filtered_taxes_id or account_taxes
 
-            if not tax_ids and not self.product_id and self.env.context.get('from_invoice_tab') and not self.move_id.quick_edit_mode:
+            if not tax_ids and not self.product_id and self.env.context.get('from_invoice_tab'):
                 tax_ids = self.company_id.account_sale_tax_id
 
         elif self.move_id.is_purchase_document(include_receipts=True):
@@ -2073,12 +2073,7 @@ class AccountMoveLine(models.Model):
     @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
-        quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
-        if quick_encode_suggestion and self.env.context.get('default_display_type') not in ('line_section', 'line_subsection', 'line_note'):
-            defaults['account_id'] = quick_encode_suggestion['account_id']
-            defaults['price_unit'] = quick_encode_suggestion['price_unit']
-            defaults['tax_ids'] = [Command.set(quick_encode_suggestion['tax_ids'])]
-        elif (
+        if (
             (journal := self.env['account.journal'].browse(self.env.context.get('journal_id')))
             and journal.type not in ('sale', 'purchase')
             and journal.default_account_id):
