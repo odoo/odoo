@@ -2,51 +2,74 @@
 <templates xml:space="preserve">
 
 <t t-name="website.dialog.addFont.singlePreview">
-    <div class="row">
-        <label class="col-12" t-attf-style="font-weight: {{previewWeight}};" t-out="previewLabel"/>
-    </div>
-    <div class="mb-3 row">
-        <div class="col-11 offset-1" t-attf-style="font-family: '{{previewFontName}}';">
-            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-model.proxy="this.state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
-            <input t-else="" class="w-100 border-0 bg-transparent" readonly="1" t-attf-style="font-weight: {{previewWeight}};"/>
+    <div class="o_website_font_preview_sample position-relative mb-2 py-2 ps-3 rounded bg-100">
+        <div class="row">
+            <small class="col-12 mb-1 text-muted" t-out="previewLabel"></small>
+        </div>
+        <div class="row">
+            <div t-if="this.isPreviewWeightAvailable(previewWeight)" class="col-12" t-attf-style="font-family: '{{previewFontName}}';">
+                <span class="o_website_font_preview_text d-block w-100 text-nowrap" t-attf-style="font-weight: {{previewWeight}}; font-size: {{this.state.previewFontSize}}px;">
+                    <t t-out="this.state.previewText || this.defaultPreviewText"/>
+                </span>
+            </div>
+            <div t-else="" class="col-12 small text-muted">
+                <span class="fst-italic">Not available for this font</span>
+                <sup class="ms-1 text-info" title="The font definition does not provide this font weight.">?</sup>
+            </div>
         </div>
     </div>
 </t>
 <t t-name="website.dialog.addFont.preview">
-    <div class="mb-3 row text-center">
-        <label class="col-12">
-            <t t-if="previewFontName">Preview of <t t-out="previewFontName"/></t>
-            <t t-else="">Preview</t>
-        </label>
+    <label for="font_preview_text" class="small">Preview</label>
+    <div class="d-flex gap-2 mb-3">
+        <input type="text" id="font_preview_text" placeholder="Type your own preview text" class="o_input"
+            t-model.proxy="this.state.previewText"/>
+        <select id="font_preview_size" class="o_website_font_preview_size o_input flex-shrink-0 w-auto" aria-label="Preview font size"
+            t-model.proxy="this.state.previewFontSize">
+            <option t-foreach="this.previewFontSizes" t-as="size" t-key="size"
+                t-att-value="size" t-out="size + ' px'"/>
+        </select>
     </div>
-    <t t-call="website.dialog.addFont.singlePreview"
-        previewLabel.translate="Light"
-        previewWeight="300"/>
-    <t t-call="website.dialog.addFont.singlePreview"
-        previewLabel.translate="Regular"
-        previewWeight="400"/>
-    <t t-call="website.dialog.addFont.singlePreview"
-        previewLabel.translate="Bold"
-        previewWeight="700"/>
+    <div>
+        <t t-call="website.dialog.addFont.singlePreview"
+            previewLabel.translate="Light"
+            previewWeight="300"/>
+        <t t-call="website.dialog.addFont.singlePreview"
+            previewLabel.translate="Regular"
+            previewWeight="400"/>
+        <t t-call="website.dialog.addFont.singlePreview"
+            previewLabel.translate="Bold"
+            previewWeight="700"/>
+    </div>
 </t>
 <t t-name="website.dialog.addFont">
-    <Dialog title.translate="Add a Google font or upload a custom font" size="'xl'">
+    <Dialog title.translate="Add a Google font or upload a custom font" size="'xl'" contentClass="'o_website_add_font_dialog'">
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-lg-6">
                 <!-- Google Font -->
                 <div class="mb-3 row">
                     <div class="col-form-label col-md-4">
-                        <label for="google_font">Choose from list</label>
-                        <div class="text-muted">Explore on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a>.</div>
+                        <label for="google_font">Google font</label>
                     </div>
                     <div class="col-form-label col-md-8 o_field_widget">
                         <div class="o_input_dropdown">
-                            <GoogleFontAutoComplete id="'google_font'" value="this.state.googleFontFamily" placeholder.translate="Select a Google Font..." sources="this.getGoogleFontList"/>
+                            <GoogleFontAutoComplete id="'google_font'" value="this.state.googleFontFamily" placeholder.translate="Search for a Google font..." sources="this.getGoogleFontList" onInput="(event) => this.onGoogleFontInput(event)">
+                                <t t-set-slot="font" t-slot-scope="fontOption">
+                                    <t t-if="fontOption.data.isLoading">
+                                        <i class="oi oi-spin" data-icon="autorenew"/> <t t-out="fontOption.label"/>
+                                    </t>
+                                    <span t-else="" t-att-class="{ o_website_selected_font: fontOption.label === this.state.googleFontFamily }"
+                                        t-att-style="fontOption.data.style" t-out="fontOption.label"/>
+                                </t>
+                            </GoogleFontAutoComplete>
                             <span class="o_dropdown_button" />
+                        </div>
+                        <div class="form-text">
+                            <a target="_blank" href="https://fonts.google.com">Browse all on Google Fonts <i class="oi" data-icon="open_in_new" aria-hidden="true"/></a>
                         </div>
                     </div>
                     <label class="col-form-label col-md-4" for="google_font_serve">
-                        Rely on Google servers to serve font
+                        Rely on Google servers to serve the font
                         <sup class="text-info" title="By default, fonts are copied on your website. You can use Google's servers for fonts, but keep in mind it may impact GDPR compliance.">
                             <a target="_blank" href="https://www.odoo.com/forum/help-1/how-to-use-google-fonts-and-respecting-german-requirements-214049">?</a>
                         </sup>
@@ -57,31 +80,38 @@
                         disabled="!this.state.googleFontFamily"
                         onChange="(checked) => this.state.googleServe = checked"/>
                 </div>
-                <hr/>
+                <div class="d-flex align-items-center gap-2 my-3">
+                    <div class="flex-grow-1 border-top" aria-hidden="true"/>
+                    <span>or</span>
+                    <div class="flex-grow-1 border-top" aria-hidden="true"/>
+                </div>
                 <!-- Upload font -->
                 <div class="mb-3 row">
                     <div class="col-form-label col-md-4">
-                        <label for="upload_font">Custom Font</label>
+                        <label for="upload_font">Custom font</label>
                         <div class="text-muted">zip, ttf, woff, woff2, otf</div>
-                        <div class="form-text text-muted">Upload a zip with multiple weights for best results.</div>
                     </div>
                     <div class="col-md-8">
                         <input t-ref="this.fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
                             id="upload_font" accept=".woff, .woff2, .ttf, .zip, .otf, font/*"
                             t-on-change="this.onUploadChange"
                         />
+                        <div class="form-text text-muted">Upload a zip with multiple weights for best results</div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5" style="border-left: var(--gray-300) solid 1px;">
+            <div class="col-lg-6" style="border-left: var(--gray-300) solid 1px;">
                 <!-- Preview -->
-                <t t-if="this.state.googleFontFamily">
-                    <t t-set="previewFontName" t-value="this.state.googleFontFamily"/>
+                <t t-if="this.state.googleFontFamily || this.state.uploadedFonts.length"
+                    t-call="website.dialog.addFont.preview"
+                    previewFontName="this.state.googleFontFamily || this.state.uploadedFontName"/>
+                <t t-else="">
+                    <div class="d-flex align-items-center h-100">
+                        <div class="mx-auto py-3 px-4 rounded bg-100 text-center text-muted">
+                            Select a Google font or upload a custom font to see a preview.
+                        </div>
+                    </div>
                 </t>
-                <t t-elif="this.state.uploadedFonts.length">
-                    <t t-set="previewFontName" t-value="this.state.uploadedFontName"/>
-                </t>
-                <t t-call="website.dialog.addFont.preview"/>
             </div>
         </div>
         <t t-set-slot="footer">

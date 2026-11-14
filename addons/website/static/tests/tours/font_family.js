@@ -74,17 +74,86 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Select a Google font in the list",
-            trigger: ".modal .dropdown-item:contains('Second test font')",
+            content: "Check that the next batch of fonts is loaded",
+            trigger: ".modal .dropdown-item:contains('Extra test font 8')",
+        },
+        {
+            content: "Check that no more fonts are loading",
+            trigger: ".modal .o-autocomplete--dropdown-menu:not(:has(.oi-spin))",
+        },
+        {
+            content: "Check that a font with only a light variant is listed",
+            trigger: `.modal .dropdown-item:has(> span[style*='font-family: "First test font"'][style*='font-weight: 300'])`,
+            run() {
+                const isFontLoaded = [...document.fonts].some(
+                    (font) =>
+                        font.family.replaceAll('"', "") === "First test font" &&
+                        font.status === "loaded"
+                );
+                if (!isFontLoaded) {
+                    throw new Error("The font should be loaded when its option is displayed");
+                }
+            },
+        },
+        {
+            content: "Check that a font with only an italic variant is listed",
+            trigger: `.modal .dropdown-item:has(> span[style*='font-family: "Third test font"'][style*='font-style: italic'])`,
+        },
+        {
+            content: "Select a Google font previewed in its own font",
+            trigger: `.modal .dropdown-item:has(> span[style*='font-family: "Second test font"'][style*='font-size: 1rem'])`,
             run: "click",
         },
         {
-            content: "Check that the preview of the selected font is displayed in the modal",
-            trigger: ".modal:contains('Preview of Second test font')",
+            content: "Check that the preview input is displayed",
+            trigger: ".modal #font_preview_text[placeholder='Type your own preview text']",
         },
         {
             content: "Check that the 3 previews are correctly set in the modal",
-            trigger: `.modal div[style='font-family: "Second test font";']:count(3)`,
+            trigger:
+                ".modal .o_website_font_preview_sample div[style*='Second test font']:count(3)",
+        },
+        {
+            content: "Edit the text of all font previews",
+            trigger: ".modal #font_preview_text",
+            run: "edit Sample text",
+        },
+        {
+            content: "Check that all font previews use the edited text",
+            trigger: ".modal .o_website_font_preview_sample span:contains('Sample text'):count(3)",
+        },
+        {
+            content: "Change the font preview size",
+            trigger: ".modal #font_preview_size",
+            run: "select 32",
+        },
+        {
+            content: "Check that all font previews use the selected size",
+            trigger:
+                ".modal .o_website_font_preview_sample span[style*='font-size: 32px']:count(3)",
+        },
+        {
+            content: "Open the Google font list again",
+            trigger: ".modal #google_font",
+            run: "click",
+        },
+        {
+            content: "Select a font that only provides a light variant",
+            trigger: `.modal .dropdown-item:has(> span[style*='font-family: "First test font"'])`,
+            run: "click",
+        },
+        {
+            content: "Check that the missing weights are not previewed",
+            trigger: ".modal .o_website_font_preview_sample:contains('Not available'):count(2)",
+        },
+        {
+            content: "Close the font dialog",
+            trigger: ".modal button.btn-secondary:contains('Discard')",
+            run: "click",
+        },
+        {
+            content: "Check that the font dialog is closed",
+            trigger: "body:not(:has(.o_website_add_font_dialog))",
         },
     ]
 );
