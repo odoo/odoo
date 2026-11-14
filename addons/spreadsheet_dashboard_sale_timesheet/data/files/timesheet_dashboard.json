@@ -799,26 +799,14 @@
         },
         "B1": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
         "B2": "=IF(PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1),PIVOT.VALUE(7,\"NonBillable Days\",\"#project_id\",1)))",
-        "B3:B4": {
+        "B3:B11": {
           "N": "=|+1|=|+1|=|+1",
           "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
           "R": "="
         },
         "C1": "=_t(\"Costs\")",
         "C2": "=IF(B2=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
-        "C3:C4": {
-          "N": "=|+1",
-          "S": ["=", "=", "=", "="],
-          "R": "+R1"
-        },
-        "C5": "=IF(PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",4)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",4),PIVOT.VALUE(7,\"NonBillable Days\",\"#project_id\",4)))",
-        "C6:C11": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "D5": "=IF('Non-Billable Projects Costs'!C5=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",4)))",
-        "D6:D11": {
+        "C3:C11": {
           "N": "=|+1",
           "S": ["=", "=", "=", "="],
           "R": "+R1"
@@ -827,13 +815,11 @@
       "styles": {
         "A1": 2,
         "A2:A11": 3,
-        "C2:C4": 3,
-        "D5:D11": 3,
+        "C2:C11": 3,
         "B1:C1": 4,
-        "B2:B4": 5,
-        "C5:C11": 5
+        "B2:B11": 5
       },
-      "formats": { "B2:B4": 2, "C5:C11": 2, "C2:C4": 3, "D5:D11": 3 },
+      "formats": { "B2:B11": 2, "C2:C11": 3 },
       "borders": {},
       "conditionalFormats": [
         {
