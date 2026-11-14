@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_city_corregimiento_poblado_barrio_view_list" model="ir.ui.view">
+        <field name="name">l10n_pa.res.city.corregimiento.poblado.barrio.list</field>
+        <field name="model">l10n_pa.res.city.corregimiento.poblado.barrio</field>
+        <field name="arch" type="xml">
+            <list string="Barrios" editable="top" multi_edit="1">
+                <field name="name"/>
+                <field name="l10n_pa_code"/>
+                <field name="poblado_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="res_city_corregimiento_poblado_barrio_view_form" model="ir.ui.view">
+        <field name="name">l10n_pa.res.city.corregimiento.poblado.barrio.form</field>
+        <field name="model">l10n_pa.res.city.corregimiento.poblado.barrio</field>
+        <field name="arch" type="xml">
+            <form string="Barrio">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Amador"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="l10n_pa_code" placeholder="e.g. 8-2-1-28-1"/>
+                        </group>
+                        <group>
+                            <field name="poblado_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_city_corregimiento_poblado_barrio_view_search" model="ir.ui.view">
+        <field name="name">l10n_pa.res.city.corregimiento.poblado.barrio.search</field>
+        <field name="model">l10n_pa.res.city.corregimiento.poblado.barrio</field>
+        <field name="arch" type="xml">
+            <search string="Search Barrio">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('l10n_pa_code', 'ilike', self)]"/>
+                <field name="poblado_id"/>
+                <group>
+                    <filter name="group_by_poblado" string="Poblado" context="{'group_by': 'poblado_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_res_city_corregimiento_poblado_barrio" model="ir.actions.act_window">
+        <field name="name">Barrios</field>
+        <field name="res_model">l10n_pa.res.city.corregimiento.poblado.barrio</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a barrio
+            </p><p>
+                Barrios are the neighborhoods within a poblado, each one
+                identified by its DGI code.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_res_city_corregimiento_poblado_barrio"
+        name="Barrio (PA)"
+        action="action_res_city_corregimiento_poblado_barrio"
+        parent="contacts.menu_localisation"
+        sequence="5"/>
+
+</odoo>
