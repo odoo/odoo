@@ -363,12 +363,19 @@ function parseSmartDateInput(value) {
         }
 
         // Operations on dates
+        const field_name = smartDateUnits[term[term.length - 1]];
+        const numberString = term.slice(1, -1);
+
+        if (!field_name) {
+            return false;
+        }
+
+        if (!/^\d+$/.test(numberString)) {
+            throw new ConversionError(_t("'%s' is not a correct date or datetime", value));
+        }
+
         try {
-            const field_name = smartDateUnits[term[term.length - 1]];
-            const number = parseInt(term.slice(1, -1), 10);
-            if (!field_name || isNaN(number)) {
-                return false;
-            }
+            const number = parseInt(numberString, 10);
             if (operator == "+") {
                 now = now.plus({ [field_name]: number });
             } else if (operator == "-") {
