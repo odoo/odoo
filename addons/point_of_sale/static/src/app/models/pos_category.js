@@ -5,12 +5,13 @@ export class PosCategory extends Base {
     static pythonModel = "pos.category";
     static excludedLazyGetters = ["hasProductsToShow"];
 
+    get children() {
+        return [...this.child_ids].sort((a, b) => a.sequence - b.sequence);
+    }
+
     getAllChildren() {
         const children = [this];
-        if (this.child_ids.length === 0) {
-            return children;
-        }
-        for (const child of this.child_ids) {
+        for (const child of this.children) {
             children.push(...child.getAllChildren());
         }
         return children;
