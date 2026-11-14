@@ -280,7 +280,7 @@ export class PaymentStripe extends PaymentInterface {
     async captureAfterPayment(processPayment, line) {
         // Don't capture if the customer can tip, in that case we
         // will capture later.
-        if (!this.canBeAdjusted(line.uuid)) {
+        if (!line.canBeAdjusted()) {
             if (
                 this.pos.config.set_tip_after_payment &&
                 line.uiState.stripeOvercaptureSupported === false
