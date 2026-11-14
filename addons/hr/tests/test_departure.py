@@ -23,7 +23,7 @@ class TestDeparture(TestHrCommon):
             'contract_date_start': date.today(),
         })
 
-        cls.emp_A, cls.emp_B, cls.emp_C = cls.env['hr.employee'].create([
+        cls.emp_A, cls.emp_B, cls.emp_C, cls.emp_D = cls.env['hr.employee'].create([
             {
                 'name': f'Employee {code}',
                 'parent_id': cls.emp_boss.id,
@@ -31,7 +31,7 @@ class TestDeparture(TestHrCommon):
                 'work_email': f'employee_{code}@example.com',
                 'contract_date_start': date(2025, 2, 1),
                 'contract_date_end': False,
-            } for code in ['A', 'B', 'C']
+            } for code in ['A', 'B', 'C', 'D']
         ])
 
         cls.user_A = cls.env['res.users'].create({
@@ -131,3 +131,18 @@ class TestDeparture(TestHrCommon):
             'departure_date': date(2025, 5, 30),
         }])
         self.assertEqual(self.employee.version_ids[1].departure_id, departure)
+
+    def test_departure_notice_contract_date(self):
+        self.emp_D.write({
+            'employee_type_id': self.env.ref('hr.contract_type_employee').id,
+        })
+
+        departure = self.env['hr.employee.departure'].create({
+            'employee_id': self.emp_D.id,
+            'dismissal_date': date(2025, 5, 25),
+            'departure_date': date(2025, 5, 30),
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+            'departure_description': 'PFI fired',
+        })
+
+        self.assertEqual(self.emp_D.contract_date_end, departure.departure_date)
