@@ -18,3 +18,9 @@ class WebauthnController(http.Controller):
         return request.make_json_response(_WEB_WELL_KNOW_ANDROID, {
             'Content-Type': 'application/json'
         })
+
+    @http.route(['/.well-known/webauthn'], type='http', auth='public')
+    def web_well_known_webauthn(self):
+        return request.make_json_response({
+            "origins": request.env['auth.passkey.key']._get_allowed_origins()
+        })
