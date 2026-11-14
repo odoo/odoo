@@ -3,7 +3,7 @@
 
 import odoo.tests
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -103,6 +103,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
         self.start_tour("/blog", "blog_tags_with_date", login="admin")
+<<<<<<< 94319a085d6bb68077024cdf66ccb1f61ef7b5a8
 
     def test_blog_posts_dynamic_snippet_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_edit', login='admin')
@@ -126,3 +127,25 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_visible', login='admin')
         blog_posts.write({'website_published': False})
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_empty', login='admin')
+||||||| b148b46b9bc463985b2cb80c3dece3896be8ada2
+=======
+
+    def test_blog_feed_only_lists_published_posts(self):
+        blog = self.env['blog.blog'].create({'name': 'Feed Blog'})
+        now = datetime.now()
+        self.env['blog.post'].create([{
+            'name': 'Past Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now - timedelta(days=1),
+        }, {
+            'name': 'Future Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now + timedelta(days=1),
+        }])
+
+        res = self.url_open(f'/blog/{blog.id}/feed')
+        self.assertIn('Past Post', res.text)
+        self.assertNotIn('Future Post', res.text)
+>>>>>>> 480abeb767e23e53957f230e506689f0166dae70
