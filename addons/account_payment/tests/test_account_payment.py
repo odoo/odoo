@@ -612,3 +612,41 @@ class TestAccountPayment(AccountPaymentCommon):
             other_invoice.action_post()
             wizard = payment_register_wizard(invoice + other_invoice)
             self.assertEqual(wizard.suitable_payment_token_ids, parent_token)
+
+    def test_invoice_paid_by_child_contact(self):
+        """
+        Test that an invoice with an early payment discount can be paid by a child contact of the
+        invoiced partner.
+        """
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'parent_id': self.partner.id,
+        })
+        invoice = self._create_invoice_with_early_discount(partner_id=self.partner.id)
+        payment = self._create_transaction(
+            flow='direct',
+            state='done',
+            amount=invoice.invoice_payment_term_id._get_amount_due_after_discount(
+                total_amount=invoice.amount_residual,
+                untaxed_amount=invoice.amount_tax,
+            ),
+            invoice_ids=[invoice.id],
+            partner_id=child_partner.id,
+        )._create_payment()
+
+        self.assertEqual(payment.line_ids.partner_id, self.partner)
+        self.assert_invoice_payment(
+            payment=payment,
+            invoice=invoice,
+            expected_values={
+                'payment_amount': 90.0,
+                'payment_amount_total': 100.0,
+                'invoice_payment_state': invoice._get_invoice_in_payment_state(),
+                'invoice_amount_paid': 90.0,
+                'payment_line_ids': [
+                    {'credit': 0.0, 'debit': 90.0, 'account_type': 'asset_current'},
+                    {'credit': 100, 'debit': 0.0, 'account_type': 'asset_receivable'},
+                    {'credit': 0, 'debit': 10.0, 'account_type': 'expense'},
+                ],
+            },
+        )
