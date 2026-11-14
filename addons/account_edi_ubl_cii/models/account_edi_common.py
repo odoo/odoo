@@ -1143,8 +1143,8 @@ class AccountEdiCommon(models.AbstractModel):
         Should stay consistent with `_get_country_specific_vat_variants`.
         """
         country = self._import_retrieve_country(collected_values)
-        customer_vat = customer.vat.replace(' ', '').upper()
-        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
+        customer_vat = customer.vat.replace(' ', '').replace(':', '').upper()
+        vat_to_compare = vat.replace(' ', '').replace('.', '').replace(':', '').upper()
         if country and country.code == 'CH':
             customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
             vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))

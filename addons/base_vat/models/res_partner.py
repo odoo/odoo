@@ -113,9 +113,9 @@ class ResPartner(models.Model):
         This has to be done because some countries' code are one character long instead of two (i.e. "T" for Japan)
         '''
         if len(vat) > 1 and vat[1].isalpha():
-            vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+            vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '').replace(':', '')
         else:
-            vat_country, vat_number = vat[:1].lower(), vat[1:].replace(' ', '')
+            vat_country, vat_number = vat[:1].lower(), vat[1:].replace(' ', '').replace(':', '')
         return vat_country, vat_number
 
     @api.model
