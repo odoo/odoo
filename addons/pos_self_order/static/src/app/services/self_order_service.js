@@ -1103,6 +1103,10 @@ export class SelfOrder {
         return webFormatCurrency(price, this.currency.id);
     }
 
+    skipCartVerification(line) {
+        return false;
+    }
+
     verifyCart() {
         let result = true;
         const unavailableProducts = new Set();
@@ -1110,7 +1114,7 @@ export class SelfOrder {
 
         const deliveryProductId = this.currentOrder.preset_id?.delivery_product_id?.id;
         for (const line of this.currentOrder.unsentLines) {
-            if (line.combo_parent_id?.uuid) {
+            if (line.combo_parent_id?.uuid || this.skipCartVerification(line)) {
                 continue;
             }
             if (deliveryProductId && line.product_id?.id === deliveryProductId) {
@@ -1258,6 +1262,10 @@ export class SelfOrder {
             : null;
     }
 
+    isLineCounted(line) {
+        return true;
+    }
+
     calculateOrderLineTotals(changes) {
         return Object.entries(changes).reduce(
             (acc, [key, { qty }]) => {
@@ -1266,7 +1274,7 @@ export class SelfOrder {
                     if (line.isTipLine()) {
                         return acc;
                     }
-                    if (!line.combo_parent_id) {
+                    if (!line.combo_parent_id && this.isLineCounted(line)) {
                         acc.count += qty;
                     }
                     const prices = line.getPriceDetailsWithQty(qty);

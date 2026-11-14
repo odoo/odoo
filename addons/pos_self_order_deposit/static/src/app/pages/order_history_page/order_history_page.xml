@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="pos_self_order_deposit.OrdersHistoryPage" t-inherit="pos_self_order.OrdersHistoryPage" t-inherit-mode="extension">
+    <xpath expr="//div[@t-foreach='order.getOrderlines()']" position="attributes">
+        <attribute name="t-foreach">this.getLines(order)</attribute>
+    </xpath>
+    <xpath expr="//div[@t-if='line.customer_note']" position="before">
+        <div t-if="line.depositLine" class="text-muted small">
+            Incl. deposit <t t-out="this.getDepositPrice(line)"/>
+        </div>
+    </xpath>
+</t>
+</templates>

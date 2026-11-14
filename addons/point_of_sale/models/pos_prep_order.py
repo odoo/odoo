@@ -24,7 +24,7 @@ class PosPrepOrder(models.Model):
         """
         prep_order = False
 
-        for line in order.lines:
+        for line in self._get_lines_to_prepare(order):
             prep_qty = sum(pl.quantity - pl.cancelled for pl in line.prep_line_ids)
             quantity_diff = line.qty - prep_qty
 
@@ -53,3 +53,7 @@ class PosPrepOrder(models.Model):
         # Cancel all orphaned prep lines (no pos_order_line_id) - e.g. from deleted orderlines
         for prep_line in order.prep_order_ids.prep_line_ids.filtered(lambda l: not l.pos_order_line_id):
             prep_line.cancelled = prep_line.quantity
+
+    @api.model
+    def _get_lines_to_prepare(self, order):
+        return order.lines
