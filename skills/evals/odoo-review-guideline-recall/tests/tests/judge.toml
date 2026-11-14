@@ -1,0 +1,156 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Tests.
+# Rules: odoo-guidelines guidelines/tests.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "ts1_test_file_not_imported"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_portal.py`:
+tests/test_portal.py is not imported in tests/__init__.py, so its test never
+runs.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts2_test_file_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/booking_tests.py`:
+tests/booking_tests.py is not named test_*.py, so it is skipped although
+__init__.py imports it.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts3_both_install_tags"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 11:
+TestEquipmentBooking is tagged both post_install and at_install, so it runs
+twice; set exactly one.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts4_at_install_without_comment"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/booking_tests.py`, line 6:
+TestBookingLocation opts into at_install with no comment justifying it.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts5_query_count_in_business_test"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 38:
+test_price wraps business assertions in assertQueryCount(60), a loose budget
+in a business test; query counts belong in dedicated performance tests, with
+exact budgets.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts6_mute_logger"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 43:
+test_reminder_without_email triggers the expected 'holder has no email'
+warning without mute_logger, so it reaches the runbot log.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts7_inherited_tests_not_run"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 61:
+TestEquipmentBookingManager defines no test of its own; inherited test_*
+methods are not collected without allow_inherited_tests_method = True, so
+the manager variant runs nothing.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts8_demo_data"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 17:
+The tests rely on the demo partner base.res_partner_2 from a plain
+TransactionCase; demo data is not guaranteed. Create the records (or start
+from BaseCommon).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ts9_implementation_assert"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 52:
+test_reminder_sent patches the private _send_reminder and asserts it is
+called, testing implementation rather than behavior (a mail queued,
+reminder_sent set).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_leases" name="My Leases">
+        <t t-call="portal.portal_layout">
+            <h3>My leases</h3>
+            <t t-foreach="leases" t-as="lease">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 t-out="lease.name"/>
+                        <p>
+                            <span t-out="lease.property_name"/>,
+                            <span t-esc="lease.rent_amount"/> per month
+                        </p>
+                        <p>Pay to: <span t-out="lease.owner_bank_account"/></p>
+                        <div class="o_rental_lease_note" t-att-data-note="lease.notes"/>
+                        <div class="o_rental_lease_terms" t-raw="lease.notes"/>
+                        <form t-attf-action="/my/leases/#{lease.id}/update" method="post">
+                            <textarea name="notes" class="form-control" t-out="lease.notes"/>
+                            <button type="submit" class="btn btn-primary mt-2">Save</button>
+                        </form>
+                        <a t-attf-href="/my/leases/#{lease.id}/cancel" class="btn btn-link">Cancel lease</a>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

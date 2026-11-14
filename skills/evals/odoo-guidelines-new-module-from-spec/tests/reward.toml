@@ -1,0 +1,12 @@
+# runtime:    deterministic: the touched modules install (with and without
+#             demo data) and upgrade without error, their views, actions,
+#             menus and assets load, the agent's own tests pass, and no
+#             existing test breaks
+# coverage:   LLM judge: the behaviours of the spec, against the original module
+# guidelines: LLM judge: the code against the house rules of the skills
+# design:     LLM judge: the engineering choices, relative to the original (3/5
+#             is on par); reported, weight 0 until calibrated
+[[reward]]
+name = "reward"
+aggregation = "weighted-mean"
+weights = { runtime = 3.0, coverage = 4.0, guidelines = 3.0, design = 0.0 }

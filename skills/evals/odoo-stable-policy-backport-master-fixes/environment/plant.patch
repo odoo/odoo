@@ -1,0 +1,72 @@
+diff --git a/addons/l10n_it_stock_ddt/models/stock_picking.py b/addons/l10n_it_stock_ddt/models/stock_picking.py
+index 97ddb64a6b81..344d5ef65322 100644
+--- a/addons/l10n_it_stock_ddt/models/stock_picking.py
++++ b/addons/l10n_it_stock_ddt/models/stock_picking.py
+@@ -21,9 +21,10 @@ class StockPicking(models.Model):
+     l10n_it_transport_method_details = fields.Char('Transport Note')
+     l10n_it_parcels = fields.Integer(string="Parcels", default=1)
+     l10n_it_ddt_number = fields.Char('DDT Number', readonly=True)
++    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+     l10n_it_show_print_ddt_button = fields.Boolean(compute="_compute_l10n_it_show_print_ddt_button")
+ 
+-    @api.depends('country_code',
++    @api.depends('l10n_it_country_code',
+                  'picking_type_code',
+                  'state',
+                  'is_locked',
+@@ -35,7 +36,7 @@ class StockPicking(models.Model):
+         # or dropshipping (picking going from supplier to customer)
+         for picking in self:
+             picking.l10n_it_show_print_ddt_button = (
+-                picking.country_code == 'IT'
++                picking.l10n_it_country_code == 'IT'
+                 and picking.state == 'done'
+                 and picking.is_locked
+                 and (picking.picking_type_code == 'outgoing'
+diff --git a/addons/l10n_it_stock_ddt/tests/test_ddt.py b/addons/l10n_it_stock_ddt/tests/test_ddt.py
+index fa8813ab2e8f..f0c8768e7b99 100644
+--- a/addons/l10n_it_stock_ddt/tests/test_ddt.py
++++ b/addons/l10n_it_stock_ddt/tests/test_ddt.py
+@@ -170,3 +170,23 @@ class TestDDT(TestSaleCommon):
+             {'l10n_it_ddt_number': so.picking_ids[-1].l10n_it_ddt_number},
+             {'l10n_it_ddt_number': so.picking_ids[-2].l10n_it_ddt_number},
+         ])
++
++    def test_ddt_sequence_follows_warehouse(self):
++        """
++            Renaming the sequence of a warehouse's delivery operation type must
++            rename its DDT sequence as well.
++        """
++        warehouse = self.env['stock.warehouse'].create({
++            'name': 'Milano',
++            'code': 'MIL',
++            'company_id': self.company_data['company'].id,
++        })
++        picking_type = warehouse.out_type_id
++        self.assertTrue(picking_type.l10n_it_ddt_sequence_id, 'An Italian delivery operation type gets a DDT sequence')
++
++        picking_type.write({'sequence_code': 'MOUT', 'warehouse_id': warehouse.id})
++        self.assertEqual(picking_type.l10n_it_ddt_sequence_id.prefix, 'MOUTDDT')
++        self.assertEqual(picking_type.l10n_it_ddt_sequence_id.name, 'Milano Sequence MOUT')
++
++        name, prefix = picking_type._get_dtt_ir_seq_vals(warehouse, 'MOUT')
++        self.assertEqual((name, prefix), ('Milano Sequence MOUT', 'MOUTDDT'))
+diff --git a/addons/l10n_it_stock_ddt/views/stock_picking_views.xml b/addons/l10n_it_stock_ddt/views/stock_picking_views.xml
+index 9521ae08bcf2..3a97bed7fa48 100644
+--- a/addons/l10n_it_stock_ddt/views/stock_picking_views.xml
++++ b/addons/l10n_it_stock_ddt/views/stock_picking_views.xml
+@@ -12,11 +12,11 @@
+                         groups="base.group_user"/>
+             </xpath>
+             <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+-                <attribute name="invisible">l10n_it_show_print_ddt_button or picking_type_code == 'outgoing' and country_code == 'IT'</attribute>
++                <attribute name="invisible">l10n_it_show_print_ddt_button or picking_type_code == 'outgoing' and l10n_it_country_code == 'IT'</attribute>
+             </xpath>
+             <group name='carrier_data' position="after">
+-                <group string="DDT Information" invisible="country_code != 'IT' or picking_type_code not in ('outgoing', 'dropship')">
+-                    <field name="country_code" invisible="1"/>
++                <group string="DDT Information" invisible="l10n_it_country_code != 'IT' or picking_type_code not in ('outgoing', 'dropship')">
++                    <field name="l10n_it_country_code" invisible="1"/>
+                     <field name="l10n_it_ddt_number"/>
+                     <field name="l10n_it_transport_reason"/>
+                     <field name="l10n_it_transport_method"/>

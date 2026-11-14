@@ -1,0 +1,278 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Recordsets, computes, methods, transactions.
+# Rules: odoo-guidelines guidelines/orm.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "or1_loop_instead_of_mapped"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 136:
+action_return builds equipment_ids with a for loop and append where
+self.equipment (or mapped) reads better.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or2_len_test"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 212:
+_cron_send_reminders tests if len(bookings) > 0: instead of if bookings:.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or3_multi_record_read"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 192:
+_send_reminder reads self.partner_id.email on the whole recordset, while
+_cron_send_reminders calls it on every due booking: with bookings of two
+holders it raises 'Expected singleton', and the email check is not per
+booking. Iterate, or check per record.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or4_prefix_domain"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 217:
+_cron_archive_past_bookings hand-builds a '|' prefix-notation domain;
+combine domains with odoo.fields.Domain (Domain(...) | Domain(...)).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or5_context_key"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/wizard/wizard.py`, line 19:
+The custom context key skip_overlap_check (set by the extend wizard, read by
+_validate_no_overlap) is not prefixed by the module; module-specific context
+keys are prefixed (equipment_booking_...) so they do not leak or collide.
+Flagging the key itself passes; flagging only that the wizard can bypass the
+overlap check does not.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or6_inherits"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/equipment_booking_location.py`, line 10:
+equipment.booking.location uses delegation inheritance (_inherits
+res.partner); it inherits fields but not methods and should be avoided where
+a plain Many2one to the address does the job.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or7_create_multi"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 237:
+equipment.booking.lines overrides create(self, vals) with @api.model and a
+single vals; create takes a list of values with @api.model_create_multi
+(create(self, vals_list)).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or8_depends_incomplete"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 79:
+_compute_is_late reads state but @api.depends lists only end_datetime; every
+field read must be listed.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or9_compute_side_effect"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 90:
+The stored compute _compute_return_datetime posts a chatter message (and
+reads the clock): a stored compute must have no side effects; it can run
+again on recompute, and posting belongs in action_return.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or10_onchange_integrity"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 111:
+That the end comes after the start is only enforced in _onchange_dates: RPC,
+the portal route, imports and the wizard can still store a booking ending
+before it starts. Enforce it with @api.constrains or a models.Constraint.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or11_sql_constraints"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/equipment_booking_location.py`, line 28:
+equipment.booking.location declares _sql_constraints, which master ignores
+(with a warning): the unique constraint is never created; use
+models.Constraint.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or12_public_helper"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 173:
+compute_price_for_period is a public method nothing calls from outside: it
+is exposed over RPC for no reason; make it private
+(_compute_price_for_period). (Reporting it only as unused code does not
+pass.)
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or13_premature_hook"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 178:
+_get_reminder_delay returns a constant, has one caller and no override: an
+extension point split off before anyone needs it.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or14_request_in_model"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 161:
+action_share_link uses odoo.http.request in a model method; request is
+absent in crons, RPC, tests and the shell. Use self.get_base_url() (or pass
+the value in from the controller).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or15_cr_commit"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 220:
+_cron_archive_past_bookings calls self.env.cr.commit() in its loop, with no
+comment justifying it; the framework owns the transaction.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "or16_broad_except"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 200:
+_send_reminder wraps the whole send in except Exception: pass, which
+silently swallows every error (template missing, mail failure, code bugs);
+catch specific exceptions over the smallest block, and log them.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

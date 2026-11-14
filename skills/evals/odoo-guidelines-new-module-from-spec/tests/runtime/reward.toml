@@ -1,0 +1,7 @@
+# Every runtime check weighs the same.
+[scoring.runtime]
+aggregation = "weighted-mean"
+
+[[reward]]
+aggregation = "weighted-mean"
+weights = { runtime = 1.0 }

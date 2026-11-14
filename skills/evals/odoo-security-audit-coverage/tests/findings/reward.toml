@@ -1,0 +1,5 @@
+# Each judge file is weighted by its number of criteria, so every planted issue
+# counts the same in the findings score.
+[[reward]]
+aggregation = "weighted-mean"
+weights = { access = 6.0, models = 7.0, routes_input = 6.0, routes_exposure = 5.0, frontend = 4.0, review_quality = 2.0 }

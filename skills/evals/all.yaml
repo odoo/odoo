@@ -1,0 +1,73 @@
+# Every task, every agent, with all the repository's skills attached: the agent
+# picks the ones that apply, as it would in the repository.
+#   cd skills/evals && harbor run -c all.yaml
+# Skill paths are relative to the directory harbor runs from. Each task's source
+# names the skill it evaluates; results are summarized per model and source.
+jobs_dir: jobs
+n_attempts: 3
+n_concurrent_trials: 3
+
+# The judges that grade every task, pinned here so a run records them; a task
+# run alone with -p falls back to the judge set in its tests/*.toml.
+verifier:
+  env:
+    REWARDKIT_JUDGE: anthropic/claude-opus-5-5
+    REWARDKIT_REASONING_EFFORT: high
+
+agents:
+  - name: claude-code
+    model_name: anthropic/claude-haiku-5-5
+    skills: &skills
+      - ../odoo-git
+      - ../odoo-guidelines
+      - ../odoo-review
+      - ../odoo-security
+      - ../odoo-stable-policy
+      - ../odoo-web-guidelines
+  - name: claude-code
+    model_name: anthropic/claude-sonnet-5-5
+    skills: *skills
+  - name: claude-code
+    model_name: anthropic/claude-opus-5-5
+    skills: *skills
+  # Open-weight models through OpenRouter's Anthropic-compatible API, on the
+  # same claude-code harness. model_name is OpenRouter's model id; the key is
+  # read from OPENROUTER_API_KEY and replaces the Anthropic one for these agents.
+  - name: claude-code
+    model_name: z-ai/glm-5.3
+    skills: *skills
+    env: &openrouter
+      ANTHROPIC_BASE_URL: https://openrouter.ai/api
+      ANTHROPIC_API_KEY: ${OPENROUTER_API_KEY}
+      ANTHROPIC_AUTH_TOKEN: ${OPENROUTER_API_KEY}
+  - name: claude-code
+    model_name: moonshotai/kimi-k3
+    skills: *skills
+    env: *openrouter
+  - name: codex
+    model_name: openai/gpt-6-luna
+    skills: *skills
+  - name: codex
+    model_name: openai/gpt-6-sol
+    skills: *skills
+  - name: codex
+    model_name: openai/gpt-6-astra
+    skills: *skills
+
+tasks:
+  - path: ./odoo-git-fix-message-from-ticket
+    source: odoo-git
+  - path: ./odoo-git-fix-message-without-ticket
+    source: odoo-git
+  - path: ./odoo-security-audit-coverage
+    source: odoo-security
+  - path: ./odoo-security-review-pr-flaw
+    source: odoo-security
+  - path: ./odoo-stable-policy-fix-without-update
+    source: odoo-stable-policy
+  - path: ./odoo-review-guideline-recall
+    source: odoo-review
+  - path: ./odoo-stable-policy-backport-master-fixes
+    source: odoo-stable-policy
+  - path: ./odoo-guidelines-new-module-from-spec
+    source: odoo-guidelines
