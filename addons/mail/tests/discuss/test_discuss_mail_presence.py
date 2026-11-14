@@ -93,6 +93,27 @@ class TestMailPresence(WebsocketCase, MailCommon):
                 cookies={"session_id": session.sid},
             )
 
+    def test_status_message(self):
+        bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
+        session = self.authenticate(bob.login, bob.login)
+        with self.assertBus(
+            BusResult(
+                (bob, "presence"),
+                "mail.record/insert",
+                {"res.users": [{"id": bob.id, "status_message": "Off on Wednesdays"}]},
+            ),
+        ):
+            self.make_jsonrpc_request(
+                "/mail/set_status_message",
+                {"message": "  Off on Wednesdays  "},
+                cookies={"session_id": session.sid},
+            )
+        self.assertEqual(bob.status_message, "Off on Wednesdays")
+        self.make_jsonrpc_request(
+            "/mail/set_status_message", {"message": "   "}, cookies={"session_id": session.sid}
+        )
+        self.assertFalse(bob.status_message)
+
     def test_presence_status_only_sent_to_self(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
         with self.assertBus(

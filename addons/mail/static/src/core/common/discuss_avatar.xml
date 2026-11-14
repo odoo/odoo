@@ -6,9 +6,19 @@
                 <mask t-att-id="this.uniqueId" width="1000" height="1000">
                     <rect x="0" y="0" height="100%" width="100%" fill="white"/>
                     <!-- geometry of the icon mask is computed from the rendered icon, see updateIconMask -->
+                    <t t-set="safariNonBreakingSpace" t-value="this.isBrowserSafari() ? '\u00a0' : ''"/> <!-- hack for making mask work in Safari -->
+                    <t t-if="this.statusMessage()">
+                        <Portal target="'body'">
+                            <svg width="0" height="0" class="position-absolute" aria-hidden="true">
+                                <defs>
+                                    <text t-att-id="this.uniqueId + '.statusMessage'" class="oi oi-filled" data-mask-icon="chat_bubble" dominant-baseline="central" fill="black" stroke="black" t-att-stroke-width="this.iconMaskGap * 2" stroke-linejoin="round" aria-hidden="true" t-out="'chat_bubble' + safariNonBreakingSpace"/>
+                                </defs>
+                            </svg>
+                        </Portal>
+                        <use t-att-href="'#' + this.uniqueId + '.statusMessage'" t-ref="this.statusMessageMaskRef"/>
+                    </t>
                     <t t-if="this.showIconMask">
                         <t t-set="imStatusData" t-value="this.imStatusData"/>
-                        <t t-set="safariNonBreakingSpace" t-value="this.isBrowserSafari() ? '\u00a0' : ''"/> <!-- hack for making mask work in Safari -->
                         <t t-if="imStatusData">
                             <!-- glyph is a ligature, i.e. text: keep it out of the text content of the avatar -->
                             <Portal target="'body'">
@@ -34,6 +44,9 @@
                     <ImStatus t-elif="this.user" user="this.user" persona="this.persona"  typing="this.props.typing"/>
                     <ImStatus t-elif="this.persona" persona="this.persona" typing="this.props.typing"/>
                 </span>
+            </span>
+            <span t-if="this.statusMessage()" class="o-mail-DiscussAvatar-statusMessageIcon position-absolute d-flex align-items-center justify-content-center">
+                <i class="oi d-flex flex-shrink-0 opacity-50" data-icon="chat_bubble" role="img" aria-hidden="true" t-ref="this.statusMessageIconRef"/>
             </span>
         </span>
     </t>

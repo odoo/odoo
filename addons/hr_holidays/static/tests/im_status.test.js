@@ -23,18 +23,18 @@ test("change icon on change partner im_status for leave variants", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']:count(1)"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title^='User is on leave and online ·']:count(1)"
     );
     sendPresenceUpdate("res.users", serverState.userId, "offline");
     await waitFor(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave']:count(1)"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title^='User is on leave ·']:count(1)"
     );
     sendPresenceUpdate("res.users", serverState.userId, "away");
     await waitFor(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and idle']:count(1)"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title^='User is on leave and idle ·']:count(1)"
     );
     sendPresenceUpdate("res.users", serverState.userId, "online");
     await waitFor(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']:count(1)"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title^='User is on leave and online ·']:count(1)"
     );
 });

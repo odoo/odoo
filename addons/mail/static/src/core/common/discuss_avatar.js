@@ -29,6 +29,7 @@ export class DiscussAvatar extends Component {
                 t.instanceOf(this.store["res.users"]),
                 t.instanceOf(this.store["mail.thread"]),
             ]),
+            showStatusMessage: t.boolean().optional(false),
             size: t.number().optional(32),
             typing: t.boolean().optional(true),
         });
@@ -40,13 +41,19 @@ export class DiscussAvatar extends Component {
         this.iconRef = signal.ref();
         this.glyphMaskRef = signal.ref();
         this.rectMaskRef = signal.ref();
+        this.statusMessageIconRef = signal.ref();
+        this.statusMessageMaskRef = signal.ref();
         useEffect(() => {
             const rootEl = this.rootRef();
             const iconEl = this.iconRef();
             // the mask element is replaced when the icon switches between glyph and rect cutouts
             const glyphMaskEl = this.glyphMaskRef();
             const rectMaskEl = this.rectMaskRef();
-            if (!rootEl || !iconEl || (!glyphMaskEl && !rectMaskEl)) {
+            const statusMessageIconEl = this.statusMessageIconRef();
+            const statusMessageMaskEl = this.statusMessageMaskRef();
+            const hasIconMask = iconEl && (glyphMaskEl || rectMaskEl);
+            const hasStatusMessageMask = statusMessageIconEl && statusMessageMaskEl;
+            if (!rootEl || (!hasIconMask && !hasStatusMessageMask)) {
                 return;
             }
             // Observing notifies once initially, then on size changes (of the icon, or of the
@@ -54,7 +61,12 @@ export class DiscussAvatar extends Component {
             // the geometry there does not force a layout per avatar like after each patch.
             const resizeObserver = new ResizeObserver(() => this.updateIconMask());
             resizeObserver.observe(rootEl);
-            resizeObserver.observe(iconEl);
+            if (hasIconMask) {
+                resizeObserver.observe(iconEl);
+            }
+            if (hasStatusMessageMask) {
+                resizeObserver.observe(statusMessageIconEl);
+            }
             return () => resizeObserver.disconnect();
         });
     }
@@ -69,35 +81,60 @@ export class DiscussAvatar extends Component {
      */
     updateIconMask() {
         const rootEl = this.rootRef();
+        const statusMessageIconEl = this.statusMessageIconRef();
+        const statusMessageMaskEl = this.statusMessageMaskRef();
+        if (rootEl && statusMessageIconEl && statusMessageMaskEl) {
+            this.fitGlyphMask(statusMessageMaskEl, statusMessageIconEl);
+        }
         const iconEl = this.iconRef();
         const glyphMaskEl = this.glyphMaskRef();
         const rectMaskEl = this.rectMaskRef();
         if (!rootEl || !iconEl || (!glyphMaskEl && !rectMaskEl)) {
             return;
         }
-        const rootRect = rootEl.getBoundingClientRect();
-        const iconRect = iconEl.getBoundingClientRect();
-        // client rects include transforms of ancestors, SVG user units are CSS pixels of the root
-        const ratio = rootRect.width / rootEl.offsetWidth || 1;
-        const x = (iconRect.left - rootRect.left) / ratio;
-        const y = (iconRect.top - rootRect.top) / ratio;
-        const width = iconRect.width / ratio;
-        const height = iconRect.height / ratio;
-        const scale = this.iconScale;
         if (glyphMaskEl) {
-            // glyph starts at its x and is vertically centered on its y (dominant-baseline)
-            glyphMaskEl.setAttribute(
-                "transform",
-                `translate(${x}, ${y + height / 2}) scale(${scale})`
-            );
+            this.fitGlyphMask(glyphMaskEl, iconEl);
             return;
         }
-        const gap = this.iconMaskGap * scale;
+        const { x, y, width, height } = this.getIconBox(iconEl);
+        const gap = this.iconMaskGap * this.iconScale;
         rectMaskEl.setAttribute("x", x - gap);
         rectMaskEl.setAttribute("y", y - gap);
         rectMaskEl.setAttribute("width", width + 2 * gap);
         rectMaskEl.setAttribute("height", height + 2 * gap);
         rectMaskEl.setAttribute("rx", Math.min(width, height) / 2 + gap);
+    }
+
+    /**
+     * @param {SVGUseElement} glyphMaskEl
+     * @param {HTMLElement} iconEl
+     */
+    fitGlyphMask(glyphMaskEl, iconEl) {
+        const { x, y, height } = this.getIconBox(iconEl);
+        // glyph starts at its x and is vertically centered on its y (dominant-baseline)
+        glyphMaskEl.setAttribute(
+            "transform",
+            `translate(${x}, ${y + height / 2}) scale(${this.iconScale})`
+        );
+    }
+
+    /** @param {HTMLElement} iconEl */
+    getIconBox(iconEl) {
+        const rootEl = this.rootRef();
+        const rootRect = rootEl.getBoundingClientRect();
+        const iconRect = iconEl.getBoundingClientRect();
+        // client rects include transforms of ancestors, SVG user units are CSS pixels of the root
+        const ratio = rootRect.width / rootEl.offsetWidth || 1;
+        return {
+            x: (iconRect.left - rootRect.left) / ratio,
+            y: (iconRect.top - rootRect.top) / ratio,
+            width: iconRect.width / ratio,
+            height: iconRect.height / ratio,
+        };
+    }
+
+    statusMessage() {
+        return this.props.showStatusMessage ? this.user?.status_message : undefined;
     }
 
     /** @returns {DiscussChannel|undefined} */

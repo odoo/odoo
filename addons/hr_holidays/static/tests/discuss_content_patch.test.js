@@ -29,7 +29,7 @@ test("show 'Back on' in header of dm chat", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(
-        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 1, 2023'):count(1)"
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-statusSubtitle:text('Back on Jan 1, 2023'):count(1)"
     );
 });
 
@@ -57,6 +57,35 @@ test("show 'Back on' in header of dm chat even when showing local timezone", asy
     await openDiscuss(channelId);
     await waitFor(".o-mail-DiscussContent-header .o-mail-DiscussContent-localDateTime:count(1)");
     await waitFor(
-        ".o-mail-DiscussContent-header .o-mail-DiscussContent-outOfOffice:text('Back on Jan 3, 2023'):count(1)"
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-statusSubtitle:text('Back on Jan 3, 2023'):count(1)"
+    );
+});
+
+test("status message takes precedence over 'Back on' in header of dm chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const userId = pyEnv["res.users"].create({
+        im_status: "online",
+        partner_id: partnerId,
+        status_message: "Ask Mitchell meanwhile",
+    });
+    const employee = pyEnv["hr.employee"].create({
+        user_id: userId,
+        leave_date_to: "2023-01-01",
+    });
+    pyEnv["res.users"].write([userId], {
+        employee_ids: [Command.link(employee)],
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-statusSubtitle:text('Ask Mitchell meanwhile'):count(1)"
     );
 });
