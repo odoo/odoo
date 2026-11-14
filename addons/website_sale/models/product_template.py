@@ -755,6 +755,9 @@ class ProductTemplate(models.Model):
             product = self._get_variant_for_combination(combination)
 
         product_or_template = product or self
+        variant_changed = product_id and product.id != product_id
+        if variant_changed or uom not in product_or_template._get_available_uoms():
+            uom = product_or_template._get_main_uom()
         combination = combination or product.product_template_attribute_value_ids
 
         display_name = product_or_template.with_context(display_default_code=False).display_name
