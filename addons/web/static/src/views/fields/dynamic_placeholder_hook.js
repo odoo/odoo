@@ -4,7 +4,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { DynamicPlaceholderPopover } from "./dynamic_placeholder_popover";
 
-export function useDynamicPlaceholder(elementRef) {
+export function useDynamicPlaceholder(elementRef, elementRefPosition) {
     const TRIGGER_KEY = "#";
     const props = useProps();
     const triggerKeyReplaceRegex = new RegExp(`${TRIGGER_KEY}$`);
@@ -71,7 +71,7 @@ export function useDynamicPlaceholder(elementRef) {
         }
         closeCallback = opts.closeCallback;
         positionCallback = opts.positionCallback;
-        popover.open(elementRef(), {
+        popover.open(elementRefPosition(), {
             resModel: model,
             validate: opts.validateCallback,
         });
