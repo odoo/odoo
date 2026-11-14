@@ -1355,6 +1355,92 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         }
         yield self.populate_document(document_params), expected_values
 
+    def _test_zero_total_round_globally(self):
+        """When the lines of a document cancel each other, the raw total is zero but the
+        rounded amounts of the lines may not sum to zero. The rounding delta must still be
+        distributed so that the total of the document is zero.
+        """
+        tax_incl = self.percent_tax(15, price_include_override="tax_included")
+        tax_excl = self.percent_tax(15)
+
+        # 13.23 / 1.15 = 11.5043 is rounded to 11.50 but -26.46 / 1.15 = -23.0087 is rounded to -23.01.
+        document_params = self.init_document(
+            [
+                {"price_unit": 13.23, "tax_ids": tax_incl},
+                {"price_unit": 13.23, "tax_ids": tax_incl},
+                {"price_unit": -26.46, "tax_ids": tax_incl},
+            ]
+        )
+        with self.with_tax_calculation_rounding_method("round_globally"):
+            expected_values = {
+                "same_tax_base": True,
+                "currency_id": self.currency.id,
+                "base_amount_currency": 0.0,
+                "tax_amount_currency": 0.0,
+                "total_amount_currency": 0.0,
+                "subtotals": [
+                    {
+                        "name": "Untaxed Amount",
+                        "base_amount_currency": 0.0,
+                        "tax_amount_currency": 0.0,
+                        "tax_groups": [
+                            {
+                                "id": self.tax_groups[0].id,
+                                "base_amount_currency": 0.0,
+                                "tax_amount_currency": 0.0,
+                                "display_base_amount_currency": 0.0,
+                            }
+                        ],
+                    }
+                ],
+            }
+            yield 1, self.populate_document(document_params), expected_values
+
+        # 0.005 is rounded to 0.01 for the first two lines while the third line is -0.01.
+        document_params = self.init_document(
+            [
+                {"price_unit": 0.01, "quantity": 0.5, "tax_ids": tax_excl},
+                {"price_unit": 0.01, "quantity": 0.5, "tax_ids": tax_excl},
+                {"price_unit": -0.01, "tax_ids": tax_excl},
+            ]
+        )
+        with self.with_tax_calculation_rounding_method("round_globally"):
+            expected_values = {
+                "same_tax_base": True,
+                "currency_id": self.currency.id,
+                "base_amount_currency": 0.0,
+                "tax_amount_currency": 0.0,
+                "total_amount_currency": 0.0,
+                "subtotals": [
+                    {
+                        "name": "Untaxed Amount",
+                        "base_amount_currency": 0.0,
+                        "tax_amount_currency": 0.0,
+                        "tax_groups": [
+                            {
+                                "id": self.tax_groups[0].id,
+                                "base_amount_currency": 0.0,
+                                "tax_amount_currency": 0.0,
+                                "display_base_amount_currency": 0.0,
+                            }
+                        ],
+                    }
+                ],
+            }
+            yield 2, self.populate_document(document_params), expected_values
+
+    def test_zero_total_round_globally_generic_helpers(self):
+        for test_index, document, expected_values in self._test_zero_total_round_globally():
+            with self.subTest(test_index=test_index):
+                self.assert_tax_totals_summary(document, expected_values)
+        self._run_js_tests()
+
+    def test_zero_total_round_globally_invoices(self):
+        for test_index, document, expected_values in self._test_zero_total_round_globally():
+            with self.subTest(test_index=test_index):
+                invoice = self.convert_document_to_invoice(document)
+                self.assert_invoice_tax_totals_summary(invoice, expected_values)
+
     def test_reverse_charge_taxes_1_generic_helpers(self):
         for document, expected_values in self._test_reverse_charge_taxes_1():
             self.assert_tax_totals_summary(document, expected_values)
