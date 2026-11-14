@@ -27,7 +27,8 @@ import { generateHTMLId } from "@web/core/utils/strings";
 const { DateTime } = luxon;
 
 export class Form extends Interaction {
-    static selector = ".s_website_form form, form.s_website_form"; // !compatibility
+    // The signup form is submitted to `/web/signup` (see `SignupForm`).
+    static selector = ".s_website_form form:not(.oe_signup_form), form.s_website_form"; // !compatibility
     dynamicSelectors = {
         ...this.dynamicSelectors,
         _endMessage: () => this.el.parentNode.querySelector(".s_website_form_end_message"),
