@@ -2164,6 +2164,10 @@ export class Rtc extends Record {
                     this.screenTrack = undefined;
                     closeStream(this.sourceScreenStream);
                     this.sourceScreenStream = null;
+                    if (this.screenAudioTrack) {
+                        this.screenAudioTrack = undefined;
+                        this.updateAudioTrack();
+                    }
                     break;
                 }
             }
@@ -2303,6 +2307,8 @@ export class Rtc extends Record {
             this.audioTrack = destination.stream.getAudioTracks()[0];
         } else {
             this.audioTrack = micAudioTrack ?? screenAudioTrack;
+            this.audioContext?.close();
+            this.audioContext = undefined;
         }
         await this.network?.updateUpload("audio", this.audioTrack);
     }
@@ -2316,8 +2322,16 @@ export class Rtc extends Record {
         this.disconnectMicAudioTrackListeners?.();
         this.micAudioTrack?.stop();
         this.micAudioTrack = undefined;
+<<<<<<< 61c86aa444876f962047f4192e695560a1af049e
         this.isMicAudioTrackMuted = false;
         this.audioTrack?.stop();
+||||||| f73aeb6142d5594b8d2af03150e012abcfa18ee5
+        this.audioTrack?.stop();
+=======
+        if (this.audioTrack !== this.screenAudioTrack) {
+            this.audioTrack?.stop();
+        }
+>>>>>>> 69b5cb25dcafea5837b7716d9239b830b9f7b29b
         this.audioTrack = undefined;
         if (!this.localChannel) {
             return;
@@ -2336,7 +2350,14 @@ export class Rtc extends Record {
                     this.setMute(false);
                 }
             } catch {
+<<<<<<< 61c86aa444876f962047f4192e695560a1af049e
                 this.showMediaUnavailableWarning({ microphone: true }, options);
+||||||| f73aeb6142d5594b8d2af03150e012abcfa18ee5
+                this.showMediaUnavailableWarning({ microphone: true });
+=======
+                this.showMediaUnavailableWarning({ microphone: true });
+                this.updateAudioTrack();
+>>>>>>> 69b5cb25dcafea5837b7716d9239b830b9f7b29b
                 return;
             }
             if (!this.localSession) {
@@ -2354,6 +2375,8 @@ export class Rtc extends Record {
             this.micAudioTrack = micAudioTrack;
             this.setupMicAudioTrackListeners();
             this.linkVoiceActivationDebounce();
+            this.updateAudioTrack();
+        } else {
             this.updateAudioTrack();
         }
     }
