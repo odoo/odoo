@@ -62,8 +62,8 @@ class PosOrderReceipt(models.AbstractModel):
             data['image']['qrcode_right'] = qrcode_right_data
         return data
 
-    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False):
-        content = super().order_receipt_generate_html(basic_receipt, printer_style)
+    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False, paper_size=False):
+        content = super().order_receipt_generate_html(basic_receipt, printer_style, paper_size)
         if any((
             self.company_id.account_fiscal_country_id.code != 'TW',
             not self.config_id.is_ecpay_enabled,
@@ -75,11 +75,11 @@ class PosOrderReceipt(models.AbstractModel):
 
         ecpay_certificate_receipt = self.env['ir.qweb']._render(
             'l10n_tw_edi_ecpay_pos.ecpay_certificate_receipt',
-            values=self.order_receipt_generate_data(basic_receipt),
+            values=self._order_receipt_generate_paper_data(basic_receipt, paper_size),
         )
         ecpay_transaction_receipt = self.env['ir.qweb']._render(
             'l10n_tw_edi_ecpay_pos.ecpay_transaction_receipt',
-            values=self.order_receipt_generate_data(basic_receipt),
+            values=self._order_receipt_generate_paper_data(basic_receipt, paper_size),
         )
         separator = '<div style="display:block; clear:both; height:4mm;"></div>'
         return separator.join([content, ecpay_certificate_receipt, ecpay_transaction_receipt])
