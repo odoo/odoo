@@ -78,34 +78,45 @@ class StockValuationLayer(models.Model):
         return self.product_id
 
     def _validate_accounting_entries(self):
-        am_vals = []
         aml_to_reconcile = defaultdict(set)
-        move_ids = OrderedSet()
-        svl_move_list = defaultdict(int) 
-        for svl in self:
-            if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
-                continue
-            if svl.currency_id.is_zero(svl.value):
-                continue
-            move = svl.stock_move_id
-            if not move:
-                move = svl.stock_valuation_layer_id.stock_move_id
-            move_ids.add(move.id)
-            svl_move_list[svl.id] = move.id
-        
-        moves = self.env['stock.move'].browse(move_ids)
-        move_directions = moves._get_move_directions()
-        for svl in self:
-            linked_move = moves.browse(svl_move_list[svl.id])
-            if linked_move:
-                am_vals += linked_move.with_context(move_directions=move_directions).with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+        batch_size = 1000
+        bounded = len(self) > batch_size
+        if bounded:
+            # Flush before dropping cached values; the receipt remains one transaction.
+            self.env.invalidate_all()
+        for batch in tools.split_every(batch_size, self.ids, self.browse):
+            am_vals = []
+            move_ids = OrderedSet()
+            svl_move_list = defaultdict(int)
+            for svl in batch:
+                if svl.with_company(svl.company_id).product_id.valuation != 'real_time':
+                    continue
+                if svl.currency_id.is_zero(svl.value):
+                    continue
+                move = svl.stock_move_id
+                if not move:
+                    move = svl.stock_valuation_layer_id.stock_move_id
+                move_ids.add(move.id)
+                svl_move_list[svl.id] = move.id
 
-        if am_vals:
-            account_moves = self.env['account.move'].sudo().create(am_vals)
-            account_moves._post()
-        products_svl = self.grouped(lambda svl: (svl._get_related_product(), svl.company_id.anglo_saxon_accounting))
+            moves = self.env['stock.move'].browse(move_ids)
+            move_directions = moves._get_move_directions()
+            for svl in batch:
+                linked_move = moves.browse(svl_move_list[svl.id]).with_prefetch(moves._prefetch_ids)
+                if linked_move:
+                    am_vals += linked_move.with_context(move_directions=move_directions).with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+
+            if am_vals:
+                account_moves = self.env['account.move'].sudo().create(am_vals)
+                account_moves._post()
+            if bounded:
+                self.env.invalidate_all()
+
+        # Reconcile only after every batch is posted, using the complete layer set.
+        layers = self.with_context(prefetch_fields=False) if bounded else self
+        products_svl = layers.grouped(lambda svl: (svl._get_related_product(), svl.company_id.anglo_saxon_accounting))
         # Reconcile all the products sharing the same invoices at once
-        anglo_saxon_products = self.env['product.product'].browse(
+        anglo_saxon_products = layers.env['product.product'].browse(
             product.id for product, anglo_saxon_accounting in products_svl if anglo_saxon_accounting
         )
         products_by_invoices = anglo_saxon_products.grouped(
@@ -121,7 +132,7 @@ class StockValuationLayer(models.Model):
                     continue
                 aml_to_reconcile[(product, aml.account_id)].add(aml.id)
         for aml_ids in aml_to_reconcile.values():
-            self.env['account.move.line'].browse(aml_ids).reconcile()
+            layers.env['account.move.line'].browse(aml_ids).reconcile()
 
     def _validate_analytic_accounting_entries(self):
         for svl in self:
