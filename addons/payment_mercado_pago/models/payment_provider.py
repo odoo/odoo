@@ -5,7 +5,7 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 from odoo.tools.urls import urljoin
@@ -90,18 +90,8 @@ class PaymentProvider(models.Model):
 
     @api.constrains("is_live", "mercado_pago_access_token")
     def _check_mercado_pago_credentials_are_set_if_live(self):
-        """Check that the Mercado Pago credentials are valid when the provider is set in live mode.
-
-        :raise ValidationError: If the Mercado Pago credentials are not set.
-        """
-        for provider in self.filtered(lambda p: p.code == "mercado_pago" and p.is_live):
-            if not provider.mercado_pago_access_token:
-                raise ValidationError(
-                    self.env._(
-                        'Mercado Pago credentials are missing. Click the "Connect" button to set'
-                        " up your account."
-                    )
-                )
+        # TODO: remove in master
+        pass
 
     @api.constrains("allow_tokenization", "mercado_pago_public_key")
     def _check_mercado_pago_credentials_are_set_before_allowing_tokenization(self):
@@ -116,6 +106,26 @@ class PaymentProvider(models.Model):
             raise ValidationError(self.env._("Connect your account before enabling tokenization."))
 
     # === CRUD METHODS === #
+
+    def write(self, vals):
+        """Override of `payment` to prevent changing `is_live` while an account is connected.
+
+        :raise UserError: If `is_live` changes on a connected provider without new credentials
+        """
+        if "is_live" in vals and "mercado_pago_access_token" not in vals:
+            if any(
+                p.code == "mercado_pago"
+                and p.is_live != vals["is_live"]
+                and p.mercado_pago_access_token
+                for p in self
+            ):
+                raise UserError(
+                    self.env._(
+                        "A connected Mercado Pago account cannot be switched between test and live"
+                        " mode. Disconnect it first."
+                    )
+                )
+        return super().write(vals)
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
@@ -163,6 +173,7 @@ class PaymentProvider(models.Model):
         proxy_url_params = {
             "return_url": f"{return_url}?{urlencode(return_url_params)}",
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
+            "is_live": self.is_live,
         }
         proxy_url = self._build_request_url("1/authorize", is_proxy_request=True)
         return {
@@ -177,6 +188,7 @@ class PaymentProvider(models.Model):
             return super()._get_reset_values()
 
         return {
+            "is_live": False,
             "mercado_pago_access_token": None,
             "mercado_pago_access_token_expiry": None,
             "mercado_pago_public_key": None,
@@ -299,6 +311,7 @@ class PaymentProvider(models.Model):
         proxy_payload = {
             "refresh_token": self.mercado_pago_refresh_token,
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
+            "is_live": self.is_live,
         }
         response_content = self._send_api_request(
             "POST",

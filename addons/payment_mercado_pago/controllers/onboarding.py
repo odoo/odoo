@@ -53,6 +53,7 @@ class MercadoPagoOnboardingController(Controller):
         proxy_payload = {
             "authorization_code": authorization_code,
             "account_country_code": provider.mercado_pago_account_country_id.code.lower(),
+            "is_live": provider.is_live,
         }
         try:
             response_content = provider._send_api_request(
@@ -76,9 +77,6 @@ class MercadoPagoOnboardingController(Controller):
             "mercado_pago_refresh_token": response_content["refresh_token"],
             "mercado_pago_access_token_expiry": expires_in,
             "mercado_pago_public_key": response_content["public_key"],
-            # Set the provider live
-            "is_live": True,
-            "is_published": True,
             "allow_tokenization": True,
         })
         # Set the currency to the one compatible with the seller account.
