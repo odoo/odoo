@@ -313,7 +313,7 @@
                         <div class="d-block h-100 w-100">
                             <t t-call="website.record_cover">
                                 <t t-set="_record" t-value="event"/>
-                                <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()"/>
+                                <meta itemprop="startDate" t-attf-content="{{event.date_begin}}Z"/>
                                 <!-- Short date + (optional) Country Flag -->
                                 <div t-if="opt_events_event_location" t-attf-class="o_wevent_date_with_flag o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
                                     <div class="o_wevent_event_date_text">
