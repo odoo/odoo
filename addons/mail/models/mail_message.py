@@ -320,7 +320,7 @@ class Message(models.Model):
             SQL.identifier(notif_alias, 'res_partner_id'),
             pid,
         ))
-        self.env.cr.execute(query.select(
+        rows = self.env.execute_query(query.select(
             SQL.identifier(self._table, 'id'),
             SQL.identifier(self._table, 'model'),
             SQL.identifier(self._table, 'res_id'),
@@ -332,7 +332,7 @@ class Message(models.Model):
                 SQL.identifier(notif_alias, 'res_partner_id'),
             ),
         ))
-        for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
+        for id_, model, res_id, author_id, message_type, partner_id in rows:
             ids.append(id_)
             if author_id == pid:
                 allowed_ids.add(id_)
