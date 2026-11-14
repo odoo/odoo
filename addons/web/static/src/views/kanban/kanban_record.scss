@@ -62,16 +62,23 @@
     }
 }
 
-.o_kanban_record:focus-visible, .o_kanban_selection_active .o_kanban_record:focus {
-    outline: none;
-    box-shadow: inset 0 0px 0px 3px var(--KanbanColumn__highlight-selected-border);
+/* Lift the focused card above the next one, which overlaps its border. */
+.o_kanban_record:focus-visible {
+    z-index: 1;
 }
 
-.o_kanban_ungrouped .o_kanban_record:focus-visible, .o_kanban_selection_active .o_kanban_ungrouped .o_kanban_record:focus {
-    @media screen and (min-width: 768px), print and (min-width: 188mm) {
-        outline: 3px solid var(--KanbanColumn__highlight-selected-border);
-        box-shadow: none;
-    }
+/* The color stripe is painted over the card's ring: keep it inside the ring. */
+.o_kanban_record.o_kanban_record_colored:focus-visible::after {
+    top: calc(var(--o-focus-ring-width) - var(--o-bs-border-width));
+    bottom: calc(var(--o-focus-ring-width) - var(--o-bs-border-width));
+    left: calc(var(--o-focus-ring-width) - var(--o-bs-border-width));
+}
+
+/* In selection mode, the focused card shows the ring even after a click. */
+.o_kanban_selection_active .o_kanban_record:focus {
+    outline: var(--o-focus-ring);
+    outline-offset: var(--o-focus-ring-offset);
+    z-index: 1;
 }
 
 .o_kanban_selection_available .o_kanban_record.o_record_selection_available {

@@ -1,8 +1,4 @@
 .o_avatar_card {
-    .o_card_user_infos a:focus-visible {
-        outline: none;
-    }
-
     .o_avatar {
         img {
             height: 60px;
@@ -16,5 +12,11 @@
             height: 18px;
             width: 18px;
         }
+    }
+
+    /* Room for the focus ring of the buttons, which the hidden overflow would cut. */
+    .o_card_user_infos {
+        padding: var(--o-focus-ring-width);
+        margin: calc(-1 * var(--o-focus-ring-width));
     }
 }

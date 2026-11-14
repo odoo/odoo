@@ -578,7 +578,7 @@ test("activity widget: delete an activity from the widget", async () => {
     await waitFor(".o-mail-ActivityListPopoverItem:count(1)");
 
     const activityListPopoverButtons = document.querySelectorAll(
-        ".overflow-auto.d-flex.align-items-baseline button"
+        ".o-mail-ActivityListPopoverItem > :first-child button"
     );
     // ensure the buttons are in the same order as in the chatter.
     expect(activityListPopoverButtons[0]).toHaveClass("o-mail-ActivityListPopoverItem-markAsDone");

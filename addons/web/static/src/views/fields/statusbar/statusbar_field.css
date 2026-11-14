@@ -29,6 +29,17 @@
         --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-gap)) 50%;
         --o-statusbar-point-bottom-left: var(--o-statusbar-caret-gap) 100%;
         --o-statusbar-point-bottom-right:  calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 100%;
+        /* The arrow inset by the focus ring width, slanted edges kept */
+        /* parallel (the caret is about .76 times a step's half height). */
+        --o-statusbar-ring-width: var(--o-focus-ring-width, 2px);
+        --o-statusbar-ring-slant: calc(var(--o-statusbar-ring-width) * 1.26);
+        --o-statusbar-ring-run: calc(var(--o-statusbar-ring-width) * .76);
+        --o-statusbar-ring-point-top-left: calc(var(--o-statusbar-caret-gap) + var(--o-statusbar-ring-slant) + var(--o-statusbar-ring-run)) var(--o-statusbar-ring-width);
+        --o-statusbar-ring-point-top-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap) - var(--o-statusbar-ring-slant) + var(--o-statusbar-ring-run)) var(--o-statusbar-ring-width);
+        --o-statusbar-ring-point-middle-right: calc(100% - var(--o-statusbar-caret-gap) - var(--o-statusbar-ring-slant)) 50%;
+        --o-statusbar-ring-point-bottom-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap) - var(--o-statusbar-ring-slant) + var(--o-statusbar-ring-run)) calc(100% - var(--o-statusbar-ring-width));
+        --o-statusbar-ring-point-bottom-left: calc(var(--o-statusbar-caret-gap) + var(--o-statusbar-ring-slant) + var(--o-statusbar-ring-run)) calc(100% - var(--o-statusbar-ring-width));
+        --o-statusbar-ring-point-middle-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap) + var(--o-statusbar-ring-slant)) 50%;
 
         .o_arrow_button:not(.d-none) {
             --btn-hover-bg: var(--gray-200);
@@ -53,10 +64,53 @@
                     var(--o-statusbar-point-middle-left)
                 );
 
+                /* The clip-path cuts the slanted sides of an outline: the ring */
+                /* is the step in the ring color, minus the arrow inset by the */
+                /* ring width. The outline, inside, rounds the ends of the bar. */
+                &:focus-visible {
+                    --o-focus-ring-offset: var(--o-focus-ring-inside);
+
+                    position: relative;
+                    isolation: isolate;
+                    /* Its background fills the inside of the ring: fading it in, */
+                    /* as dropdown toggles do, would show the ring color through. */
+                    transition: none;
+
+                    &::before, &::after {
+                        content: "";
+                        position: absolute;
+                        z-index: -1;
+                        inset: 0;
+                        /* A dropdown toggle styles it as its caret */
+                        margin: 0;
+                        border: 0;
+                    }
+
+                    &::before {
+                        border-radius: inherit;
+                        background-color: var(--o-focus-ring-color);
+                    }
+
+                    &::after {
+                        background: inherit;
+                        clip-path: polygon(
+                            var(--o-statusbar-ring-point-top-left),
+                            var(--o-statusbar-ring-point-top-right),
+                            var(--o-statusbar-ring-point-middle-right),
+                            var(--o-statusbar-ring-point-bottom-right),
+                            var(--o-statusbar-ring-point-bottom-left),
+                            var(--o-statusbar-ring-point-middle-left)
+                        );
+                    }
+                }
+
                 &.o_last {
                     --o-statusbar-point-top-left: 0 0;
                     --o-statusbar-point-middle-left: 0 50%;
                     --o-statusbar-point-bottom-left: 0 100%;
+                    --o-statusbar-ring-point-top-left: var(--o-statusbar-ring-width) var(--o-statusbar-ring-width);
+                    --o-statusbar-ring-point-middle-left: var(--o-statusbar-ring-width) 50%;
+                    --o-statusbar-ring-point-bottom-left: var(--o-statusbar-ring-width) calc(100% - var(--o-statusbar-ring-width));
 
                     margin-left: 0;
                     padding-inline-start: var(--o-statusbar-button-padding-x);
@@ -70,6 +124,9 @@
                     --o-statusbar-point-top-right: 100% 0;
                     --o-statusbar-point-middle-right: 100% 50%;
                     --o-statusbar-point-bottom-right: 100% 100%;
+                    --o-statusbar-ring-point-top-right: calc(100% - var(--o-statusbar-ring-width)) var(--o-statusbar-ring-width);
+                    --o-statusbar-ring-point-middle-right: calc(100% - var(--o-statusbar-ring-width)) 50%;
+                    --o-statusbar-ring-point-bottom-right: calc(100% - var(--o-statusbar-ring-width)) calc(100% - var(--o-statusbar-ring-width));
 
                     padding-inline-end: var(--o-statusbar-button-padding-x);
 
@@ -82,7 +139,7 @@
                     --btn-border-radius: var(--o-statusbar-radius);
                 }
 
-                &.dropdown-toggle::after {
+                &.dropdown-toggle:not(:focus-visible)::after {
                     content: normal;
                 }
 
@@ -97,6 +154,11 @@
                     --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 50%;
                     --o-statusbar-point-bottom-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 100%;
                     --o-statusbar-point-bottom-right: calc(100% - var(--o-statusbar-caret-gap)) 100%;
+
+                    /* The inner arrow is the left-to-right one, mirrored. */
+                    &:focus-visible::after {
+                        scale: -1 1;
+                    }
 
                     &.o_last {
                         --o-statusbar-point-top-right: 100% 0;
