@@ -56,6 +56,7 @@ export const onError = runner.exposeRuntimeHook("onError");
 export const getFixture = exposeMethod(runner.fixture, "getFixture");
 
 // Other test runner functions
+export const claimJobIndex = exposeMethod(runner, "claimJobIndex");
 export const createJobScopedGetter = exposeMethod(runner, "createJobScopedGetter");
 export const definePreset = exposeMethod(runner, "definePreset");
 export const dryRun = exposeMethod(runner, "dryRun");
