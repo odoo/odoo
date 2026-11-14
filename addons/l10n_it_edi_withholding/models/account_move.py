@@ -42,6 +42,8 @@ class AccountMove(models.Model):
     def _l10n_it_edi_grouping_function_base_lines(self, base_line, tax_data):
         # EXTENDS 'l10n_it_edi'
         grouping_key = super()._l10n_it_edi_grouping_function_base_lines(base_line, tax_data)
+        if not tax_data:
+            return grouping_key
         tax = tax_data['tax']
         is_withholding = tax._l10n_it_filter_kind('withholding')
         is_pension_fund = tax._l10n_it_filter_kind('pension_fund')
