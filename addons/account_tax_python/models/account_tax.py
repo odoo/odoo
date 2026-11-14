@@ -30,7 +30,11 @@ class AccountTaxPython(models.Model):
              ":param base: float, actual amount on which the tax is applied\n"
              ":param price_unit: float\n"
              ":param quantity: float\n"
-             ":param product: A object representing the product\n"
+             ":param product: An object representing the product,\n read a field with product.<field>, e.g. product.weight.\n"
+             ":param uom: An object representing the unit of measure,\n read a field with uom.<field>, e.g. uom.factor.\n\n"
+             "Examples:\n"
+             "- quantity * uom.factor\n"
+             "- product.weight * quantity * uom.factor",
     )
     formula_decoded_info = fields.Json(compute='_compute_formula_decoded_info')
 
@@ -141,7 +145,10 @@ class AccountTaxPython(models.Model):
                 i += number_size
                 continue
 
-            raise ValidationError(_("Malformed formula '%(formula)s' at position %(position)s", formula=formula, position=i))
+            raise ValidationError(_(
+                "Invalid formula '%(formula)s'.\nTo Read a field of a product, use product.<field>. For unit of measure, use uom.<field>.\n"
+                "For more information and examples, hover over the (?) next to the Formula field.", formula=formula,
+            ))
 
     @api.model
     def _eval_tax_amount_formula(self, raw_base, evaluation_context):
