@@ -10,35 +10,32 @@ class JobAddApplicants(models.TransientModel):
 
     def _add_applicants_to_job(self):
         applicants = self.with_context(no_copy_in_partner_name=True).applicant_ids
-        applicant_data = []
-        copy_data_values = {}
-        for applicant in applicants:
-            # last attachment should follow - [0] is the last as order = id Desc (should be a CV in most cases)
-            if applicant.attachment_ids:
-                applicant_attachment = applicant.attachment_ids[0].copy({
-                    'res_id': applicant.id
-                })
-                copy_data_values = {
-                    'attachment_ids': [Command.link(applicant_attachment.id)]
-                }
-            applicant_data.append(applicant.with_context(no_copy_in_partner_name=True).copy_data(copy_data_values)[0])
+        applicant_data = [
+            (applicant, applicant.with_context(no_copy_in_partner_name=True).copy_data()[0])
+            for applicant in applicants
+        ]
         new_applicants_vals = []
         stage_per_job = dict(self.env['hr.recruitment.stage']._read_group(
             domain=[('job_ids', 'in', self.job_ids.ids + [False]), ('fold', '=', False)],
             groupby=['job_ids'],
             aggregates=['id:recordset'],
         ))
-        for applicant in applicant_data:
+        for applicant, applicant_vals in applicant_data:
             for job in self.job_ids:
                 job_stages = ((stage_per_job.get(job) or self.env['hr.recruitment.stage']) +
                               (stage_per_job.get(self.env['hr.job']) or self.env['hr.recruitment.stage']))
                 stage = min(job_stages, key=lambda job: job.sequence) if job_stages else self.env['hr.job']
-                new_applicants_vals.append({
-                    **applicant,
+                new_applicant_vals = {
+                    **applicant_vals,
                     'job_id': job.id,
                     'talent_pool_ids': False,
                     'stage_id': stage.id,
-                })
+                }
+                # last attachment should follow - [0] is the last as order = id Desc (should be a CV in most cases)
+                if applicant.attachment_ids:
+                    applicant_attachment = applicant.attachment_ids[0].copy({'res_id': applicant.id})
+                    new_applicant_vals['attachment_ids'] = [Command.link(applicant_attachment.id)]
+                new_applicants_vals.append(new_applicant_vals)
         new_applicants = self.env["hr.applicant"].create(new_applicants_vals)
         return new_applicants
 
