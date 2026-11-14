@@ -1,9 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, proxy, useProps, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { SnoozeDialog } from "./snooze_dialog/snooze_dialog";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 
@@ -20,34 +19,26 @@ export class ProductInfoPopup extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
-        this.state = proxy({
-            countdown: "",
-            activeSnooze: this.pos.getActiveSnooze("product", {
-                product: this.props.productTemplate,
-            }),
-        });
-
-        useLayoutEffect(
-            () => {
-                if (!this.state.activeSnooze) {
-                    return;
-                }
-                this.updateSnoozeCountdown();
-                const interval = setInterval(() => this.updateSnoozeCountdown(), 1000);
-                return () => {
-                    clearInterval(interval);
-                };
-            },
-            () => [this.state.activeSnooze]
-        );
     }
-    updateSnoozeCountdown() {
-        [this.state.countdown, this.state.activeSnooze] = this.pos.getSnoozeCountdown(
-            this.state.activeSnooze
-        );
-        if (!this.ui.isSmall) {
-            this.state.countdown = _t("%s left", this.state.countdown);
+
+    get activeSnooze() {
+        return this.pos.getActiveSnooze("product", {
+            product: this.props.productTemplate,
+        });
+    }
+    get snoozeCountdown() {
+        if (!this.activeSnooze) {
+            return "";
         }
+
+        const [countdown] = this.pos.getSnoozeCountdown(this.activeSnooze);
+        if (!countdown) {
+            return "";
+        }
+        if (!this.activeSnooze.end_time) {
+            return countdown;
+        }
+        return this.ui.isSmall ? countdown : _t("%s left", countdown);
     }
     searchProduct(productName) {
         this.pos.setSelectedCategory(0);
@@ -76,20 +67,13 @@ export class ProductInfoPopup extends Component {
         return _t("Total Tax:");
     }
     openSnoozeDialog() {
-        if (this.state.activeSnooze) {
-            this.pos.unSnoozeItem(this.state.activeSnooze, () => {
-                this.state.activeSnooze = undefined;
-                this.state.countdown = "";
-            });
+        if (this.activeSnooze) {
+            this.pos.unSnoozeItem(this.activeSnooze);
             return;
         }
-        this.pos.snoozeItem(
-            "product",
-            (record) => {
-                this.state.activeSnooze = record;
-            },
-            { product_template_id: this.props.productTemplate.id }
-        );
+        this.pos.snoozeItem("product", undefined, {
+            product_template_id: this.props.productTemplate.id,
+        });
     }
     get taxDetails() {
         return this.props.info.productTaxDetails;
