@@ -4,6 +4,7 @@
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.test_taxes_downpayment import TestTaxesDownPayment
@@ -1080,3 +1081,22 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             {'balance': 1600.0},
             {'balance': 240.0},
         ])
+
+    def test_no_currency_change_on_downpayments(self):
+        """
+        Test that we prevent changing currency on a downpayment.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'name': 'test', 'price_unit': 1000.0, 'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        self.env['sale.advance.payment.inv'].with_context(
+            active_model='sale.order', active_ids=sale_order.ids, active_id=sale_order.id,
+        ).create({'advance_payment_method': 'percentage', 'amount': 10.0}).create_invoices()
+
+        invoice = sale_order.invoice_ids
+        with self.assertRaisesRegex(UserError, "You cannot change the currency of a downpayment :"):
+            invoice.currency_id = self.other_currency
