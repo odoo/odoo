@@ -3,5 +3,8 @@
         <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
             <Dashboard/>
         </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
+            <attribute name="t-att-class">{ 'o_sale_dashboard_nocontent': this.showNoContentHelper }</attribute>
+        </xpath>
     </t>
 </templates>
