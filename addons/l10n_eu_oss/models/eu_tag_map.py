@@ -12,6 +12,9 @@ The EU_TAG_MAP answers the question: "which tag should I apply on the OSS tax re
         'refund_tax_tag': xml_id_of_the_tag or None,
     },
 }
+
+The xml_id may also be the one of a tax report expression, which applies its positive tag. Prefix
+it with "-" to apply its negative tag instead.
 """
 
 EU_TAG_MAP = {
@@ -93,16 +96,16 @@ EU_TAG_MAP = {
     },
     # Germany SKR03
     'de_skr03': {
-        'invoice_base_tag': None,
+        'invoice_base_tag': 'l10n_de.tax_report_de_tag_45_tag',
         'invoice_tax_tag': None,
-        'refund_base_tag': None,
+        'refund_base_tag': '-l10n_de.tax_report_de_tag_45_tag',
         'refund_tax_tag': None,
     },
     # Germany SKR04
     'de_skr04': {
-        'invoice_base_tag': None,
+        'invoice_base_tag': 'l10n_de.tax_report_de_tag_45_tag',
         'invoice_tax_tag': None,
-        'refund_base_tag': None,
+        'refund_base_tag': '-l10n_de.tax_report_de_tag_45_tag',
         'refund_tax_tag': None,
     },
     # Greece
