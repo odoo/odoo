@@ -791,6 +791,31 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertEqual(len(expense_sheet.account_move_ids.attachment_ids), 2)
 
+    def test_main_attachment_in_move_from_company_expense(self):
+        """ Checks that the journal entry of an expense paid by company has the receipt as main attachment """
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expenses paid by company',
+            'employee_id': self.expense_employee.id,
+            'expense_line_ids': [Command.create({
+                'name': 'Company expense',
+                'payment_mode': 'company_account',
+                'total_amount_currency': 1000.00,
+                'employee_id': self.expense_employee.id,
+                'attachment_ids': [Command.create({
+                    'name': 'receipt.txt',
+                    'raw': b'test',
+                    'res_model': 'hr.expense',
+                })],
+            })],
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        move = expense_sheet.account_move_ids
+        self.assertEqual(len(move.attachment_ids), 1)
+        self.assertEqual(move.message_main_attachment_id, move.attachment_ids)
+
     def test_expense_payment_method(self):
         default_payment_method_line = self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0]
         check_method = self.env['account.payment.method'].sudo().create({
