@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
+from odoo.tools import mute_logger
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
 
@@ -65,15 +66,17 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             thread=thread,
         )
 
-    def test_attachment_delete_not_found(self):
-        """Test a 404 notifies the user or guest to remove an attachment they cannot read,
-        but not one they can read without being allowed to delete it."""
-        for pseudo_user, attachment, channels in (
-            (self.user_employee, self.admin_attachment, [self.user_employee]),
-            (self.user_employee, self.deleted_attachment, [self.user_employee]),
-            (self.user_employee, self.readonly_attachment, []),
-            (self.guest, self.deleted_attachment, [self.guest]),
-            (self.guest, self.channel_attachment, []),
+    @mute_logger("odoo.http")
+    def test_attachment_delete_unauthorized(self):
+        """Test attachment deletion access:
+        - Unreadable/missing attachments return a NotFound error.
+        - Readable but strictly read-only attachments return an AccessError."""
+        for pseudo_user, attachment, channels, expected_error in (
+            (self.user_employee, self.admin_attachment, [self.user_employee], "werkzeug.exceptions.NotFound"),
+            (self.user_employee, self.deleted_attachment, [self.user_employee], "werkzeug.exceptions.NotFound"),
+            (self.user_employee, self.readonly_attachment, [], "odoo.exceptions.AccessError"),
+            (self.guest, self.deleted_attachment, [self.guest], "werkzeug.exceptions.NotFound"),
+            (self.guest, self.channel_attachment, [], "odoo.exceptions.AccessError"),
         ):
             self._authenticate_pseudo_user(pseudo_user)
             notifications = [
@@ -88,7 +91,7 @@ class TestAttachmentController(MailControllerAttachmentCommon):
                     "/mail/attachment/delete",
                     json={"params": {"attachment_id": attachment.id}},
                 )
-                self.assertEqual(res.json()["error"]["code"], 404)
+                self.assertEqual(res.json()["error"]["data"]["name"], expected_error)
 
     def test_upload_multi_company(self):
         record = self.user_employee.partner_id
