@@ -4,7 +4,7 @@ from odoo import Command
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 from odoo.tests.common import HttpCase, new_test_user
 from odoo.exceptions import UserError, ValidationError
@@ -287,7 +287,7 @@ class TestDiscussSubChannels(BusCase, HttpCase):
                     self.env.user,
                     "mail.record/insert",
                     Store()
-                    .add(self.general, ["member_count"])
+                    .add(self.general, lambda res: res.attr("member_count", version=False))
                     .add(self.general.self_member_id, "_store_member_fields"),
                 ),
                 BusResult(
@@ -299,7 +299,7 @@ class TestDiscussSubChannels(BusCase, HttpCase):
                     self.env.user,
                     "mail.record/insert",
                     Store()
-                    .add(sub_channel, ["member_count"])
+                    .add(sub_channel, lambda res: res.attr("member_count", version=False))
                     .add(sub_channel.self_member_id, "_store_member_fields"),
                 ),
                 BusResult(
@@ -308,6 +308,8 @@ class TestDiscussSubChannels(BusCase, HttpCase):
                     {
                         "mail.message": [
                             {
+                                "__field_versions__": {"linkedSubChannel": ANY},
+                                "__version__": ANY,
                                 "id": self.general_message.id,
                                 "linkedSubChannel": sub_channel.id,
                             },

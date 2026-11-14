@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 from odoo.tests import HttpCase, new_test_user, tagged, users
 from odoo.tools import mute_logger
 
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 
 @tagged("mail_message")
@@ -66,7 +66,15 @@ class TestMailMessage(common.MailCommon, HttpCase):
         data = self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params})
         self.assertEqual(
             data["mail.thread"],
-            [{"display_name": partner.display_name, "id": partner.id, "model": "res.partner"}],
+            [
+                {
+                    "__field_versions__": {"display_name": None},
+                    "__version__": ANY,
+                    "display_name": partner.display_name,
+                    "id": partner.id,
+                    "model": "res.partner",
+                }
+            ],
         )
         portal_user = new_test_user(self.env, login="portal_r", groups="base.group_portal")
         self.authenticate(portal_user.login, portal_user.login)

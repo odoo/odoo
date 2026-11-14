@@ -95,9 +95,7 @@ export class RecordListInternal {
                 if (oldRecord.notIn(newRecords)) {
                     oldRecord._.uses.delete(recordList);
                     if (inverse) {
-                        store._.updateFields(oldRecord, {
-                            [inverse]: [["DELETE", self.owner]],
-                        });
+                        self.echoInverse(inverse, oldRecord, "DELETE");
                     }
                 }
             }
@@ -134,6 +132,26 @@ export class RecordListInternal {
         return this.owner.Model._.fieldsTargetModel.get(this.name);
     }
     /**
+     * Echo a command on this list onto its inverse field.
+     *
+     * @param {string} inverse name of the inverse field on the target model
+     * @param {Record|any} val
+     * @param {"ADD"|"DELETE"|"ADD.noinv"|"DELETE.noinv"} cmd
+     * @param {Object} [options={}]
+     * @param {boolean} [options.bypassUpdateFields=false]
+     * @param {import("./field_version").WriteDate} [options.version] Version to echo.
+     *   Defaults to the field's own last known write date, for a local mutation that
+     *   has no version of its own (e.g. direct list manipulation from client code).
+     */
+    echoInverse(inverse, val, cmd, { bypassUpdateFields = false, version } = {}) {
+        version ??= this.owner._.fieldsVersion.get(this.name)?.lastWriteDate;
+        if (bypassUpdateFields) {
+            (isRecord(val) ? val._proxy : val)[inverse] = [[cmd, this.owner, version]];
+            return;
+        }
+        this.recordList._store._.updateFields(val, { [inverse]: [[cmd, this.owner, version]] });
+    }
+    /**
      * @param {R|any} val
      * @param {(R) => void} [fn] function that is called in-between preinsert and
      *   insert. Preinsert only inserted what's needed to make record, while
@@ -148,7 +166,6 @@ export class RecordListInternal {
      */
     insert(val, fn, { inv = true, mode = "ADD" } = {}) {
         const recordList = this.recordList;
-        const inverse = this.getInverse();
         const targetModel = this.getTargetModel();
         if (typeof val !== "object") {
             if (Array.isArray(recordList._store[targetModel].id)) {
@@ -161,10 +178,12 @@ export class RecordListInternal {
             // single-id data
             val = { [recordList._store[targetModel].id]: val };
         }
-        if (inverse && inv) {
-            // special command to call addNoinv/deleteNoInv, to prevent infinite loop
-            const target = isRecord(val) && val._raw === val ? val._proxy : val;
-            target[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", this.owner]];
+        const inverse = inv && this.getInverse();
+        if (inverse) {
+            this.echoInverse(inverse, val, mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", {
+                bypassUpdateFields: true, // Prevent infinite loop for addNoinv/deleteNoInv.
+                version: val?.__version__,
+            });
         }
         /** @type {R} */
         let newRecordProxy;
@@ -226,6 +245,7 @@ export class RecordListInternal {
             if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                 // support for "array[index] = r3" syntax
                 const index = parseInt(name);
+                const inverse = self.getInverse();
                 self.insert(val, function recordListSet_Insert(newRecord) {
                     const oldRecord = self.data()[index];
                     if (oldRecord !== newRecord) {
@@ -236,18 +256,13 @@ export class RecordListInternal {
                     if (oldRecord && oldRecord.notEq(newRecord)) {
                         oldRecord._.uses.delete(recordList);
                     }
-                    const inverse = self.getInverse();
                     if (inverse) {
-                        store._.updateFields(oldRecord, {
-                            [inverse]: [["DELETE", self.owner]],
-                        });
+                        self.echoInverse(inverse, oldRecord, "DELETE");
                     }
                     if (newRecord) {
                         newRecord._.uses.add(recordList);
                         if (inverse) {
-                            store._.updateFields(newRecord, {
-                                [inverse]: [["ADD", self.owner]],
-                            });
+                            self.echoInverse(inverse, newRecord, "ADD");
                         }
                     }
                 });

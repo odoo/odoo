@@ -8,9 +8,9 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
@@ -59,4 +59,10 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     await contains(".o-livechat-VisitorDisconnected", { text: `Visitor is disconnected` });
     sendPresenceUpdate("mail.guest", guestId, "online");
     await waitForNone(".o-livechat-VisitorDisconnected");
+    // Late read from before the reconnection: its offline_since must not show the banner.
+    pyEnv["bus.bus"]._sendone(serverState.userId, "mail.record/insert", {
+        "mail.guest": [{ id: guestId, offline_since: "2025-01-05 10:00:00" }],
+    });
+    await animationFrame();
+    expect(".o-livechat-VisitorDisconnected").toHaveCount(0);
 });
