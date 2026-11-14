@@ -178,16 +178,23 @@ class IrSequence(models.Model):
                         _alter_sequence(self._cr, "ir_sequence_%03d" % seq.id, number_increment=i)
                         seq.date_range_ids._alter_sequence(number_increment=i)
                 else:
+                    # The no_gap implementation uses the stored next numbers:
+                    # keep the ones of the PostgreSQL sequences being dropped.
+                    number_next = _predict_nextval(self, "%03d" % seq.id)
                     _drop_sequences(self._cr, ["ir_sequence_%03d" % seq.id])
+                    if 'number_next' not in values:
+                        seq.number_next = number_next
                     for sub_seq in seq.date_range_ids:
+                        number_next = _predict_nextval(self, "%03d_%03d" % (seq.id, sub_seq.id))
                         _drop_sequences(self._cr, ["ir_sequence_%03d_%03d" % (seq.id, sub_seq.id)])
+                        sub_seq.number_next = number_next
             else:
                 if new_implementation in ('no_gap', None):
                     pass
                 else:
                     _create_sequence(self._cr, "ir_sequence_%03d" % seq.id, i, n)
                     for sub_seq in seq.date_range_ids:
-                        _create_sequence(self._cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, n)
+                        _create_sequence(self._cr, "ir_sequence_%03d_%03d" % (seq.id, sub_seq.id), i, sub_seq.number_next)
         res = super(IrSequence, self).write(values)
         # DLE P179
         self.flush_model(values.keys())
