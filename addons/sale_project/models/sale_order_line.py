@@ -429,8 +429,8 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         if self.product_id.service_policy != 'delivered_milestones':
             return
-        if not self.project_id.allow_milestones:
-            self.project_id.allow_milestones = True
+        if not project.allow_milestones:
+            project.allow_milestones = True
         if (milestones := project.milestone_ids.filtered(lambda milestone: not milestone.sale_line_id)):
             write_vals = {'sale_line_id': self.id}
             if all(float_is_zero(milestone.quantity_percentage, 2) for milestone in milestones):
