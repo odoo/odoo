@@ -891,9 +891,9 @@ class ResPartner(models.Model):
         commercial_to_upstream = (
             # has a parent and is not a commercial entity itself
             bool(self.parent_id) and (self.commercial_partner_id != self) and
-            # actually updated, or parent updated
-            (any(field in values for field in self._synced_commercial_fields()) or 'parent_id' in values) and
-            # something is actually updated
+            # a synced commercial field is actually being edited on this record
+            any(field in values for field in self._synced_commercial_fields()) and
+            # something is actually updated, i.e. it differs from the parent
             any(self[fname] != self.parent_id[fname] for fname in self._synced_commercial_fields())
         )
         if commercial_to_upstream:
