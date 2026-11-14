@@ -38,6 +38,8 @@ touching instead of loading whole files.
 | [QWeb PDF reports](guidelines/reports.md#qweb-pdf-reports) | report templates or `_get_report_values` |
 | [Access rights](guidelines/security.md#access-rights) | touching `security/` (`ir.access.csv`, groups) |
 | [Batch ORM calls](guidelines/performance.md#batch-orm-calls) | ORM calls (`create`/`search*`/aggregates) inside a loop |
+| [Search and read in one query](guidelines/performance.md#search-and-read-in-one-query) | a `search` whose records are read afterwards |
+| [Do not read an x2many that grows without bound](guidelines/performance.md#do-not-read-an-x2many-that-grows-without-bound) | reading messages, followers, members, logs, or any x2many that grows with the life of the record |
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
 | [Freeze the cursor time with mock_datetime_and_now](guidelines/tests.md#freeze-the-cursor-time-with-mock_datetime_and_now) | a test that uses `freeze_time`, or checks `create_date`, `write_date` or a value taken from `cr.now()` |
