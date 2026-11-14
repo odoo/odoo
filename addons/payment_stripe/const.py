@@ -8,7 +8,7 @@ SENSITIVE_KEYS = {
 }
 PAYMENT_SENSITIVE_KEYS.update(SENSITIVE_KEYS)  # Add Stripe-specific keys to the global set.
 
-API_VERSION = "2019-05-16"  # The API version of Stripe implemented in this module
+API_VERSION = "2026-09-30.endive"  # The API version of Stripe implemented in this module
 
 # Stripe proxy URL
 PROXY_URL = "https://stripe.api.odoo.com/api/stripe/"
