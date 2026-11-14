@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_send_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.order.send.wizard.form</field>
+        <field name="model">purchase.order.send.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- Warnings -->
+                <div class="m-0" id="alerts" invisible="not alerts">
+                    <field name="alerts" class="o_field_html" widget="actionable_errors"/>
+                </div>
+
+                <!-- Sending methods -->
+                <div class="m-0" id="sending_methods">
+                    <field name="sending_method_checkboxes" widget="json_checkboxes"/>
+                </div>
+
+                <!-- Mail composer -->
+                <div invisible="'email' not in sending_methods">
+                    <field name="model" invisible="1"/>  <!-- needed for the `mail_composer_template_selector` widget -->
+
+                    <group>
+                        <label for="mail_partner_ids" string="To"/>
+                        <div>
+                            <field name="mail_partner_ids"
+                                   widget="many2many_tags_email"
+                                   placeholder="Add contacts to notify..."
+                                   options="{'no_quick_create': True}"
+                                   required="'email' in sending_methods"
+                                   context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                        </div>
+                        <field name="mail_partner_cc_ids"
+                               widget="many2many_tags_email"
+                               placeholder="Add contacts in copy..."
+                               options="{'no_quick_create': True}"
+                               invisible="not mail_partner_cc_ids"
+                               context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                        <field name="subject"
+                               placeholder="Subject..."
+                               required="'email' in sending_methods"/>
+                    </group>
+                    <field name="body"
+                           class="oe-bordered-editor"
+                           widget="html_mail"/>
+                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                </div>
+
+                <footer>
+                    <button string="Send"
+                            data-hotkey="q"
+                            name="action_send"
+                            type="object"
+                            class="btn-primary"/>
+                    <button data-hotkey="x"
+                            special="cancel"
+                            class="btn-secondary"/>
+                    <field name="template_id" widget="mail_composer_template_selector" invisible="'email' not in sending_methods"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

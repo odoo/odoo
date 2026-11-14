@@ -732,11 +732,6 @@ class AccountEdiCommon(models.AbstractModel):
             ._retrieve_partner(name=name, phone=phone, email=email, vat=vat, additional_identifiers=additional_identifiers, domain=domain)
         country_code = postal_address.get('country_code')
         country = self.env['res.country'].search([('code', '=', country_code.upper())]) if country_code else self.env['res.country']
-        state_code = postal_address.get('state_code')
-        state = self.env['res.country.state'].search(
-            [('country_id', '=', country.id), ('code', '=', state_code)],
-            limit=1,
-        ) if state_code and country else self.env['res.country.state']
 
         vat_mismatch = False
         if vat and partner.vat and not self._vat_is_equal(partner.vat, vat, country):
@@ -759,16 +754,28 @@ class AccountEdiCommon(models.AbstractModel):
                   name=name, vat=vat, phone=phone, email=email))
         if vat and not partner.vat:
             partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
-        if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
-            partner.write({
-                'country_id': country.id,
-                'street': postal_address.get('street'),
-                'street2': postal_address.get('additional_street'),
-                'city': postal_address.get('city'),
-                'zip': postal_address.get('zip'),
-                'state_id': state.id,
-            })
+        self._import_partner_postal_address(partner, postal_address)
         return partner, logs
+
+    def _import_partner_postal_address(self, partner, postal_address):
+        """ Fill the address of the partner from the document, when the partner has none. """
+        if partner.country_id or partner.street or partner.street2 or partner.city or partner.zip or partner.state_id:
+            return
+        country_code = postal_address.get('country_code')
+        country = self.env['res.country'].search([('code', '=', country_code.upper())]) if country_code else self.env['res.country']
+        state_code = postal_address.get('state_code')
+        state = self.env['res.country.state'].search(
+            [('country_id', '=', country.id), ('code', '=', state_code)],
+            limit=1,
+        ) if state_code and country else self.env['res.country.state']
+        partner.write({
+            'country_id': country.id,
+            'street': postal_address.get('street'),
+            'street2': postal_address.get('additional_street'),
+            'city': postal_address.get('city'),
+            'zip': postal_address.get('zip'),
+            'state_id': state.id,
+        })
 
     def _import_partner_bank(self, invoice, bank_details):
         partner = None
