@@ -226,6 +226,16 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
 ])) - _BLACKLIST
 
 
+if hasattr(dis, '_unpack_opargs'):
+    def _code_opcodes(code_obj):
+        # 3.12: `(i, op, arg)`
+        # 3.13+: `(i, start_offset, op, arg)`
+        return {op for *_, op, _ in dis._unpack_opargs(code_obj.co_code)}
+else:
+    def _code_opcodes(code_obj):
+        return {instr.opcode for instr in dis.get_instructions(code_obj)}
+
+
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
 
@@ -270,9 +280,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
-    # set operations are almost twice as fast as a manual iteration + condition
-    # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
+    code_codes = _code_opcodes(code_obj)
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
