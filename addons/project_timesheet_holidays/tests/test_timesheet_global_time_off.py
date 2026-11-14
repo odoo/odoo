@@ -607,3 +607,35 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
         timesheet = self.env['account.analytic.line'].search([('employee_id', '=', self.flexible_employee.id)])
         self.assertEqual(timesheet.unit_amount, 7)
+
+    def test_public_holiday_timesheet_positive_utc_offset(self):
+        """ The public holiday timesheet must be created on the holiday itself, with the
+        full work time of the day, for a company in a positive UTC offset timezone whose
+        working day ends after (24:00 - UTC offset) local time.
+        """
+        self.test_company.tz = 'Asia/Kolkata'  # UTC+05:30
+        calendar = self.env['resource.calendar'].create({
+            'name': '8h-19h',
+            'company_id': self.test_company.id,
+            'attendance_ids': [
+                Command.create({'dayofweek': str(day), 'hour_from': hour_from, 'hour_to': hour_to, 'day_period': period})
+                for day in range(5)
+                for hour_from, hour_to, period in [(8, 12, 'morning'), (12, 19, 'afternoon')]
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Kolkata Employee',
+            'company_id': self.test_company.id,
+            'resource_calendar_id': calendar.id,
+            'tz': 'Asia/Kolkata',
+        })
+        # Wednesday 2021-01-06, full day in Asia/Kolkata
+        self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2021, 1, 5, 18, 30, 0),
+            'date_to': datetime(2021, 1, 6, 18, 29, 59),
+        })
+        timesheets = self.env['account.analytic.line'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(timesheets), 1, "A single timesheet should be created for the public holiday")
+        self.assertEqual(timesheets.date, datetime(2021, 1, 6).date())
+        self.assertAlmostEqual(timesheets.unit_amount, 11, places=2)
