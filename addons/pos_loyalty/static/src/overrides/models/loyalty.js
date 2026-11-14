@@ -359,7 +359,10 @@ patch(Order.prototype, {
             return;
         }
 
-        updateRewardsMutex.exec(() => {
+        // Return the mutex promise so callers can await the recompute (e.g. after an
+        // online payment, before confirming the coupon programs). `set_order` still
+        // calls this without awaiting, which is fine.
+        return updateRewardsMutex.exec(() => {
             return this._updateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
                 const claimableRewards = this.getClaimableRewards(false, false, true);

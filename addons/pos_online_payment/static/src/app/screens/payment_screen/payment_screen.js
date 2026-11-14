@@ -263,6 +263,17 @@ patch(PaymentScreen.prototype, {
             }
         }
 
+        // The order was rebuilt from the server data and re-selected above, which drops
+        // the client-side loyalty `couponPointChanges` and schedules an async reward
+        // recompute (`set_order` -> `_updateRewards`) that `set_order` does NOT await.
+        // Wait for that recompute to finish before confirming the coupon programs,
+        // otherwise the earned points are confirmed as empty. Most visible for a
+        // first-time customer whose loyalty card must be fetched with an extra RPC, so
+        // the recompute never wins the race on its own.
+        if (this.currentOrder._updateRewards) {
+            await this.currentOrder._updateRewards();
+        }
+
         await this.postPushOrderResolve([this.currentOrder.server_id]);
 
         this.afterOrderValidation(true);
