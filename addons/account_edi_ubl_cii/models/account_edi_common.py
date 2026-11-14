@@ -10,7 +10,7 @@ from odoo import _, api, fields, models, Command
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_is_zero, float_repr, format_list, html2plaintext, pdf, str2bool
+from odoo.tools import float_compare, float_is_zero, float_repr, format_amount, format_list, html2plaintext, pdf, str2bool
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _lt
 from odoo.tools.misc import clean_context, formatLang, html_escape
@@ -637,15 +637,11 @@ class AccountEdiCommon(models.AbstractModel):
                 ], limit=1)
                 if tax:
                     tax_ids += tax.ids
-                elif name:
-                    logs.append(_(
-                        "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
-                        tax_percentage=tax_amount,
-                        line=name,
-                    ))
                 else:
-                    logs.append(
-                        _("Could not retrieve the tax: %s for the document level allowance/charge.", tax_amount))
+                    logs.append(self._get_missing_tax_log_message(
+                        f'{tax_amount}%',
+                        line_name=name,
+                    ))
 
             line_vals.append([name, quantity, price_unit, tax_ids])
         return record._get_line_vals_list(line_vals), logs
@@ -733,7 +729,9 @@ class AccountEdiCommon(models.AbstractModel):
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             lines_values.append(line_values)
-            lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
+            charge_lines, charge_logs = self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
+            lines_values += charge_lines
+            logs += charge_logs
         return lines_values, logs
 
     def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
@@ -965,6 +963,38 @@ class AccountEdiCommon(models.AbstractModel):
                     return tax
         return self.env['account.tax']
 
+    def _create_fixed_tax(self, company_id, name, amount, type_tax_use='sale', **kwargs):
+        return self.env['account.tax'].create({
+            'name': name,
+            'amount_type': 'fixed',
+            'amount': amount,
+            'type_tax_use': type_tax_use,
+            'include_base_amount': True,
+            'sequence': 0,
+            'company_id': company_id.id,
+            **kwargs,
+        })
+
+    def _get_missing_tax_log_message(self, amount, line_name=None):
+        if line_name:
+            return self.env._(
+                "Could not retrieve the tax: %(amount)s for line '%(line)s'.",
+                amount=amount,
+                line=line_name,
+            )
+        return self.env._(
+            "Could not retrieve the tax: %(amount)s for the document level allowance/charge.",
+            amount=amount,
+        )
+
+    def _get_created_tax_log_message(self, amount, line_name, tax_name):
+        log_message = self._get_missing_tax_log_message(amount, line_name=line_name)
+        return self.env._(
+            "%(log_message)s A new tax '%(tax_name)s' was created.",
+            log_message=log_message,
+            tax_name=tax_name,
+        )
+
     def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=None):
         """
         Retrieve the taxes on the document line at import.
@@ -1015,11 +1045,10 @@ class AccountEdiCommon(models.AbstractModel):
                 tax = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
 
             if not tax:
-                logs.append(
-                    _("Could not retrieve the tax: %(amount)s %% for line '%(line)s'.",
-                    amount=amount,
-                    line=line_values['name']),
-                )
+                logs.append(self._get_missing_tax_log_message(
+                    f'{amount}%',
+                    line_name=line_values['name'],
+                ))
             else:
                 taxes.append(tax.id)
                 if tax.price_include:
@@ -1035,6 +1064,7 @@ class AccountEdiCommon(models.AbstractModel):
         corresponding line had a fixed tax, so it first tries to find a matching fixed tax to apply to the current aml.
         """
         charges_vals = []
+        logs = []
         for charge in line_values.pop('charges'):
             if not charge['line_quantity']:
                 continue
@@ -1043,18 +1073,25 @@ class AccountEdiCommon(models.AbstractModel):
                 # a 1 eur fixed tax on a line with quantity=2 will yield an AllowanceCharge with amount = 2
                 charge_copy = charge.copy()
                 charge_copy['amount'] /= charge_copy['line_quantity']
-                if tax := self._retrieve_fixed_tax(record.company_id, charge_copy):
-                    taxes.append(tax.id)
-                    if tax.price_include:
-                        line_values['price_unit'] += tax.amount
-                    continue
+                tax = self._retrieve_fixed_tax(record.company_id, charge_copy)
+                if not tax:
+                    amount = charge_copy['amount']
+                    tax_name = charge_copy.get('reason', '')
+                    type_tax_use = record.journal_id.type if record.journal_id else 'sale'
+                    tax = self._create_fixed_tax(record.company_id, tax_name, amount, type_tax_use)
+                    amount = format_amount(self.env, amount, record.currency_id)
+                    logs.append(self._get_created_tax_log_message(amount, line_values['name'], tax_name))
+                taxes.append(tax.id)
+                if tax.price_include:
+                    line_values['price_unit'] += tax.amount
+                continue
 
             price_subtotal_before = line_values['price_unit'] * charge['line_quantity'] * (1.0 - line_values['discount'] / 100.0)
             price_subtotal_after = price_subtotal_before + charge['amount']
             line_values['price_unit'] += charge['amount'] / charge['line_quantity']
             new_price_subtotal_before_discount = line_values['price_unit'] * charge['line_quantity']
             line_values['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
-        return record._get_line_vals_list(charges_vals)
+        return record._get_line_vals_list(charges_vals), logs
 
     def _get_document_allowance_charge_xpaths(self):
         # OVERRIDE
@@ -1394,22 +1431,26 @@ class AccountEdiCommon(models.AbstractModel):
                 global_tax_values['related_taxes_values'].append(tax_values)
 
         # Taxes at the document line level.
+        currency = collected_values['invoice'].currency_id
         for line_collected_values in lines_collected_values:
             to_write = line_collected_values['to_write']
             tax_ids_commands = to_write['tax_ids'] = [Command.set([])]
             for tax_values in line_collected_values['taxes_values']:
-                if tax := tax_values.get('tax'):
+                tax = tax_values.get('tax')
+                if not tax and tax_values.get('amount_type') == 'fixed':
+                    amount = tax_values['amount']
+                    tax_name = tax_values.get('name', '')
+                    type_tax_use = tax_values.get('type_tax_use', 'sale')
+                    tax = tax_values['tax'] = self._create_fixed_tax(company, tax_name, amount, type_tax_use)
+                    amount = format_amount(self.env, amount, currency)
+                    logs.append(self._get_created_tax_log_message(amount, line_collected_values['name'], tax_name))
+
+                if tax:
                     tax_ids_commands[0][2].append(tax.id)
-                elif reason := tax_values.get('name'):
-                    logs.append(self.env._(
-                        "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
-                        tax_percentage=tax_values['amount'],
-                        line=reason,
-                    ))
                 else:
-                    logs.append(self.env._(
-                        "Could not retrieve the tax: %s for the document level allowance/charge.",
-                        tax_values['amount'],
+                    logs.append(self._get_missing_tax_log_message(
+                        f"{tax_values['amount']}%",
+                        line_name=line_collected_values['name'],
                     ))
 
         # Taxes at the document level.
@@ -1417,17 +1458,10 @@ class AccountEdiCommon(models.AbstractModel):
             if tax_values.get('tax'):
                 continue
 
-            if reason := tax_values.get('name'):
-                logs.append(self.env._(
-                    "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
-                    tax_percentage=tax_values['amount'],
-                    line=reason,
-                ))
-            else:
-                logs.append(self.env._(
-                    "Could not retrieve the tax: %s for the document level allowance/charge.",
-                    tax_values['amount'],
-                ))
+            logs.append(self._get_missing_tax_log_message(
+                f"{tax_values['amount']}%",
+                line_name=tax_values.get('name'),
+            ))
 
     def _import_invoice_get_default_base_line_kwargs(self, collected_values):
         invoice = collected_values['invoice']

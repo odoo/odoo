@@ -69,7 +69,9 @@ class SaleEdiCommon(models.AbstractModel):
                 order, line_values, 'sale',
             )
             logs += tax_logs
-            lines_values += self._retrieve_line_charges(order, line_values, line_values['tax_id'])
+            charge_lines, charge_logs = self._retrieve_line_charges(order, line_values, line_values['tax_id'])
+            lines_values += charge_lines
+            logs += charge_logs
             if not line_values['product_uom']:
                 line_values.pop('product_uom')  # if no uom, pop it so it's inferred from the product_id
             if line_values.get('discount'):  # Exclude discounts
