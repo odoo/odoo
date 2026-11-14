@@ -537,8 +537,8 @@
             'website/static/src/js/send_mail_form.js',
         ],
         'html_builder.iframe_add_dialog': [
-            'website/static/src/snippets/**/*.preview.scss',
-            'website/static/src/snippets/**/*.preview.css',
+            'website/static/src/**/*.preview.scss',
+            'website/static/src/**/*.preview.css',
         ],
     },
     'configurator_snippets': {

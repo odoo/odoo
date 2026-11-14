@@ -50,20 +50,6 @@ export function isElementInViewport(el) {
 }
 
 /**
- * Checks if the given element is visible in the sense of the jQuery `:visible`
- * selector.
- *
- * @param {HTMLElement} el the element
- * @returns {Boolean}
- */
-export function isVisible(el) {
-    if (el.offsetHeight > 0 || el.offsetWidth > 0) {
-        return true;
-    }
-    return false;
-}
-
-/**
  * Gets all the elements matching an option selector/exclude starting from the
  * root element.
  *
