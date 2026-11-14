@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.tests.common import new_test_user, tagged, TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -117,3 +121,54 @@ class TestResPartner(TransactionCase):
         self.env.invalidate_all()
         c1_partner_seen_from_c2 = company1_user.partner_id.with_user(allcompany_user).with_company(company2)
         self.assertEqual(c1_partner_seen_from_c2.meeting_count, 1, "Should compute meeting count without access error as partner is accessible in all companies")
+
+    @freeze_time("2025-04-08 12:00:00")
+    def test_in_meeting_until(self):
+        event = self.env["calendar.event"].create({
+            "name": "Meeting",
+            "start": fields.Datetime.now(),
+            "stop": fields.Datetime.now() + relativedelta(hours=1),
+            "show_as": "busy",
+            "privacy": "public",
+        })
+        self.assertEqual(self.env.user.partner_id.meeting_until, event.stop)
+
+    @freeze_time("2025-04-08 12:00:00")
+    def test_in_meeting_until_filters(self):
+        """Only accepted, busy, public and non all-day meetings are taken into account."""
+        now = fields.Datetime.now()
+        cases = [
+            ("private", {"privacy": "private"}, "accepted"),
+            ("available", {"show_as": "free"}, "accepted"),
+            ("all day", {"allday": True, "start_date": now.date(), "stop_date": now.date()}, "accepted"),
+            ("declined", {}, "declined"),
+            ("tentative", {}, "tentative"),
+            ("needs action", {}, "needsAction"),
+        ]
+        for description, values, state in cases:
+            with self.subTest(description=description):
+                partner = self.env["res.partner"].create({"name": description})
+                event = self.env["calendar.event"].create({
+                    "name": "Meeting",
+                    "start": now,
+                    "stop": now + relativedelta(hours=1),
+                    "show_as": "busy",
+                    "privacy": "public",
+                    "partner_ids": [partner.id],
+                    **values,
+                })
+                event.attendee_ids.state = state
+                self.assertFalse(partner.meeting_until)
+
+    @freeze_time("2025-04-08 12:00:00")
+    def test_in_meeting_until_back_to_back(self):
+        """Back-to-back meetings extend meeting_until, a gap between meetings stops it."""
+        now = fields.Datetime.now()
+        self.env["calendar.event"].create([{
+            "name": f"Meeting {start}",
+            "start": now + relativedelta(hours=start),
+            "stop": now + relativedelta(hours=start + 1),
+            "show_as": "busy",
+            "privacy": "public",
+        } for start in (0, 1, 3)])
+        self.assertEqual(self.env.user.partner_id.meeting_until, now + relativedelta(hours=2))
