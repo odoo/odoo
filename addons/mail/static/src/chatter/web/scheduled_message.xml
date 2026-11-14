@@ -12,7 +12,7 @@
             <div class="w-100 min-w-0">
                 <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
                     <span class="o-mail-Message-author cursor-pointer o-hover-text-underline" t-on-click="ev => this.onClickAuthor(ev)">
-                        <strong class="me-1 text-truncate o_redirect cursor-pointer" t-out="this.props.scheduledMessage.author_id.name"/>
+                        <strong class="me-1 text-truncate o_redirect cursor-pointer" t-out="this.highlightSearch(this.props.scheduledMessage.author_id.name)"/>
                     </span>
                     <small class="o-mail-Message-date text-muted opacity-75" t-att-title="this.scheduledDate">
                         <i class="oi mx-1" data-icon="send"/>
@@ -31,10 +31,10 @@
                                 <div t-on-click="this.onClick"
                                     t-attf-class="position-relative text-break o-mail-Message-body #{this.props.scheduledMessage.is_note ? 'p-1' : 'mb-0 py-2 px-3 align-self-start'}">
                                     <t t-if="this.props.scheduledMessage.subject and !this.props.scheduledMessage.isSubjectThreadName">
-                                        <em class="mb-1 me-2">Subject: <t t-out="this.props.scheduledMessage.subject"/></em>
+                                        <em class="mb-1 me-2">Subject: <t t-out="this.highlightSearch(this.props.scheduledMessage.subject)"/></em>
                                     </t>
-                                    <t t-if="this.isShort or this.readMore()" t-out="this.props.scheduledMessage.body || ''"/>
-                                    <p t-else="" t-out="this.truncatedMessage"/>
+                                    <t t-if="this.isShort or this.readMore()" t-out="this.highlightSearch(this.props.scheduledMessage.body || '')"/>
+                                    <p t-else="" t-out="this.highlightSearch(this.truncatedMessage)"/>
                                     <button t-if="!this.isShort" t-attf-class="btn btn-link #{this.readMore() ? '' : 'ps-0'}" t-on-click="this.toggleFn(this.readMore)">
                                         <t t-if="this.readMore()">
                                             Read Less

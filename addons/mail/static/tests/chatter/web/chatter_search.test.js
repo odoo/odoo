@@ -16,7 +16,7 @@ import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer"
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { contains, serverState } from "@web/../tests/web_test_helpers";
 
-import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
+import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_plugin";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -245,18 +245,34 @@ test("Scrolling bottom in non-aside chatter should load more searched message", 
 
 test("Switching chatter filters after empty result should show messages", async () => {
     const pyEnv = await startServer();
-    pyEnv["mail.message"].create({
-        body: "not empty",
-        message_type: "comment",
-        model: "res.partner",
-        res_id: serverState.partnerId,
-        subtype_id: pyEnv["mail.message.subtype"].search([
-            ["subtype_xmlid", "=", "mail.mt_comment"],
-        ])[0],
-    });
+    pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            message_type: "comment",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_comment"],
+            ])[0],
+        },
+        {
+            body: "internal search note",
+            message_type: "comment",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
+        },
+    ]);
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await contains("[title='Search Messages']:count(1)").click();
+    await contains("[title='Filter Messages']:count(1)").click();
+    await contains(".o-dropdown-item:text('Notes'):count(1)").click();
+    await waitFor(
+        ".o-mail-SearchMessageResult .o-mail-Message-content:text('internal search note'):count(1)"
+    );
     await contains("[title='Filter Messages']:count(1)").click();
     await contains(".o-dropdown-item:text('Changes'):count(1)").click();
     await waitFor(".o-mail-MessageCardList:text('No messages found'):count(1)");
