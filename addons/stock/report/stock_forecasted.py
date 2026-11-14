@@ -346,8 +346,15 @@ class StockForecasted_Product_Product(models.AbstractModel):
         linked_moves_per_out = {}
         ins_ids = set(ins._ids)
         for out in outs:
-            # stop the rollup at the in moves: what feeds them is still outside the warehouse
-            linked_move_ids = out._rollup_move_origs(seen=OrderedSet(ins._ids)) - ins_ids
+            linked_move_ids = OrderedSet()
+            # Nodes to visit.
+            to_visit = out
+            while to_visit:
+                # Get Ids for all nodes to visit, Don't include in moves
+                move_ids = [move_id for move_id in to_visit._ids if move_id not in linked_move_ids and move_id not in ins_ids]
+                linked_move_ids.update(move_ids)
+                # Get parent/source nodes
+                to_visit = self.env['stock.move'].browse(move_ids).move_orig_ids
             linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
 
         # Gather all linked moves
