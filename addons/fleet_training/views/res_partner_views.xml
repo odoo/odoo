@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_fleet_training" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.fleet.training</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_fleet_training_drivers" type="object"
+                        class="oe_stat_button" icon="directions_car"
+                        invisible="fleet_training_driver_count == 0">
+                    <field name="fleet_training_driver_count" widget="statinfo" string="Fleet Drivers"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
