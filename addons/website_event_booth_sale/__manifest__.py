@@ -13,9 +13,6 @@ Use the e-commerce to sell your event booths.
     ],
     'auto_install': True,
     'assets': {
-        'web.assets_frontend': [
-            '/website_event_booth_sale/static/src/interactions/*',
-        ],
         'web.assets_tests': [
             '/website_event_booth_sale/static/tests/tours/**/*.js'
         ],
