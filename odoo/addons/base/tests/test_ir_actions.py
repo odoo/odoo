@@ -409,6 +409,21 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             })
             self.action.flush_recordset(['update_path', 'update_field_id'])
 
+    def test_38_field_path_traversal_property(self):
+        """ Test that a property reached through a relation is updated on the related record """
+        definition = self.env['properties.base.definition']._get_definition_for_property_field('res.partner', 'properties')
+        definition.properties_definition = [{'name': 'tier', 'type': 'char', 'string': 'Tier'}]
+        company = self.env['res.partner'].create({'name': 'TestingCompany', 'is_company': True})
+        self.test_partner.parent_id = company
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'parent_id.properties.tier',
+            'value': 'Gold',
+        })
+        self.action.with_context(self.context).run()
+        self.assertEqual(company.properties['tier'], 'Gold', 'the property of the related record should be updated')
+        self.assertFalse(self.test_partner.properties['tier'], 'the property of the starting record should be untouched')
+
     def test_39_boolean_update(self):
         """ Test that boolean fields can be updated """
         # update the country's name via the partner
