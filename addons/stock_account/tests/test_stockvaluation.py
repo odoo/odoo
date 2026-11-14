@@ -807,6 +807,37 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.qty_available, 0)
         self.assertEqual(product.total_value, 0)
 
+    def test_validate_picking_across_second_no_replay(self):
+        """ Validating a picking does not replay the valuation when the clock
+        moves to the next second between its moves and its date_done.
+        """
+        product = self.product_fifo
+        self._make_in_move(product, 2, unit_cost=10)
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.write({'quantity': 1, 'picked': True})
+
+        # Every now() falls one second after the previous one
+        Product = type(product)
+        with freeze_time(Datetime.now(), auto_tick_seconds=1), \
+                patch.object(Product, '_correct_inventory_valuation', autospec=True,
+                             side_effect=Product._correct_inventory_valuation) as replay:
+            delivery.button_validate()
+
+        replay.assert_not_called()
+        self.assertEqual(delivery.date_done, delivery.move_ids.date)
+        self.assertEqual(delivery.move_ids.value, -10)
+
     def test_fifo_standard_price_upate_1(self):
         product = self.product_fifo
         self._make_in_move(product, 3, unit_cost=17)
