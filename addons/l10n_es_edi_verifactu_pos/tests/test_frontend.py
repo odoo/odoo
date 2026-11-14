@@ -46,3 +46,15 @@ class TestL10nEsEdiVerifactuPosFrontend(TestL10nEsEdiVerifactuPosCommon, TestPoi
 
         self.assertTrue(order.to_invoice)
         self.assertEqual(refund.account_move.l10n_es_edi_verifactu_refund_reason, 'R2')
+
+    def test_simplified_invoice_on_receipt(self):
+        """
+        Tests that the simplified invoice is on the receipt if needed
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with self._mock_zeep_registration_operation_certificate_issue():
+            self.start_tour(
+                f'/pos/ui?config_id={self.main_pos_config.id}',
+                'l10n_es_edi_verifactu_pos.test_simplified_invoice_on_receipt',
+                login='pos_user'
+            )
