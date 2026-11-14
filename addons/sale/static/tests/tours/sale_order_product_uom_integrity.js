@@ -12,3 +12,20 @@ registry.category('web_tour.tours').add('sale_order_keep_uom_on_variant_wizard_q
         ...stepUtils.saveForm(),
     ],
 });
+
+registry.category('web_tour.tours').add('sale_order_ignore_previous_uom_on_product_change', {
+    steps: () => [
+        tourUtils.editLineMatching("Packed Product"),
+        {
+            trigger: 'div[name="product_template_id"] input',
+            run: "edit Configurable Product",
+        },
+        {
+            trigger: 'ul.ui-autocomplete a:contains("Configurable Product")',
+            run: 'click',
+        },
+        productConfiguratorTourUtils.assertProductPrice("Configurable Product", "10.00"),
+        ...productConfiguratorTourUtils.saveConfigurator(),
+        ...stepUtils.saveForm(),
+    ],
+});
