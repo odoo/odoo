@@ -1,3 +1,4 @@
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
 
 import {
@@ -121,6 +122,61 @@ test("click away from the empty suggestion list keeps the fetched suggestions", 
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     fetchHeld.resolve();
     await contains(".o-mail-Composer-suggestion", { text: "Bob" });
+});
+
+test("[text composer] late empty answer of a previous search does not drop the current search", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Georges" });
+    const fetchHeld = new Deferred();
+    onRpc("res.partner", "get_mention_suggestions", async ({ kwargs }) => {
+        asyncStep(`get_mention_suggestions: ${kwargs.search}`);
+        if (kwargs.search === "xxx") {
+            await fetchHeld;
+        }
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "@xxx");
+    await expect.waitForSteps(["get_mention_suggestions: xxx"]);
+    await insertText(".o-mail-Composer-input", "@Georges", { replace: true });
+    await animationFrame();
+    fetchHeld.resolve();
+    await contains(".o-mail-Composer-suggestion", { text: "Georges" });
+    await expect.waitForSteps(["get_mention_suggestions: georges"]);
+});
+
+test.tags("html composer");
+test("late empty answer of a previous search does not drop the current search", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Georges" });
+    const fetchHeld = new Deferred();
+    onRpc("res.partner", "get_mention_suggestions", async ({ kwargs }) => {
+        asyncStep(`get_mention_suggestions: ${kwargs.search}`);
+        if (kwargs.search === "xxx") {
+            await fetchHeld;
+        }
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    await htmlInsertText(editor, "@xxx");
+    await expect.waitForSteps(["get_mention_suggestions: xxx"]);
+    const { anchorNode } = document.getSelection();
+    setSelection({ anchorNode, anchorOffset: 0, focusOffset: anchorNode.textContent.length });
+    await htmlInsertText(editor, "@Georges");
+    await animationFrame();
+    fetchHeld.resolve();
+    await contains(".o-mail-Composer-suggestion", { text: "Georges" });
+    await expect.waitForSteps(["get_mention_suggestions: georges"]);
 });
 
 test.tags("html composer");
