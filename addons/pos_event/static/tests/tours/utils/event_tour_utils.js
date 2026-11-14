@@ -31,6 +31,36 @@ export function increaseQuantityOfTicketBy(ticket, number) {
     return Array.from({ length: number }, () => increaseQuantityOfTicket(ticket)).flat();
 }
 
+export function decreaseQuantityOfTicket(ticket) {
+    return [
+        {
+            content: `decrease quantity`,
+            trigger: `.modal .o_event_configurator_popup div:contains('${ticket}') .fa.fa-minus`,
+            run: "click",
+        },
+    ];
+}
+
+export function answerTicketRadioOrCheckboxQuestion(ticketNumber, question, answer) {
+    return [
+        {
+            content: `Answer question ${question} with ${answer} for ticket ${ticketNumber}`,
+            trigger: `.ticket_question:contains('Ticket #${ticketNumber}') .input-group:contains('${question}') .form-check:contains('${answer}') input`,
+            run: "click",
+        },
+    ];
+}
+
+export function answerGlobalRadioOrCheckboxQuestion(question, answer) {
+    return [
+        {
+            content: `Answer question ${question} with ${answer} for global`,
+            trigger: `.global_question:contains('${question}') .form-check:contains('${answer}') input`,
+            run: "click",
+        },
+    ];
+}
+
 export function answerTicketSelectQuestion(ticketNumber, question, answer) {
     return [
         {
