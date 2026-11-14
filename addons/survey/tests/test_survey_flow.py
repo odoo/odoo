@@ -18,6 +18,8 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         return post_data
 
     def test_flow_public(self):
+        self._warm_ir_cache()
+
         # Step: survey manager creates the survey
         # --------------------------------------------------
         with self.with_user('survey_manager'):

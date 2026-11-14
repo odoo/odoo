@@ -1539,6 +1539,7 @@ def preload_registries(dbnames):
                             env = api.Environment(cr, api.SUPERUSER_ID, {})
                             env.registry._assertion_report = registry._assertion_report
                             env['ir.qweb']._pregenerate_assets_bundles()
+                            env['ir.qweb']._pregenerate_view_caches()
                     result = loader.run_suite(post_install_suite, global_report=registry._assertion_report)
                     registry._assertion_report.update(result)
                     _logger.info("%d post-tests in %.2fs, %s queries",

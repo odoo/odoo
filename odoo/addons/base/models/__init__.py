@@ -24,6 +24,7 @@ from . import ir_mail_server
 from . import ir_fields
 from . import ir_qweb
 from . import ir_qweb_fields
+from . import ir_cache
 from . import ir_http
 from . import ir_logging
 from . import ir_module

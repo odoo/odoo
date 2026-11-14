@@ -72,10 +72,12 @@ class TestPregenerateTime(HttpCase):
 
     def test_logs_pregenerate_time(self):
         self.env['ir.qweb']._pregenerate_assets_bundles()
+        self.env['ir.qweb']._pregenerate_view_caches()
         start = time.time()
         self.env.transaction.clear()
         with self.profile(collectors=['sql', odoo.tools.profiler.PeriodicCollector(interval=0.01)], disable_gc=True):
             self.env['ir.qweb']._pregenerate_assets_bundles()
+            self.env['ir.qweb']._pregenerate_view_caches()
         duration = time.time() - start
         _logger.info('All bundle checked in %.2fs', duration)
 

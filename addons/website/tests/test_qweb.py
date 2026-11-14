@@ -2,6 +2,7 @@
 
 import re
 from contextlib import contextmanager
+from unittest.mock import patch
 
 from odoo.http.router import root
 from odoo.tests.common import TransactionCase, tagged
@@ -174,6 +175,15 @@ class TestQweb(TransactionCaseWithUserDemo):
             'minimal_qcontext': True,
             'cookies_allowed': True,
         })
+
+        # fill ir.cache, then clear all the caches to simulate a new worker
+        env['ir.qweb']._render('base.testing_content', {'doc': 'warmup'})
+        env['ir.qweb'].with_context(website_id=False)._render('base.testing_content', {'doc': 'warmup'})
+        with MockRequest(env, website=website) as request:
+            request.env['ir.qweb']._render('base.testing_content', {'doc': 'warmup'})
+        env.transaction.invalidate_ormcache('templates')
+        env.transaction.invalidate_ormcache('stable')
+        env.invalidate_all()
 
         # add some website information in cache (default website, lang...)
         env['ir.qweb']._render('base.testing_unused')
@@ -552,6 +562,13 @@ class TestQwebDataSnippet(TransactionCase):
         self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
 
     def test_call_query_count_snippets_template(self):
+        # fill ir.cache, then clear all the caches to simulate a new worker
+        with MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
+            request.env['ir.ui.view'].render_public_asset('website.snippets')
+        self.env.transaction.invalidate_ormcache('templates')
+        self.env.transaction.invalidate_ormcache('stable')
+        self.env.invalidate_all()
+
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
             with MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
@@ -566,21 +583,17 @@ class TestQwebDataSnippet(TransactionCase):
         t_call_snippets = 2  # number of nested t-calls (t-call > view > t-call > other views...)
 
         # website_blog/event/sale add snippets calling s_dynamic_snippet_template
-        # with nested preview data t-calls, which adds 2 levels of nesting.
+        # with nested preview data t-calls, which adds 1 level of nesting.
         installed_modules = self.env['ir.module.module']._installed()
         if any(
             module in installed_modules
             for module in ('website_blog', 'website_event', 'website_sale')
         ):
-            t_call_snippets += 2
+            t_call_snippets += 1
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
-        get_root_view = 1  # determine the root views
-        # website_sale adds one more root view.
-        if 'website_sale' in installed_modules:
-            get_root_view += 1
-        combine_views = 3  # Queries performed to execute the read combine
+        ir_cache = 1 + t_call_snippets  # compiled code read from ir.cache, in batch for each level of t-calls
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + ir_cache
         self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
@@ -588,3 +601,33 @@ class TestQwebDataSnippet(TransactionCase):
         str_queries = "\n".join(website_queries)
 
         self.assertLessEqual(len(website_queries), 20, f'Maximum queries: {20}\n{str_queries}')
+
+
+@tagged('post_install', '-at_install')
+class TestQwebCodeCacheWebsite(TransactionCase):
+
+    def test_website_write(self):
+        """ The compiled code stored in `ir.cache` depends on the website. """
+        website = self.env['website'].browse(1)
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_ir_cache_website',
+            'type': 'qweb',
+            'arch_db': '<t t-name="test_ir_cache_website"><div>content</div></t>',
+        })
+        IrQweb = self.env['ir.qweb'].with_context(website_id=website.id)
+
+        def render():
+            """ Render like a new worker, return whether the code is generated. """
+            self.env.transaction.invalidate_ormcache('templates')
+            self.env.invalidate_all()
+            with patch.object(self.env.registry['ir.qweb'], '_generate_code', autospec=True, side_effect=self.env.registry['ir.qweb']._generate_code) as generate:
+                self.assertEqual(str(IrQweb._render(view.id)), '<div>content</div>')
+            return generate.called
+
+        self.assertTrue(render())
+        self.assertFalse(render(), "the code is read from ir.cache")
+        self.assertFalse(render(), "the code is read from ir.cache")
+
+        website.write({'name': 'Other name'})
+        self.assertTrue(render(), "the website changed, the code is generated again")
+        self.assertFalse(render(), "the code is read from ir.cache")

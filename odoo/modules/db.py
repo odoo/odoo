@@ -554,9 +554,9 @@ def drop(db_name: str) -> None:
             raise
         _logger.info("DROP DB: %s", db_name)
 
-    fs = odoo.tools.config.filestore(db_name)
-    if os.path.exists(fs):
-        shutil.rmtree(fs)
+    for fs in (odoo.tools.config.filestore(db_name), odoo.tools.config.cache_dir(db_name)):
+        if os.path.exists(fs):
+            shutil.rmtree(fs)
 
 
 def _dump_db_manifest(cr: Cursor):
@@ -709,6 +709,10 @@ def rename(
     new_fs = odoo.tools.config.filestore(new_name)
     if os.path.exists(old_fs) and not os.path.exists(new_fs):
         shutil.move(old_fs, new_fs)
+    old_cache = odoo.tools.config.cache_dir(old_name)
+    new_cache = odoo.tools.config.cache_dir(new_name)
+    if os.path.exists(old_cache) and not os.path.exists(new_cache):
+        shutil.move(old_cache, new_cache)
 
 
 def list_dbs(*, force=False):
