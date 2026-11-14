@@ -34,6 +34,8 @@ class PosMakeInvoice(models.TransientModel):
         invoices = self.env['account.move']
 
         if not self.consolidated_billing or len(selected_orders) == 1:
+            if any(not o.partner_id for o in selected_orders):
+                raise UserError(_("Kindly ensure that each order contains a customer."))
             for order in selected_orders:
                 invoices |= order._generate_pos_order_invoice()
                 # Commit after each invoice because a failure on one POS Order would rollback all previously created invoices,
