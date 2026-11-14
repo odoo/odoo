@@ -112,6 +112,11 @@
                                 class="btn btn-success btn-sm"
                                 groups="hr_attendance.group_hr_attendance_officer"/>
                     </div>
+                    <div class="alert alert-info mb-3 d-flex gap-2" role="status"
+                         invisible="not time_rule_split_preview">
+                        <i class="oi mt-1" data-icon="info" role="img" aria-label="Info" title="Info"/>
+                        <field name="time_rule_split_preview" readonly="1" nolabel="1"/>
+                    </div>
                     <group>
                         <group colspan="2">
                             <group col="1" name="group_employee">

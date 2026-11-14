@@ -120,11 +120,19 @@ class HrAttendance(http.Controller):
         """Return :meth:`_get_employee_info_response` with the ``notification`` of the check in
         or out, if any.
 
+        When the employee is checked out, also ``split_summary``: how the time rules split the
+        last attendance (``hr.attendance._get_time_rule_split_summary``), ``False`` if they
+        did not.
+
         :rtype: dict
         """
         response = cls._get_employee_info_response(employee)
         if notification:
             response['notification'] = notification
+        employee_sudo = employee.sudo()
+        last_attendance = employee_sudo.last_attendance_id
+        if employee_sudo and employee_sudo.attendance_state == 'checked_out' and last_attendance.check_out:
+            response['split_summary'] = last_attendance._get_time_rule_split_summary()
         return response
 
     @staticmethod
@@ -476,7 +484,8 @@ class HrAttendance(http.Controller):
         """Check the current user's employee in or out from the systray (``systray`` mode).
 
         :return: :meth:`_get_attendance_action_response` updated with
-            :meth:`_get_user_attendance_data` (with details)
+            :meth:`_get_user_attendance_data` (with details); on a check-out split by the time
+            rules, the ``notification`` (if none) describes the split
         """
         employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         if not employee:
@@ -489,6 +498,9 @@ class HrAttendance(http.Controller):
         notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
         response = self._get_attendance_action_response(employee, notification)
         response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
+        split_summary = response.get('split_summary')
+        if split_summary and not notification:
+            response['notification'] = {'type': 'info', 'message': split_summary['message']}
         return response
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", replica=True)

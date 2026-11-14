@@ -72,6 +72,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div t-if="this.isCheckOut and this.splitSummary"
+                                    class="o_hr_attendance_kiosk_split alert alert-info d-flex flex-column gap-1 mb-0 p-2"
+                                    role="status">
+                                    <div class="small fw-bolder text-center" t-out="this.splitSummary.title"/>
+                                    <div t-foreach="this.splitSummary.parts" t-as="part" t-key="part_index"
+                                        class="d-flex justify-content-between gap-3">
+                                        <span t-out="part.work_entry_type"/>
+                                        <strong t-out="this.formatHours(part.hours)"/>
+                                    </div>
+                                </div>
                                 <div t-if="this.isCheckOut and this.props.employeeData.break_management_enabled"
                                     role="group" class="alert alert-secondary d-flex flex-column align-items-center">
                                     <button type="button" class="btn btn-secondary px-4 fw-semibold"

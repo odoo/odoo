@@ -25,6 +25,15 @@ export class KioskGreetings extends Component {
         return Boolean(this.attendance.check_out);
     }
 
+    /** How the time rules split the attendance at check-out, see `_get_time_rule_split_summary`. */
+    get splitSummary() {
+        return this.props.employeeData.split_summary;
+    }
+
+    formatHours(hours) {
+        return formatFloatTime(hours);
+    }
+
     checkInTime = computed(() =>
         this.attendance.check_in ? formatDateTime(deserializeDateTime(this.attendance.check_in)) : ""
     );
