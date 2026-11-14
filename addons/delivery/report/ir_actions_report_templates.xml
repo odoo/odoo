@@ -13,13 +13,13 @@
     <template id="report_delivery_note">
         <t t-foreach="docs" t-as="o">
             <t t-call="web.html_container" t-lang="o._get_report_lang()">
-                <t t-set="partner" t-value="o.partner_id"/>
+                <t t-set="partner" t-value="o.partner_shipping_id or o.partner_id"/>
                 <t t-set="address">
                     <div name="div_outgoing_address">
                         <div name="outgoing_delivery_address">
                             <strong>Delivery Address</strong>
                             <div
-                                t-out="o.partner_id"
+                                t-out="partner"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'
                             />
                         </div>
@@ -29,13 +29,14 @@
                     <div class="row">
                         <div class="col-7" name="div_incoming_address">
                             <t t-set="show_partner" t-value="False"/>
-                            <div name="customer_address" t-if="partner and partner != partner.commercial_partner_id">
+                            <t t-set="customer" t-value="o.partner_id.commercial_partner_id"/>
+                            <div name="customer_address" t-if="customer and partner != customer">
                                 <strong>Customer</strong>
                                 <t t-set="show_partner" t-value="True"/>
                             </div>
                             <div t-if="show_partner" name="partner_header">
                                 <div
-                                    t-field="partner.commercial_partner_id"
+                                    t-out="customer"
                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'
                                 />
                             </div>
