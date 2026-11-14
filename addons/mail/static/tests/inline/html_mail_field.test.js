@@ -45,6 +45,14 @@ class CustomMessage extends models.Model {
     _records = [
         { id: 1, title: "first", body: "<p>first</p>" },
         { id: 2, title: "second", body: "<p>second</p>" },
+        {
+            id: 3,
+            title: "webp",
+            body: `<p class="o_text">text</p>
+                <p><img src="/web/static/img/logo.png?.webp"></p>
+                <div style="background-image: url('/web/static/img/logo2.png?.webp');"><p>bg</p></div>
+                <p><img src="https://example.com/external.webp"></p>`,
+        },
     ];
 
     _onChanges = {
@@ -154,4 +162,46 @@ test("HtmlMail add icon and save inline html", async function () {
 
     await clickSave();
     await expect.waitForSteps(["web_save"]);
+});
+
+test("HtmlMail saves webp images as png", async function () {
+    onRpc("/html_editor/get_image_info", async (request) => {
+        const { params } = await request.json();
+        const id = params.src === "/web/static/img/logo.png" ? 101 : 102;
+        return {
+            original: { id, image_src: `/web/image/${id}-a/image.webp`, mimetype: "image/webp" },
+        };
+    });
+    for (const id of [101, 102]) {
+        onRpc(`/html_editor/modify_image/${id}`, async (request) => {
+            const { params } = await request.json();
+            expect.step(`modify_image ${params.mimetype} ${params.name}`);
+            return `/web/image/${id + 100}-a/image.png`;
+        });
+    }
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].body).toInclude('src="/web/image/201-a/image.png"');
+        expect(args[1].body).toInclude("/web/image/202-a/image.png");
+        expect(args[1].body).toInclude('src="https://example.com/external.webp"');
+        expect(args[1].body).not.toInclude("?.webp");
+        expect.step("web_save");
+    });
+    await mountView({
+        type: "form",
+        resId: 3,
+        resModel: "custom.message",
+        arch: `
+        <form>
+            <field name="body" widget="html_mail"/>
+        </form>`,
+    });
+    setSelectionInHtmlField(".o_text");
+    await insertText(htmlEditor, "a");
+
+    await clickSave();
+    await expect.waitForSteps([
+        "modify_image image/png image.png",
+        "modify_image image/png image.png",
+        "web_save",
+    ]);
 });
