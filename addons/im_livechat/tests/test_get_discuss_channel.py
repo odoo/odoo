@@ -250,3 +250,17 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             partner_ids=self.operators[0].partner_id.ids
         )
         self.assertEqual(self_member.partner_id, self.operators[0].partner_id)
+
+    def test_visitor_leave_session_without_guest_context(self):
+        channel_info = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"anonymous_name": "Visitor", "channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(channel_info["id"])
+        self.assertTrue(channel.livechat_active)
+        self.opener.cookies.pop("dgid", None)
+        # Must not raise when member record is not found.
+        self.make_jsonrpc_request(
+            "/im_livechat/visitor_leave_session", {"uuid": channel_info["uuid"]}
+        )
+        self.assertTrue(channel.livechat_active)
