@@ -772,6 +772,11 @@ class BaseModel(metaclass=MetaModel):
 
             fetch_fields(self, fields)
 
+        # ``fields2`` (the sub-fields to export for a relational column) only
+        # depends on ``fields`` and the column name, not on the record, so
+        # compute it once per column name instead of once per record.
+        fields2_cache = {}
+
         for record in self:
             # main line of record, initially empty
             current = [''] * len(fields)
@@ -817,8 +822,18 @@ class BaseModel(metaclass=MetaModel):
                         primary_done.append(name)
                         # recursively export the fields that follow name; use
                         # 'display_name' where no subfield is exported
-                        fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
-                                   for p in fields]
+                        cached = fields2_cache.get(name)
+                        if cached is None:
+                            fields2 = [
+                                (p[1:] or ['display_name'] if p and p[0] == name else [])
+                                for p in fields
+                            ]
+                            # columns that ``fields2`` actually exports: the
+                            # others stay empty in the sub-rows, so there is no
+                            # point scanning them when merging back.
+                            sub_columns = [j for j, p in enumerate(fields2) if p]
+                            cached = fields2_cache[name] = (fields2, sub_columns)
+                        fields2, sub_columns = cached
 
                         # in import_compat mode, m2m should always be exported as
                         # a comma-separated list of xids or names in a single cell
@@ -846,8 +861,11 @@ class BaseModel(metaclass=MetaModel):
 
                         lines2 = value._export_rows(fields2, _is_toplevel_call=False)
                         if lines2:
-                            # merge first line with record's main line
-                            for j, val in enumerate(lines2[0]):
+                            # merge first line with record's main line; only the
+                            # columns exported by ``fields2`` can be non-empty
+                            line2 = lines2[0]
+                            for j in sub_columns:
+                                val = line2[j]
                                 if val or isinstance(val, (int, float)):
                                     current[j] = val
                             # append the other lines at the end
