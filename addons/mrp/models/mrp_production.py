@@ -3275,6 +3275,44 @@ class MrpProduction(models.Model):
         self.qty_producing = 0
         self._set_qty_producing(False)
 
+    def get_forecast_infos(self):
+        self.ensure_one()
+        warehouse = self.location_dest_id.warehouse_id
+        uom = self.product_id.uom_id
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
+        result_base = {
+            "warehouse_id": warehouse.id,
+            "uom": uom.display_name,
+            "digits": digits,
+        }
+        if self.state == 'draft':
+            virtual_available = self.product_id.with_context(warehouse_id=warehouse.id, to_date=self.date_start).virtual_available
+            report_values = self.env['report.mrp.report_bom_structure'].with_context(warehouse_id=warehouse.id)._get_report_data(bom_id=self.bom_id.id)
+            ready_to_produce = report_values["lines"]["uom"]._compute_quantity(report_values["lines"]["producible_qty"], uom, round=False)
+            domain = [
+                ('product_id', '=', self.product_id.id),
+                ('state', 'in', ['confirmed', 'progress']),
+                ('location_dest_id', '=', self.location_dest_id.id),
+            ]
+            producing = self.env['mrp.production'].sudo()._read_group(domain, aggregates=['product_uom_qty:sum'], groupby=['product_id'])
+            return {**result_base,
+                "forecasted": virtual_available + self.product_uom_qty,
+                "max_producible": ready_to_produce - (producing[0][1] if producing else 0)
+            }
+        if self.state in ['confirmed', 'progress']:
+            bom = self.bom_id
+            report_values = self.env['report.mrp.report_bom_structure'].with_context(warehouse_id=warehouse.id)._get_report_data(bom_id=bom.id)
+            ready_to_produce = report_values["lines"]["uom"]._compute_quantity(report_values["lines"]["producible_qty"], uom, round=False)
+            return {**result_base,
+                "ready_to_produce": min(ready_to_produce, self.product_uom_qty),
+                "quantity": self.product_uom_qty,
+            }
+        if self.state in ['to_close', 'done']:
+            return {**result_base,
+                "outgoing": self.product_id.outgoing_qty,
+            }
+        return {}
+
     def _track_execute(self, track_init_values, trackings, track_records=None):
         """
            Extend tracking behavior to manage the `previous_date_start` field
