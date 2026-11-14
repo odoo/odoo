@@ -313,8 +313,14 @@ export class Rtc extends Record {
     fallbackMode = false;
     isPipMode = false;
     isFullscreen = false;
+<<<<<<< e747532ea8f271f6cfda0870b76193252cf2ed00
     /** Whether fullscreen was active before opening PIP. */
     hadFullscreen = false;
+||||||| fdb1df4cb299cd42db7a619318b7d79eae0788fa
+=======
+    /** Mirrors `screenTrack.enabled`, which a template cannot observe. */
+    isScreenTrackPaused = false;
+>>>>>>> 6bc8de0410608ee2f0044fd957956362754d0972
     /** @type {RtcLog} */
     logs = {};
     notifications = reactive(new Map());
@@ -613,6 +619,62 @@ export class Rtc extends Record {
         this.setPttReleaseTimeout();
     }
 
+<<<<<<< e747532ea8f271f6cfda0870b76193252cf2ed00
+||||||| fdb1df4cb299cd42db7a619318b7d79eae0788fa
+    showMirroringWarning() {
+        this.screenTrack.enabled = false;
+        const trackEndedFn = () => this.removeMirroringWarning?.();
+        this.removeMirroringWarning = this.overlay.add(
+            CallInfiniteMirroringWarning,
+            {
+                onClose: ({ stopScreensharing } = {}) => {
+                    this.removeMirroringWarning({ stopScreensharing });
+                },
+            },
+            {
+                onRemove: ({ stopScreensharing } = {}) => {
+                    if (stopScreensharing) {
+                        this.toggleVideo("screen", false);
+                    }
+                    this.screenTrack?.removeEventListener("ended", trackEndedFn);
+                    this.removeMirroringWarning = null;
+                },
+            }
+        );
+        this.screenTrack.addEventListener("ended", trackEndedFn, { once: true });
+    }
+
+=======
+    /** @param {boolean} paused */
+    setScreenTrackPaused(paused) {
+        this.screenTrack.enabled = !paused;
+        this.isScreenTrackPaused = paused;
+    }
+
+    showMirroringWarning() {
+        this.setScreenTrackPaused(true);
+        const trackEndedFn = () => this.removeMirroringWarning?.();
+        this.removeMirroringWarning = this.overlay.add(
+            CallInfiniteMirroringWarning,
+            {
+                onClose: ({ stopScreensharing } = {}) => {
+                    this.removeMirroringWarning({ stopScreensharing });
+                },
+            },
+            {
+                onRemove: ({ stopScreensharing } = {}) => {
+                    if (stopScreensharing) {
+                        this.toggleVideo("screen", false);
+                    }
+                    this.screenTrack?.removeEventListener("ended", trackEndedFn);
+                    this.removeMirroringWarning = null;
+                },
+            }
+        );
+        this.screenTrack.addEventListener("ended", trackEndedFn, { once: true });
+    }
+
+>>>>>>> 6bc8de0410608ee2f0044fd957956362754d0972
     setPttReleaseTimeout(duration = PTT_RELEASE_DURATION) {
         this.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
@@ -2101,6 +2163,7 @@ export class Rtc extends Record {
             }
             case "screen": {
                 Object.assign(this, {
+                    isScreenTrackPaused: false,
                     isSendingScreen: Boolean(outputTrack),
                     screenAudioTrack: screenAudioTrack,
                     screenTrack: outputTrack,
@@ -2434,7 +2497,7 @@ export const rtcService = {
                 rtc.screenTrack.enabled = false;
             } else if (!rtc.isFullscreen) {
                 if (wasFullscreen && rtc.screenTrack) {
-                    rtc.screenTrack.enabled = true;
+                    rtc.setScreenTrackPaused(false);
                 }
             }
         });
