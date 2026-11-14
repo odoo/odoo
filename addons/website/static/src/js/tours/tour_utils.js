@@ -682,7 +682,7 @@ export function openLinkPopup({
         steps.push(
             {
                 content: "Click on Remove Link in Popover",
-                trigger: `.o-we-linkpopover .o_link_popover_container:has(.input-group) .o_we_remove_link`,
+                trigger: `.o-we-linkpopover .o_link_popover_container .o_we_remove_link`,
                 run: "click",
             },
             {

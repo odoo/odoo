@@ -15,8 +15,6 @@ import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceLinkUrl, normalizeLinkUrlInput } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import {
     BUTTON_SHAPES,
     BUTTON_SIZES,
@@ -70,7 +68,7 @@ function useContentChange(el, callback) {
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
     props = useProps(linkPopoverProps);
-    static components = { CheckBox, Dropdown, DropdownItem };
+    static components = { CheckBox };
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
     buttonTypesData = BUTTON_TYPES;
@@ -334,6 +332,24 @@ export class LinkPopover extends Component {
     }
 
     /**
+     * Link styles of the segmented control, with short labels. A custom style
+     * cannot be picked here: it only shows when the link already has one.
+     */
+    get linkTypeItems() {
+        const shortLabels = {
+            link: _t("Link"),
+            primary: _t("Primary"),
+            secondary: _t("Secondary"),
+        };
+        return this.buttonTypesData
+            .filter((typeData) => typeData.type !== "custom" || this.state.type === "custom")
+            .map((typeData) => ({
+                ...typeData,
+                shortLabel: shortLabels[typeData.type] || typeData.label,
+            }));
+    }
+
+    /**
      * @private
      */
     async updateDocumentState() {
@@ -493,6 +509,17 @@ export class LinkPopover extends Component {
 
     get showUrl() {
         return this.state.urlTitle && this.state.url && this.state.urlTitle !== this.state.url;
+    }
+
+    /**
+     * @returns {string} the site of the link, shown at the top of its preview
+     * (the link itself when it has no host, e.g. an email address)
+     */
+    get previewHost() {
+        if (!this.state.url) {
+            return "";
+        }
+        return URL.parse(this.state.url, document.URL)?.host || this.state.url;
     }
 
     async uploadFile() {
