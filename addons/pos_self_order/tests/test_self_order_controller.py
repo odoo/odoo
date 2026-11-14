@@ -37,3 +37,15 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = self.env['pos.order']._check_pos_order(self.pos_config, params, None)
         self.assertFalse('account_move' in data)  # Do not add it back, if needed contact the PoS team.
         self.assertFalse('access_token' in data)  # Do not add it back, if needed contact the PoS team.
+
+    def test_self_order_data_no_internal_fields(self):
+        """POST /pos-self/data as anonymous user must not expose internal fields."""
+        self.pos_config.write({'self_ordering_mode': 'mobile', 'self_ordering_pay_after': 'each'})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        resp = self.make_jsonrpc_request(
+            f'/pos-self/data/{self.pos_config.id}',
+            {},
+        )
+        self.assertNotIn('standard_price', resp['product.product']['fields'])
+        self.assertNotIn('cash_register_balance_start', resp['pos.session']['fields'])

@@ -33,6 +33,10 @@ class PosSession(models.Model):
     def _load_pos_self_data_domain(self, data):
         return [('config_id', '=', data['pos.config']['data'][0]['id']), ('state', '=', 'opened')]
 
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        return ['id', 'name', 'config_id', 'state', 'access_token']
+
     def _load_pos_self_data(self, data):
         result = super()._load_pos_self_data(data)
         if result['data']:
