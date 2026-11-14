@@ -2,6 +2,8 @@
 
 import odoo
 from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
+from odoo.tests import JsonRpcException
+from odoo.tools import mute_logger
 
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
@@ -36,6 +38,58 @@ class TestAttachmentController(MailControllerAttachmentCommon):
         )
         channel.message_post(attachment_ids=cls.channel_attachment.ids)
 
+    def test_attachment_delete_message_access(self):
+        """Test that deleting an attachment of a message the user can read raises AccessError,
+        while it raises NotFound for internal notes hidden to portal users, even when they
+        can read the record"""
+        thread = self.env["mail.test.access"].create({"access": "logged_ro", "name": "Test"})
+        for subtype_xmlid, exp_error in (
+            ("mail.mt_comment", "odoo.exceptions.AccessError"),
+            ("mail.mt_note", "werkzeug.exceptions.NotFound"),
+        ):
+            with self.subTest(subtype_xmlid=subtype_xmlid):
+                attachment = self.env["ir.attachment"].create({"name": "sample attachment"})
+                thread.message_post(
+                    attachment_ids=attachment.ids,
+                    body="Hello",
+                    message_type="comment",
+                    partner_ids=self.user_portal.partner_id.ids,
+                    subtype_xmlid=subtype_xmlid,
+                )
+                self._authenticate_pseudo_user(self.user_portal)
+                with self.assertRaises(JsonRpcException) as e:
+                    self._delete_attachment(attachment, token=False)
+                self.assertEqual(str(e.exception), exp_error)
+                self.assertTrue(attachment.exists())
+
+    def test_attachment_delete_channel_message_access(self):
+        """Test that deleting an attachment of a channel message raises AccessError for
+        members, while it raises NotFound for non-members"""
+        chat = self.env["discuss.channel"].create({"name": "Group", "channel_type": "group"})
+        chat._add_members(guests=self.guest, users=self.user_admin)
+        non_member = self.env["mail.guest"].create({"name": "Non member"})
+        for guest, exp_error in (
+            (self.guest, "odoo.exceptions.AccessError"),
+            (non_member, "werkzeug.exceptions.NotFound"),
+        ):
+            with self.subTest(guest=guest.name):
+                attachment = self.env["ir.attachment"].create({
+                    "name": "sample attachment",
+                    "res_id": 0,
+                    "res_model": "mail.compose.message",
+                })
+                chat.message_post(
+                    attachment_ids=attachment.ids,
+                    body="Hello",
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
+                self._authenticate_pseudo_user(guest)
+                with self.assertRaises(JsonRpcException) as e:
+                    self._delete_attachment(attachment, token=False)
+                self.assertEqual(str(e.exception), exp_error)
+                self.assertTrue(attachment.exists())
+
     def test_independent_attachment_delete(self):
         """Test access to delete an attachment whether or not limited `ownership_token` is sent"""
         self._execute_subtests_delete(self.all_users, token=True, allowed=True)
@@ -66,27 +120,30 @@ class TestAttachmentController(MailControllerAttachmentCommon):
 
     def test_attachment_delete_not_found(self):
         """Test a 404 notifies the user or guest to remove an attachment they cannot read,
-        but not one they can read without being allowed to delete it."""
+        while one they can read without being allowed to delete it raises AccessError and
+        stays on screen."""
         employee_channel = (self.cr.dbname, "res.partner", self.partner_employee.id)
         guest_channel = (self.cr.dbname, "mail.guest", self.guest.id)
-        for pseudo_user, attachment, channels in (
-            (self.user_employee, self.admin_attachment, [employee_channel]),
-            (self.user_employee, self.deleted_attachment, [employee_channel]),
-            (self.user_employee, self.readonly_attachment, []),
-            (self.guest, self.deleted_attachment, [guest_channel]),
-            (self.guest, self.channel_attachment, []),
+        not_found, access_error = "werkzeug.exceptions.NotFound", "odoo.exceptions.AccessError"
+        for pseudo_user, attachment, exp_error, channels in (
+            (self.user_employee, self.admin_attachment, not_found, [employee_channel]),
+            (self.user_employee, self.deleted_attachment, not_found, [employee_channel]),
+            (self.user_employee, self.readonly_attachment, access_error, []),
+            (self.guest, self.deleted_attachment, not_found, [guest_channel]),
+            (self.guest, self.channel_attachment, access_error, []),
         ):
             self._authenticate_pseudo_user(pseudo_user)
             notifications = [{"type": "ir.attachment/delete", "payload": {"id": attachment.id}}]
             with (
                 self.subTest(user=pseudo_user.name, attachment_id=attachment.id),
                 self.assertBus(channels, notifications if channels else []),
+                mute_logger("odoo.http"),
             ):
                 res = self.url_open(
                     "/mail/attachment/delete",
                     json={"params": {"attachment_id": attachment.id}},
                 )
-                self.assertEqual(res.json()["error"]["code"], 404)
+                self.assertEqual(res.json()["error"]["data"]["name"], exp_error)
 
     def test_upload_multi_company(self):
         record = self.user_employee.partner_id

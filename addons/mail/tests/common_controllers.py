@@ -131,8 +131,15 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     self._delete_attachment(attachment, token)
                     self.assertFalse(attachment.exists())
                 else:
-                    with self.assertRaises(JsonRpcException, msg="Wrong access token"):
+                    with self.assertRaises(JsonRpcException) as e:
                         self._delete_attachment(attachment, token)
+                    # existence of unreadable attachments must not be leaked
+                    expected = (
+                        "odoo.exceptions.AccessError"
+                        if attachment.with_user(user).has_access("read")
+                        else "werkzeug.exceptions.NotFound"
+                    )
+                    self.assertEqual(str(e.exception), expected)
 
     def _upload_attachment(self, document, route_kw):
         cookies = route_kw.pop("cookies", None)
