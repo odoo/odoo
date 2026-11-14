@@ -1,6 +1,8 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 
 export function nbOrdersIs(nb) {
     return [
@@ -336,4 +338,34 @@ export function sendEmail(email, expectSuccess = true) {
         ...(expectSuccess ? [{ trigger: `.o_notification_manager .o_notification_progress` }] : []),
         back(),
     ];
+}
+
+// ----- Pages (shown on large screens only) ----- //
+
+export function setOrdersByPage(nbr) {
+    return [
+        { trigger: ".ticket-screen .page", run: "click" },
+        ...NumberPopup.enterValue(`${nbr}`),
+        Dialog.confirm(),
+    ].map((step) => ({ ...step, isActive: ["desktop"] }));
+}
+export function pageLabelIs(label) {
+    return {
+        isActive: ["desktop"],
+        trigger: `.ticket-screen .page:contains("${label}")`,
+    };
+}
+export function clickNextPage() {
+    return {
+        isActive: ["desktop"],
+        trigger: ".ticket-screen .page-controls .next:enabled",
+        run: "click",
+    };
+}
+export function clickPreviousPage() {
+    return {
+        isActive: ["desktop"],
+        trigger: ".ticket-screen .page-controls .previous:enabled",
+        run: "click",
+    };
 }

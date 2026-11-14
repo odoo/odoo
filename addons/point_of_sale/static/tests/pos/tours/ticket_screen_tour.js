@@ -500,3 +500,58 @@ registry.category("web_tour.tours").add("test_ticket_screen_search_suggestions",
             TicketScreen.suggestionIsOnTop("Customer"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_ticket_screen_paid_pages_and_filters", {
+    steps: () =>
+        [
+            {
+                content: "use the server's time zone: 'Today' is the same day for both",
+                trigger: "body",
+                run: () => {
+                    luxon.Settings.defaultZone = "UTC";
+                },
+            },
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.nthRowContains(1, "PAID-0001"),
+            // Pages of 2 orders, most recent first.
+            TicketScreen.setOrdersByPage(2),
+            TicketScreen.pageLabelIs("1-2 / 5"),
+            TicketScreen.clickNextPage(),
+            TicketScreen.pageLabelIs("3-4 / 5"),
+            TicketScreen.nthRowContains(1, "PAID-0003"),
+            TicketScreen.clickPreviousPage(),
+            TicketScreen.pageLabelIs("1-2 / 5"),
+            TicketScreen.nthRowContains(1, "PAID-0001"),
+            // The server filters: the rows and the count follow each filter.
+            TicketScreen.clickFilterButton("Takeaway"),
+            TicketScreen.pageLabelIs("1-2 / 2"),
+            TicketScreen.nbOrdersIs(2),
+            TicketScreen.contains("PAID-0003"),
+            TicketScreen.clickFilterButton("Takeaway"),
+            TicketScreen.pageLabelIs("1-2 / 5"),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(1),
+            TicketScreen.contains("CANCEL-0001"),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.search("Reference", "702"),
+            TicketScreen.pageLabelIs("1-1 / 1"),
+            TicketScreen.nbOrdersIs(1),
+            TicketScreen.contains("PAID-0002"),
+            TicketScreen.search("Receipt Number", "paid-0003"),
+            TicketScreen.pageLabelIs("1-1 / 1"),
+            TicketScreen.contains("PAID-0003"),
+            TicketScreen.search("Date", "Today"),
+            TicketScreen.pageLabelIs("1-2 / 2"),
+            TicketScreen.nbOrdersIs(2),
+            TicketScreen.contains("PAID-0001"),
+            TicketScreen.contains("PAID-0002"),
+            TicketScreen.search("Customer", "Partner Test 2"),
+            TicketScreen.pageLabelIs("1-2 / 2"),
+            TicketScreen.nbOrdersIs(2),
+            TicketScreen.contains("PAID-0003"),
+            TicketScreen.contains("PAID-0004"),
+        ].flat(),
+});
