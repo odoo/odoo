@@ -741,7 +741,8 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("You cannot cancel an expense sheet linked to a posted journal entry"))
 
         if draft_moves_sudo:
-            draft_moves_sudo.unlink()  # Else we have lingering moves
+            draft_moves_sudo.origin_payment_id.unlink()  # Also deletes their draft entry, else we have lingering payments
+            draft_moves_sudo.exists().unlink()  # Else we have lingering moves
 
         self.approval_state = 'cancel'
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
@@ -804,7 +805,8 @@ class HrExpenseSheet(models.Model):
                 default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves_sudo],
                 cancel=True
             )
-            draft_moves_sudo.unlink()
+            draft_moves_sudo.origin_payment_id.unlink()  # Also deletes their draft entry, else we have lingering payments
+            draft_moves_sudo.exists().unlink()
 
     def _calculate_default_accounting_date(self):
         """
