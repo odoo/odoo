@@ -5562,6 +5562,30 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.move_finished_ids.move_line_ids.lot_id, new_sn)
 
+    def test_reset_to_progress_packages(self):
+        """Setting a done MO back to progress returns the component to its package, reserved,
+        and takes the finished product out of its package. Producing again reverts both.
+        """
+        Quant = self.env['stock.quant']
+        mo, __, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=10, qty_base_2=1)
+        comp_package = self.env['stock.package'].create({'name': 'Component Package'})
+        Quant._update_available_quantity(p1, self.stock_location, 10, package_id=comp_package)
+        Quant._update_available_quantity(p2, self.stock_location, 1)
+        mo.action_assign()
+        mo.move_finished_ids.move_line_ids.action_put_in_pack()
+        final_package = mo.move_finished_ids.move_line_ids.result_package_id
+        mo.button_mark_done()
+
+        mo.action_reset_to_progress()
+        self.assertRecordValues(Quant.search([('product_id', '=', p1.id), ('location_id', '=', self.stock_location.id)]), [
+            {'product_id': p1.id, 'package_id': comp_package.id, 'quantity': 10.0, 'reserved_quantity': 10.0},
+        ])
+
+        mo.button_mark_done()
+        self.assertRecordValues(Quant.search([('product_id', '=', p_final.id), ('location_id', '=', self.stock_location.id)]), [
+            {'product_id': p_final.id, 'package_id': final_package.id, 'quantity': 1.0, 'reserved_quantity': 0.0},
+        ])
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (
