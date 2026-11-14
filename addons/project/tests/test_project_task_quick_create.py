@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import tagged, Form
 
@@ -108,3 +109,20 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             self.task_1.user_ids,
             "Portal user must be removed when task is moved to a project they do not follow",
         )
+
+    def test_project_user_without_contact_rights_sets_customer_on_task(self):
+        """ A project user who cannot edit contacts must be able to save a task
+        with a customer: the customer's phone is sent along with the task values
+        (e.g. task form, import) and must not trigger a write on the partner. """
+        self.user_projectuser.group_ids = [Command.set([self.env.ref('project.group_project_user').id])]
+        self.partner_1.phone = '+32 456 00 00 00'
+        Task = self.env['project.task'].with_user(self.user_projectuser)
+        task = Task.create({
+            'name': 'Task with customer',
+            'project_id': self.project_pigs.id,
+            'partner_id': self.partner_1.id,
+            'partner_phone': self.partner_1.phone,  # unchanged phone
+        })
+        self.assertEqual(task.partner_id, self.partner_1)
+        task.write({'partner_phone': '+32 456 11 11 11'})
+        self.assertEqual(self.partner_1.phone, '+32 456 11 11 11')
