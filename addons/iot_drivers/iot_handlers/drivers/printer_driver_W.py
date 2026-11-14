@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import logging
 from base64 import b64decode
 from datetime import datetime, timezone
@@ -16,6 +17,8 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
 
 _logger = logging.getLogger(__name__)
+
+ERROR_PRINT_CANCELLED = 63
 
 
 class PrinterDriver(PrinterDriverBase):
@@ -46,7 +49,7 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data, action_unique_id=None):
+    def print_raw(self, data, action_unique_id=None, retry=True):
         job_id = False
         page_started = False
         try:
@@ -62,6 +65,22 @@ class PrinterDriver(PrinterDriverBase):
                     self.job_action_ids[job_id] = action_unique_id
         except pywintypes.error as error:
             _logger.error("Error while printing raw data to printer %s: %s", self.device_name, error)
+            if error.winerror == ERROR_PRINT_CANCELLED and retry and not page_started:
+                # Once one of its jobs was deleted, the handle fails every new job: reopen it.
+                try:
+                    with win32print_lock:
+                        if job_id:
+                            with contextlib.suppress(pywintypes.error):
+                                win32print.EndDocPrinter(self.printer_handle)
+                        new_handle = win32print.OpenPrinter(self.device_name)
+                        with contextlib.suppress(pywintypes.error):
+                            win32print.ClosePrinter(self.printer_handle)
+                        self.printer_handle = new_handle
+                except pywintypes.error as err:
+                    _logger.error("Could not reopen printer %s: %s", self.device_name, err)
+                    self.send_status(status='error', message='ERROR_FAILED')
+                    return
+                return self.print_raw(data, action_unique_id=action_unique_id, retry=False)
             if job_id or page_started:
                 try:
                     with win32print_lock:
