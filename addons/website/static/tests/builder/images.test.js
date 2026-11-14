@@ -67,6 +67,28 @@ test("Double click on image and replace it", async () => {
     expect(".o_hb_options_container[data-container-title='Image']").toHaveCount(1);
 });
 
+test("Replacing an image keeps its JSON-LD property", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<div data-jsonld-type="Person"><img class=a_nice_img data-jsonld-prop="image" src='${dummyBase64Img}'></div>`
+    );
+    await dblclick(":iframe img.a_nice_img");
+    await animationFrame();
+    await contains(".o_select_media_dialog .o_button_area[aria-label='logo']").click();
+    await waitSidebarUpdated();
+    await waitForNone(".o_select_media_dialog");
+    expect(":iframe img").toHaveAttribute("data-jsonld-prop", "image");
+});
+
 test("media dialog requests website logo attachments", async () => {
     onRpc("ir.attachment", "search_read", ({ kwargs = {} }) => {
         expect(kwargs.domain.slice(0, 8)).toEqual([

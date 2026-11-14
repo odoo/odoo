@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
-from urllib.parse import urlparse, urlsplit
+from urllib.parse import quote, urljoin, urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
@@ -26,6 +26,7 @@ from odoo.addons.website.tools import (
     adapt_dark_palette_content,
     get_base_domain,
     similarity_score,
+    text_from_element,
     text_from_html,
 )
 from odoo.addons.portal.controllers.portal import pager
@@ -37,6 +38,7 @@ from odoo.models import Query
 from odoo.modules.module import get_manifest
 from odoo.tools import BinaryBytes, BinaryValue, file_open, lazy
 from odoo.tools.image import image_process
+from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.translate import _
 
@@ -1689,6 +1691,8 @@ class Website(models.CachedModel):
             is_view_active=self.is_view_active,
             translatable=translatable,
             editable=editable,
+            # schemas of the rendered snippets, output by the layout
+            structured_data_snippets=[],
         ))
 
         if editable:
@@ -2727,6 +2731,127 @@ class Website(models.CachedModel):
             'url': base_url,
             'logo': f'{base_url}/web/image/website/{self.id}/logo',
         }
+
+    @api.model
+    def _get_jsonld_required_props(self, jsonld_type):
+        """Return the properties without which an item of ``jsonld_type`` is
+        left out. Each type marked in a snippet needs them, checked by a test:
+        the ones its Google rich result requires, or the ones it means nothing
+        without.
+
+        :param str jsonld_type: Schema.org type.
+        :return: Names of the properties, None if the type isn't listed.
+        :rtype: list | None
+        """
+        return {
+            'Person': ['name'],
+            'FAQPage': ['mainEntity'],
+            'Question': ['name', 'acceptedAnswer'],
+            'Answer': ['text'],
+            'Organization': ['contactPoint'],
+            'ContactPoint': [],
+            'WebSite': [],
+        }.get(jsonld_type)
+
+    @api.model
+    def _build_jsonld_item_vals(self, item):
+        """Build the Schema.org dictionary of an item marked in HTML.
+
+        :param item: element marked with ``data-jsonld-type``.
+        :return: Dictionary of Schema.org properties, or None if a required one is
+            missing or if it has none. Plain JSON values (text, numbers, lists, dicts):
+            they're written into the compiled templates.
+        :rtype: dict | None
+        """
+        item_type = item.get('data-jsonld-type')
+        props = self._get_jsonld_props(item)
+        if not item_type or props is None:
+            return None
+        # what the snippets can't hold, from the website: no host in the URLs,
+        # views keep them in their compiled code, so the current host is added
+        # when rendering (see _render_page_jsonld)
+        website_props = {
+            'Person': {'worksFor': {'@id': '/#organization'}},
+            'Organization': {'@id': '/#organization'},
+            # a search bar: the search page of the website, whatever the bar searches
+            'WebSite': {
+                'url': '/',
+                'potentialAction': {
+                    '@type': 'SearchAction',
+                    'target': '/website/search?search={search_term_string}',
+                    'query-input': 'required name=search_term_string',
+                },
+            },
+        }
+        vals = {'@type': item_type, **props, **website_props.get(item_type, {})}
+        if item_type == 'Person':
+            # the name makes the id: a person shown twice is one node, two names
+            # never share an id
+            vals['@id'] = f"/#person-{quote(vals['name'], safe='')}"
+        if len(vals) == 1:
+            return None  # nothing but its type
+        return vals
+
+    @api.model
+    def _get_jsonld_props(self, el):
+        """Read the Schema.org properties of an item from its descendants
+        marked with ``data-jsonld-prop``.
+
+        :param el: element marked with ``data-jsonld-type``.
+        :return: Dictionary of Schema.org properties, None if a required one is missing.
+        :rtype: dict | None
+        """
+        props, items = {}, {}
+        for prop_el in el.xpath('.//*[@data-jsonld-prop]'):
+            if prop_el.xpath('ancestor::*[@data-jsonld-type][1]')[0] is not el:
+                continue  # property of a nested item
+            prop = prop_el.get('data-jsonld-prop')
+            if prop.startswith('@'):
+                continue  # not a property, like the @type and @id of JSON-LD
+            # a nested item: all of them are kept, a value only once
+            if jsonld_type := prop_el.get('data-jsonld-type'):
+                if item := self._get_jsonld_props(prop_el):
+                    items.setdefault(prop, []).append({'@type': jsonld_type, **item})
+                continue
+            if prop_el.tag == 'img':
+                value = prop_el.get('src', '')
+                if not value.startswith(('/', 'http://', 'https://')):
+                    continue  # not a URL to give: embedded (data:), relative, javascript:...
+            else:
+                value = text_from_element(prop_el)
+            if value:
+                props.setdefault(prop, value)
+        for prop, prop_items in items.items():
+            props[prop] = prop_items if len(prop_items) > 1 else prop_items[0]
+        required = self._get_jsonld_required_props(el.get('data-jsonld-type')) or []
+        if set(required) - props.keys():
+            return None  # a required property is missing
+        return props
+
+    def _render_page_jsonld(self, structured_data, schemas):
+        """Render the JSON-LD of the page: its structured data and the schemas
+        of its snippets, in one graph.
+
+        :param list structured_data: Schema.org dictionaries of the page, see ``_render_jsonld``.
+        :param list schemas: Schema.org dictionaries of the rendered snippets.
+        :return: JSON-LD string.
+        :rtype: str
+        """
+        def make_urls_absolute(value, prop=None):
+            # the schemas are compiled in the templates without host: add the current one
+            if isinstance(value, dict):
+                return {key: make_urls_absolute(val, key) for key, val in value.items()}
+            if isinstance(value, list):
+                return [make_urls_absolute(val, prop) for val in value]
+            if prop in ('@id', 'image', 'url', 'target'):
+                return urljoin(self.get_base_url(), value)
+            return value
+
+        nodes = structured_data + make_urls_absolute(schemas)
+        return json_safe.dumps(
+            {'@context': 'https://schema.org', '@graph': nodes},
+            ensure_ascii=False,
+        )
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):

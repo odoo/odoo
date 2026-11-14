@@ -315,25 +315,18 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         return [website._prepare_jsonld_vals()]
 
     def _render_jsonld(self, is_detail_page=False):
-        """Render the complete JSON-LD payload for the current page.
-        Collects schemas, appends a BreadcrumbList if applicable, and Returns a
-        JSON-LD object with @context and an @graph array bundling all page
-        schemas, or False if none.
+        """Collect the schemas of the current page, and its BreadcrumbList if
+        applicable. The layout outputs them, see ``website._render_page_jsonld``.
 
         :param bool is_detail_page: True if on a record detail page.
-        :return: JSON-LD string, or False if no schemas exist.
-        :rtype: str | bool
+        :return: Schema.org dictionaries.
+        :rtype: list[dict]
         """
         schemas = [s for s in self._get_jsonld_dict(is_detail_page=is_detail_page) if s]
-        if not schemas:
-            return False
         breadcrumb_items = self._get_breadcrumb_items(is_detail_page=is_detail_page)
         if len(breadcrumb_items) > 1:
             schemas.append(self._build_breadcrumb_jsonld(breadcrumb_items))
-        return json_safe.dumps(
-            {'@context': 'https://schema.org', '@graph': schemas},
-            ensure_ascii=False,
-        )
+        return schemas
 
     def _get_breadcrumb_items(self, is_detail_page=False):
         """Return ordered ``(name, relative_url)`` pairs for the breadcrumb trail.

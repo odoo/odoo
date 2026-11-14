@@ -1,6 +1,8 @@
+from lxml.html import fromstring
+
 from odoo.tests import common
 
-from odoo.addons.website.tools import add_seo_rels_to_links
+from odoo.addons.website.tools import add_seo_rels_to_links, text_from_element
 
 
 class TestWebsiteSeoRels(common.TransactionCase):
@@ -59,3 +61,16 @@ class TestWebsiteSeoRels(common.TransactionCase):
             result,
             'Hello <a href="https://odoo.com" rel="nofollow noopener noreferrer ugc">link</a> bye',
         )
+
+
+class TestTextFromElement(common.TransactionCase):
+
+    def test_text_from_element(self):
+        for markup, text in [
+            ('<b>Tony</b>, <i>e</i>-<s>commerce</s> <a href="/x">link</a>s!', 'Tony, e-commerce links!'),
+            ('<h1>Title</h1><ul><li>One</li><li>Two</li></ul>Line<br/>break', 'Title One Two Line break'),
+            ('&nbsp; Lots\n\tof   <span>space</span> ', 'Lots of space'),
+            ('To<!-- comment -->ny', 'Tony'),
+        ]:
+            with self.subTest(markup=markup):
+                self.assertEqual(text_from_element(fromstring(f'<div>{markup}</div>')), text)
