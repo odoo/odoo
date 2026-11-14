@@ -852,12 +852,68 @@ class AccountEdiUBL(models.AbstractModel):
         else:
             normalized_value = normalize_vat_for_ubl(commercial_partner.country_code, identifier_vals['value'])
 
+<<<<<<< e074822813a6d52cbbfab7617ea1fbd15d6c81b2
         nodes.append({
             'cbc:CompanyID': {'_text': normalized_value},
             'cac:TaxScheme': {
                 'cbc:ID': {'_text': tax_scheme_id},
             },
         })
+||||||| d8051b207cc99c3b89c9e4857ac8e2003b7dfd61
+        if commercial_partner.vat and commercial_partner.vat != '/':
+            vat = commercial_partner.vat
+            country_code = commercial_partner.country_id.code
+            if country_code in GST_COUNTRY_CODES:
+                tax_scheme_id = 'GST'
+            else:
+                tax_scheme_id = 'VAT'
+
+            if country_code == 'HU' and not vat.upper().startswith('HU'):
+                vat = 'HU' + vat[:8]
+            if country_code == 'DK' and not vat.upper().startswith('DK'):
+                vat = f'DK{vat}'
+            if country_code == 'NO' and not vat.upper().startswith('NO'):
+                vat = f'NO{vat}'
+            if country_code == 'NO' and vat[-3:] != 'MVA':
+                vat += 'MVA'
+            nodes.append({
+                'cbc:CompanyID': {'_text': vat},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': tax_scheme_id},
+                },
+            })
+=======
+        vat = commercial_partner.vat
+        if (
+            self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note')
+            and commercial_partner == vals['company'].partner_id
+        ):
+            fiscal_position = vals['invoice'].fiscal_position_id
+            if fiscal_position.foreign_vat:
+                vat = fiscal_position.foreign_vat
+                country_code = fiscal_position.country_id.code
+
+        if vat and vat != '/':
+            if country_code in GST_COUNTRY_CODES:
+                tax_scheme_id = 'GST'
+            else:
+                tax_scheme_id = 'VAT'
+
+            if country_code == 'HU' and not vat.upper().startswith('HU'):
+                vat = 'HU' + vat[:8]
+            if country_code == 'DK' and not vat.upper().startswith('DK'):
+                vat = f'DK{vat}'
+            if country_code == 'NO' and not vat.upper().startswith('NO'):
+                vat = f'NO{vat}'
+            if country_code == 'NO' and vat[-3:] != 'MVA':
+                vat += 'MVA'
+            nodes.append({
+                'cbc:CompanyID': {'_text': vat},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': tax_scheme_id},
+                },
+            })
+>>>>>>> c9161e899f1239523260b84dbd006585d8034715
 
     def _need_party_tax_scheme_nodes(self, vals):
         return True
