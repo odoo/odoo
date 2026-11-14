@@ -3719,14 +3719,16 @@ class MailThread(models.AbstractModel):
         # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)
         message_sudo = message.sudo()
-        ancestors = self.env['mail.message'].sudo().search(
-            [
-                ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
-                ('id', '!=', message_sudo.id),
-                ('subtype_id', '!=', False),  # filters out logs
-                ('message_id', '!=', False),  # ignore records that somehow don't have a message_id (non ORM created)
-            ], limit=32, order='id DESC',  # take 32 last, hoping to find public discussions in it
-        )
+        ancestors = self.env['mail.message'].sudo()
+        if message_sudo.model and message_sudo.res_id:
+            ancestors = ancestors.search(
+                [
+                    ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
+                    ('id', '!=', message_sudo.id),
+                    ('subtype_id', '!=', False),  # filters out logs
+                    ('message_id', '!=', False),  # ignore records that somehow don't have a message_id (non ORM created)
+                ], limit=32, order='id DESC',  # take 32 last, hoping to find public discussions in it
+            )
 
         # filter out internal messages, to fetch 'public discussion' first
         outgoing_types = ('comment', 'auto_comment', 'email', 'email_outgoing')
