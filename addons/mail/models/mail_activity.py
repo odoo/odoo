@@ -244,10 +244,19 @@ class MailActivity(models.Model):
             return 'planned'
 
     @api.depends('res_model', 'res_id', 'user_id')
+    @api.depends_context('uid')
     def _compute_can_write(self):
         valid_records = self._filtered_access('write')
         for record in self:
-            record.can_write = record in valid_records
+            if record._origin:
+                record.can_write = record in valid_records
+                continue
+            # sudo: mail.activity - can check access on related record
+            record.can_write = record.sudo().res_access_create and (
+                not record.user_id
+                or record.user_id == self.env.user
+                or record.sudo().res_access_write
+            )
 
     @api.depends('activity_type_id')
     def _compute_date_deadline(self):

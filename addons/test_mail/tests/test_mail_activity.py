@@ -190,6 +190,32 @@ class TestActivityRights(TestActivityCommon):
         found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
         self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _ge_mail_get_operation_for_mail_message_operationt_mail_message_access, reading non locked records')
 
+    @users('employee')
+    def test_activity_security_user_access_unsaved(self):
+        """ On an unsaved activity, 'can_write' tells whether it can be created. """
+        access_open, access_ro, access_locked = self.env['mail.test.access.custo'].sudo().create([
+            {'name': 'Open'},
+            {'name': 'Open RO', 'is_readonly': True},
+            {'name': 'Locked', 'is_locked': True},
+        ])
+        for record, user, can_write in [
+            (access_open, self.user_employee, True), (access_open, self.user_admin, True),
+            (access_ro, self.user_employee, True), (access_ro, self.user_admin, False),
+            (access_locked, self.user_employee, False),
+        ]:
+            with self.subTest(record=record.name, user=user.name):
+                form = Form(self.env['mail.activity'].with_context(
+                    default_res_model_id=self.env['ir.model']._get_id(record._name),
+                    default_res_id=record.id,
+                ))
+                form.user_id = user
+                self.assertEqual(form.can_write, can_write)
+                if can_write:
+                    form.save()
+                else:
+                    with self.assertRaises(exceptions.AccessError):
+                        form.save()
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(records, operation):
