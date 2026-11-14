@@ -49,6 +49,28 @@ test("Preparation ticket: order note behavior and change detection", async () =>
     }
 });
 
+test("printWithFallback shows the retry popup when the printer has no instance", async () => {
+    const store = await setupPosEnv();
+    const printer = store.models["pos.printer"].get(1);
+    printer._instance = false;
+    const iframe = document.createElement("iframe");
+    iframe.srcdoc = '<html id="pos-receipt"><head></head><body>Receipt</body></html>';
+    getFixture().appendChild(iframe);
+    await new Promise((resolve) => (iframe.onload = resolve));
+    patchWithCleanup(store.ticketPrinter, {
+        showPrinterErrorDialog(message) {
+            expect.step(message.body);
+        },
+    });
+    const status = await store.ticketPrinter.printWithFallback({
+        iframe,
+        printer,
+        fallbacks: [],
+    });
+    expect(status.successful).toBe(false);
+    expect.verifySteps(["An unexpected error occurred while printing."]);
+});
+
 test("printWeb gives the focus back to the POS window after printing", async () => {
     const store = await setupPosEnv();
     const iframe = document.createElement("iframe");
