@@ -10,6 +10,7 @@ export class BreakDurationDialog extends Component {
     props = useProps({
         employeeName: t.string().optional(),
         maxMinutes: t.number().optional(),
+        defaultMinutes: t.number().optional(),
         // Returning false keeps the dialog open, for a duration the employee can correct.
         onConfirm: t.function(),
         close: t.function(),
@@ -17,7 +18,7 @@ export class BreakDurationDialog extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.state = proxy({ minutes: 0 });
+        this.state = proxy({ minutes: this.props.defaultMinutes || 0 });
         this.dialogTitle = _t("Break Duration");
         this.promptText = this.props.employeeName
             ? sprintf(

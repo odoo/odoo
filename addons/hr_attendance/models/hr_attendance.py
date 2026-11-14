@@ -305,6 +305,19 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+        if self._needs_automatic_break(vals):
+            # closing open attendances without break: add the automatic break, per attendance
+            closing = self.filtered(lambda a: not a.check_out and a._is_automatic_break_candidate())
+            if closing:
+                check_out = fields.Datetime.to_datetime(vals['check_out'])
+                if others := self - closing:
+                    others.with_context(skip_automatic_break=True).write(vals)
+                for attendance in closing:
+                    attendance.with_context(skip_automatic_break=True).write({
+                        **vals,
+                        **attendance._get_automatic_break_vals(check_out),
+                    })
+                return True
         # snapshot existing output ids before the pipeline runs so that newly
         # created outputs (fresh, accurate) are not incorrectly marked stale
         stale_targets = self.env['hr.attendance']
@@ -574,13 +587,19 @@ class HrAttendance(models.Model):
                     )
                 )
 
-                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-                if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.with_context(skip_time_rules=True).check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
-                    att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
-                        "out_mode": "auto_check_out"
+                automatic_break = att.employee_id._get_automatic_break_duration(att.check_in)
+                allowed_hours = expected_worked_hours + automatic_break + max_tol - previous_attendances_duration
+
+                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar plus the automatic break
+                if current_attendance_duration > allowed_hours:
+                    check_out = max(
+                        att.check_in + relativedelta(hours=allowed_hours),
+                        att.check_in + relativedelta(seconds=1),
+                    )
+                    att.with_context(skip_automatic_break=True).write({
+                        "check_out": check_out,
+                        "out_mode": "auto_check_out",
+                        **att._get_automatic_break_vals(check_out, automatic_break),
                     })
                     att.message_post(
                         body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
@@ -697,6 +716,70 @@ class HrAttendance(models.Model):
         localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         return localized_start, localized_end
+
+    def _needs_automatic_break(self, vals):
+        """Tell whether ``vals`` close an attendance without giving its break, so that the
+        automatic break of the time rules must be computed.
+
+        A ``break_duration`` of ``0`` counts as not given (the forms always send it).
+
+        :rtype: bool
+        """
+        return (
+            bool(vals.get('check_out'))
+            and float_is_zero(vals.get('break_duration') or 0.0, precision_digits=4)
+            and not self.env.context.get('skip_automatic_break')
+        )
+
+    def _is_automatic_break_candidate(self):
+        """Tell whether the attendance can get an automatic break: not an output of the time
+        rules and not a technical attendance.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        return not (
+            self.time_rule_id or self.source_attendance_id
+            or 'technical' in (self.in_mode, self.out_mode)
+        )
+
+    def _get_automatic_break_vals(self, check_out, break_duration=None):
+        """Return the ``break_duration`` value of the automatic break for a check-out.
+
+        Nothing is returned when the attendance already has a break (e.g. set by a manager), when
+        no automatic break rule applies or when the break would not fit in the attendance.
+
+        :param datetime check_out: naive UTC check-out about to be written
+        :param float break_duration: the automatic break, computed if not given
+        :return: ``{'break_duration': hours}`` or ``{}``
+        :rtype: dict
+        """
+        self.ensure_one()
+        if not float_is_zero(self.break_duration, precision_digits=4):
+            return {}
+        automatic_break = self._compute_automatic_break(self.employee_id, self.check_in, check_out, break_duration)
+        return {'break_duration': automatic_break} if automatic_break else {}
+
+    @api.model
+    def _compute_automatic_break(self, employee, check_in, check_out, break_duration=None):
+        """Return the automatic break of an attendance of ``employee`` from ``check_in`` to
+        ``check_out``, ``0.0`` when no rule applies or when the break does not fit in it.
+
+        :param employee: ``hr.employee``
+        :param datetime check_in: naive UTC
+        :param datetime check_out: naive UTC
+        :param float break_duration: the automatic break, computed if not given
+        :rtype: float
+        """
+        if not employee or not check_in or not check_out:
+            return 0.0
+        if break_duration is None:
+            break_duration = employee._get_automatic_break_duration(check_in)
+        if float_is_zero(break_duration, precision_digits=4):
+            return 0.0
+        if float_compare(break_duration, time_to_float(check_out - check_in), precision_digits=4) >= 0:
+            return 0.0
+        return break_duration
 
     def _get_break_duration_within_period(self, start, stop):
         """Return the part of the break durations of ``self`` falling within a period.
@@ -840,6 +923,18 @@ class HrAttendance(models.Model):
                     if vals.get('employee_id'):
                         company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
                     vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
+            if self._needs_automatic_break(vals) and vals.get('check_in') and not (
+                vals.get('time_rule_id') or vals.get('source_attendance_id')
+                or 'technical' in (vals.get('in_mode'), vals.get('out_mode'))
+            ):
+                employee = self.env['hr.employee'].browse(vals.get('employee_id')) or self._default_employee()
+                automatic_break = self._compute_automatic_break(
+                    employee,
+                    fields.Datetime.to_datetime(vals['check_in']),
+                    fields.Datetime.to_datetime(vals['check_out']),
+                )
+                if automatic_break:
+                    vals['break_duration'] = automatic_break
         res = super().create(vals_list)
         res._update_tolerance_state()
         return res
