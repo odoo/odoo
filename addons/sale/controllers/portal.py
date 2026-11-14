@@ -289,6 +289,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
             return {'error': _('The order is not in a state requiring customer signature.')}
         if not signature:
             return {'error': _('Signature is missing.')}
+        # the version of the order displayed to the customer, if provided
+        version = request.httprequest.args.get('version')
+        if version and version != order_sudo._get_portal_version():
+            return {'error': _('The quotation has been modified. Please reload the page to review it before signing.')}
 
         try:
             order_sudo.write({
