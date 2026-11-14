@@ -17,7 +17,9 @@ class TestHrLeaveMandatoryDays(TransactionCase):
 
         cls.company = cls.add_class_company('base.test_company', {
             'name': 'super company',
+            'country_id': cls.env.ref('base.us').id,
         })
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.default_calendar = cls.env['resource.calendar'].create({
             'name': 'moon calendar',
@@ -58,7 +60,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'request_unit': 'day',
             'unit_of_measure': 'day',
             'count_as': 'absence',
-            'country_id': False,
+            'country_id': cls.company.country_id.id,
         })
 
         cls.mandatory_day = cls.env['hr.leave.mandatory.day'].create({
