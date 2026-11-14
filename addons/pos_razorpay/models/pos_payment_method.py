@@ -112,7 +112,7 @@ class PosPaymentMethod(models.Model):
         body.update({'origP2pRequestId': data.get('p2pRequestId')})
         response = razorpay._call_razorpay(endpoint='cancel', payload=body)
         if response.get('success') and not response.get('errorCode'):
-            return {'error': _('Razorpay POS transaction canceled successfully')}
+            return {'error': _('Razorpay POS transaction cancelled successfully')}
         default_error_msg = _('Razorpay POS payment cancel request expected errorCode not found in the response')
         errorMessage = response.get('errorMessage') or default_error_msg
         return {'errorMessage': str(errorMessage)}

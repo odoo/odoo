@@ -436,4 +436,4 @@ class StockPickingBatch(models.Model):
 
     def _l10n_ro_edi_stock_report_unhandled_document_state(self, state: str):
         self.ensure_one()
-        self.message_post(body=_("Unhandled eTransport document state: %(state)s", state=state))
+        self.message_post(body=_("Unhandled eTransport document status: %(status)s", status=state))

@@ -793,7 +793,7 @@ class TestEventNotifications(CalendarMailCommon):
         # Check that the mail has been generated from the edition of the default cancellation email template.
         self.assertIn('Event canceled', self._new_mails.body)
         self.assertIn('(edited)', self._new_mails.body)
-        self.assertEqual(self._new_mails.subject, 'Canceled event: Test Event Delete Notification (edited)')
+        self.assertEqual(self._new_mails.subject, 'Cancelled event: Test Event Delete Notification (edited)')
         self.assertEqual(self._new_mails.partner_ids, self.user_admin.partner_id + self.user_employee_2.partner_id)
 
     def test_get_next_potential_limit_alarm(self):

@@ -42,7 +42,7 @@ class IapAccount(models.Model):
     # Dynamic fields, which are received from iap server and set when loading the view
     balance_amount = fields.Float()
     balance = fields.Char(compute='_compute_balance')
-    state = fields.Selection([('banned', 'Banned'), ('registered', "Registered"), ('unregistered', "Unregistered")], readonly=True)
+    state = fields.Selection([('banned', 'Banned'), ('registered', "Registered"), ('unregistered', "Unregistered")], string="Status", readonly=True)
 
     @api.depends('balance_amount', 'service_id.integer_balance', 'service_id.unit_name')
     def _compute_balance(self):

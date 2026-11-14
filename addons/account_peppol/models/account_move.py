@@ -29,7 +29,7 @@ class AccountMove(models.Model):
             ('error', 'Error'),
         ],
         compute='_compute_peppol_move_state', store=True,
-        string='Peppol status',
+        string='Peppol Status',
         copy=False,
     )
     peppol_is_sent = fields.Boolean(compute='_compute_peppol_is_sent')

@@ -1318,7 +1318,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         - Notif type:  ('inbox', 'Inbox'), ('email', 'Email')
         - Notif status: ('ready', 'Ready to Send'), ('sent', 'Sent'),
                       ('bounce', 'Bounced'), ('exception', 'Exception'),
-                      ('canceled', 'Canceled')
+                      ('canceled', 'Cancelled')
         - Notif failure type: ("SMTP", "Connection failed (outgoing mail server problem)"),
                             ("RECIPIENT", "Invalid email address"),
                             ("BOUNCE", "Email address rejected by destination"),

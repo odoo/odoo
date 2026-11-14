@@ -557,9 +557,9 @@
         </record>
 
         <record id="calendar_template_delete_event" model="mail.template">
-            <field name="name">Calendar: Event Canceled</field>
+            <field name="name">Calendar: Event Cancelled</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>
-            <field name="subject">Canceled event: {{ object.name }}</field>
+            <field name="subject">Cancelled event: {{ object.name }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -571,13 +571,13 @@
     <t t-set="event_name" t-value="object.name or ''"/>
     <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
-        Event canceled
+        Event cancelled
         <img src="/calendar/static/src/img/times-circle.png" style="border:0; width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-align: middle; padding-bottom: 2px;" />
     </h1>
     <p style="margin: 0;">
         Hello,<br/>
         <span style="display: block; margin-top: 8px;">
-            This is to inform you that the event <strong t-out="event_name or ''">Follow-up for Project proposal</strong> <t t-if="event_organizer">organized by </t><t t-out="event_organizer or ''">Colleen Diaz</t> has been canceled and removed from your calendar.
+            This is to inform you that the event <strong t-out="event_name or ''">Follow-up for Project proposal</strong> <t t-if="event_organizer">organized by </t><t t-out="event_organizer or ''">Colleen Diaz</t> has been cancelled and removed from your calendar.
         </span>
     </p>
     <div style="margin: 32px 0 0;">

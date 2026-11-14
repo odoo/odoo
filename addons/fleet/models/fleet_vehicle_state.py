@@ -15,5 +15,5 @@ class FleetVehicleState(models.Model):
 
     _fleet_state_name_unique = models.Constraint(
         'unique(name)',
-        'State name already exists',
+        'A status with this name already exists.',
     )

@@ -19,8 +19,8 @@ class PosOrder(models.Model):
         groups="account.group_account_invoice",
     )
     l10n_my_edi_state = fields.Selection(
-        string="MyInvois State",
-        help="State of this order on the MyInvois portal.",
+        string="MyInvois Status",
+        help="Status of this order on the MyInvois portal.",
         selection=[
             ('in_progress', 'Validation In Progress'),
             ('valid', 'Valid'),

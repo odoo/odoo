@@ -19,7 +19,7 @@ const QR_CODE = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAA
 const HTTP_ERRORS = {
     401: ["Authentication with Bancontact failed. Please verify your API key.", "AccessDenied"],
     422: [
-        "Unable to cancel payment. The payment may not be in a cancellable state.",
+        "Unable to cancel the payment. Its current status may not allow it.",
         "ValidationError",
     ],
     429: ["Rate limit reached with Bancontact. Please wait and try again.", "AccessDenied"],

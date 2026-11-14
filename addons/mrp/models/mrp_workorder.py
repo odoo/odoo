@@ -45,7 +45,7 @@ class MrpWorkorder(models.Model):
         string='Stock Availability', readonly=True,
         related='production_id.reservation_state', store=True) # Technical: used in views and domains only
     production_state = fields.Selection(
-        string='Production State', readonly=True,
+        string='Production Status', readonly=True,
         related='production_id.state', tracking=False)  # Technical: used in views only
     production_bom_id = fields.Many2one('mrp.bom', related='production_id.bom_id')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')

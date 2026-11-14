@@ -85,10 +85,10 @@ class FleetVehicle(models.Model):
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.context_today, tracking=True)
     color = fields.Char(help='Color of the vehicle', tracking=True)
-    state_id = fields.Many2one('fleet.vehicle.state', 'State',
+    state_id = fields.Many2one('fleet.vehicle.state', 'Status',
         default=_get_default_state, group_expand='_read_group_expand_full',
         tracking=True,
-        help='Current state of the vehicle', ondelete="set null")
+        help='Current status of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seating Capacity', help='Number of seats of the vehicle',
         compute='_compute_seats', store=True, readonly=False)
@@ -134,7 +134,7 @@ class FleetVehicle(models.Model):
          ('expired', 'Expired'),
          ('done', 'Done'),
          ('closed', 'Closed')
-        ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
+        ], string='Last Contract Status', compute='_compute_contract_reminder', required=False)
     car_value = fields.Float(string="Catalog Value (Tax Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()

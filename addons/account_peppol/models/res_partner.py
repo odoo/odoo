@@ -33,7 +33,7 @@ class ResPartner(models.Model):
             ('not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
             ('valid', 'Partner is on Peppol'),
         ],
-        string='Peppol status',
+        string='Peppol Status',
         company_dependent=True,
     )
     peppol_supported_documents = fields.Json('Supported Peppol Documents')

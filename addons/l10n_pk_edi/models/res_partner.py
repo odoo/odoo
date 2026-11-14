@@ -29,7 +29,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         if not all(self[field] for field in ("street", "city", "state_id", "country_id")):
             return (
-                ("message", self.env._("Partner(s) should have a complete address, verify their Street, City, State and Country.")),
+                ("message", self.env._("Partner(s) should have a complete address, verify their Street, City, State/Province and Country.")),
                 ("error_code", "l10n_pk_edi_partner_address_missing"),
                 ("level", "danger"),
             )

@@ -43,11 +43,11 @@ class PosOrder(models.Model):
             ('unsuccessful', "Unsuccessful"),
             ('successful_demo', "Successful (Demo)"),
         ],
-        string="FBR State",
+        string="FBR Status",
         default='to_send',
         copy=False,
         readonly=True,
-        help="State of the order submission to the FBR.",
+        help="Status of the order submission to the FBR.",
     )
     l10n_pk_edi_pos_payload = fields.Binary(
         string="FBR Payload",

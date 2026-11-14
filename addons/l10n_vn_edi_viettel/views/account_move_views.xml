@@ -56,7 +56,7 @@
             <filter name="late" position="after">
                 <separator/>
                 <field name="l10n_vn_edi_invoice_state"/>
-                <filter string="Need payment state update" name="pay_state_to_update" domain="[('l10n_vn_edi_invoice_state', '=', 'payment_state_to_update')]"/>
+                <filter string="Need payment status update" name="pay_state_to_update" domain="[('l10n_vn_edi_invoice_state', '=', 'payment_state_to_update')]"/>
             </filter>
         </field>
     </record>
