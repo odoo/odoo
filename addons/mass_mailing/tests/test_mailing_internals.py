@@ -570,6 +570,30 @@ class TestMassMailingMailServer(MassMailCommon):
         with self.assertRaises(ValidationError):
             self.public_server.owner_user_id = self.user_marketing
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_return_path_follows_sender_company(self):
+        """The Return-Path uses the bounce alias of the mailing from address company."""
+        recipient = self.env['res.partner'].create({
+            'email': 'target@example.com',
+            'name': 'Target',
+        })
+        mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>x</p>',
+            'email_from': self.mail_alias_domain_c2.default_from_email,
+            'mailing_domain': [('id', '=', recipient.id)],
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'M',
+            'subject': 'S',
+        })
+
+        # The environment runs under the main company, not the from address one.
+        self.assertEqual(self.env.company, self.company_admin)
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing.action_send_mail()
+
+        self.assertEqual(self._new_mails.record_alias_domain_id, self.mail_alias_domain_c2)
+        self.assertEqual(self._mails[0]['headers']['Return-Path'], self.mail_alias_domain_c2.bounce_email)
+
     def test_fallback_excludes_personal_mail_server(self):
         """When no dedicated server is configured, the personal server must
         not be picked even if its from_filter matches the campaign sender."""
