@@ -53,7 +53,11 @@ export class TextHighlight extends Interaction {
             closestToObserves.add(this.closestToObserve(target));
         }
         for (const closestToObserve of closestToObserves) {
-            for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
+            const highlightEls = [...closestToObserve.querySelectorAll(".o_text_highlight")];
+            if (closestToObserve.matches(".o_text_highlight")) {
+                highlightEls.unshift(closestToObserve);
+            }
+            for (const el of highlightEls) {
                 const highlightID = getCurrentTextHighlight(el);
                 const currentSVGs = el.querySelectorAll(".o_text_highlight_svg");
                 for (const svg of currentSVGs) {
