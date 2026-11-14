@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo data is only loaded in databases created with demo data: never in production -->
+
+    <record id="estate_property_type_house" model="estate.property.type">
+        <field name="name">House</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="estate_property_type_apartment" model="estate.property.type">
+        <field name="name">Apartment</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="estate_property_type_land" model="estate.property.type">
+        <field name="name">Land</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="estate_property_tag_cozy" model="estate.property.tag">
+        <field name="name">Cozy</field>
+        <field name="color">3</field>
+    </record>
+    <record id="estate_property_tag_renovated" model="estate.property.tag">
+        <field name="name">Renovated</field>
+        <field name="color">10</field>
+    </record>
+    <record id="estate_property_tag_sea_view" model="estate.property.tag">
+        <field name="name">Sea View</field>
+        <field name="color">4</field>
+    </record>
+
+    <!-- One property per status, so that every step of the workflow can be seen right away -->
+
+    <record id="estate_property_villa" model="estate.property">
+        <field name="name">Big Villa</field>
+        <field name="description">A nice and big villa</field>
+        <field name="postcode">12345</field>
+        <field name="property_type_id" ref="estate_property_type_house"/>
+        <field name="tag_ids" eval="[Command.set([ref('estate_property_tag_sea_view')])]"/>
+        <field name="expected_price">1600000</field>
+        <field name="bedrooms">6</field>
+        <field name="living_area">100</field>
+        <field name="facades">4</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">100000</field>
+        <field name="garden_orientation">south</field>
+    </record>
+
+    <record id="estate_property_trailer_home" model="estate.property">
+        <field name="name">Trailer Home</field>
+        <field name="description">Home in a trailer park</field>
+        <field name="postcode">54321</field>
+        <field name="property_type_id" ref="estate_property_type_house"/>
+        <field name="tag_ids" eval="[Command.set([ref('estate_property_tag_cozy')])]"/>
+        <field name="expected_price">100000</field>
+        <field name="bedrooms">1</field>
+        <field name="living_area">10</field>
+        <field name="facades">4</field>
+    </record>
+    <!-- Offers are created from the lowest to the highest: a lower offer would be refused -->
+    <record id="estate_property_offer_trailer_home_1" model="estate.property.offer">
+        <field name="property_id" ref="estate_property_trailer_home"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="price">10000</field>
+        <field name="validity">14</field>
+    </record>
+    <record id="estate_property_offer_trailer_home_2" model="estate.property.offer">
+        <field name="property_id" ref="estate_property_trailer_home"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="price">95000</field>
+    </record>
+
+    <record id="estate_property_city_apartment" model="estate.property">
+        <field name="name">City Center Apartment</field>
+        <field name="postcode">10001</field>
+        <field name="property_type_id" ref="estate_property_type_apartment"/>
+        <field
+            name="tag_ids"
+            eval="[Command.set([
+                ref('estate_property_tag_renovated'),
+                ref('estate_property_tag_cozy'),
+            ])]"
+        />
+        <field name="expected_price">250000</field>
+        <field name="bedrooms">2</field>
+        <field name="living_area">75</field>
+        <field name="facades">1</field>
+    </record>
+    <record id="estate_property_offer_city_apartment_1" model="estate.property.offer">
+        <field name="property_id" ref="estate_property_city_apartment"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="price">230000</field>
+    </record>
+    <record id="estate_property_offer_city_apartment_2" model="estate.property.offer">
+        <field name="property_id" ref="estate_property_city_apartment"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="price">240000</field>
+    </record>
+    <!-- Calls the same method as the Accept button: <function> runs code at install time -->
+    <function
+        model="estate.property.offer"
+        name="action_accept"
+        eval="[[ref('estate_property_offer_city_apartment_2')]]"
+    />
+
+    <record id="estate_property_seaside_studio" model="estate.property">
+        <field name="name">Seaside Studio</field>
+        <field name="postcode">98000</field>
+        <field name="property_type_id" ref="estate_property_type_apartment"/>
+        <field name="tag_ids" eval="[Command.set([ref('estate_property_tag_sea_view')])]"/>
+        <field name="expected_price">180000</field>
+        <field name="bedrooms">1</field>
+        <field name="living_area">35</field>
+        <field name="facades">2</field>
+    </record>
+    <record id="estate_property_offer_seaside_studio_1" model="estate.property.offer">
+        <field name="property_id" ref="estate_property_seaside_studio"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="price">175000</field>
+    </record>
+    <function
+        model="estate.property.offer"
+        name="action_accept"
+        eval="[[ref('estate_property_offer_seaside_studio_1')]]"
+    />
+    <function
+        model="estate.property"
+        name="action_sold"
+        eval="[[ref('estate_property_seaside_studio')]]"
+    />
+
+    <record id="estate_property_building_plot" model="estate.property">
+        <field name="name">Building Plot</field>
+        <field name="postcode">67890</field>
+        <field name="property_type_id" ref="estate_property_type_land"/>
+        <field name="expected_price">90000</field>
+        <field name="bedrooms">0</field>
+        <field name="garden">True</field>
+        <field name="garden_area">800</field>
+        <field name="garden_orientation">west</field>
+        <field name="state">cancelled</field>
+    </record>
+</odoo>
