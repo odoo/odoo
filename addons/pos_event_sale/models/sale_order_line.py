@@ -7,4 +7,4 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return super()._load_pos_data_fields(config) + ['event_ticket_id', 'event_slot_id']
+        return super()._load_pos_data_fields(config) + ['event_ticket_id', 'event_slot_id', 'registration_ids']
