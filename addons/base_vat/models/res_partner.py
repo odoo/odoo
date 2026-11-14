@@ -722,7 +722,7 @@ class ResPartner(models.Model):
     def check_vat_uz(self, vat):
         if not vat.isdigit():
             return False
-        if self.is_company:
+        if self.commercial_partner_id.is_company:
             return len(vat) == 9
         return len(vat) == 14
 
