@@ -152,6 +152,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         # change the standard price to 14
         self.product_standard_auto.standard_price = 14.0
+        self.assertRecordValues(amls, [
+            {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 28.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 28.0, 'credit': 0.0},
+        ])
 
         # deliver the backorder
         sale_order.picking_ids.filtered('backorder_id').move_ids.write({'quantity': 1, 'picked': True})
@@ -177,11 +181,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
 
-        closing_move = self._close()
-        self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 8.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 8.0, 'credit': 0.0},
-        ])
+        with self.assertRaises(UserError):
+            # Since the amls from the first receipt got updated with the new value, there is nothing to close.
+            self._close()
 
     # -------------------------------------------------------------------------
     # Standard Delivered
@@ -227,6 +229,10 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         # change the standard price to 14
         self.product_standard_auto.standard_price = 14.0
+        self.assertRecordValues(amls, [
+            {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 28.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 28.0, 'credit': 0.0},
+        ])
 
         # deliver the backorder
         sale_order.picking_ids.filtered('backorder_id').move_ids.write({'quantity': 1, 'picked': True})
@@ -252,11 +258,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(income_aml.debit, 0)
         self.assertEqual(income_aml.credit, 24)
 
-        closing_move = self._close()
-        self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 8.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 8.0, 'credit': 0.0},
-        ])
+        with self.assertRaises(UserError):
+            # Since the amls from the first receipt got updated with the new value, there is nothing to close.
+            self._close()
 
     # -------------------------------------------------------------------------
     # AVCO Ordered

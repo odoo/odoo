@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
 from odoo.tests import tagged, Form, TransactionCase, freeze_time
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -658,3 +659,174 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertEqual(po.picking_ids.move_ids.quantity, 10.0)
         po.order_line.product_qty = 5.0
         self.assertEqual(po.picking_ids.move_ids.quantity, 5.0)
+
+
+class TestSalePurchaseStockValuation(TestStockValuationCommon):
+
+    _test_user_groups = (
+        'stock.group_stock_user',
+        'purchase.group_purchase_user',
+        'sales_team.group_sale_salesman',
+        'account.group_account_invoice',
+    )
+
+    _test_user_name = 'Test User'
+
+    def test_bill_during_lock_period_with_cogs(self):
+        """ Checks that when a bill changes the product value which would affect cogs during a lock period,
+            compensation lines are created after the lock period for the missing values.
+            These compensation lines need to be reverted (not deleted) if that bill is reset to draft.
+        """
+        with freeze_time('2026-10-25'):
+            purchase_order = self.env['purchase.order'].create({
+                'partner_id': self.vendor.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_avco_auto.id,
+                        'product_qty': 1,
+                        'price_unit': 10,
+                    })
+                ],
+            })
+            purchase_order.button_confirm()
+            purchase_order.picking_ids.move_ids.write({
+                'picked': True,
+                'quantity': 1,
+            })
+            purchase_order.picking_ids.button_validate()
+
+        with freeze_time('2026-10-27'):
+            sale_order = self.env['sale.order'].create({
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_avco_auto.id,
+                        'product_uom_qty': 1,
+                        'price_unit': 100,
+                    }),
+                ],
+            })
+            sale_order.action_confirm()
+            out_move = sale_order.picking_ids.move_ids
+            out_move.write({
+                'picked': True,
+                'quantity': 1,
+            })
+            sale_order.picking_ids.button_validate()
+            invoice = sale_order._create_invoices()
+            invoice.invoice_date = fields.Date.today()
+            invoice.action_post()
+
+            cogs_lines = out_move.cogs_aml_ids
+            self.assertRecordValues(cogs_lines, [
+                {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 10},
+                {'account_id': self.account_expense.id, 'debit': 10, 'credit': 0},
+            ])
+
+        with freeze_time('2026-11-01'):
+            # Lock the journal entries so that the moves are within the lock period
+            sale_order.company_id.sudo().fiscalyear_lock_date = fields.Date.today()
+
+            bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+            bill.write({'invoice_date': '2026-10-25'})
+            bill.line_ids.write({'price_unit': 25})
+            bill.action_post()
+
+            # Since we're during a lock period, should have created compensation lines instead of updating the existing cogs
+            out_move.invalidate_recordset(['cogs_aml_ids'])
+            cogs_lines = sale_order.picking_ids.move_ids.cogs_aml_ids
+            self.assertRecordValues(cogs_lines.sorted(), [
+                {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 15},
+                {'account_id': self.account_expense.id, 'debit': 15, 'credit': 0},
+                {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 10},
+                {'account_id': self.account_expense.id, 'debit': 10, 'credit': 0},
+            ])
+
+            # Setting the bill to draft should create another compensation layer that will negate the first compensation layer
+            bill.button_draft()
+            out_move.invalidate_recordset(['cogs_aml_ids'])
+            cogs_lines = sale_order.picking_ids.move_ids.cogs_aml_ids
+            self.assertRecordValues(cogs_lines.sorted(), [
+                {'account_id': self.account_stock_valuation.id, 'debit': 15, 'credit': 0},
+                {'account_id': self.account_expense.id, 'debit': 0, 'credit': 15},
+                {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 15},
+                {'account_id': self.account_expense.id, 'debit': 15, 'credit': 0},
+                {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 10},
+                {'account_id': self.account_expense.id, 'debit': 10, 'credit': 0},
+            ])
+
+    def test_bill_during_lock_period_compensates_zero_cost_cogs(self):
+        """ A product received, delivered and invoiced at a zero cost has no COGS on its invoice.
+            When the bill later gives it a value while the invoice is within a lock period,
+            COGS should be booked in a compensation entry after the lock date.
+        """
+        today = fields.Date.today()
+        product = self.product_avco_auto
+
+        with freeze_time(today - timedelta(days=5)):
+            product.sudo().standard_price = 0  # setup master-data
+
+        with freeze_time(today - timedelta(days=3)):
+            self.assertEqual(product.standard_price, 0)
+            purchase_order = self.env['purchase.order'].create({
+                'partner_id': self.vendor.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': product.id,
+                        'product_qty': 1.0,
+                        'price_unit': 0.0,
+                        'tax_ids': False,
+                    }),
+                ],
+            })
+            purchase_order.button_confirm()
+            purchase_order.picking_ids.move_ids.write({
+                'picked': True,
+                'quantity': 1,
+            })
+            purchase_order.picking_ids.button_validate()
+
+            sale_order = self.env['sale.order'].create({
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': product.id,
+                        'product_uom_qty': 1,
+                        'price_unit': 100,
+                    }),
+                ],
+            })
+            sale_order.action_confirm()
+            out_move = sale_order.picking_ids.move_ids
+            out_move.write({
+                'picked': True,
+                'quantity': 1,
+            })
+            sale_order.picking_ids.button_validate()
+            invoice = sale_order._create_invoices()
+            invoice.invoice_date = fields.Date.today()
+            invoice.action_post()
+
+            # Nothing to value yet: no COGS on the invoice
+            self.assertEqual(out_move.value, 0)
+            self.assertFalse(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs'))
+
+        with freeze_time(today):
+            # Lock the period so that the invoice can't be updated anymore
+            self.company.sudo().fiscalyear_lock_date = today - timedelta(days=1)
+
+            bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+            bill.invoice_date = fields.Date.today()
+            bill.invoice_line_ids.price_unit = 10.0
+            bill.action_post()
+
+            # The delivery is now valued at 10 and its COGS are compensated after the lock date
+            self.assertEqual(out_move.value, -10)
+            self.assertFalse(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs'))
+            cogs_lines = self.env['account.move.line'].search([
+                ('cogs_origin_id', 'in', invoice.invoice_line_ids.ids),
+            ])
+            self.assertRecordValues(cogs_lines.sorted('balance'), [
+                {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 10, 'date': fields.Date.today()},
+                {'account_id': self.account_expense.id, 'debit': 10, 'credit': 0, 'date': fields.Date.today()},
+            ])

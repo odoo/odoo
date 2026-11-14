@@ -6062,14 +6062,24 @@ class AccountMove(models.Model):
     def _get_cogs_lines_vals(self):
         """Prepare the COGS journal items (account.move.line) for a customer invoice: one line
         crediting the stock valuation account and one line debiting the expense account, for
-        each invoice line whose product is valued in real time.
+        each invoice line whose product is valued in real time. Lines already booked by a
+        previous call (e.g. a revaluation) are taken into account, so only the remaining delta
+        is returned. The ``cogs_origin_line_id`` context key can be set to only generate the
+        vals for that specific invoice line instead of all of them.
+
+        TODO: master: this method only ever deals with a single invoice line at a time; move it
+        to ``account.move.line`` instead of looping over ``invoice_line_ids`` here.
         """
         self.ensure_one()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         sign = -1 if self.move_type == 'out_refund' else 1
 
+        invoice_line_ids = self.invoice_line_ids
+        if invoice_line_id := self.env.context.get('cogs_origin_line_id'):
+            invoice_line_ids = self.env['account.move.line'].browse(invoice_line_id)
+
         lines_vals_list = []
-        for line in self.invoice_line_ids:
+        for line in invoice_line_ids:
             if not line._use_inventory_valuation():
                 continue
 
@@ -6088,19 +6098,30 @@ class AccountMove(models.Model):
             if self.company_currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
                 continue
 
+            invoice_lines_to_check = self.line_ids
+            if line_ids := self.env.context.get('cogs_invoice_line_ids'):
+                invoice_lines_to_check = self.env['account.move.line'].browse(line_ids)
+
+            cogs_lines = invoice_lines_to_check.filtered(lambda l: l.display_type == 'cogs' and l.cogs_origin_id == line)
+            existing_balance = sum(cogs_lines.filtered(lambda l: l.account_id == stock_account).mapped('balance'))
+
             common_vals = self._get_cogs_common_vals(line)
-            lines_vals_list.append({
-                **common_vals,
-                'price_unit': price_unit,
-                'balance': -balance,
-                'account_id': stock_account.id,
-            })
-            lines_vals_list.append({
-                **common_vals,
-                'price_unit': -price_unit,
-                'balance': balance,
-                'account_id': expense_account.id,
-            })
+            stock_balance = -balance - existing_balance
+            if not self.company_currency_id.is_zero(stock_balance):
+                lines_vals_list.append({
+                    **common_vals,
+                    'price_unit': price_unit,
+                    'balance': stock_balance,
+                    'account_id': stock_account.id,
+                })
+            expense_balance = balance + existing_balance
+            if not self.company_currency_id.is_zero(expense_balance):
+                lines_vals_list.append({
+                    **common_vals,
+                    'price_unit': -price_unit,
+                    'balance': expense_balance,
+                    'account_id': expense_account.id,
+                })
         return lines_vals_list
 
     def _get_price_difference_lines_vals(self):
