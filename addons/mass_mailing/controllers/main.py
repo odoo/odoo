@@ -407,6 +407,10 @@ class MassMailController(http.Controller):
 
         return response
 
+    # A hook to be overridable
+    def _preprocess_url(self, url, mailing_trace_id, code=None):
+        return url
+
     @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
     def full_url_redirect(self, code, mailing_trace_id, **post):
         request.env['link.tracker.click'].sudo().add_click(
@@ -418,7 +422,8 @@ class MassMailController(http.Controller):
         redirect_url = request.env['link.tracker'].get_url_from_code(code)
         if not redirect_url:
             raise NotFound()
-        return request.redirect(redirect_url, code=301, local=False)
+        redirect_url = self._preprocess_url(redirect_url, mailing_trace_id, code=code)
+        return request.redirect(redirect_url, code=302, local=False)
 
     # ------------------------------------------------------------
     # MAILING MANAGEMENT

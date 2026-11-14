@@ -112,6 +112,9 @@ export class SelectMany2X extends Component {
         this.state.limit += this.props.limit;
         this.search(searchValue);
     }
+    getSearchFields() {
+        return [this.props.displayNameField, "name"];
+    }
     async search(searchValue) {
         const domain = Object.values(this.props.domain).filter((item) => item !== null);
         const selectedIds = this.props.selected
@@ -130,7 +133,7 @@ export class SelectMany2X extends Component {
         const results = await this.cachedModel.ormRead(
             this.props.model,
             tuples.map(([id, _name]) => id),
-            [...new Set(this.props.fields).add(this.props.displayNameField).add("name")]
+            [...new Set([...this.props.fields, ...this.getSearchFields()])]
         );
         if (this.props.nullText && (!results.length || results[0].id)) {
             results.unshift({
