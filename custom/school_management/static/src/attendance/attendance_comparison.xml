@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.AttendanceComparison">
+        <div class="o_att_comparison d-flex flex-column h-100">
+            <!-- ==================== 1. BREADCRUMB & TOP BAR (Matching Staff Attendance) ==================== -->
+            <nav class="o_att_breadcrumb d-flex align-items-center justify-content-between position-sticky top-0 z-3" aria-label="Breadcrumb">
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="o_att_breadcrumb_link" t-on-click="onBack" title="Back to Attendance Management">
+                        <i class="fa fa-arrow-left" aria-hidden="true"/> Attendance
+                    </button>
+                    <span aria-hidden="true">/</span>
+                    <span class="o_att_breadcrumb_record" aria-current="page">Attendance Comparison &amp; Report</span>
+                </div>
+
+                <!-- Top View Mode Switcher & Refresh -->
+                <div class="d-flex align-items-center gap-2">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="View Mode">
+                        <button type="button"
+                                t-att-class="'btn ' + (state.viewMode === 'kanban' ? 'btn-primary' : 'btn-outline-secondary')"
+                                t-on-click="() => this.setViewMode('kanban')"
+                                title="Kanban Card View">
+                            <i class="fa fa-th me-1" aria-hidden="true"/> Kanban
+                        </button>
+                        <button type="button"
+                                t-att-class="'btn ' + (state.viewMode === 'table' ? 'btn-primary' : 'btn-outline-secondary')"
+                                t-on-click="() => this.setViewMode('table')"
+                                title="Table / Grid View">
+                            <i class="fa fa-th-list me-1" aria-hidden="true"/> Table
+                        </button>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="load" t-att-disabled="state.loading"
+                            title="Refresh Data" aria-label="Refresh Data">
+                        <i class="fa fa-refresh me-1" t-att-class="state.loading ? 'fa-spin' : ''" aria-hidden="true"/>
+                        Refresh
+                    </button>
+                </div>
+            </nav>
+
+            <!-- ERROR ALERT -->
+            <div class="px-4 pt-3" t-if="state.error">
+                <div class="alert alert-danger d-flex align-items-center mb-0" role="alert">
+                    <i class="fa fa-exclamation-triangle me-2 fs-5" aria-hidden="true"/>
+                    <span t-esc="state.error"/>
+                </div>
+            </div>
+
+            <!-- LOADING SPINNER -->
+            <div class="text-center py-5" t-if="state.loading and !state.data">
+                <div class="spinner-border text-primary" role="status"/>
+                <div class="text-muted small mt-2">Loading attendance comparison data...</div>
+            </div>
+
+            <!-- ==================== MAIN FULL-WIDTH CONTAINER (Matching Staff Attendance Matrix) ==================== -->
+            <div class="o_att_comparison_container p-3 flex-grow-1" t-if="state.data">
+                <div class="card shadow-sm border-0 mb-4 bg-white rounded-3">
+                    <!-- 1. Top Greeting Bar (Screenshot Header) -->
+                    <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-baseline gap-2">
+                            <h4 class="mb-0 fw-bold text-dark o_att_matrix_greeting">
+                                Attendance Comparison &amp; Report
+                            </h4>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-secondary fw-medium o_att_matrix_time">
+                                <i class="fa fa-clock-o me-1 text-muted"/>
+                                <t t-esc="currentTimeStr"/>
+                            </span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 px-3 o_att_matrix_print_btn" t-on-click="onPrint">
+                                <i class="fa fa-print" aria-hidden="true"/> Print
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. Filter Controls & Legend Bar (Screenshot Toolbar) -->
+                    <div class="card-body bg-light-subtle border-bottom py-3 px-4">
+                        <div class="row g-3 align-items-center justify-content-between">
+                            <!-- Left: Faculty, Department, Year, Search Filters -->
+                            <div class="col-12 col-xl-8">
+                                <div class="d-flex flex-wrap align-items-center gap-3">
+                                    <!-- Faculties Select -->
+                                    <div class="o_att_filter_group">
+                                        <label class="form-label small fw-semibold text-muted mb-1 d-block">Faculties</label>
+                                        <select class="form-select form-select-sm o_att_matrix_select" style="min-width: 170px;"
+                                                t-on-change="onFacultyFilterChange"
+                                                t-att-disabled="state.loading">
+                                            <option value="all" t-att-selected="state.facultyFilter === 'all'">All Faculties</option>
+                                            <t t-if="faculties.length">
+                                                <option t-foreach="faculties" t-as="fac" t-key="fac.id"
+                                                        t-att-value="fac.id"
+                                                        t-att-selected="state.facultyFilter == fac.id"
+                                                        t-esc="fac.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <!-- Departments Select -->
+                                    <div class="o_att_filter_group">
+                                        <label class="form-label small fw-semibold text-muted mb-1 d-block">Departments</label>
+                                        <select class="form-select form-select-sm o_att_matrix_select" style="min-width: 170px;"
+                                                t-on-change="onDepartmentFilterChange"
+                                                t-att-disabled="state.loading">
+                                            <option value="all" t-att-selected="state.departmentFilter === 'all'">All Departments</option>
+                                            <t t-if="availableDepartments.length">
+                                                <option t-foreach="availableDepartments" t-as="dept" t-key="dept.id"
+                                                        t-att-value="dept.id"
+                                                        t-att-selected="state.departmentFilter == dept.id"
+                                                        t-esc="dept.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <!-- Academic Year Input -->
+                                    <div class="o_att_filter_group">
+                                        <label class="form-label small fw-semibold text-muted mb-1 d-block">Years</label>
+                                        <input type="number" min="2000" max="2100" class="form-control form-control-sm o_att_matrix_select" style="width: 100px;"
+                                               t-att-value="state.year"
+                                               t-on-change="onYearChange"
+                                               t-att-disabled="state.loading"/>
+                                    </div>
+
+                                    <!-- Search Input -->
+                                    <div class="o_att_filter_group">
+                                        <label class="form-label small fw-semibold text-muted mb-1 d-block">Search</label>
+                                        <div class="input-group input-group-sm" style="width: 190px;">
+                                            <span class="input-group-text bg-white text-muted">
+                                                <i class="fa fa-search" aria-hidden="true"/>
+                                            </span>
+                                            <input type="text" class="form-control form-control-sm"
+                                                   placeholder="Search section..."
+                                                   t-att-value="state.searchQuery"
+                                                   t-on-input="onSearchInput"
+                                                   t-att-disabled="state.loading"/>
+                                            <button t-if="state.searchQuery" class="btn btn-outline-secondary btn-sm" type="button"
+                                                    t-on-click="clearSearch" title="Clear Search">
+                                                <i class="fa fa-times" aria-hidden="true"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Legend Badges (Matching Staff Attendance Matrix Pills) -->
+                            <div class="col-12 col-xl-4 text-xl-end">
+                                <div class="d-inline-flex align-items-center gap-2 flex-wrap">
+                                    <button type="button"
+                                            t-att-class="'badge border-0 cursor-pointer o_att_legend_pill ' + (state.statusFilter === 'all' ? 'bg-dark text-white' : 'bg-secondary bg-opacity-25 text-dark')"
+                                            t-on-click="() => this.setStatusFilter('all')"
+                                            title="Filter: All Sections">
+                                        All: Total (<t t-esc="summary.totalSections"/>)
+                                    </button>
+                                    <button type="button"
+                                            t-att-class="'badge border-0 cursor-pointer o_att_legend_pill ' + (state.statusFilter === 'good' ? 'o_att_legend--present' : 'bg-success bg-opacity-25 text-success')"
+                                            t-on-click="() => this.setStatusFilter('good')"
+                                            title="Filter: &gt;= 90% Excellent">
+                                        P: &#8805; 90% (<t t-esc="summary.goodCount"/>)
+                                    </button>
+                                    <button type="button"
+                                            t-att-class="'badge border-0 cursor-pointer o_att_legend_pill ' + (state.statusFilter === 'warn' ? 'o_att_legend--leave' : 'bg-warning bg-opacity-25 text-warning-emphasis')"
+                                            t-on-click="() => this.setStatusFilter('warn')"
+                                            title="Filter: 75% - 89% Average">
+                                        L: 75-89% (<t t-esc="summary.warnCount"/>)
+                                    </button>
+                                    <button type="button"
+                                            t-att-class="'badge border-0 cursor-pointer o_att_legend_pill ' + (state.statusFilter === 'bad' ? 'o_att_legend--absent' : 'bg-danger bg-opacity-25 text-danger')"
+                                            t-on-click="() => this.setStatusFilter('bad')"
+                                            title="Filter: &lt; 75% At Risk">
+                                        A: &lt; 75% (<t t-esc="summary.badCount"/>)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Main Dashboard Content -->
+                    <div class="card-body p-4">
+                        <!-- ==================== EXECUTIVE SUMMARY METRIC TILES ==================== -->
+                        <div class="row g-3 mb-4">
+                            <!-- Metric 1: Average Attendance Rate -->
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <div class="card shadow-sm border h-100 rounded-3 bg-white p-3 att_container">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <span class="text-muted small fw-bold text-uppercase">Average Attendance</span>
+                                        <div class="rounded-circle p-2 bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+                                             style="width: 32px; height: 32px;">
+                                            <i class="fa fa-percent" aria-hidden="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="fs-2 fw-bold text-dark mt-1">
+                                        <t t-esc="summary.avgRate"/>%
+                                    </div>
+                                    <div class="progress mt-2" style="height: 6px;">
+                                        <div t-att-class="'progress-bar ' + getRateProgressBarClass(summary.avgRate)"
+                                             role="progressbar"
+                                             t-att-style="'width: ' + summary.avgRate + '%;'"
+                                             t-att-aria-valuenow="summary.avgRate"
+                                             aria-valuemin="0" aria-valuemax="100"/>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between text-muted small mt-1">
+                                        <span>Benchmark</span>
+                                        <strong class="text-dark">&gt;= 75%</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Metric 2: Academic Faculties & Departments -->
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <div class="card shadow-sm border h-100 rounded-3 bg-white p-3 att_container">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <span class="text-muted small fw-bold text-uppercase">Faculties &amp; Depts</span>
+                                        <div class="rounded-circle p-2 bg-info-subtle text-info d-flex align-items-center justify-content-center"
+                                             style="width: 32px; height: 32px;">
+                                            <i class="fa fa-university" aria-hidden="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="fs-2 fw-bold text-dark mt-1">
+                                        <t t-esc="summary.totalFaculties"/> / <t t-esc="summary.totalDepts"/>
+                                    </div>
+                                    <div class="text-muted small mt-2 pt-1 border-top">
+                                        <i class="fa fa-building text-info me-1" aria-hidden="true"/>
+                                        <t t-esc="summary.totalFaculties"/> Faculties, <t t-esc="summary.totalDepts"/> Departments
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Metric 3: Class Sections Monitored -->
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <div class="card shadow-sm border h-100 rounded-3 bg-white p-3 att_container">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <span class="text-muted small fw-bold text-uppercase">Class Sections</span>
+                                        <div class="rounded-circle p-2 bg-success-subtle text-success d-flex align-items-center justify-content-center"
+                                             style="width: 32px; height: 32px;">
+                                            <i class="fa fa-graduation-cap" aria-hidden="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="fs-2 fw-bold text-dark mt-1">
+                                        <t t-esc="summary.totalSections"/>
+                                    </div>
+                                    <div class="text-muted small mt-2 pt-1 border-top">
+                                        <i class="fa fa-users text-primary me-1" aria-hidden="true"/>Enrolled cohorts &amp; courses
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Metric 4: Total Logged Attendance Records -->
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <div class="card shadow-sm border h-100 rounded-3 bg-white p-3 att_container">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <span class="text-muted small fw-bold text-uppercase">Total Logs</span>
+                                        <div class="rounded-circle p-2 bg-warning-subtle text-warning d-flex align-items-center justify-content-center"
+                                             style="width: 32px; height: 32px;">
+                                            <i class="fa fa-list-alt" aria-hidden="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="fs-2 fw-bold text-dark mt-1">
+                                        <t t-esc="summary.totalRecords"/>
+                                    </div>
+                                    <div class="text-muted small mt-2 pt-1 border-top">
+                                        <i class="fa fa-database text-muted me-1" aria-hidden="true"/>Attendance event rows
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ==================== FACULTIES KANBAN BENCHMARKS ==================== -->
+                        <div class="mb-4" t-if="faculties.length">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">
+                                        <i class="fa fa-university me-1" aria-hidden="true"/>Faculties
+                                    </span>
+                                    <h5 class="h6 fw-bold mb-0 text-dark text-uppercase tracking-wider">
+                                        Faculty Performance Benchmarks
+                                    </h5>
+                                </div>
+                                <button t-if="state.facultyFilter !== 'all'"
+                                        type="button"
+                                        class="btn btn-sm btn-link text-decoration-none p-0 text-primary small fw-semibold"
+                                        t-on-click="() => this.toggleFacultyFilter('all')">
+                                    <i class="fa fa-times-circle me-1" aria-hidden="true"/>Reset to All Faculties
+                                </button>
+                            </div>
+
+                            <div class="row row-cols-1 row-cols-md-2 g-3">
+                                <t t-foreach="faculties" t-as="fac" t-key="fac.id">
+                                    <div class="col">
+                                        <div t-att-class="'card h-100 rounded-3 shadow-sm att_container o_att_faculty_card cursor-pointer transition-all ' + (state.facultyFilter == fac.id ? 'border-primary shadow bg-primary-subtle bg-opacity-10' : 'border bg-white')"
+                                             t-on-click="() => this.toggleFacultyFilter(fac.id)"
+                                             title="Click to filter by this Faculty">
+                                            <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <!-- Faculty Header: Name + Code + Active Indicator -->
+                                                    <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                                        <div class="d-flex align-items-center gap-2 min-w-0 flex-grow-1">
+                                                            <div class="rounded-circle p-2 bg-primary-subtle text-primary d-flex align-items-center justify-content-center flex-shrink-0"
+                                                                 style="width: 36px; height: 36px;">
+                                                                <i class="fa fa-university" aria-hidden="true"/>
+                                                            </div>
+                                                            <div class="min-w-0 flex-grow-1">
+                                                                <div class="d-flex align-items-center gap-1 flex-wrap">
+                                                                    <h6 class="fw-bold text-dark mb-0 fs-6 lh-sm" t-att-title="fac.name">
+                                                                        <t t-esc="fac.name"/>
+                                                                    </h6>
+                                                                    <span class="badge bg-light text-secondary border small" t-if="fac.code" t-esc="fac.code"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-shrink-0 ms-2">
+                                                            <span t-if="state.facultyFilter == fac.id" class="badge bg-primary rounded-pill px-2 py-1 text-nowrap flex-shrink-0">
+                                                                <i class="fa fa-check me-1" aria-hidden="true"/>Filtered
+                                                            </span>
+                                                            <span t-else="" t-att-class="getRateBadgeClass(fac.rate)" t-esc="getRateStatusLabel(fac.rate)"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Dean Chip -->
+                                                    <div class="d-flex align-items-center gap-2 text-muted small mb-2 px-2 py-1 rounded bg-light border">
+                                                        <i class="fa fa-user-circle text-primary" aria-hidden="true"/>
+                                                        <span class="text-truncate">
+                                                            Dean: <strong class="text-dark"><t t-esc="fac.dean_name || 'Not appointed'"/></strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Attendance Progress Bar -->
+                                                    <div class="mt-2 mb-2 p-2 rounded-2 bg-light border">
+                                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                                            <span class="text-muted small fw-semibold">Faculty Attendance</span>
+                                                            <span class="fw-bold fs-6"
+                                                                  t-att-class="fac.rate &gt;= 90 ? 'text-success' : (fac.rate &gt;= 75 ? 'text-warning' : 'text-danger')"
+                                                                  t-esc="fac.rate + '%'"/>
+                                                        </div>
+                                                        <div class="progress" style="height: 6px;">
+                                                            <div t-att-class="'progress-bar ' + getRateProgressBarClass(fac.rate)"
+                                                                 role="progressbar"
+                                                                 t-att-style="'width: ' + fac.rate + '%;'"
+                                                                 t-att-aria-valuenow="fac.rate"
+                                                                 aria-valuemin="0" aria-valuemax="100"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Footer Stats -->
+                                                <div class="mt-2 pt-2 border-top d-flex align-items-center justify-content-between text-muted small">
+                                                    <span>
+                                                        <i class="fa fa-building text-info me-1" aria-hidden="true"/>
+                                                        <strong><t t-esc="fac.department_count"/></strong> Depts
+                                                    </span>
+                                                    <span>
+                                                        <i class="fa fa-graduation-cap text-success me-1" aria-hidden="true"/>
+                                                        <strong><t t-esc="fac.section_count"/></strong> Sections
+                                                    </span>
+                                                    <span>
+                                                        <i class="fa fa-list-alt text-warning me-1" aria-hidden="true"/>
+                                                        <strong><t t-esc="fac.total"/></strong> Logs
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- EMPTY STATE -->
+                        <div class="card shadow-sm border-0 rounded-3 p-5 text-center my-4" t-if="!filteredDepartments.length">
+                            <div class="rounded-circle bg-info-subtle text-info d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                                 style="width: 60px; height: 60px;">
+                                <i class="fa fa-info-circle fa-2x" aria-hidden="true"/>
+                            </div>
+                            <h4 class="h5 fw-bold text-dark">No Matching Sections Found</h4>
+                            <p class="text-muted mb-0">No departments or class sections match the active faculty, department, or status filters.</p>
+                        </div>
+
+                        <!-- ==================== REPORT CONTENT: KANBAN MODE ==================== -->
+                        <t t-if="state.viewMode === 'kanban'">
+                            <div class="o_att_dept_group mb-4"
+                                 t-foreach="filteredDepartments" t-as="department" t-key="department.id">
+                                <!-- Department Chapter Header Banner -->
+                                <div class="o_att_dept_banner d-flex flex-wrap align-items-center justify-content-between mb-3 shadow-sm">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary text-white rounded p-2 d-flex align-items-center justify-content-center"
+                                             style="width: 38px; height: 38px;">
+                                            <i class="fa fa-building" aria-hidden="true"/>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex align-items-center flex-wrap gap-2">
+                                                <h4 class="h5 fw-bold mb-0 text-dark" t-esc="department.name"/>
+                                                <span t-if="department.faculty_name" class="badge text-bg-light border text-muted small" title="Parent Faculty">
+                                                    <i class="fa fa-university me-1 text-primary" aria-hidden="true"/>
+                                                    <t t-esc="department.faculty_name"/>
+                                                </span>
+                                            </div>
+                                            <span class="text-muted small">
+                                                <t t-esc="department.filteredSections.length"/> section(s) in this review
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="text-end">
+                                            <div class="text-muted small">Department Attendance</div>
+                                            <div class="fw-bold fs-6">
+                                                <span t-att-class="department.rate &gt;= 90 ? 'text-success' : (department.rate &gt;= 75 ? 'text-warning' : 'text-danger')"
+                                                      t-esc="department.rate + '%'"/>
+                                            </div>
+                                        </div>
+                                        <div class="progress" style="width: 130px; height: 8px;">
+                                            <div t-att-class="'progress-bar ' + getRateProgressBarClass(department.rate)"
+                                                 role="progressbar"
+                                                 t-att-style="'width: ' + department.rate + '%;'"
+                                                 t-att-aria-valuenow="department.rate"
+                                                 aria-valuemin="0" aria-valuemax="100"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Kanban Cards Grid -->
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                                    <t t-foreach="department.filteredSections" t-as="section" t-key="section.id">
+                                        <div class="col">
+                                            <div class="card h-100 shadow-sm border rounded-3 o_att_section_card bg-white">
+                                                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                                            <h5 class="card-title fw-bold text-dark text-truncate mb-0 fs-6 min-w-0" t-att-title="section.name">
+                                                                <i class="fa fa-users me-1 text-primary" aria-hidden="true"/>
+                                                                <t t-esc="section.name"/>
+                                                            </h5>
+                                                            <div class="flex-shrink-0 ms-2">
+                                                                <span t-att-class="getRateBadgeClass(section.rate)"
+                                                                      t-esc="getRateStatusLabel(section.rate)"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Attendance Rate Progress Gauge -->
+                                                        <div class="mt-3 mb-3 p-2 rounded-2 bg-light border">
+                                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                                <span class="text-muted small fw-semibold">Attendance Rate</span>
+                                                                <span class="fw-bold fs-6"
+                                                                      t-att-class="section.rate &gt;= 90 ? 'text-success' : (section.rate &gt;= 75 ? 'text-warning' : 'text-danger')"
+                                                                      t-esc="section.rate + '%'"/>
+                                                            </div>
+                                                            <div class="progress" style="height: 8px;">
+                                                                <div t-att-class="'progress-bar progress-bar-striped progress-bar-animated ' + getRateProgressBarClass(section.rate)"
+                                                                     role="progressbar"
+                                                                     t-att-style="'width: ' + section.rate + '%;'"
+                                                                     t-att-aria-valuenow="section.rate"
+                                                                     aria-valuemin="0" aria-valuemax="100"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex align-items-center justify-content-between text-muted small mb-2">
+                                                            <span>
+                                                                <i class="fa fa-graduation-cap me-1 text-primary" aria-hidden="true"/>
+                                                                <strong><t t-esc="section.students.length"/></strong> Enrolled
+                                                            </span>
+                                                            <span>
+                                                                <i class="fa fa-check-square-o me-1 text-info" aria-hidden="true"/>
+                                                                <strong><t t-esc="section.total"/></strong> Records
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Expandable Student Mini-List -->
+                                                    <div t-if="state.expandedSections[section.id]" class="mt-2 pt-2 border-top">
+                                                        <div class="fw-semibold small text-muted mb-2">Student Performance:</div>
+                                                        <div class="o_att_student_mini_list overflow-auto" style="max-height: 180px;">
+                                                            <div t-foreach="section.students" t-as="student" t-key="student.id"
+                                                                 class="d-flex align-items-center justify-content-between py-1 border-bottom small">
+                                                                <div class="text-truncate me-2 cursor-pointer" t-att-title="student.name"
+                                                                     t-on-click="() => this.openStudent(student.id)">
+                                                                    <span class="fw-semibold text-primary" t-esc="student.name"/>
+                                                                    <span class="text-muted ms-1" t-if="student.code" t-esc="'(' + student.code + ')'"/>
+                                                                </div>
+                                                                <div class="fw-bold"
+                                                                     t-att-class="student.rate &gt;= 90 ? 'text-success' : (student.rate &gt;= 75 ? 'text-warning' : 'text-danger')"
+                                                                     t-esc="student.rate + '%'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Quick Actions Footer -->
+                                                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                                                        <button type="button"
+                                                                class="btn btn-sm btn-link p-0 text-decoration-none small text-secondary"
+                                                                t-on-click="() => this.toggleSectionStudents(section.id)">
+                                                            <i t-att-class="'fa me-1 ' + (state.expandedSections[section.id] ? 'fa-chevron-up' : 'fa-chevron-down')"
+                                                               aria-hidden="true"/>
+                                                            <t t-esc="state.expandedSections[section.id] ? 'Hide Students' : 'View Students (' + section.students.length + ')'"/>
+                                                        </button>
+
+                                                        <div class="d-flex align-items-center gap-1">
+                                                            <button type="button"
+                                                                    class="btn btn-sm btn-outline-primary py-1 px-2"
+                                                                    t-on-click="() => this.openSectionGrid(section.id)"
+                                                                    title="Open Attendance Daily Grid">
+                                                                <i class="fa fa-table me-1" aria-hidden="true"/>Grid
+                                                            </button>
+                                                            <button type="button"
+                                                                    class="btn btn-sm btn-outline-secondary py-1 px-2"
+                                                                    t-on-click="() => this.openSectionSheet(section.id)"
+                                                                    title="Open Attendance Sheet">
+                                                                <i class="fa fa-calendar-check-o me-1" aria-hidden="true"/>Sheet
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- ==================== REPORT CONTENT: TABLE MODE ==================== -->
+                        <t t-else="">
+                            <div class="card shadow-sm border rounded-3 mb-4 bg-white overflow-hidden"
+                                 t-foreach="filteredDepartments" t-as="department" t-key="department.id">
+                                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                                        <h5 class="mb-0 fw-bold text-dark">
+                                            <i class="fa fa-building me-2 text-primary" aria-hidden="true"/>
+                                            <t t-esc="department.name"/>
+                                        </h5>
+                                        <span t-if="department.faculty_name" class="badge text-bg-light border text-muted small">
+                                            <i class="fa fa-university me-1 text-primary" aria-hidden="true"/>
+                                            <t t-esc="department.faculty_name"/>
+                                        </span>
+                                    </div>
+                                    <span class="badge text-bg-light border text-muted">
+                                        Attendance rate: <b class="text-dark" t-esc="department.rate"/>%
+                                    </span>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Class Section</th>
+                                                <th class="text-center">Enrolled Students</th>
+                                                <th class="text-center">Total Records</th>
+                                                <th style="width: 250px;">Attendance Rate</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="department.filteredSections" t-as="section" t-key="section.id">
+                                                <td class="fw-semibold text-dark" t-esc="section.name"/>
+                                                <td class="text-center" t-esc="section.students.length"/>
+                                                <td class="text-center" t-esc="section.total"/>
+                                                <td>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div t-att-class="'progress-bar ' + getRateProgressBarClass(section.rate)"
+                                                                 role="progressbar"
+                                                                 t-att-style="'width: ' + section.rate + '%;'"
+                                                                 t-att-aria-valuenow="section.rate"
+                                                                 aria-valuemin="0" aria-valuemax="100"/>
+                                                        </div>
+                                                        <span class="fw-bold small"
+                                                              t-att-class="section.rate &gt;= 90 ? 'text-success' : (section.rate &gt;= 75 ? 'text-warning' : 'text-danger')"
+                                                              t-esc="section.rate + '%'"/>
+                                                    </div>
+                                                </td>
+                                                <td class="text-end">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button"
+                                                                class="btn btn-outline-primary py-0 px-2"
+                                                                t-on-click="() => this.openSectionGrid(section.id)"
+                                                                title="Open Daily Grid">
+                                                            <i class="fa fa-table me-1" aria-hidden="true"/>Grid
+                                                        </button>
+                                                        <button type="button"
+                                                                class="btn btn-outline-secondary py-0 px-2"
+                                                                t-on-click="() => this.openSectionSheet(section.id)"
+                                                                title="Open Attendance Sheet">
+                                                            <i class="fa fa-calendar-check-o me-1" aria-hidden="true"/>Sheet
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- 4. Footer Matching Staff Attendance Matrix -->
+                    <div class="card-footer bg-white border-top py-2 px-4 d-flex justify-content-between align-items-center text-muted small">
+                        <span>
+                            Showing <strong t-esc="filteredDepartments.length"/> active department(s) with <strong t-esc="summary.totalSections"/> section(s) for Academic Year <strong t-esc="state.year"/>
+                        </span>
+                        <span class="fst-italic text-secondary">
+                            <i class="fa fa-info-circle me-1"/> Click on any faculty card or benchmark pill above to filter records.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

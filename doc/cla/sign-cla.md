@@ -4,7 +4,24 @@ In order for your contribution to Odoo to be accepted, you have to sign the
 Odoo Contributor License Agreement (CLA). More information about this
 requirement is explained in the [FAQ](#faq).
 
-## If you are an individual
+## Preferred way (electronic signature)
+
+For both individuals and companies, the fastest way to sign is the electronic
+form on the Odoo website:
+
+* **Individuals**: sign the
+  [Individual Contributor License Agreement](https://www.odoo.com/sign-cla) online.
+* **Companies**: contact `cla-submission@odoo.com` to sign the
+  [Corporate Contributor License Agreement](ccla-1.0.md).
+
+## Alternative way (signature by pull request)
+
+The signature may also be recorded directly in the repository. If you do not
+wish to use the electronic form, you can submit your signature with a pull
+request. An Odoo R&D Team member will verify and accept it; until then, your
+other pull requests cannot be merged.
+
+### If you are an individual
 
 1.  Read the [Individual Contributor License Agreement](icla-1.0.md)
 
@@ -40,7 +57,7 @@ Signed,
 make other pull requests, but we won't be able to merge them until your CLA
 signature is merged.
 
-## If you work for a company
+### If you work for a company
 
 1.  Read the [Corporate Contributor License Agreement](ccla-1.0.md)
 
@@ -69,7 +86,9 @@ List of contributors:
 ```
 
     The List of contributors should list the individual contributors working
-    for the company.
+    for the company. Each listed contributor must still sign the Individual
+    Contributor License Agreement to cover the contributions they make on
+    their own behalf.
 
     Replacing the following placeholders:
 
@@ -83,12 +102,14 @@ List of contributors:
 make other pull requests, but we won't be able to merge them until your CLA
 signature is merged.
 
-## If you don't have a github account
+## If you don't have a GitHub account
 
 If you cannot submit your signature using a pull request, you may alternatively
-print the CLA, complete it, sign it, scan it and send it by email to
-`cla-submission` `at` `odoo.com`.  In that case someone from the Odoo team will
-make the pull request on your behalf.
+complete, sign and submit the agreement by email:
+
+* Scan and email the signed agreement to `cla-submission@odoo.com`. In that
+  case someone from the Odoo team will make the pull request on your behalf.
+* Or use the electronic signature form at https://www.odoo.com/sign-cla
 
 * Printable Odoo CCLA v1.0 https://www.odoo.com/files/legal/Odoo-CCLA-v1.0.pdf
 * Printable Odoo ICLA v1.0 https://www.odoo.com/files/legal/Odoo-ICLA-v1.0.pdf

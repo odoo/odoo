@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================== -->
+    <!-- MODEL: public.holiday                      -->
+    <!-- ========================================== -->
+
+    <!-- Search View -->
+    <record id="view_public_holiday_search" model="ir.ui.view">
+        <field name="name">public.holiday.search</field>
+        <field name="model">public.holiday</field>
+        <field name="arch" type="xml">
+            <search string="Search Public Holidays">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('name_km', 'ilike', self)]"/>
+                <field name="name_km"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id" string="Term"/>
+                <separator/>
+                <filter string="Current Year" name="current_year"
+                        domain="[('date_from', '&gt;=', context_today().strftime('%Y-01-01')), ('date_from', '&lt;=', context_today().strftime('%Y-12-31'))]"/>
+                <filter string="Upcoming" name="upcoming"
+                        domain="[('date_to', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Ongoing" name="filter_ongoing" domain="[('status', '=', 'ongoing')]"/>
+                <filter string="Past" name="filter_past" domain="[('status', '=', 'past')]"/>
+
+                <filter string="Has Conflicts" name="filter_conflicts" domain="[('session_count', '&gt;', 0)]"/>
+                <separator/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Academic Year" name="group_academic_year" context="{'group_by': 'academic_year_id'}"/>
+                    <filter string="Term" name="group_term" context="{'group_by': 'semester_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Year" name="group_year" context="{'group_by': 'date_from:year'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'date_from:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_public_holiday_list" model="ir.ui.view">
+        <field name="name">public.holiday.list</field>
+        <field name="model">public.holiday</field>
+        <field name="arch" type="xml">
+            <list limit="80" string="Public Holidays" sample="1" decoration-danger="session_count &gt; 0">
+                <header>
+                    <button name="%(school_public_holiday.action_wizard_import_public_holiday)d"
+                            string="Import Public Holidays"
+                            type="action"
+                            class="btn-primary"
+                            icon="fa-upload"
+                            groups="school_management.group_school_admin,base.group_system"/>
+                </header>
+                <field name="name" string="Name"/>
+                <field name="academic_year_id" string="Academic Year"/>
+                <field name="date_from" string="Start Date"/>
+                <field name="date_to" string="End Date"/>
+                <field name="semester_id" string="Term"/>
+                <field name="number_of_days" string="Public Holiday Days"/>
+                <field name="status" widget="badge"
+                       decoration-info="status == 'upcoming'"
+                       decoration-success="status == 'ongoing'"
+                       decoration-muted="status == 'past'"/>
+                <field name="name_km" optional="hide" string="Khmer Name"/>
+                <field name="session_count" string="Affected Sessions" widget="badge" optional="hide"
+                       decoration-danger="session_count &gt; 0"
+                       decoration-muted="session_count == 0"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_public_holiday_form" model="ir.ui.view">
+        <field name="name">public.holiday.form</field>
+        <field name="model">public.holiday</field>
+        <field name="arch" type="xml">
+            <form string="Public Holiday">
+                <header>
+                    <button name="action_cancel_affected_sessions"
+                            string="Cancel Affected Sessions"
+                            type="object"
+                            class="btn-danger"
+                            icon="fa-ban"
+                            invisible="session_count == 0"
+                            confirm="Are you sure you want to cancel all timetable sessions scheduled during this holiday period? A cancellation reason and log note will be recorded."/>
+                    <button name="action_view_affected_sessions"
+                            string="View Affected Sessions"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-calendar-times-o"
+                            invisible="session_count == 0"/>
+                    <button name="action_publish_notice"
+                            string="Announce on Notice Board"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-bullhorn"
+                            invisible="notice_id != False"
+                            groups="school_management.group_school_admin,school_management.group_school_registrar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_notice"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-bullhorn"
+                                invisible="not notice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Notice Board</span>
+                            </div>
+                        </button>
+                        <button name="action_view_affected_sessions"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-calendar-times-o">
+                            <field name="session_count" widget="statinfo" string="Affected Sessions"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+
+                    <!-- Title Section -->
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Holiday Name (Official / English)"/>
+                        <h1><field name="name" placeholder="e.g. Khmer New Year (Choul Chnam Thmey)"/></h1>
+                        <label for="name_km" class="oe_edit_only" string="Khmer Name"/>
+                        <h3><field name="name_km" placeholder="e.g. ពិធីបុណ្យចូលឆ្នាំថ្មីប្រពៃណីជាតិ"/></h3>
+                    </div>
+
+                    <!-- Conflict Alert Banner -->
+                    <div class="alert alert-warning d-flex align-items-center mb-3 py-2 px-3" role="alert" invisible="session_count == 0">
+                        <i class="fa fa-exclamation-triangle fa-2x me-3 text-warning" title="Warning" aria-hidden="true"/>
+                        <div class="flex-grow-1">
+                            <strong>Schedule Conflicts Detected:</strong>
+                            There are <strong><field name="session_count" readonly="1"/></strong> active class session(s) scheduled during this holiday period.
+                            Click <em>Affected Sessions</em> in the button box to review them, or click <em>Cancel Affected Sessions</em> above to cancel them.
+                        </div>
+                    </div>
+
+                    <!-- Main Form Fields -->
+                    <group>
+                        <group string="Date &amp; Schedule">
+                            <field name="date_from" string="Start Date"/>
+                            <field name="date_to" string="End Date"/>
+                            <field name="number_of_days" readonly="1"/>
+                            <field name="status" widget="badge"
+                                   decoration-info="status == 'upcoming'"
+                                   decoration-success="status == 'ongoing'"
+                                   decoration-muted="status == 'past'"/>
+                        </group>
+                        <group string="Academic Scope &amp; Settings">
+                            <field name="academic_year_id" options="{'no_create_edit': True}"/>
+                            <field name="semester_id" options="{'no_create_edit': True}"/>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="notice_id" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Notes &amp; Legal Reference" name="notes">
+                            <field name="note" placeholder="Enter additional notes, royal decree references (e.g. Royal Sub-Decree on Public Holidays in Cambodia), or university administrative directives..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_public_holiday_calendar" model="ir.ui.view">
+        <field name="name">public.holiday.calendar</field>
+        <field name="model">public.holiday</field>
+        <field name="arch" type="xml">
+            <calendar string="Public Holidays"
+                      date_start="date_from"
+                      date_stop="date_to"
+                      mode="month"
+                      event_open_popup="true"
+                      quick_create="false">
+                <field name="name"/>
+                <field name="name_km"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_public_holiday" model="ir.actions.act_window">
+        <field name="name">Public Holidays</field>
+        <field name="res_model">public.holiday</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="limit">80</field>
+        <field name="search_view_id" ref="view_public_holiday_search"/>
+        <field name="context">{'search_default_current_year': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No public holidays configured!
+            </p>
+            <p>
+                Add national public holidays or use the <strong>Import Holidays</strong> button to upload Cambodian public holidays from a CSV or Excel file.
+            </p>
+        </field>
+    </record>
+
+    <!-- List View Server Action: Announce on Notice Board -->
+    <record id="action_server_announce_notice_board" model="ir.actions.server">
+        <field name="name">Announce on Notice Board</field>
+        <field name="model_id" ref="school_public_holiday.model_public_holiday"/>
+        <field name="binding_model_id" ref="school_public_holiday.model_public_holiday"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_publish_notice()
+        </field>
+        <field name="group_ids" eval="[(4, ref('school_management.group_school_admin')), (4, ref('school_management.group_school_registrar'))]"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- MODEL: university.holiday (INHERITED)      -->
+    <!-- ========================================== -->
+    <record id="view_university_holiday_form_inherit" model="ir.ui.view">
+        <field name="name">university.holiday.form.inherit.public_holiday</field>
+        <field name="model">university.holiday</field>
+        <field name="inherit_id" ref="school_management.view_university_holiday_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_conflicts" type="object" class="oe_stat_button" icon="fa-exclamation-triangle" invisible="conflict_count == 0">
+                        <field name="conflict_count" widget="statinfo" string="Class Conflicts"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//group" position="replace">
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name" placeholder="e.g. Mid-term Exam Break or Semester Recess"/></h1>
+                </div>
+                <group>
+                    <group string="Date Range">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="number_of_days"/>
+                        <field name="year"/>
+                        <field name="academic_year_id" optional="show"/>
+                    </group>
+                    <group string="Holiday Details">
+                        <field name="holiday_type"/>
+                        <field name="work_pay_multiplier"/>
+                        <field name="active" widget="boolean_toggle"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="import_batch_id" invisible="not import_batch_id" readonly="1"/>
+                    </group>
+                </group>
+                <group string="Applicable Scope">
+                    <field name="applies_to" widget="radio"/>
+                    <field name="faculty_ids" widget="many2many_tags" invisible="applies_to != 'faculty'" required="applies_to == 'faculty'"/>
+                    <field name="department_ids" widget="many2many_tags" invisible="applies_to != 'department'" required="applies_to == 'department'"/>
+                    <field name="program_ids" widget="many2many_tags" invisible="applies_to != 'program'" required="applies_to == 'program'"/>
+                </group>
+                <group string="Notes &amp; Description">
+                    <field name="note" placeholder="Additional details or university administrative directive reference..."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_university_holiday_list_inherit" model="ir.ui.view">
+        <field name="name">university.holiday.list.inherit.public_holiday</field>
+        <field name="model">university.holiday</field>
+        <field name="inherit_id" ref="school_management.view_university_holiday_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="%(action_wizard_import_public_holiday)d" type="action" string="Import Public Holidays" class="btn-primary" icon="fa-upload"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="replace">
+                <field name="date_from"/>
+            </xpath>
+            <xpath expr="//field[@name='date_end']" position="replace">
+                <field name="date_to"/>
+                <field name="number_of_days"/>
+                <field name="holiday_type" widget="badge" decoration-info="holiday_type == 'public'" decoration-warning="holiday_type == 'school_break'" decoration-primary="holiday_type == 'exam_break'"/>
+                <field name="applies_to"/>
+                <field name="work_pay_multiplier" optional="show"/>
+                <field name="conflict_count" string="Conflicts" decoration-danger="conflict_count &gt; 0" widget="badge"/>
+            </xpath>
+            <xpath expr="//field[@name='faculty_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_university_holiday_search_inherit" model="ir.ui.view">
+        <field name="name">university.holiday.search.inherit.public_holiday</field>
+        <field name="model">university.holiday</field>
+        <field name="inherit_id" ref="school_management.view_university_holiday_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_university']" position="after">
+                <separator/>
+                <filter string="Public Holidays" name="filter_public" domain="[('holiday_type', '=', 'public')]"/>
+                <filter string="School Breaks" name="filter_school_break" domain="[('holiday_type', '=', 'school_break')]"/>
+                <filter string="Exam Breaks" name="filter_exam_break" domain="[('holiday_type', '=', 'exam_break')]"/>
+                <separator/>
+                <filter string="Has Conflicts" name="filter_conflicts" domain="[('conflict_count', '&gt;', 0)]"/>
+                <group>
+                    <filter string="Holiday Type" name="group_by_type" context="{'group_by': 'holiday_type'}"/>
+                    <filter string="Year" name="group_by_year" context="{'group_by': 'year'}"/>
+                    <filter string="Applies To" name="group_by_applies_to" context="{'group_by': 'applies_to'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

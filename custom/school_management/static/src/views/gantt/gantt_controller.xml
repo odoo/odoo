@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="school_management.GanttController">
+        <div class="o_gantt_view d-flex flex-column h-100 bg-white" t-ref="root">
+            <Layout className="'o_gantt_layout h-100 d-flex flex-column'" display="display">
+                <!-- Create button: standard Odoo New button (matching Kanban/List) -->
+                <t t-set-slot="control-panel-create-button">
+                    <button type="button" class="btn btn-primary o-kanban-button-new fw-semibold" accesskey="c" t-on-click="onClickNew" data-bounce-button="">
+                        New
+                    </button>
+                </t>
+
+                <!-- Layout buttons: Publish, Actions dropdown, and Date controls -->
+                <t t-set-slot="layout-buttons">
+                    <button type="button" class="btn btn-outline-primary fw-semibold btn-sm shadow-sm" t-on-click="onClickPublish">
+                        Publish
+                    </button>
+
+                    <div class="dropdown d-inline-block">
+                        <button class="btn btn-outline-secondary btn-sm fw-semibold dropdown-toggle shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu shadow-sm small">
+                            <li>
+                                <a class="dropdown-item py-1" href="#" t-on-click.prevent="openTimetableWizard">
+                                    <i class="fa fa-magic me-2 text-primary"/>Generate Timetable (Wizard)
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"/></li>
+                            <li>
+                                <a class="dropdown-item py-1" href="#" t-on-click.prevent="onClickCopyPreviousWeek">
+                                    <i class="fa fa-clone me-2 text-muted"/>Copy Previous Week
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-1" href="#" t-on-click.prevent="onClickPublish">
+                                    <i class="fa fa-check me-2 text-success"/>Publish This Week
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"/></li>
+                            <li>
+                                <a class="dropdown-item py-1" href="#" t-on-click.prevent="exportSchedule">
+                                    <i class="fa fa-file-excel-o me-2 text-success"/>Export Schedule (Excel)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="vr my-1 mx-1 text-muted"/>
+
+                    <!-- Date Navigator: <, >, Today, Week Dropdown, and Range Title -->
+                    <div class="d-inline-flex align-items-center gap-1">
+                        <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 border-0" title="Previous Week" t-on-click="() => this.model.prev()">
+                            <i class="fa fa-chevron-left text-dark"/>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2 border-0" title="Next Week" t-on-click="() => this.model.next()">
+                            <i class="fa fa-chevron-right text-dark"/>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold px-2 ms-1" t-on-click="() => this.model.today()">
+                            Today
+                        </button>
+
+                        <div class="dropdown d-inline-block ms-1">
+                            <button class="btn btn-outline-secondary btn-sm fw-semibold px-2 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Week
+                            </button>
+                            <ul class="dropdown-menu shadow-sm small">
+                                <li><a class="dropdown-item active" href="#">Week</a></li>
+                                <li><a class="dropdown-item" href="#">Day</a></li>
+                                <li><a class="dropdown-item" href="#">Month</a></li>
+                            </ul>
+                        </div>
+
+                        <span class="fw-bold fs-7 text-dark ms-2 text-nowrap user-select-none">
+                            <t t-esc="this.model.rangeLabel"/>
+                        </span>
+                    </div>
+                </t>
+
+                <!-- Actions Menu (Standard Cog Menu) -->
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+
+                <!-- Real Odoo Search Bar (with Filters, Group By, Favorites, Facets) -->
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler"/>
+                </t>
+
+                <!-- Navigation Additional: "N to schedule" counter badge -->
+                <t t-set-slot="control-panel-navigation-additional">
+                    <span class="badge rounded-pill bg-dark text-white px-3 py-1 fs-8 fw-semibold shadow-2xs text-nowrap d-inline-flex align-items-center me-2">
+                        <t t-esc="this.model.toScheduleCount"/> to schedule
+                    </span>
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+
+                <!-- Default Content: Gantt Renderer -->
+                <GanttRenderer
+                    model="this.model"
+                    onOpenSlot="(slotId) => this.openSlot(slotId)"
+                    onCreateSlot="(resId, dateStr) => this.createSlot(resId, dateStr)"
+                />
+            </Layout>
+        </div>
+    </t>
+
+</templates>

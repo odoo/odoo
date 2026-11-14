@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subject: Inherit university.subject to add eLearning Courses tab and button -->
+    <record id="view_university_subject_form_inherit_elearning" model="ir.ui.view">
+        <field name="name">university.subject.form.inherit.elearning</field>
+        <field name="model">university.subject</field>
+        <field name="inherit_id" ref="school_management.view_university_subject_form"/>
+        <field name="arch" type="xml">
+            <!-- Stat Button in Button Box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_slide_channels"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-graduation-cap"
+                        groups="school_management.group_school_admin,school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_dean,website_slides.group_website_slides_officer">
+                    <field name="slide_channel_count" widget="statinfo" string="eLearning"/>
+                </button>
+            </xpath>
+
+            <!-- eLearning Courses Notebook Tab -->
+            <xpath expr="//notebook" position="inside">
+                <page string="eLearning Courses"
+                      name="elearning_tab"
+                      groups="school_management.group_school_admin,school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_dean,website_slides.group_website_slides_officer">
+                    <field name="slide_channel_ids" context="{'default_subject_id': id}">
+                        <list string="eLearning Courses">
+                            <field name="name" string="Course Title"/>
+                            <field name="channel_type" string="Type"/>
+                            <field name="user_id" string="Responsible"/>
+                            <field name="teacher_id" string="Teacher"/>
+                            <field name="total_slides" string="Lessons"/>
+                            <field name="members_all_count" string="Attendees"/>
+                            <field name="is_published" widget="boolean_toggle"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================= -->
+    <!-- UNIVERSITY FEE INVOICE TEMPLATE (REPORT CARD FORMAT)              -->
+    <!-- ================================================================= -->
+    <template id="report_university_fee_invoice_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="fee" t-value="o"/>
+                <t t-set="student" t-value="o.student_id"/>
+                <t t-set="signature" t-value="o.sudo().signature_ids.filtered(lambda s: s.state == 'signed' and s.signature).sorted('signed_on', reverse=True)[:1]"/>
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; color: #263238; line-height: 1.4; padding: 12px 8px 10px; background: #ffffff;">
+                        <style type="text/css">
+                            .invoice-watermark {
+                                position: fixed;
+                                top: 35%;
+                                left: 18%;
+                                z-index: 0;
+                                color: #a51c30;
+                                opacity: 0.08;
+                                font-size: 96px;
+                                font-weight: bold;
+                                -webkit-transform: rotate(-32deg);
+                                transform: rotate(-32deg);
+                            }
+                            .invoice-content {
+                                position: relative;
+                                z-index: 1;
+                            }
+                        </style>
+
+                        <!-- Watermark for Draft, Canceled, or Overdue -->
+                        <div t-if="o.state == 'draft'" class="invoice-watermark">DRAFT</div>
+                        <div t-elif="o.state == 'canceled'" class="invoice-watermark">VOID</div>
+                        <div t-elif="o.payment_state == 'overdue'" class="invoice-watermark" style="color: #c00000; opacity: 0.07;">OVERDUE</div>
+
+                        <div class="invoice-content">
+                            <!-- Top Header: Institution Info & Title -->
+                            <table style="width: 100%; border-collapse: separate; border-spacing: 0; border-bottom: 3px solid #a51c30; margin-bottom: 10px; padding-bottom: 8px;">
+                                <tr>
+                                    <td style="width: 14%; vertical-align: top;">
+                                        <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" style="max-height: 64px; max-width: 78px;"/>
+                                        <img t-else="" src="/school_management/static/src/img/university_logo.png" style="max-height: 64px; max-width: 78px;"/>
+                                    </td>
+                                    <td style="width: 48%; vertical-align: top; padding-left: 6px;">
+                                        <div style="font-weight: bold; font-size: 13px; color: #a51c30; letter-spacing: 0.3px; text-transform: uppercase;">
+                                            <t t-out="res_company.name"/>
+                                        </div>
+                                        <div style="font-size: 10px; color: #5f6b76; margin-top: 2px;">
+                                            <t t-out="o.student_id.program_id.name or 'Office of the Bursar &amp; Student Accounts'"/>
+                                        </div>
+                                        <div style="font-size: 15px; color: #1f2933; font-weight: bold; margin-top: 5px; letter-spacing: 0.2px;">
+                                            Student Tuition &amp; Fee Invoice
+                                        </div>
+                                    </td>
+                                    <td style="width: 38%; vertical-align: top; text-align: right; font-size: 9.5px; color: #5f6b76; line-height: 1.4;">
+                                        <div style="font-weight: bold; color: #1f2933;"><t t-out="res_company.name"/></div>
+                                        <div t-if="res_company.street"><t t-out="res_company.street"/></div>
+                                        <div>
+                                            <t t-if="res_company.city"><t t-out="res_company.city"/>, </t>
+                                            <t t-if="res_company.state_id"><t t-out="res_company.state_id.name"/> </t>
+                                            <t t-if="res_company.zip"><t t-out="res_company.zip"/> </t>
+                                            <t t-if="res_company.country_id"><t t-out="res_company.country_id.name"/></t>
+                                        </div>
+                                        <div t-if="res_company.email"><t t-out="res_company.email"/></div>
+                                        <div t-if="res_company.website"><t t-out="res_company.website"/></div>
+                                        <div t-if="res_company.vat">Tax ID: <t t-out="res_company.vat"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Date Issued & Invoice Reference Banner -->
+                            <div style="font-weight: bold; font-size: 10.5px; color: #1f2933; background: #f7f2f3; border-left: 4px solid #a51c30; padding: 7px 10px; margin-bottom: 12px; display: flex; justify-content: space-between;">
+                                <div>
+                                    Date Issued: <span t-out="o.date.strftime('%B %d, %Y') if o.date else context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                                </div>
+                                <div style="text-align: right;">
+                                    Invoice No: <span style="color: #a51c30;"><t t-out="o.name"/></span> &amp;nbsp;|&amp;nbsp;
+                                    Due Date: <span><t t-out="o.due_date.strftime('%B %d, %Y') if o.due_date else 'Upon Receipt'"/></span>
+                                </div>
+                            </div>
+
+                            <!-- Demographics & Student Information (2 Columns) -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; font-size: 10.5px; margin-bottom: 12px; line-height: 1.45;">
+                                <tr>
+                                    <td style="width: 16%; color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Name:</td>
+                                    <td style="width: 34%; color: #1f2933; font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.name"/></td>
+                                    <td style="width: 18%; color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Academic Term:</td>
+                                    <td style="width: 32%; color: #1f2933; font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">
+                                        <t t-out="o.academic_year_id.name or 'Academic Year'"/>
+                                        <t t-if="o.semester_id"> - <t t-out="o.semester_id.name"/></t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Student ID:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.student_id or '—'"/></td>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Program / Major:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.program_id.name or 'Degree Program'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Guardian:</td>
+                                    <td style="padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.emergency_contact_name or '—'"/></td>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Payment Status:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">
+                                        <span t-if="o.payment_state == 'paid'" style="color: #0d8a43;">Paid in Full</span>
+                                        <span t-elif="o.payment_state == 'partial'" style="color: #b78103;">Partially Paid</span>
+                                        <span t-elif="o.payment_state == 'overdue'" style="color: #c00000;">Overdue</span>
+                                        <span t-else="" style="color: #495057;">Unpaid / Pending</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #687582; padding: 5px 8px;">Address:</td>
+                                    <td style="padding: 5px 8px;"><t t-out="o.student_id.address or '—'"/></td>
+                                    <td style="color: #687582; padding: 5px 8px;">Invoice Status:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; text-transform: uppercase;">
+                                        <span t-if="o.state == 'posted'" style="color: #1a56db;">Confirmed</span>
+                                        <span t-elif="o.state == 'paid'" style="color: #0d8a43;">Settled</span>
+                                        <span t-elif="o.state == 'draft'" style="color: #6b7280;">Draft</span>
+                                        <span t-else="" style="color: #991b1b;"><t t-out="o.state"/></span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Billing Policies & Account Summary (2 Columns) -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; background: #fbfcfe; font-size: 10px; margin-bottom: 14px; line-height: 1.4;">
+                                <tr>
+                                    <td style="width: 52%; vertical-align: top; padding: 8px 12px; border-right: 1px solid #d8dee6;">
+                                        <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 4px;">Billing &amp; Payment Policies</div>
+                                        <div>Structure: <t t-out="o.fee_structure_id.name or 'Standard University Tuition &amp; Academic Fees'"/></div>
+                                        <div>Terms: Due on or before <strong t-out="o.due_date.strftime('%B %d, %Y') if o.due_date else 'the specified deadline'"/>.</div>
+                                        <div style="font-style: italic; margin-top: 3px; color: #5f6b76;">
+                                            Full settlement of tuition and associated fees ensures uninterrupted course enrollment, classroom participation, exam clearance, and official academic documentation.
+                                        </div>
+                                    </td>
+                                    <td style="width: 48%; vertical-align: top; padding: 8px 12px;">
+                                        <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 4px; text-align: right;">Financial Account Summary</div>
+                                        <table style="width: 100%; border-collapse: collapse; font-size: 10px; line-height: 1.55;">
+                                            <tr>
+                                                <td style="color: #5f6b76;">Total Assessed Fees:</td>
+                                                <td style="text-align: right; font-weight: bold; color: #1f2933;">
+                                                    <span t-field="o.total_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #5f6b76;">Total Payments Applied:</td>
+                                                <td style="text-align: right; font-weight: bold; color: #0d8a43;">
+                                                    <span t-field="o.paid_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-top: 1px dashed #c8d0db;">
+                                                <td style="font-weight: bold; color: #1f2933; padding-top: 4px;">Balance Due:</td>
+                                                <td style="text-align: right; font-weight: bold; font-size: 11px; padding-top: 4px; color: #a51c30;">
+                                                    <span t-field="o.balance" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Itemized Fee Schedule Box -->
+                            <div style="border: 1px solid #d8dee6; border-radius: 2px; margin-bottom: 12px; page-break-inside: avoid;">
+                                <div style="font-weight: bold; color: #1f2933; background: #eef2f6; padding: 6px 10px; border-bottom: 1px solid #d8dee6; font-size: 11px;">
+                                    ITEMIZED TUITION &amp; FEE SCHEDULE
+                                </div>
+                                <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                    <thead>
+                                        <tr style="border-bottom: 1.5px solid #a51c30; background: #fafbfc; color: #1f2933;">
+                                            <th style="text-align: left; padding: 6px 10px; width: 8%;">#</th>
+                                            <th style="text-align: left; padding: 6px 10px; width: 62%;">Fee Description / Item</th>
+                                            <th style="text-align: right; padding: 6px 10px; width: 30%;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="o.line_ids">
+                                            <t t-set="idx" t-value="1"/>
+                                            <t t-foreach="o.line_ids" t-as="l">
+                                                <tr style="border-bottom: 1px solid #edf1f5;">
+                                                    <td style="padding: 6px 10px; color: #687582;"><t t-out="idx"/></td>
+                                                    <td style="padding: 6px 10px; font-weight: 600; color: #1f2933;"><t t-out="l.name"/></td>
+                                                    <td style="padding: 6px 10px; text-align: right; font-weight: bold;">
+                                                        <span t-field="l.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-set="idx" t-value="idx + 1"/>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <tr>
+                                                <td colspan="3" style="text-align: center; padding: 12px; font-style: italic; color: #687582;">
+                                                    -- No fee items recorded for this invoice --
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+
+                                <!-- Totals row -->
+                                <div style="border-top: 1.5px solid #a51c30; padding: 6px 10px; background: #fafbfc;">
+                                    <table style="width: 100%; font-size: 10.5px;">
+                                        <tr>
+                                            <td style="width: 70%; text-align: right; font-weight: bold; color: #1f2933; padding: 2px 10px;">Total Assessed Fees:</td>
+                                            <td style="width: 30%; text-align: right; font-weight: bold; color: #1f2933; padding: 2px 10px;">
+                                                <span t-field="o.total_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: right; font-weight: bold; color: #0d8a43; padding: 2px 10px;">Total Amount Paid:</td>
+                                            <td style="text-align: right; font-weight: bold; color: #0d8a43; padding: 2px 10px;">
+                                                <span t-field="o.paid_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-top: 1px solid #d8dee6;">
+                                            <td style="text-align: right; font-weight: bold; font-size: 11.5px; color: #a51c30; padding: 5px 10px 2px;">Remaining Balance Due:</td>
+                                            <td style="text-align: right; font-weight: bold; font-size: 11.5px; color: #a51c30; padding: 5px 10px 2px;">
+                                                <span t-field="o.balance" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Recorded Payments Box (if payments exist) -->
+                            <t t-set="confirmed_payments" t-value="o.payment_ids.filtered(lambda p: p.state == 'posted')"/>
+                            <t t-if="confirmed_payments">
+                                <div style="border: 1px solid #d8dee6; border-radius: 2px; margin-bottom: 12px; page-break-inside: avoid;">
+                                    <div style="font-weight: bold; color: #1f2933; background: #eef2f6; padding: 5px 10px; border-bottom: 1px solid #d8dee6; font-size: 10px;">
+                                        RECORDED PAYMENTS &amp; RECEIPTS
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 9.5px;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid #c8d0db; color: #687582; background: #fafbfc;">
+                                                <th style="text-align: left; padding: 4px 8px;">Receipt #</th>
+                                                <th style="text-align: left; padding: 4px 8px;">Date</th>
+                                                <th style="text-align: left; padding: 4px 8px;">Payment Method</th>
+                                                <th style="text-align: left; padding: 4px 8px;">Reference</th>
+                                                <th style="text-align: right; padding: 4px 8px;">Amount Paid</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="confirmed_payments" t-as="p">
+                                                <tr style="border-bottom: 1px solid #edf1f5;">
+                                                    <td style="padding: 4px 8px; font-weight: bold;"><t t-out="p.name"/></td>
+                                                    <td style="padding: 4px 8px;"><t t-out="p.date.strftime('%b %d, %Y') if p.date else ''"/></td>
+                                                    <td style="padding: 4px 8px; text-transform: capitalize;"><t t-out="p.payment_method.replace('_', ' ') if p.payment_method else ''"/></td>
+                                                    <td style="padding: 4px 8px; color: #555;"><t t-out="p.reference or '—'"/></td>
+                                                    <td style="padding: 4px 8px; text-align: right; font-weight: bold; color: #0d8a43;">
+                                                        <span t-field="p.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+
+                            <!-- Bottom Section: Remittance, Seal, Signature -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; background: #fbfcfe; font-size: 10px; margin-top: 14px; page-break-inside: avoid;">
+                                <tr>
+                                    <td style="width: 45%; vertical-align: top; padding: 8px 10px;">
+                                        <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; margin-bottom: 5px; text-transform: uppercase;">Payment &amp; Remittance Details</div>
+                                        <table style="width: 95%; border-collapse: collapse; font-size: 9.5px; line-height: 1.5;">
+                                            <tr>
+                                                <td style="width: 38%; color: #687582;">Bank Name:</td>
+                                                <td style="font-weight: bold; color: #1f2933;"><t t-out="res_company.partner_id.bank_ids[:1].bank_name or 'Sample Central Bank'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #687582;">Account Name:</td>
+                                                <td style="font-weight: bold; color: #1f2933;"><t t-out="res_company.name"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #687582;">Account / IBAN:</td>
+                                                <td style="font-weight: bold; color: #1f2933;"><t t-out="res_company.partner_id.bank_ids[:1].acc_number or '100-2490-8821-001'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #687582;">Payment Ref:</td>
+                                                <td style="font-weight: bold; color: #a51c30;"><t t-out="o.name"/></td>
+                                            </tr>
+                                        </table>
+                                        <div style="font-weight: bold; margin-top: 8px; margin-bottom: 2px; color: #1f2933;">Notes / Activity</div>
+                                        <div style="color: #555; font-size: 9px;">Official University Student Financial Record</div>
+                                        <div style="color: #555; font-size: 9px;">Verification: <strong style="font-family: inherit; letter-spacing: 1px;"><t t-out="o.name"/></strong></div>
+                                    </td>
+
+                                    <td style="width: 25%; vertical-align: bottom; text-align: center; padding: 8px 0 7px;">
+                                        <div style="font-weight: bold; color: #a51c30; margin-bottom: 5px; font-size: 10px; text-align: center;">Seal:</div>
+                                        <div style="box-sizing: border-box; width: 80px; height: 80px; border: 1.5px dashed #a51c30; border-radius: 50%; margin: 0 auto; text-align: center; font-size: 9px; font-weight: bold; color: #7c1728; line-height: 1.2; padding-top: 24px;">
+                                            <t t-if="o.payment_state == 'paid'">
+                                                PAID IN FULL<br/>BURSAR SEAL
+                                            </t>
+                                            <t t-else="">
+                                                OFFICIAL<br/>BURSAR SEAL
+                                            </t>
+                                        </div>
+                                    </td>
+
+                                    <td style="width: 30%; vertical-align: bottom; text-align: center; padding: 8px 10px;">
+                                        <t t-if="signature">
+                                            <img t-att-src="image_data_uri(signature.signature)" style="max-height: 48px; max-width: 140px; margin-bottom: 2px;"/>
+                                            <div style="border-bottom: 1.5px solid #a51c30; width: 100%; margin-bottom: 4px;"></div>
+                                            <div style="font-weight: bold; color: #1f2933; font-size: 10.5px;"><t t-out="signature.signed_name or 'Bursar / Financial Officer'"/></div>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="height: 35px;"></div>
+                                            <div style="border-bottom: 1.5px solid #a51c30; width: 100%; margin-bottom: 4px;"></div>
+                                            <div style="font-weight: bold; color: #1f2933; font-size: 10.5px;">Bursar / Financial Officer</div>
+                                        </t>
+                                        <div style="font-size: 9px; color: #687582;"><t t-out="res_company.name"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Document Notices -->
+                            <div style="text-align: center; font-size: 8.5px; color: #666; margin-top: 6px;">
+                                Payments can be made via direct bank transfer or at the University Cashier counter. For billing inquiries, contact bursar@university.edu.
+                            </div>
+                            <div style="text-align: center; font-size: 9px; color: #a00; margin-top: 4px; font-weight: bold; letter-spacing: 0.5px;">
+                                SAMPLE DOCUMENT - NOT AN OFFICIAL RECORD
+                            </div>
+                            <div style="text-align: center; font-size: 9px; color: #687582; border-top: 1px solid #e1e6ec; padding-top: 5px; margin-top: 6px;">
+                                1 of 1
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ================================================================= -->
+    <!-- UNIVERSITY PAYMENT RECEIPT TEMPLATE (REPORT CARD FORMAT)          -->
+    <!-- ================================================================= -->
+    <template id="report_payment_receipt_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="fee" t-value="o.fee_id"/>
+                <t t-set="student" t-value="o.student_id"/>
+                <t t-set="signature" t-value="fee and fee.sudo().signature_ids.filtered(lambda s: s.state == 'signed' and s.signature).sorted('signed_on', reverse=True)[:1]"/>
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; color: #263238; line-height: 1.4; padding: 12px 8px 10px; background: #ffffff;">
+                        <style type="text/css">
+                            .receipt-watermark {
+                                position: fixed;
+                                top: 35%;
+                                left: 22%;
+                                z-index: 0;
+                                color: #0d8a43;
+                                opacity: 0.08;
+                                font-size: 96px;
+                                font-weight: bold;
+                                -webkit-transform: rotate(-32deg);
+                                transform: rotate(-32deg);
+                            }
+                            .receipt-content {
+                                position: relative;
+                                z-index: 1;
+                            }
+                        </style>
+
+                        <!-- Watermark -->
+                        <div t-if="o.state == 'posted'" class="receipt-watermark">PAID</div>
+                        <div t-elif="o.state == 'draft'" class="receipt-watermark" style="color: #a51c30;">DRAFT</div>
+                        <div t-elif="o.state == 'canceled'" class="receipt-watermark" style="color: #c00000;">VOID</div>
+
+                        <div class="receipt-content">
+                            <!-- Top Header: Institution Info & Title -->
+                            <table style="width: 100%; border-collapse: separate; border-spacing: 0; border-bottom: 3px solid #a51c30; margin-bottom: 10px; padding-bottom: 8px;">
+                                <tr>
+                                    <td style="width: 14%; vertical-align: top;">
+                                        <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" style="max-height: 64px; max-width: 78px;"/>
+                                        <img t-else="" src="/school_management/static/src/img/university_logo.png" style="max-height: 64px; max-width: 78px;"/>
+                                    </td>
+                                    <td style="width: 48%; vertical-align: top; padding-left: 6px;">
+                                        <div style="font-weight: bold; font-size: 13px; color: #a51c30; letter-spacing: 0.3px; text-transform: uppercase;">
+                                            <t t-out="res_company.name"/>
+                                        </div>
+                                        <div style="font-size: 10px; color: #5f6b76; margin-top: 2px;">
+                                            <t t-out="o.student_id.program_id.name or 'Office of the Bursar &amp; Student Accounts'"/>
+                                        </div>
+                                        <div style="font-size: 15px; color: #1f2933; font-weight: bold; margin-top: 5px; letter-spacing: 0.2px;">
+                                            Official Student Payment Receipt
+                                        </div>
+                                    </td>
+                                    <td style="width: 38%; vertical-align: top; text-align: right; font-size: 9.5px; color: #5f6b76; line-height: 1.4;">
+                                        <div style="font-weight: bold; color: #1f2933;"><t t-out="res_company.name"/></div>
+                                        <div t-if="res_company.street"><t t-out="res_company.street"/></div>
+                                        <div>
+                                            <t t-if="res_company.city"><t t-out="res_company.city"/>, </t>
+                                            <t t-if="res_company.state_id"><t t-out="res_company.state_id.name"/> </t>
+                                            <t t-if="res_company.zip"><t t-out="res_company.zip"/> </t>
+                                            <t t-if="res_company.country_id"><t t-out="res_company.country_id.name"/></t>
+                                        </div>
+                                        <div t-if="res_company.email"><t t-out="res_company.email"/></div>
+                                        <div t-if="res_company.website"><t t-out="res_company.website"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Date Issued & Receipt Reference Banner -->
+                            <div style="font-weight: bold; font-size: 10.5px; color: #1f2933; background: #f7f2f3; border-left: 4px solid #a51c30; padding: 7px 10px; margin-bottom: 12px; display: flex; justify-content: space-between;">
+                                <div>
+                                    Receipt Date: <span t-out="o.date.strftime('%B %d, %Y') if o.date else context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                                </div>
+                                <div style="text-align: right;">
+                                    Receipt No: <span style="color: #a51c30;"><t t-out="o.name"/></span> &amp;nbsp;|&amp;nbsp;
+                                    Invoice Ref: <span><t t-out="fee.name if fee else 'Direct Payment'"/></span>
+                                </div>
+                            </div>
+
+                            <!-- Demographics & Student Information (2 Columns) -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; font-size: 10.5px; margin-bottom: 12px; line-height: 1.45;">
+                                <tr>
+                                    <td style="width: 16%; color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Name:</td>
+                                    <td style="width: 34%; color: #1f2933; font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.name"/></td>
+                                    <td style="width: 18%; color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Academic Term:</td>
+                                    <td style="width: 32%; color: #1f2933; font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">
+                                        <t t-if="fee">
+                                            <t t-out="fee.academic_year_id.name or 'Academic Year'"/>
+                                            <t t-if="fee.semester_id"> - <t t-out="fee.semester_id.name"/></t>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-out="o.student_id.academic_year_id.name or 'Academic Year'"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Student ID:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.student_id or '—'"/></td>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Program / Major:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.student_id.program_id.name or 'Degree Program'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Payment Method:</td>
+                                    <td style="font-weight: bold; text-transform: capitalize; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.payment_method.replace('_', ' ') if o.payment_method else 'Cash'"/></td>
+                                    <td style="color: #687582; padding: 5px 8px; border-bottom: 1px solid #eef2f6;">Transaction Ref:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; border-bottom: 1px solid #eef2f6;"><t t-out="o.reference or '—'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #687582; padding: 5px 8px;">Receipt Status:</td>
+                                    <td style="font-weight: bold; padding: 5px 8px; text-transform: uppercase;">
+                                        <span t-if="o.state == 'posted'" style="color: #0d8a43;">Confirmed Paid</span>
+                                        <span t-elif="o.state == 'draft'" style="color: #6b7280;">Draft</span>
+                                        <span t-else="" style="color: #991b1b;"><t t-out="o.state"/></span>
+                                    </td>
+                                    <td style="color: #687582; padding: 5px 8px;">Guardian / Contact:</td>
+                                    <td style="padding: 5px 8px;"><t t-out="o.student_id.emergency_contact_name or '—'"/></td>
+                                </tr>
+                            </table>
+
+                            <!-- Payment Applied & Account Summary (2 Columns) -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; background: #fbfcfe; font-size: 10px; margin-bottom: 14px; line-height: 1.4;">
+                                <tr>
+                                    <td style="width: 52%; vertical-align: top; padding: 8px 12px; border-right: 1px solid #d8dee6;">
+                                        <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 4px;">Payment Confirmation</div>
+                                        <div>Applied Invoice: <strong t-out="fee.name if fee else 'Direct Payment'"/></div>
+                                        <div t-if="fee and fee.due_date">Original Due Date: <t t-out="fee.due_date.strftime('%B %d, %Y')"/></div>
+                                        <div style="font-style: italic; margin-top: 3px; color: #5f6b76;">
+                                            This receipt serves as official proof of payment credited toward student tuition and related university academic fees.
+                                        </div>
+                                    </td>
+                                    <td style="width: 48%; vertical-align: top; padding: 8px 12px;">
+                                        <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 4px; text-align: right;">Payment &amp; Balance Summary</div>
+                                        <table style="width: 100%; border-collapse: collapse; font-size: 10px; line-height: 1.55;">
+                                            <tr t-if="fee">
+                                                <td style="color: #5f6b76;">Total Invoice Amount:</td>
+                                                <td style="text-align: right; font-weight: bold; color: #1f2933;">
+                                                    <span t-field="fee.total_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #5f6b76; font-weight: bold;">Amount Paid (This Receipt):</td>
+                                                <td style="text-align: right; font-weight: bold; color: #0d8a43; font-size: 11px;">
+                                                    <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="fee" style="border-top: 1px dashed #c8d0db;">
+                                                <td style="font-weight: bold; color: #1f2933; padding-top: 4px;">Remaining Balance:</td>
+                                                <td style="text-align: right; font-weight: bold; font-size: 11px; padding-top: 4px; color: #a51c30;">
+                                                    <span t-field="fee.balance" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Itemized Fee Line Details (if associated with fee invoice) -->
+                            <t t-if="fee and fee.line_ids">
+                                <div style="border: 1px solid #d8dee6; border-radius: 2px; margin-bottom: 12px; page-break-inside: avoid;">
+                                    <div style="font-weight: bold; color: #1f2933; background: #eef2f6; padding: 6px 10px; border-bottom: 1px solid #d8dee6; font-size: 11px;">
+                                        ASSOCIATED INVOICE FEE BREAKDOWN
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                        <thead>
+                                            <tr style="border-bottom: 1.5px solid #a51c30; background: #fafbfc; color: #1f2933;">
+                                                <th style="text-align: left; padding: 6px 10px; width: 8%;">#</th>
+                                                <th style="text-align: left; padding: 6px 10px; width: 62%;">Fee Description / Item</th>
+                                                <th style="text-align: right; padding: 6px 10px; width: 30%;">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="idx" t-value="1"/>
+                                            <t t-foreach="fee.line_ids" t-as="l">
+                                                <tr style="border-bottom: 1px solid #edf1f5;">
+                                                    <td style="padding: 6px 10px; color: #687582;"><t t-out="idx"/></td>
+                                                    <td style="padding: 6px 10px; font-weight: 600; color: #1f2933;"><t t-out="l.name"/></td>
+                                                    <td style="padding: 6px 10px; text-align: right; font-weight: bold;">
+                                                        <span t-field="l.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-set="idx" t-value="idx + 1"/>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+
+                            <!-- Bottom Section: Remittance, Seal, Signature -->
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; background: #fbfcfe; font-size: 10px; margin-top: 14px; page-break-inside: avoid;">
+                                <tr>
+                                    <td style="width: 45%; vertical-align: top; padding: 8px 10px;">
+                                        <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; margin-bottom: 5px; text-transform: uppercase;">Payment Record &amp; Verification</div>
+                                        <table style="width: 95%; border-collapse: collapse; font-size: 9.5px; line-height: 1.5;">
+                                            <tr>
+                                                <td style="width: 38%; color: #687582;">Receipt Number:</td>
+                                                <td style="font-weight: bold; color: #1f2933;"><t t-out="o.name"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #687582;">Student ID:</td>
+                                                <td style="font-weight: bold; color: #1f2933;"><t t-out="o.student_id.student_id or '—'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #687582;">Payment Method:</td>
+                                                <td style="font-weight: bold; color: #1f2933; text-transform: capitalize;"><t t-out="o.payment_method.replace('_', ' ') if o.payment_method else 'Cash'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #687582;">Transaction Ref:</td>
+                                                <td style="font-weight: bold; color: #a51c30;"><t t-out="o.reference or '—'"/></td>
+                                            </tr>
+                                        </table>
+                                        <div style="font-weight: bold; margin-top: 8px; margin-bottom: 2px; color: #1f2933;">Notes / Activity</div>
+                                        <div style="color: #555; font-size: 9px;">Official University Payment Receipt - Paid in Full</div>
+                                        <div style="color: #555; font-size: 9px;">Verification: <strong style="font-family: inherit; letter-spacing: 1px;"><t t-out="o.name"/></strong></div>
+                                    </td>
+
+                                    <td style="width: 25%; vertical-align: bottom; text-align: center; padding: 8px 0 7px;">
+                                        <div style="font-weight: bold; color: #a51c30; margin-bottom: 5px; font-size: 10px; text-align: center;">Seal:</div>
+                                        <div style="box-sizing: border-box; width: 80px; height: 80px; border: 1.5px dashed #a51c30; border-radius: 50%; margin: 0 auto; text-align: center; font-size: 9px; font-weight: bold; color: #7c1728; line-height: 1.2; padding-top: 24px;">
+                                            PAID IN FULL<br/>BURSAR SEAL
+                                        </div>
+                                    </td>
+
+                                    <td style="width: 30%; vertical-align: bottom; text-align: center; padding: 8px 10px;">
+                                        <t t-if="signature">
+                                            <img t-att-src="image_data_uri(signature.signature)" style="max-height: 48px; max-width: 140px; margin-bottom: 2px;"/>
+                                            <div style="border-bottom: 1.5px solid #a51c30; width: 100%; margin-bottom: 4px;"></div>
+                                            <div style="font-weight: bold; color: #1f2933; font-size: 10.5px;"><t t-out="signature.signed_name or 'Bursar / Cashier'"/></div>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="height: 35px;"></div>
+                                            <div style="border-bottom: 1.5px solid #a51c30; width: 100%; margin-bottom: 4px;"></div>
+                                            <div style="font-weight: bold; color: #1f2933; font-size: 10.5px;">Bursar / Cashier</div>
+                                        </t>
+                                        <div style="font-size: 9px; color: #687582;"><t t-out="res_company.name"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Document Notices -->
+                            <div style="text-align: center; font-size: 8.5px; color: #666; margin-top: 6px;">
+                                Thank you for your payment. Please retain this official receipt for your academic and financial records.
+                            </div>
+                            <div style="text-align: center; font-size: 9px; color: #a00; margin-top: 4px; font-weight: bold; letter-spacing: 0.5px;">
+                                SAMPLE DOCUMENT - NOT AN OFFICIAL RECORD
+                            </div>
+                            <div style="text-align: center; font-size: 9px; color: #687582; border-top: 1px solid #e1e6ec; padding-top: 5px; margin-top: 6px;">
+                                1 of 1
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

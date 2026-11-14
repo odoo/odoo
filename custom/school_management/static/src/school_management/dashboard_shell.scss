@@ -1,0 +1,892 @@
+// =============================================================================
+// University Executive / Leadership Dashboard (Admin, Dean, HOD, Teacher)
+// Full-Width Architecture without Redundant Navbars
+// Design System: Slate #1E293B, Light #F8FAFC, 16px Radius, Subtle Elevation
+// =============================================================================
+
+.o_exec_portal_root {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    // Clean Modern Light Sidebar System (Executive roles: Admin, Dean, HOD)
+    .o_exec_sidebar {
+        width: 256px;
+        min-width: 256px;
+        max-width: 256px;
+        height: 100%;
+        background-color: #ffffff;
+        color: #475569;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #e2e8f0;
+        z-index: 20;
+        transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.2s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.o_sidebar_collapsed {
+            width: 68px;
+            min-width: 68px;
+            max-width: 68px;
+        }
+
+        .o_sidebar_header {
+            padding: 16px 14px 12px;
+
+            .o_brand_icon {
+                width: 32px;
+                height: 32px;
+                background-color: #0e7569;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                flex-shrink: 0;
+            }
+
+            .o_brand_title {
+                font-size: 15px;
+                font-weight: 700;
+                color: #0f172a;
+                letter-spacing: -0.01em;
+            }
+
+            .o_btn_sidebar_toggle {
+                border: none;
+                background: transparent;
+                color: #94a3b8;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #f1f5f9;
+                    color: #0f172a;
+                }
+            }
+        }
+
+        .o_sidebar_search {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+
+            &:hover {
+                border-color: #cbd5e1;
+                background-color: #f1f5f9;
+            }
+
+            .o_kbd_shortcut {
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 4px;
+                padding: 1px 5px;
+                font-size: 10px;
+                font-weight: 600;
+                color: #64748b;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+            }
+        }
+
+        .o_exec_sidebar_nav {
+            padding: 0 8px;
+
+            .o_nav_group {
+                margin-bottom: 6px;
+
+                .o_nav_group_label {
+                    font-size: 10.5px;
+                    font-weight: 600;
+                    color: #94a3b8;
+                    letter-spacing: 0.03em;
+                    margin-bottom: 4px;
+                    margin-top: 10px;
+                }
+            }
+
+            .o_sidebar_nav_item {
+                display: flex;
+                align-items: center;
+                border-radius: 8px;
+                color: #475569;
+                font-size: 13.5px;
+                font-weight: 500;
+                text-align: left;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                position: relative;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    color: #0f172a;
+                }
+
+                &.active {
+                    background-color: #e6f7f5;
+                    color: #0e7569;
+                    font-weight: 600;
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        top: 6px;
+                        bottom: 6px;
+                        width: 3px;
+                        background-color: #0d9488;
+                        border-radius: 0 2px 2px 0;
+                    }
+
+                    svg {
+                        stroke: #0e7569;
+                    }
+                }
+
+                .o_nav_icon_wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+
+                    svg {
+                        stroke: currentColor;
+                    }
+                }
+
+                .o_collapsed_badge_dot {
+                    width: 7px;
+                    height: 7px;
+                    border: 1.5px solid #ffffff;
+
+                    &.o_dot_red { background-color: #ef4444; }
+                    &.o_dot_amber { background-color: #f59e0b; }
+                    &.o_dot_teal { background-color: #0d9488; }
+                    &.o_dot_gray { background-color: #94a3b8; }
+                }
+            }
+
+            .o_sidebar_badge {
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 7px;
+                border-radius: 9999px;
+
+                &.o_badge_red {
+                    background-color: #fee2e2;
+                    color: #ef4444;
+                }
+                &.o_badge_amber {
+                    background-color: #fef3c7;
+                    color: #b45309;
+                }
+                &.o_badge_teal {
+                    background-color: #ccfbf1;
+                    color: #0f766e;
+                }
+                &.o_badge_teal_solid {
+                    background-color: #0f766e;
+                    color: #ffffff;
+                }
+                &.o_badge_plain {
+                    background-color: #f1f5f9;
+                    color: #64748b;
+                }
+            }
+        }
+
+        .o_exec_sidebar_footer {
+            background-color: #ffffff;
+
+            .o_btn_help {
+                color: #64748b;
+                border-radius: 8px;
+                font-size: 13px;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    color: #0f172a;
+                }
+            }
+
+            .o_sidebar_profile_card {
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    border-color: #cbd5e1;
+                }
+
+                .o_profile_avatar {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background-color: #0e7569;
+                    color: #ffffff;
+                    font-weight: 700;
+                    font-size: 11.5px;
+                }
+
+                .o_profile_name {
+                    font-size: 12.5px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    line-height: 1.25;
+                }
+
+                .o_profile_role {
+                    font-size: 11px;
+                    color: #64748b;
+                    line-height: 1.2;
+                }
+            }
+        }
+    }
+
+    .o_executive_dashboard_container {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+
+    .o_dashboard_canvas {
+        max-width: 1720px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    // -------------------------------------------------------------------------
+    // 1. Unified Clean Top Header Card
+    // -------------------------------------------------------------------------
+    .o_exec_header_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
+
+        .o_badge_live {
+            background-color: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+
+            .o_pulse_dot {
+                width: 7px;
+                height: 7px;
+                background-color: #10b981;
+                border-radius: 50%;
+                display: inline-block;
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+                animation: pulse-green 2s infinite;
+            }
+        }
+
+        .o_exec_title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .o_exec_subtitle {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .o_filter_group {
+            .o_filter_label {
+                font-size: 0.6875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+
+            .o_filter_select {
+                border-radius: 8px;
+                border: 1px solid #cbd5e1;
+                background-color: #f8fafc;
+                font-size: 0.8125rem;
+                font-weight: 600;
+                color: #1e293b;
+                padding: 6px 12px;
+                min-width: 135px;
+                transition: all 0.15s ease;
+
+                &:focus {
+                    border-color: #4f46e5;
+                    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+                    background-color: #ffffff;
+                }
+            }
+
+            .o_btn_refresh {
+                border-radius: 8px;
+                border: 1px solid #cbd5e1;
+                background-color: #f8fafc;
+                color: #475569;
+                font-size: 0.8125rem;
+                font-weight: 600;
+                padding: 6px 14px;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #ffffff;
+                    color: #4f46e5;
+                    border-color: #4f46e5;
+                    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.12);
+                }
+
+                &.is-refreshing i {
+                    animation: spin 1s infinite linear;
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Executive "Action Center" Banner
+    // -------------------------------------------------------------------------
+    .o_action_center_banner {
+        background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 50%, #fef2f2 100%);
+        border: 1px solid #fde68a;
+        border-radius: 14px;
+        box-shadow: 0 1px 3px rgba(245, 158, 11, 0.08);
+
+        .o_action_center_tag {
+            background: #ffffff;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 4px 10px;
+        }
+
+        .o_alert_pill {
+            background: #ffffff;
+            border: 1px solid #fef08a;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            transition: all 0.15s ease;
+
+            &:hover {
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            }
+
+            .o_alert_btn {
+                font-size: 0.72rem;
+                font-weight: 700;
+                padding: 2px 9px;
+                border-radius: 6px;
+                transition: all 0.15s ease;
+
+                &.o_alert_btn_amber {
+                    background-color: #fef3c7;
+                    color: #b45309;
+                    border: 1px solid #fde68a;
+
+                    &:hover {
+                        background-color: #fde68a;
+                        color: #92400e;
+                    }
+                }
+
+                &.o_alert_btn_danger {
+                    background-color: #fee2e2;
+                    color: #b91c1c;
+                    border: 1px solid #fecaca;
+
+                    &:hover {
+                        background-color: #fecaca;
+                        color: #991b1b;
+                    }
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Streamlined KPI Summary Block
+    // -------------------------------------------------------------------------
+    .o_kpi_summary_section {
+        .o_kpi_block_card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
+                border-color: #cbd5e1;
+            }
+
+            .o_kpi_category_tag {
+                font-size: 0.6875rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+
+                &.text-indigo { color: #4f46e5 !important; }
+                &.text-purple { color: #7c3aed !important; }
+                &.text-info { color: #0284c7 !important; }
+                &.text-warning { color: #d97706 !important; }
+                &.text-success { color: #16a34a !important; }
+                &.text-danger { color: #dc2626 !important; }
+                &.text-primary { color: #2563eb !important; }
+            }
+
+            .o_kpi_icon_bubble {
+                width: 34px;
+                height: 34px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+
+                &.bg-indigo-subtle { background-color: #eef2ff !important; color: #4f46e5 !important; }
+                &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+                &.bg-info-subtle { background-color: #e0f2fe !important; color: #0284c7 !important; }
+                &.bg-warning-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+                &.bg-success-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+                &.bg-danger-subtle { background-color: #fee2e2 !important; color: #dc2626 !important; }
+                &.bg-primary-subtle { background-color: #dbeafe !important; color: #2563eb !important; }
+            }
+
+            .o_kpi_value_large {
+                font-size: 1.85rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.15;
+                letter-spacing: -0.025em;
+
+                &.text-indigo { color: #4f46e5 !important; }
+                &.text-purple { color: #7c3aed !important; }
+                &.text-info { color: #0284c7 !important; }
+                &.text-warning { color: #d97706 !important; }
+                &.text-success { color: #16a34a !important; }
+                &.text-danger { color: #dc2626 !important; }
+            }
+
+            .o_mini_track {
+                height: 5px;
+                background-color: #f1f5f9;
+                border-radius: 9999px;
+                overflow: hidden;
+
+                .o_mini_fill {
+                    height: 100%;
+                    border-radius: 9999px;
+                    transition: width 0.4s ease;
+
+                    &.bg-indigo { background-color: #4f46e5 !important; }
+                    &.bg-purple { background-color: #7c3aed !important; }
+                    &.bg-info { background-color: #0284c7 !important; }
+                    &.bg-warning { background-color: #f59e0b !important; }
+                    &.bg-success { background-color: #10b981 !important; }
+                    &.bg-danger { background-color: #ef4444 !important; }
+                    &.bg-primary { background-color: #3b82f6 !important; }
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Modern Analytics & Distribution Grid (8 + 4 Cols)
+    // -------------------------------------------------------------------------
+    .o_analytics_grid_section {
+        .o_chart_card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+
+            .o_card_title {
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.015em;
+            }
+
+            .o_card_subtitle {
+                font-size: 0.8rem;
+            }
+
+            .o_legend_pill {
+                .o_legend_box {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    &.bg-indigo { background-color: #4f46e5; }
+                }
+            }
+
+            .o_program_breakdown_list {
+                border-color: #f1f5f9 !important;
+
+                .o_prog_dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                }
+
+                .o_prog_name {
+                    font-size: 0.8125rem;
+                }
+
+                .o_prog_badge {
+                    font-size: 0.72rem;
+                    padding: 2px 7px;
+                    border-radius: 6px;
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Bottom Row: Quick Operations
+    // -------------------------------------------------------------------------
+    .o_quick_ops_section {
+        .o_quick_ops_container {
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+
+            .o_card_title {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.015em;
+            }
+        }
+
+        .o_quick_op_tile {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background: #ffffff;
+                border-color: #cbd5e1;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.08);
+
+                .o_op_title {
+                    color: #4f46e5 !important;
+                }
+            }
+
+            .o_op_icon_wrap {
+                width: 36px;
+                height: 36px;
+                border-radius: 9px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+
+                &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+                &.bg-primary-subtle { background-color: #dbeafe !important; color: #2563eb !important; }
+                &.bg-info-subtle { background-color: #e0f2fe !important; color: #0284c7 !important; }
+                &.bg-success-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+                &.bg-warning-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+                &.bg-danger-subtle { background-color: #fee2e2 !important; color: #dc2626 !important; }
+                &.bg-secondary-subtle { background-color: #f1f5f9 !important; color: #64748b !important; }
+            }
+
+            .o_op_title {
+                font-size: 0.84rem;
+                line-height: 1.2;
+                transition: color 0.15s ease;
+            }
+
+            .o_op_desc {
+                font-size: 0.72rem;
+            }
+        }
+    }
+
+
+    // -------------------------------------------------------------------------
+    // Redesigned Executive Structure Styles (Matching Image Mockup)
+    // -------------------------------------------------------------------------
+    .o_header_brand_bubble {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        color: #ffffff;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .o_filter_pill {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        transition: all 0.15s ease;
+
+        &:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+        }
+    }
+
+    .o_kpi_five_section {
+        .o_kpi_five_row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1rem;
+
+            @media (max-width: 1399.98px) {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            @media (max-width: 991.98px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            @media (max-width: 575.98px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .o_kpi_metric_card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            min-height: 130px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
+                border-color: #cbd5e1;
+            }
+
+            .o_kpi_metric_label {
+                font-size: 0.8125rem;
+                font-weight: 600;
+                color: #64748b;
+            }
+
+            .o_kpi_metric_value {
+                font-size: 1.85rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.15;
+                letter-spacing: -0.025em;
+            }
+
+            .o_kpi_icon_bubble {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+
+                &.bg-indigo-subtle { background-color: #eef2ff !important; color: #4f46e5 !important; }
+                &.bg-teal-subtle { background-color: #ccfbf1 !important; color: #0f766e !important; }
+                &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+                &.bg-amber-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+                &.bg-emerald-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+            }
+        }
+    }
+
+    .o_status_chart_card {
+        .o_status_legend_box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background-color: #f1f5f9;
+                border-color: #cbd5e1;
+            }
+        }
+
+        .o_status_dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+    }
+
+    .o_recent_enrollments_card {
+        .o_enrollment_table {
+            thead th {
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                color: #94a3b8;
+                border-bottom: 1px solid #e2e8f0;
+                padding: 8px 6px;
+            }
+
+            tbody tr {
+                transition: background-color 0.15s ease;
+
+                &:hover {
+                    background-color: #f8fafc;
+                }
+
+                td {
+                    padding: 9px 6px;
+                    border-bottom: 1px solid #f1f5f9;
+                    font-size: 0.8125rem;
+                }
+            }
+
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.72rem;
+                font-weight: 600;
+                padding: 3px 8px;
+                border-radius: 6px;
+                line-height: 1.25;
+                letter-spacing: 0.01em;
+
+                &.bg-success-subtle,
+                &.text-success,
+                &[class*="success"] {
+                    background-color: #e8f5f0 !important;
+                    color: #1f7a5c !important;
+                    border: 1px solid #a7f3d0 !important;
+                }
+
+                &.bg-warning-subtle,
+                &.text-warning,
+                &[class*="warning"] {
+                    background-color: #fef3c7 !important;
+                    color: #b45309 !important;
+                    border: 1px solid #fde68a !important;
+                }
+
+                &.bg-danger-subtle,
+                &.text-danger,
+                &[class*="danger"] {
+                    background-color: #fef2f2 !important;
+                    color: #dc2626 !important;
+                    border: 1px solid #fecaca !important;
+                }
+
+                &.bg-info-subtle,
+                &.text-info,
+                &[class*="info"] {
+                    background-color: #eff6ff !important;
+                    color: #2563eb !important;
+                    border: 1px solid #bfdbfe !important;
+                }
+
+                &.bg-secondary-subtle,
+                &.text-secondary {
+                    background-color: #f1f5f9 !important;
+                    color: #475569 !important;
+                    border: 1px solid #e2e8f0 !important;
+                }
+            }
+        }
+    }
+
+    .o_top_departments_card {
+        .o_dept_progress_item {
+            .progress {
+                background-color: #f1f5f9;
+                border-radius: 9999px;
+                overflow: hidden;
+
+                .progress-bar {
+                    border-radius: 9999px;
+                    transition: width 0.4s ease;
+                }
+            }
+        }
+    }
+
+    .o_low_gpa_banner {
+        background-color: #fffbeb !important;
+        border: 1px solid #fde68a !important;
+        box-shadow: 0 1px 2px rgba(245, 158, 11, 0.05);
+
+        .o_alert_icon_bubble {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .o_events_card {
+        .o_event_item {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background-color: #ffffff;
+                border-color: #cbd5e1;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+            }
+
+            .o_event_icon_bubble {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    .o_pending_reports_banner {
+        background-color: #f0f9ff !important;
+        border: 1px solid #bae6fd !important;
+        box-shadow: 0 1px 2px rgba(14, 165, 233, 0.05);
+
+        .o_alert_icon_bubble {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    // Skeleton shimmer box
+    .o_skeleton_box {
+        background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.5s infinite;
+        border-radius: 12px;
+    }
+
+    @keyframes skeleton-shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    @keyframes pulse-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+}
+}

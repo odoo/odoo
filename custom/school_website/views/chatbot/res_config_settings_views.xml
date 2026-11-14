@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_chatbot_ai" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.chatbot.ai</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='website']" position="inside">
+                <block title="AI Live Chatbot (OpenAI / Gemini)" id="chatbot_ai_settings">
+                    <setting string="AI Chatbot Integration" help="Enable AI-powered replies for your website chatbot.">
+                        <field name="chatbot_ai_enabled"/>
+                        <div class="content-group" invisible="not chatbot_ai_enabled">
+                            <div class="row mt16">
+                                <label for="chatbot_ai_provider" class="col-lg-3 o_light_label" string="AI Provider"/>
+                                <field name="chatbot_ai_provider" class="col-lg-9"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="chatbot_ai_api_key" class="col-lg-3 o_light_label" string="Global API Key"/>
+                                <field name="chatbot_ai_api_key" password="True" class="col-lg-9" placeholder="sk-... (OpenAI) or AIza... (Gemini)"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="chatbot_ai_model" class="col-lg-3 o_light_label" string="Default Model"/>
+                                <field name="chatbot_ai_model" class="col-lg-9" placeholder="gpt-4o-mini or gemini-1.5-flash"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="chatbot_ai_system_prompt" class="col-lg-3 o_light_label" string="System Prompt"/>
+                                <field name="chatbot_ai_system_prompt" class="col-lg-9" placeholder="Default instructions for Harvard AI persona..."/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

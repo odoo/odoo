@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="rule_advising_note_admin" model="ir.rule">
+        <field name="name">Admin: all advising notes</field>
+        <field name="model_id" ref="model_university_student_advising_note" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_advising_note_hod" model="ir.rule">
+        <field name="name">HOD: department student non-private advising notes</field>
+        <field name="model_id" ref="model_university_student_advising_note" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">['&amp;', ('is_private', '=', False), '|', ('department_id.head_id.user_id', '=', user.id), ('department_id.head_id', '=', user.teacher_id.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_advising_note_teacher" model="ir.rule">
+        <field name="name">Teacher: own or non-private advisee notes</field>
+        <field name="model_id" ref="model_university_student_advising_note" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">['|', ('user_id', '=', user.id), '&amp;', ('is_private', '=', False), '|', ('student_id.advisor_id.user_id', '=', user.id), ('student_id.enrollment_ids.section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+</odoo>

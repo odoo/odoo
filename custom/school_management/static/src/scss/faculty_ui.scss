@@ -1,0 +1,22 @@
+// University Management System - Faculty UI Polish
+// Scoped to faculty views
+
+.o_university_faculty_kanban {
+    .o_faculty_kanban_card {
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1 !important;
+        }
+
+        .o_kanban_record_title {
+            color: #0f172a;
+            font-weight: 700;
+        }
+    }
+}

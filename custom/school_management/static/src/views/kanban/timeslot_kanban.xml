@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.TimeslotKanbanRenderer">
+        <div class="o_timeslot_kanban o_renderer d-flex w-100 h-100" t-ref="root">
+            <t t-set="columns" t-value="timeslotColumns"/>
+            <t t-if="columns.length === 0">
+                <div class="o_view_nocontent d-flex flex-column align-items-center justify-content-center p-5 text-center w-100 text-muted">
+                    <p class="fs-4 fw-bold">No timeslots found</p>
+                    <p class="small">Try adjusting your filters or create a new timeslot.</p>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-foreach="columns" t-as="col" t-key="col.key">
+                    <div class="o_timeslot_column" t-att-data-day="col.group.value">
+                        <!-- Column Header -->
+                        <div class="o_timeslot_column_header">
+                            <div class="o_timeslot_column_title" t-esc="col.displayName"/>
+                            <div class="o_timeslot_column_subtitle" t-esc="col.headerSummary"/>
+                        </div>
+
+                        <!-- Column Cards Container -->
+                        <div class="o_timeslot_column_cards d-flex flex-column gap-2">
+                            <!-- Morning Cards -->
+                            <t t-if="col.hasMorning">
+                                <div t-if="col.showPeriodLabels" class="o_timeslot_period_label">Morning</div>
+                                <t t-foreach="col.morningCards" t-as="card" t-key="card.id">
+                                    <t t-call="school_management.TimeslotKanbanCard">
+                                        <t t-set="card" t-value="card"/>
+                                    </t>
+                                </t>
+                            </t>
+
+                            <!-- Afternoon Cards -->
+                            <t t-if="col.hasAfternoon">
+                                <div t-if="col.showPeriodLabels" class="o_timeslot_period_label mt-1">Afternoon</div>
+                                <t t-foreach="col.afternoonCards" t-as="card" t-key="card.id">
+                                    <t t-call="school_management.TimeslotKanbanCard">
+                                        <t t-set="card" t-value="card"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="school_management.TimeslotKanbanCard">
+        <div class="o_timeslot_card o_kanban_record"
+             role="button"
+             tabindex="0"
+             t-att-class="{ 'o_timeslot_inactive': !card.isActive, 'o_timeslot_overlap': card.hasOverlap }"
+             t-att-data-id="card.id"
+             t-on-click="() => this.onCardClick(card.record)"
+             t-on-keydown="(ev) => this.onCardKeyDown(card.record, ev)">
+            <!-- Line 1: Time · Duration + Badges -->
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="o_timeslot_time_title fw-bold text-nowrap" t-esc="card.timeDisplay"/>
+                <div class="d-flex gap-1 align-items-center ms-2 flex-shrink-0">
+                    <span t-if="card.hasOverlap" class="o_timeslot_badge o_badge_overlap">Overlap</span>
+                    <span t-if="!card.isActive" class="o_timeslot_badge o_badge_inactive">Inactive</span>
+                </div>
+            </div>
+
+            <!-- Line 2: Real Custom Title (only when slot has a real custom name) -->
+            <div t-if="card.customTitle" class="o_timeslot_custom_title text-truncate" t-esc="card.customTitle"/>
+
+            <!-- Line 3: Load row -->
+            <div class="o_timeslot_load_row mt-2">
+                <div class="d-flex align-items-baseline gap-1 mb-1">
+                    <span class="o_timeslot_session_num fw-bold" title="Scheduled sessions on this slot." t-esc="card.slotCount"/>
+                    <span class="o_timeslot_session_label">sessions</span>
+                </div>
+                <div class="o_timeslot_progress_track">
+                    <div class="o_timeslot_progress_bar"
+                         role="progressbar"
+                         t-att-style="'width: ' + card.barPercent + '%; background-color: ' + card.barColor + ';'"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

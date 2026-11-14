@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==========================================
+         BOOK REQUIREMENT LIST VIEW
+         Model: university.book.requirement
+    =========================================== -->
+
+    <record id="view_university_book_requirement_list"
+            model="ir.ui.view">
+
+        <field name="name">university.book.requirement.list</field>
+        <field name="model">university.book.requirement</field>
+
+        <field name="arch" type="xml">
+            <list create="0">
+
+                <field name="section_id"/>
+                <field name="subject_id"/>
+                <field name="product_id"/>
+                <field name="vendor_id"/>
+
+                <field name="students_needing_books"/>
+                <field name="required_qty"/>
+                <field name="available_qty"/>
+                <field name="purchase_qty"/>
+
+                <field name="purchase_order_id"/>
+                <field name="state" widget="badge"/>
+
+                <field name="company_id"
+                       optional="hide"
+                       groups="base.group_multi_company"/>
+
+            </list>
+        </field>
+    </record>
+
+
+    <!-- ==========================================
+         BOOK REQUIREMENT FORM VIEW
+         Model: university.book.requirement
+    =========================================== -->
+
+    <record id="view_university_book_requirement_form"
+            model="ir.ui.view">
+
+        <field name="name">university.book.requirement.form</field>
+        <field name="model">university.book.requirement</field>
+
+        <field name="arch" type="xml">
+
+            <form create="0" edit="0">
+
+                <!-- Workflow buttons -->
+                <header>
+
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            invisible="state in ('cancel', 'done')"/>
+
+                    <button name="action_reset_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            invisible="state not in ('cancel', 'rfq')"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,ready,rfq,done"/>
+
+                </header>
+
+                <sheet>
+
+                    <group>
+
+                        <group string="Book Information">
+
+                            <field name="section_id"/>
+                            <field name="subject_id"/>
+                            <field name="product_id"/>
+                            <field name="vendor_id"/>
+
+                        </group>
+
+                        <group string="Quantity Information">
+
+                            <field name="student_count"/>
+                            <field name="students_with_books"/>
+                            <field name="students_needing_books"/>
+
+                            <field name="required_qty"/>
+                            <field name="available_qty"/>
+                            <field name="purchase_qty"/>
+
+                        </group>
+
+                        <group string="Purchase Information">
+
+                            <field name="purchase_line_id"/>
+                            <field name="purchase_order_id"/>
+                            <field name="warehouse_id"/>
+
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+
+                        </group>
+
+                    </group>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ==========================================
+         BOOK REQUIREMENT WINDOW ACTION
+    =========================================== -->
+
+    <record id="action_university_book_requirement"
+            model="ir.actions.act_window">
+
+        <field name="name">Book Requirements</field>
+        <field name="res_model">university.book.requirement</field>
+        <field name="view_mode">list,form</field>
+
+    </record>
+
+</odoo>

@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== ADVISING NOTES VIEWS ==================== -->
+    <!-- KANBAN VIEW -->
+    <record id="view_university_student_advising_note_kanban" model="ir.ui.view">
+        <field name="name">university.student.advising.note.kanban</field>
+        <field name="model">university.student.advising.note</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="category" sample="1" quick_create="false">
+                <field name="id"/>
+                <field name="student_id"/>
+                <field name="advisor_id"/>
+                <field name="category"/>
+                <field name="date"/>
+                <field name="note"/>
+                <field name="is_private"/>
+                <field name="department_id"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span t-if="record.category.raw_value === 'academic'" class="badge text-bg-primary">
+                                    <i class="fa fa-graduation-cap me-1" title="Academic"/>Academic
+                                </span>
+                                <span t-elif="record.category.raw_value === 'attendance'" class="badge text-bg-warning text-dark">
+                                    <i class="fa fa-calendar-check-o me-1" title="Attendance"/>Attendance
+                                </span>
+                                <span t-elif="record.category.raw_value === 'career'" class="badge text-bg-success">
+                                    <i class="fa fa-briefcase me-1" title="Career"/>Career
+                                </span>
+                                <span t-else="" class="badge text-bg-secondary">
+                                    <i class="fa fa-heartbeat me-1" title="Wellbeing"/>Wellbeing
+                                </span>
+
+                                <span t-if="record.is_private.raw_value" class="badge text-bg-danger" title="Confidential / Private Note">
+                                    <i class="fa fa-lock me-1" title="Private"/>Private
+                                </span>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <field name="student_id" widget="many2one_avatar"/>
+                                <div class="overflow-hidden">
+                                    <strong class="d-block text-truncate text-dark small">
+                                        <field name="student_id"/>
+                                    </strong>
+                                    <span class="text-muted very-small">
+                                        Advisor: <field name="advisor_id"/>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="text-secondary small mb-2 text-truncate-2 o_kanban_record_subtitle" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.2rem;">
+                                <t t-esc="record.note.value"/>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top text-muted very-small">
+                                <span>
+                                    <i class="fa fa-building-o me-1 text-secondary" title="Department"/>
+                                    <field name="department_id"/>
+                                </span>
+                                <span>
+                                    <i class="fa fa-calendar me-1" title="Date"/>
+                                    <field name="date"/>
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_student_advising_note_list" model="ir.ui.view">
+        <field name="name">university.student.advising.note.list</field>
+        <field name="model">university.student.advising.note</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Advising Notes" default_order="date desc, id desc" sample="1">
+                <field name="date" widget="date" decoration-bf="1"/>
+                <field name="student_id" widget="many2one_avatar" decoration-bf="1"/>
+                <field name="advisor_id" widget="many2one_avatar"/>
+                <field name="category"
+                       widget="badge"
+                       decoration-info="category == 'academic'"
+                       decoration-warning="category == 'attendance'"
+                       decoration-success="category == 'career'"
+                       decoration-muted="category == 'personal'"/>
+                <field name="note" string="Observations &amp; Recommendations"/>
+                <field name="is_private" widget="boolean_toggle" string="Confidential"/>
+                <field name="department_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_student_advising_note_form" model="ir.ui.view">
+        <field name="name">university.student.advising.note.form</field>
+        <field name="model">university.student.advising.note</field>
+        <field name="arch" type="xml">
+            <form string="Advising Note">
+                <sheet>
+                    <!-- Confidential Alert Banner -->
+                    <div class="alert alert-warning d-flex align-items-center gap-2 mb-3 py-2 px-3" role="status" invisible="not is_private">
+                        <i class="fa fa-lock fa-lg text-warning" title="Confidential"/>
+                        <div>
+                            <strong>Confidential Advising Record</strong>
+                            <div class="small">This advising entry is private and restricted to the authoring advisor and university administration.</div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Advisee &amp; Faculty Advisor">
+                            <field name="student_id" options="{'no_create': True}"/>
+                            <field name="advisor_id" options="{'no_create': True}"/>
+                            <field name="department_id" readonly="1"/>
+                        </group>
+                        <group string="Session Metadata">
+                            <field name="date"/>
+                            <field name="category" widget="radio" options="{'horizontal': true}"/>
+                            <field name="is_private" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <group string="Advising Session Observations &amp; Guidance Action Plan">
+                        <field name="note" nolabel="1" placeholder="Record student academic performance observations, career exploration feedback, attendance recovery plans, or personal wellbeing guidance..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_student_advising_note_search" model="ir.ui.view">
+        <field name="name">university.student.advising.note.search</field>
+        <field name="model">university.student.advising.note</field>
+        <field name="arch" type="xml">
+            <search string="Search Advising Notes">
+                <field name="student_id"/>
+                <field name="advisor_id"/>
+                <field name="category"/>
+                <field name="department_id"/>
+                <filter string="My Notes" name="my_notes" domain="[('advisor_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Academic Performance" name="academic" domain="[('category', '=', 'academic')]"/>
+                <filter string="Attendance &amp; Discipline" name="attendance" domain="[('category', '=', 'attendance')]"/>
+                <filter string="Career &amp; Internships" name="career" domain="[('category', '=', 'career')]"/>
+                <filter string="General &amp; Wellbeing" name="personal" domain="[('category', '=', 'personal')]"/>
+                <separator/>
+                <filter string="Confidential / Private" name="private" domain="[('is_private', '=', True)]"/>
+                <filter string="Standard (Public)" name="public" domain="[('is_private', '=', False)]"/>
+                <group>
+                    <filter string="Category" name="group_by_category" context="{'group_by': 'category'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Advisor" name="group_by_advisor" context="{'group_by': 'advisor_id'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                </group>
+                <searchpanel>
+                    <field name="category" icon="fa-tags" enable_counters="1"/>
+                    <field name="department_id" icon="fa-building-o" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_student_advising_note" model="ir.actions.act_window">
+        <field name="name">Advising Notes</field>
+        <field name="res_model">university.student.advising.note</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_student_advising_note_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Record student academic and wellbeing advising notes.
+            </p>
+        </field>
+    </record>
+
+
+    <!-- ==================== FOLLOW-UP ACTION VIEWS ==================== -->
+    <!-- KANBAN VIEW -->
+    <record id="view_university_student_followup_kanban" model="ir.ui.view">
+        <field name="name">university.student.followup.kanban</field>
+        <field name="model">university.student.followup</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1" quick_create="false" limit="10">
+                <field name="id"/>
+                <field name="title"/>
+                <field name="student_id"/>
+                <field name="advisor_id"/>
+                <field name="action_type"/>
+                <field name="date_deadline"/>
+                <field name="state"/>
+                <field name="visible_to_student"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="badge text-bg-light border text-truncate">
+                                    <i class="fa fa-tasks me-1 text-primary" title="Action Type"/>
+                                    <field name="action_type"/>
+                                </span>
+                                <span t-if="record.state.raw_value === 'completed'" class="badge text-bg-success">
+                                    <i class="fa fa-check me-1" title="Completed"/>Done
+                                </span>
+                                <span t-elif="record.state.raw_value === 'in_progress'" class="badge text-bg-info">
+                                    <i class="fa fa-spinner fa-spin me-1" title="In Progress"/>In Progress
+                                </span>
+                                <span t-elif="record.state.raw_value === 'pending'" class="badge text-bg-warning text-dark">
+                                    <i class="fa fa-clock-o me-1" title="Pending"/>Pending
+                                </span>
+                                <span t-else="" class="badge text-bg-secondary">Cancelled</span>
+                            </div>
+
+                            <strong class="fs-6 o_kanban_record_title text-dark d-block mb-2 text-truncate" t-att-title="record.title.value">
+                                <field name="title"/>
+                            </strong>
+
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <field name="student_id" widget="many2one_avatar"/>
+                                <div class="overflow-hidden">
+                                    <strong class="d-block text-truncate text-dark small">
+                                        <field name="student_id"/>
+                                    </strong>
+                                    <span class="text-muted very-small">
+                                        Assigned: <field name="advisor_id"/>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top text-muted small">
+                                <span>
+                                    <i class="fa fa-calendar-check-o me-1" title="Deadline"/>
+                                    <field name="date_deadline"/>
+                                </span>
+                                <span t-if="record.visible_to_student.raw_value" class="badge text-bg-light border" title="Visible on Student Portal">
+                                    <i class="fa fa-eye me-1 text-info" title="Student Portal"/>Shared
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_student_followup_list" model="ir.ui.view">
+        <field name="name">university.student.followup.list</field>
+        <field name="model">university.student.followup</field>
+        <field name="arch" type="xml">
+            <list string="Follow-up Actions" limit="10" default_order="date_deadline asc, id desc" sample="1">
+                <field name="date_deadline" widget="date" decoration-bf="1"/>
+                <field name="title" decoration-bf="1"/>
+                <field name="student_id" widget="many2one_avatar" decoration-bf="1"/>
+                <field name="advisor_id" widget="many2one_avatar"/>
+                <field name="action_type" widget="badge"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-warning="state == 'pending'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-success="state == 'completed'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="visible_to_student" widget="boolean_toggle" string="Student Portal"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_student_followup_form" model="ir.ui.view">
+        <field name="name">university.student.followup.form</field>
+        <field name="model">university.student.followup</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up Action">
+                <header>
+                    <button name="action_start"
+                            string="Start Progress"
+                            type="object"
+                            class="oe_highlight btn-primary"
+                            invisible="state != 'pending'"
+                            icon="fa-play"/>
+                    <button name="action_complete"
+                            string="Mark Completed"
+                            type="object"
+                            class="oe_highlight btn-success"
+                            invisible="state not in ('pending', 'in_progress')"
+                            icon="fa-check"/>
+                    <button name="action_cancel"
+                            string="Cancel Action"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state in ('completed', 'cancelled')"/>
+                    <button name="action_reset"
+                            string="Reset to Pending"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title" string="Action Plan Title"/>
+                        <h1 class="text-primary">
+                            <field name="title" placeholder="e.g. Schedule GPA Improvement &amp; Tutoring Review"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Advisee &amp; Assigned Faculty">
+                            <field name="student_id" options="{'no_create': True}"/>
+                            <field name="advisor_id" options="{'no_create': True}"/>
+                            <field name="department_id" readonly="1"/>
+                        </group>
+                        <group string="Timeline &amp; Settings">
+                            <field name="action_type"/>
+                            <field name="date_deadline"/>
+                            <field name="visible_to_student" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Detailed Action Plan &amp; Interventions">
+                        <field name="description" nolabel="1" placeholder="Specify next milestones, recommended peer tutoring schedule, or agreed student academic commitments..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_student_followup_search" model="ir.ui.view">
+        <field name="name">university.student.followup.search</field>
+        <field name="model">university.student.followup</field>
+        <field name="arch" type="xml">
+            <search string="Search Follow-up Actions">
+                <field name="title"/>
+                <field name="student_id"/>
+                <field name="advisor_id"/>
+                <separator/>
+                <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="My Assigned" name="my_assigned" domain="[('advisor_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Visible to Student" name="shared" domain="[('visible_to_student', '=', True)]"/>
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Action Type" name="group_by_type" context="{'group_by': 'action_type'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Advisor" name="group_by_advisor" context="{'group_by': 'advisor_id'}"/>
+                    <filter string="Deadline" name="group_by_deadline" context="{'group_by': 'date_deadline'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" icon="fa-tasks" enable_counters="1"/>
+                    <field name="action_type" icon="fa-tag" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_student_followup" model="ir.actions.act_window">
+        <field name="name">Follow-up Actions</field>
+        <field name="res_model">university.student.followup</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_university_student_followup_search"/>
+        <field name="limit">10</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage academic advising follow-up actions and student interventions.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.AttendanceGrid">
+        <div class="o_att_grid p-4 bg-light h-100">
+            <!-- HEADER TOOLBAR -->
+            <div class="o_att_toolbar d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h1 class="o_att_title h3 fw-bold mb-1 text-dark d-flex align-items-center gap-2">
+                        <i class="fa fa-calendar-check-o text-primary" title="Attendance Grid" aria-hidden="true"/>
+                        <span>Attendance Grid</span>
+                        <span class="badge rounded-pill bg-primary-subtle text-primary fs-6 border border-primary-subtle ms-2"
+                              t-if="state.grid">
+                            <t t-esc="summary.totalSections"/> Sections
+                        </span>
+                    </h1>
+                    <p class="text-muted small mb-0">
+                        Monthly class attendance tracking, daily matrix and section performance
+                    </p>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <!-- Month Selector -->
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <span class="input-group-text bg-white text-muted">Month</span>
+                        <select class="form-select form-select-sm" t-on-change="onMonthChange" t-att-disabled="state.loading">
+                            <option t-foreach="[1,2,3,4,5,6,7,8,9,10,11,12]" t-as="m" t-key="m"
+                                    t-att-value="m" t-att-selected="state.month === m"
+                                    t-esc="m"/>
+                        </select>
+                    </div>
+
+                       <!-- Year Selector -->
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <span class="input-group-text bg-white text-muted">Year</span>
+                        <input type="number" min="2000" max="2100" class="form-control form-control-sm" style="width: 85px;"
+                               t-att-value="state.year"
+                               t-on-change="onYearChange"
+                               t-att-disabled="state.loading"/>
+                    </div>
+
+                    <!-- Section Selector -->
+                    <select class="form-select form-select-sm" style="width: auto; max-width: 220px;"
+                            t-on-change="onSectionFilterChange"
+                            t-att-disabled="state.loading">
+                        <option value="all">All Class Sections</option>
+                        <t t-if="state.grid and state.grid.sections">
+                            <option t-foreach="state.grid.sections" t-as="s" t-key="s.id"
+                                    t-att-value="s.id"
+                                    t-att-selected="state.selectedSectionId === ('' + s.id)"
+                                    t-esc="s.name"/>
+                        </t>
+                    </select>
+
+                    <!-- Search Input -->
+                    <div class="input-group input-group-sm" style="width: 180px;">
+                        <span class="input-group-text bg-white text-muted">
+                            <i class="fa fa-search" aria-hidden="true"/>
+                        </span>
+                        <input type="text" class="form-control form-control-sm"
+                               placeholder="Search section..."
+                               t-on-input="onSearchInput"
+                               t-att-disabled="state.loading"/>
+                    </div>
+
+                    <!-- View Switcher (Kanban vs Matrix) -->
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button"
+                                t-att-class="'btn ' + (state.viewMode === 'kanban' ? 'btn-primary' : 'btn-outline-secondary')"
+                                t-on-click="() => this.setViewMode('kanban')"
+                                title="Kanban Section Cards" aria-label="Kanban View">
+                            <i class="fa fa-th-large me-1" aria-hidden="true"/>Kanban
+                        </button>
+                        <button type="button"
+                                t-att-class="'btn ' + (state.viewMode === 'matrix' ? 'btn-primary' : 'btn-outline-secondary')"
+                                t-on-click="() => this.setViewMode('matrix')"
+                                title="Daily Matrix Grid" aria-label="Matrix View">
+                            <i class="fa fa-table me-1" aria-hidden="true"/>Matrix Grid
+                        </button>
+                    </div>
+
+                    <!-- Print Wizard Button -->
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="() => this.openPrintWizard()"
+                            t-att-disabled="state.loading" title="Print Attendance Grid">
+                        <i class="fa fa-print me-1" aria-hidden="true"/>Print
+                    </button>
+
+                    <!-- Refresh Button -->
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="refresh" t-att-disabled="state.loading"
+                            title="Refresh" aria-label="Refresh">
+                        <i class="fa fa-refresh me-1" t-att-class="state.loading ? 'fa-spin' : ''" aria-hidden="true"/>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ERROR ALERT -->
+            <div class="alert alert-danger d-flex align-items-center mb-4" t-if="state.error" role="alert">
+                <i class="fa fa-exclamation-triangle me-2 fs-5" aria-hidden="true"/>
+                <span t-esc="state.error"/>
+            </div>
+
+            <!-- LOADING SPINNER -->
+            <div class="text-center py-5" t-if="state.loading and !state.grid">
+                <i class="fa fa-spinner fa-spin fa-2x text-muted" aria-hidden="true"/>
+                <div class="text-muted mt-2">Loading attendance grid records...</div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <t t-if="state.grid">
+                <!-- KPI SUMMARY CARDS -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="card shadow-sm border-0 h-100 rounded-3">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <div class="rounded-circle p-3 d-flex align-items-center justify-content-center bg-primary-subtle text-primary" style="width: 52px; height: 52px;">
+                                    <i class="fa fa-graduation-cap fa-lg" aria-hidden="true"/>
+                                </div>
+                                <div>
+                                    <div class="text-muted small fw-semibold">Class Sections</div>
+                                    <div class="fs-4 fw-bold text-dark">
+                                        <t t-esc="summary.totalSections"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="card shadow-sm border-0 h-100 rounded-3">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <div class="rounded-circle p-3 d-flex align-items-center justify-content-center bg-info-subtle text-info" style="width: 52px; height: 52px;">
+                                    <i class="fa fa-users fa-lg" aria-hidden="true"/>
+                                </div>
+                                <div>
+                                    <div class="text-muted small fw-semibold">Enrolled Students</div>
+                                    <div class="fs-4 fw-bold text-dark">
+                                        <t t-esc="summary.totalStudents"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="card shadow-sm border-0 h-100 rounded-3">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <div class="rounded-circle p-3 d-flex align-items-center justify-content-center bg-success-subtle text-success" style="width: 52px; height: 52px;">
+                                    <i class="fa fa-percent fa-lg" aria-hidden="true"/>
+                                </div>
+                                <div>
+                                    <div class="text-muted small fw-semibold">Average Attendance</div>
+                                    <div class="fs-4 fw-bold text-dark">
+                                        <t t-esc="summary.avgRate"/>%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="card shadow-sm border-0 h-100 rounded-3">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <div class="rounded-circle p-3 d-flex align-items-center justify-content-center bg-danger-subtle text-danger" style="width: 52px; height: 52px;">
+                                    <i class="fa fa-exclamation-triangle fa-lg" aria-hidden="true"/>
+                                </div>
+                                <div>
+                                    <div class="text-muted small fw-semibold">Students At Risk</div>
+                                    <div class="fs-4 fw-bold" t-att-class="summary.totalAtRisk > 0 ? 'text-danger' : 'text-success'">
+                                        <t t-esc="summary.totalAtRisk"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div class="card shadow-sm border-0 rounded-3 p-5 text-center my-4" t-if="!filteredSections.length">
+                    <div class="rounded-circle bg-info-subtle text-info d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width: 64px; height: 64px;">
+                        <i class="fa fa-info fa-2x" aria-hidden="true"/>
+                    </div>
+                    <h4 class="h5 fw-bold text-dark">No Class Sections Found</h4>
+                    <p class="text-muted mb-0">
+                        No class sections are available for the selected filters. Please select another month/year or adjust your search.
+                    </p>
+                </div>
+
+                <!-- KANBAN VIEW MODE -->
+                <t t-if="state.viewMode === 'kanban'">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-4">
+                        <t t-foreach="filteredSections" t-as="section" t-key="section.id">
+                            <t t-set="secRate" t-value="sectionRate(section)"/>
+                            <t t-set="secAtRisk" t-value="sectionAtRiskCount(section, state.grid.threshold)"/>
+                            <div class="col">
+                                <div class="card h-100 shadow-sm border rounded-3 o_att_section_card bg-white">
+                                    <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                        <!-- Header -->
+                                        <div>
+                                            <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                                <div class="min-w-0">
+                                                    <h5 class="card-title fw-bold text-dark text-truncate mb-1 fs-6 cursor-pointer"
+                                                        t-att-title="section.display_name"
+                                                        t-on-click="() => this.openSectionMatrix(section.id)">
+                                                        <i class="fa fa-users me-1 text-primary" aria-hidden="true"/>
+                                                        <t t-esc="section.name"/>
+                                                    </h5>
+                                                    <div class="d-flex flex-wrap align-items-center gap-1">
+                                                        <span class="badge text-bg-light border text-muted small" t-if="section.department">
+                                                            <i class="fa fa-building me-1" aria-hidden="true"/>
+                                                            <t t-esc="section.department"/>
+                                                        </span>
+                                                        <span class="badge text-bg-light border text-muted small" t-if="section.semester">
+                                                            <t t-esc="section.semester"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <span t-att-class="getHealthBadgeClass(secRate)"
+                                                      t-esc="getHealthLabel(secRate)"/>
+                                            </div>
+
+                                            <div class="text-muted small text-truncate mb-3" t-if="section.teacher">
+                                                <i class="fa fa-user me-1 text-secondary" aria-hidden="true"/>
+                                                Instructor: <span class="fw-semibold text-dark"><t t-esc="section.teacher"/></span>
+                                            </div>
+
+                                            <!-- Attendance Rate Progress Gauge -->
+                                            <div class="p-2 mb-3 rounded-2 bg-light border">
+                                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                                    <span class="text-muted small fw-semibold">Attendance Performance</span>
+                                                    <span class="fw-bold fs-6"
+                                                          t-att-class="secRate &gt;= 90 ? 'text-success' : (secRate &gt;= 75 ? 'text-warning' : 'text-danger')"
+                                                          t-esc="secRate + '%'"/>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div t-att-class="'progress-bar progress-bar-striped progress-bar-animated ' + getProgressBarClass(secRate)"
+                                                         role="progressbar"
+                                                         t-att-style="'width: ' + secRate + '%;'"
+                                                         t-att-aria-valuenow="secRate"
+                                                         aria-valuemin="0" aria-valuemax="100"/>
+                                                </div>
+                                            </div>
+
+                                            <!-- Stats Grid -->
+                                            <div class="row g-2 mb-3 text-center">
+                                                <div class="col-4">
+                                                    <div class="p-2 rounded bg-light border">
+                                                        <div class="text-muted small">Students</div>
+                                                        <div class="fw-bold text-dark"><t t-esc="section.students.length"/></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="p-2 rounded bg-light border">
+                                                        <div class="text-muted small">Recorded</div>
+                                                        <div class="fw-bold text-dark"><t t-esc="sectionTotalLogs(section)"/></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="p-2 rounded bg-light border">
+                                                        <div class="text-muted small">At Risk</div>
+                                                        <div t-att-class="'fw-bold ' + (secAtRisk &gt; 0 ? 'text-danger' : 'text-success')">
+                                                            <t t-esc="secAtRisk"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Card Footer: Quick Actions -->
+                                        <div class="mt-2 pt-2 border-top d-flex align-items-center justify-content-between gap-1">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary py-1 px-2 flex-grow-1"
+                                                    t-on-click="() => this.openSectionMatrix(section.id)"
+                                                    title="Open Daily Attendance Matrix">
+                                                <i class="fa fa-table me-1" aria-hidden="true"/>Daily Grid
+                                            </button>
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary py-1 px-2"
+                                                    t-on-click="() => this.openAttendanceSheet(section.id)"
+                                                    title="Attendance Sheet">
+                                                <i class="fa fa-calendar-check-o" aria-hidden="true"/>
+                                            </button>
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-success py-1 px-2"
+                                                    t-if="section.can_edit"
+                                                    t-on-click="() => this.openTakeAttendance(section.id)"
+                                                    title="Take Attendance">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"/>
+                                            </button>
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-secondary py-1 px-2"
+                                                    t-on-click="() => this.openPrintWizard(section.id)"
+                                                    title="Print Section Grid">
+                                                <i class="fa fa-print" aria-hidden="true"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- MATRIX GRID VIEW MODE -->
+                <t t-else="">
+                    <!-- Legend Bar -->
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 bg-white border rounded-3 shadow-sm mb-4">
+                        <div class="d-flex flex-wrap align-items-center gap-3">
+                            <span class="text-muted small fw-semibold">
+                                <i class="fa fa-info-circle me-1 text-primary" aria-hidden="true"/>Status Codes:
+                            </span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">P = Present</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle">A = Absent</span>
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle">L = Late</span>
+                            <span class="badge bg-secondary-subtle text-secondary border">E = Excused</span>
+                            <span class="text-muted small">
+                                <i class="fa fa-asterisk text-warning me-1" aria-hidden="true"/>* = Holiday / Weekend
+                            </span>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                t-on-click="() => this.setViewMode('kanban')">
+                            <i class="fa fa-th-large me-1" aria-hidden="true"/>Back to Section Cards
+                        </button>
+                    </div>
+
+                    <!-- Render Matrix for each filtered section -->
+                    <div class="o_att_grid_section card shadow-sm border rounded-3 bg-white mb-4 overflow-hidden"
+                         t-foreach="filteredSections" t-as="section" t-key="section.id">
+                        <!-- Section Header Banner -->
+                        <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-primary text-white rounded p-2 d-flex align-items-center justify-content-center"
+                                     style="width: 38px; height: 38px;">
+                                    <i class="fa fa-users" aria-hidden="true"/>
+                                </div>
+                                <div>
+                                    <h4 class="h6 fw-bold mb-0 text-dark" t-esc="section.display_name"/>
+                                    <div class="d-flex align-items-center gap-2 text-muted small">
+                                        <span t-if="section.department" t-esc="section.department"/>
+                                        <span t-if="section.teacher" t-esc="'• ' + section.teacher"/>
+                                        <span class="badge text-bg-light border text-muted">
+                                            <t t-esc="section.students.length"/> Students
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                        t-on-click="() => this.openAttendanceSheet(section.id)">
+                                    <i class="fa fa-calendar-check-o me-1" aria-hidden="true"/>Sheet
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-success"
+                                        t-if="section.can_edit"
+                                        t-on-click="() => this.openTakeAttendance(section.id)">
+                                    <i class="fa fa-check me-1" aria-hidden="true"/>Take Attendance
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        t-on-click="() => this.openPrintWizard(section.id)">
+                                    <i class="fa fa-print" aria-hidden="true"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Daily Matrix Table -->
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered align-middle mb-0 o_att_grid_table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-center" style="width: 35px;">#</th>
+                                        <th style="min-width: 180px;">Student</th>
+                                        <th t-foreach="state.grid.calendar.days" t-as="day" t-key="day.day"
+                                            t-att-class="'text-center o_att_day' + ((day.weekend || day.holiday) ? ' o_att_day_off' : '')"
+                                            t-att-title="day.holiday ? 'Holiday' : (day.weekend ? 'Weekend' : '')">
+                                            <div class="small fw-bold" t-esc="day.day"/>
+                                            <i t-if="day.holiday" class="fa fa-asterisk text-warning" title="Holiday"/>
+                                        </th>
+                                        <th class="text-center" title="Absent">Abs</th>
+                                        <th class="text-center" title="Present">Pre</th>
+                                        <th class="text-center" title="Late">Late</th>
+                                        <th class="text-center" title="Excused">Exc</th>
+                                        <th class="text-center" style="min-width: 60px;">Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="section.students" t-as="student" t-key="student.student_id">
+                                        <td class="text-center text-muted small" t-esc="student_index + 1"/>
+                                        <td class="o_att_student">
+                                            <div class="d-flex align-items-center gap-1">
+                                                <span class="fw-semibold text-dark text-truncate" t-esc="student.name"/>
+                                                <span class="text-muted small" t-if="student.code" t-esc="'(' + student.code + ')'"/>
+                                                <i class="fa fa-exclamation-triangle text-danger ms-1"
+                                                   title="Below attendance threshold"
+                                                   t-if="isRisk(student, state.grid.threshold)"/>
+                                            </div>
+                                        </td>
+                                        <td t-foreach="student.cells" t-as="cell" t-key="cell.day"
+                                            t-att-class="'text-center o_att_day' + ((state.grid.calendar.days[cell.day - 1].weekend || state.grid.calendar.days[cell.day - 1].holiday) ? ' o_att_day_off' : '')">
+                                            <t t-if="state.grid.calendar.days[cell.day - 1].weekend || state.grid.calendar.days[cell.day - 1].holiday">
+                                                <span class="text-muted">—</span>
+                                            </t>
+                                            <select t-elif="section.can_edit"
+                                                    class="o_att_cell_select"
+                                                    t-att-disabled="state.savingCell"
+                                                    t-on-change="(ev) => this.onCellChange(section.id, student.student_id, cell.day, ev)">
+                                                <option value="" t-att-selected="!cell.status">·</option>
+                                                <option t-foreach="state.statuses" t-as="option" t-key="option.value"
+                                                        t-att-value="'' + option.value"
+                                                        t-att-selected="cell.status === option.value"
+                                                        t-esc="option.key"/>
+                                            </select>
+                                            <span t-else="" t-att-class="'o_att_cell_code o_att_cell_' + cell.status"
+                                                  t-att-title="cell.remark || ''"
+                                                  t-esc="cell.code || ''"/>
+                                        </td>
+                                        <td class="text-center text-danger fw-semibold" t-esc="studentCounts(student).absent"/>
+                                        <td class="text-center text-success fw-semibold" t-esc="studentCounts(student).present"/>
+                                        <td class="text-center text-warning fw-semibold" t-esc="studentCounts(student).late"/>
+                                        <td class="text-center text-secondary" t-esc="studentCounts(student).excused"/>
+                                        <td class="text-center"
+                                            t-att-class="'o_att_grid_rate ' + (isRisk(student, state.grid.threshold) ? 'text-danger' : 'text-success')"
+                                            t-esc="rate(student) + '%'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

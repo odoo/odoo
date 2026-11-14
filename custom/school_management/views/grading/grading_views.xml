@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =================================================================== -->
+    <!-- GRADE SCALE VIEWS                                                   -->
+    <!-- =================================================================== -->
+    <record id="view_university_grade_scale_list" model="ir.ui.view">
+        <field name="name">university.grade.scale.list</field>
+        <field name="model">university.grade.scale</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Grade Scales">
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_grade_scale_form" model="ir.ui.view">
+        <field name="name">university.grade.scale.form</field>
+        <field name="model">university.grade.scale</field>
+        <field name="arch" type="xml">
+            <form string="Grade Scale">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <field name="line_ids">
+                        <list limit="10" editable="bottom">
+                            <field name="name"/>
+                            <field name="min_score"/>
+                            <field name="max_score"/>
+                            <field name="grade_point"/>
+                            <field name="is_passing"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_university_grade_scale" model="ir.actions.act_window">
+        <field name="name">Grade Scales</field>
+        <field name="res_model">university.grade.scale</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- ASSESSMENT CATEGORY VIEWS                                           -->
+    <!-- =================================================================== -->
+    <record id="view_university_assessment_category_search" model="ir.ui.view">
+        <field name="name">university.assessment.category.search</field>
+        <field name="model">university.assessment.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Assessment Categories">
+                <field name="name" string="Category" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="code"/>
+                <field name="evaluation_type"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Coursework" name="filter_coursework" domain="[('evaluation_type', '=', 'coursework')]"/>
+                <filter string="Exams" name="filter_exam" domain="[('evaluation_type', '=', 'exam')]"/>
+                <filter string="Quizzes" name="filter_quiz" domain="[('evaluation_type', '=', 'quiz')]"/>
+                <filter string="Attendance" name="filter_attendance" domain="[('evaluation_type', '=', 'attendance')]"/>
+                <separator/>
+                <filter string="High Weight (&gt;= 20%)" name="filter_high_weight" domain="[('weight', '&gt;=', 20)]"/>
+                <group>
+                    <filter string="Evaluation Type" name="group_evaluation_type" context="{'group_by': 'evaluation_type'}"/>
+                    <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
+                </group>
+                <searchpanel>
+                    <field name="evaluation_type" icon="fa-tasks" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_university_assessment_category_list" model="ir.ui.view">
+        <field name="name">university.assessment.category.list</field>
+        <field name="model">university.assessment.category</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Assessment Categories" default_order="sequence, id">
+                <field name="sequence" widget="handle"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="code" widget="badge"
+                       decoration-info="evaluation_type == 'coursework'"
+                       decoration-danger="evaluation_type == 'exam'"
+                       decoration-warning="evaluation_type == 'quiz'"
+                       decoration-success="evaluation_type == 'attendance'"/>
+                <field name="evaluation_type" widget="badge"/>
+                <field name="weight" string="Weight (%)" sum="Total Weight" decoration-bf="1"/>
+                <field name="assignment_count" string="Assignments" decoration-muted="assignment_count == 0"/>
+                <field name="result_count" string="Graded Records" decoration-muted="result_count == 0"/>
+                <field name="avg_score" string="Avg Score (%)" widget="progressbar" optional="show"/>
+                <field name="passing_rate" string="Pass Rate (%)" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_assessment_category_kanban" model="ir.ui.view">
+        <field name="name">university.assessment.category.kanban</field>
+        <field name="model">university.assessment.category</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" class="o_university_assessment_category_kanban">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="weight"/>
+                <field name="evaluation_type"/>
+                <field name="icon"/>
+                <field name="color"/>
+                <field name="active"/>
+                <field name="assignment_count"/>
+                <field name="result_count"/>
+                <field name="avg_score"/>
+                <field name="passing_rate"/>
+                <field name="description"/>
+                <templates>
+                    <t t-name="card" class="o_assessment_cat_card p-3 d-flex flex-column justify-content-between h-100">
+                        <div>
+                            <!-- Header: Icon, Category Name, Code, and Weight Badge -->
+                            <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                <div class="d-flex align-items-center gap-2 min-w-0">
+                                    <t t-if="record.evaluation_type.raw_value == 'exam'">
+                                        <div class="o_category_icon_tile o_category_exam shadow-sm flex-shrink-0">
+                                            <i class="fa fa-graduation-cap" title="Examination" aria-hidden="true"/>
+                                        </div>
+                                    </t>
+                                    <t t-elif="record.evaluation_type.raw_value == 'quiz'">
+                                        <div class="o_category_icon_tile o_category_quiz shadow-sm flex-shrink-0">
+                                            <i class="fa fa-question-circle" title="Quiz" aria-hidden="true"/>
+                                        </div>
+                                    </t>
+                                    <t t-elif="record.evaluation_type.raw_value == 'attendance'">
+                                        <div class="o_category_icon_tile o_category_attendance shadow-sm flex-shrink-0">
+                                            <i class="fa fa-calendar-check-o" title="Attendance" aria-hidden="true"/>
+                                        </div>
+                                    </t>
+                                    <t t-elif="record.evaluation_type.raw_value == 'practical'">
+                                        <div class="o_category_icon_tile o_category_practical shadow-sm flex-shrink-0">
+                                            <i class="fa fa-flask" title="Practical" aria-hidden="true"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="o_category_icon_tile o_category_coursework shadow-sm flex-shrink-0">
+                                            <i class="fa fa-file-text-o" title="Coursework" aria-hidden="true"/>
+                                        </div>
+                                    </t>
+                                    <div class="min-w-0 flex-grow-1">
+                                        <strong class="fs-6 fw-bold text-dark text-truncate d-block" t-att-title="record.name.value">
+                                            <field name="name"/>
+                                        </strong>
+                                        <div class="d-flex align-items-center gap-1 mt-1">
+                                            <span class="badge bg-light text-secondary border px-1 py-0 fs-7 fw-semibold font-monospace">
+                                                <field name="code"/>
+                                            </span>
+                                            <span class="text-muted small text-truncate">
+                                                <field name="evaluation_type"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end flex-shrink-0">
+                                    <div class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-6 fw-bold">
+                                        <field name="weight"/>%
+                                    </div>
+                                    <div class="text-muted small" style="font-size: 0.7rem;">Weight</div>
+                                </div>
+                            </div>
+
+                            <!-- Weight Progress Bar -->
+                            <div class="progress my-2" style="height: 5px; background-color: #f1f5f9;">
+                                <div class="progress-bar rounded" role="progressbar"
+                                     t-attf-style="width: #{record.weight.raw_value || 0}%; background-color: #{record.evaluation_type.raw_value == 'exam' ? '#dc2626' : (record.evaluation_type.raw_value == 'quiz' ? '#7c3aed' : (record.evaluation_type.raw_value == 'attendance' ? '#16a34a' : '#2563eb'))};"
+                                     t-att-aria-valuenow="record.weight.raw_value"
+                                     aria-valuemin="0" aria-valuemax="100"/>
+                            </div>
+
+                            <!-- Description Snippet -->
+                            <div class="text-muted small my-2" style="font-size: 0.8rem; line-height: 1.35; min-height: 2.7rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" t-att-title="record.description.value">
+                                <t t-if="record.description.raw_value">
+                                    <i class="fa fa-info-circle text-info me-1" title="Policy"/>
+                                    <field name="description"/>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted fst-italic">Standard university assessment criteria and scoring policy apply.</span>
+                                </t>
+                            </div>
+
+                            <!-- 2x2 Metric Cards Grid -->
+                            <div class="row g-2 my-2 pt-2 border-top">
+                                <div class="col-6">
+                                    <button type="object" name="action_view_assignments" class="btn btn-sm btn-light border w-100 p-2 text-start d-flex align-items-center justify-content-between rounded-2 shadow-none o_metric_box" title="View Linked Assignments">
+                                        <div class="d-flex align-items-center gap-2 min-w-0">
+                                            <div class="o_metric_icon rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center">
+                                                <i class="fa fa-file-text-o fs-7" title="Assignments" aria-hidden="true"/>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <div class="fw-bold text-dark fs-6 lh-1"><field name="assignment_count"/></div>
+                                                <div class="text-muted small text-truncate" style="font-size: 0.7rem;">Assignments</div>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted fs-8 ms-1" aria-hidden="true"/>
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="object" name="action_view_results" class="btn btn-sm btn-light border w-100 p-2 text-start d-flex align-items-center justify-content-between rounded-2 shadow-none o_metric_box" title="View Assessment Results">
+                                        <div class="d-flex align-items-center gap-2 min-w-0">
+                                            <div class="o_metric_icon rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center">
+                                                <i class="fa fa-check-circle fs-7" title="Graded Records" aria-hidden="true"/>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <div class="fw-bold text-dark fs-6 lh-1"><field name="result_count"/></div>
+                                                <div class="text-muted small text-truncate" style="font-size: 0.7rem;">Records</div>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted fs-8 ms-1" aria-hidden="true"/>
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded-2 bg-light d-flex align-items-center gap-2">
+                                        <div class="o_metric_icon rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center">
+                                            <i class="fa fa-line-chart fs-7" title="Average Score" aria-hidden="true"/>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="fw-bold text-dark fs-6 lh-1"><field name="avg_score"/>%</div>
+                                            <div class="text-muted small text-truncate" style="font-size: 0.7rem;">Avg Score</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded-2 bg-light d-flex align-items-center gap-2">
+                                        <div class="o_metric_icon rounded-circle bg-warning-subtle text-warning d-flex align-items-center justify-content-center">
+                                            <i class="fa fa-trophy fs-7" title="Passing Rate" aria-hidden="true"/>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="fw-bold text-dark fs-6 lh-1"><field name="passing_rate"/>%</div>
+                                            <div class="text-muted small text-truncate" style="font-size: 0.7rem;">Pass Rate</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <footer class="d-flex align-items-center justify-content-between pt-2 mt-auto border-top">
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="object" name="action_view_assignments" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold text-primary">
+                                    <span>View Work</span>
+                                    <i class="fa fa-arrow-right ms-1" style="font-size: 0.75rem;" title="View Work"/>
+                                </button>
+                                <span class="text-muted small">|</span>
+                                <button type="object" name="action_view_results" class="btn btn-link btn-sm p-0 text-decoration-none fw-semibold text-success">
+                                    <span>Scores</span>
+                                    <i class="fa fa-table ms-1" style="font-size: 0.75rem;" title="Score Records"/>
+                                </button>
+                            </div>
+                            <div>
+                                <t t-if="record.active.raw_value">
+                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2 py-1 fs-7 fw-medium">Active</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 fs-7 fw-medium">Archived</span>
+                                </t>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_university_assessment_category_form" model="ir.ui.view">
+        <field name="name">university.assessment.category.form</field>
+        <field name="model">university.assessment.category</field>
+        <field name="arch" type="xml">
+            <form string="Assessment Category">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assignments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o">
+                            <field name="assignment_count" widget="statinfo" string="Assignments"/>
+                        </button>
+                        <button name="action_view_exams"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-graduation-cap">
+                            <field name="exam_count" widget="statinfo" string="Exams"/>
+                        </button>
+                        <button name="action_view_results"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-check-circle">
+                            <field name="result_count" widget="statinfo" string="Graded Records"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title">
+                        <label for="name" string="Assessment Category"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Midterm Examination" required="1"/>
+                        </h1>
+                        <div class="d-flex align-items-center gap-2 mt-1">
+                            <span class="text-muted fw-bold">Code:</span>
+                            <field name="code" placeholder="e.g. MIDTERM" required="1"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Configuration &amp; Weighting">
+                            <field name="evaluation_type"/>
+                            <label for="weight" string="Grade Weight"/>
+                            <div class="o_row">
+                                <field name="weight" class="oe_inline"/>
+                                <span class="fw-bold">%</span>
+                            </div>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Performance Metrics &amp; Styling">
+                            <field name="avg_score" widget="progressbar"/>
+                            <field name="passing_rate" widget="progressbar"/>
+                            <field name="icon"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Grading Policy &amp; Guidelines" name="policy_tab">
+                            <field name="description" placeholder="Specify grading guidelines, submission rubrics, late submission deductions, and evaluation standards for this assessment category..."/>
+                        </page>
+                        <page string="Linked Assignments" name="assignments_tab">
+                            <field name="assignment_ids" readonly="1">
+                                <list limit="10" string="Assignments" decoration-muted="state == 'draft'">
+                                    <field name="name"/>
+                                    <field name="subject_id"/>
+                                    <field name="section_id"/>
+                                    <field name="teacher_id"/>
+                                    <field name="due_date"/>
+                                    <field name="max_score"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'approved'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Recent Assessment Results" name="results_tab">
+                            <field name="result_ids" readonly="1">
+                                <list string="Assessment Results" limit="10">
+                                    <field name="student_id"/>
+                                    <field name="subject_id"/>
+                                    <field name="section_id"/>
+                                    <field name="date"/>
+                                    <field name="score"/>
+                                    <field name="max_score"/>
+                                    <field name="percentage"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'published'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_university_assessment_category" model="ir.actions.act_window">
+        <field name="name">Assessment Categories</field>
+        <field name="res_model">university.assessment.category</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_assessment_category_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Assessment Category!
+            </p>
+            <p>
+                Define institutional grading categories such as Assignments, Quizzes, Midterms, Attendance, and Final Exams with proportional weights.
+            </p>
+        </field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- ASSESSMENT RESULT VIEWS                                             -->
+    <!-- =================================================================== -->
+    <record id="view_university_assessment_result_list" model="ir.ui.view">
+        <field name="name">university.assessment.result.list</field>
+        <field name="model">university.assessment.result</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Assessment Results">
+                <field name="student_id"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <field name="category_id"/>
+                <field name="score"/>
+                <field name="max_score"/>
+                <field name="percentage"/>
+                <field name="weighted_score"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'published'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_assessment_result_form" model="ir.ui.view">
+        <field name="name">university.assessment.result.form</field>
+        <field name="model">university.assessment.result</field>
+        <field name="arch" type="xml">
+            <form string="Assessment Result">
+                <header>
+                    <button name="action_publish" type="object" string="Publish" class="oe_highlight" invisible="state == 'published'"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="student_id"/>
+                            <field name="section_id"/>
+                            <field name="subject_id"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group>
+                            <field name="academic_year_id"/>
+                            <field name="semester_id"/>
+                            <field name="category_id"/>
+                            <field name="assignment_id"/>
+                            <field name="submission_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="score"/>
+                        <field name="max_score"/>
+                        <field name="percentage"/>
+                        <field name="weighted_score"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_university_assessment_result_student" model="ir.actions.act_window">
+        <field name="name">My Results</field>
+        <field name="res_model">university.assessment.result</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- REPORT CARD VIEWS                                                   -->
+    <!-- =================================================================== -->
+    <record id="view_university_report_card_list" model="ir.ui.view">
+        <field name="name">university.report.card.list</field>
+        <field name="model">university.report.card</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Report Cards" sample="1">
+                <field name="name" string="Reference"/>
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <field name="total_credits" string="Credits"/>
+                <field name="passed_credits" string="Passed"/>
+                <field name="gpa" string="GPA"
+                       decoration-success="gpa &gt;= 3.5"
+                       decoration-info="gpa &gt;= 2.0 and gpa &lt; 3.5"
+                       decoration-danger="gpa &lt; 2.0"/>
+                <field name="academic_standing" widget="badge"
+                       decoration-success="academic_standing == 'dean_list'"
+                       decoration-info="academic_standing == 'good'"
+                       decoration-danger="academic_standing == 'probation'"/>
+                <field name="evaluation_status" widget="badge"
+                       decoration-success="evaluation_status == 'completed'"
+                       decoration-warning="evaluation_status == 'in_progress'"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'generated'"
+                       decoration-success="state == 'approved'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_report_card_kanban" model="ir.ui.view">
+        <field name="name">university.report.card.kanban</field>
+        <field name="model">university.report.card</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="academic_standing" sample="1" quick_create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <field name="gpa"/>
+                <field name="total_credits"/>
+                <field name="passed_credits"/>
+                <field name="academic_standing"/>
+                <field name="evaluation_status"/>
+                <field name="state"/>
+                <field name="verification_code"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column h-100 p-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="text-primary fs-6"><field name="name"/></strong>
+                                <field name="state" widget="badge"
+                                       decoration-info="state == 'draft'"
+                                       decoration-warning="state == 'generated'"
+                                       decoration-success="state == 'approved'"/>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <field name="student_id" widget="many2one_avatar"/>
+                            </div>
+                            <div class="text-muted small mb-2">
+                                <span class="badge bg-light text-dark border me-1"><field name="program_id"/></span>
+                                <span class="badge bg-light text-muted border"><field name="semester_id"/></span>
+                            </div>
+                            <div class="row g-1 my-1 text-center">
+                                <div class="col-6">
+                                    <div class="p-1 rounded bg-light border">
+                                        <div class="text-muted very-small text-uppercase">Term GPA</div>
+                                        <div class="fw-bold fs-5"
+                                             t-attf-class="{{ record.gpa.raw_value >= 3.5 ? 'text-success' : (record.gpa.raw_value >= 2.0 ? 'text-primary' : 'text-danger') }}">
+                                            <field name="gpa"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-1 rounded bg-light border">
+                                        <div class="text-muted very-small text-uppercase">Credits</div>
+                                        <div class="fw-bold fs-6 text-dark mt-1">
+                                            <field name="passed_credits"/> / <field name="total_credits"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="record.verification_code.raw_value" class="mt-2 mb-1">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle font-monospace very-small">
+                                    <i class="fa fa-certificate me-1" title="Verified"/><field name="verification_code"/>
+                                </span>
+                            </div>
+                            <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                                <field name="academic_standing" widget="badge"
+                                       decoration-success="academic_standing == 'dean_list'"
+                                       decoration-info="academic_standing == 'good'"
+                                       decoration-danger="academic_standing == 'probation'"/>
+                                <field name="evaluation_status" widget="badge"
+                                       decoration-success="evaluation_status == 'completed'"
+                                       decoration-warning="evaluation_status == 'in_progress'"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_university_report_card_form" model="ir.ui.view">
+        <field name="name">university.report.card.form</field>
+        <field name="model">university.report.card</field>
+        <field name="arch" type="xml">
+            <form string="Report Card">
+                <header>
+                    <button name="action_generate_lines" type="object" string="Generate / Recalculate Grades" class="btn-primary"/>
+                    <button name="action_approve" type="object" string="Approve" class="btn-success" invisible="state == 'approved'"/>
+                    <button name="action_print_report_card" type="object" string="Print PDF" class="btn-secondary"/>
+                    <button name="action_download_document" type="object" string="Download PDF" class="btn-primary" invisible="state != 'approved'"/>
+                    <button name="action_download_xlsx" type="object" string="Download Excel" class="btn-secondary" invisible="state != 'approved'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,generated,approved"/>
+                </header>
+                <sheet>
+                    <!-- Official Verification Banner -->
+                    <div class="alert alert-success mb-3" role="alert" invisible="state != 'approved'">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-certificate fa-2x me-3 text-success" title="Verified"/>
+                                <div>
+                                    <h5 class="mb-0 fw-bold">Official Term Report Card Approved</h5>
+                                    <span class="small">Verification Code: <strong class="font-monospace"><field name="verification_code" readonly="1"/></strong></span>
+                                </div>
+                            </div>
+                            <button name="action_print_report_card" type="object" string="Print PDF" class="btn btn-sm btn-success">
+                                <i class="fa fa-print me-1" title="Print"/>Print Report Card
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <!-- Clean KPI Metric Cards -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Term GPA</span>
+                                <h3 class="mb-0 fw-bold text-primary"><field name="gpa"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Total Credits</span>
+                                <h3 class="mb-0 fw-bold text-dark"><field name="total_credits"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Passed Credits</span>
+                                <h3 class="mb-0 fw-bold text-success"><field name="passed_credits"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Academic Standing</span>
+                                <h4 class="mb-0 fw-bold">
+                                    <field name="academic_standing" widget="badge"
+                                           decoration-success="academic_standing == 'dean_list'"
+                                           decoration-info="academic_standing == 'good'"
+                                           decoration-danger="academic_standing == 'probation'"/>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Student &amp; Program">
+                            <field name="student_id"/>
+                            <field name="program_id"/>
+                            <field name="evaluation_status" widget="badge"
+                                   decoration-success="evaluation_status == 'completed'"
+                                   decoration-warning="evaluation_status == 'in_progress'"/>
+                        </group>
+                        <group string="Period &amp; Grading Rules">
+                            <field name="academic_year_id"/>
+                            <field name="semester_id"/>
+                            <field name="grade_scale_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Course Component Breakdown" name="components_tab">
+                            <field name="line_ids">
+                                <list limit="10" editable="bottom"
+                                      decoration-danger="not is_passing"
+                                      decoration-success="is_passing">
+                                    <field name="subject_id"/>
+                                    <field name="credits" string="Credits"/>
+                                    <field name="attendance_score"/>
+                                    <field name="quiz_score"/>
+                                    <field name="midterm_score"/>
+                                    <field name="assignment_score"/>
+                                    <field name="final_exam_score"/>
+                                    <field name="final_score" class="fw-bold"/>
+                                    <field name="grade" string="Grade" class="fw-bold"/>
+                                    <field name="grade_point" string="GPA Pts"/>
+                                    <field name="is_passing" string="Pass" widget="boolean"/>
+                                    <field name="evaluation_status" string="Status" widget="badge"
+                                           decoration-success="evaluation_status == 'completed'"
+                                           decoration-warning="evaluation_status == 'in_progress'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_university_report_card_search" model="ir.ui.view">
+        <field name="name">university.report.card.search</field>
+        <field name="model">university.report.card</field>
+        <field name="arch" type="xml">
+            <search string="Search Report Cards">
+                <field name="name" string="Reference"/>
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <field name="verification_code"/>
+
+                <filter string="Dean's List" name="filter_dean_list" domain="[('academic_standing', '=', 'dean_list')]"/>
+                <filter string="Good Standing" name="filter_good" domain="[('academic_standing', '=', 'good')]"/>
+                <filter string="Academic Probation" name="filter_probation" domain="[('academic_standing', '=', 'probation')]"/>
+                <separator/>
+                <filter string="Approved" name="filter_approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Generated" name="filter_generated" domain="[('state', '=', 'generated')]"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Completed Evaluation" name="filter_completed" domain="[('evaluation_status', '=', 'completed')]"/>
+
+                <group>
+                    <filter string="Academic Standing" name="group_by_standing" context="{'group_by': 'academic_standing'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Program" name="group_by_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Academic Year" name="group_by_year" context="{'group_by': 'academic_year_id'}"/>
+                    <filter string="Semester" name="group_by_semester" context="{'group_by': 'semester_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_university_report_card" model="ir.actions.act_window">
+        <field name="name">Report Cards</field>
+        <field name="res_model">university.report.card</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_report_card_search"/>
+    </record>
+
+    <record id="action_university_report_card_student" model="ir.actions.act_window">
+        <field name="name">My Report Cards</field>
+        <field name="res_model">university.report.card</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- TRANSCRIPT VIEWS                                                    -->
+    <!-- =================================================================== -->
+    <record id="view_university_transcript_list" model="ir.ui.view">
+        <field name="name">university.transcript.list</field>
+        <field name="model">university.transcript</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Transcripts" sample="1">
+                <field name="name" string="Reference"/>
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="total_credits" string="Credits"/>
+                <field name="cumulative_gpa" string="Cumulative GPA"
+                       decoration-success="cumulative_gpa &gt;= 3.5"
+                       decoration-info="cumulative_gpa &gt;= 2.0 and cumulative_gpa &lt; 3.5"
+                       decoration-danger="cumulative_gpa &lt; 2.0"/>
+                <field name="verification_code" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'generated'"
+                       decoration-success="state == 'approved'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_transcript_kanban" model="ir.ui.view">
+        <field name="name">university.transcript.kanban</field>
+        <field name="model">university.transcript</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="state" sample="1" quick_create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="cumulative_gpa"/>
+                <field name="total_credits"/>
+                <field name="state"/>
+                <field name="verification_code"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column h-100 p-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="text-primary fs-6"><field name="name"/></strong>
+                                <field name="state" widget="badge"
+                                       decoration-info="state == 'draft'"
+                                       decoration-warning="state == 'generated'"
+                                       decoration-success="state == 'approved'"/>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <field name="student_id" widget="many2one_avatar"/>
+                            </div>
+                            <div class="text-muted small mb-2">
+                                <span class="badge bg-light text-dark border"><field name="program_id"/></span>
+                            </div>
+                            <div class="row g-1 my-1 text-center">
+                                <div class="col-6">
+                                    <div class="p-1 rounded bg-light border">
+                                        <div class="text-muted very-small text-uppercase">Cumulative GPA</div>
+                                        <div class="fw-bold fs-5"
+                                             t-attf-class="{{ record.cumulative_gpa.raw_value >= 3.5 ? 'text-success' : (record.cumulative_gpa.raw_value >= 2.0 ? 'text-primary' : 'text-danger') }}">
+                                            <field name="cumulative_gpa"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-1 rounded bg-light border">
+                                        <div class="text-muted very-small text-uppercase">Earned Credits</div>
+                                        <div class="fw-bold fs-5 text-dark mt-1">
+                                            <field name="total_credits"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="record.verification_code.raw_value" class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle font-monospace">
+                                    <i class="fa fa-shield me-1" title="Security Code"/><field name="verification_code"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_university_transcript_form" model="ir.ui.view">
+        <field name="name">university.transcript.form</field>
+        <field name="model">university.transcript</field>
+        <field name="arch" type="xml">
+            <form string="Transcript">
+                <header>
+                    <button name="action_generate_lines" type="object" string="Generate / Recalculate Transcript" class="btn-primary"/>
+                    <button name="action_approve" type="object" string="Approve" class="btn-success" invisible="state == 'approved'"/>
+                    <button name="action_print_transcript" type="object" string="Print PDF" class="btn-secondary"/>
+                    <button name="action_download_document" type="object" string="Download PDF" class="btn-primary" invisible="state != 'approved'"/>
+                    <button name="action_download_xlsx" type="object" string="Download Excel" class="btn-secondary" invisible="state != 'approved'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,generated,approved"/>
+                </header>
+                <sheet>
+                    <!-- Official Verification Banner -->
+                    <div class="alert alert-success mb-3" role="alert" invisible="state != 'approved'">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-shield fa-2x me-3 text-success" title="Verified"/>
+                                <div>
+                                    <h5 class="mb-0 fw-bold">Official Academic Transcript Validated</h5>
+                                    <span class="small">Verification Code: <strong class="font-monospace"><field name="verification_code" readonly="1"/></strong></span>
+                                </div>
+                            </div>
+                            <button name="action_print_transcript" type="object" string="Print PDF" class="btn btn-sm btn-success">
+                                <i class="fa fa-print me-1" title="Print"/>Print Official Document
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <!-- Clean KPI Metric Cards -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-4">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Cumulative GPA</span>
+                                <h3 class="mb-0 fw-bold"
+                                    t-attf-class="{{ cumulative_gpa >= 3.5 ? 'text-success' : (cumulative_gpa >= 2.0 ? 'text-primary' : 'text-danger') }}">
+                                    <field name="cumulative_gpa"/>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Earned Credits</span>
+                                <h3 class="mb-0 fw-bold text-dark"><field name="total_credits"/></h3>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Official Status</span>
+                                <h4 class="mb-0 fw-bold">
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-warning="state == 'generated'"
+                                           decoration-success="state == 'approved'"/>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Student &amp; Degree">
+                            <field name="student_id"/>
+                            <field name="program_id"/>
+                        </group>
+                        <group string="Academic Record Summary">
+                            <field name="total_credits"/>
+                            <field name="cumulative_gpa"/>
+                            <field name="verification_code" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Curriculum &amp; Course History" name="courses_tab">
+                            <field name="line_ids">
+                                <list limit="10" editable="bottom"
+                                      decoration-danger="not is_passing"
+                                      decoration-success="is_passing">
+                                    <field name="academic_year_id"/>
+                                    <field name="semester_id"/>
+                                    <field name="subject_id"/>
+                                    <field name="credits" string="Credits"/>
+                                    <field name="final_score" string="Final Score" class="fw-bold"/>
+                                    <field name="grade" string="Grade" class="fw-bold"/>
+                                    <field name="grade_point" string="GPA Pts"/>
+                                    <field name="is_passing" string="Passed" widget="boolean"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_university_transcript_search" model="ir.ui.view">
+        <field name="name">university.transcript.search</field>
+        <field name="model">university.transcript</field>
+        <field name="arch" type="xml">
+            <search string="Search Transcripts">
+                <field name="name" string="Reference"/>
+                <field name="student_id"/>
+                <field name="program_id"/>
+                <field name="verification_code"/>
+
+                <filter string="Approved" name="filter_approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Generated" name="filter_generated" domain="[('state', '=', 'generated')]"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Honors (GPA &gt;= 3.5)" name="filter_honors" domain="[('cumulative_gpa', '&gt;=', 3.5)]"/>
+                <filter string="Good Standing (GPA 2.0 - 3.49)" name="filter_good" domain="[('cumulative_gpa', '&gt;=', 2.0), ('cumulative_gpa', '&lt;', 3.5)]"/>
+                <filter string="At Risk (GPA &lt; 2.0)" name="filter_at_risk" domain="[('cumulative_gpa', '&lt;', 2.0)]"/>
+
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Program" name="group_by_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_university_transcript" model="ir.actions.act_window">
+        <field name="name">Transcripts</field>
+        <field name="res_model">university.transcript</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_transcript_search"/>
+    </record>
+
+    <record id="action_university_transcript_student" model="ir.actions.act_window">
+        <field name="name">My Transcript</field>
+        <field name="res_model">university.transcript</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+</odoo>

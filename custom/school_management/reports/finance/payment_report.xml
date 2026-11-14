@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Student Fee Invoice Report Action -->
+    <record id="action_report_university_fee_invoice" model="ir.actions.report">
+        <field name="name">Fee Invoice</field>
+        <field name="model">university.fee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_management.report_university_fee_invoice_document</field>
+        <field name="report_file">school_management.report_university_fee_invoice_document</field>
+        <field name="print_report_name">'Invoice - ' + (object.name or 'Fee') + ' - ' + object.student_id.name</field>
+        <field name="binding_model_id" ref="model_university_fee"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_academic_transcript"/>
+    </record>
+
+    <!-- Payment Receipt Report Action -->
+    <record id="action_report_university_payment_receipt" model="ir.actions.report">
+        <field name="name">Payment Receipt</field>
+        <field name="model">university.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_management.report_payment_receipt_document</field>
+        <field name="report_file">school_management.report_payment_receipt_document</field>
+        <field name="print_report_name">'Receipt - ' + (object.name or 'Payment') + ' - ' + object.student_id.name</field>
+        <field name="binding_model_id" ref="model_university_payment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_academic_transcript"/>
+    </record>
+
+</odoo>

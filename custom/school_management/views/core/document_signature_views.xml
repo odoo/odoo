@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LIST VIEW -->
+    <record id="view_university_document_signature_list" model="ir.ui.view">
+        <field name="name">university.document.signature.list</field>
+        <field name="model">university.document.signature</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Document Signatures" default_order="signed_on desc, id desc" sample="1">
+                <field name="name" string="Signature Reference" decoration-bf="1"/>
+                <field name="student_id" widget="many2one_avatar" decoration-bf="1"/>
+                <field name="fee_id" string="Fee Invoice" widget="badge" decoration-info="1"/>
+                <field name="signed_name" string="Signer Legal Name"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state == 'signed'"/>
+                <field name="signed_on" widget="datetime"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_document_signature_kanban" model="ir.ui.view">
+        <field name="name">university.document.signature.kanban</field>
+        <field name="model">university.document.signature</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="state" sample="1" quick_create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="fee_id"/>
+                <field name="signed_name"/>
+                <field name="state"/>
+                <field name="signed_on"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="badge text-bg-light border fw-bold text-dark">
+                                    <i class="fa fa-file-text-o me-1 text-primary" title="Document Reference"/>
+                                    <field name="name"/>
+                                </span>
+                                <span t-if="record.state.raw_value === 'signed'" class="badge text-bg-success">
+                                    <i class="fa fa-check-circle me-1"/>Signed
+                                </span>
+                                <span t-else="" class="badge text-bg-warning text-dark">
+                                    <i class="fa fa-clock-o me-1"/>Pending
+                                </span>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <field name="student_id" widget="many2one_avatar"/>
+                                <div class="overflow-hidden">
+                                    <strong class="d-block text-truncate text-dark small">
+                                        <field name="student_id"/>
+                                    </strong>
+                                    <span class="text-muted very-small" t-if="record.signed_name.value">
+                                        Signer: <field name="signed_name"/>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top text-muted small">
+                                <span>
+                                    <i class="fa fa-receipt text-secondary me-1" title="Fee Invoice"/>
+                                    <field name="fee_id"/>
+                                </span>
+                                <span class="very-small" t-if="record.signed_on.value">
+                                    <field name="signed_on"/>
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_document_signature_form" model="ir.ui.view">
+        <field name="name">university.document.signature.form</field>
+        <field name="model">university.document.signature</field>
+        <field name="arch" type="xml">
+            <form string="Document Signature">
+                <header>
+                    <button name="action_signed"
+                            string="Confirm &amp; Sign"
+                            type="object"
+                            invisible="state == 'signed'"
+                            class="oe_highlight btn-primary"
+                            icon="fa-pencil"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,signed"/>
+                </header>
+                <sheet>
+                    <!-- Success Banner -->
+                    <div class="alert alert-success d-flex align-items-center gap-2 mb-3 py-2 px-3" role="status" invisible="state != 'signed'">
+                        <i class="fa fa-check-circle fa-lg text-success" title="Digitally Certified"/>
+                        <div>
+                            <strong>Document Digitally Signed &amp; Certified</strong>
+                            <div class="small text-muted">Legal signature captured and recorded with verifiable timestamp.</div>
+                        </div>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Signature Reference"/>
+                        <h1 class="text-primary"><field name="name"/></h1>
+                    </div>
+
+                    <group>
+                        <group string="Signer Details">
+                            <field name="student_id" readonly="state == 'signed'" options="{'no_create': True}"/>
+                            <field name="signed_name" readonly="state == 'signed'" placeholder="e.g. Legal Full Name"/>
+                        </group>
+                        <group string="Document &amp; Timestamp">
+                            <field name="fee_id" domain="[('student_id', '=', student_id)]" readonly="state == 'signed'" options="{'no_create': True}"/>
+                            <field name="signed_on" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Digital Signature" name="signature_tab">
+                            <div class="p-3 bg-light rounded border mt-2">
+                                <label for="signature" string="Digital Signature Capture" class="fw-bold mb-2 d-block"/>
+                                <field name="signature" widget="signature" readonly="state == 'signed'"/>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_document_signature_search" model="ir.ui.view">
+        <field name="name">university.document.signature.search</field>
+        <field name="model">university.document.signature</field>
+        <field name="arch" type="xml">
+            <search string="Search Document Signatures">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="fee_id"/>
+                <field name="signed_name"/>
+                <separator/>
+                <filter string="Pending Signatures" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Certified / Signed" name="signed" domain="[('state', '=', 'signed')]"/>
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Fee Invoice" name="group_by_fee" context="{'group_by': 'fee_id'}"/>
+                    <filter string="Date Signed" name="group_by_signed_on" context="{'group_by': 'signed_on'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_document_signature" model="ir.actions.act_window">
+        <field name="name">Document Signatures</field>
+        <field name="res_model">university.document.signature</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_document_signature_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Track and verify student document and invoice signatures.
+            </p>
+        </field>
+    </record>
+</odoo>

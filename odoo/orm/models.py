@@ -7022,6 +7022,33 @@ class BaseModel(metaclass=MetaModel):
         """
         return False
 
+    def _compute_totals(self):
+        pass
+
+    def report_action(self, self1):
+        pass
+
+    def _prepare_fee_vals(self, student, admission):
+        pass
+
+    def action_post(self):
+        pass
+
+    def _update_state_from_balance(self):
+        pass
+
+    def has_group(self, param):
+        pass
+
+    def build_at_risk_csv(self, month, year, ids):
+        pass
+
+    def _get_role_sections(self):
+        pass
+
+    def _attendance_percentage(self, counts):
+        pass
+
 
 collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
@@ -7079,6 +7106,9 @@ class Model(AbstractModel):
     _auto: bool = True          # automatically create database backend
     _register: bool = False     # not visible in ORM registry, meant to be python-inherited only
     _abstract: typing.Literal[False] = False  # not abstract
+
+    def _signup_create_user(self, signup_values):
+        pass
 
 
 @functools.total_ordering

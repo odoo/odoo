@@ -1,0 +1,381 @@
+/* Public Holiday Schedule Styling - CSS variables with Dark Mode support */
+:root {
+    --holiday-shaded-bg: #fef2f2;
+    --holiday-stripe-color: #fee2e2;
+    --holiday-stripe-pattern: repeating-linear-gradient(
+        -45deg,
+        var(--holiday-shaded-bg),
+        var(--holiday-shaded-bg) 14px,
+        var(--holiday-stripe-color) 14px,
+        var(--holiday-stripe-color) 28px
+    );
+    --holiday-conflict-bg: #fee2e2;
+    --holiday-conflict-border: #dc2626;
+    --holiday-conflict-text: #991b1b;
+    --holiday-cancelled-bg: #f3f4f6;
+    --holiday-cancelled-border: #9ca3af;
+    --holiday-cancelled-text: #6b7280;
+    --holiday-override-bg: #fef3c7;
+    --holiday-override-border: #d97706;
+    --holiday-override-text: #92400e;
+}
+
+[data-color-mode="dark"], .o_web_client.o_dark {
+    --holiday-shaded-bg: rgba(245, 158, 11, 0.14);
+    --holiday-stripe-color: rgba(245, 158, 11, 0.22);
+    --holiday-conflict-bg: rgba(220, 38, 38, 0.28);
+    --holiday-conflict-border: #ef4444;
+    --holiday-conflict-text: #fca5a5;
+    --holiday-cancelled-bg: #374151;
+    --holiday-cancelled-border: #6b7280;
+    --holiday-cancelled-text: #9ca3af;
+    --holiday-override-bg: rgba(217, 119, 6, 0.28);
+    --holiday-override-border: #f59e0b;
+    --holiday-override-text: #fde68a;
+}
+
+/* Day column shading across week, day, and resource views */
+.o_grid_day_col.bg-danger-subtle,
+.o_grid_day_col.o_holiday_day_col,
+.o_grid_day_col.o_holiday_shaded_day,
+.o_grid_day_col.bg-warning-subtle,
+.o_resource_cell.bg-danger-subtle,
+.o_resource_cell.o_holiday_day_col {
+    background-color: var(--holiday-shaded-bg) !important;
+    background: var(--holiday-stripe-pattern) !important;
+}
+
+.o_grid_day_header_col.bg-danger-subtle,
+.o_grid_day_header_col.o_holiday_col_header,
+.o_grid_day_header_col.bg-warning-subtle,
+th.o_resource_header_col.o_holiday_col_header,
+th.o_resource_header_col.bg-danger-subtle {
+    background-color: var(--holiday-stripe-color) !important;
+    border-top: 3px solid #dc2626 !important;
+}
+
+.o_holiday_header_badge {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    font-size: 0.72rem;
+    cursor: help;
+}
+
+/* Conflicting session: red border + light red bg + warning icon + holiday label */
+.o_schedule_block.o_slot_holiday_conflict {
+    background-color: var(--holiday-conflict-bg) !important;
+    border: 2px solid var(--holiday-conflict-border) !important;
+    border-left-width: 5px !important;
+    border-left-color: var(--holiday-conflict-border) !important;
+    color: var(--holiday-conflict-text) !important;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2) !important;
+}
+
+.o_schedule_block.o_slot_holiday_conflict .badge.bg-warning {
+    background-color: var(--holiday-conflict-border) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+/* Timetable Kanban Public Holiday Highlight */
+.o_kanban_record:has(.o_slot_holiday_card),
+.o_kanban_record.o_slot_holiday_card,
+.o_kanban_record .o_slot_holiday_card {
+    background-color: var(--holiday-conflict-bg) !important;
+    border: 1px solid var(--holiday-conflict-border) !important;
+    border-left: 5px solid var(--holiday-conflict-border) !important;
+    border-radius: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25) !important;
+    }
+}
+
+/* Cancelled session on holiday: grey with strikethrough */
+.o_schedule_block.o_slot_holiday_cancelled {
+    background-color: var(--holiday-cancelled-bg) !important;
+    border: 1px dashed var(--holiday-cancelled-border) !important;
+    border-left-width: 4px !important;
+    border-left-color: var(--holiday-cancelled-border) !important;
+    color: var(--holiday-cancelled-text) !important;
+    opacity: 0.65;
+    filter: grayscale(80%);
+}
+
+.o_schedule_block.o_slot_holiday_cancelled .o_block_title,
+.o_schedule_block.o_slot_holiday_cancelled .o_block_time {
+    text-decoration: line-through !important;
+}
+
+/* Allowed session by admin override: amber with badge */
+.o_schedule_block.o_slot_holiday_override {
+    background-color: var(--holiday-override-bg) !important;
+    border: 2px solid var(--holiday-override-border) !important;
+    border-left-width: 5px !important;
+    border-left-color: var(--holiday-override-border) !important;
+    color: var(--holiday-override-text) !important;
+}
+
+.o_schedule_block.o_slot_holiday_override .badge.bg-warning {
+    background-color: var(--holiday-override-border) !important;
+    color: #ffffff !important;
+}
+
+/* Legend styling */
+.o_holiday_schedule_legend {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 3px 10px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.o_holiday_legend_item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.o_legend_swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.o_legend_swatch.swatch_holiday {
+    background-color: #fef2f2;
+    background: var(--holiday-stripe-pattern);
+    border: 1px solid #dc2626;
+}
+
+.o_legend_swatch.swatch_conflict {
+    background: var(--holiday-conflict-bg);
+    border: 1px solid var(--holiday-conflict-border);
+}
+
+.o_legend_swatch.swatch_cancelled {
+    background: var(--holiday-cancelled-bg);
+    border: 1px dashed var(--holiday-cancelled-border);
+}
+
+.o_legend_swatch.swatch_override {
+    background: var(--holiday-override-bg);
+    border: 1px solid var(--holiday-override-border);
+}
+
+/* ==========================================================================
+   Public Holiday Import Wizard Form Styling
+   ========================================================================== */
+.o_holiday_wizard_form {
+    /* Top Stepper Bar */
+    .o_holiday_stepper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 24px;
+        position: relative;
+        overflow: hidden;
+
+        .o_step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+
+            .o_step_badge {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 0.9rem;
+                transition: all 0.25s ease;
+            }
+
+            .o_step_content {
+                display: flex;
+                flex-direction: column;
+
+                .o_step_title {
+                    font-size: 0.86rem;
+                    font-weight: 700;
+                    color: #334155;
+                    line-height: 1.2;
+                }
+
+                .o_step_desc {
+                    font-size: 0.72rem;
+                    color: #64748b;
+                }
+            }
+
+            &.o_step_active {
+                .o_step_badge {
+                    background: #6366f1;
+                    color: #ffffff;
+                    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+                }
+                .o_step_title {
+                    color: #4f46e5;
+                }
+            }
+
+            &.o_step_completed {
+                .o_step_badge {
+                    background: #10b981;
+                    color: #ffffff;
+                }
+                .o_step_title {
+                    color: #059669;
+                }
+            }
+
+            &.o_step_pending {
+                opacity: 0.55;
+                .o_step_badge {
+                    background: #e2e8f0;
+                    color: #64748b;
+                }
+            }
+        }
+
+        .o_step_divider {
+            flex-grow: 1;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 0 16px;
+            border-radius: 1px;
+
+            &.o_divider_active {
+                background: #10b981;
+            }
+        }
+    }
+
+    /* Cards */
+    .o_holiday_card {
+        border-radius: 12px;
+        border-color: #e2e8f0;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+        }
+    }
+
+    /* Dropzone area */
+    .o_holiday_dropzone {
+        border: 2px dashed #cbd5e1 !important;
+        background: #f8fafc !important;
+        border-radius: 10px;
+        transition: border-color 0.2s ease, background 0.2s ease;
+        &:hover {
+            border-color: #6366f1 !important;
+            background: #f5f3ff !important;
+        }
+    }
+
+    /* KPI Cards in Preview */
+    .o_kpi_card {
+        border-radius: 10px;
+        border-color: #e2e8f0;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .o_kpi_icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    /* Preview Table container */
+    .o_preview_table_card {
+        border-radius: 10px;
+        border-color: #e2e8f0;
+        overflow: hidden;
+
+        .o_preview_table_container {
+            max-height: 380px;
+            overflow-y: auto;
+
+            .o_list_renderer {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    /* Done Celebration Card */
+    .o_done_card {
+        border-radius: 14px;
+        background: #ffffff;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+
+        .o_done_circle {
+            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.15);
+            animation: pulse-badge 2s infinite ease-in-out;
+        }
+    }
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.15);
+    }
+    50% {
+        box-shadow: 0 0 0 14px rgba(16, 185, 129, 0.05);
+    }
+}
+
+/* Dark mode adjustments */
+[data-color-mode="dark"], .o_web_client.o_dark {
+    .o_holiday_wizard_form {
+        .o_holiday_stepper {
+            background: #1e293b;
+            border-color: #334155;
+
+            .o_step .o_step_content .o_step_title {
+                color: #e2e8f0;
+            }
+            .o_step.o_step_pending .o_step_badge {
+                background: #334155;
+                color: #94a3b8;
+            }
+            .o_step_divider {
+                background: #334155;
+            }
+        }
+
+        .o_holiday_dropzone {
+            background: #1e293b !important;
+            border-color: #475569 !important;
+        }
+
+        .o_holiday_card, .o_kpi_card, .o_preview_table_card, .o_done_card {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        .card-header {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+    }
+}

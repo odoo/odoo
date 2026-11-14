@@ -1,0 +1,103 @@
+<odoo>
+    <record id="admission_lead_view_kanban" model="ir.ui.view">
+        <field name="name">admission.lead.kanban</field>
+        <field name="model">admission.lead</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="stage_id" records_draggable="1">
+                <field name="stage_id"/>
+                <field name="student_name"/>
+                <field name="program_id"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="menu">
+                        <button role="menuitem" type="object" name="action_set_won" class="dropdown-item btn">Accept Lead</button>
+                        <button role="menuitem" type="object" name="action_set_lost" class="dropdown-item btn">Reject Lead</button>
+                    </t>
+                    <t t-name="card">
+                        <main class="ms-2 p-3">
+                            <div class="o_kanban_record_top mb-2">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="fs-5 o_kanban_record_title">
+                                        <field name="student_name"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="text-muted mb-2" t-if="record.program_id.value">
+                                <i class="fa fa-graduation-cap me-1" title="Program"/>
+                                <field name="program_id"/>
+                            </div>
+                            <div class="text-muted text-tryuncate" t-if="record.email.value">
+                                <i class="fa fa-envelope-o me-1" title="Email"/>
+                                <field name="email"/>
+                            </div>
+                            <div class="text-muted" t-if="record.phone.value">
+                                <i class="fa fa-phone me-1" title="Phone"/>
+                                <field name="phone"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="admission_lead_view_form" model="ir.ui.view">
+        <field name="name">admission.lead.form</field>
+        <field name="model">admission.lead</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="active" invisible="1"/>
+                <header>
+                    <button name="action_set_won" type="object" string="Accept" class="btn btn-primary" invisible="not active"/>
+                    <button name="action_set_lost" type="object" string="Reject" class="btn btn-secondary" invisible="not active"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="student_name" string="Applicant Name"/>
+                        <h1><field name="student_name" placeholder="e.g. John Doe"/></h1>
+                    </div>
+                    <group>
+                        <group string="Contact Information">
+                            <field name="email" widget="email"/>
+                            <field name="phone" widget="phone"/>
+                        </group>
+                        <group string="Pipeline Details">
+                            <field name="program_id"/>
+                            <field name="lost_reason" invisible="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="admission_lead_view_search" model="ir.ui.view">
+        <field name="name">admission.lead.search</field>
+        <field name="model">admission.lead</field>
+        <field name="arch" type="xml">
+            <search string="Search Admission Pipeline">
+                <field name="student_name"/>
+                <field name="program_id"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <searchpanel>
+                    <field name="program_id" icon="fa-graduation-cap" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="admission_lead_action" model="ir.actions.act_window">
+        <field name="name">Admission Pipeline</field>
+        <field name="res_model">admission.lead</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="admission_lead_view_search"/>
+    </record>
+
+</odoo>

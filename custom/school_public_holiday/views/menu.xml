@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Merged Holidays & Breaks menu under Academic Setup > Calendar -->
+    <menuitem
+        id="menu_public_holiday"
+        name="Holidays &amp; Breaks"
+        parent="school_management.menu_university_sec_calendar"
+        action="action_public_holiday"
+        sequence="40"
+        groups="school_management.group_school_admin,base.group_system"
+    />
+
+    <!-- Legacy School Breaks menu deactivated (merged into Holidays & Breaks) -->
+    <record id="menu_university_holiday_config" model="ir.ui.menu">
+        <field name="name">School Breaks &amp; Closures</field>
+        <field name="parent_id" ref="school_management.menu_university_sec_calendar"/>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

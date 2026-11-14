@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== SEARCH VIEW ==================== -->
+    <record id="view_university_service_request_search" model="ir.ui.view">
+        <field name="name">university.service.request.search</field>
+        <field name="model">university.service.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Service Requests">
+                <field name="name" string="Request #"/>
+                <field name="student_id" string="Student"/>
+                <field name="title" string="Subject"/>
+                <field name="request_type"/>
+                <filter string="Pending / Open" name="filter_open" domain="[('state', 'in', ('pending', 'in_review'))]"/>
+                <filter string="Approved" name="filter_approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Completed" name="filter_completed" domain="[('state', '=', 'completed')]"/>
+                <group>
+                    <filter string="Request Type" name="group_by_type" context="{'group_by': 'request_type'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="request_type" icon="fa-file-text-o" enable_counters="1"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== KANBAN VIEW (ODOO 19 CARD TEMPLATE) ==================== -->
+    <record id="view_university_service_request_kanban" model="ir.ui.view">
+        <field name="name">university.service.request.kanban</field>
+        <field name="model">university.service.request</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="state" quick_create="false">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="student_id"/>
+                <field name="request_type"/>
+                <field name="request_date"/>
+                <field name="state"/>
+                <field name="delivery_method"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="fs-6 text-primary text-truncate me-2"><field name="title"/></strong>
+                                <span class="badge rounded-pill flex-shrink-0"
+                                      t-att-class="record.state.raw_value == 'completed' ? 'text-bg-success' : (record.state.raw_value in ['pending', 'in_review'] ? 'text-bg-warning text-dark' : (record.state.raw_value == 'approved' ? 'text-bg-info text-white' : 'text-bg-secondary'))">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 mb-2">
+                                <span class="badge text-bg-light border text-muted">
+                                    <field name="request_type"/>
+                                </span>
+                                <span class="badge text-bg-light border text-muted small">
+                                    <field name="name"/>
+                                </span>
+                            </div>
+                            <div class="text-dark fw-bold small mt-1" t-if="record.student_id.value">
+                                <i class="fa fa-graduation-cap text-secondary me-1" title="Student"/>
+                                <field name="student_id"/>
+                            </div>
+                            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center small">
+                                <span class="text-muted">
+                                    <i class="fa fa-calendar me-1" title="Request Date"/>
+                                    <field name="request_date"/>
+                                </span>
+                                <span class="badge bg-light text-secondary border">
+                                    <i class="fa fa-truck me-1" title="Delivery Method"/>
+                                    <field name="delivery_method"/>
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== LIST VIEW ==================== -->
+    <record id="view_university_service_request_list" model="ir.ui.view">
+        <field name="name">university.service.request.list</field>
+        <field name="model">university.service.request</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Student Service Requests" sample="1">
+                <field name="name" string="Request #" decoration-bf="1"/>
+                <field name="student_id"/>
+                <field name="request_type" widget="badge"/>
+                <field name="title"/>
+                <field name="delivery_method" optional="show"/>
+                <field name="request_date"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'completed'"
+                       decoration-info="state == 'approved'"
+                       decoration-warning="state in ('pending', 'in_review')"
+                       decoration-muted="state == 'draft'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_university_service_request_form" model="ir.ui.view">
+        <field name="name">university.service.request.form</field>
+        <field name="model">university.service.request</field>
+        <field name="arch" type="xml">
+            <form string="Student Service Request">
+                <header>
+                    <button name="action_submit"
+                            type="object"
+                            string="Submit Request"
+                            class="oe_highlight"
+                            icon="fa-paper-plane"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start_review"
+                            type="object"
+                            string="Under Review"
+                            class="btn-secondary"
+                            invisible="state != 'pending'"
+                            groups="school_management.group_school_admin,school_management.group_school_registrar,base.group_system"/>
+                    <button name="action_approve"
+                            type="object"
+                            string="Approve Request"
+                            class="oe_highlight"
+                            icon="fa-check"
+                            invisible="state not in ('pending', 'in_review')"
+                            groups="school_management.group_school_admin,school_management.group_school_registrar,base.group_system"/>
+                    <button name="action_complete"
+                            type="object"
+                            string="Mark as Completed / Ready"
+                            class="btn-success text-white"
+                            icon="fa-check-circle"
+                            invisible="state != 'approved'"
+                            groups="school_management.group_school_admin,school_management.group_school_registrar,base.group_system"/>
+                    <button name="action_reject"
+                            type="object"
+                            string="Reject Request"
+                            class="btn-danger"
+                            icon="fa-times"
+                            invisible="state not in ('pending', 'in_review')"
+                            groups="school_management.group_school_admin,school_management.group_school_registrar,base.group_system"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,in_review,approved,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title" string="Request Subject"/>
+                        <h1>
+                            <field name="title" placeholder="e.g. Official Enrollment Certificate for Visa Application" readonly="state != 'draft'"/>
+                        </h1>
+                        <div class="text-muted">
+                            <i class="fa fa-tag me-1" title="Reference"/>
+                            <field name="name" readonly="1"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Applicant &amp; Service Type">
+                            <field name="student_id" readonly="state != 'draft'"/>
+                            <field name="student_code"/>
+                            <field name="program_id"/>
+                            <field name="request_type" readonly="state != 'draft'"/>
+                            <field name="semester_id" invisible="request_type != 'leave_of_absence'" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Fulfillment &amp; Delivery">
+                            <field name="delivery_method" readonly="state != 'draft'"/>
+                            <field name="copies" readonly="state != 'draft'"/>
+                            <field name="request_date"/>
+                            <field name="reviewed_by_id"/>
+                            <field name="completed_at"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Request Details &amp; Attachments" name="details_page">
+                            <group string="Purpose / Details">
+                                <field name="description" placeholder="Specify requirements, language of certificate, reason for leave, or details of request..." readonly="state != 'draft'"/>
+                            </group>
+                            <group string="Supporting Attachments">
+                                <field name="attachment_ids" widget="many2many_binary" readonly="state != 'draft'"/>
+                            </group>
+                        </page>
+                        <page string="Staff Feedback / Response" name="staff_page">
+                            <field name="staff_notes" placeholder="Registrar notes, pickup instructions, or reason for decision..." readonly="state in ('completed', 'rejected') and not uid"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== ACTIONS ==================== -->
+    <record id="action_university_service_request" model="ir.actions.act_window">
+        <field name="name">Student Service Requests</field>
+        <field name="res_model">university.service.request</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_service_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No service requests yet.</p>
+            <p>Requests for enrollment certificates, recommendation letters, deferments, and student complaints will appear here.</p>
+        </field>
+    </record>
+
+    <record id="action_university_service_request_student" model="ir.actions.act_window">
+        <field name="name">Student Service Requests</field>
+        <field name="res_model">university.service.request</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_university_service_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Submit a Student Service Request!</p>
+            <p>Request enrollment certificates, letters of recommendation, leaves of absence, or submit student feedback.</p>
+        </field>
+    </record>
+</odoo>

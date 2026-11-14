@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Professional Academic Transcript / Report Card Paperformat (Portrait) -->
+    <record id="paperformat_academic_transcript" model="report.paperformat">
+        <field name="name">Academic Transcript (Portrait)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top" eval="10"/>
+        <field name="margin_bottom" eval="10"/>
+        <field name="margin_left" eval="10"/>
+        <field name="margin_right" eval="10"/>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing" eval="5"/>
+    </record>
+
+    <record id="action_report_university_report_card" model="ir.actions.report">
+        <field name="name">Report Card</field>
+        <field name="model">university.report.card</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_management.report_university_report_card_document</field>
+        <field name="report_file">school_management.report_university_report_card_document</field>
+        <field name="print_report_name">'Report Card - ' + object.student_id.name</field>
+        <field name="binding_model_id" ref="model_university_report_card"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_academic_transcript"/>
+    </record>
+
+    <record id="action_report_university_transcript" model="ir.actions.report">
+        <field name="name">Academic Transcript</field>
+        <field name="model">university.transcript</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_management.report_university_transcript_document</field>
+        <field name="report_file">school_management.report_university_transcript_document</field>
+        <field name="print_report_name">'Transcript - ' + object.student_id.name</field>
+        <field name="binding_model_id" ref="model_university_transcript"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_academic_transcript"/>
+    </record>
+
+</odoo>
