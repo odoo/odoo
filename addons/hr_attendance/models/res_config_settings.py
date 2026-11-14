@@ -24,6 +24,11 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.attendance_work_entry_type_id',
         readonly=False,
     )
+    attendance_tolerance = fields.Boolean(related="company_id.attendance_tolerance", readonly=False)
+    attendance_tolerance_early_check_in = fields.Integer(related="company_id.attendance_tolerance_early_check_in", readonly=False)
+    attendance_tolerance_late_check_in = fields.Integer(related="company_id.attendance_tolerance_late_check_in", readonly=False)
+    attendance_tolerance_early_check_out = fields.Integer(related="company_id.attendance_tolerance_early_check_out", readonly=False)
+    attendance_tolerance_late_check_out = fields.Integer(related="company_id.attendance_tolerance_late_check_out", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
     attendance_capture_check_in = fields.Boolean(related="company_id.attendance_capture_check_in", readonly=False)
     attendance_break_management = fields.Boolean(related="company_id.attendance_break_management", readonly=False)
