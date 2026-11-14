@@ -53,6 +53,24 @@ patch(PaymentForm.prototype, {
     // #=== DOM MANIPULATION ===#
 
     /**
+     * Request the SDK of each PayPal payment method listed in the form that is handled by the SDK.
+     *
+     * @override method from payment.payment_form
+     */
+    _getAssetsPromises() {
+        const promises = super._getAssetsPromises();
+        for (const radio of this.el.querySelectorAll(
+            '[name="o_payment_radio"][data-provider-code="paypal"]'
+            + '[data-payment-option-type="payment_method"]'
+        )) {
+            if (PAYPAL_SDK_METHODS.includes(this._getPaymentMethodCode(radio))) {
+                promises.set(radio, [this._paypalLoadSDK(this._paypalGetSDKURL(radio))]);
+            }
+        }
+        return promises;
+    },
+
+    /**
      * @override
      */
     async willStart() {
@@ -142,32 +160,12 @@ patch(PaymentForm.prototype, {
         }
         const currentPayPalData = this.paypalData[paymentOptionId];
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
-            const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL'];
-            await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
             this.paypalData[paymentOptionId]['enabledButtons']?.forEach(btn => btn.show());
             this.paypalData[paymentOptionId]['disabledButtons']?.forEach(btn => btn.show());
         }
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {};
             const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-            let inlineFormValues;
-            if (radio) {
-                inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
-            }
-
-            // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-            const { client_id, currency_code, country_code } = inlineFormValues;
-            const paypalSDKParams = new URLSearchParams({
-                "client-id": client_id,
-                "components": "buttons,card-fields,payment-fields,funding-eligibility",
-                "buyer-country": country_code,
-                "currency": currency_code,
-                "enable-funding": "paylater,venmo",
-                "intent": "capture",
-            });
-            const paypalSDKURL = `https://www.paypal.com/sdk/js?${paypalSDKParams}`;
-            this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
-            await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
 
             if (isCard && paypal.CardFields !== undefined) {
                 // Render the card inputs
@@ -273,6 +271,30 @@ patch(PaymentForm.prototype, {
             buttonContainer.classList.toggle('d-none', isCard);
         }
         this.selectedOptionId = paymentOptionId;
+    },
+
+    /**
+     * Return the SDK URL of the PayPal payment option linked to the provided radio button.
+     *
+     * See https://developer.paypal.com/sdk/js/configuration/#link-queryparameters.
+     *
+     * @private
+     * @param {HTMLInputElement} radio - The radio button linked to the payment option.
+     * @return {string} The SDK URL.
+     */
+    _paypalGetSDKURL(radio) {
+        const { client_id, currency_code, country_code } = JSON.parse(
+            radio.dataset['paypalInlineFormValues']
+        );
+        const paypalSDKParams = new URLSearchParams({
+            "client-id": client_id,
+            "components": "buttons,card-fields,payment-fields,funding-eligibility",
+            "buyer-country": country_code,
+            "currency": currency_code,
+            "enable-funding": "paylater,venmo",
+            "intent": "capture",
+        });
+        return `https://www.paypal.com/sdk/js?${paypalSDKParams}`;
     },
 
     /**
