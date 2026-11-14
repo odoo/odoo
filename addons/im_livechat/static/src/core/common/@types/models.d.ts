@@ -53,6 +53,8 @@ declare module "models" {
         livechatNoteText: string|undefined;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
         livechatVisitorMember: ChannelMember;
+        recent_channel_ids: DiscussChannel[];
+        recent_channels_count: number|undefined;
         transcriptUrl: Readonly<string>;
     }
     export interface LivechatChannel {
