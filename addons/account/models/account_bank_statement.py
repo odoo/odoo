@@ -352,7 +352,7 @@ class AccountBankStatement(models.Model):
               AND ROUND(prev_balance_end_real, decimal_places) != ROUND(balance_start, decimal_places)
               {"" if all_statements else "AND id IN %(ids)s"};
         """, {
-            'journal_ids': tuple(set(self.journal_id.ids)),
+            'journal_ids': tuple(set(self.journal_id.ids)) or (None,),
             'ids': tuple(self.ids)
         })
         res = self.env.cr.fetchall()
