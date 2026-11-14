@@ -7290,14 +7290,16 @@ class AccountMove(models.Model):
         else:
             # This is an existing invoice on which a message was posted either by e-mail or via the webclient.
             attachment_records = self._from_files_data(files_data)
-            self._fix_attachments_on_record_from_files_data(valid_files_data, extra_files_data)
             # Only trigger decoding if the message was sent by an active internal user (note OdooBot is always inactive).
             if self.env.user.active and self.env.user._is_internal():
                 self._extend_with_attachments(files_data)
 
             new_message.attachment_ids = [Command.set(attachment_records.ids)]
             message_values['attachment_ids'] = [Command.link(attachment.id) for attachment in attachment_records]
-            return super()._message_post_after_hook(new_message, message_values)
+            res = super()._message_post_after_hook(new_message, message_values)
+            # Fix the attachments once the main attachment is set, so that it is never a detached one.
+            self._fix_attachments_on_record_from_files_data(valid_files_data, extra_files_data)
+            return res
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
