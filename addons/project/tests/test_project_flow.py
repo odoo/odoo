@@ -536,3 +536,21 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         with Form(task) as task_form:
             task_form.project_id = project
         self.assertEqual(task.partner_id, self.partner_1)
+
+    def test_project_form_customer_without_contact_rights(self):
+        """ A project manager who cannot edit contacts must be able to create
+        a project for a customer from the form view (the customer's phone and
+        email are displayed, hence sent back, but not modified). """
+        self.user_projectmanager.group_ids = [Command.set([self.env.ref('project.group_project_manager').id])]
+        self.partner_1.phone = '+32 456 00 00 00'
+        with Form(self.env['project.project'].with_user(self.user_projectmanager)) as project_form:
+            project_form.name = 'Project for a customer'
+            project_form.partner_id = self.partner_1
+        project = project_form.record
+        self.assertEqual(project.partner_id, self.partner_1)
+        self.assertEqual(project.partner_phone, '+32 456 00 00 00')
+        # editing the phone from the project still updates the customer
+        self.user_projectmanager.group_ids = [Command.link(self.env.ref('base.group_partner_manager').id)]
+        with Form(project.with_user(self.user_projectmanager)) as project_form:
+            project_form.partner_phone = '+32 456 11 11 11'
+        self.assertEqual(self.partner_1.phone, '+32 456 11 11 11')
