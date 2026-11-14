@@ -134,3 +134,13 @@ test("searching by customer keeps the orders of a nameless address contact", asy
         { message: "the address contact is searched by its company name" }
     );
 });
+
+test("changing the filter resets the ticket screen to page 1", async () => {
+    await setupPosEnv();
+    const comp = await mountWithCleanup(TicketScreen, {
+        props: { stateOverride: { nbrByPage: 1, page: 2 } },
+    });
+    expect(comp.state.page).toBe(2);
+    await comp.onFilterSelected("PAYMENT");
+    expect(comp.state.page).toBe(1);
+});
