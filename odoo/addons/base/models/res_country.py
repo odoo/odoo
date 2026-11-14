@@ -126,7 +126,22 @@ class ResCountry(models.CachedModel):
         return result
 
     @api.model
+<<<<<<< e074822813a6d52cbbfab7617ea1fbd15d6c81b2
     @api.ormcache('code', cache='stable')
+||||||| ec79d0c2b6910c8c0151d1bef959d847669bb4e2
+    @tools.ormcache('code', cache='stable')
+=======
+    def _search_display_name(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        if operator == 'in':
+            codes = [code for code in value if not (isinstance(code, str) and len(code) > 2)]
+            return Domain('name', operator, value) | Domain('code', operator, codes)
+        return super()._search_display_name(operator, value)
+
+    @api.model
+    @tools.ormcache('code', cache='stable')
+>>>>>>> a53752dc3fd139d1033169bcb5977ce417f92f33
     def _phone_code_for(self, code):
         data = self._cached_data()
         for country_code, phone_code in zip(data['code'], data['phone_code']):
