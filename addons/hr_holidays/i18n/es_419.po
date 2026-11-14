@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:36+0000\n"
-"PO-Revision-Date: 2026-10-22 19:13+0000\n"
+"POT-Creation-Date: 2026-11-13 17:36+0000\n"
+"PO-Revision-Date: 2026-11-11 16:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/hr_holidays/es_419/>\n"
@@ -202,6 +202,12 @@ msgstr "%(start_date)s → %(end_date)s (%(duration)s)"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid "%(success_count)s time off request(s) created successfully."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
 msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
@@ -318,8 +324,8 @@ msgstr ""
 "                    Apreciable <b><t t-"
 "out=\"object.env.context.get('manager')\"/></b>,\n"
 "                    <br/><br/>\n"
-"                    <p>Solicité un permiso y agradecería que lo apruebes "
-"cuando sea posible.</p>\n"
+"                    <p>Solicitaré un permiso. Te agradecería mucho que lo "
+"apruebes cuando te sea posible.</p>\n"
 "                    <ul>\n"
 "                        <li>Tipo de permiso: <t t-"
 "out=\"object.work_entry_type_id.name\"/></li>\n"
@@ -4074,6 +4080,12 @@ msgstr "Tablero de permisos"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
 msgid "Time Off Description"
 msgstr "Descripción del tiempo personal"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid "Time Off Generated"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__leave_notif_subtype_id

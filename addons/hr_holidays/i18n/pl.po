@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:36+0000\n"
+"POT-Creation-Date: 2026-11-13 17:36+0000\n"
 "PO-Revision-Date: 2026-10-28 10:49+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -228,6 +228,12 @@ msgstr "%(start_date)s → %(end_date)s (%(duration)s)"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid "%(success_count)s time off request(s) created successfully."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
 msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
@@ -340,8 +346,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Dzień dobry <b><t t-out=\"object.env.context.get"
-"('manager')\"/></b>,\n"
+"                    Dzień dobry <b><t t-"
+"out=\"object.env.context.get('manager')\"/></b>,\n"
 "                    <br/><br/>\n"
 "                    <p>Składam wniosek o urlop. Będę wdzięczny/-a za szybkie "
 "zatwierdzenie!</p>\n"
@@ -402,8 +408,8 @@ msgid ""
 "= 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"unit_of_measure == 'hour'\">Dni</span>\n"
-"                            <span class=\"ml8\" invisible=\"unit_of_measure "
-"!= 'hour'\">Godziny</span>"
+"                            <span class=\"ml8\" invisible=\"unit_of_measure !"
+"= 'hour'\">Godziny</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -2291,9 +2297,9 @@ msgid ""
 "{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
-"Wnioskuję o {{ object.duration_display }} typu {{ "
-"object.work_entry_type_id.name }} od {{ object.request_date_from }} do {{ "
-"object.request_date_to }}"
+"Wnioskuję o {{ object.duration_display }} typu "
+"{{ object.work_entry_type_id.name }} od {{ object.request_date_from }} do "
+"{{ object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -4088,6 +4094,12 @@ msgstr "Pulpit nawigacyjny czasu wolnego"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
 msgid "Time Off Description"
 msgstr "Czas wolny Opis"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid "Time Off Generated"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__leave_notif_subtype_id
