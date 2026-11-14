@@ -12,7 +12,6 @@ import {
     isElement,
     isEmptyBlock,
     isPhrasingContent,
-    isRedundantElement,
     isTextNode,
     isVisibleTextNode,
     isWhitespace,
@@ -25,7 +24,6 @@ import {
     descendants,
     findFurthest,
     findUpTo,
-    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
@@ -108,21 +106,11 @@ export class ColorPlugin extends Plugin {
             }
         },
 
-        /** Processors */
-        normalize_processors: this.normalize.bind(this),
+        redundant_element_selectors: "font",
     };
 
     setup() {
         this.activeColorInfo = {};
-    }
-
-    normalize(root) {
-        for (const el of selectElements(root, "font")) {
-            if (isRedundantElement(el)) {
-                unwrapContents(el);
-            }
-        }
-        return root;
     }
 
     getActiveColorInfo() {
