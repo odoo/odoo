@@ -124,7 +124,7 @@ export class CommandPalette extends Component {
         this.DefaultCommandItem = DefaultCommandItem;
         this.uiService = useService("ui");
         this.activeElement = this.uiService.activeElement;
-        useAutofocus({ ref: this.inputRef });
+        useAutofocus({ ref: this.inputRef, mobile: true });
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
         useHotkey("Control+Enter", () => this.executeSelectedCommand(true), {
