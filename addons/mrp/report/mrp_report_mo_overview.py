@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import copy
 import json
 from collections import defaultdict
@@ -290,29 +288,69 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_finished_operation_data(self, production, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id
         operations = []
+        employee_costs = []
         total_duration = total_duration_expected = total_cost = 0
-        for index, workorder in enumerate(production.workorder_ids):
-            estimate_cost = workorder._should_estimate_cost()
-            hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
-            duration = workorder.duration_expected / 60 if estimate_cost else workorder._get_actual_duration()
-            operation_cost = duration * hourly_cost
-            total_duration += duration
-            total_duration_expected += workorder.duration_expected
-            total_cost += operation_cost
-            operations.append({
+        e_index = 0
+
+        def _make_line(index, name, duration, unit_cost, decorator=None):
+            line = {
                 'level': level,
-                'index': f"{current_index}W{index}",
-                'model': workorder._name,
-                'name': f"{workorder.workcenter_id.display_name}: {workorder.display_name}",
-                'quantity': duration,
-                'quantity_decorator': self._get_comparison_decorator(workorder.duration_expected / 60, duration),
+                'index': index,
+                'model': 'mrp.workorder',
+                'name': name,
+                'quantity': duration,   # Quantity Column displays duration for operations.
                 'uom_name': "",
                 'uom_precision': 4,
-                'unit_cost': hourly_cost,
-                'mo_cost': currency.round(operation_cost),
+                'unit_cost': unit_cost,
+                'mo_cost': currency.round(duration * unit_cost),
                 'currency_id': currency.id,
                 'currency': currency,
-            })
+            }
+            if decorator:
+                line['quantity_decorator'] = decorator
+            return line
+
+        for w_index, workorder in enumerate(production.workorder_ids):
+            estimate = workorder._should_estimate_cost()
+            # Workcenter Cost
+            wc_hourly = workorder.costs_hour or workorder.workcenter_id.costs_hour
+            wc_duration = workorder.duration_expected / 60 if estimate else workorder._get_actual_duration()
+            total_duration += wc_duration
+            total_duration_expected += workorder.duration_expected
+            total_cost += (wc_duration * wc_hourly)
+            operations.append(_make_line(
+                f"{current_index}W{w_index}",
+                f"{workorder.workcenter_id.display_name}: {workorder.display_name}",
+                wc_duration, wc_hourly,
+                self._get_comparison_decorator(workorder.duration_expected / 60, wc_duration)
+            ))
+            # Employee Estimated Cost
+            if estimate:
+                employee_hourly = workorder.employee_costs_hour or workorder.workcenter_id.employee_costs_hour
+                employee_duration = workorder.duration_expected / 60
+                total_cost += (employee_duration * employee_hourly)
+                employee_costs.append(_make_line(
+                    f"{current_index}WE{e_index}",
+                    self.env._("Estimated employee cost: %(operation_name)s", operation_name=workorder.display_name),
+                    employee_duration, employee_hourly,
+                ))
+                e_index += 1
+            else:
+                # Employee actual Cost
+                for employee, time_ids in workorder.time_ids.grouped('employee_id').items():
+                    emp_name = employee.display_name if employee else _("Employee")
+                    for times in time_ids.grouped('employee_cost').values():
+                        employee_hourly = times[0].employee_cost
+                        employee_duration = sum(times.mapped('duration')) / 60
+                        total_cost += (employee_duration * employee_hourly)
+                        employee_costs.append(_make_line(
+                            f"{current_index}WE{e_index}",
+                            f"{emp_name}: {workorder.display_name}",
+                            employee_duration, employee_hourly,
+                        ))
+                        e_index += 1
+        # To keep the previous order --> workcenter costs then employee costs
+        operations.extend(employee_costs)
         return {
             'summary': {
                 'index': f"{current_index}W",
