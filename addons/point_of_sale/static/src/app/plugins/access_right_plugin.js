@@ -4,6 +4,7 @@ import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { user } from "@web/core/user";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 export class PosAccessRightPlugin extends Plugin {
     notification = usePlugin(NotificationPlugin);
@@ -24,7 +25,9 @@ export class PosAccessRightPlugin extends Plugin {
             this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
             this.canReorderProducts = await user.checkAccessRight("product.template", "write");
         } catch (error) {
-            console.error("Failed to check access rights:", error);
+            if (!(error instanceof ConnectionLostError)) {
+                console.error("Failed to check access rights:", error);
+            }
         }
     }
 
