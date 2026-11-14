@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
@@ -34,6 +34,41 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
             (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
         ]
+
+        attendance_ids_40h = [
+            Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+            Command.create({'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+        ]
+        attendance_ids_20h = [
+            Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+            Command.create({'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'full_day'}),
+        ]
+
+        self.calendar_40h, self.calendar_20h = self.env['resource.calendar'].create([
+            {
+                'name': 'Calendar 40h',
+                'company_id': self.test_company.id,
+                'hours_per_day': 8,
+                'attendance_ids': attendance_ids_40h,
+            },
+            {
+                'name': 'Calendar 20h',
+                'company_id': self.test_company.id,
+                'hours_per_day': 4,
+                'attendance_ids': attendance_ids_20h,
+            }
+        ])
 
         self.part_time_calendar, self.part_time_calendar2 = self.env['resource.calendar'].create([
             {
@@ -79,6 +114,21 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             timesheet.id: count
             for timesheet, count in timesheets_by_read_dict
         }
+
+    def _create_versions(self, employee, calendar_by_date):
+        return self.env['hr.version'].with_company(self.test_company).create([{
+            'date_version': date_version,
+            'contract_date_start': calendar_by_date[0][0],
+            'resource_calendar_id': calendar.id,
+            'employee_id': employee.id,
+        } for date_version, calendar in calendar_by_date])
+
+    def _get_global_leave_timesheets(self, global_leave, employee):
+        timesheets = self.env['account.analytic.line'].search(
+            [('global_leave_id', '=', global_leave.id), ('employee_id', '=', employee.id)],
+            order='date',
+        )
+        return [(timesheet.date, timesheet.unit_amount) for timesheet in timesheets]
 
     # This tests that timesheets are created for every employee with the same calendar
     # when a global time off is created.
@@ -615,3 +665,331 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
         timesheet = self.env['account.analytic.line'].search([('employee_id', '=', self.flexible_employee.id)])
         self.assertEqual(timesheet.unit_amount, self.flexible_calendar.hours_per_day)
+
+    def test_global_time_off_in_different_employees_versions(self):
+        # This version is using a 40h calendar
+        self.env['hr.version'].create({
+            'company_id': self.test_company.id,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 9, 30),
+            'resource_calendar_id': self.calendar_40h.id,
+            'employee_id': self.full_time_employee.id,
+        })
+        # Another version with half the working schedule 20h
+        self.env['hr.version'].create({
+            'company_id': self.test_company.id,
+            'date_version': datetime(2025, 10, 1),
+            'contract_date_start': datetime(2025, 10, 1),
+            'resource_calendar_id': self.calendar_20h.id,
+            'employee_id': self.full_time_employee.id,
+        })
+
+        global_time_off, global_time_off_v2 = self.env['resource.calendar.leaves'].with_company(self.test_company).create([
+            {
+                'name': 'Test',
+                'date_from': datetime(year=2025, month=9, day=23, hour=0),
+                'date_to': datetime(year=2025, month=9, day=23, hour=23),
+            },
+            {
+                'name': 'Test',
+                'date_from': datetime(year=2025, month=10, day=15, hour=0),
+                'date_to': datetime(year=2025, month=10, day=15, hour=23),
+            }
+        ])
+
+        first_timesheet = self.env['account.analytic.line'].search([('global_leave_id', '=', global_time_off.id), ('employee_id', '=', self.full_time_employee.id)])
+        second_timesheet = self.env['account.analytic.line'].search([('global_leave_id', '=', global_time_off_v2.id), ('employee_id', '=', self.full_time_employee.id)])
+
+        self.assertEqual(first_timesheet.unit_amount, self.calendar_40h.hours_per_day)
+        self.assertEqual(second_timesheet.unit_amount, self.calendar_20h.hours_per_day)
+
+    def test_change_of_calendar_within_same_contract(self):
+        # This version is using a 40h calendar
+        self.env['hr.version'].create({
+            'company_id': self.test_company.id,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 12, 31),
+            'resource_calendar_id': self.calendar_40h.id,
+            'employee_id': self.full_time_employee.id,
+        })
+        # Another version with half the working schedule 20h
+        self.env['hr.version'].create({
+            'company_id': self.test_company.id,
+            'date_version': datetime(2025, 10, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 12, 31),
+            'resource_calendar_id': self.calendar_20h.id,
+            'employee_id': self.full_time_employee.id,
+        })
+
+        one_version_global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Test',
+            'date_from': datetime(year=2025, month=9, day=23, hour=0),
+            'date_to': datetime(year=2025, month=9, day=23, hour=23),
+        })
+
+        one_version_timesheet = self.env['account.analytic.line'].search(
+            [('global_leave_id', '=', one_version_global_time_off.id),
+             ('employee_id', '=', self.full_time_employee.id)],
+            order='date',
+        )
+
+        self.assertEqual(one_version_timesheet.unit_amount, self.calendar_40h.hours_per_day)
+
+        two_versions_global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Test',
+            'company_id': self.test_company.id,
+            'date_from': datetime(year=2025, month=9, day=30, hour=0),
+            'date_to': datetime(year=2025, month=10, day=1, hour=23),
+        })
+        timesheets = self.env['account.analytic.line'].search(
+            [('global_leave_id', '=', two_versions_global_time_off.id), ('employee_id', '=', self.full_time_employee.id)],
+            order='date',
+        )
+
+        self.assertEqual(len(timesheets), 2, "There should be one timesheet per day")
+        self.assertEqual(timesheets.mapped('unit_amount'), [self.calendar_40h.hours_per_day, self.calendar_20h.hours_per_day])
+
+    def test_change_of_calendar_without_contract_dates(self):
+        self.env['hr.version'].create([
+            {
+                'company_id': self.test_company.id,
+                'date_version': datetime(2025, 9, 1),
+                'resource_calendar_id': self.test_company.resource_calendar_id.id,
+                'employee_id': self.full_time_employee.id,
+            },
+            {
+                'company_id': self.test_company.id,
+                'date_version': datetime(2025, 10, 3),
+                'resource_calendar_id': self.part_time_calendar.id,
+                'employee_id': self.full_time_employee.id,
+            },
+        ])
+
+        global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Test',
+            'date_from': datetime(2025, 10, 2, 0),
+            'date_to': datetime(2025, 10, 3, 23),
+        })
+        timesheets = self.env['account.analytic.line'].search(
+            [('global_leave_id', '=', global_time_off.id), ('employee_id', '=', self.full_time_employee.id)],
+            order='date',
+        )
+
+        self.assertEqual(len(timesheets), 2, "There should be one timesheet per day")
+        self.assertEqual(timesheets.mapped('unit_amount'), [8, 6])
+
+    def test_public_holiday_created_by_time_off_administrator(self):
+        time_off_admin = self.env['res.users'].with_company(self.test_company).create({
+            'name': 'Time Off Administrator',
+            'login': 'time_off_admin',
+            'group_ids': [Command.link(self.env.ref('hr_holidays.group_hr_holidays_manager').id)],
+        })
+        self._create_versions(self.full_time_employee, [
+            (date(2025, 9, 1), self.test_company.resource_calendar_id),
+            (date(2025, 10, 3), self.part_time_calendar),
+        ])
+
+        global_time_off = self.env['resource.calendar.leaves'].with_user(time_off_admin).with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 10, 2, 0),
+            'date_to': datetime(2025, 10, 3, 23),
+        })
+
+        self.assertEqual(
+            self._get_global_leave_timesheets(global_time_off, self.full_time_employee),
+            [(date(2025, 10, 2), 8), (date(2025, 10, 3), 6)],
+        )
+
+    def test_move_public_holiday_across_versions(self):
+        self._create_versions(self.full_time_employee, [
+            (date(2025, 9, 1), self.test_company.resource_calendar_id),
+            (date(2025, 10, 3), self.part_time_calendar),
+        ])
+        global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 10, 2, 0),
+            'date_to': datetime(2025, 10, 2, 23),
+        })
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(date(2025, 10, 2), 8)])
+
+        global_time_off.write({
+            'date_from': datetime(2025, 10, 6, 0),
+            'date_to': datetime(2025, 10, 6, 23),
+        })
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(date(2025, 10, 6), 6)])
+
+        global_time_off.write({
+            'date_from': datetime(2025, 10, 2, 0),
+            'date_to': datetime(2025, 10, 2, 23),
+        })
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(date(2025, 10, 2), 8)])
+
+    def test_change_calendar_of_version_with_public_holiday(self):
+        __, version_2 = self._create_versions(self.full_time_employee, [
+            (date(2025, 9, 1), self.test_company.resource_calendar_id),
+            (date(2025, 10, 3), self.test_company.resource_calendar_id),
+        ])
+        gto_version_1, gto_version_2 = self.env['resource.calendar.leaves'].with_company(self.test_company).create([
+            {
+                'name': 'Public Holiday',
+                'date_from': datetime(2025, 10, 2, 0),
+                'date_to': datetime(2025, 10, 2, 23),
+            },
+            {
+                'name': 'Public Holiday',
+                'date_from': datetime(2025, 10, 6, 0),
+                'date_to': datetime(2025, 10, 6, 23),
+            },
+        ])
+        self.assertEqual(self._get_global_leave_timesheets(gto_version_2, self.full_time_employee), [(date(2025, 10, 6), 8)])
+
+        version_2.resource_calendar_id = self.part_time_calendar
+
+        self.assertEqual(self._get_global_leave_timesheets(gto_version_1, self.full_time_employee), [(date(2025, 10, 2), 8)])
+        self.assertEqual(self._get_global_leave_timesheets(gto_version_2, self.full_time_employee), [(date(2025, 10, 6), 6)])
+
+    @freeze_time('2026-09-05')
+    def test_public_holiday_with_fully_flexible_version(self):
+        self._create_versions(self.full_time_employee, [
+            (date(2025, 9, 1), self.env['resource.calendar']),
+            (date(2025, 10, 3), self.test_company.resource_calendar_id),
+        ])
+        self._create_versions(self.full_time_employee_2, [
+            (date(2025, 9, 1), self.test_company.resource_calendar_id),
+            (date(2025, 10, 3), self.env['resource.calendar']),
+        ])
+        # Created separately, a batch would find the versions of every leave at once
+        gto_flexible_only = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 9, 30, 0),
+            'date_to': datetime(2025, 9, 30, 23),
+        })
+        gto_across_versions = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 10, 2, 0),
+            'date_to': datetime(2025, 10, 3, 23),
+        })
+
+        self.assertFalse(self._get_global_leave_timesheets(gto_flexible_only, self.full_time_employee))
+        self.assertEqual(self._get_global_leave_timesheets(gto_across_versions, self.full_time_employee), [(date(2025, 10, 3), 8)])
+        self.assertEqual(self._get_global_leave_timesheets(gto_flexible_only, self.full_time_employee_2), [(date(2025, 9, 30), 8)])
+        self.assertEqual(self._get_global_leave_timesheets(gto_across_versions, self.full_time_employee_2), [(date(2025, 10, 2), 8)])
+
+    def test_public_holiday_and_time_off_on_previous_version(self):
+        self._create_versions(self.full_time_employee, [
+            (date(2025, 9, 1), self.part_time_calendar),
+            (date(2025, 10, 3), self.test_company.resource_calendar_id),
+        ])
+        leave_type = self.env['hr.leave.type'].with_company(self.test_company).create({
+            'name': 'Paid Time Off',
+            'requires_allocation': False,
+        })
+        HrLeave = self.env['hr.leave'].with_company(self.test_company).with_context(mail_create_nolog=True, mail_notrack=True)
+
+        # Time off first, then a public holiday during it, then the time off is refused
+        time_off = HrLeave.create({
+            'name': 'Time Off',
+            'employee_id': self.full_time_employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2025, 9, 29),
+            'request_date_to': date(2025, 9, 30),
+        })
+        time_off.action_approve()
+        global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 9, 29, 0),
+            'date_to': datetime(2025, 9, 29, 23),
+        })
+        self.assertFalse(self._get_global_leave_timesheets(global_time_off, self.full_time_employee))
+
+        time_off.action_refuse()
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(date(2025, 9, 29), 6)])
+
+        # Public holiday first, then a time off around it, then the public holiday is cancelled
+        time_off_2 = HrLeave.create({
+            'name': 'Time Off',
+            'employee_id': self.full_time_employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2025, 9, 29),
+            'request_date_to': date(2025, 9, 30),
+        })
+        time_off_2.action_approve()
+        self.assertEqual(
+            sorted(time_off_2.timesheet_ids.mapped(lambda t: (t.date, t.unit_amount))),
+            [(date(2025, 9, 30), 6)],
+        )
+
+        global_time_off.unlink()
+        self.assertEqual(
+            sorted(time_off_2.timesheet_ids.mapped(lambda t: (t.date, t.unit_amount))),
+            [(date(2025, 9, 29), 6), (date(2025, 9, 30), 6)],
+        )
+
+    def test_refused_time_off_during_public_holiday_across_versions(self):
+        self._create_versions(self.full_time_employee, [
+            (date(2025, 9, 1), self.test_company.resource_calendar_id),
+            (date(2025, 10, 3), self.part_time_calendar),
+        ])
+        leave_type = self.env['hr.leave.type'].with_company(self.test_company).create({
+            'name': 'Paid Time Off',
+            'requires_allocation': False,
+        })
+        # A time off cannot cross versions with different working schedules, so one per version,
+        # each with a working day outside the public holiday to keep its timesheets
+        time_off_version_1, time_off_version_2 = self.env['hr.leave'].with_company(self.test_company).with_context(
+            mail_create_nolog=True, mail_notrack=True,
+        ).create([
+            {
+                'name': 'Time Off',
+                'employee_id': self.full_time_employee.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': date(2025, 10, 1),
+                'request_date_to': date(2025, 10, 2),
+            },
+            {
+                'name': 'Time Off',
+                'employee_id': self.full_time_employee.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': date(2025, 10, 3),
+                'request_date_to': date(2025, 10, 6),
+            },
+        ])
+        (time_off_version_1 | time_off_version_2).action_approve()
+        global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2025, 10, 2, 0),
+            'date_to': datetime(2025, 10, 3, 23),
+        })
+        self.assertFalse(self._get_global_leave_timesheets(global_time_off, self.full_time_employee))
+
+        time_off_version_1.action_refuse()
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(date(2025, 10, 2), 8)])
+
+        time_off_version_2.action_refuse()
+        self.assertEqual(
+            self._get_global_leave_timesheets(global_time_off, self.full_time_employee),
+            [(date(2025, 10, 2), 8), (date(2025, 10, 3), 6)],
+        )
+
+    def test_change_calendar_of_current_version_by_employees_officer(self):
+        employees_officer = self.env['res.users'].with_company(self.test_company).create({
+            'name': 'Employees Officer',
+            'login': 'employees_officer',
+            'group_ids': [Command.link(self.env.ref('hr.group_hr_user').id)],
+        })
+        today = date.today()
+        next_monday = today + timedelta(days=7 - today.weekday())
+        global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+            'name': 'Public Holiday',
+            'date_from': datetime.combine(next_monday, datetime.min.time()),
+            'date_to': datetime.combine(next_monday, datetime.min.time()) + timedelta(hours=23),
+        })
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(next_monday, 8)])
+
+        # The current version has no end date
+        self.full_time_employee.with_user(employees_officer).resource_calendar_id = self.part_time_calendar
+
+        self.assertEqual(self._get_global_leave_timesheets(global_time_off, self.full_time_employee), [(next_monday, 6)])
