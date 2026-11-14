@@ -53,6 +53,10 @@
             }
         }
 
+    &:active i {
+        transform: scale(0.9);
+    }
+
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
                 opacity: var(--o-mail-ActionList-Button-opacity);
