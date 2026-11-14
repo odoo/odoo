@@ -1,5 +1,6 @@
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
+import { getActiveActions } from "@web/views/utils";
 
 export class ActivityArchParser {
     parse(xmlDoc, models, modelName) {
@@ -45,6 +46,7 @@ export class ActivityArchParser {
             }
         });
         return {
+            activeActions: getActiveActions(xmlDoc),
             fieldNodes,
             templateDocs,
             title,
