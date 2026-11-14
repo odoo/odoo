@@ -4,3 +4,4 @@ from . import equipment
 from . import hr_employee
 from . import hr_employee_departure
 from . import hr_employee_public
+from . import update
