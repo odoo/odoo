@@ -41,7 +41,6 @@ except ImportError:
 from abc import ABC, abstractmethod
 from pathlib import Path
 from sys import stderr, stdout
-from typing import Dict, List, Optional, Tuple
 from urllib.request import HTTPError
 from urllib.request import urlopen as _urlopen
 
@@ -57,7 +56,7 @@ from pip._internal.index.package_finder import (
 from pip._internal.models.link import Link  # noqa: PLC2701
 from pip._internal.models.target_python import TargetPython  # noqa: PLC2701
 
-Version = Tuple[int, ...]
+Version = tuple[int, ...]
 
 # shared beween debian and ubuntu
 SPECIAL = {
@@ -79,7 +78,7 @@ def urlopen(url):
     return open(file_path, 'rb')   # noqa: SIM115
 
 
-def parse_version(vstring: str) -> Optional[Version]:
+def parse_version(vstring: str) -> Version | None:
     try:
         return parse(vstring).release
     except InvalidVersion:
@@ -181,7 +180,7 @@ class Distribution(ABC):
         self._release = release
 
     @abstractmethod
-    def get_version(self, package: str) -> Optional[Version]:
+    def get_version(self, package: str) -> Version | None:
         ...
 
     def __str__(self):
@@ -242,15 +241,15 @@ class Ubuntu(Distribution):
         # ideally we should request the proper Content-Encoding but PUC
         # apparently does not care, and returns a somewhat funky
         # content-encoding (x-gzip) anyway
-        data = gzip.open(
+        with gzip.open(
             urlopen(f'https://packages.ubuntu.com/source/{release}/allpackages?format=txt.gz'),
             mode='rt', encoding='utf-8',
-        )
-        for line in itertools.islice(data, 6, None):  # first 6 lines is garbage header
-            # ignore the restricted, security, universe, multiverse tags
-            m = re.match(r'(\S+) \(([^)]+)\)', line.strip())
-            assert m, f"invalid line {line.strip()!r}"
-            self._packages[m[1]] = m[2]
+        ) as data:
+            for line in itertools.islice(data, 6, None):  # first 6 lines is garbage header
+                # ignore the restricted, security, universe, multiverse tags
+                m = re.match(r'(\S+) \(([^)]+)\)', line.strip())
+                assert m, f"invalid line {line.strip()!r}"
+                self._packages[m[1]] = m[2]
 
     def get_version(self, package):
         package = SPECIAL.get(package, package)
@@ -265,7 +264,7 @@ def _strip_comment(line):
     return line.split('#', 1)[0].strip()
 
 
-def parse_requirements(reqpath: Path) -> Dict[str, List[Tuple[str, Marker]]]:
+def parse_requirements(reqpath: Path) -> dict[str, list[tuple[str, Marker]]]:
     """ Parses a requirement file to a dict of {package: [(version, markers)]}
 
     The env markers express *whether* that specific dep applies.
@@ -336,7 +335,7 @@ def main(args):
         platform_headers.append(checker._release[:5])
         python_headers.append(version)
 
-    reqs = parse_requirements((Path.cwd() / __file__).parent.parent / 'requirements.txt')
+    reqs = parse_requirements((Path.cwd() / __file__).parent.parent.parent / 'requirements.txt')
     if args.filter:
         reqs = {r: o for r, o in reqs.items() if any(f in r for f in args.filter.split(','))}
 
@@ -486,7 +485,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         'release', nargs='+',
-        help="Release to check against, should use the format '{distro}:{release}' e.g. 'debian:sid'"
+        help="Release to check against, should use the format '{distro}:{release}' e.g. 'debian:sid'",
     )
     parser.add_argument(
         '-a', '--all', action="store_true",

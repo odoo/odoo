@@ -12,6 +12,10 @@ exclude_suffix = '_L' if IS_WINDOWS else '_W'
 drivers_path = Path(__file__).parent / 'drivers'
 interfaces_path = Path(__file__).parent / 'interfaces'
 
+if not IS_TEST:
+    import serial  # mostly to help odools detecting the dependency since the import are conditional
+    import pyusb
+
 for file_path in chain(drivers_path.glob('*.py'), interfaces_path.glob('*.py')):
     module = file_path.stem
     if IS_TEST or any(module.endswith(suffix) for suffix in ['__', exclude_suffix]):

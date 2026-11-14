@@ -11,9 +11,8 @@ from datetime import timedelta
 
 TEST_CRED = {}
 last_invoice = {'INV/2024/': 20, 'RINV/2024/': 12}
-with contextlib.suppress(ImportError):
-    # Private credentials.py. Sorry, we can't share this file.
-    from .credentials import TEST_CRED, last_invoice
+
+# TODO ando make it work without import
 
 
 @tagged('external_l10n', 'external', 'post_install', '-at_install', '-standard', '-post_install_l10n')

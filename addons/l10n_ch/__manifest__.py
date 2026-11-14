@@ -26,6 +26,9 @@ The generation of the QR-bill is automatic if you meet the previous criteria. Th
         'account_edi_ubl_cii',
         'l10n_din5008',
     ],
+    'external_dependencies': [
+        {'pypi': 'reportlab', 'apt': 'python3-reportlab'},
+    ],
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
