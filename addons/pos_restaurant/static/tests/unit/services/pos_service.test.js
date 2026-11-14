@@ -682,6 +682,20 @@ describe("restaurant pos_store.js", () => {
         });
     });
 
+    test("a popstate keeps the selected course of the current order", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder({ table_id: store.models["restaurant.table"].get(2) });
+        store.navigate("ProductScreen", { orderUuid: order.uuid });
+        store.addCourse();
+        store.addCourse();
+        expect(order.getSelectedCourse().name).toBe("Course 2");
+
+        // On mobile, closing a popup goes back in the history (popstate)
+        await store.router.popStateCallback();
+
+        expect(order.getSelectedCourse().name).toBe("Course 2");
+    });
+
     test("preparation receipt prints courses in their sequence order", async () => {
         const store = await setupPosEnv();
         const models = store.models;
