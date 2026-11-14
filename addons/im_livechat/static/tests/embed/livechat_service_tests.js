@@ -88,3 +88,28 @@ QUnit.test("Only necessary requests are made when creating a new chat", async (a
         "/mail/link_preview",
     ]);
 });
+
+QUnit.test("Leaving clears the saved session before notifying the server", async (assert) => {
+    await startServer();
+    await loadDefaultConfig();
+    start({
+        mockRPC(route) {
+            if (route === "/im_livechat/visitor_leave_session") {
+                assert.step(
+                    expirableStorage.getItem("im_livechat_session")
+                        ? "session still saved"
+                        : "session cleared"
+                );
+            }
+        },
+    });
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow");
+    await insertText(".o-mail-Composer-input", "Hello World!");
+    triggerHotkey("Enter");
+    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await click("[title='Close Chat Window']");
+    await click("button", { text: "Close conversation" });
+    await contains(".o-livechat-LivechatButton", { count: 0 });
+    assert.verifySteps(["session cleared"]);
+});
