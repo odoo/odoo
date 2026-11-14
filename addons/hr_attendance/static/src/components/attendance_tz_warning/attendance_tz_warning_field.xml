@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_attendance.AttendanceTzWarningField">
+        <div t-if="this.warning" class="o_attendance_tz_warning alert alert-warning mb-3" role="status">
+            <i class="oi me-1" data-icon="warning" role="img" aria-label="Warning" title="Warning"/>
+            <t t-out="this.warning"/>
+            You see the hours in <t t-out="this.browserTz"/>.
+        </div>
+    </t>
+
+</templates>
