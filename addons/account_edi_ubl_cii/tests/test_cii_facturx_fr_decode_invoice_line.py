@@ -238,3 +238,19 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'price_unit': 2.0,
             'discount': 25.0,
         }])
+
+    def test_partial_import_invoice_line_allowance_included_in_net_price(self):
+        """Test that a line allowance not deducted from the line total is not deducted from the net price either."""
+        self.percent_tax(10.0, type_tax_use='purchase')
+        imported_invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_allowance_included_in_net_price')
+        self.assertRecordValues(imported_invoice.invoice_line_ids, [{
+            'quantity': 1.0,
+            'price_unit': 2.45,
+            'discount': 0.0,
+            'price_subtotal': 2.45,
+        }])
+        self.assertRecordValues(imported_invoice, [{
+            'amount_untaxed': 2.45,
+            'amount_tax': 0.25,
+            'amount_total': 2.70,
+        }])
