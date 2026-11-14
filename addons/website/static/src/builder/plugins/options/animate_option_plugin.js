@@ -52,7 +52,7 @@ export class AnimateOptionPlugin extends Plugin {
                 description: _t("Animate Text"),
                 Component: AnimateText,
                 props: {
-                    config: this.config.getAnimateTextConfig(),
+                    config: this.config.getBuilderEnvConfig(),
                     getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
                     isActive: this.isAnimatedTextActive.bind(this),
                     animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
@@ -491,10 +491,6 @@ export class SetAnimationModeAction extends BuilderAction {
         this.animationWithFadein = ["onAppearance", "onScroll"];
         this.scrollingElement = getScrollingElement(this.document);
     }
-    // todo: to remove after having the commit of louis
-    isApplied() {
-        return true;
-    }
     async clean({ editingElement, value: effectName, nextAction }) {
         this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
         editingElement.classList.remove(
@@ -607,10 +603,6 @@ export class SetAnimateIntensityAction extends BuilderAction {
 export class ForceAnimationAction extends BuilderAction {
     static id = "forceAnimation";
     static dependencies = ["animateOption"];
-    // todo: to remove after having the commit of louis
-    isActive() {
-        return true;
-    }
     apply({ editingElement }) {
         this.dependencies.animateOption.forceAnimation(editingElement);
     }

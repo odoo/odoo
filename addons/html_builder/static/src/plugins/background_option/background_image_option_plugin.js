@@ -136,10 +136,6 @@ export class BackgroundImageOptionPlugin extends Plugin {
                 "o_modified_image_to_save"
             );
         }
-        // TODO: check this comment
-        // We use selectStyle so that if when a background image is removed the
-        // remaining image matches the o_cc's gradient background, it can be
-        // removed too.
         this.dependencies.style.setBackgroundImageUrl(el, backgroundURL);
     }
     /**

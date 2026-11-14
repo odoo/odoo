@@ -36,7 +36,6 @@ export class SetGridLayoutAction extends BuilderAction {
     static id = "setGridLayout";
     static dependencies = ["selection"];
     apply({ editingElement }) {
-        // TODO no preview/apply if it s isApplied
         if (isGrid(editingElement)) {
             return;
         }
@@ -54,7 +53,6 @@ export class SetColumnLayoutAction extends BuilderAction {
     static id = "setColumnLayout";
     apply({ editingElement }) {
         const rowEl = getRow(editingElement);
-        // TODO no preview/apply if it s isApplied
         if (!isGrid(editingElement)) {
             return;
         }
