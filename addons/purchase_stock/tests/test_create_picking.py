@@ -750,6 +750,30 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(purchase_order.order_line.price_unit, 0)
         self.assertEqual(purchase_order.picking_ids.move_ids.price_unit, 0)
 
+    def test_update_qty_after_date_change(self):
+        """ A PO is confirmed with an Expected Arrival in 8 days, then its Expected Arrival is set
+        to today. Decreasing and increasing the ordered quantity updates the receipt move, whose
+        deadline stays on the Promised Date.
+        """
+        date_promised = datetime.today().replace(microsecond=0) + timedelta(days=8)
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({'product_id': self.product_id_1.id, 'product_qty': 3.0, 'date_planned': date_promised})],
+        })
+        purchase_order.button_confirm()
+
+        with Form(purchase_order) as po_form:
+            po_form.date_planned = datetime.today()
+        with Form(purchase_order) as po_form:
+            with po_form.order_line.edit(0) as line:
+                line.product_qty = 2.0
+        self.assertRecordValues(purchase_order.picking_ids.move_ids, [{'product_uom_qty': 2.0, 'date_deadline': date_promised}])
+
+        with Form(purchase_order) as po_form:
+            with po_form.order_line.edit(0) as line:
+                line.product_qty = 5.0
+        self.assertRecordValues(purchase_order.picking_ids.move_ids, [{'product_uom_qty': 5.0, 'date_deadline': date_promised}])
+
     def test_return_to_vendor_multi_step(self):
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         self.env.user.group_ids += self.env.ref('stock.group_adv_location')
