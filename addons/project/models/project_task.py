@@ -1709,6 +1709,11 @@ class ProjectTask(models.Model):
             & Domain("subtype_id.internal", "=", False)
         ) | Domain("message_type", "=", "tracking")
 
+    def _allow_sudo_tracking(self):
+        # tracking is exposed to share users through _get_share_message_domain,
+        # so the portal fetch must sudo to bypass the mail.message share ACL
+        return True
+
     def _notify_get_recipients_groups(self, message, model_description):
         # Handle project users and managers recipients that can assign
         # tasks and create new one directly from notification emails. Also give

@@ -5329,3 +5329,12 @@ class MailThread(models.AbstractModel):
 
     def _get_share_message_domain(self):
         return SHARE_DOMAIN
+
+    def _allow_sudo_tracking(self):
+        """Whether a share/portal user who can access this record may see its
+        tracking messages. When True, the portal chatter fetch runs sudo so the
+        mail.message share ACL (which strips tracking) is bypassed; the fetch
+        domain (``_get_portal_message_fetch_domain`` -> ``_get_share_message_domain``)
+        still restricts what is returned. Models that relax their share domain
+        to expose tracking (e.g. project.task) opt in here too."""
+        return False

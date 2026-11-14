@@ -62,14 +62,18 @@ class PortalWebClientController(WebclientController):
         domain = self._setup_portal_message_fetch_extra_domain(
             params
         ) & self._get_portal_message_fetch_domain(thread)
-        # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
+        # sudo: mail.message - thread access is validated above and the domain is
+        # massively restricted to share-only messages. Threads sudoed by access
+        # (token / hash-pid) fetch sudoed; models that expose tracking to share
+        # users (_allow_sudo_tracking) also sudo, to bypass the share ACL which
+        # strips tracking, while the domain still bounds the result.
         messages = self._resolve_messages(
             store,
             domain=domain,
             thread=thread,
             fetch_params=fetch_params,
             add_to_store=False,
-            sudo=True,
+            sudo=thread.env.su or thread._allow_sudo_tracking(),
         )
         for message_data in messages.portal_message_format(options=params):
             store.add_model_values("mail.message", message_data)
