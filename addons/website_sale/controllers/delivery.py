@@ -84,6 +84,9 @@ class Delivery(WebsiteSale):
             'amount_total': Monetary.value_to_html(
                 order.amount_total, {'display_currency': currency}
             ),
+            "website_sale.cart_summary_content": request.env["ir.ui.view"]._render_template(
+                "website_sale.cart_summary_content", {"website_sale_order": order}
+            ),
         }
 
     @route('/shop/get_delivery_rate', type='jsonrpc', auth='public', methods=['POST'], website=True)
