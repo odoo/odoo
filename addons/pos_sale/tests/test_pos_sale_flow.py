@@ -134,7 +134,7 @@ class PoSSaleSyncCommon:
     def _settle_in_pos(self, sale_order):
         pos_order_id = self._sync_paid_pos_order(
             [{
-                'product': line.product_id,
+                'product': line.product_id or self.main_pos_config.default_product_id,
                 'qty': line.product_uom_qty,
                 'price_unit': line.price_unit,
                 'extra_values': {
