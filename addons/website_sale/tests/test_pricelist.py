@@ -36,12 +36,12 @@ Try to keep one call to `get_pricelist_available` by test method.
 @tagged("post_install", "-at_install")
 class TestWebsitePriceList(WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -401,26 +401,62 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(base_unit_price, product.base_unit_price)
 
     def test_pricelist_report_cost_based_restricted_to_internal_users(self):
-        """ Portal users can read pricelists but not the product cost, so they must not be able
+        """Portal users can read pricelists but not the product cost, so they must not be able
         to print a cost-based pricelist.
         """
-        pricelist = self._create_pricelist(item_ids=[Command.create({
-            'base': 'standard_price',
-            'compute_price': 'markup',
-            'price_markup': 10,
-        })])
+        pricelist = self._create_pricelist(
+            item_ids=[
+                Command.create({
+                    "base": "standard_price",
+                    "compute_price": "markup",
+                    "price_markup": 10,
+                })
+            ]
+        )
         self.product.standard_price = 100.0
         data = {
-            'pricelist_id': pricelist.id,
-            'active_model': 'product.product',
-            'active_ids': self.product.ids,
+            "pricelist_id": pricelist.id,
+            "active_model": "product.product",
+            "active_ids": self.product.ids,
         }
-        report = self.env['report.product.report_pricelist']
+        report = self.env["report.product.report_pricelist"]
         with self.assertRaisesRegex(AccessError, "not allowed to access this document"):
             report.with_user(self._create_new_portal_user()).get_html(data)
 
         report_data = report.with_user(self._create_new_internal_user())._get_report_data(data)
-        self.assertEqual(report_data['products'][0]['price'][self.product.uom_id.id][1], 110.0)
+        self.assertEqual(report_data["products"][0]["price"][self.product.uom_id.id][1], 110.0)
+
+    def test_prevent_zero_price_sale_hides_price_before_discount(self):
+        """When a pricelist discounts a product to zero and zero prices are hidden,
+        the catalog price must not be sent either: the product page would still
+        print it as a hidden strikethrough, and it is also used as analytics price."""
+        self.website.sudo().prevent_sale = True
+        product_tmpl = self.env["product.template"].create({
+            "name": "Test Product",
+            "list_price": 100.0,
+            "taxes_id": False,
+            "is_published": True,
+        })
+        self.pricelist.write({
+            "item_ids": [
+                Command.create({
+                    "compute_price": "discount",
+                    "price_discount": 100,
+                    "product_tmpl_id": product_tmpl.id,
+                })
+            ]
+        })
+        with self.mock_request(website_sale_current_pl=self.pricelist.id) as request:
+            product_tmpl = product_tmpl.with_env(request.env)
+            combination_info = product_tmpl._get_combination_info()
+            analytics_data = product_tmpl._get_google_analytics_data(
+                product_tmpl.product_variant_id, combination_info
+            )
+
+        self.assertTrue(combination_info["hide_price"])
+        self.assertFalse(combination_info["has_discounted_price"])
+        self.assertEqual(combination_info["list_price"], 0)
+        self.assertEqual(analytics_data["price"], 0)
 
     def test_base_price_with_discount_on_pricelist_tax_included(self):
         """
@@ -437,13 +473,18 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         }).execute()
         self.pricelist = self._enable_pricelists()
 
-        product_tmpl = self.env["product.template"].sudo().create({
-            "name": "Test Product",
-            "type": "consu",
-            "list_price": 61.98,  # 75 tax incl.
-            "taxes_id": [Command.create({"name": "21%", "type_tax_use": "sale", "amount": 21})],
-            "is_published": True,
-        })
+        product_tmpl = (
+            self
+            .env["product.template"]
+            .sudo()
+            .create({
+                "name": "Test Product",
+                "type": "consu",
+                "list_price": 61.98,  # 75 tax incl.
+                "taxes_id": [Command.create({"name": "21%", "type_tax_use": "sale", "amount": 21})],
+                "is_published": True,
+            })
+        )
         self.pricelist.sudo().write({
             "item_ids": [
                 Command.create({
@@ -595,12 +636,12 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 @tagged("post_install", "-at_install")
 class TestWebsitePriceListAvailable(WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -704,12 +745,12 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
 @tagged("post_install", "-at_install")
 class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     def setUp(self):
         super().setUp()
@@ -808,8 +849,10 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # Test get all available pricelists with geoip and no partner pricelist
 
         # property_product_pricelist will also be returned in the available pricelists
-        website_id = self.ref('base.default_website')
-        self.website1_be_pl += self.env.user.with_context(website_id=website_id).partner_id.property_product_pricelist
+        website_id = self.ref("base.default_website")
+        self.website1_be_pl += self.env.user.with_context(
+            website_id=website_id
+        ).partner_id.property_product_pricelist
 
         with self.mock_request(country_code=self.BE.code):
             pls = self.website.get_pricelist_available()
@@ -849,8 +892,10 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # Test get all available with geoip and visible pricelists + promo pl
         pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_code_select
         # property_product_pricelist will also be returned in the available pricelists
-        website_id = self.ref('base.default_website')
-        pls_to_return += self.env.user.with_context(website_id=website_id).partner_id.property_product_pricelist
+        website_id = self.ref("base.default_website")
+        pls_to_return += self.env.user.with_context(
+            website_id=website_id
+        ).partner_id.property_product_pricelist
 
         current_pl = self.w1_pl_code
         with self.mock_request(website_sale_current_pl=current_pl.id, country_code=self.BE.code):
