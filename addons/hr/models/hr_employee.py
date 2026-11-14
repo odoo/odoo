@@ -1339,30 +1339,23 @@ class HrEmployee(models.Model):
     def _get_employee_working_now(self):
         """Return the ids of the employees of ``self`` expected to work now.
 
-        An employee is "working now" when their current working schedule has
-        work intervals within the next hour (in the employee's timezone).
-        Intervals are computed per calendar, so only company-wide leaves are
-        considered, not the employee's own time off. Employees without
-        calendar are never returned. Despite ``@api.model``, it works on ``self``.
+        An employee is "working now" when the working schedule of their version
+        in contract (their current one if they never had a contract) has work
+        intervals within the next hour. Only company-wide leaves are considered,
+        not the employee's own time off. Employees without calendar are never
+        returned. Despite ``@api.model``, it works on ``self``.
 
         :rtype: list[int]
         """
-        working_now = []
-        # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
-        for tz_info, employee_ids in self.filtered('resource_calendar_id').grouped('tz').items():
-            calendar_by_employee = employee_ids.grouped('resource_calendar_id')
-            tz = ZoneInfo(tz_info or 'UTC')
-            from_datetime = fields.Datetime.now().replace(tzinfo=UTC).astimezone(tz)
-            to_datetime = from_datetime + timedelta(hours=1)
-            for calendar_id, res_employee_ids in calendar_by_employee.items():
-                # Getting work interval of the first is working. Functions called on resource_calendar_id
-                # are waiting for singleton
-                work_interval = calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
-                # Employee that is not supposed to work have empty items.
-                if len(work_interval._items) > 0:
-                    # The employees should be working now according to their work schedule
-                    working_now += res_employee_ids.ids
-        return working_now
+        from_datetime = fields.Datetime.now().replace(tzinfo=UTC)
+        to_datetime = from_datetime + timedelta(hours=1)
+        work_intervals = self.filtered('resource_calendar_id')._work_intervals(
+            from_datetime, to_datetime,
+            # only the company-wide leaves, not the employee's own time off
+            domain=[('resource_id', '=', False), ('count_as', '=', 'absence')],
+        )
+        # The employees should be working now according to their work schedule
+        return [employee.id for employee, intervals in work_intervals.items() if intervals]
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
@@ -2917,84 +2910,47 @@ class HrEmployee(models.Model):
         :rtype: dict[int, list[dict]]
         """
 
-        unavailability_mapping = defaultdict(list)
         start_dt = start.astimezone(UTC)
         stop_dt = stop.astimezone(UTC)
         full_interval = Intervals([(start_dt, stop_dt, self.env['resource.calendar.attendance'])])
-        calendar_tz_periods_per_employee = self.sudo()._get_version_periods(
-            (start_dt - relativedelta(days=1)).date(),
-            (stop_dt + relativedelta(days=1)).date(),
-            ['resource_calendar_id', 'tz'],
-            check_contract=True,
-        )
-
-        work_resources_per_calendar = defaultdict(self.env['resource.resource'].sudo)
-        attendance_resources_per_calendar = defaultdict(self.env['resource.resource'].sudo)
-        leave_resources_per_calendar = defaultdict(self.env['resource.resource'].sudo)
-        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
-            for period_start, period_stop, (calendar, tz) in calendar_periods:
-                if calendar._is_flexible():
-                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                elif any(calendar.attendance_ids.mapped('duration_based')):
-                    attendance_resources_per_calendar[calendar, tz] += employee.resource_id
-                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                else:
-                    work_resources_per_calendar[calendar, tz] += employee.resource_id
-
-        work_intervals_per_calendar = defaultdict()
-        attendance_intervals_per_calendar = defaultdict()
-        leave_intervals_per_calendar = defaultdict()
-        # Standard Calendars
-        for (calendar, tz), resources in work_resources_per_calendar.items():
-            work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-
-        # Duration Based Calendars
-        for (calendar, tz), resources in attendance_resources_per_calendar.items():
-            attendance_intervals_per_calendar[calendar, tz] = calendar._attendance_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-            for resource_id, work_intervals in attendance_intervals_per_calendar[calendar, tz].items():
-                extended_intervals = Intervals([])
-                for att_start, att_end, attendance in work_intervals:
-                    if not attendance.duration_based:
-                        extended_intervals |= Intervals([(att_start, att_end, attendance)])
-                        continue
-                    extended_start = datetime.combine(att_start.date(), time.min, ZoneInfo(tz))
-                    extended_end = datetime.combine(att_end.date() + timedelta(days=1), time.min, ZoneInfo(tz))
-                    extended_intervals |= Intervals([(extended_start, extended_end, attendance)])
-                attendance_intervals_per_calendar[calendar, tz][resource_id] = extended_intervals
-
-        # Flexible and Fully Flexible Calendars
-        for (calendar, tz), resources in leave_resources_per_calendar.items():
-            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-
-        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
-            employee_work_intervals = []
-            for period_start, period_stop, (calendar, tz) in calendar_periods:
-                period_start_dt = datetime.combine(period_start, time.min).replace(tzinfo=ZoneInfo(tz))
-                period_stop_dt = datetime.combine(period_stop + timedelta(days=1), time.min).replace(tzinfo=ZoneInfo(tz))
-                period_interval = Intervals([(period_start_dt, period_stop_dt, calendar)])
-                current_work_intervals = Intervals([])
-                if calendar._is_flexible():
-                    current_work_intervals = period_interval - leave_intervals_per_calendar[calendar, tz][employee.resource_id.id]
-                elif any(calendar.attendance_ids.mapped('duration_based')):
-                    current_work_intervals = period_interval & attendance_intervals_per_calendar[calendar, tz][employee.resource_id.id] \
-                                          - employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][employee.resource_id.id])
-                else:
-                    current_work_intervals = period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
-                for interval_start, interval_stop, interval_calendar in current_work_intervals:
-                    employee_work_intervals += Intervals([(
-                        interval_start.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
-                        interval_stop.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
-                        interval_calendar
-                    )])
-            unavailability_mapping[employee.resource_id.id] = full_interval - employee_work_intervals
+        # a day more on each side: the intervals are moved to the user timezone below
+        dt_from, dt_to = start_dt - relativedelta(days=1), stop_dt + relativedelta(days=1)
+        # sudo: the employees are listed to users without access to them (e.g. through
+        # hr.employee.public in the gantt views), whatever the active companies
+        resources = self.sudo().resource_id
+        windows = resources._get_period_windows(dt_from, dt_to)
+        work_intervals = resources._work_intervals_from_windows(dt_from, dt_to, windows)
+        presence_intervals = resources._attendance_intervals_from_windows(dt_from, dt_to, windows, availability=True)
+        leave_intervals = resources._leave_intervals_from_windows(dt_from, dt_to, windows)
 
         result = {}
         for employee in self:
-            if employee not in calendar_tz_periods_per_employee:
+            resource = employee.resource_id
+            if not windows.get(resource):
                 result[employee.id] = [{'start': start_dt, 'stop': stop_dt}]
                 continue
-            result[employee.id] = [{'start': interval[0].astimezone(UTC), 'stop': interval[1].astimezone(UTC)} for interval in unavailability_mapping.get(employee.resource_id.id, [])]
-
+            employee_work_intervals = []
+            for window_start, window_stop, calendar, zone in windows[resource]:
+                window = Intervals([(window_start, window_stop, calendar)])
+                if not calendar or calendar._is_flexible():
+                    current_work_intervals = window - leave_intervals[resource]
+                elif any(calendar.attendance_ids.mapped('duration_based')):
+                    # whole attendance days, minus the leaves
+                    current_work_intervals = (window & presence_intervals[resource]) \
+                        - employee._adjust_leaves(leave_intervals[resource])
+                else:
+                    current_work_intervals = window & work_intervals[resource]
+                employee_work_intervals.extend(
+                    (interval_start.astimezone(zone).replace(tzinfo=self.env.tz),
+                     interval_stop.astimezone(zone).replace(tzinfo=self.env.tz),
+                     interval_calendar)
+                    for interval_start, interval_stop, interval_calendar in current_work_intervals
+                )
+            unavailable_intervals = full_interval - Intervals(employee_work_intervals)
+            result[employee.id] = [
+                {'start': interval[0].astimezone(UTC), 'stop': interval[1].astimezone(UTC)}
+                for interval in unavailable_intervals
+            ]
         return result
 
     @api.model
@@ -3106,17 +3062,16 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = ZoneInfo(self.tz) if self.tz else None
         if not valid_versions:
             calendar = self.resource_calendar_id
             resources_per_tz = self._get_resources_per_tz(date_from)
-            calendar_intervals = calendar._work_intervals_batch(
+            return self._work_intervals(
                 date_from,
                 date_to,
-                resources_per_tz=resources_per_tz,
-                compute_leaves=True,
-                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
-            return calendar_intervals
+                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self]
+        # The first version in contract applies from the contract start, even when it is dated later:
+        # the resource-side _work_intervals follow the version dates, so they cannot be used here.
+        employee_tz = ZoneInfo(self.tz) if self.tz else None
         duration_data = Intervals()
         version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
         for version in valid_versions:
@@ -3206,6 +3161,27 @@ class HrEmployee(models.Model):
         :return: versions ordered by ``date_version``
         :rtype: hr.version
         """
+        versions = self.env['hr.version'].union(*(
+            version
+            for periods in self._get_contract_version_periods(date_from, date_to).values()
+            for _start, _stop, version in periods
+        ))
+        return versions.sorted('date_version')
+
+    def _get_contract_version_periods(self, date_from, date_to):
+        """Return the days of ``[date_from, date_to]`` on which each version in contract is in effect.
+
+        Within a contract, a version is effective from its ``date_version``
+        (the first version from the contract start) until the day before the
+        next version of the same contract (the last one until the contract
+        end). Days out of any contract are absent. Works in batch.
+
+        :param datetime.date date_from: start of the period (inclusive)
+        :param datetime.date date_to: end of the period (inclusive)
+        :return: ``{employee: [(date_from, date_to, version), ...]}`` with inclusive dates,
+            ordered by date (``defaultdict(list)``)
+        :rtype: dict
+        """
         candidate_versions = self.version_ids.filtered_domain([
             ('active', '=', True),
             ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
@@ -3213,10 +3189,10 @@ class HrEmployee(models.Model):
         ])
         versions_per_contract = defaultdict(lambda: self.env['hr.version'])
         for version in candidate_versions:
-            key = (version.employee_id.id, version.contract_date_start, version.contract_date_end)
+            key = (version.employee_id, version.contract_date_start, version.contract_date_end)
             versions_per_contract[key] += version
 
-        result = self.env['hr.version']
+        result = defaultdict(list)
         for (employee, contract_start, contract_end), versions in versions_per_contract.items():
             versions = versions.sorted('date_version')
             for index, version in enumerate(versions):
@@ -3226,9 +3202,12 @@ class HrEmployee(models.Model):
                     eff_end = versions[index + 1].date_version - relativedelta(days=1)
                 else:
                     eff_end = contract_end or date.max
-                if eff_start <= date_to and eff_end >= date_from:
-                    result += version
-        return result.sorted('date_version')
+                start, stop = max(eff_start, date_from), min(eff_end, date_to)
+                if start <= stop:
+                    result[employee].append((start, stop, version))
+        for periods in result.values():
+            periods.sort(key=lambda period: period[0])
+        return result
 
     # ---------------------------------------------------------
     # Messaging
