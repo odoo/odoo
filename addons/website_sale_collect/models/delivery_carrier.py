@@ -21,6 +21,11 @@ class DeliveryCarrier(models.Model):
     )
     warehouse_ids = fields.Many2many(string="Stores", comodel_name="stock.warehouse")
 
+    def _compute_provider_icon(self):
+        super()._compute_provider_icon()
+        for carrier in self.filtered(lambda c: c.delivery_type == "in_store"):
+            carrier.provider_icon = "/website_sale_collect/static/description/icon.png"
+
     @api.depends("delivery_type")
     def _compute_support_test_environment(self):
         super()._compute_support_test_environment()
@@ -205,13 +210,8 @@ class DeliveryCarrier(models.Model):
             OrderedSet(availability[0].date().isoformat() for availability in availabilities)
         )
 
-    def in_store_rate_shipment(self, *_args):
-        return {
-            "success": True,
-            "price": self.product_id.list_price,
-            "error_message": False,
-            "warning_message": False,
-        }
+    def in_store_rate_shipment(self, order):
+        return self.in_house_rate_shipment(order)
 
     def _get_pickup_locations(self, country=None, country_code=None, **kwargs):
         """Override of `website_sale` to include the selected country from the location selector.

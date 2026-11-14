@@ -9,12 +9,25 @@ class IrModuleModule(models.Model):
 
     def action_view_delivery_methods(self):
         self.ensure_one()
-
-        module_name = self.name  # e.g., delivery_dhl
-        if not module_name.startswith("delivery_"):
+        delivery_type = self.state == "installed" and self._get_provided_delivery_type()
+        if not delivery_type:
             return False
 
-        delivery_type = module_name.removeprefix("delivery_")  # dhl, fedex, etc.
-        action = self.env.ref("delivery.action_delivery_carrier_form").read()[0]
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "delivery.action_delivery_carrier_form",
+        )
         action["context"] = {"search_default_delivery_type": delivery_type}
         return action
+
+    def _get_provided_delivery_type(self):
+        """Return the delivery type added by the module.
+
+        :return: The delivery type, or `False` if the module doesn't add any.
+        :rtype: str | bool
+        """
+        self.ensure_one()
+        if self.name == "delivery":
+            return "in_house"
+        if self.name.startswith("delivery_"):
+            return self.name.removeprefix("delivery_")  # e.g., dhl_rest
+        return False
