@@ -1,6 +1,7 @@
 /** @odoo-module */
 import { useSubEnv } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
+import { Mutex } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { ProductCatalogOrderLine } from "./order_line/order_line";
@@ -17,7 +18,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
             execBeforeUnmount: true,
         });
-        this._pendingUpdate = Promise.resolve();
+        this.updateMutex = new Mutex();
 
         useSubEnv({
             currencyId: this.props.record.context.product_catalog_currency_id,
@@ -68,13 +69,12 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     _updateQuantityAndGetPrice() {
         // Chain RPC calls to ensure that each request is completed before starting the next one.
         // This prevents race conditions and ensures the server processes updates sequentially.
-        this._pendingUpdate = this._pendingUpdate.then(() =>
+        return this.updateMutex.exec(() =>
             rpc(
                 "/product/catalog/update_order_line_info",
                 this._getUpdateQuantityAndGetPriceParams()
             )
         );
-        return this._pendingUpdate;
     }
 
     _getUpdateQuantityAndGetPriceParams() {
