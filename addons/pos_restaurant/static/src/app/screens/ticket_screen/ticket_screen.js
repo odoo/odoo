@@ -26,14 +26,6 @@ patch(TicketScreen.prototype, {
         }
         return res;
     },
-    async setOrder(order) {
-        const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;
-        if (shouldBeOverridden) {
-            const orderTable = order.getTable();
-            await this.pos.setTable(orderTable, order.uuid);
-        }
-        return await super.setOrder(order);
-    },
     isDefaultOrderEmpty(order) {
         if (this.pos.config.module_pos_restaurant) {
             return false;

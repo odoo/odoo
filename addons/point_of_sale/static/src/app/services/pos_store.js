@@ -361,9 +361,10 @@ export class PosStore extends WithLazyGetterTrap {
         const pageParams = registry.category("pos_pages").get(routeName);
         const component = pageParams.component;
 
-        if (routeParams.orderUuid) {
+        if (routeParams.orderUuid && routeParams.autoSelectOrder !== false) {
             this.selectedOrderUuid = routeParams.orderUuid;
         }
+        delete routeParams.autoSelectOrder;
 
         if (component.storeOnOrder ?? true) {
             this.getOrder()?.setScreenData({ name: routeName, props: routeParams });
@@ -377,6 +378,18 @@ export class PosStore extends WithLazyGetterTrap {
     navigateToFirstPage() {
         const page = this.firstPage;
         this.navigate(page.page, page.params);
+    }
+
+    async openExistingOrder(order) {
+        if (this.isOrderSyncing(order)) {
+            return false;
+        }
+        if (this.config.isShareable) {
+            await this.syncAllOrders();
+        }
+        this.setOrder(order);
+        this.navigateToOrderScreen(order);
+        return true;
     }
 
     navigateToOrderScreen(order) {
@@ -1871,6 +1884,27 @@ export class PosStore extends WithLazyGetterTrap {
             ["state", "=", "draft"],
         ]);
     }
+    async loadScannedOrder(uuid) {
+        try {
+            // Always try to fetch the order from the server first in case of
+            // modification on another device.
+            const [order] = await this.data.loadServerOrders([
+                ["uuid", "=", uuid],
+                ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+            ]);
+            return order;
+        } catch (error) {
+            if (error instanceof ConnectionLostError) {
+                // If the connection is lost, try to get the order from the local cache.
+                const order = this.getOrderByUuid(uuid);
+                if (order) {
+                    return order;
+                }
+            }
+
+            throw error;
+        }
+    }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
         // check back-end method `get_product_info_pos` to see what it returns
@@ -2912,12 +2946,16 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     clickSaveOrder() {
-        this.syncAllOrders({ orders: [this.getOrder()] });
+        const order = this.getOrder();
+        this.syncAllOrders({ orders: [order] });
         this.notification.add(_t("Order saved for later"), { type: "success" });
         const newOrder = this.getEmptyOrder();
         this.setOrder(newOrder);
         this.navigate("ProductScreen", { orderUuid: newOrder.uuid });
         this.mobile_pane = "right";
+        if (this.config.iface_printbill) {
+            this.ticketPrinter.printOrderReceipt({ order, printBillActionTriggered: true });
+        }
     }
 
     get isSmallProductScreen() {
