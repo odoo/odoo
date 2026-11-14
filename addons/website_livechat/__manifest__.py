@@ -5,9 +5,11 @@
     'description': "Allow website visitors to chat with the collaborators.",
     'depends': ['website', 'im_livechat'],
     'auto_install': True,
+    'post_init_hook': '_post_init_hook',
     'data': [
         'views/website_livechat.xml',
         'views/res_config_settings_views.xml',
+        'views/im_livechat_channel_views.xml',
         'views/im_livechat_chatbot_script_view.xml',
         'views/website_visitor_views.xml',
         'views/im_livechat_channel_add.xml',
@@ -49,6 +51,10 @@
         'web.assets_backend': [
             "website_livechat/static/src/core/common/**/*",
             'website_livechat/static/src/**/*',
+            ('remove', 'website_livechat/static/src/scss/theme_colors_export.scss'),
+        ],
+        'website.font_urls_export': [
+            'website_livechat/static/src/scss/theme_colors_export.scss',
         ],
         'web.assets_unit_tests': [
             'website_livechat/static/tests/**/*',

@@ -52,10 +52,16 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         store.add(discuss_channel, "_store_open_chat_window_fields")
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
         store.add(chatbot_script, "_store_script_fields")
+        # Preview the script with the colors visitors of this website would see.
+        livechat_channel = request.env.website.channel_id.sudo()
+        livechat_colors = request.env['im_livechat.channel']._get_default_colors()
+        if livechat_channel:
+            livechat_colors = {field: livechat_channel[field] for field in livechat_colors}
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
             'chatbot_script': chatbot_script,
             'chatbot_test_store': store.as_dict(),
+            'livechat_colors': livechat_colors,
             'session_info': {'bus_info': request.env['ir.http']._get_bus_session_info()},
             'title': self.env._("Test %s", chatbot_script.title),
         })

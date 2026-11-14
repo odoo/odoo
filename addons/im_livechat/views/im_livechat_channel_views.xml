@@ -174,30 +174,24 @@
                             </page>
                             <page string="Options" name="options" groups="im_livechat.im_livechat_group_manager">
                                 <group>
-                                    <group string="Live Chat Button">
-                                        <field name="button_text" string="Notification Text" placeholder="e.g. Need help? Chat with us."/>
-                                        <label for="button_background_color" string="Button Colors" />
-                                        <div class="o_livechat_layout_colors d-flex align-items-center align-middle">
-                                            <field name="button_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <field name="button_text_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <widget name="colors_reset_button" options="{'default_colors': {'button_background_color': '#878787', 'button_text_color': '#FFFFFF'}}" />
-                                        </div>
-                                    </group>
-                                    <group string="Live Chat Window">
-                                        <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
-                                        <label for="header_background_color" string="Window Colors" />
-                                        <div class="o_livechat_layout_colors d-flex align-items-center align-middle">
-                                            <field name="header_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <field name="title_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <widget name="colors_reset_button" options="{'default_colors': {'header_background_color': '#875A7B', 'title_color': '#FFFFFF'}}" />
-                                        </div>
-                                        <field name="review_link" placeholder="Do not redirect visitors"/>
-                                    </group>
-                                    <group string="Session Limits">
+                                    <field name="button_text" string="Notification Text" placeholder="e.g. Need help? Chat with us."/>
+                                    <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
+                                    <field name="review_link" placeholder="Do not redirect visitors"/>
+                                </group>
+                                <group string="Session Limits">
+                                    <group>
                                         <field name="max_sessions_mode" widget="radio" options="{'horizontal': true}"/>
                                         <field name="max_sessions" invisible="max_sessions_mode != 'limited'"/>
                                         <field name="block_assignment_during_call"/>
                                     </group>
+                                </group>
+                                <group name="colors" string="Colors">
+                                    <field name="default_colors" invisible="1"/>
+                                    <div name="design_theme_sync" class="mb-2 d-flex align-items-center gap-2" colspan="2">
+                                        <widget name="colors_reset_button" />
+                                    </div>
+                                    <field name="primary_color" widget="color"/>
+                                    <field name="secondary_color" widget="color"/>
                                 </group>
                             </page>
                             <page string="Rules" name="channel_rules" groups="im_livechat.im_livechat_group_manager">

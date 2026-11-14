@@ -76,10 +76,8 @@ export async function loadDefaultEmbedConfig() {
             can_load_livechat: true,
             serverUrl: window.origin,
             options: {
-                header_background_color: "#875A7B",
-                button_background_color: "#875A7B",
-                title_color: "#FFFFFF",
-                button_text_color: "#FFFFFF",
+                primary_color: "#875A7B",
+                secondary_color: "#4EA7F2",
                 button_text: "Need help? Chat with us.",
                 default_message: "Hello, how may I help you?",
                 channel_name: "YourWebsite.com",

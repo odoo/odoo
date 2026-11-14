@@ -38,10 +38,13 @@ class Im_LivechatChannel(models.Model):
     button_text = fields.Char('Text of the Button', default=_default_button_text, translate=True)
     default_message = fields.Char('Welcome Message', default=_default_default_message,
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.", translate=True)
-    header_background_color = fields.Char(default="#875A7B", help="Default background color of the channel header once open")
-    title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
-    button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
-    button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
+    primary_color = fields.Char(default=lambda self: self._get_default_colors()['primary_color'], required=True,
+        help="Main brand color: window header, visitor message bubbles, and the Livechat button.")
+    secondary_color = fields.Char(default=lambda self: self._get_default_colors()['secondary_color'], required=True,
+        help="Color of the operator's message bubbles.")
+    # Sent to the client as part of the record so "reset to default" can
+    # apply it without a round-trip - see colors_reset_button.js.
+    default_colors = fields.Json(compute="_compute_default_colors")
     max_sessions_mode = fields.Selection(
         [("unlimited", "Unlimited"), ("limited", "Limited")],
         default="unlimited",
@@ -600,14 +603,23 @@ class Im_LivechatChannel(models.Model):
                 return self._get_less_active_operator(operator_statuses, operators)
         return self._get_less_active_operator(operator_statuses, users)
 
+    def _get_default_colors(self):
+        return {
+            "primary_color": "#71639E",
+            "secondary_color": "#4EA7F2",
+        }
+
+    @api.depends()
+    def _compute_default_colors(self):
+        for channel in self:
+            channel.default_colors = self._get_default_colors()
+
     def _get_channel_infos(self):
         self.ensure_one()
 
         return {
-            'header_background_color': self.header_background_color,
-            'button_background_color': self.button_background_color,
-            'title_color': self.title_color,
-            'button_text_color': self.button_text_color,
+            'primary_color': self.primary_color,
+            'secondary_color': self.secondary_color,
             'button_text': self.button_text,
             'default_message': self.default_message,
             "channel_name": self.name,
