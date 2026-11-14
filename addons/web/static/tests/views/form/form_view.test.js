@@ -9,6 +9,7 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    resize,
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
@@ -339,6 +340,7 @@ test(`button box rendering on big screen`, async () => {
         btnString += `<button class="oe_stat_button" id="btn${i}">My Button ${i}</button>`;
     }
 
+    await resize({ width: 1534 });
     await mountView({
         resModel: "partner",
         type: "form",
@@ -8028,7 +8030,11 @@ test(`correct amount of buttons`, async () => {
     await assertFormContainsNButtonsWithSizeClass(SIZES.MD, 7);
     await assertFormContainsNButtonsWithSizeClass(SIZES.LG, 3);
     await assertFormContainsNButtonsWithSizeClass(SIZES.XL, 4);
-    await assertFormContainsNButtonsWithSizeClass(SIZES.XXL, 7);
+    await resize({ width: 1533 });
+    await assertFormContainsNButtonsWithSizeClass(SIZES.XXL, 4);
+    await resize({ width: 1534 });
+    await animationFrame();
+    expect(`.o-form-buttonbox button.oe_stat_button`).toHaveCount(7);
 });
 
 test(`can set bin_size to false in context`, async () => {
