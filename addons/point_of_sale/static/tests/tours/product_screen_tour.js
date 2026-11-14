@@ -465,7 +465,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             PartnerList.checkContactValues(
-                "John Doe",
+                "John Alberto Doe",
                 "1 street of astreet",
                 "9898989899",
                 "0987654321",
@@ -478,7 +478,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             },
 
             // Check searches
-            ProductScreenPartnerList.searchCustomerValueAndClear("John Doe"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("John Alberto Doe"),
             ProductScreenPartnerList.searchCustomerValueAndClear("1 street of astreet"),
             ProductScreenPartnerList.searchCustomerValueAndClear("26432685463"),
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
@@ -486,7 +486,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("9898989899"),
             ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreenPartnerList.searchCustomerValueAndClear("john@doe.com"),
-            // Test wildcard search ('j%hn d%e' -> john doe)
+            // Test wildcard search ('j%hn a%berto d%e' -> John Alberto Doe)
             ProductScreen.clickPartnerButton(),
             {
                 isActive: ["mobile"],
@@ -495,13 +495,33 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
                 run: `click`,
             },
             {
-                content: `Search customer with "j%hn d%e"`,
+                content: `Search customer with "j%hn a%berto d%e"`,
                 trigger: `.modal-dialog .input-group input`,
-                run: `edit j%hn d%e`,
+                run: `edit j%hn a%berto d%e`,
             },
             {
-                content: `Check "John Doe" is shown`,
-                trigger: `.partner-list .partner-info:nth-child(1):contains("John Doe")`,
+                content: `Check "John Alberto Doe" is shown`,
+                trigger: `.partner-list .partner-info:nth-child(1):contains("John Alberto Doe")`,
+            },
+            // Empty the list first to make sure we find the customer with the new searcj
+            {
+                content: `Search customer with "nobody"`,
+                trigger: `.modal-dialog .input-group input`,
+                run: `edit nobody`,
+            },
+            negateStep({
+                content: `Check "John Alberto Doe" is shown`,
+                trigger: `.partner-list .partner-info:contains("John Alberto Doe")`,
+            }),
+            // Test multi-word search ('john doe' -> John Alberto Doe)
+            {
+                content: `Search customer with "john doe"`,
+                trigger: `.modal-dialog .input-group input`,
+                run: `edit john doe`,
+            },
+            {
+                content: `Check "John Alberto Doe" is shown`,
+                trigger: `.partner-list .partner-info:nth-child(1):contains("John Alberto Doe")`,
             },
         ].flat(),
 });
@@ -564,12 +584,13 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.searchProduct("Test Product"),
-            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Big Red Apple").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 1"),
             ProductScreen.productIsDisplayed("Test Product 2"),
-            ProductScreen.searchProduct("Apple"),
+            ProductScreen.searchProduct("Big Apple"),
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Big Red Apple"),
             ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),

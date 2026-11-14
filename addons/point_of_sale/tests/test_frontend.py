@@ -1524,7 +1524,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Also verify that all these fields can be searched.
         """
         self.env["res.partner"].create({
-            "name": "John Doe",
+            "name": "John Alberto Doe",
             "street": "1 street of astreet",
             "city": "Acity",
             "state_id": self.env.ref("base.state_us_30").id,  # Ohio
@@ -1782,7 +1782,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'default_code': 'TESTPROD2',
             },
             {
-                'name': 'Apple',
+                'name': 'Big Red Apple',
                 'list_price': 100,
                 'taxes_id': False,
                 'available_in_pos': True,
