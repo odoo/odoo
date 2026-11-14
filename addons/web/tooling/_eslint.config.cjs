@@ -143,6 +143,7 @@ module.exports = [
             "**/appointment/static/src/scss/web_calendar.css",
             "**/hr_holidays/static/src/scss/time_off.css",
             "**/mail/static/src/core/common/chat_window.css",
+            "**/mail/static/src/core/common/message.css",
             "**/mail/static/src/core/common/thread.css",
             "**/mail/static/src/discuss/call/common/call_presentation_bar.css",
             "**/social_linkedin/static/src/scss/social_linkedin.css",

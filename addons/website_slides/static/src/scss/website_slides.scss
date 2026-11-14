@@ -1,7 +1,7 @@
 $MAX-Z-INDEX : 2147483647 !default;
 
 /* Retrive the tab's height by summ its properties */
-$o-wslides-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
+$o-wslides-tabs-height: calc(#{$nav-link-padding-y * 2} + #{$font-size-base} * var(--body-line-height));
 
 /* Overal page bg-color: Blend it 'over' the color chosen by the user
    ($body-bg), rather than force it replacing the variable's value. */
@@ -208,13 +208,13 @@ $o-wslides-fs-side-width: 300px;
 }
 
 @mixin o-wslides-tabs($tab-active-color: $o-wslides-color-bg) {
-    margin-top: ($o-wslides-tabs-height * -1);
+    margin-top: calc(#{$o-wslides-tabs-height} * -1);
     border-bottom: 0;
 
     .nav-link {
         border-radius: 0;
         border-width: 0 1px;
-        line-height: $line-height-base;
+        line-height: var(--body-line-height);
         color: rgba(255, 255, 255, 0.8);
 
         &:hover, &:focus, &.focus {
@@ -273,6 +273,10 @@ $o-wslides-fs-side-width: 300px;
 .o_wslides_course_header {
     @media (min-width: 768px) {
         @include o-wslides-header-bar();
+
+        > .container > .row > :last-child {
+            margin-bottom: calc((var(--body-line-height) - #{$line-height-base}) * #{$font-size-base});
+        }
     }
     .o_wslides_header_text {
         color:inherit;
