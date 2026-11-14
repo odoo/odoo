@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:29+0000\n"
-"PO-Revision-Date: 2026-10-15 07:33+0000\n"
+"PO-Revision-Date: 2026-11-10 14:32+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "mrp_account/fi/>\n"
@@ -51,7 +51,7 @@ msgstr "<span class=\"o_stat_text\">Tuotanto</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">WIP</span>"
-msgstr "<span class=\"o_stat_text\">KET</span>"
+msgstr "<span class=\"o_stat_text\">Keskeneräinen tuotanto</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -106,7 +106,9 @@ msgstr "Tilikirjauksen rivi"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr "Tilikirjauksen rivi, joka luodaan WIP-tilikirjauksen yhteydessä"
+msgstr ""
+"Tilikirjauksen rivi, joka luodaan keskeneräisen tuotannon tilikirjauksen "
+"yhteydessä"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -391,12 +393,12 @@ msgstr "Valmistuksen jälkeinen kesken oleva työ"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr "Kirjaa WIP"
+msgstr "Kirjaa Keskeneräinen tuotanto"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr "Kirjaa WIP kirjanpitoon"
+msgstr "Kirjaa Keskeneräinen tuotanto kirjanpitoon"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -432,7 +434,7 @@ msgstr "Viite"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr "Asiaankuuluvat WIP tuotantotilaukset"
+msgstr "Relevantit keskeneräisen tuotannon tuotantotilaukset"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -473,8 +475,8 @@ msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
-"Valmistustilaukset, joihin tämä WIP-kirjaus perustuu. Odotetaan asetettavan "
-"WIP-merkinnän luontihetkellä."
+"Tuotantotilaukset, joihin tämä keskeneräisen tuotannon kirjaus perustuu. "
+"Odotetaan asetettavan keskeneräisen tuotannon kirjauksen luontihetkellä."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -513,50 +515,50 @@ msgstr "Debet yhteensä"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr "WIP - komponenttien arvo"
+msgstr "Keskeneräinen tuotanto - komponenttien arvo"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr "WIP - yleiskustannukset"
+msgstr "Keskeneräinen tuotanto - yleiskustannukset"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "WIP Entries of %s"
-msgstr "%s:n KET-kirjaukset"
+msgstr "%s:n keskeneräisen tuotannon kirjaukset"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
 msgid "WIP Journal Entry Count"
-msgstr "KET-kirjauskansion kirjausten määrä"
+msgstr "Keskeneräisen tuotannon päiväkirjan kirjausten määrä"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr "WIP valmistustilaukset %s"
+msgstr "Keskeneräisen tuotannon tuotantotilaukset %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "WIP Report for"
-msgstr "WIP-raportti kohteelle"
+msgstr "Keskeneräisen tuotannon raportti kohteelle"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr "WIP-kirjanpidon rivit"
+msgstr "Keskeneräisen tuotannon kirjanpidon rivit"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr "Ohjattu käynnissä olevan työn (WIP) kirjanpidon toiminto"
+msgstr "Ohjattu keskeneräisen tuotannon kirjanpitotoiminto"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
 msgid "WIP report"
-msgstr "WIP-raportti"
+msgstr "Keskeneräisen tuotannon raportti"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
@@ -566,12 +568,12 @@ msgstr "Työpisteen laskentakohderivi"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
 msgid "Wip Move"
-msgstr "KET-siirto"
+msgstr "Keskeneräisen tuotannon kirjaus"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr "Ohjattu tuotannon käynnissä olevan työn tilikirjaustoiminto"
+msgstr "Ohjattu keskeneräisen tuotannon tilin kirjaustoiminto"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

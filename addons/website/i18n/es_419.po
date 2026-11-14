@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-11-06 19:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:36+0000\n"
+"PO-Revision-Date: 2026-11-13 21:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/website/es_419/>\n"
@@ -3597,7 +3597,7 @@ msgstr "Aventura"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing<br/>(optional)"
-msgstr "Anuncios y marketing<br/>(opcional)"
+msgstr "Publicidad y marketing<br/>(opcional)"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
@@ -3834,12 +3834,6 @@ msgstr "Siempre"
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Always Underline"
 msgstr "Siempre subrayado"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-msgid "Always Visible"
-msgstr "Siempre visible"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
@@ -15167,7 +15161,7 @@ msgstr "Zona de desplazamiento"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option_plugin.js:0
 msgid "Scroll down to next section"
-msgstr "Desplazarse hacia abajo a la siguiente sección"
+msgstr "Desplázate hacia abajo para ver la siguiente sección"
 
 #. module: website
 #. odoo-javascript
@@ -16756,7 +16750,7 @@ msgstr "Gracias"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 msgid "Thank you for your feedback!"
-msgstr "Agradecemos su retroalimentación"
+msgstr "¡Gracias por tus comentarios!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mockup_image
@@ -17171,10 +17165,8 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid ""
 "This field is mandatory for this action. You cannot remove it. Try hiding it "
-"with the 'Visibility' option instead and add it a default value."
+"with the 'Visibility Rule' option instead and add it a default value."
 msgstr ""
-"Este campo es obligatorio para realizar esta acción y no se puede eliminar. "
-"Ocúltelo con la opción \"Visibilidad\" y agregue un valor predeterminado."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__arch_base
@@ -18249,10 +18241,10 @@ msgid ""
 "                                                and any specific marketing "
 "campaign that brought you to the website."
 msgstr ""
-"Se utiliza para recopilar información sobre sus interacciones con el sitio "
-"web, las páginas que ha visto\n"
-"                                                y la campaña de marketing "
-"que le haya traído al sitio web."
+"Se utilizan para recopilar información sobre tus interacciones con el sitio "
+"web, las páginas que has visitado\n"
+"                                                 y las campañas de marketing "
+"específicas que te llevaron al sitio web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -18263,11 +18255,12 @@ msgid ""
 "relevant ads when you visit other websites that display ads or to improve "
 "reporting on ad campaign performance."
 msgstr ""
-"Se utiliza para que la publicidad sea más atractiva para los usuarios y más "
-"valiosa para los editores y anunciantes,\n"
-"                                                tales como proporcionar "
-"publicidad más relevante cuando visita otros sitios web que muestren "
-"publicidad o mejorar los reportes de rendimiento de campañas."
+"Se utilizan para que la publicidad sea más llamativa para los usuarios y más "
+"valiosa para los editores y anunciantes. \n"
+"                                                Por ejemplo, permiten "
+"mostrar anuncios más relevantes cuando visitas otros sitios web que incluyen "
+"publicidad o mejorar los reportes sobre el rendimiento de las campañas "
+"publicitarias."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -18449,6 +18442,12 @@ msgstr "Visibilidad de la contraseña"
 #: model:ir.model.fields,field_description:website.field_website_page_properties__visibility_password_display
 msgid "Visibility Password Display"
 msgstr "Pantalla de visibilidad de contraseña"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+msgid "Visibility Rule"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__group_ids
@@ -18783,8 +18782,8 @@ msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
 "standard for compliance."
 msgstr ""
-"Actualmente no somos compatibles con señales de Do Not Track, ya que no "
-"existe un estándar en el sector para el cumplimiento."
+"Actualmente no admitimos las señales \"No rastrear\" (DNT o Do Not Track), "
+"pues no existe un estándar de la industria para su cumplimiento."
 
 #. module: website
 #. odoo-javascript
@@ -21342,6 +21341,17 @@ msgstr "✽  Pizzas"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Qué ofrecemos"
+
+#~ msgid "Always Visible"
+#~ msgstr "Siempre visible"
+
+#~ msgid ""
+#~ "This field is mandatory for this action. You cannot remove it. Try hiding "
+#~ "it with the 'Visibility' option instead and add it a default value."
+#~ msgstr ""
+#~ "Este campo es obligatorio para realizar esta acción y no se puede "
+#~ "eliminar. Ocúltelo con la opción \"Visibilidad\" y agregue un valor "
+#~ "predeterminado."
 
 #~ msgid "%(error)s (website: %(website_id)s)"
 #~ msgstr "%(error)s (sitio web: %(website_id)s)"

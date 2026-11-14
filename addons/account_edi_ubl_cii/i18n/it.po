@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
-"PO-Revision-Date: 2026-10-30 09:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:36+0000\n"
+"PO-Revision-Date: 2026-11-09 07:43+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/it/>\n"
@@ -249,6 +249,7 @@ msgstr "Impossibile trovare il file di origine, prova a importarlo di nuovo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
 msgstr "Addebito"
@@ -318,6 +319,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT and "
 "country. A new partner was created."
 msgstr ""
+"Impossibile recuperare un partner corrispondente a '%s' con la stessa "
+"partita IVA e lo stesso Paese. È stato creato un nuovo partner."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -435,6 +438,7 @@ msgstr "Direzioni della Commissione Europea"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "Sconto"
@@ -1321,6 +1325,10 @@ msgid ""
 "Identification Number (TIN). If your business is VAT-registered, this is the "
 "first 10 digits of your 15-digit TRN. Expected format: 1001234567."
 msgstr ""
+"L'endpoint Peppol non è valido. Inserisci un numero di identificazione "
+"fiscale (TIN) di 10 cifre valido. Se l'azienda è registrata ai fini IVA, si "
+"tratta delle prime 10 cifre del TRN di 15 cifre. Formato previsto: "
+"1001234567."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1510,6 +1518,16 @@ msgstr "Nome file UBL/CII"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9959
 msgid "USA EIN"
 msgstr "EIN USA"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason

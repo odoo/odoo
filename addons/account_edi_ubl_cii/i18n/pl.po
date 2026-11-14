@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 07:55+0000\n"
+"POT-Creation-Date: 2026-11-13 17:36+0000\n"
+"PO-Revision-Date: 2026-11-12 12:45+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/pl/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -120,7 +120,7 @@ msgstr "Andorski VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "At least one Invoice Line is required [IBR-016]."
-msgstr ""
+msgstr "Wymagany jest przynajmniej jeden wiersz faktury [IBR-016]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -177,7 +177,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Podstawowe pomocniki dla CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -213,25 +213,27 @@ msgstr "Sieć rejestrów przedsiębiorstw"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Country Code is missing [IBR-011]."
-msgstr ""
+msgstr "Brakuje kodu kraju nabywcy [IBR-011]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
 msgstr ""
+"Brakuje elektronicznego adresu nabywcy / ID punktu końcowego [IBR-080]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
 msgstr ""
+"Brakuje identyfikatora schematu adresu elektronicznego nabywcy [IBR-063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Name is missing [IBR-007]."
-msgstr ""
+msgstr "Brakuje nazwy nabywcy [IBR-007]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -248,9 +250,10 @@ msgstr "Nie można znaleźć pliku źródłowego. Spróbuj zaimportować go pono
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
-msgstr ""
+msgstr "Opłata"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -291,7 +294,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Firmy"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -318,6 +321,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT and "
 "country. A new partner was created."
 msgstr ""
+"Nie można było pobrać partnera odpowiadającego '%s' z tym samym NIP i "
+"krajem. Utworzono nowego partnera."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -392,7 +397,7 @@ msgstr "Chorwacki VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Currency Code is missing [IBR-005]."
-msgstr ""
+msgstr "Brakuje kodu kraju [IBR-005]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9928
@@ -431,6 +436,7 @@ msgstr "Dyrekcje Komisji Europejskiej"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "Zniżka"
@@ -466,7 +472,7 @@ msgstr "Nazwa wyświetlana"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
-msgstr ""
+msgstr "Upust dokumentu %(charge)s w wierszu %(line)s: brak kwoty [IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -475,13 +481,15 @@ msgid ""
 "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-033]."
 msgstr ""
+"Upust dokumentu %(charge)s w wierszu %(line)s: wymagany jest powód lub kod "
+"powodu [IBR-033]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
-msgstr ""
+msgstr "Opłata dokumentu %(charge)s w wierszu %(line)s: brak kwoty [IBR-036]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -490,6 +498,8 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
+"Opłata dokumentu %(charge)s w wierszu %(line)s: wymagany jest powód lub kod "
+"powodu [IBR-038]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -579,7 +589,7 @@ msgstr "Eksport poza UE"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
@@ -787,7 +797,7 @@ msgstr "Zaopatrzenie wewnątrzwspólnotowe"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Invoice Issue Date is missing [IBR-003]."
-msgstr ""
+msgstr "Brak daty wystawienia faktury [IBR-003]."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -887,43 +897,44 @@ msgstr "Liechtenstein VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoice line net amount is missing [IBR-024]."
-msgstr ""
+msgstr "Pozycja %s: Brakuje kwoty netto pozycji faktury [IBR-024]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity is missing [IBR-022]."
-msgstr ""
+msgstr "Pozycja %s: Brakuje fakturowanej kwoty [IBR-022]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity unit of measure code is missing [IBR-023]."
 msgstr ""
+"Pozycja %s: Brak kodu jednostki miary dla fakturowanej ilości [IBR-023]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item name is missing [IBR-025]."
-msgstr ""
+msgstr "Pozycja %s: Brakuje nazwy elementu [IBR-025]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr ""
+msgstr "Pozycja %s: Cena netto elementu NIE MOŻE być ujemna [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price is missing [IBR-026]."
-msgstr ""
+msgstr "Pozycja %s: Brakuje ceny netto elementu [IBR-026]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr ""
+msgstr "Pozycja %s: Brakuje kodu kategorii podatkowej elementu [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0200
@@ -1149,25 +1160,27 @@ msgstr "San Marino VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Country Code is missing [IBR-009]."
-msgstr ""
+msgstr "Brakuje kodu kraju sprzedawcy [IBR-009]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
 msgstr ""
+"Brakuje adresu elektronicznego / ID punktu końcowego sprzedawcy [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
 msgstr ""
+"Brakuje identyfikatora schematu adresu elektronicznego sprzedawcy [IBR-062]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Name is missing [IBR-006]."
-msgstr ""
+msgstr "Brakuje nazwy sprzedawcy [IBR-006]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9948
@@ -1302,6 +1315,10 @@ msgid ""
 "Identification Number (TIN). If your business is VAT-registered, this is the "
 "first 10 digits of your 15-digit TRN. Expected format: 1001234567."
 msgstr ""
+"Punkt końcowy Peppol jest nieprawidłowy. Wprowadź prawidłowy 10-cyfrowy "
+"numer identyfikacji podatkowej (TIN). Jeśli Twoja firma jest zarejestrowana "
+"jako płatnik VAT, jest to pierwsze 10 cyfr Twojego 15-cyfrowego numeru TRN. "
+"Oczekiwany format: 1001234567."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1488,6 +1505,16 @@ msgstr "Nazwa pliku UBL/CII"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9959
 msgid "USA EIN"
 msgstr "USA EIN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason
@@ -2283,7 +2310,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F – Sprzedaż towarów używanych"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2293,12 +2320,12 @@ msgstr "VATEX-FR-FRANCHISE - Francja; krajowa franczyza VAT w podstawie"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I – Sprzedaż dzieł sztuki"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J – Sprzedaż antyków"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
