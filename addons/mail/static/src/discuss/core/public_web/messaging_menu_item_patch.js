@@ -2,6 +2,7 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useThreadPreview } from "@mail/core/common/thread_preview";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
+import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { onClickIntent, PEEK_DELAY } from "@mail/utils/common/hooks";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -15,7 +16,7 @@ import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
 const { DateTime } = luxon;
 
-Object.assign(MessagingMenuItem.components, { CountryFlag });
+Object.assign(MessagingMenuItem.components, { CountryFlag, MessageSeenIndicator });
 
 /** @type {MessagingMenuItem} */
 const messagingMenuItemPatch = {
@@ -105,6 +106,9 @@ const messagingMenuItemPatch = {
     },
     get itemName() {
         return this.channel?.thread?.displayName ?? super.itemName;
+    },
+    get itemPreviewText() {
+        return this.channel?.hasDraft ? this.channel.draftPreview : super.itemPreviewText;
     },
     get itemPreviewThread() {
         return super.itemPreviewThread || this.channel?.thread;

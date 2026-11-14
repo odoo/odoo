@@ -31,6 +31,7 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "../mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { BOUNCE_DURATION } from "@mail/core/common/chat_bubble";
 
 import { rpc } from "@web/core/network/rpc";
@@ -230,6 +231,25 @@ test("Escape closes a chat bubble preview containing a focused link", async () =
     await focus('.o-mail-ChatBubble-preview a[href="https://odoo.com/"]:not(:focus)');
     await triggerHotkey("Escape");
     await waitForNone(".o-mail-ChatBubble-preview");
+});
+
+test("Hover on chat bubble shows draft indicator along with draft content", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Not sent yet");
+    await contains(".o-mail-ChatWindow-header [title='Fold']:count(1)").click();
+    await hover(".o-mail-ChatBubble[name='Marc']");
+    await waitFor(".o-mail-ChatBubble-preview .text-danger:text('[Draft]'):count(1)");
+    await waitFor(".o-mail-ChatBubble-preview:text('Marc [Draft]Not sent yet'):count(1)");
 });
 
 test("Hover on chat bubble shows message preview along with message seen indicator", async () => {

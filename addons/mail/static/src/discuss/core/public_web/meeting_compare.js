@@ -1,5 +1,5 @@
 import { compareThreads } from "@mail/core/common/thread_compare";
-import { compareFavorites } from "@mail/discuss/core/common/thread_compare_patch";
+import { compareDrafts, compareFavorites } from "@mail/discuss/core/common/thread_compare_patch";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 const { DateTime } = luxon;
@@ -24,6 +24,10 @@ export function compareChannels(channel1, channel2) {
  * @param {import("models").DiscussChannel} channel2
  */
 export function compareMeetings(channel1, channel2) {
+    const draft = compareDrafts(channel1.thread, channel2.thread);
+    if (draft !== undefined) {
+        return draft;
+    }
     const favorite = compareFavorites(channel1.thread, channel2.thread);
     if (favorite !== undefined) {
         return favorite;
