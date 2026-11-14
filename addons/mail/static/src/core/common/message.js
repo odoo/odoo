@@ -29,7 +29,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { messageSearchType } from "@mail/core/common/message_search_hook";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -113,7 +113,7 @@ export class Message extends Component {
             isFirstMessage: t.boolean().optional(),
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
-            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messageSearch: messageSearchType(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
             previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),
@@ -230,7 +230,7 @@ export class Message extends Component {
                 this.shadowRoot(),
                 this.message.showTranslation,
                 this.message.richTranslationValue,
-                this.props.messageSearch?.searchTerm,
+                this.props.messageSearch.searchTerm,
                 this.message.richBody,
                 this.isEditing,
             ],
@@ -240,8 +240,7 @@ export class Message extends Component {
                         "span",
                         this.message.showTranslation
                             ? this.message.richTranslationValue
-                            : this.props.messageSearch?.highlight(this.message.richBody) ??
-                                  this.message.richBody
+                            : this.props.messageSearch.highlight(this.message.richBody)
                     );
                     const roots = this.prepareMessageBody(bodyEl) ?? [];
                     shadowRoot.appendChild(bodyEl);
@@ -267,7 +266,7 @@ export class Message extends Component {
             const current = {
                 isEditing: this.isEditing,
                 richBody: this.message.richBody,
-                searchTerm: this.props.messageSearch?.searchTerm,
+                searchTerm: this.props.messageSearch.searchTerm,
                 bodyEl: this.messageBody(),
             };
             if (shallowEqual(current, preparedFor)) {

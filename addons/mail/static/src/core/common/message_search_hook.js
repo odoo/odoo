@@ -1,6 +1,6 @@
 import { SearchState } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { proxy } from "@odoo/owl";
+import { proxy, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -66,6 +66,21 @@ export function searchHighlight(searchTerm, target) {
     }
     return getInnerHtml(htmlDoc.body);
 }
+
+/**
+ * Stands in for a `MessageSearchState` where messages are not shown in a
+ * search, so that templates can call `highlight` without a fallback.
+ */
+export const messageSearchFallback = {
+    /** @param {string} text */
+    highlight: (text) => text,
+};
+
+/** Type of the `messageSearch` prop, defaulting to {@link messageSearchFallback}. */
+export const messageSearchType = () =>
+    t
+        .or([t.instanceOf(MessageSearchState), t.literal(messageSearchFallback)])
+        .optional(messageSearchFallback);
 
 export class MessageSearchState extends SearchState {
     count = 0;
