@@ -35,6 +35,20 @@ class TestResetPassword(HttpCase, MailCommon):
 
         self.assertNotIn("signup_email", url_parse(self.test_user.partner_id._get_signup_url()).decode_query(), "query should not contain 'signup_email'")
 
+    def test_get_login_or_email_domain(self):
+        """
+            Test that a user record is still found when the login or the email is passed with trailing white space
+        """
+        ResUserModel = self.env.registry['res.users']
+
+        # Overwrite reset password process to only test  _get_login_domain
+        def action_reset_password(user):
+            return user.id
+
+        with patch.object(ResUserModel, 'action_reset_password', action_reset_password):
+            self.assertEqual(self.test_user.reset_password('  test  '), self.test_user.id)
+            self.assertEqual(self.test_user.reset_password('  noop@example.com  '), self.test_user.id)
+
     @patch('odoo.addons.mail.models.mail_mail.MailMail.send')
     def test_reset_password_mail_server_error(self, mock_send):
         """
