@@ -2,16 +2,9 @@ import { Plugin } from "@html_editor/plugin";
 import { Cache } from "@web/core/utils/cache";
 import { ModelEdit } from "./cached_model_utils";
 
-/**
- * @typedef { Object } CachedModelShared
- * @property { CachedModelPlugin['ormRead'] } ormRead
- * @property { CachedModelPlugin['ormSearchRead'] } ormSearchRead
- * @property { CachedModelPlugin['useModelEdit'] } useModelEdit
- */
-
 export class CachedModelPlugin extends Plugin {
     static id = "cachedModel";
-    static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
+    static shared = /** @type {const} */ (["ormRead", "ormSearchRead", "useModelEdit"]);
     static dependencies = ["domObserver"];
     /** @type {import("plugins").BuilderResources} */
     resources = {

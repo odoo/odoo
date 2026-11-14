@@ -6,16 +6,10 @@ import { WebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 
-/**
- * @typedef { Object } WebsiteParallaxShared
- * @property { WebsiteParallaxPlugin['applyParallaxType'] } applyParallaxType
- * @property { WebsiteParallaxPlugin['getParallaxBgSelector'] } getParallaxBgSelector
- */
-
 export class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
     static dependencies = ["builderActions", "backgroundImageOption", "builderOptions"];
-    static shared = ["applyParallaxType", "getParallaxBgSelector"];
+    static shared = /** @type {const} */ (["applyParallaxType", "getParallaxBgSelector"]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

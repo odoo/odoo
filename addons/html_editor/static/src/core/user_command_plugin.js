@@ -15,17 +15,12 @@ import { Plugin } from "../plugin";
  */
 
 /**
- * @typedef { Object } UserCommandShared
- * @property { UserCommandPlugin['getCommand'] } getCommand
- */
-
-/**
  * @typedef {UserCommand[]} user_commands
  */
 
 export class UserCommandPlugin extends Plugin {
     static id = "userCommand";
-    static shared = ["getCommand"];
+    static shared = /** @type {const} */ (["getCommand"]);
 
     setup() {
         this.commands = {};

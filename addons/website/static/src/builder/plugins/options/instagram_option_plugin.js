@@ -4,15 +4,10 @@ import { _t } from "@web/core/l10n/translation";
 import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-/**
- * @typedef { Object } InstagramOptionShared
- * @property { InstagramOptionPlugin['instagramPageNameFromUrl'] } instagramPageNameFromUrl
- */
-
 export class InstagramOptionPlugin extends Plugin {
     static id = "instagramOption";
     static dependencies = ["domObserver"];
-    static shared = ["instagramPageNameFromUrl"];
+    static shared = /** @type {const} */ (["instagramPageNameFromUrl"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -79,7 +74,6 @@ export class InstagramOptionPlugin extends Plugin {
     /**
      * Returns the instagram page name from the given url.
      *
-     * @private
      * @param {string} url
      * @returns {string|undefined}
      */

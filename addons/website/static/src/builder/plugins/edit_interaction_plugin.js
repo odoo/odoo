@@ -3,19 +3,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 /**
- * @typedef { Object } EditInteractionShared
- * @property { EditInteractionPlugin['restartInteractions'] } restartInteractions
- * @property { EditInteractionPlugin['stopInteraction'] } stopInteraction
- */
-
-/**
  * @typedef {((commonAncestorEl: HTMLElement) => void)[]} on_content_manually_updated_handlers
  */
 
 export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
 
-    static shared = ["restartInteractions", "stopInteraction"];
+    static shared = /** @type {const} */ (["restartInteractions", "stopInteraction"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

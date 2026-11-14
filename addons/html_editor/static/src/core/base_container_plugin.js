@@ -22,19 +22,16 @@ import { childNodeIndex } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate, getSelection } from "@html_editor/utils/selection";
 
 /**
- * @typedef { Object } BaseContainerShared
- * @property { BaseContainerPlugin['createBaseContainer'] } createBaseContainer
- * @property { BaseContainerPlugin['getDefaultNodeName'] } getDefaultNodeName
- * @property { BaseContainerPlugin['isCandidateForBaseContainer'] } isCandidateForBaseContainer
- */
-
-/**
  * @typedef {((node: Node) => boolean | undefined)[]} is_valid_for_base_container_predicates
  */
 
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
-    static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
+    static shared = /** @type {const} */ ([
+        "createBaseContainer",
+        "getDefaultNodeName",
+        "isCandidateForBaseContainer",
+    ]);
     static defaultConfig = {
         baseContainers: ["P", "DIV"],
     };

@@ -7,14 +7,9 @@ import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
 const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
 const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 
-/**
- * @typedef { Object } ProtectedNodeShared
- * @property { ProtectedNodePlugin['setProtectingNode'] } setProtectingNode
- */
-
 export class ProtectedNodePlugin extends Plugin {
     static id = "protectedNode";
-    static shared = ["setProtectingNode"];
+    static shared = /** @type {const} */ (["setProtectingNode"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */

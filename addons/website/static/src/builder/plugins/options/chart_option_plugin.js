@@ -9,15 +9,10 @@ import {
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } ChartOptionShared
- * @property { ChartOptionPlugin['isPieChart'] } isPieChart
- */
-
 export class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
     static dependencies = ["history"];
-    static shared = ["isPieChart"];
+    static shared = /** @type {const} */ (["isPieChart"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

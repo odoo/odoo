@@ -30,22 +30,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * @typedef {((el: HTMLElement) => boolean)[]} should_ignore_background_color_for_shapes_predicates
  */
 
-/**
- * @typedef { Object } BackgroundShapeOptionShared
- * @property { BackgroundShapeOptionPlugin['getShapeStyleUrl'] } getShapeStyleUrl
- * @property { BackgroundShapeOptionPlugin['getShapeData'] } getShapeData
- * @property { BackgroundShapeOptionPlugin['getBackgroundShapeGroups'] } getBackgroundShapeGroups
- * @property { BackgroundShapeOptionPlugin['getBackgroundShapes'] } getBackgroundShapes
- * @property { BackgroundShapeOptionPlugin['getImplicitColors'] } getImplicitColors
- * @property { BackgroundShapeOptionPlugin['applyShape'] } applyShape
- * @property { BackgroundShapeOptionPlugin['createShapeContainer'] } createShapeContainer
- * @property { BackgroundShapeOptionPlugin['getComputedConnectionsColors'] } getComputedConnectionsColors
- * @property { BackgroundShapeOptionPlugin['handleBgColorUpdated'] } handleBgColorUpdated
- * @property { BackgroundShapeOptionPlugin['isShapeEligibleForComputation'] } isShapeEligibleForComputation
- * @property { BackgroundShapeOptionPlugin['getShapeSrc'] } getShapeSrc
- * @property { BackgroundShapeOptionPlugin['getShapeStylePosition'] } getShapeStylePosition
- */
-
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
     /** @type {import("plugins").BuilderResources} */
@@ -88,7 +72,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         on_cloned_handlers: ({ cloneEl }) => this.handleBgColorUpdated(cloneEl),
         on_website_color_updated_handlers: this.syncBackgroundShapeColorsWithTheme.bind(this),
     };
-    static shared = [
+    static shared = /** @type {const} */ ([
         "getShapeStyleUrl",
         "getShapeData",
         "getBackgroundShapeGroups",
@@ -101,7 +85,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "isShapeEligibleForComputation",
         "getShapeSrc",
         "getShapeStylePosition",
-    ];
+    ]);
     setup() {
         // TODO: update shapeStyles if a stylesheet value changes.
         this.shapeStyles = {};

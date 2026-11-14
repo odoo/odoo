@@ -20,25 +20,6 @@ import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position
 import { loadImage } from "@html_editor/utils/image_processing";
 
 /**
- * @typedef { Object } CustomizeWebsiteShared
- * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
- * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
- * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
- * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
- * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
- * @property { CustomizeWebsitePlugin['withCustomHistory'] } withCustomHistory
- * @property { CustomizeWebsitePlugin['populateCache'] } populateCache
- * @property { CustomizeWebsitePlugin['loadConfigKey'] } loadConfigKey
- * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
- * @property { CustomizeWebsitePlugin['getWebsiteVariableValue'] } getWebsiteVariableValue
- * @property { CustomizeWebsitePlugin['getPendingThemeRequests'] } getPendingThemeRequests
- * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
- * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
- * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
- * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
- */
-
-/**
  * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
  */
 
@@ -46,8 +27,14 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
-    static shared = [
+    static dependencies = [
+        "builderActions",
+        "domObserver",
+        "savePlugin",
+        "edit_interaction",
+        "websiteBridge",
+    ];
+    static shared = /** @type {const} */ ([
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
         "loadTemplateKey",
@@ -63,7 +50,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "isPluginDestroyed",
         "reloadBundles",
         "setViewsOnSave",
-    ];
+    ]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -373,7 +360,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 "ir.ui.view",
                 "render_public_asset",
                 [`${key}`, {}],
-                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() }
             );
         }
         return this.getTemplateKey(key);

@@ -5,16 +5,13 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 
-/**
- * @typedef { Object } ImageHoverShared
- * @property { ImageHoverPlugin['setHoverEffect'] } setHoverEffect
- * @property { ImageHoverPlugin['getHoverEffectUpdate'] } getHoverEffectUpdate
- * @property { ImageHoverPlugin['removeHoverEffect'] } removeHoverEffect
- */
-
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
-    static shared = ["setHoverEffect", "getHoverEffectUpdate", "removeHoverEffect"];
+    static shared = /** @type {const} */ ([
+        "setHoverEffect",
+        "getHoverEffectUpdate",
+        "removeHoverEffect",
+    ]);
     static dependencies = ["imagePostProcess", "imageShapeOption", "imageToolOption"];
 
     /** @type {import("plugins").WebsiteResources} */

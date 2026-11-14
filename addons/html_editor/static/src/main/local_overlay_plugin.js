@@ -1,18 +1,12 @@
 import { Plugin } from "../plugin";
 
 /**
- * @typedef { Object } LocalOverlayShared
- * @property { LocalOverlayPlugin['makeLocalOverlay'] } makeLocalOverlay
- * @property { LocalOverlayPlugin['createElement'] } createElement
- */
-
-/**
  * This plugins provides a way to create a "local" overlays so that their
  * visibility is relative to the overflow of their ancestors.
  */
 export class LocalOverlayPlugin extends Plugin {
     static id = "localOverlay";
-    static shared = ["makeLocalOverlay", "createElement"];
+    static shared = /** @type {const} */ (["makeLocalOverlay", "createElement"]);
 
     setup() {
         this.localOverlayContainer = this.config.localOverlayContainers?.ref();

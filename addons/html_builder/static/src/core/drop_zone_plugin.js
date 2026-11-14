@@ -14,14 +14,6 @@ import { _t } from "@web/core/l10n/translation";
  *     dropNear: CSSSelector;
  *     excludeNearParent: CSSSelector;
  * }} DropzoneSelector
- *
- * @typedef { Object } DropZoneShared
- * @property { DropZonePlugin['activateDropzones'] } activateDropzones
- * @property { DropZonePlugin['removeDropzones'] } removeDropzones
- * @property { DropZonePlugin['getDropRootElement'] } getDropRootElement
- * @property { DropZonePlugin['getSelectorSiblings'] } getSelectorSiblings
- * @property { DropZonePlugin['getSelectorChildren'] } getSelectorChildren
- * @property { DropZonePlugin['getSelectors'] } getSelectors
  */
 
 /**
@@ -35,14 +27,14 @@ import { _t } from "@web/core/l10n/translation";
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history", "setup_editor_plugin"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "activateDropzones",
         "removeDropzones",
         "getDropRootElement",
         "getSelectorSiblings",
         "getSelectorChildren",
         "getSelectors",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         ignored_sibling_selectors: ".o_we_no_overlay",

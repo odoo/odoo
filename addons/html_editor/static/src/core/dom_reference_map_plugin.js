@@ -37,22 +37,12 @@ export function nodeToTree(node) {
 }
 
 /**
- * @typedef { Object } DomReferenceMapShared
- * @property { DomReferenceMapPlugin['hasNode'] } hasNode
- * @property { DomReferenceMapPlugin['register'] } register
- * @property { DomReferenceMapPlugin['set'] } set
- * @property { DomReferenceMapPlugin['getNodeById'] } getNodeById
- * @property { DomReferenceMapPlugin['getNodeId'] } getNodeId
- * @property { DomReferenceMapPlugin['serializeTree'] } serializeTree
- * @property { DomReferenceMapPlugin['unserializeNode'] } unserializeNode
- */
-/**
  * @typedef { ((serializableDescendants: Tree[], elem: Node) => Tree[])[] } serializable_descendants_processors
  */
 export class DomReferenceMapPlugin extends Plugin {
     static id = "domReferenceMap";
     static dependencies = ["sanitize"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "hasNode",
         "register",
         "set",
@@ -60,7 +50,7 @@ export class DomReferenceMapPlugin extends Plugin {
         "getNodeId",
         "serializeTree",
         "unserializeNode",
-    ];
+    ]);
     resources = {
         on_will_reset_history_handlers: this.reset.bind(this),
     };

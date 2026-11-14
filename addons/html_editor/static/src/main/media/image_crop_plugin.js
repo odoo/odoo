@@ -5,15 +5,10 @@ import { ImageCrop } from "./image_crop";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 
-/**
- * @typedef { Object } ImageCropShared
- * @property { ImageCropPlugin['openCropImage'] } openCropImage
- */
-
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
     static dependencies = ["selection", "history", "imagePostProcess"];
-    static shared = ["openCropImage"];
+    static shared = /** @type {const} */ (["openCropImage"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
