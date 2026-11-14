@@ -274,10 +274,11 @@ class AccountEdiFormat(models.Model):
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
 
         date_string = invoice.invoice_date.strftime('%Y-%m-%dT%H:%M:%SZ')
+        document_type = invoice._get_l10n_eg_eta_document_type()
         eta_invoice = {
             'issuer': self._l10n_eg_eta_prepare_address_data(invoice.journal_id.l10n_eg_branch_id, invoice, issuer=True,),
             'receiver': self._l10n_eg_eta_prepare_address_data(invoice.partner_id, invoice),
-            'documentType': invoice._get_l10n_eg_eta_document_type(),
+            'documentType': document_type,
             'documentTypeVersion': '1.0',
             'dateTimeIssued': date_string,
             'taxpayerActivityCode': invoice.journal_id.l10n_eg_activity_type_id.code,
@@ -304,6 +305,10 @@ class AccountEdiFormat(models.Model):
             eta_invoice['purchaseOrderReference'] = invoice.ref
         if invoice.invoice_origin:
             eta_invoice['salesOrderReference'] = invoice.invoice_origin
+        if document_type in ['ec', 'ed']:
+            eta_invoice['references'] = [self._l10n_eg_eta_get_origin_move(invoice).l10n_eg_uuid]
+        if document_type in ['i', 'ei', 'ec', 'ed'] and invoice.delivery_date:
+            eta_invoice['serviceDeliveryDate'] = invoice.delivery_date.strftime('%Y-%m-%d')
         return eta_invoice
 
     @api.model
@@ -357,6 +362,11 @@ class AccountEdiFormat(models.Model):
             if invoice.currency_id != self.env.ref('base.EGP'):
                 lines[-1]['unitValue']['currencyExchangeRate'] = self._l10n_eg_edi_round(invoice._l10n_eg_edi_exchange_currency_rate())
                 lines[-1]['unitValue']['amountSold'] = line.price_unit
+            if self._l10n_eg_eta_is_export(invoice.partner_id):
+                quantity = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, round=False)
+                weight_quantity = 0.01 if line.product_id.type != 'consu' else line.product_id.weight * quantity
+                lines[-1]['weightUnitType'] = {'kg': 'KGM', 'lb': 'LB'}.get((line.product_id.weight_uom_name or '').lower(), False)
+                lines[-1]['weightQuantity'] = self._l10n_eg_edi_round(weight_quantity)
         return lines, totals
 
     @api.model
@@ -367,6 +377,12 @@ class AccountEdiFormat(models.Model):
             return 'B' if partner_id.commercial_partner_id.is_company else 'P'
         else:
             return 'F'
+
+    def _l10n_eg_eta_is_export(self, partner_id):
+        return partner_id.commercial_partner_id.country_code != 'EG'
+
+    def _l10n_eg_eta_get_origin_move(self, invoice):
+        return invoice.reversed_entry_id or (invoice._fields.get('debit_origin_id') and invoice.debit_origin_id)
 
     @api.model
     def _l10n_eg_eta_prepare_address_data(self, partner, invoice, issuer=False):
@@ -432,6 +448,34 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Please make sure the invoice lines taxes all have the correct ETA tax code"))
         if not all(aml.product_id.l10n_eg_eta_code or aml.product_id.barcode for aml in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_section', 'line_subsection', 'line_note'))):
             errors.append(_("Please make sure the EGS/GS1 Barcode is set correctly on all products"))
+        if self._l10n_eg_eta_is_export(invoice.partner_id):
+            errors.extend(self._l10n_eg_eta_check_export_configuration(invoice))
+        return errors
+
+    def _l10n_eg_eta_check_export_configuration(self, invoice):
+        errors = []
+        invalid_product_weights = invoice.invoice_line_ids.product_id.filtered(
+            lambda p: p.type == 'consu' and p.weight <= 0
+        )
+        if invalid_product_weights:
+            message = self.env._(
+                "All product weights must be greater than 0 for export invoices, as required by the "
+                "Egyptian Tax Authority (ETA). Please update the weight on the following products: %s.",
+                ", ".join(invalid_product_weights.mapped('display_name')),
+            )
+            if not self.env.user.has_group('uom.group_uom'):
+                message += self.env._(" Make sure to enable 'Units of Measure & Packagings' under Accounting > Settings to display the Weight field on the product form.")
+            errors.append(message)
+        if not invoice.delivery_date:
+            errors.append(self.env._("Please set the delivery date, it is mandatory for export documents"))
+        if invoice._get_l10n_eg_eta_document_type() in ['ec', 'ed']:
+            origin = self._l10n_eg_eta_get_origin_move(invoice)
+            if not origin:
+                errors.append(self.env._("Please create this export credit/debit note from the original export invoice."))
+            elif not origin.l10n_eg_uuid:
+                errors.append(self.env._(
+                    "The original export invoice %s has not been submitted to the ETA yet. "
+                    "Please send it to the ETA first, then retry this credit/debit note.", origin.name))
         return errors
 
     def _l10n_eg_edi_post_invoice(self, invoice):
