@@ -356,6 +356,16 @@ class TestRealCursor(BaseCase):
             self.assertEqual(cr.fetchone(), ('on',))
             self.assertTrue(cr._cnx.readonly)
 
+    def test_locked_registry_no_transaction(self):
+        from odoo.orm.environments import Transaction  # noqa: PLC0415
+        with self.registry.cursor() as cr:
+            with (
+                patch.object(Transaction, '_check_signaling', side_effect=AssertionError),
+                self.assertRaises(AssertionError),
+            ):
+                api.Environment(cr, api.SUPERUSER_ID, {})
+            self.assertIsNone(cr.transaction, "Failing to check signaling must not set a Transaction")
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHTTPCursor(HttpCase):
