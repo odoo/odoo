@@ -758,6 +758,152 @@ class TestSaleStockInvoices(TestSaleCommon):
         text = html2plaintext(html)
         self.assertRegex(text, r'Product By USN\n1.00\s+Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
 
+    def _create_usn_lot(self, name):
+        lot = self.env['stock.lot'].create({
+            'name': name,
+            'product_id': self.product_by_usn.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_by_usn, self.stock_location, 1, lot_id=lot)
+        return lot
+
+    def _deliver_usn_lots(self, picking, lots):
+        picking.do_unreserve()
+        move_form = Form(picking.move_ids, view='stock.view_stock_move_operations')
+        for lot in lots:
+            with move_form.move_line_ids.new() as line:
+                line.lot_id = lot
+                line.quantity = 1
+        move_form.save()
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+    def _invoiced_lot_ids(self, invoice):
+        return [rec['lot_id'] for rec in invoice._get_invoiced_lot_values()]
+
+    def test_reverse_and_create_invoice_then_invoice_remaining_serials(self):
+        display_lots = self.env.ref('stock_account.group_lot_on_invoice')
+        display_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
+        self.product_by_usn.invoice_policy = 'order'
+        usn03 = self._create_usn_lot('USN0003')
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 1}),
+            ],
+        })
+        so.action_confirm()
+        delivery01 = so.picking_ids
+        self._deliver_usn_lots(delivery01, self.usn01)
+
+        invoice_a = so._create_invoices()
+        invoice_a.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=invoice_a.ids).create({
+            'journal_id': invoice_a.journal_id.id,
+        })
+        invoice_b = self.env['account.move'].browse(reversal_wizard.modify_moves()['res_id'])
+        invoice_b.action_post()
+        self.assertEqual(invoice_a.payment_state, 'reversed')
+
+        so.order_line.product_uom_qty = 3
+        self._deliver_usn_lots(so.picking_ids - delivery01, self.usn02 | usn03)
+
+        invoice_c = so._create_invoices()
+        invoice_c.action_post()
+        self.assertEqual(invoice_c.invoice_line_ids.quantity, 2)
+
+        self.assertEqual(self._invoiced_lot_ids(invoice_a), [self.usn01.id])
+        self.assertEqual(self._invoiced_lot_ids(invoice_b), [self.usn01.id])
+        self.assertEqual(self._invoiced_lot_ids(invoice_c), [self.usn02.id, usn03.id])
+
+    def test_reverse_then_invoice_again_then_invoice_remaining_serials(self):
+        display_lots = self.env.ref('stock_account.group_lot_on_invoice')
+        display_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
+        self.product_by_usn.invoice_policy = 'order'
+        usn03 = self._create_usn_lot('USN0003')
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 1}),
+            ],
+        })
+        so.action_confirm()
+        delivery01 = so.picking_ids
+        self._deliver_usn_lots(delivery01, self.usn01)
+
+        invoice_a = so._create_invoices()
+        invoice_a.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=invoice_a.ids).create({
+            'journal_id': invoice_a.journal_id.id,
+        })
+        credit_note_a = self.env['account.move'].browse(reversal_wizard.refund_moves()['res_id'])
+        credit_note_a.action_post()
+        self.assertEqual(invoice_a.payment_state, 'reversed')
+
+        invoice_b = so._create_invoices()
+        invoice_b.action_post()
+        self.assertEqual(invoice_b.invoice_line_ids.quantity, 1)
+
+        so.order_line.product_uom_qty = 3
+        self._deliver_usn_lots(so.picking_ids - delivery01, self.usn02 | usn03)
+
+        invoice_c = so._create_invoices()
+        invoice_c.action_post()
+
+        self.assertEqual(self._invoiced_lot_ids(invoice_a), [self.usn01.id])
+        self.assertEqual(self._invoiced_lot_ids(invoice_b), [self.usn01.id])
+        self.assertEqual(self._invoiced_lot_ids(invoice_c), [self.usn02.id, usn03.id])
+
+    def test_partial_credit_note_is_still_counted_by_later_invoices(self):
+        display_lots = self.env.ref('stock_account.group_lot_on_invoice')
+        display_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
+        self.product_by_usn.invoice_policy = 'order'
+        usn03 = self._create_usn_lot('USN0003')
+        usn04 = self._create_usn_lot('USN0004')
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'name': self.product_by_usn.name, 'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
+            ],
+        })
+        so.action_confirm()
+        delivery01 = so.picking_ids
+        self._deliver_usn_lots(delivery01, self.usn01 | self.usn02)
+
+        invoice_a = so._create_invoices()
+        invoice_a.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=invoice_a.ids).create({
+            'journal_id': invoice_a.journal_id.id,
+        })
+        credit_note_a = self.env['account.move'].browse(reversal_wizard.refund_moves()['res_id'])
+        credit_note_a.invoice_line_ids.quantity = 1
+        credit_note_a.action_post()
+        self.assertNotEqual(invoice_a.payment_state, 'reversed')
+
+        so.order_line.product_uom_qty = 3
+        delivery02 = so.picking_ids - delivery01
+        self._deliver_usn_lots(delivery02, usn03)
+        invoice_d = so._create_invoices()
+        invoice_d.action_post()
+        self.assertEqual(invoice_d.invoice_line_ids.quantity, 2)
+
+        so.order_line.product_uom_qty = 4
+        self._deliver_usn_lots(so.picking_ids - delivery01 - delivery02, usn04)
+        invoice_e = so._create_invoices()
+        invoice_e.action_post()
+        self.assertEqual(invoice_e.invoice_line_ids.quantity, 1)
+
+        self.assertEqual(self._invoiced_lot_ids(invoice_d), [self.usn02.id, usn03.id])
+        self.assertEqual(self._invoiced_lot_ids(invoice_e), [usn04.id])
+
     def test_picking_description_no_attribute_product(self):
         """
         Verify that for a product without attributes, the pickings description contains atleast the product name.
