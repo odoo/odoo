@@ -4905,6 +4905,21 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         expected_fr = f"<p>Conditions générales : {baseurl} </p>"
         self.assertEqual(invoice.narration, expected_fr)
 
+    def test_narration_kept_on_posted_invoice_on_partner_language_change(self):
+        """Ensure a posted invoice keeps its narration when partner.lang changes."""
+        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env.company.terms_type = 'html'
+        self.partner_a.lang = 'en_US'
+        invoice = self._create_invoice(partner_id=self.partner_a, post=True)
+        baseurl = self.env.company.get_base_url() + '/terms'
+        expected_en = f"<p>Terms &amp; Conditions: {baseurl}</p>"
+        self.assertEqual(invoice.narration, expected_en)
+
+        self.partner_a.lang = 'fr_FR'
+
+        self.assertEqual(invoice.narration, expected_en, "A posted invoice must keep the terms it was issued with")
+
     def test_multiple_currency_change(self):
         """
         Test amount currency and balance are correctly recomputed when switching currency multiple times
