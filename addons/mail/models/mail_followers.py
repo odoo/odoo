@@ -127,6 +127,8 @@ class MailFollowers(models.Model):
             * ``notif`` -- notification type (``'inbox'`` or ``'email'``).
               Overrides may change this value (e.g. ``'sms'`` in the SMS
               module);
+            * ``push_allowed`` -- user's push notification preference.
+              Overrides may change this value;
             * ``share`` -- whether the partner is a customer (no user or
               share user);
             * ``ushare`` -- if the partner has users, whether all are
@@ -143,6 +145,7 @@ class MailFollowers(models.Model):
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
         self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'group_ids'])
+        self.env['res.users.settings'].flush_model(['inbox_push'])
         self.env['res.partner'].flush_model(['active', 'email_normalized', 'name', 'partner_share'])
         self.env['res.groups'].flush_model(['user_ids'])
         # if we have records and a subtype: we have to fetch followers, unless being
@@ -187,6 +190,7 @@ class MailFollowers(models.Model):
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
+           COALESCE(sub_user.inbox_push, FALSE) as push_allowed,
            sub_user.groups as groups,
            sub_user.uids as uids,
            sub_followers.res_id as res_id,
@@ -198,6 +202,7 @@ class MailFollowers(models.Model):
         SELECT users.id AS uid,
                users.share AS share,
                users.notification_type AS notification_type,
+               user_settings.inbox_push AS inbox_push,
                ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
                ARRAY_AGG(users.id) OVER (
                    ORDER BY users.share ASC NULLS FIRST, users.id ASC
@@ -205,10 +210,12 @@ class MailFollowers(models.Model):
                ) AS uids
           FROM res_users users
      LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+     LEFT JOIN res_users_settings user_settings ON user_settings.user_id = users.id
          WHERE users.partner_id = partner.id AND users.active
       GROUP BY users.id,
                users.share,
-               users.notification_type
+               users.notification_type,
+               user_settings.inbox_push
       ORDER BY users.share ASC NULLS FIRST, users.id ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
@@ -231,6 +238,7 @@ class MailFollowers(models.Model):
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
+           COALESCE(sub_user.inbox_push, FALSE) as push_allowed,
            sub_user.groups as groups,
            sub_user.uids as uids,
            ARRAY_AGG(fol.res_id) FILTER (WHERE fol.res_id IS NOT NULL) AS res_ids
@@ -242,6 +250,7 @@ class MailFollowers(models.Model):
         SELECT users.id AS uid,
                users.share AS share,
                users.notification_type AS notification_type,
+               user_settings.inbox_push AS inbox_push,
                ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
                ARRAY_AGG(users.id) OVER (
                    ORDER BY users.share ASC NULLS FIRST, users.id ASC
@@ -249,10 +258,12 @@ class MailFollowers(models.Model):
                ) AS uids
           FROM res_users users
      LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+     LEFT JOIN res_users_settings user_settings ON user_settings.user_id = users.id
          WHERE users.partner_id = partner.id AND users.active
       GROUP BY users.id,
                users.share,
-               users.notification_type
+               users.notification_type,
+               user_settings.inbox_push
       ORDER BY users.share ASC NULLS FIRST, users.id ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
@@ -262,6 +273,7 @@ class MailFollowers(models.Model):
            sub_user.uid,
            sub_user.share,
            sub_user.notification_type,
+           sub_user.inbox_push,
            sub_user.groups,
            sub_user.uids
 """
@@ -291,6 +303,7 @@ class MailFollowers(models.Model):
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
+           COALESCE(sub_user.inbox_push, FALSE) as push_allowed,
            sub_user.groups as groups,
            sub_user.uids as uids,
            0 as res_id,
@@ -300,6 +313,7 @@ class MailFollowers(models.Model):
         SELECT users.id AS uid,
                users.share AS share,
                users.notification_type AS notification_type,
+               user_settings.inbox_push AS inbox_push,
                ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
                ARRAY_AGG(users.id) OVER (
                    ORDER BY users.share ASC NULLS FIRST, users.id ASC
@@ -307,10 +321,12 @@ class MailFollowers(models.Model):
                ) AS uids
           FROM res_users users
      LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+     LEFT JOIN res_users_settings user_settings ON user_settings.user_id = users.id
          WHERE users.partner_id = partner.id AND users.active
       GROUP BY users.id,
                users.share,
-               users.notification_type
+               users.notification_type,
+               user_settings.inbox_push
       ORDER BY users.share ASC NULLS FIRST, users.id ASC
          FETCH FIRST ROW ONLY
          ) sub_user ON TRUE
@@ -320,6 +336,7 @@ class MailFollowers(models.Model):
            sub_user.uid,
            sub_user.share,
            sub_user.notification_type,
+           sub_user.inbox_push,
            sub_user.groups,
            sub_user.uids
 """
@@ -333,7 +350,7 @@ class MailFollowers(models.Model):
         doc_infos = dict((res_id, {}) for res_id in res_ids)
         for (
             partner_id, is_active, email_normalized, lang, name,
-            pshare, uid, ushare, notif, groups, uids, res_id, is_follower
+            pshare, uid, ushare, notif, push_allowed, groups, uids, res_id, is_follower
         ) in res:
             to_update = [res_id] if res_id else res_ids
             # add transitive closure of implied groups; note that the field
@@ -354,6 +371,7 @@ class MailFollowers(models.Model):
                     'name': name,
                     'groups': set(groups or []),
                     'notif': notif,
+                    'push_allowed': push_allowed,
                     'share': pshare,
                     'uid': uid,
                     'uids': uids or [],
