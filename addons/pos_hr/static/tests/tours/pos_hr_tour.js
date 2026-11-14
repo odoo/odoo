@@ -1,5 +1,6 @@
 import * as PosHr from "@pos_hr/../tests/tours/utils/pos_hr_helpers";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -271,5 +272,37 @@ registry.category("web_tour.tours").add("test_logged_employee_ids_tracking", {
             CashierSelectionPopup.has("Pos Employee2", { run: "click" }),
             PosHr.enterPin("1234"),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_hr_chatter_author", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.login("Pos Employee1", "2580"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.isShown(),
+            ProductScreen.addOrderline("Desk Pad", "2"),
+            ProductScreen.saveOrder(),
+            Chrome.waitForOrdersSync(),
+            PosHr.clickCashierName(),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.isShown(),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.isShown(),
+            ProductScreen.clickLine("Desk Pad", "2"),
+            ProductScreen.clickNumpad("1"),
+            ProductScreen.selectedOrderlineHas("Desk Pad", "1"),
+            ProductScreen.saveOrder(),
+            Chrome.waitForOrdersSync(),
+            Chrome.clickOrders(),
+            TicketScreen.deleteOrder("001"),
+            Dialog.confirm(),
+            Chrome.clickMenuOption("Close Register"),
+            ProductScreen.closeWithCashAmount("0"),
+            Chrome.clickBtn("Close Register", { expectUnloadPage: true }),
         ].flat(),
 });
