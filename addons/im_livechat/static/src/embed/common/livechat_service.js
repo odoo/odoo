@@ -142,15 +142,12 @@ export class LivechatService {
      */
     async leaveSession({ notifyServer = true } = {}) {
         const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
-        try {
-            if (session?.uuid && notifyServer) {
-                this.busService.deleteChannel(session.uuid);
-                await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
-            }
-        } finally {
-            expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
-            this.state = SESSION_STATE.NONE;
-            this.sessionInitialized = false;
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+        this.state = SESSION_STATE.NONE;
+        this.sessionInitialized = false;
+        if (session?.uuid && notifyServer) {
+            this.busService.deleteChannel(session.uuid);
+            await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
         }
     }
 
