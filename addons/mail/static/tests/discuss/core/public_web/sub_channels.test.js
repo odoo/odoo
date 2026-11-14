@@ -1,4 +1,5 @@
 import {
+    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -7,10 +8,11 @@ import {
     openDiscuss,
     start,
     startServer,
+    step,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -118,6 +120,51 @@ test("view sub thread of a message when not a member of the sub thread", async (
     await click(".o-mail-Message-actions [title='Expand']");
     await click("[title='View Thread']");
     await contains(".o-mail-Discuss-threadName", { value: "Bob's thread" });
+});
+
+test("archived sub thread stays linked to its message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "<p>Hello world</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["discuss.channel"].create({
+        active: false,
+        from_message_id: messageId,
+        name: "Old thread",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-actions [title='Expand']");
+    await contains("[title='View Thread']");
+    await contains("[title='Create Thread']", { count: 0 });
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    await contains("[title='Expand']", { count: 0 });
+    await click("[title='View Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "Old thread" });
+});
+
+test("open archived sub thread from sub-thread list without joining it", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const channelId = pyEnv["discuss.channel"].create({ active: false, name: "General" });
+    pyEnv["discuss.channel"].create({
+        active: false,
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        name: "Bob's thread",
+        parent_channel_id: channelId,
+    });
+    onRpc("/discuss/channel/join", () => step("/discuss/channel/join"));
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Threads']");
+    await contains(".o-mail-SubChannelList-thread .badge", { text: "Archived" });
+    await click(".o-mail-SubChannelList-thread", { text: "Bob's thread" });
+    await contains(".o-mail-Discuss-threadName", { value: "Bob's thread" });
+    await assertSteps([]);
 });
 
 test("view sub thread created by another user from an open channel", async () => {

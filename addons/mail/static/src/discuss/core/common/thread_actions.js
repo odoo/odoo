@@ -14,6 +14,7 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
+                !component.thread.isArchived &&
                 component.store.self.type !== "guest" &&
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
@@ -78,6 +79,7 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
+                !component.thread.isArchived &&
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },

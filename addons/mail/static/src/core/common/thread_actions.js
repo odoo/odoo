@@ -33,6 +33,7 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread &&
+                !component.thread.isArchived &&
                 component.props.chatWindow?.isOpen &&
                 (component.thread.is_editable || component.thread.channel_type === "chat")
             );

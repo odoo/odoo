@@ -108,7 +108,7 @@
                             <Typing channel="thread" size="'medium'"/>
                         </div>
                     </div>
-                    <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
+                    <Composer t-if="!thread.isArchived" composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
                 </t>
             </t>
         </div>
@@ -144,5 +144,6 @@
     <ThreadIcon t-if="thread and thread.channel_type === 'chat' and thread.correspondent" thread="thread"/>
     <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatWindow-country border'"/>
     <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent mx-1 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
+    <span t-if="thread?.showArchivedBadge" class="badge rounded-pill flex-shrink-0 me-1 text-bg-danger">Archived</span>
 </t>
 </templates>

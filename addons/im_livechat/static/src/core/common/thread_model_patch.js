@@ -18,4 +18,11 @@ patch(Thread.prototype, {
     get isChatChannel() {
         return this.channel_type === "livechat" || super.isChatChannel;
     },
+
+    get showArchivedBadge() {
+        if (this.channel_type === "livechat" && !this.store.self.isInternalUser) {
+            return false;
+        }
+        return super.showArchivedBadge;
+    },
 });
