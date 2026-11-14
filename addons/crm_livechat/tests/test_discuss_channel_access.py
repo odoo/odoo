@@ -60,6 +60,14 @@ class TestDiscussChannelAccess(HttpCase):
                 {"name": "lead", "origin_channel_id": channel.id}
             )
 
+        with self.assertRaises(
+            AccessError,
+            msg="You cannot create a lead linked to a restricted channel through context defaults.",
+        ):
+            self.env["crm.lead"].with_user(user).with_context(
+                default_origin_channel_id=channel.id,
+            ).create({"name": "lead"})
+
         lead = self.env["crm.lead"].with_user(user).create({"name": "lead"})
         with self.assertRaises(
             AccessError,
