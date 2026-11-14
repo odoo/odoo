@@ -284,7 +284,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         contextual action, with dynamic reports involved """
         self.env.invalidate_all()
         # tm: 20, nightly: +1
-        with self.with_user(self.user_employee.login), self.assertQueryCount(21):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(20):
             mail_id = self.test_template_wreports.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -301,7 +301,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template in batch with dynamic reports """
         self.env.invalidate_all()
         # tm: 231, nightly: +1
-        with self.with_user(self.user_employee.login), self.assertQueryCount(232):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(231):
             template = self.test_template_wreports.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
