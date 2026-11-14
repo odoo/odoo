@@ -144,7 +144,12 @@ export class DomObserverPlugin extends Plugin {
         // --------
 
         // Start / Refresh
-        on_editor_started_handlers: withSequence(9, this.observe.bind(this)),
+        on_editor_started_handlers: [
+            withSequence(9, this.observe.bind(this)),
+            // Run last, so that the content changes made by other start
+            // handlers are seen.
+            withSequence(Infinity, () => this.triggerContentUpdated(this.editable)),
+        ],
         on_will_reset_history_handlers: this.reset.bind(this),
         on_committed_to_history_handlers: () => {
             this.triggerContentUpdated();
@@ -170,6 +175,7 @@ export class DomObserverPlugin extends Plugin {
         on_history_rebased_handlers: () => {
             /** @see on_will_rebase_history_handlers */
             this.observe();
+            this.triggerContentUpdated(this.editable);
         },
         on_remote_history_commit_applied_handlers: (newCommit) => {
             const root =
@@ -427,20 +433,15 @@ export class DomObserverPlugin extends Plugin {
         }
         const currentMutationsCount = this.mutations.length;
         if (currentMutationsCount) {
-            // Normalize the mutated nodes. Note: this can cause other commits
-            // to be written.
-            const commitRoot = this.getMutationsCommonAncestor(this.mutations) || this.editable;
-            this.dependencies.dom.normalize(commitRoot);
             if (!hasRelatedCommit) {
+                // Normalize the mutated nodes. Note: this can cause other commits
+                // to be written. The state restored by reverting a commit is
+                // already normalized, so normalization is skipped if there is
+                // a related commit.
+                const commitRoot = this.getMutationsCommonAncestor(this.mutations) || this.editable;
+                this.dependencies.dom.normalize(commitRoot);
                 this.trigger("on_pending_mutations_normalized_handlers");
-            }
-            this.flush();
-            if (currentMutationsCount === this.mutations.length) {
-                // If there was no added staged mutation during the
-                // normalization commit, force the trigger of a content_updated
-                // to allow i.e. the hint plugin to react to non-observed
-                // changes (i.e. a div becoming a baseContainer).
-                this.triggerContentUpdated();
+                this.flush();
             }
         }
         return { ...data, mutations: [...this.mutations] };
@@ -1228,14 +1229,17 @@ export class DomObserverPlugin extends Plugin {
     }
 
     /**
-     * Trigger `on_content_updated_handlers` if there are staged mutations and
-     * their targets have a common ancestor.
+     * Trigger `on_content_updated_handlers` on the given root, or on the common
+     * ancestor of the staged mutations if no root is given.
+     *
+     * @param { HTMLElement } [root]
      */
-    triggerContentUpdated() {
+    triggerContentUpdated(
+        root = this.mutations.length && this.getMutationsCommonAncestor(this.mutations)
+    ) {
         // @todo @phoenix remove this?
         // @todo @phoenix this includes previous mutations that were already
         // stored in the current commit. Ideally, it should only include the new ones.
-        const root = this.mutations.length && this.getMutationsCommonAncestor(this.mutations);
         if (root) {
             this.trigger("on_content_updated_handlers", root);
         }
