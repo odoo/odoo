@@ -38,7 +38,10 @@ class SaleOrderLine(models.Model):
         def line_filter(line):
             return line.order_id.state not in ["cancel", "draft"]
 
-        for sale_line in self.filtered(lambda line: line.product_id.type != "service"):
+        delivered_lines = self.filtered(
+            lambda line: line.product_id.type != "service" and line._is_delivered_by_pos()
+        )
+        for sale_line in delivered_lines:
             pos_line_ids = sale_line.sudo().pos_order_line_ids
             pos_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.filtered(line_filter))
             if pos_qty != 0:
@@ -52,11 +55,15 @@ class SaleOrderLine(models.Model):
     def _get_qty_procurement(self, previous_product_uom_qty=False):
         # The quantities settled in PoS are delivered by the PoS pickings: they must not be procured again by the SO.
         qty = super()._get_qty_procurement(previous_product_uom_qty)
-        if self.is_downpayment:
+        if self.is_downpayment or not self._is_delivered_by_pos():
             return qty
         pos_lines = self.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
         refund_lines = pos_lines.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
         return qty + sum(self._convert_qty(self, pos_line.qty, 'p2s') for pos_line in pos_lines | refund_lines)
+
+    def _is_delivered_by_pos(self):
+        self.ensure_one()
+        return True
 
     def _get_read_converted_extra_items(self, sale_line):
         extra_items = super()._get_read_converted_extra_items(sale_line)

@@ -9,6 +9,8 @@ class PosOrderLine(models.Model):
     def _get_qty_to_move(self):
         # Override to only ship what the linked sale order still owes.
         sale_line = self.sale_order_line_id.sudo()
+        if sale_line and not sale_line._is_delivered_by_pos():
+            return 0
         if not sale_line or self.qty < 0:
             return super()._get_qty_to_move()
         qty_left = sale_line.product_uom_qty - sale_line.qty_delivered
@@ -51,5 +53,8 @@ class PosOrderLine(models.Model):
     def _launch_stock_rule_from_pos_order_lines(self):
         orders = self.mapped('order_id')
         for order in orders:
-            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
+            sale_lines = order.lines.sale_order_line_id.filtered(
+                lambda line: line._is_delivered_by_pos()
+            )
+            self.env['stock.move'].browse(sale_lines.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
         return super()._launch_stock_rule_from_pos_order_lines()
