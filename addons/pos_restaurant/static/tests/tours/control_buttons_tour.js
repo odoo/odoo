@@ -11,6 +11,7 @@ import * as ChromePos from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     steps: () =>
@@ -107,5 +108,24 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             NumberPopup.isShown("5"),
             Dialog.confirm(),
             ProductScreen.guestNumberIs("5"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RestaurantFiscalPositionPrice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Restaurant Tax Product"),
+            ProductScreen.totalAmountIs("115.00"),
+            ProductScreen.clickFiscalPosition("No Tax", true),
+            ProductScreen.totalAmountIs("115.00"),
+            Numpad.click("Price"),
+            ...["1", "2", "0"].map(Numpad.click),
+            ProductScreen.totalAmountIs("120.00"),
+            ProductScreen.clickFiscalPosition("Dine in"),
+            ProductScreen.checkFiscalPosition("Tax"),
+            ProductScreen.totalAmountIs("120.00"),
         ].flat(),
 });

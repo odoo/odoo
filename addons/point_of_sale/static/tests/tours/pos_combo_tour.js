@@ -3,6 +3,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as ProductConfigurator from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
@@ -119,27 +120,37 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ProductScreen.clickDisplayedProduct("Office Combo"),
             ProductScreen.checkProductExtraPrice("Combo Product 3", "2"),
             combo.select("Combo Product 2"),
+            Dialog.is("Attribute selection"),
+            ProductConfigurator.pickRadio("Blue"),
+            Dialog.confirm(),
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
             Dialog.confirm(),
 
             inLeftSide([
-                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "8.33"),
+                ...ProductScreen.orderLineHas("Combo Product 2 (Blue)", "1.0", "19.33"),
                 ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "16.67"),
                 ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "25.00"),
             ]),
-            ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("4.55")),
+            ProductScreen.totalAmountIs("61.00"),
+            inLeftSide(Order.hasTax("5.55")),
 
-            // Test than changing the fp, doesn't change the price of the combo
             ProductScreen.clickFiscalPosition("test fp"),
             inLeftSide([
-                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "16.67"),
-                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "25.00"),
-                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "8.33"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "15.91"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "23.86"),
+                ...ProductScreen.orderLineHas("Combo Product 2 (Blue)", "1.0", "18.45"),
             ]),
-            ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("2.38")),
+            ProductScreen.totalAmountIs("58.22"),
+            inLeftSide(Order.hasTax("2.78")),
+            inLeftSide([...ProductScreen.clickLine("Combo Product 2 (Blue)"), Numpad.click("2")]),
+            ProductScreen.totalAmountIs("116.44"),
+            ProductScreen.clickPriceList("Combo Discount"),
+            ProductScreen.totalAmountIs("106.92"),
+            inLeftSide(ProductScreen.orderLineHas("Combo Product 2 (Blue)", "2.0", "35.32")),
+            ProductScreen.clickFiscalPosition("Tax Exempt"),
+            inLeftSide(ProductScreen.orderLineHas("Combo Product 2 (Blue)", "2.0", "33.64")),
+            ProductScreen.totalAmountIs("101.84"),
             ProductScreen.isShown(),
         ].flat(),
 });

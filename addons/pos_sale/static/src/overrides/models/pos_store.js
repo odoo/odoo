@@ -61,9 +61,7 @@ patch(PosStore.prototype, {
         // to ensure that the fiscal position is correctly computed
         // based on sale order.
         const orderFiscalPos = sale_order.fiscal_position_id;
-        this.get_order().update({
-            fiscal_position_id: orderFiscalPos,
-        });
+        this.get_order().set_fiscal_position(orderFiscalPos);
 
         selectedOption == "settle"
             ? await this.settleSO(sale_order, orderFiscalPos)
