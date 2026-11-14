@@ -7,13 +7,19 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    def setup_independent_company(cls):
+        return super().setup_independent_company(
+            company_xmlid="base.test_company_template",
+            currency_id=cls.env.ref("base.EUR").id,
+        )
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         # Currencies and company setup
         cls.eur_currency = cls.env.ref("base.EUR")
         cls.usd_currency = cls.env.ref("base.USD")
-        cls.company.currency_id = cls.eur_currency
 
         # Second company for multi-company tests
         cls.company_2 = cls.env["res.company"].create({
