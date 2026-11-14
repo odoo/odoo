@@ -9,6 +9,7 @@
                 t-attf-class="o_modal_design_{{ this.design }} {{ !this.props.withBodyPadding ? 'o_modal_no_body_padding': 'o_modal_body_padding' }}"
                 t-ref="this.modalRef"
                 >
+                <div t-if="this.props.technical" class="o_modal_backdrop_filter" aria-hidden="true"/>
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{ this.size }}">
                     <div class="modal-content" t-att-class="this.props.contentClass" t-att-style="this.contentStyle">
                         <header t-if="this.props.header" class="modal-header">

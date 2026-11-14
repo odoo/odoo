@@ -1,8 +1,11 @@
 import {
+    createAudioStream,
+    createVideoStream,
     defineMailModels,
     focus,
     MENU_ACTIVE_IDS,
     mockGetMedia,
+    mockMediaCaptureElements,
     mockPermissionsPrompt,
     openDiscuss,
     start,
@@ -10,11 +13,17 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { contains, getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
-import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
+import { beforeEach, describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 defineMailModels();
+/** @type {ReturnType<typeof mockMediaCaptureElements>} */
+let mediaCapture;
+beforeEach(() => {
+    mediaCapture = mockMediaCaptureElements();
+});
 
 test("Starting a video call asks for permissions", async () => {
     const pyEnv = await startServer();
@@ -215,4 +224,70 @@ test("Pressing Escape key on voice & video wizard does not trigger permission di
     triggerHotkey("Escape");
     await waitForNone(".o-mail-DeviceSelect-button[data-kind='audioinput']");
     await waitForNone(".o-discuss-CallPermissionDeniedDialog");
+});
+
+test("Uses <usermedia> to enable microphone and camera", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    mediaCapture.setSupported("usermedia");
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='Turn camera on']:count(1)").click();
+    const userMediaElement = await waitFor(".modal-footer usermedia:count(1)");
+    const audioTrack = createAudioStream().getAudioTracks()[0];
+    const videoTrack = createVideoStream().getVideoTracks()[0];
+    mediaCapture.dispatchMedia(userMediaElement, new MediaStream([audioTrack, videoTrack]));
+    expect(audioTrack.readyState).toBe("ended");
+    expect(videoTrack.readyState).toBe("ended");
+    await waitForNone(".modal");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+});
+
+test("Uses <microphone> to enable microphone", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    mediaCapture.setSupported("microphone");
+    await start();
+    const rtc = getService("discuss.rtc");
+    rtc.microphonePermission = "denied";
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='Unmute']:count(1)").click();
+    const microphoneElement = await waitFor(".modal-footer microphone:count(1)");
+    const audioTrack = createAudioStream().getAudioTracks()[0];
+    mediaCapture.dispatchMedia(microphoneElement, audioTrack);
+    expect(audioTrack.readyState).toBe("ended");
+    await waitForNone(".modal");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+});
+
+test("Falls back to asking permission when the capability element fails", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    mediaCapture.setSupported("microphone");
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='Unmute']:count(1)").click();
+    const microphoneElement = await waitFor(".modal-footer microphone:count(1)");
+    patch(navigator.mediaDevices, {
+        async getUserMedia(constraints) {
+            expect.step("getUserMedia");
+            expect(constraints.audio).toBeOfType("object");
+            expect(constraints.video).toBe(false);
+            throw new DOMException("Permission denied", "NotAllowedError");
+        },
+    });
+    microphoneElement.dispatchEvent(new Event("error"));
+    await expect.waitForSteps(["getUserMedia"]);
+    await waitFor(".o-discuss-CallPermissionDeniedDialog:count(1)");
+    await waitForNone(".modal-footer microphone");
 });
