@@ -133,16 +133,22 @@ class PosOrderLine(models.Model):
         for order in orders:
             pickings_to_confirm = order.picking_ids
             if pickings_to_confirm:
-                # Trigger the Scheduler for Pickings
                 tracked_lines = order.lines.filtered(lambda line: line.product_id.tracking in ['lot', 'serial'])
                 lines_by_tracked_product = tracked_lines.grouped('product_id')
                 pickings_to_confirm.action_confirm()
+                pickings_to_confirm.move_ids._create_production_lots_for_pos_order(tracked_lines)
                 for product, lines in lines_by_tracked_product.items():
-                    product_id = product.id
-                    moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
+                    moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id == product)
                     moves.move_line_ids.unlink()
-                    moves._add_mls_related_to_order(lines, are_qties_done=False)
                     moves._recompute_state()
+                    for line in lines:
+                        qty_left = abs(line._get_qty_to_move())
+                        for pos_lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                            lot_qty = 1.0 if product.tracking == 'serial' else min(qty_left, line._get_qty_to_move())
+                            lot = self.env['stock.lot'].search([('product_id', '=', product.id), ('name', '=', pos_lot.lot_name)], limit=1)
+                            if lot:
+                                moves._action_assign(force_qty=lot_qty, lot_id=lot)
+                            qty_left -= lot_qty
         return True
 
     def _is_product_storable_fifo_avco(self):
