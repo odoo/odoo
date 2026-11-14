@@ -18,6 +18,8 @@ from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 _logger = logging.getLogger(__name__)
 
+KSEF_FIRST_DAY = fields.Date.from_string('2026-01-31')
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -713,7 +715,7 @@ class AccountMove(models.Model):
         if last_processed_move:
             date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
         else:
-            date_from = fields.Datetime.from_string("2026-01-31 00:00:00")  # The date it became mandatory
+            date_from = fields.Datetime.to_datetime(KSEF_FIRST_DAY)  # The date it became mandatory
 
         tomorrow = fields.Datetime.now() + relativedelta(days=1)
         date_to = min(date_from + relativedelta(months=2), tomorrow)

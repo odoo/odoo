@@ -997,7 +997,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
             patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number) as capt,
         ):
-            self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills').method_direct_trigger()
+            self.env['account.move'].with_company(self.company_2)._l10n_pl_edi_download_bills_from_ksef()
 
         capt.assert_called_once_with(ksef_number)
         bill = self.env['account.move'].search([
