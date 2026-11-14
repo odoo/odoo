@@ -505,14 +505,36 @@ class TestMailMessageAccess(MessageAccessCommon):
                 body=f'AnchorForTest / A message from {self.user_admin.name} on {record.name}',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
+        # authored message on locked: readable through ACLs (author), not through document access
+        msg_author = records[2].message_post(
+            author_id=self.partner_employee.id, body='Authored', subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+
         # lock -> see '_get_mail_message_access', cannot read locked message
         # without write access, with is not granted for employees
         with self.assertRaises(AccessError):  # write access not granted on locked -> cannot read message
             messages_all[2].with_user(self.user_employee).fetch(['subject'])
+        # write access not granted on locked but author -> can read message
+        msg_author.with_user(self.user_employee).fetch(['subject'])
         with self.assertRaises(AccessError):  # also working in case of batch ok / not ok
             messages_all.with_user(self.user_employee).fetch(['subject'])
         messages_all[0].with_user(self.user_employee).fetch(['subject'])
         messages_all[1].with_user(self.user_employee).fetch(['subject'])  # can read message of readonly
+
+        # '_get_with_access' (controllers, on sudo-ed messages) applies the same rules, also in batch
+        messages_su = (messages_all + msg_author).with_user(self.user_employee).sudo()
+        self.assertFalse(messages_su[2]._get_with_access(), 'Write access not granted on locked')
+        self.assertEqual(messages_su[3]._get_with_access(), msg_author, 'Write access not granted on locked, but author')
+        valid = self.env['mail.message'].sudo()
+        for msg_su in messages_su:
+            if msg_su._get_with_access():
+                valid += msg_su
+        # batch mixes messages granted by ACLs and by document access: an inaccessible message
+        # in the batch should not drop messages granted by ACLs only (here: authored one)
+        self.assertEqual(valid, messages_all[:2] + msg_author)
+        messages_su_with_access = messages_su._get_with_access()
+        self.assertEqual(messages_su_with_access, valid, 'Batch version = concatenation of singleton version')
+        self.assertTrue(messages_su_with_access.env.su, 'Result keeps caller env, used as sudo by controllers')
 
         with self.assertRaises(AccessError):  # fetch should be symmetric to read
             _message = messages_all[2].with_user(self.user_employee).copy_data()
@@ -520,6 +542,21 @@ class TestMailMessageAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):  # no write access at all
             messages_all.with_user(self.user_portal).fetch(['subject'])
         messages_all.with_user(self.user_admin).fetch(['subject'])
+
+    def test_access_read_orphan(self):
+        """ Message of a removed document is not accessible, and does not crash
+        access check of other messages checked in batch. """
+        record, removed = self.env['mail.test.access.custo'].create([{'name': 'Open'}, {'name': 'Removed'}])
+        removed_id = removed.id
+        removed.unlink()
+        message = record.message_post(body='Valid', subtype_id=self.env.ref('mail.mt_comment').id)
+        orphan = self.env['mail.message'].create({
+            'body': 'Orphan', 'model': 'mail.test.access.custo', 'res_id': removed_id,
+        })
+        messages_su = (message + orphan).with_user(self.user_employee).sudo()
+        self.assertFalse(messages_su[1]._get_with_access())
+        self.assertEqual(messages_su[0]._get_with_access(), message)
+        self.assertEqual(messages_su._get_with_access(), message)
 
     def test_access_read_portal(self):
         """ Read access check for portal users """
@@ -598,21 +635,21 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Read access check for public users """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_public.message_ids[0], {}, False, 'Access on record'),
+            (self.record_public.message_ids[0], {}, True, 'Public NoRead > Access on record'),
             (self.record_portal.message_ids[0], {}, True, 'No access on record'),
             (self.record_admin.message_ids[0], {}, True, 'No access on record'),
             # author
             (self.record_internal.message_ids[0], {
                 'author_id': self.user_public.partner_id.id,
-            }, False, 'Author > no access on record'),
+            }, True, 'Public NoRead > Author > no access on record'),
             # Recipient To
             (self.record_admin.message_ids[0], {
                 'partner_ids': [(4, self.user_public.partner_id.id)],
-            }, False, 'Recipients To > no access on record'),
+            }, True, 'Public NoRead > Recipients To > no access on record'),
             # Recipients Cc
             (self.record_admin.message_ids[0], {
                 'partner_cc_ids': [(4, self.user_public.partner_id.id)],
-            }, False, 'Recipients Cc > no access on record'),
+            }, True, 'Public NoRead > Recipients Cc > no access on record'),
             # forbidden
             (self.record_public.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
@@ -625,7 +662,7 @@ class TestMailMessageAccess(MessageAccessCommon):
                 'notification_ids': [(0, 0, {
                     'res_partner_id': self.user_public.partner_id.id,
                 })],
-            }, False, 'Notified > no access on record'),
+            }, True, 'Public NoRead > Notified > no access on record'),
         ]:
             original_vals = {
                 'author_id': msg.author_id.id,
@@ -648,6 +685,19 @@ class TestMailMessageAccess(MessageAccessCommon):
                 if msg_vals:
                     msg.write(original_vals)
                     self.env.invalidate_all()
+
+        # quick check on controller fetch shared messages of readable documents
+        self.authenticate(None, None)
+        res = self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [["/mail/thread/messages", {
+                    "thread_model": self.record_public._name,
+                    "thread_id": self.record_public.id,
+                }]],
+            }
+        )
+        self.assertEqual({m["id"] for m in res["mail.message"]}, set(self.record_public.message_ids[:2].ids))  # not creation note
 
     # ------------------------------------------------------------
     # UNLINK
@@ -875,7 +925,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.user_admin, []),
         ], [
             # public: record with access but no tracking
-            msg_record_public,
+            None,
             # portal: mentionned + record with access, if published
             msgs[0] + msgs[3] + msg_record_portal + msg_record_public,
             # employee
@@ -886,7 +936,11 @@ class TestMailMessageAccess(MessageAccessCommon):
             with self.subTest(test_user=test_user.name, add_domain=add_domain):
                 self.env.invalidate_all()
                 domain = [('subject', 'like', '_ZTest')] + add_domain
-                self.assertEqual(self.env['mail.message'].with_user(test_user).search(domain), exp_messages)
+                if exp_messages is None:
+                    with self.assertRaises(AccessError):
+                        self.env['mail.message'].with_user(test_user).search(domain)
+                else:
+                    self.assertEqual(self.env['mail.message'].with_user(test_user).search(domain), exp_messages)
 
     def test_search_customized(self):
         """ Test '_mail_get_operation_for_mail_message_operation' support in search """

@@ -214,7 +214,8 @@ class BlogPost(models.Model):
     comment_count = fields.Integer("Comment count", compute='_compute_comment_count')
 
     def _compute_comment_count(self):
-        count_by_post = dict(self.env['mail.message']._read_group(
+        # sudo: mail.message - published comments, domain restricted to shared messages
+        count_by_post = dict(self.env['mail.message'].sudo()._read_group(
             domain=PortalWebClientController._get_portal_message_fetch_domain(self),
             groupby=["res_id"],
             aggregates=['__count'],

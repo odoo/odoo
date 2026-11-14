@@ -156,12 +156,28 @@ class TestTranslationController(HttpCase):
         self.assertHTMLEqual(translation.body, "<p>Bij slecht weer, goed gezicht.</p>")
 
     def test_access_right(self):
-        with self.assertRaises(JsonRpcException, msg="odoo.http.session.SessionExpiredException"):
-            self._mock_translation_request({"message_id": self.message.id})
+        """ Public translates messages it can read (public channel comment), not
+        internal notes nor messages of documents it cannot read. """
+        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Public Channel")
+        comment = channel.message_post(body=SAMPLE["text"], subtype_xmlid="mail.mt_comment")
+        note = channel.message_post(body=SAMPLE["text"], subtype_xmlid="mail.mt_note")
+        result = self._mock_translation_request({"message_id": comment.id})
+        self.assertEqual(result["body"], SAMPLE["en"])
+        for message in note + self.message:
+            with self.assertRaisesRegex(JsonRpcException, "NotFound"), mute_logger("odoo.http"):
+                self._mock_translation_request({"message_id": message.id})
         new_test_user(self.env, "user_test_portal", groups="base.group_portal", lang="fr_FR")
         self.authenticate("user_test_portal", "user_test_portal")
-        with self.assertRaises(JsonRpcException, msg="odoo.exceptions.AccessError"), mute_logger("odoo.http"):
+        with self.assertRaisesRegex(JsonRpcException, "NotFound"), mute_logger("odoo.http"):
             self._mock_translation_request({"message_id": self.message.id})
+        # user notifications are private to their recipients, even on readable documents
+        notification = self.env.ref("base.partner_admin").message_notify(
+            body=SAMPLE["text"], partner_ids=self.env.ref("base.partner_admin").ids,
+        )
+        new_test_user(self.env, "user_test_internal", groups="base.group_user", lang="fr_FR")
+        self.authenticate("user_test_internal", "user_test_internal")
+        with self.assertRaisesRegex(JsonRpcException, "NotFound"), mute_logger("odoo.http"):
+            self._mock_translation_request({"message_id": notification.id})
 
     def test_unknown_language(self):
         self.authenticate("admin", "admin")

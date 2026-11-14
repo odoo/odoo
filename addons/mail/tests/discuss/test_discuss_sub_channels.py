@@ -6,11 +6,12 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo.tests.common import HttpCase, new_test_user
+from odoo.tests.common import HttpCase, JsonRpcException, new_test_user
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.bus.tests.common import BusCase, BusResult
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools import mute_logger
 
 
 class TestDiscussSubChannels(BusCase, HttpCase):
@@ -319,3 +320,26 @@ class TestDiscussSubChannels(BusCase, HttpCase):
 
         with self.assertBus(notifications):
             sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
+
+    @mute_logger("odoo.http")
+    def test_16_sub_channel_create_internal_only(self):
+        """Threads are created by internal users only, see 'canCreateSubChannels'."""
+        channel = self.env["discuss.channel"]._create_channel(name="Public", group_id=None)
+        message = channel.message_post(body="Hello", message_type="comment", subtype_xmlid="mail.mt_comment")
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        portal_user = mail_new_test_user(self.env, "portal_user", groups="base.group_portal")
+        channel._add_members(users=portal_user, guests=guest)
+        for login, as_guest, exception in [
+            (None, True, "SessionExpiredException"),  # auth="user"
+            ("portal_user", False, "werkzeug.exceptions.NotFound"),
+        ]:
+            with self.subTest(login=login):
+                self.authenticate(login, login)
+                if as_guest:
+                    self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
+                with self.assertRaisesRegex(JsonRpcException, exception):
+                    self.make_jsonrpc_request(
+                        "/discuss/channel/sub_channel/create",
+                        {"parent_channel_id": channel.id, "from_message_id": message.id},
+                    )
+        self.assertFalse(channel.sub_channel_ids)
