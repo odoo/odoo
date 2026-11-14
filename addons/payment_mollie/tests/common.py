@@ -12,4 +12,10 @@ class MollieCommon(PaymentCommon):
         cls.provider = cls.mollie
         cls.currency = cls.currency_euro
 
-        cls.payment_data = {"ref": cls.reference, "id": "tr_ABCxyz0123"}
+        cls.payment_data = {
+            "ref": cls.reference,
+            "id": "tr_ABCxyz0123",
+            "method": "apple_pay",
+            "amount": {"value": cls.amount, "currency": cls.currency.name},
+            "status": "paid",
+        }
