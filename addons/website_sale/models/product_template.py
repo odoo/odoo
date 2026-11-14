@@ -8,7 +8,7 @@ from urllib.parse import urlencode, urlparse
 from psycopg2 import sql
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.db import FunctionStatus
@@ -496,9 +496,7 @@ class ProductTemplate(models.Model):
             if template.product_template_image_ids:
                 first_product_image = template.product_template_image_ids.sorted("sequence")[0]
                 if first_product_image.video_url:
-                    raise ValidationError(
-                        template.env._("You can't use a video as the template's main image.")
-                    )
+                    continue
                 if template.image_1920.content == first_product_image.image_1920.content:
                     continue
                 template.with_context(
