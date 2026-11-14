@@ -3,8 +3,9 @@
 
 import hashlib
 
-from odoo import api, models, _
+from odoo import api, models, Command, _
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class HrEmployee(models.Model):
@@ -97,3 +98,39 @@ class HrEmployee(models.Model):
                     employee=employee.name,
                     config_list=", ".join(linked_configs.mapped("name")),
                 ))
+        configs_with_employees = self.env['pos.config'].sudo().search([('module_pos_hr', '=', True)]).filtered(lambda c: c.current_session_id)
+        configs_with_all_employees = configs_with_employees.filtered(lambda c: not c.basic_employee_ids and not c.advanced_employee_ids and not c.minimal_employee_ids)
+        configs_with_specific_employees = configs_with_employees.filtered(lambda c: (c.basic_employee_ids or c.advanced_employee_ids or c.minimal_employee_ids) & self)
+        if configs_with_all_employees or configs_with_specific_employees:
+            error_msg = _("You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n")
+            for employee in self:
+                config_ids = configs_with_all_employees | configs_with_specific_employees.filtered(lambda c: employee in c.basic_employee_ids)
+                if config_ids:
+                    error_msg += _("Employee: %(employee)s - PoS Config(s): %(config_list)s \n", employee=employee.name, config_list=config_ids.mapped("name"))
+
+            raise UserError(error_msg)
+
+    def write(self, vals):
+        if 'active' in vals or 'company_id' in vals:
+            employee_fields = ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')
+            domain = Domain.OR([Domain([(fname, 'in', self.ids)]) for fname in employee_fields])
+            # If active is True (or unchanged in vals) and company_id is not being modified,
+            # no cross-company cleanup is necessary.
+            if vals.get('active', True):
+                if 'company_id' not in vals:
+                    return super().write(vals)
+                company_id = vals['company_id']
+                if hasattr(company_id, 'id'):
+                    company_id = company_id.id
+                domain = Domain.AND([domain, [('company_id', '!=', company_id)]])
+            # Search across all companies using sudo and remove the affected employees
+            configs_to_clean = self.env['pos.config'].sudo().search(domain)
+            for config in configs_to_clean:
+                config_vals = {
+                    fname: [Command.unlink(emp.id) for emp in config[fname] & self]
+                    for fname in employee_fields
+                    if config[fname] & self
+                }
+                if config_vals:
+                    config.write(config_vals)
+        return super().write(vals)
