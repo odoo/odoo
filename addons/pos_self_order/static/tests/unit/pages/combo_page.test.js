@@ -6,6 +6,23 @@ import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
 
+test("combo choices follow the POS product sequence and is_favorite", async () => {
+    const store = await setupSelfPosEnv();
+    const comboProduct = store.models["product.template"].get(7);
+    const [firstItem, secondItem] = comboProduct.combo_ids[0].combo_item_ids;
+    firstItem.product_id.product_tmpl_id.update({ pos_sequence: 20 });
+    secondItem.product_id.product_tmpl_id.update({ pos_sequence: 10 });
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+
+    expect(comp.comboItems.map((item) => item.id)).toEqual([secondItem.id, firstItem.id]);
+
+    firstItem.product_id.product_tmpl_id.update({ is_favorite: true });
+    expect(comp.comboItems.map((item) => item.id)).toEqual([firstItem.id, secondItem.id]);
+});
+
 test("onChoiceClicked and selectItem", async () => {
     const store = await setupSelfPosEnv();
     const models = store.models;

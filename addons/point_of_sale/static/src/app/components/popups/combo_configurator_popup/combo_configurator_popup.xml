@@ -18,7 +18,7 @@
                     </t>
                 </div>
                 <div class="product-list d-grid gap-1 gap-lg-2">
-                    <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" t-if="combo_item.product_id">
+                    <div t-foreach="this.getComboItems(combo)" t-as="combo_item" t-key="combo_item.id" t-if="combo_item.product_id">
                         <t t-set="product" t-value="combo_item.product_id"/>
                         <label class="combo-item d-block h-100 w-100 rounded cursor-pointer transition-base"
                             t-att-class="{ 'selected': this.state.qty[combo.id][combo_item.id] }"

@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { compareProductsByFavoriteAndSequence } from "@point_of_sale/utils";
 
 export class ComboConfiguratorPopup extends Component {
     static template = "point_of_sale.ComboConfiguratorPopup";
@@ -150,6 +151,12 @@ export class ComboConfiguratorPopup extends Component {
             this.props.values &&
             this.isConfirmButtonEnabled() &&
             !Object.values(this.props.values).some((acc) => Object.keys(acc).includes("upsell"))
+        );
+    }
+
+    getComboItems(combo) {
+        return [...combo.combo_item_ids].sort((a, b) =>
+            compareProductsByFavoriteAndSequence(a.product_id, b.product_id)
         );
     }
 

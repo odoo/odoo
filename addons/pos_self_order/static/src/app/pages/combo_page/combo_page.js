@@ -10,6 +10,7 @@ import { computeTotalComboPrice } from "../../services/card_utils";
 import { formatProductName, shouldShowMissingDetails } from "../../utils";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
+import { compareProductsByFavoriteAndSequence } from "@point_of_sale/utils";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
@@ -59,9 +60,9 @@ export class ComboPage extends Component {
     }
 
     get comboItems() {
-        return this.selectedChoice.combo_item_ids.filter(
-            (item) => item.product_id.self_order_available
-        );
+        return this.selectedChoice.combo_item_ids
+            .filter((item) => item.product_id.self_order_available)
+            .sort((a, b) => compareProductsByFavoriteAndSequence(a.product_id, b.product_id));
     }
 
     get currentChoiceState() {
