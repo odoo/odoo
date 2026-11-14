@@ -209,8 +209,84 @@ export class ListCorePlugin extends OdooCorePlugin {
     // Private
     // ---------------------------------------------------------------------
 
+<<<<<<< 9cffc73966d54ab1b07e82ed229d127e30611eab
     _addList(id, definition) {
         const lists = { ...this.lists };
+||||||| 915f3ac0bd4cf71d069622aae8729f6df8ba3e33
+    /**
+     * Get the current FieldMatching on a list
+     *
+     * @param {string} listId
+     * @param {string} filterId
+     */
+    getListFieldMatching(listId, filterId) {
+        return this.lists[listId].fieldMatching[filterId];
+    }
+
+    /**
+     * Sets the current FieldMatching on a list
+     *
+     * @param {string} filterId
+     * @param {Record<string,FieldMatching>} listFieldMatches
+     */
+    _setListFieldMatching(filterId, listFieldMatches) {
+        const lists = { ...this.lists };
+        for (const [listId, fieldMatch] of Object.entries(listFieldMatches)) {
+            lists[listId].fieldMatching[filterId] = fieldMatch;
+        }
+        this.history.update("lists", lists);
+    }
+
+    _onFilterDeletion(filterId) {
+        const lists = { ...this.lists };
+        for (const listId in lists) {
+            this.history.update("lists", listId, "fieldMatching", filterId, undefined);
+        }
+    }
+
+    _addList(id, definition, fieldMatching = undefined) {
+        const lists = { ...this.lists };
+        if (!fieldMatching) {
+            const model = definition.metaData.resModel;
+            fieldMatching = this.getters.getFieldMatchingForModel(model);
+        }
+=======
+    /**
+     * Get the current FieldMatching on a list
+     *
+     * @param {string} listId
+     * @param {string} filterId
+     */
+    getListFieldMatching(listId, filterId) {
+        return this.lists[listId].fieldMatching[filterId];
+    }
+
+    /**
+     * Sets the current FieldMatching on a list
+     *
+     * @param {string} filterId
+     * @param {Record<string,FieldMatching>} listFieldMatches
+     */
+    _setListFieldMatching(filterId, listFieldMatches) {
+        for (const [listId, fieldMatch] of Object.entries(listFieldMatches)) {
+            this.history.update("lists", listId, "fieldMatching", filterId, fieldMatch);
+        }
+    }
+
+    _onFilterDeletion(filterId) {
+        const lists = { ...this.lists };
+        for (const listId in lists) {
+            this.history.update("lists", listId, "fieldMatching", filterId, undefined);
+        }
+    }
+
+    _addList(id, definition, fieldMatching = undefined) {
+        const lists = { ...this.lists };
+        if (!fieldMatching) {
+            const model = definition.metaData.resModel;
+            fieldMatching = this.getters.getFieldMatchingForModel(model);
+        }
+>>>>>>> a24731d272085ae589a65e303285560842a31f6d
         lists[id] = {
             id,
             definition,
