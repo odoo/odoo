@@ -101,6 +101,31 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         timesheets = AnalyticLineModel.search(timesheet_domain)
         self.assertIn(timesheet_entry.id, timesheets.ids, "Portal user should see the timesheet when set as the project’s partner.")
 
+    def test_timesheet_visibility_portal_collaborator(self):
+        """ A collaborator of a shared project should see the timesheets of the project in the
+        portal, even if they do not follow the task, as they can read them in project sharing. """
+        employee = self.env['hr.employee'].create({
+            'name': 'Project User Employee',
+            'user_id': self.user_projectuser.id,
+        })
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'project_id': self.project_cows.id,
+            'task_id': self.task_cow.id,
+            'employee_id': employee.id,
+        })
+        self.env['project.collaborator'].create({
+            'project_id': self.project_cows.id,
+            'partner_id': self.user_portal.partner_id.id,
+            'access_mode': 'view',
+        })
+        self.assertNotIn(self.user_portal.partner_id, self.task_cow.message_partner_ids)
+        timesheet.with_user(self.user_portal).check_access('read')
+
+        timesheet_domain = self.env['account.analytic.line'].with_user(self.user_portal)._timesheet_get_portal_domain()
+        self.assertIn(timesheet, self.env['account.analytic.line'].search(timesheet_domain),
+            "A collaborator of the project should see its timesheets in the portal.")
+
     def test_portal_task_hours_no_double_counting(self):
         """ Test that totals for both allocated and spent hours are calculated correctly, preventing double-counting.
 
