@@ -193,7 +193,9 @@
                 <filter string="Planned" name="filter_planned" domain="[('production_state', 'not in', ('done', 'cancel')), ('date_start', '!=', False)]"/>
                 <filter string="To Plan" name="filter_to_plan" domain="[('production_state', '=', 'confirmed'), ('date_start', '=', False)]"/>
                 <separator/>
-                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;=', 'today'), ('state', '=', 'ready')]" help="Production started late"/>
+                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', 'today'), ('state', '=', 'ready')]" help="Production started late"/>
+                <filter string="Today" name="today" domain="[('date_start', '&gt;=', 'today'), ('date_start', '&lt;', 'today +1d'), ('state', '=', 'ready')]" help="Production starts today"/>
+                <filter string="Future" name="future" domain="[('date_start', '&gt;=', 'today +1d'), ('state', '=', 'ready')]" help="Production starts in the future"/>
                 <filter string="Conflicts" name="conflicts" domain="[('has_conflicts', '=', True)]"/>
                 <filter string="Planning Issues" name="issues" domain="[('has_planning_issues', '=', True)]"/>
                 <group>
@@ -289,15 +291,11 @@
                         <footer>
                             <t invisible="state in ('done', 'cancel')">
                                 <i class="oi me-1" data-icon="hourglass_bottom" title="time remaining"/>
-                                <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time" t-att-class="record.remaining_time.raw_value &lt; 0 ? 'o_wo_red' : ''">
+                                <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time">
                                     <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes'}"/>
                                 </div>
                                 <t t-set="start_datetime" t-value="luxon.DateTime.fromISO(record.date_start.raw_value)"/>
-                                <div class="o_kanban_workorder_date" invisible="not date_start"
-                                    t-att-class="{'o_wo_orange': start_datetime.hasSame(luxon.DateTime.now(), 'day'),
-                                        'o_wo_red': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
-                                        '': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
-                                    }">
+                                <div class="o_kanban_workorder_date" invisible="not date_start">
                                     <i class="oi me-1 my-auto" data-icon="schedule" title="planned date start"></i>
                                     <div data-tooltip="Scheduled Date">
                                         <field name="date_start" class="pe-2"/>
