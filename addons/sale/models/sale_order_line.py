@@ -1436,7 +1436,7 @@ class SaleOrderLine(models.Model):
                 price_subtotal = 0.0
                 uom_qty_to_consider = (
                     line.qty_delivered
-                    if line.product_id.invoice_policy == "delivery"
+                    if line.invoice_policy == "delivery"
                     else line.product_uom_qty
                 )
                 price_reduce = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
