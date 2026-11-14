@@ -37,7 +37,9 @@ export class MailComposerTemplateSelector extends Component {
             "mail.template",
             [
                 ["model", "=", this.props.record.data.render_model],
+                "|",
                 ["user_id", "=", user.userId],
+                ["role_ids.user_ids", "in", [user.userId]],
             ],
             fields,
             { limit: this.limit }
@@ -49,6 +51,7 @@ export class MailComposerTemplateSelector extends Component {
                     [
                         ["model", "=", this.props.record.data.render_model],
                         ["user_id", "=", false],
+                        ["role_ids", "=", false],
                     ],
                     fields,
                     { limit: this.limit - templates.length }
