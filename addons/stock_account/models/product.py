@@ -87,10 +87,11 @@ class ProductProduct(models.Model):
         string="Average Cost", compute='_compute_value',
         compute_sudo=True, currency_field='company_currency_id')
     total_value = fields.Monetary(
-        string="Total Value", compute='_compute_value',
+        string="Total Value", compute='_compute_value', compute_sql='_compute_sql_total_value',
         compute_sudo=True, currency_field='company_currency_id')
     company_currency_id = fields.Many2one(
-        'res.currency', 'Valuation Currency', compute='_compute_value', compute_sudo=True,
+        'res.currency', 'Valuation Currency', compute='_compute_value',
+        compute_sql='_compute_sql_company_currency_id', compute_sudo=True,
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
 
@@ -182,6 +183,24 @@ class ProductProduct(models.Model):
         for product in self:
             product.total_value = sum(c.currency_id._convert(total_value_by_company_id[c.id].get(product.id, 0), self.env.company.currency_id) for c in self.env.companies)
             product.avg_cost = product.total_value / product._with_valuation_context().qty_available if product._with_valuation_context().qty_available else std_price_by_company_id[self.env.company.id].get(product.id, product.standard_price)
+
+    def _compute_sql_company_currency_id(self, table):
+        return SQL("%s", self.env.company.currency_id.id)
+
+    def _compute_sql_total_value(self, table):
+        """ SQL version of `total_value`, used to sort and group on it.
+            limitation so far: no to_date is used, correct only for today
+        """
+        values = []
+        for company in self.env.companies:
+            products = self.with_company(company).with_context(allowed_company_ids=company.ids)._with_valuation_context()
+            company_table = table._with_model(products)
+            rate = company.currency_id._convert(1.0, self.env.company.currency_id, self.env.company, fields.Date.today(), round=False)
+            values.append(SQL(
+                "%s * %s * %s",
+                products._compute_sql_qty_available(company_table), company_table.standard_price, rate,
+            ))
+        return SQL("(%s)", SQL(" + ").join(values))
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -5,6 +5,7 @@ from datetime import timedelta
 import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 
 
 PY_OPERATORS = {
@@ -325,6 +326,34 @@ class ProductProduct(models.Model):
                 }
 
         return res
+
+    def _get_kit_quantity_sql(self, table, field_name, super_compute_sql_qty):
+        kits = self.with_context(active_test=False).search([('is_kits', '=', True)]).with_env(self.env)
+        if not kits:
+            return super_compute_sql_qty
+        ctx = self.env.context
+        quantities = kits._compute_quantities_dict(
+            ctx.get('lot_id'), ctx.get('owner_id'), ctx.get('package_id'), ctx.get('from_date'), ctx.get('to_date'))
+        kit_values = SQL(", ").join(SQL("(%s, %s)", kit.id, quantities[kit.id][field_name]) for kit in kits)
+        return SQL(
+            "COALESCE((SELECT kit.qty FROM (VALUES %s) AS kit(id, qty) WHERE kit.id = %s), %s)",
+            kit_values, table.id, super_compute_sql_qty,
+        )
+
+    def _compute_sql_qty_available(self, table):
+        return self._get_kit_quantity_sql(table, 'qty_available', super()._compute_sql_qty_available(table))
+
+    def _compute_sql_free_qty(self, table):
+        return self._get_kit_quantity_sql(table, 'free_qty', super()._compute_sql_free_qty(table))
+
+    def _compute_sql_incoming_qty(self, table):
+        return self._get_kit_quantity_sql(table, 'incoming_qty', super()._compute_sql_incoming_qty(table))
+
+    def _compute_sql_outgoing_qty(self, table):
+        return self._get_kit_quantity_sql(table, 'outgoing_qty', super()._compute_sql_outgoing_qty(table))
+
+    def _compute_sql_virtual_available(self, table):
+        return self._get_kit_quantity_sql(table, 'virtual_available', super()._compute_sql_virtual_available(table))
 
     def action_view_bom(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
