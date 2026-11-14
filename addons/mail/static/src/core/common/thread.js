@@ -212,7 +212,9 @@ export class Thread extends Component {
             (highlightMessage, mountedAndLoaded) => {
                 if (highlightMessage && mountedAndLoaded) {
                     this.messageHighlight?.highlightMessage(highlightMessage);
-                    this.props.thread.highlightMessage = null;
+                    // reset after this effect: writing one of its dependencies while it
+                    // runs would prevent it from reacting to the next highlight request
+                    Promise.resolve().then(() => (this.props.thread.highlightMessage = null));
                 }
             }
         );

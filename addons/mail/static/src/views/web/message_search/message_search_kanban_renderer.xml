@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="mail.MessageSearchKanbanRenderer">
+        <t t-if="!this.props.list.isGrouped" t-call="web.KanbanRenderer"/>
+        <div t-else="" class="o_kanban_renderer o_kanban_ungrouped o_renderer o_mail_message_search_kanban p-2" t-ref="this.rootRef">
+            <section t-foreach="this.props.list.groups" t-as="group" t-key="group.id" class="mb-3">
+                <button class="btn btn-link d-flex align-items-center gap-1 p-0 mb-2 fw-bold fs-5 text-reset text-start" t-on-click="() => this.toggleGroup(group)">
+                    <i class="oi" t-att-data-icon="group.isFolded ? 'chevron_right' : 'expand_more'" aria-hidden="true"/>
+                    <t t-out="group.displayName"/>
+                    <span class="fw-normal text-muted">(<t t-out="group.count"/>)</span>
+                </button>
+                <t t-if="!group.isFolded">
+                    <div class="o_mail_message_search_kanban_group d-flex flex-wrap align-content-start justify-content-start">
+                        <KanbanRecord
+                            t-foreach="group.list.records" t-as="record" t-key="record.id"
+                            archInfo="this.props.archInfo.cardArchInfo"
+                            Compiler="this.props.Compiler"
+                            canResequence="false"
+                            cardColorField="this.props.archInfo.cardColorField"
+                            forceGlobalClick="this.props.forceGlobalClick"
+                            groupByField="this.props.list.groupByField"
+                            getSelection.bind="this.getSelection"
+                            toggleSelection.bind="this.toggleSelection"
+                            deleteRecord="this.props.deleteRecord"
+                            archiveRecord="(record, active) => this.archiveRecord(record, active)"
+                            canOpenRecords="this.props.archInfo.canOpenRecords"
+                            openAction="this.props.archInfo.openAction"
+                            openRecord="this.props.openRecord"
+                            readonly="this.props.readonly"
+                            record="record"
+                            selectionAvailable="this.state.selectionAvailable"
+                        />
+                        <!-- kanban ghost cards are used to properly space last elements. -->
+                        <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost o_sample_data_disabled flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0"/>
+                    </div>
+                    <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(group)"/>
+                    <div t-if="unloadedCount > 0" class="o_kanban_load_more o_sample_data_disabled">
+                        <button class="btn btn-outline-primary mt-2" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                    </div>
+                </t>
+            </section>
+            <ActionHelper t-if="this.showNoContentHelper" noContentHelp="this.props.noContentHelp"/>
+        </div>
+    </t>
+</templates>
