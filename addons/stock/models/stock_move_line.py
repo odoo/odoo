@@ -483,7 +483,7 @@ class StockMoveLine(models.Model):
                 if 'quantity' in vals or 'uom_id' in vals:
                     new_ml_uom = updates.get('uom_id', ml.uom_id)
                     new_reserved_qty = new_ml_uom._compute_quantity(
-                        vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
+                        float(vals.get('quantity', ml.quantity)), ml.product_id.uom_id, rounding_method='HALF-UP')
                     # Make sure `reserved_uom_qty` is not negative.
                     if ml.product_id.uom_id.compare(new_reserved_qty, 0) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
@@ -510,7 +510,7 @@ class StockMoveLine(models.Model):
             next_moves = self.env['stock.move']
             mls = self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.is_storable)
             if not updates:  # we can skip those where quantity is already good up to UoM rounding
-                mls = mls.filtered(lambda ml: not ml.uom_id.is_zero(ml.quantity - vals['quantity']))
+                mls = mls.filtered(lambda ml: not ml.uom_id.is_zero(ml.quantity - float(vals['quantity'])))
             for ml in mls:
                 # undo the original move line
                 in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id)[1]
