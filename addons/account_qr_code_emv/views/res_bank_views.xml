@@ -11,8 +11,8 @@
                 <page string="Payment QR Settings" name="emv_qr_settings" invisible="not display_qr_setting or not company_qr_code">
                     <group>
                         <field name="country_proxy_keys" invisible="1"/>
-                        <field name="proxy_type" widget="dynamic_selection" options="{'available_field': 'country_proxy_keys'}"/>
-                        <field name="proxy_value"/>
+                        <field name="proxy_type" widget="dynamic_selection" options="{'available_field': 'country_proxy_keys'}" readonly="lock_trust_fields" force_save="1"/>
+                        <field name="proxy_value" readonly="lock_trust_fields" force_save="1"/>
                         <field name="include_reference"/>
                     </group>
                 </page>

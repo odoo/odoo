@@ -91,6 +91,11 @@ class ResPartnerBank(models.Model):
             vals['l10n_ch_qr_iban'] = format_account_number(self.env, vals['l10n_ch_qr_iban'])
         return super().write(vals)
 
+    @api.model
+    def _get_lock_trust_fields(self):
+        # EXTENDS account
+        return super()._get_lock_trust_fields() | {'l10n_ch_qr_iban'}
+
     def _l10n_ch_filter_text(self, value):
         value = ' '.join((value or '').split())
         if value.isprintable() and value.isascii() or {*value} < UNICODE_ALLOWED:
