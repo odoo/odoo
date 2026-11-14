@@ -1,7 +1,8 @@
-import { computed, useProps, types, Component } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { computed, useProps, types, Component, usePlugin } from "@odoo/owl";
 
 import { OutLine } from "../out_line/out_line";
+import { ORM } from "@web/core/orm_plugin";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export class ProductLine extends Component {
     static template = "stock.AllocationReport.ProductLine";
@@ -39,8 +40,8 @@ export class ProductLine extends Component {
     })
 
     setup() {
-        this.ormService = useService("orm");
-        this.actionService = useService("action");
+        this.ormService = usePlugin(ORM);
+        this.actionService = usePlugin(ActionPlugin);
         const needs = this.props.needs;
         this.needs = needs.sort((needA, needB) => {
             const reservationA = needA.moves.some(move => move.is_reserved);

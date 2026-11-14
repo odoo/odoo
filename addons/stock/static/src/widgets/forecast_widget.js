@@ -2,14 +2,16 @@ import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { formatDate } from "@web/core/l10n/dates";
 import { formatFloat } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ORM } from "@web/core/orm_plugin";
+import { usePlugin } from "@odoo/owl";
 
 export class ForecastWidgetField extends FloatField {
     static template = "stock.ForecastWidget";
     setup() {
         const { data, fields, resId } = this.props.record;
-        this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.actionService = usePlugin(ActionPlugin);
+        this.orm = usePlugin(ORM);
         this.resId = resId;
 
         this.forecastExpectedDate = formatDate(

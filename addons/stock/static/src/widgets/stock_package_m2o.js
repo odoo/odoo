@@ -1,5 +1,4 @@
-import { Component, useProps, t } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useProps, t, usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
@@ -9,6 +8,7 @@ import {
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
+import { ORM } from "@web/core/orm_plugin";
 
 class Many2XStockPackageAutocomplete extends Many2XAutocomplete {
     get createDialog() {
@@ -65,7 +65,7 @@ export class StockPackageMany2One extends Component {
     });
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.isDone = ["done", "cancel"].includes(this.props.record?.data?.state);
     }
 

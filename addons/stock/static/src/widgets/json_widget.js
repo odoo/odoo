@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { Component, useProps } from "@odoo/owl";
+import { Component, useProps, usePlugin } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { ORM } from "@web/core/orm_plugin";
 
 export class JsonPopOver extends Component {
     static template = "";
@@ -45,7 +45,7 @@ export class UpdateButton extends Component {
 
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
     }
 
     async updateDailyDemand(ev) {
