@@ -126,6 +126,20 @@ class ResUsers(models.Model):
             state = json.loads(params['state'])
             token = state.get('t')
             values = self._generate_signup_values(provider, validation, params)
+            # On the first OAuth/OIDC login the validated identity may already be
+            # linked to an existing internal user (whose login is the validated
+            # email but whose oauth_uid is still empty). Link it instead of
+            # failing with a duplicate-email signup error.
+            existing_user = self.with_context(active_test=False).search(
+                [("login", "=", values.get('login')), ("oauth_uid", "=", False)], limit=1
+            )
+            if existing_user:
+                existing_user.write({
+                    'oauth_provider_id': provider,
+                    'oauth_uid': oauth_uid,
+                    'oauth_access_token': params['access_token'],
+                })
+                return existing_user.login
             try:
                 login, _ = self.signup(values, token)
                 return login
