@@ -2,6 +2,15 @@
 <templates xml:space="preserve">
 
 <t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
+    <xpath expr="//div[hasclass('o-mail-MessagingMenu-filters')]" position="inside">
+        <div t-if="this.activeTab().recordType === 'discuss.channel'" class="o-mail-MessagingMenu-moreActionsWrapper ms-auto flex-shrink-0">
+            <IsolatedDropdown items="this.markAllReadItems" menuClass="'o-mail-MessagingMenu-dropdownMenu'" beforeOpen="() => this.refreshUnreadConversationCount()">
+                <button class="o-mail-MessagingMenu-moreActions btn btn-sm rounded-3 d-flex align-items-center justify-content-center p-0" type="button" title="More actions" aria-label="More actions" data-available-offline="">
+                    <i class="oi" data-icon="more_horiz" aria-hidden="true"/>
+                </button>
+            </IsolatedDropdown>
+        </div>
+    </xpath>
     <xpath expr="//MessagingMenuItem[@t-foreach='this.messages()']" position="after">
         <MessagingMenuItem
             t-foreach="this.channels()" t-as="channel" t-key="channel.localId"
