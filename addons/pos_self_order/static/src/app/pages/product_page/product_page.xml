@@ -47,7 +47,13 @@
             <!-- Footer -->
             <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
                 <div class="container o_self_container ">
+<<<<<<< 0eb66d421410aa1186438fcb8e665decb39281d8
                     <div  t-if="this.isArchivedCombination()" class="alert alert-warning text-center mb-3">
+||||||| 859c06f83a80b0b39e2ced68b3547961312d66bf
+                    <div  t-if="isArchivedCombination()" class="alert alert-warning text-center mb-3">
+=======
+                    <div  t-if="isArchivedCombination() or isDeletedCombination()" class="alert alert-warning text-center mb-3">
+>>>>>>> 86e5e325d0422680a31a11bdfb50a9984e6d1b59
                         This combination does not exist.
                     </div>
                    <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
