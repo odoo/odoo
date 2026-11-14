@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
 import os
 import re
@@ -352,6 +353,11 @@ class WebsitePage(models.Model):
         # the page may have been cached while the translations hash wasn't
         translation_hash = self.env['ir.http']._get_cached_frontend_translations_hash(request.lang.code)
         html = re.sub(r'"translation_hash": "[^"]*"', f'"translation_hash": "{translation_hash}"', html)
+        # the page may have been cached for a visitor from another country
+        geoip_country_code = request.geoip.country_code
+        geoip_phone_code = self.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
+        html = re.sub(r'"geoip_country_code": (?:"[^"]*"|null)', f'"geoip_country_code": {json.dumps(geoip_country_code)}', html)
+        html = re.sub(r'"geoip_phone_code": (?:\d+|null)', f'"geoip_phone_code": {json.dumps(geoip_phone_code)}', html)
         response.response = [html]
 
         # used for _register_website_track
