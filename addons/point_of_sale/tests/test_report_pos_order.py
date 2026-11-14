@@ -3,6 +3,7 @@
 import odoo
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.tests.common import new_test_user
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestReportPoSOrder(TestPoSCommon):
@@ -10,6 +11,16 @@ class TestReportPoSOrder(TestPoSCommon):
     def setUp(self):
         super(TestReportPoSOrder, self).setUp()
         self.config = self.basic_config
+
+    def test_report_margin_access(self):
+        pos_user = new_test_user(
+            self.env,
+            login='pos_user',
+            groups='point_of_sale.group_pos_user',
+        )
+
+        self.assertNotIn('margin', self.env['report.pos.order'].with_user(pos_user).fields_get())
+        self.assertIn('margin', self.env['report.pos.order'].fields_get())
 
     def test_report_pos_order_0(self):
         """Test the margin and price_total of a PoS Order with no taxes."""
