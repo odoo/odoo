@@ -50,13 +50,15 @@ class SaleComboConfiguratorController(Controller):
         date = datetime.fromisoformat(date)
         selected_combo_item_dict = {item["id"]: item for item in selected_combo_items or []}
 
+        price, pricelist_rule_id = product_template._get_configurator_display_price(
+            product_template, quantity, date, currency, pricelist, **kwargs
+        )
+
         return {
             "product_tmpl_id": product_tmpl_id,
             "display_name": product_template.display_name,
             "quantity": quantity,
-            "price": product_template._get_configurator_display_price(
-                product_template, quantity, date, currency, pricelist, **kwargs
-            )[0],
+            "price": price,
             "combos": [
                 {
                     "id": combo.id,
@@ -70,6 +72,7 @@ class SaleComboConfiguratorController(Controller):
                             currency,
                             pricelist,
                             quantity=quantity,
+                            pricelist_rule_id=pricelist_rule_id,
                             **kwargs,
                         )
                         for combo_item in combo.combo_item_ids
@@ -122,7 +125,15 @@ class SaleComboConfiguratorController(Controller):
         )[0]
 
     def _get_combo_item_data(
-        self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
+        self,
+        combo,
+        combo_item,
+        selected_combo_item,
+        date,
+        currency,
+        pricelist,
+        pricelist_rule_id,
+        **kwargs,
     ):
         """Return the price of the specified combo product.
 
@@ -131,6 +142,8 @@ class SaleComboConfiguratorController(Controller):
         :param datetime date: The date to use to compute prices.
         :param res.currency currency: The currency to express prices in.
         :param product.pricelist pricelist: The pricelist to use to compute prices.
+        :param int pricelist_rule_id: The pricelist rule to use to compute prices, as a
+            `product.pricelist.item` id.
         :param dict kwargs: Locally unused data passed to `_get_additional_configurator_data`.
         :rtype: dict
         :return: A dict containing data about the combo item.
@@ -148,13 +161,25 @@ class SaleComboConfiguratorController(Controller):
         # combo item isn't configurable.
         is_preselected = len(combo.combo_item_ids) == 1 and not is_configurable
 
-        return {
-            "id": combo_item.id,
-            "extra_price": combo_item.currency_id._convert(
+        extra_price = (
+            combo_item.currency_id._convert(
                 combo_item.extra_price, currency, request.env.company, date
             )
             if currency
-            else combo_item.extra_price,
+            else combo_item.extra_price
+        )
+        if extra_price and pricelist and pricelist_rule_id:
+            rule = self.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
+            discount_percentage = 0.0
+            if rule.compute_price == "percentage":
+                discount_percentage = rule.percent_price
+            elif rule.compute_price == "formula":
+                discount_percentage = rule.price_discount
+            extra_price -= extra_price * (discount_percentage / 100.0)
+
+        return {
+            "id": combo_item.id,
+            "extra_price": extra_price,
             "is_preselected": is_preselected,
             "is_selected": bool(selected_combo_item) or is_preselected,
             "is_configurable": is_configurable,

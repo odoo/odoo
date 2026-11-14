@@ -45,4 +45,10 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
             combo_item_image := combo_item.product_id.image_256
         ):
             data["product"]["image_src"] = image_data_uri(combo_item_image)
+
+        if website := self.env.website:
+            data["extra_price"] = combo_item.product_id._apply_taxes_to_price(
+                data["extra_price"], currency, website=website
+            )
+
         return data

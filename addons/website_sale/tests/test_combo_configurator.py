@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo.fields import Command
 from odoo.tests import HttpCase, JsonRpcException, tagged
 from odoo.tools import mute_logger
@@ -10,13 +12,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
-        'website.group_website_designer',  # website config (show_line_subtotals_tax_selection)
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
+        "website.group_website_designer",  # website config (show_line_subtotals_tax_selection)
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     def test_website_sale_combo_configurator(self):
         no_variant_attribute = self.env["product.attribute"].create({
@@ -57,7 +59,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             type="combo",
             combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
         )
-        self.website.show_line_subtotals_tax_selection = "tax_included"
+        self.website.tax_display = "tax_included"
         self.start_tour(combo_product.website_url, "website_sale.combo_configurator")
 
     def test_website_sale_combo_configurator_single_configuration(self):
@@ -119,29 +121,38 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
 
     @mute_logger("odoo.http")
     def test_website_sale_combo_configurator_incomplete_selection(self):
-        """ Test that a combo can't be added to the cart with missing combo choices. """
-        combos = self.env["product.combo"].create([{
-            "name": f"Combo {suffix}",
-            "combo_item_ids": [Command.create({"product_id": self._create_product().id})],
-        } for suffix in ("A", "B")])
+        """Test that a combo can't be added to the cart with missing combo choices."""
+        combos = self.env["product.combo"].create([
+            {
+                "name": f"Combo {suffix}",
+                "combo_item_ids": [Command.create({"product_id": self._create_product().id})],
+            }
+            for suffix in ("A", "B")
+        ])
         combo_product = self._create_product(type="combo", combo_ids=[Command.set(combos.ids)])
         item_a, item_b = combos.combo_item_ids
 
         def add_to_cart(combo_items):
-            return self.make_jsonrpc_request("/shop/cart/add", {
-                "product_template_id": combo_product.product_tmpl_id.id,
-                "product_id": combo_product.id,
-                "quantity": 1,
-                "linked_products": [{
-                    "product_template_id": item.product_id.product_tmpl_id.id,
-                    "parent_product_template_id": combo_product.product_tmpl_id.id,
+            return self.make_jsonrpc_request(
+                "/shop/cart/add",
+                {
+                    "product_template_id": combo_product.product_tmpl_id.id,
+                    "product_id": combo_product.id,
                     "quantity": 1,
-                    "product_id": item.product_id.id,
-                    "combo_item_id": item.id,
-                    "no_variant_attribute_value_ids": [],
-                    "product_custom_attribute_values": [],
-                } for item in combo_items],
-            })
+                    "linked_products": [
+                        {
+                            "product_template_id": item.product_id.product_tmpl_id.id,
+                            "parent_product_template_id": combo_product.product_tmpl_id.id,
+                            "quantity": 1,
+                            "product_id": item.product_id.id,
+                            "combo_item_id": item.id,
+                            "no_variant_attribute_value_ids": [],
+                            "product_custom_attribute_values": [],
+                        }
+                        for item in combo_items
+                    ],
+                },
+            )
 
         with self.assertRaises(JsonRpcException):  # A combo choice is unanswered.
             add_to_cart(item_a)
@@ -150,3 +161,33 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         with self.assertRaises(JsonRpcException):  # Every choice is answered, but one twice.
             add_to_cart(item_a + item_a + item_b)
         self.assertEqual(add_to_cart(item_a + item_b)["quantity"], 1)
+
+    def test_combo_item_tax_included_extra_price(self):
+        """Test that combo item extra prices in the website sale configurator include taxes when the
+        website is configured to display tax-inclusive prices.
+        """
+        self.website.tax_display = "tax_included"
+        tax_10 = self.env["account.tax"].create({"name": "Tax 10%", "amount": 10.0})
+
+        product = self._create_product(
+            name="Product", list_price=0.0, taxes_id=[Command.link(tax_10.id)]
+        )
+        combo = self.env["product.combo"].create({
+            "name": "Combo choice",
+            "combo_item_ids": [Command.create({"product_id": product.id, "extra_price": 10.0})],
+        })
+        combo_product = self._create_product(
+            name="Combo product", list_price=50.0, type="combo", combo_ids=[Command.link(combo.id)]
+        )
+
+        result = self.make_jsonrpc_request(
+            "/website_sale/combo_configurator/get_data",
+            {
+                "product_tmpl_id": combo_product.product_tmpl_id.id,
+                "quantity": 1,
+                "date": datetime(2026, 1, 1).isoformat(),
+            },
+        )
+
+        combo_item_data = result["combos"][0]["combo_items"][0]
+        self.assertAlmostEqual(combo_item_data["extra_price"], 11.0)
