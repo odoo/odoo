@@ -80,6 +80,7 @@ class HrApplicant(models.Model):
         string="Sanitized Phone Number", compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null'
     )
     linkedin_profile = fields.Char('LinkedIn Profile', tracking=True, index='btree_not_null')
+    linkedin_profile_name = fields.Char('LinkedIn Profile Name', store=True, compute='_compute_linkedin_profile_name', index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree", tracking=True)
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     color = fields.Integer("Color Index", default=0)
@@ -204,7 +205,11 @@ class HrApplicant(models.Model):
             return super()._get_model_description(model_name)
         return self.env._("Application")
 
-    @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
+    def _check_phone_validity(self):
+        self.ensure_one()
+        return self.partner_phone_sanitized and len(self.partner_phone_sanitized) > 5
+
+    @api.depends("partner_id", "email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
     def _compute_talent_pool_count(self):
         """
         This method will find the amount of talent pools the current application is associated with.
@@ -231,26 +236,31 @@ class HrApplicant(models.Model):
         domain = self._get_similar_applicants_domain() & Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
         in_pool_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
 
+        in_pool_partners = defaultdict(int)
         in_pool_emails = defaultdict(int)
         in_pool_phones = defaultdict(int)
         in_pool_linkedins = defaultdict(int)
 
         for applicant in in_pool_applicants:
             talent_pool_count = len(applicant.pool_applicant_id.talent_pool_ids)
+            if applicant.partner_id:
+                in_pool_partners[applicant.partner_id.id] = talent_pool_count
             if applicant.email_normalized:
                 in_pool_emails[applicant.email_normalized] = talent_pool_count
-            if applicant.partner_phone_sanitized:
+            if applicant._check_phone_validity():
                 in_pool_phones[applicant.partner_phone_sanitized] = talent_pool_count
-            if applicant.linkedin_profile:
-                in_pool_linkedins[applicant.linkedin_profile] = talent_pool_count
+            if applicant.linkedin_profile_name:
+                in_pool_linkedins[applicant.linkedin_profile_name] = talent_pool_count
 
         for applicant in indirectly_linked:
-            if applicant.email_from and in_pool_emails[applicant.email_normalized]:
+            if applicant.partner_id and in_pool_partners[applicant.partner_id.id]:
+                applicant.talent_pool_count = in_pool_partners[applicant.partner_id.id]
+            elif applicant.email_from and in_pool_emails[applicant.email_normalized]:
                 applicant.talent_pool_count = in_pool_emails[applicant.email_normalized]
             elif applicant.partner_phone_sanitized and in_pool_phones[applicant.partner_phone_sanitized]:
                 applicant.talent_pool_count = in_pool_phones[applicant.partner_phone_sanitized]
-            elif applicant.linkedin_profile and in_pool_linkedins[applicant.linkedin_profile]:
-                applicant.talent_pool_count = in_pool_linkedins[applicant.linkedin_profile]
+            elif applicant.linkedin_profile_name and in_pool_linkedins[applicant.linkedin_profile_name]:
+                applicant.talent_pool_count = in_pool_linkedins[applicant.linkedin_profile_name]
             else:
                 applicant.talent_pool_count = 0
 
@@ -345,28 +355,34 @@ class HrApplicant(models.Model):
         domain = self._get_similar_applicants_domain(ignore_talent=True)
         matching_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
 
+        partner_map = defaultdict(set)
         email_map = defaultdict(set)
         phone_map = defaultdict(set)
         linkedin_map = defaultdict(set)
         pool_applicant_map = defaultdict(set)
+
         for app in matching_applicants:
+            if app.partner_id:
+                partner_map[app.partner_id].add(app.id)
             if app.email_normalized:
                 email_map[app.email_normalized].add(app.id)
-            if app.partner_phone_sanitized:
+            if app._check_phone_validity():
                 phone_map[app.partner_phone_sanitized].add(app.id)
-            if app.linkedin_profile:
-                linkedin_map[app.linkedin_profile].add(app.id)
+            if app.linkedin_profile_name:
+                linkedin_map[app.linkedin_profile_name].add(app.id)
             if app.pool_applicant_id:
                 pool_applicant_map[app.pool_applicant_id].add(app.id)
 
         for applicant in self:
             related_ids = set()
+            if applicant.partner_id:
+                related_ids.update(partner_map.get(applicant.partner_id, set()))
             if applicant.email_normalized:
                 related_ids.update(email_map.get(applicant.email_normalized, set()))
             if applicant.partner_phone_sanitized:
                 related_ids.update(phone_map.get(applicant.partner_phone_sanitized, set()))
-            if applicant.linkedin_profile:
-                related_ids.update(linkedin_map.get(applicant.linkedin_profile, set()))
+            if applicant.linkedin_profile_name:
+                related_ids.update(linkedin_map.get(applicant.linkedin_profile_name, set()))
             if applicant.pool_applicant_id:
                 related_ids.update(pool_applicant_map.get(applicant.pool_applicant_id, set()))
 
@@ -393,9 +409,10 @@ class HrApplicant(models.Model):
         """
         domain = Domain.OR([
             Domain("id", "in", self.ids),
+            Domain("partner_id", "in", self.partner_id.ids),
             Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
-            Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
-            Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
+            Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone and len(phone) > 5]),
+            Domain("linkedin_profile_name", "in", [linkedin_profile_name for linkedin_profile_name in self.mapped("linkedin_profile_name") if linkedin_profile_name]),
             Domain("pool_applicant_id", "in", [pool_applicant.id for pool_applicant in self.mapped("pool_applicant_id") if pool_applicant]),
         ])
         if ignore_talent:
@@ -405,7 +422,7 @@ class HrApplicant(models.Model):
         return domain
 
     @api.depends(
-        "talent_pool_ids", "pool_applicant_id", "email_normalized", "partner_phone_sanitized", "linkedin_profile"
+        "talent_pool_ids", "pool_applicant_id", "partner_id", "email_normalized", "partner_phone_sanitized", "linkedin_profile"
     )
     def _compute_is_applicant_in_pool(self):
         """
@@ -434,21 +451,24 @@ class HrApplicant(models.Model):
 
         domain = self._get_similar_applicants_domain() & Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
         in_pool_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
-        in_pool_data = {"emails": set(), "phones": set(), "linkedins": set()}
+        in_pool_data = {"partner_ids": set(), "emails": set(), "phones": set(), "linkedins": set()}
 
         for applicant in in_pool_applicants:
+            if applicant.partner_id:
+                in_pool_data["partner_ids"].add(applicant.partner_id.id)
             if applicant.email_normalized:
                 in_pool_data["emails"].add(applicant.email_normalized)
-            if applicant.partner_phone_sanitized:
+            if applicant._check_phone_validity():
                 in_pool_data["phones"].add(applicant.partner_phone_sanitized)
-            if applicant.linkedin_profile:
-                in_pool_data["linkedins"].add(applicant.linkedin_profile)
+            if applicant.linkedin_profile_name:
+                in_pool_data["linkedins"].add(applicant.linkedin_profile_name)
 
         for applicant in indirect:
             applicant.is_applicant_in_pool = (
-                applicant.email_normalized in in_pool_data["emails"]
+                applicant.partner_id.id in in_pool_data["partner_ids"]
+                or applicant.email_normalized in in_pool_data["emails"]
                 or applicant.partner_phone_sanitized in in_pool_data["phones"]
-                or applicant.linkedin_profile in in_pool_data["linkedins"]
+                or applicant.linkedin_profile_name in in_pool_data["linkedins"]
             )
 
     def _search_is_applicant_in_pool(self, operator, value):
@@ -471,7 +491,7 @@ class HrApplicant(models.Model):
                            a.id as id,
                            email_normalized,
                            partner_phone_sanitized,
-                           linkedin_profile
+                           linkedin_profile_name
                       FROM hr_applicant a
                  LEFT JOIN hr_applicant_hr_talent_pool_rel rel
                         ON a.id = rel.hr_applicant_id
@@ -499,13 +519,14 @@ class HrApplicant(models.Model):
                         SELECT DISTINCT partner_phone_sanitized
                         FROM talent_pool_applicants
                         WHERE partner_phone_sanitized IS NOT NULL
+                            AND LENGTH(partner_phone_sanitized) > 5
                     ))
                     OR
                     -- Check if LinkedIn profile matches any talent pool applicant
-                    (a.linkedin_profile IN (
-                        SELECT DISTINCT linkedin_profile
+                    (a.linkedin_profile_name IN (
+                        SELECT DISTINCT linkedin_profile_name
                         FROM talent_pool_applicants
-                        WHERE linkedin_profile IS NOT NULL
+                        WHERE linkedin_profile_name IS NOT NULL
                     ))
         """))]
 
@@ -668,6 +689,16 @@ class HrApplicant(models.Model):
     def _compute_recruiter(self):
         for applicant in self:
             applicant.recruiter_id = applicant.job_id.recruiter_id.id
+
+    @api.depends('linkedin_profile')
+    def _compute_linkedin_profile_name(self):
+        for applicant in self:
+            if applicant.linkedin_profile:
+                url_parts = applicant.linkedin_profile.split("/")
+                profile_name_index = url_parts.index("in") + 1 if "in" in url_parts else False
+                applicant.linkedin_profile_name = url_parts[profile_name_index].split("?")[0] if profile_name_index and profile_name_index < len(url_parts) else False
+            else:
+                applicant.linkedin_profile_name = False
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to

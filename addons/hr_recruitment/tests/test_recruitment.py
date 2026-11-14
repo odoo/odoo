@@ -61,21 +61,21 @@ class TestRecruitment(MailCase, TransactionCase):
                 'active': False,  # Refused/archived application should still count
                 'partner_name': 'Application A',
                 'email_from': 'abc@odoo.com',
-                'partner_phone': '123',
+                'partner_phone': '123456',
             },
             {
                 'partner_name': 'Application B',
-                'partner_phone': '456',
+                'partner_phone': '456789',
             },
             {
                 'partner_name': 'Application C',
                 'email_from': 'def@odoo.com',
-                'partner_phone': '123',
+                'partner_phone': '123456',
             },
             {
                 'partner_name': 'Application D',
                 'email_from': 'abc@odoo.com',
-                'partner_phone': '456',
+                'partner_phone': '456789',
             },
             {
                 'partner_name': 'Application E',
@@ -84,7 +84,7 @@ class TestRecruitment(MailCase, TransactionCase):
             {
                 'partner_name': 'Application F',
                 'email_from': 'ghi@odoo.com',
-                'partner_phone': '789',
+                'partner_phone': '789123',
             },
             {
                 'partner_name': 'Application G',
@@ -104,14 +104,14 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "Talent A",
                     "email_from": "abc@example.com",
-                    "partner_phone": "1234",
-                    "linkedin_profile": "linkedin/talent",
+                    "partner_phone": "123456",
+                    "linkedin_profile": "linkedin/in/talent",
                     "talent_pool_ids": [tp_A.id, tp_B.id],
                 },
                 {
                     "partner_name": "Talent B",
                     "email_from": "talent_b@example.com",
-                    "partner_phone": "9999",
+                    "partner_phone": "999999",
                     "talent_pool_ids": [tp_B.id],
                 },
             ]
@@ -127,8 +127,8 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "B",
                     "email_from": "def@example.com",
-                    "partner_phone": "6789",
-                    "linkedin_profile": "linkedin/b",
+                    "partner_phone": "456789",
+                    "linkedin_profile": "linkedin/in/b",
                     "pool_applicant_id": t_A.id,
                 },
                 {
@@ -137,17 +137,17 @@ class TestRecruitment(MailCase, TransactionCase):
                 },
                 {
                     "partner_name": "D",
-                    "partner_phone": "6789",
+                    "partner_phone": "456789",
                 },
                 {
                     "partner_name": "E",
-                    "linkedin_profile": "linkedin/b",
+                    "linkedin_profile": "linkedin/in/b",
                 },
                 {
                     "partner_name": "F",
                     "email_from": "not_linked@example.com",
-                    "partner_phone": "00000",
-                    "linkedin_profile": "linkedin/not_linked",
+                    "partner_phone": "000000",
+                    "linkedin_profile": "linkedin/in/not_linked",
                 },
                 {"partner_name": "G", "pool_applicant_id": t_B.id},
             ]
@@ -186,7 +186,7 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "Applicant 1 B",
                     "email_from": "otherTalentEmail@example.com",
-                    "partner_phone": "1234",
+                    "partner_phone": "123456",
                     "linkedin_profile": "linkedin.com/in/applicant",
                     "job_id": job.id,
                 },
@@ -197,7 +197,7 @@ class TestRecruitment(MailCase, TransactionCase):
                 },
                 {
                     "partner_name": "Applicant 1 D",
-                    "partner_phone": "1234",
+                    "partner_phone": "123456",
                     "job_id": job.id,
                 },
                 {
@@ -208,7 +208,7 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "A different applicant F",
                     "email_from": "differentEmail@example.com",
-                    "partner_phone": "9876",
+                    "partner_phone": "987654",
                     "linkedin_profile": "linkedin.com/in/NotAnApplicant",
                     "job_id": job.id,
                 },
