@@ -5006,6 +5006,11 @@ class AccountMove(models.Model):
         if self._should_store_import_source_attachment(selected_file_data):
             self.import_source_attachment_id = self._get_import_source_attachment(selected_file_data)
 
+    def _set_invoice_pdf_file(self, files_data):
+        # EXTENDS 'account.document.import.mixin'
+        super()._set_invoice_pdf_file(files_data)
+        self._compute_linked_attachment_id('invoice_pdf_report_id', 'invoice_pdf_report_file')
+
     def _extend_with_attachments(self, files_data, new=False):
         if new:
             # we force an early access token write to prevent edge-cases where the notification
