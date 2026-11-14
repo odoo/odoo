@@ -11,7 +11,6 @@ from odoo import Command
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftCalendarSync
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future, patch_api
 from odoo.tests import tagged
 
@@ -20,13 +19,16 @@ from odoo.exceptions import UserError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
-@patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateEvents(TestCommon):
 
     @patch_api
     def setUp(self):
         super(TestUpdateEvents, self).setUp()
+        (self.organizer_user | self.attendee_user).microsoft_calendar_token_validity = datetime.now() + timedelta(hours=1)
+        self.organizer_user.microsoft_calendar_token = mock_get_token(self.organizer_user)
+        self.attendee_user.microsoft_calendar_token = mock_get_token(self.attendee_user)
+
         self.create_events_for_tests()
 
     # -------------------------------------------------------------------------------
@@ -42,7 +44,7 @@ class TestUpdateEvents(TestCommon):
         """
 
         # arrange
-        self.organizer_user.microsoft_synchronization_stopped = True
+        self.organizer_user.microsoft_calendar_token = False
         self.simple_event.need_sync_m = False
 
         # act
@@ -52,7 +54,7 @@ class TestUpdateEvents(TestCommon):
 
         # assert
         mock_patch.assert_not_called()
-        self.assertEqual(self.simple_event.need_sync_m, False)
+        self.assertTrue(self.simple_event.need_sync_m)
 
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_simple_event_from_odoo(self, mock_patch):
@@ -1409,15 +1411,15 @@ class TestUpdateEvents(TestCommon):
         Forbid in Odoo simple event becoming a recurrence when Outlook Calendar sync is active.
         """
         # Set custom calendar token validity to simulate real scenario.
-        self.env.user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=5)
+        self.organizer_user.microsoft_calendar_token_validity = datetime.now() + timedelta(minutes=5)
 
         # Assert that synchronization with Outlook Calendar is active.
-        self.assertFalse(self.env.user.microsoft_synchronization_stopped)
+        self.assertTrue(self.organizer_user.microsoft_calendar_token)
 
         # Simulate upgrade of a simple event to recurrent event (forbidden).
         simple_event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
         with self.assertRaises(UserError):
-            simple_event.write({
+            simple_event.with_user(self.organizer_user).write({
                 'recurrency': True,
                 'rrule_type': 'weekly',
                 'event_tz': 'America/Sao_Paulo',
@@ -1441,7 +1443,6 @@ class TestUpdateEvents(TestCommon):
         for later synchronizing it with Outlook Calendar.
         """
         # Set user synchronization configuration as active and pause it.
-        self.organizer_user.microsoft_synchronization_stopped = False
         self.organizer_user.pause_microsoft_synchronization()
 
         # Try to update a simple event in Odoo Calendar.
@@ -1450,7 +1451,7 @@ class TestUpdateEvents(TestCommon):
         self.simple_event.invalidate_recordset()
 
         # Ensure that synchronization is paused, delete wasn't called and record is waiting to be synced again.
-        self.assertFalse(self.organizer_user.microsoft_synchronization_stopped)
+        self.assertTrue(bool(self.organizer_user.microsoft_calendar_token))
         self.assertEqual(self.organizer_user._get_microsoft_sync_status(), "sync_paused")
         self.assertTrue(self.simple_event.need_sync_m, "Sync variable must be true for updating event when sync re-activates")
         mock_patch.assert_not_called()
@@ -1475,13 +1476,13 @@ class TestUpdateEvents(TestCommon):
 
         # Deactivate user B's calendar synchronization. Try changing the event organizer to user B.
         # A ValidationError must be thrown because user B's calendar is not synced.
-        self.attendee_user.microsoft_synchronization_stopped = True
+        self.attendee_user.microsoft_calendar_token = False
         with self.assertRaises(ValidationError):
             event.with_user(self.organizer_user).write({'user_id': self.attendee_user.id})
 
         # Activate user B's calendar synchronization and try again without listing user B as an attendee.
         # Another ValidationError must be thrown.
-        self.attendee_user.microsoft_synchronization_stopped = False
+        self.attendee_user.microsoft_calendar_token = mock_get_token(self.attendee_user)
         with self.assertRaises(ValidationError):
             event.with_user(self.organizer_user).write({'user_id': self.attendee_user.id})
 
@@ -1577,21 +1578,6 @@ class TestUpdateEvents(TestCommon):
                         pattern.get(key), expected_val,
                         f"{case['name']}: pattern['{key}'] should be {expected_val!r}",
                     )
-
-    @freeze_time('2021-09-22')
-    @patch.object(MicrosoftCalendarService, 'patch')
-    def test_restart_sync_with_synced_recurrence(self, _mock_patch):
-        """ Ensure that sync restart is not blocked when there are recurrence outliers in Odoo database. """
-        # Stop synchronization, set recurrent events as outliers and restart sync with Outlook.
-        self.organizer_user.with_user(self.organizer_user).stop_microsoft_synchronization()
-        self.recurrent_events.with_user(self.organizer_user).write({
-            'microsoft_id': False,
-            'ms_universal_event_id': False,
-            'follow_recurrence': False
-            })
-        self.attendee_user.with_user(self.attendee_user).restart_microsoft_synchronization()
-        self.organizer_user.with_user(self.organizer_user).restart_microsoft_synchronization()
-        self.assertTrue(all(ev.need_sync_m for ev in self.recurrent_events))
 
     @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')

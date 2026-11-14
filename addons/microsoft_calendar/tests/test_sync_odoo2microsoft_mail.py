@@ -29,7 +29,6 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
                 'microsoft_calendar_token_validity': datetime(9999, 12, 31),
             })
             user.res_users_settings_id.write({
-                'microsoft_synchronization_stopped': False,
                 'microsoft_calendar_sync_token': f'{n}_sync_token',
             })
             cls.users += [user]
@@ -50,11 +49,10 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
         paused_sync_user = self.users[2]
         paused_sync_user.write({
             'email': 'ms.sync.paused@test.lan',
-            'microsoft_synchronization_stopped': True,
+            'microsoft_calendar_token': False,
             'name': 'Paused Microsoft Sync User',
             'login': 'ms_sync_paused_user',
         })
-        self.assertTrue(paused_sync_user.microsoft_synchronization_stopped)
         for create_user, organizer, mail_notified_partners, attendee in [
             (user_root, self.users[0], partner + self.users[0].partner_id, partner),  # emulates online appointment with user 0
             (user_root, None, partner, partner),  # emulates online resource appointment
@@ -92,7 +90,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
         Test that changing organizer on a pure Odoo event (not synced with Microsoft)
         does not archive the event.
         """
-        self.organizer_user.microsoft_synchronization_stopped = True
+        self.organizer_user.microsoft_calendar_token = False
         event = self.env["calendar.event"].with_user(self.organizer_user).create({
             'name': "Pure Odoo Event",
             'start': datetime(2024, 1, 1, 10, 0),
