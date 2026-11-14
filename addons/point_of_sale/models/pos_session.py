@@ -1068,6 +1068,9 @@ class PosSession(models.Model):
             refund,
             payments,
         )
+        # Zero-amount product lines are dropped by the aggregation, e.g. fully discounted orders
+        if not lines_commands and not payment_commands and not extra_commands:
+            return self.env['account.move']
 
         # Ensure rounding method record is set on the invoice if needed
         rounding_method = self.config_id._get_rounding_method_for_invoice(orders)
