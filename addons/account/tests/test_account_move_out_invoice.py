@@ -1195,6 +1195,42 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': -2627.014,
         })
 
+    def test_out_invoice_line_price_total_tax_round_globally(self):
+        """Ensure that when the tax rounding method is set to 'global', price_total is equal to
+        round(price_subtotal) + round(taxes), not simply round(subtotal + taxes)"""
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        
+        tax_100 = self.env['account.tax'].create({
+            'name': '100%',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 100,
+            # 'price_include_override': 'tax_included',
+            # 'include_base_amount': True,
+        })
+
+        # eur = self.setup_other_currency('EUR')
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            # 'currency_id': eur.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'quantity': 1.00,
+                    'price_unit': 1.003,
+                    'tax_ids': tax_100.ids,
+                }),
+            ],
+        })
+
+        # Subtotal 1.003 + Tax 1.003 = Total 2.006
+        # Should round to (1 + 1 = 2.00), not (1 + 1 = 2.01)
+        self.assertRecordValues(invoice.line_ids, [
+            {'price_total': 2.00},
+        ])
+
     def test_payment_term_line_fiscal_position(self):
         """Test the mapping of payment term line accounts with fiscal position."""
         account_revenue_copy = self.company_data['default_account_revenue'].copy()
