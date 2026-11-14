@@ -1673,10 +1673,36 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(self._get_shop_path())
 
+<<<<<<< 503998e479441946907f005e8a51ccdf72d959e6
         if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
             order_sudo._check_cart_is_ready_to_be_paid()
             # Only confirm the order if it wasn't already confirmed.
             order_sudo._validate_order()
+||||||| 8d6cd5bd90a60f2788f4461fdeb722c60cba1dcd
+        if not order or (order.amount_total and not tx_sudo):
+            return request.redirect('/shop')
+
+        if order and not order.amount_total and not tx_sudo:
+            if order.state != 'sale':
+                order._check_cart_is_ready_to_be_paid()
+                order._validate_order()
+
+            # clean context and session, then redirect to the portal page
+            request.website.sale_reset()
+            return request.redirect(order.get_portal_url())
+=======
+        if not order or (order.amount_total and not tx_sudo):
+            return request.redirect('/shop')
+
+        if order and not order.amount_total:
+            if order.state != 'sale':
+                order._check_cart_is_ready_to_be_paid()
+                order._validate_order()
+
+            # clean context and session, then redirect to the portal page
+            request.website.sale_reset()
+            return request.redirect(order.get_portal_url())
+>>>>>>> d5e45093c0a4ad5dd6542b4046f98efed7f04e2b
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
