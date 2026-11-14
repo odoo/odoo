@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-04 11:33+0000\n"
+"PO-Revision-Date: 2026-11-12 14:05+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/de/>\n"
@@ -1367,7 +1367,7 @@ msgstr "<span class=\"o_stat_text\">Journalbuchung</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Buchungszeilen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1942,8 +1942,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
-"\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1964,8 +1964,8 @@ msgstr ""
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
-"\" class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
+"contain;\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -1992,8 +1992,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            Sie haben <t t-"
-"if=\"invoice_count &gt; 1\">neue elektronische Rechnungen</t><t t-"
-"else=\"\">eine neue elektronische Rechnung</t>!\n"
+"if=\"invoice_count &gt; 1\">neue elektronische Rechnungen</t><t t-else=\"\">"
+"eine neue elektronische Rechnung</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -2008,19 +2008,19 @@ msgstr ""
 "                                                <t t-if=\"inv.name or "
 "inv.ref\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Rechnungsref.:</span> <t t-out=\"inv.name or inv.ref\"/><br/"
-">\n"
+"weight:bold;\">Rechnungsref.:</span> <t t-out=\"inv.name or inv.ref\"/><br/>"
+"\n"
 "                                                </t>\n"
 "                                                <t t-"
 "if=\"inv.partner_id.name\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">Lieferant:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-"
-"if=\"inv.amount_total\">\n"
+"                                                <t t-if=\"inv.amount_total\">"
+"\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Betrag:</span> <t t-out=\"inv.amount_total\" t-"
-"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Betrag:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -2035,11 +2035,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?"
-"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
-"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
-"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
-"radius:3px; display: inline-block;\">\n"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\">\n"
 "                                               Rechnungen einsehen\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -2056,7 +2056,7 @@ msgstr ""
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
 "                                            Wenn Sie sich vom Erhalt von E-"
-"Mails für eingehende Rechnungen abmelden möchten, klicken Sie <a t-attf-"
+"Mails zu eingehenden Rechnungen abmelden möchten, klicken Sie <a t-attf-"
 "href=\"/my/journal/{{ object.id }}/unsubscribe\">hier</a>.\n"
 "                                        </p>\n"
 "                                    </td>\n"
@@ -2946,7 +2946,7 @@ msgstr "Anzahl Buchungen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_move_line_ids
 msgid "Account Move Line"
-msgstr ""
+msgstr "Buchungszeile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -3006,7 +3006,7 @@ msgstr "Debitorenkonto aktiv"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__account_reconcile_model_line_ids
 msgid "Account Reconcile Model Line"
-msgstr ""
+msgstr "Abstimmungsmodellzeile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3369,7 +3369,7 @@ msgstr "Insgesamt abgegrenzt"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
 msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+msgstr "Kumulierte Abschreibung - Gebäude"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
@@ -4755,7 +4755,7 @@ msgstr "Zurück zur Rechnung"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Credit Note"
-msgstr ""
+msgstr "Zurück zur Gutschrift"
 
 #. module: account
 #. odoo-javascript
@@ -4767,7 +4767,7 @@ msgstr "Zurück zur Rechnung"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Refund"
-msgstr ""
+msgstr "Zurück zu Rückerstattung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7913,7 +7913,7 @@ msgstr "Abschreibung"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_deprec_amort_expense
 msgid "Depreciation & Amortization Expense"
-msgstr ""
+msgstr "Abschreibungs- und Amortisationsaufwand"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -8850,6 +8850,8 @@ msgid ""
 "Email addresses that should receive invoices copy/return reminders. Separate "
 "entries with ';'."
 msgstr ""
+"E-Mail-Adressen, die Kopien von Rechnungen oder Erinnerungen für "
+"Steuererklärungen erhalten sollen. Trennen Sie Einträge mit „;“."
 
 #. module: account
 #. odoo-javascript
@@ -9530,7 +9532,7 @@ msgstr "Steuerlicher Ländercode"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__company_country_code
 msgid "Fiscal Country Code of the Company"
-msgstr ""
+msgstr "Steuerlicher Ländercode des Unternehmens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -11628,7 +11630,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Invoice generated but not sent."
-msgstr ""
+msgstr "Rechnung erstellt, aber nicht versendet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12356,7 +12358,7 @@ msgstr "Etikett auf Kassenbons"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sanitize_payment_reference
 #: model:ir.model.fields,field_description:account.field_account_move__sanitize_payment_reference
 msgid "Label sanitize"
-msgstr ""
+msgstr "Bezeichnung bereinigen"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_land
@@ -13788,6 +13790,9 @@ msgid ""
 "No valid sending method could be applied, so this invoice was not sent "
 "automatically. Please configure a sending method and send it manually."
 msgstr ""
+"Es konnte keine gültige Versandmethode angewendet werden, daher wurde diese "
+"Rechnung nicht automatisch versendet. Bitte konfigurieren Sie eine "
+"Versandmethode und versenden Sie die Rechnung manuell."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
@@ -14232,7 +14237,7 @@ msgstr "Online-Zahlungen"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Only Accounting managers can create foreign taxes."
-msgstr ""
+msgstr "Nur Buchhaltungsmanager können ausländische Steuern anlegen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -14619,7 +14624,7 @@ msgstr "Überfälliger Betrag"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Overdue Invoices"
-msgstr ""
+msgstr "Überfällige Rechnungen"
 
 #. module: account
 #. odoo-python
@@ -19172,6 +19177,8 @@ msgid ""
 "The account code can only contain alphanumeric characters, dots, and dashes. "
 "(account code: %s)"
 msgstr ""
+"Der Kontocode darf nur alphanumerische Zeichen, Punkte und Bindestriche "
+"enthalten. (Kontocode: %s)"
 
 #. module: account
 #. odoo-python
@@ -19546,6 +19553,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is using taxes (%(tax_names)s) from a different company."
 msgstr ""
+"Die Buchung verwendet Steuern (%(tax_names)s) eines anderen Unternehmens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -20498,6 +20506,8 @@ msgstr "Der Eintrag wurde von %s gutgeschrieben"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reviewed by accountants, only them can edit it now."
 msgstr ""
+"Dieser Buchungssatz wurde von Buchhaltern geprüft; nur diese können ihn "
+"jetzt noch bearbeiten."
 
 #. module: account
 #. odoo-python
@@ -20621,10 +20631,9 @@ msgstr "Dieser Buchungssatz wird zum Buchungsdatum gebucht: %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
-#, fuzzy
 msgid "This note will be mentioned on invoices using this tax."
 msgstr ""
-"Dieser Hinweis wird auf Rechnungen angegeben, die diese Steuer verwenden."
+"Dieser Hinweis wird auf Rechnungen angegeben, die diese Steuer enthalten."
 
 #. module: account
 #. odoo-javascript
@@ -22155,6 +22164,13 @@ msgid ""
 "2/ filter on this journal and on 'Unposted' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Sie können kein Journal archivieren, das Journalbuchungen im Entwurf "
+"enthält.\n"
+"\n"
+"Um fortzufahren:\n"
+"1/ gehen Sie zu Buchhaltung > Buchhaltung > Journalbuchungen\n"
+"2/ filtern Sie nach diesem Journal und nach „Nicht gebuchten“ Posten\n"
+"3/ wählen Sie alle aus und buchen oder löschen Sie diese über das Aktionsmenü"
 
 #. module: account
 #. odoo-python
@@ -22384,6 +22400,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"Sie können diese Journalbuchungen nicht auf Entwurf zurücksetzen. Sie müssen "
+"stattdessen eine Stornierung beantragen."
 
 #. module: account
 #. odoo-python
@@ -22670,6 +22688,8 @@ msgid ""
 "You cannot modify the following readonly fields on the posted move %(move)s: "
 "%(fields)s"
 msgstr ""
+"Sie können die folgenden schreibgeschützten Felder des gebuchten Postens %"
+"(move)s nicht bearbeiten: %(fields)s"
 
 #. module: account
 #. odoo-python
