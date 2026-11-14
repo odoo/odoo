@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-06 09:49+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-10 06:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/de/>\n"
@@ -328,6 +328,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/></t>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Guten Tag <t t-"
+"out=\"client_name\">Name des Kunden</t>,</t>\n"
+"                        <t t-else=\"\">Guten Tag,</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>vielen Dank für Ihren Einkauf bei <t t-"
+"out=\"store_name\">Name des Shops</t>!</div>\n"
+"                    <div>Im Anhang finden Sie Ihren Beleg für den Einkauf "
+"vom <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">''\">                          lang_code=lg) or ''\">Datum</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">Uhrzeit</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Mit freundlichen Grüßen</div>\n"
+"                    <br>\n"
+"                    <t t-out=\"store_name\">Name des Shops</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -594,6 +625,8 @@ msgstr "? Klicken Sie auf „Bestätigen“, um die Zahlung zu validieren."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "A customer is required on the order to create an invoice."
 msgstr ""
+"Für den Auftrag bzw. die Bestellung ist ein Kunde erforderlich, um eine "
+"Rechnung zu erstellen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1758,7 +1791,7 @@ msgstr "Vor 19.1:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr ""
+msgstr "Rechnung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1830,7 +1863,7 @@ msgstr "Brote"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Break Combo"
-msgstr ""
+msgstr "Kombi trennen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4776,7 +4809,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -10534,6 +10567,15 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The order was validated with a total of %(paid)s, but its lines now amount "
+"to %(total)s because they were changed on another device. The order stays "
+"open until the difference is settled."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
 msgstr ""
 "Der bezahlte Betrag unterscheidet sich vom Gesamtbetrag des Auftrags bzw. "
@@ -10557,6 +10599,15 @@ msgid "The password is located on the back of the printer (remove covers)."
 msgstr ""
 "Das Passwort befindet sich auf der Rückseite des Druckers (Abdeckungen "
 "entfernen)."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The payment method %(payment_method)s has no outstanding account, its "
+"payments cannot be posted.\n"
+"Set an outstanding account on it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

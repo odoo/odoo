@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_eu_account_vies
+# * l10n_eu_account_vies
 #
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-28 18:19+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-11-12 15:31+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
+"l10n_eu_account_vies/fr/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.module.module,description:base.module_l10n_eu_account_vies
@@ -40,87 +44,123 @@ msgid ""
 "such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
 "only the country code will be validated.\n"
 msgstr ""
+"\n"
+"Validation des numéros de TVA des partenaires.\n"
+"=========================================\n"
+"\n"
+"Après l'installation de ce module, les valeurs saisies dans le champ TVA des "
+"partenaires seront\n"
+"validées à l'aide du système VIES pour tous les pays pris en charge. Le pays "
+"est déduit du\n"
+"code pays à 2 lettres qui précède le numéro de TVA, par exemple "
+"``BE0477472701``\n"
+"sera validé selon les règles belges.\n"
+"\n"
+"    * Lorsque l'option « Vérification de la TVA via VIES » est activée (dans "
+"la configuration de la\n"
+"      société de l'utilisateur), les numéros de TVA sont soumis à la base de "
+"données européenne\n"
+"      VIES en ligne, qui vérifie que le numéro est valide et actuellement\n"
+"      attribué à une entreprise de l'UE. Cette vérification est un peu plus "
+"lente qu'un simple\n"
+"      contrôle hors ligne, nécessite une connexion Internet et peut ne pas "
+"être disponible\n"
+"      en permanence. Si le service est indisponible ou ne prend pas en "
+"charge le\n"
+"      pays demandé (par exemple, pour les pays hors UE), un contrôle simple "
+"sera effectué\n"
+"      à la place.\n"
+"\n"
+"Les pays actuellement pris en charge comprennent les pays de l'UE ainsi que "
+"certains pays hors UE,\n"
+"comme le Chili, la Colombie, le Mexique, la Norvège ou la Russie. Pour les "
+"pays non pris en charge,\n"
+"seul le code pays sera validé.\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model,name:l10n_eu_account_vies.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model,name:l10n_eu_account_vies.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Pays"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model,website_form_label:l10n_eu_account_vies.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Créer un client"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__display_name
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,help:l10n_eu_account_vies.field_res_partner__vies_valid
 #: model:ir.model.fields,help:l10n_eu_account_vies.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
+"Les numéros de TVA européens sont automatiquement vérifiés dans la base de "
+"données VIES."
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__has_foreign_fiscal_position
 msgid "Has Foreign Fiscal Position"
-msgstr ""
+msgstr "A une position fiscale étrangère"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_country__id
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Validité intracommunautaire confirmée"
 
 #. module: l10n_eu_account_vies
 #. odoo-python
 #: code:addons/l10n_eu_account_vies/models/res_partner.py:0
 msgid "Invalid IAP VIES endpoint"
-msgstr ""
+msgstr "Point de terminaison IAP VIES invalide"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:l10n_eu_account_vies.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Effectuer la validation via VIES"
 
 #. module: l10n_eu_account_vies
 #. odoo-python
 #: code:addons/l10n_eu_account_vies/models/res_partner.py:0
 msgid "The Intra-Community validity has been updated to: %s."
-msgstr ""
+msgstr "La validité intracommunautaire a été mise à jour : %s."
 
 #. module: l10n_eu_account_vies
 #. odoo-python
 #: code:addons/l10n_eu_account_vies/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
+"La vérification VIES a échoué. Veuillez vérifier manuellement le numéro de "
+"TVA."
 
 #. module: l10n_eu_account_vies
 #. odoo-python
 #: code:addons/l10n_eu_account_vies/models/res_partner.py:0
 msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
+msgstr "La vérification VIES est en attente. Le statut sera bientôt mis à jour."
 
 #. module: l10n_eu_account_vies
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_account_vies
 msgid "VAT VIES Validation"
-msgstr ""
+msgstr "Validation de la TVA via VIES"
 
 #. module: l10n_eu_account_vies
 #: model:ir.actions.server,name:l10n_eu_account_vies.vies_iap_check_update_ir_actions_server
 msgid "VIES: Sync updates from IAP VIES"
-msgstr ""
+msgstr "VIES : Synchroniser les mises à jour depuis IAP VIES"

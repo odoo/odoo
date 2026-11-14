@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-05 11:41+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-10 12:13+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/hr/es/>\n"
 "Language: es\n"
@@ -1889,11 +1889,8 @@ msgid "Date Start"
 msgstr "Fecha de inicio"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_date
-#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
-#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
 msgstr ""
@@ -1905,6 +1902,17 @@ msgstr ""
 msgid ""
 "Date at which the departure process starts. Differs from the actual "
 "departure date in case of a notice period."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
+#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
+msgid ""
+"Date at which the employee (and their user, if they have no other active "
+"employee) is archived, by default the day after the departure. If it is "
+"today or earlier, the departure is applied on confirmation; otherwise it is "
+"scheduled for that date."
 msgstr ""
 
 #. module: hr
@@ -2199,7 +2207,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_resource_calendar_leaves__display_name
 #: model:ir.model.fields,field_description:hr.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: hr
 #. odoo-javascript
@@ -5877,7 +5885,7 @@ msgstr "Asociación verdadera"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Trust Bank Account"
-msgstr "Cuenta bancaria confiable"
+msgstr "Cuenta bancaria segura"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted

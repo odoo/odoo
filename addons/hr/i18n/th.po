@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
 "PO-Revision-Date: 2026-10-28 08:03+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/hr/th/>\n"
@@ -1899,11 +1899,8 @@ msgid "Date Start"
 msgstr "วันที่เริ่มต้น"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_date
-#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
-#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
 msgstr "วันที่พ้นสภาพพนักงานจริง"
@@ -1918,6 +1915,17 @@ msgid ""
 msgstr ""
 "วันที่ที่กระบวนการพ้นสภาพพนักงานเริ่มขึ้น "
 "ซึ่งอาจแตกต่างจากวันที่พ้นสภาพพนักงานจริงในกรณีที่มีระยะเวลาแจ้งล่วงหน้า"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
+#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
+msgid ""
+"Date at which the employee (and their user, if they have no other active "
+"employee) is archived, by default the day after the departure. If it is "
+"today or earlier, the departure is applied on confirmation; otherwise it is "
+"scheduled for that date."
+msgstr ""
 
 #. module: hr
 #. odoo-javascript

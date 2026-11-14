@@ -33,13 +33,14 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-14 13:35+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 10:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "website_slides/tr/>\n"
 "Language: tr\n"
@@ -65,6 +66,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Online Kurslar Oluşturun\n"
+"=====================\n"
+"\n"
+"Öne çıkan özellikler\n"
+"\n"
+"* Entegre kurs ve ders yönetimi\n"
+" * Tam ekran navigasyon\n"
+" * Destek Youtube videoları, Google dokümanları, PDF, resimler, makaleler\n"
+" * Kısa sınavlarla test bilgisi\n"
+" * Filtre ve Etiketler\n"
+" *İstatistikler\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -291,6 +304,26 @@ msgid ""
 "<div>&amp;nbsp;</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Merhaba<br><br>\n"
+"        Yeni bir kursa kaydınız yapıldı: <t t-out=\"object.channel_id.name "
+"or ''\">Bahçe Tasarımı Temelleri</t>.\n"
+"    </p>\n"
+"</div>\n"
+"<div style=\"margin: 32px 0px 32px 0px;\">\n"
+"    <a t-att-href=\"object.invitation_link\" style=\"background-color: "
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px; font-size:13px;\">\n"
+"        <t t-if=\"enroll_mode\"> Kursa başlamak için buraya tıklayın </t> <t "
+"t-else=\"\"> Başlamak için buraya tıklayın </t>\n"
+"    </a>\n"
+"</div>\n"
+"<div style=\"margin: 0px; padding: 0px; font-size:13px;\">\n"
+"    Bu özel içeriğin keyfini çıkarın!\n"
+"</div>\n"
+"<div>&amp;nbsp;</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
@@ -316,6 +349,26 @@ msgid ""
 "<div>&amp;nbsp;</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Merhaba<br><br>\n"
+"        Bu kursa göz atmanız için davet edildiniz: <t t-"
+"out=\"object.channel_id.name or ''\">Bahçe Tasarımı Temelleri</t>.\n"
+"    </p>\n"
+"</div>\n"
+"<div style=\"margin: 32px 0px 32px 0px;\">\n"
+"    <a t-att-href=\"object.invitation_link\" style=\"background-color: "
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px; font-size:13px;\">\n"
+"        <t t-if=\"enroll_mode\"> Kursa başlamak için buraya tıklayın </t> <t "
+"t-else=\"\"> Başlamak için buraya tıklayın </t>\n"
+"    </a>\n"
+"</div>\n"
+"<div style=\"margin: 0px; padding: 0px; font-size:13px;\">\n"
+"    Bu özel içeriğin keyfini çıkarın!\n"
+"</div>\n"
+"<div>&amp;nbsp;</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_completed
@@ -351,6 +404,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: "
+"13px;\">\n"
+"                        <p style=\"margin: 0px;\">Merhaba <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
+"                        <p><b>Tebrikler!</b></p>\n"
+"                        <p><b t-out=\"object.channel_id.name or ''\">Basics "
+"of Gardening</b> kursunu tamamladınız</p>\n"
+"                        <p>Mevcut diğer kurslara göz atın.</p><br>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a href=\"/slides\" t-attf-style=\"background-"
+"color: {{object.channel_id.user_id.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.channel_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"border-radius: 5px;\">\n"
+"                                Kursları keşfet\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Bu özel içeriğin keyfini çıkarın!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\">\n"
+"                            <br>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"><t t-out=\"object.channel_id.user_id.signature or ''\">Mitchell "
+"Admin</t></div>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
@@ -388,6 +471,38 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Merhaba<br><br>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> "
+"<strong t-out=\"object.name or ''\">belgeyi</strong> sizinle paylaştı!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-"
+"align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{"
+"{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" "
+"style=\"height:auto; width:150px; margin: 16px;\">\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\" t-"
+"attf-style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px;                                 "
+"text-decoration: none; color: {{user.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">\n"
+"                                <strong t-out=\"object.name or ''\">Belgeyi</"
+"strong> Görüntüle</a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -426,6 +541,39 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Merhaba<br><br>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> <t t-"
+"out=\"object.slide_category or ''\">belgeyi</t> <strong t-out=\"object.name "
+"or ''\">Trees</strong> sizinle paylaştı!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-"
+"align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + "
+"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-att-"
+"src=\"object.get_image_1024_src()\" style=\"height:auto; width:150px; "
+"margin: 16px;\">\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + "
+"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" t-"
+"attf-style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
+"<strong t-out=\"object.name or ''\">Trees</strong> Görüntüle</a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -468,6 +616,43 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Merhaba<br><br>\n"
+"                        Takip ettiğiniz <strong t-"
+"out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> "
+"kursunda yeni bir şey var:<br><br>\n"
+"                        </p><center><strong t-out=\"object.name or ''\">"
+"Trees</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-"
+"align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-att-"
+"src=\"object.get_image_1024_src()\" style=\"height:auto; width:150px; "
+"margin: 16px;\">\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" t-"
+"attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px;\">İçeriği görüntüle</a>\n"
+"                        </div>\n"
+"                        Bu özel içeriğin keyfini çıkarın!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -1151,7 +1336,6 @@ msgstr "<strong>Henüz Katılımcı Yok!</strong>"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report_certified
-#, fuzzy
 msgid "<strong>No Certified Attendees Yet!</strong>"
 msgstr "<strong>Henüz Sertifikalı Katılımcı Yok!</strong>"
 
@@ -1300,7 +1484,7 @@ msgstr "Erişim Yetkileri"
 #. module: website_slides
 #: model:portal.entry,description:website_slides.portal_slides_client
 msgid "Access all your e-learning courses"
-msgstr ""
+msgstr "Tüm e-eğitim kurslarınıza erişin"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
@@ -1350,7 +1534,6 @@ msgstr "Etkinlik İstisna Dekorasyonu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_plans_ids
-#, fuzzy
 msgid "Activity Plans"
 msgstr "Aktivite Planları"
 
@@ -1709,7 +1892,6 @@ msgstr "Katılımcı"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_new_attendees
-#, fuzzy
 msgid "Attendee Registrations"
 msgstr "Katılımcı Kayıtları"
 
@@ -1749,7 +1931,6 @@ msgstr "Grupları Otomatik Kaydet"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_on
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__publish_on
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__publish_on
-#, fuzzy
 msgid "Auto publish on"
 msgstr "Otomatik yayınla"
 
@@ -1757,7 +1938,6 @@ msgstr "Otomatik yayınla"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_on
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__publish_on
 #: model:ir.model.fields,help:website_slides.field_slide_slide__publish_on
-#, fuzzy
 msgid "Automatically publish the page on the chosen date and time."
 msgstr "Sayfayı seçilen tarih ve saatte otomatik olarak yayınlayın."
 
@@ -1911,7 +2091,6 @@ msgstr "Sertifikalar"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_certified_attendees
-#, fuzzy
 msgid "Certified Attendees"
 msgstr "# Sertifikalı Katılımcılar"
 
@@ -1923,7 +2102,6 @@ msgstr "Sertifikalı Bilgi"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action_report_certified
-#, fuzzy
 msgid "Certified attendees"
 msgstr "# Sertifikalı Katılımcılar"
 
@@ -1959,7 +2137,6 @@ msgstr "Kanal Türü"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag_group
-#, fuzzy
 msgid "Channel/Course Group"
 msgstr "Kanal/Kurs Grubu"
 
@@ -2210,7 +2387,6 @@ msgstr "Tamamlanma Zamanı"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion_date
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__completion_date
-#, fuzzy
 msgid "Completion date"
 msgstr "Tamamlama tarihi"
 
@@ -2512,7 +2688,7 @@ msgstr "Kurs Tamamlanmamış Olarak Ayarlandı"
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
 msgid "Course Slides"
-msgstr ""
+msgstr "Kurs Slaytları"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
@@ -2552,12 +2728,12 @@ msgstr "Ders Türü"
 #: model:ir.model.fields,field_description:website_slides.field_website_visitor__visitor_slide_channel_count
 #: model_terms:ir.ui.view,arch_db:website_slides.website_slides_visitor_view_form
 msgid "Course Views"
-msgstr ""
+msgstr "Kurs Görüntülemeleri"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.website_slides_visitor_slide_channel_action
 msgid "Course Views History"
-msgstr ""
+msgstr "Kurs Görüntüleme Geçmişi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
@@ -2828,7 +3004,6 @@ msgstr "Tüm makaleyi okudunuz mu?"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_digest_digest
-#, fuzzy
 msgid "Digest"
 msgstr "Özet"
 
@@ -3006,7 +3181,7 @@ msgstr "İndirme URL'si"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Drag blocks here to add them on all lessons"
-msgstr ""
+msgstr "Bunları tüm derslere eklemek için blokları buraya sürükleyin"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_10
@@ -4026,13 +4201,11 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_certified_attendees_value
-#, fuzzy
 msgid "Kpi Nbr Of Certified Attendees Value"
 msgstr "Kpi Sertifikalı Katılımcı Sayısı Değer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_new_attendees_value
-#, fuzzy
 msgid "Kpi Nbr Of New Attendees Value"
 msgstr "Kpi Yeni Katılımcı Sayısı Değer"
 
@@ -4107,7 +4280,7 @@ msgstr "Son başarılar"
 #. module: website_slides
 #: model:website.snippet.filter,name:website_slides.dynamic_filter_latest_courses
 msgid "Latest eLearning Courses"
-msgstr ""
+msgstr "En Yeni e-Eğitim Kursları"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4135,7 +4308,7 @@ msgstr "Bahçeciliğin temellerini öğrenin!"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_1
 msgid "Learn to identify quality wood in order to create solid furniture."
-msgstr ""
+msgstr "Sağlam mobilyalar oluşturmak için kaliteli ahşabı tanımlamayı öğrenin."
 
 #. module: website_slides
 #. odoo-javascript
@@ -4252,7 +4425,7 @@ msgstr "Ana Ağaçlar Kategorileri"
 #. module: website_slides
 #: model:ir.module.module,summary:base.module_website_slides
 msgid "Manage and publish an eLearning platform"
-msgstr ""
+msgstr "Bir e-öğrenim platformunu yönetme ve yayınlama"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -4294,7 +4467,7 @@ msgstr "<b>Doğru</b> işaretini işaretleyerek doğru yanıtı işaretleyin."
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Malzeme Sembolleri simgesi, örn. kontrol listesi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -4320,14 +4493,13 @@ msgstr "Menü Girişi"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
-#, fuzzy
 msgid "Merge Partner Wizard"
 msgstr "İş Ortağı Birleştirme Sihirbazı"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Mesaj"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
@@ -4567,7 +4739,7 @@ msgstr "Aramanız kullanılarak içerik bulunamadı"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.website_slides_visitor_slide_channel_action
 msgid "No course views yet for this visitor"
-msgstr ""
+msgstr "Bu ziyaretçi için henüz kurs görüntülemesi yok"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_search_results
@@ -4623,7 +4795,7 @@ msgstr "Yayınlanmadı"
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel_partner__member_status__joined
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
 msgid "Not Started"
-msgstr ""
+msgstr "Başlamadı"
 
 #. module: website_slides
 #. odoo-python
@@ -4986,7 +5158,6 @@ msgstr "Yayın Tarihi"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__published_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__published_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__published_date
-#, fuzzy
 msgid "Published date"
 msgstr "Yayınlanma tarihi"
 
@@ -5371,7 +5542,7 @@ msgstr "Arama İçeriği"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_search_bar
 msgid "Search courses..."
-msgstr ""
+msgstr "Kurslarda ara..."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5685,12 +5856,12 @@ msgstr "Slayt / Ortak dekore m2m"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_website_track__slide_channel_id
 msgid "Slide Channel"
-msgstr ""
+msgstr "Slayt Kanalı"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_icon_class
 msgid "Slide Icon oi-class"
-msgstr ""
+msgstr "Slayt Simgesi oi-class"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -6255,7 +6426,7 @@ msgstr "Toplam görüntülenme"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_website_visitor__visitor_slide_channel_count
 msgid "Total number of views on courses"
-msgstr ""
+msgstr "Kurslardaki toplam görüntüleme sayısı"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_karma_tracking
@@ -6522,7 +6693,7 @@ msgstr "Kursu görüntüle"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.dynamic_filter_template_slide_channel_card
 msgid "View {{0}}"
-msgstr ""
+msgstr "Görüntüle {{0}}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -6563,12 +6734,12 @@ msgstr "Mevcut web sitesinde görülebilir"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website_track
 msgid "Visited Page"
-msgstr ""
+msgstr "Ziyaret Edilen Sayfa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.website_slides_visitor_page_view_tree
 msgid "Visitor Course Views History"
-msgstr ""
+msgstr "Ziyaretçi Kurs Görüntüleme Geçmişi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_views
@@ -6649,7 +6820,7 @@ msgstr "Web Sitesi URL Adresi"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "Websitesi Ziyaretçi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
@@ -6891,7 +7062,6 @@ msgstr ""
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/base_partner_merge.py:0
-#, fuzzy
 msgid ""
 "You cannot merge these contacts because multiple contacts are enrolled in "
 "the same courses: %s"
@@ -7015,14 +7185,12 @@ msgstr "YouTube:"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
-#, fuzzy
 msgid "Your %s"
 msgstr "Sizin %s"
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
-#, fuzzy
 msgid "Your document"
 msgstr "Belgeniz"
 

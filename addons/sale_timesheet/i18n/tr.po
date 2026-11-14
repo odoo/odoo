@@ -16,18 +16,19 @@
 # Umur Akın <umura@projetgrup.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-11-03 08:22+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 10:14+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "sale_timesheet/tr/>\n"
 "Language: tr\n"
@@ -98,6 +99,12 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"Satış siparişlerinde satış çalışma çizelgesine izin verir.\n"
+"\n"
+"Bu modül, çalıştığınız siparişe / sözleşmeye göre tüm çalışma çizelgesinde "
+"doğru ürünü belirler. Bu, satış siparişlerindeki gerçek teslim miktarının "
+"olmasını sağlar.\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -244,11 +251,13 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as </span>"
 msgstr ""
+"<span class=\"text-muted\">Satış siparişi kalemi olmayan çalışma çizelgeleri "
+"şu şekilde raporlanır: </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 msgid "<span>Sales Order Item: </span>"
-msgstr ""
+msgstr "<span>Satış Siparişi Kalemi: </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -329,6 +338,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ürün yapılandırmasına göre teslim edilen miktar şu yöntemlerle otomatik "
+"olarak hesaplanabilir:\n"
+"  - Manuel: miktar satırda elle belirlenir\n"
+"  - Giderlerden Analitik: miktar, muhasebeleştirilmiş giderlerin toplamından "
+"alınır\n"
+"  - Çalışma Çizelgesi: miktar, bu satış satırına bağlı görevlerde kaydedilen "
+"saatlerin toplamıdır\n"
+"  - Stok Hareketleri: miktar, onaylanmış sevkiyatlardan alınır\n"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -605,7 +622,7 @@ msgstr "Çalışan"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee_departure
 msgid "Employee Departure"
-msgstr ""
+msgstr "Çalışanın İşten Ayrılması"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
@@ -784,7 +801,7 @@ msgstr "Yevmiye Kaydı"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "Günlük Kaydının İptali"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
@@ -866,7 +883,7 @@ msgstr "Kilometre taşı hizmetler"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_search
 msgid "Mine"
-msgstr ""
+msgstr "Benim"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -958,6 +975,8 @@ msgid ""
 "Notify the salesperson about an upsell opportunity when completed work "
 "exceeds"
 msgstr ""
+"Tamamlanan çalışma şu miktarı aştığında satış temsilcisini ek satış fırsatı "
+"hakkında bilgilendir"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -992,7 +1011,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Order"
-msgstr ""
+msgstr "Sipariş"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1170,7 +1189,7 @@ msgstr "Satış Siparişleri"
 #. module: sale_timesheet
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Satış Çalışma Çizelgesi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1230,7 +1249,7 @@ msgstr "Satış Siparişi Öğelerinde Ara"
 #. module: sale_timesheet
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr ""
+msgstr "Çalışma çizelgesini baz alarak sat"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1462,13 +1481,13 @@ msgstr "Çalışma Çizelgeleri (Sabit Fiyat)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Manual)"
-msgstr ""
+msgstr "Çalışma Çizelgeleri (Manuel)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Milestones)"
-msgstr ""
+msgstr "Çalışma Çizelgeleri (Kilometre Taşları)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1681,7 +1700,7 @@ msgstr "faturalandırılamaz"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of the hours sold."
-msgstr ""
+msgstr "satılan saatlerin."
 
 #. module: sale_timesheet
 #. odoo-python

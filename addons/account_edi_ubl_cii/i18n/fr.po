@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-02 07:08+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
@@ -292,6 +292,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
 msgstr "Frais"
@@ -342,6 +343,14 @@ msgstr "Configurer"
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
 msgid "Contact"
 msgstr "Contact"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -459,6 +468,7 @@ msgstr "Directorates of the European Commission"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "Remise"
@@ -993,7 +1003,8 @@ msgstr "Ligne %s : le nom de l’article est manquant [IBR-025]."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr "Ligne %s : le prix net de l’article NE DOIT PAS être négatif [IBR-027]."
+msgstr ""
+"Ligne %s : le prix net de l’article NE DOIT PAS être négatif [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1006,8 +1017,8 @@ msgstr "Ligne %s : le prix net de l’article est manquant [IBR-026]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
 msgstr ""
-"Ligne %s : le code de catégorie de taxe de l’article est manquant [IBR-SR-"
-"58]."
+"Ligne %s : le code de catégorie de taxe de l’article est manquant [IBR-"
+"SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0200
@@ -1259,8 +1270,8 @@ msgstr "Le code pays du vendeur est manquant [IBR-009]."
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
 msgstr ""
-"L’adresse électronique / l’ID de point de terminaison du vendeur est manquant"
-"(e) [IBR-081]."
+"L’adresse électronique / l’ID de point de terminaison du vendeur est "
+"manquant(e) [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1576,6 +1587,16 @@ msgstr "Code UN/ECE"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
 msgid "USA EIN"
 msgstr "EIN USA"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason

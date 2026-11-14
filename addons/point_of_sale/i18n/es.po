@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-03 14:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-10 12:13+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/es/>\n"
@@ -3704,7 +3704,7 @@ msgstr "Descuentos"
 #: model:ir.model.fields,field_description:point_of_sale.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6629,7 +6629,7 @@ msgstr "Abrir caja"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Open Customer Display"
-msgstr "Abrir pantalla del cliente"
+msgstr "Abrir pantalla de cliente"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9528,7 +9528,7 @@ msgstr "Define varios precios por producto, descuentos automáticos, etc."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set the background image of your customer display"
-msgstr "Establezca la imagen de fondo de la pantalla del cliente"
+msgstr "Establece la imagen de fondo de tu pantalla de cliente"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10496,6 +10496,15 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The order was validated with a total of %(paid)s, but its lines now amount "
+"to %(total)s because they were changed on another device. The order stays "
+"open until the difference is settled."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
 msgstr "El importe pagado es diferente al importe total del pedido."
 
@@ -10518,6 +10527,15 @@ msgid "The password is located on the back of the printer (remove covers)."
 msgstr ""
 "La contraseña se encuentra en la parte posterior de la impresora (quita las "
 "tapas)."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The payment method %(payment_method)s has no outstanding account, its "
+"payments cannot be posted.\n"
+"Set an outstanding account on it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

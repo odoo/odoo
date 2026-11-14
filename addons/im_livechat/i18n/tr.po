@@ -21,18 +21,19 @@
 # İlknur Gözütok, 2023
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-14 13:35+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 11:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "im_livechat/tr/>\n"
 "Language: tr\n"
@@ -51,6 +52,11 @@ msgid ""
 "        or empty and can only be set on live chat channels.\n"
 "        "
 msgstr ""
+"\n"
+"        Canlı Sohbet puanı 1 (Memnun Değil), 3 (Nötr), 5 (Memnun)\n"
+"        olmalı veya boş bırakılmalı ve yalnızca Canlı Sohbet kanallarında "
+"ayarlanabilir.\n"
+"        "
 
 #. module: im_livechat
 #: model:ir.module.module,description:base.module_im_livechat
@@ -66,6 +72,17 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 msgstr ""
+"\n"
+"Canlı Sohbet Desteği\n"
+"==========================\n"
+"\n"
+"Herhangi bir web sayfasına anlık mesajlaşma widget’ları ekleyerek mevcut "
+"sunucu ile iletişim kurar\n"
+"ve ziyaretçi taleplerini birden fazla canlı sohbet operatörü \n"
+"arasında yönlendirir.\n"
+"Müşterilerinize bu sohbetle yardımcı olun ve geri bildirimlerini analiz "
+"edin.\n"
+"\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -112,25 +129,25 @@ msgstr "% Mutluluk"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
-msgstr ""
+msgstr "%(days)sd"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(hours)sh"
-msgstr ""
+msgstr "%(hours)ss"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
-msgstr ""
+msgstr "%(minutes)sm"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_service.js:0
 msgid "%(name)s left a rating:"
-msgstr ""
+msgstr "%(name)s bir puanlama bıraktı:"
 
 #. module: im_livechat
 #. odoo-python
@@ -142,7 +159,7 @@ msgstr "%(title)s - Adım %(sequence)d"
 #. odoo-python
 #: code:addons/im_livechat/models/res_users.py:0
 msgid "%(visitor)s authenticated as %(user)s."
-msgstr ""
+msgstr "%(visitor)s, %(user)s olarak doğrulandı."
 
 #. module: im_livechat
 #. odoo-python
@@ -160,12 +177,14 @@ msgid ""
 "'%(input_phone)s' does not look like a valid phone number. Can you please "
 "try again?"
 msgstr ""
+"'%(input_phone)s' geçerli bir Telefon numarası gibi görünmüyor. Lütfen "
+"tekrar deneyebilir misiniz?"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "'%s' is not a valid phone number."
-msgstr ""
+msgstr "'%s' geçerli bir Telefon numarası değildir."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -178,22 +197,28 @@ msgid ""
 "'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
+"* 'Göster' sohbet düğmesini sayfalarda görüntüler.\n"
+"* 'Bildirimle göster' seçeneği, düğmenin hemen yanında kayan bir metinle "
+"birlikte 'Göster' işlevini sunar.\n"
+"* 'Otomatik aç' düğmeyi görüntüler ve daha büyük ekranlarda sohbet bölmesini "
+"otomatik olarak açar. Küçük ekranlarda bu, 'Göster' gibi davranır.\n"
+"* 'Gizle' sohbet düğmesini sayfalardan gizler.\n"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
-msgstr ""
+msgstr "< 1dk"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Join"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Katıl"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Leave"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Ayrıl"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -206,6 +231,8 @@ msgid ""
 "<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
 "aria-label=\"Happy face\"/>"
 msgstr ""
+"<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
+"aria-label=\"Happy face\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -351,13 +378,13 @@ msgstr "Ajanlar (Tarih)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids_count
 msgid "Agents Connected"
-msgstr ""
+msgstr "Bağlanan Temsilciler"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
 msgid "Agents Performance"
-msgstr ""
+msgstr "Temsilci Performansı"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -390,7 +417,7 @@ msgstr "Daima"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "An error occurred while processing your answer."
-msgstr ""
+msgstr "Cevabınız işlenirken bir hata oluştu."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -485,7 +512,7 @@ msgstr "Çağrı Geçmişi"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/livechat_command_dialog.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
@@ -550,12 +577,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
-msgstr ""
+msgstr "Bizimle sohbet edin"
 
 #. module: im_livechat
 #: model:ir.module.module,summary:base.module_im_livechat
 msgid "Chat with your website visitors"
-msgstr ""
+msgstr "Website ziyaretçilerinizle konuşun"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -564,6 +591,8 @@ msgid ""
 "Chat with your website visitors in real time by creating a\n"
 "                channel for each website where you want live chat enabled."
 msgstr ""
+"Canlı sohbetin etkinleştirilmesini istediğiniz her bir websitesi için kanal "
+"oluşturarak website ziyaretçilerinizle gerçek zamanlı sohbet edin."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -670,7 +699,7 @@ msgstr "Kapat"
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
-msgstr ""
+msgstr "Sohbeti Kapat"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
@@ -684,6 +713,8 @@ msgid ""
 "Closing this will end the live chat with %(channel_name)s. Are you sure you "
 "want to proceed?"
 msgstr ""
+"Bunu kapatmak, %(channel_name)s ile olan Canlı Sohbeti sonlandıracaktır. "
+"Devam etmek istediğinizden emin misiniz?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__color
@@ -703,13 +734,13 @@ msgstr "Ayarlar"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Configure Channel"
-msgstr ""
+msgstr "Kanalı Yapılandır"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Connect"
-msgstr ""
+msgstr "Bağlan"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -730,7 +761,7 @@ msgstr "Sohbet"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
 msgid "Conversation Type"
-msgstr ""
+msgstr "Konuşma Türü"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -770,7 +801,7 @@ msgstr "Ülke"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Country & Language"
-msgstr ""
+msgstr "Ülke & Dil"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
@@ -861,7 +892,7 @@ msgstr "Tarih: Geçen hafta"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Datetime when the chat entered the 'Looking for help' status."
-msgstr ""
+msgstr "Sohbetin 'Yardım aranıyor' durumuna girdiği tarih ve saat."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
@@ -922,7 +953,7 @@ msgstr "Özet"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "İptal"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
@@ -977,13 +1008,13 @@ msgstr "Ziyaretçileri yönlendirmeyin"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Download"
-msgstr ""
+msgstr "İndir"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Download Conversation"
-msgstr ""
+msgstr "Sohbeti İndir"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1038,6 +1069,8 @@ msgstr "ChatBot'u Etkinleştir"
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Engage with visitors to convert leads or offer services."
 msgstr ""
+"Potansiyel müşterilere dönüştürmek veya hizmet sunmak için ziyaretçilerle "
+"etkileşime geçin."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1102,7 +1135,7 @@ msgstr "ODOO İLE OLUŞTURULMUŞ WEB SİTELERİ İÇİN"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "File"
-msgstr ""
+msgstr "Dosya"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
@@ -1167,6 +1200,8 @@ msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
 "<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
+"Şuraya gidin: <strong>Websitesi</strong> &gt; <strong>Yapılandırma</strong> "
+"&gt; <strong>Ayarlar</strong> &gt; <strong>Genel.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1182,7 +1217,7 @@ msgstr "Misafir"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Yönlendirme"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
@@ -1257,7 +1292,7 @@ msgstr "Yardım Durumu"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Help needed"
-msgstr ""
+msgstr "Yardım gerekiyor"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -1268,7 +1303,7 @@ msgstr "İşte seninle yaptığım konuşmanın bir kopyası"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Here's the most recent message:"
-msgstr ""
+msgstr "İşte en son mesaj:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1529,7 +1564,7 @@ msgstr "Diller"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Languages you can speak for live chat conversations."
-msgstr ""
+msgstr "Canlı Sohbet görüşmeleri için konuşabileceğiniz diller."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1602,6 +1637,8 @@ msgid ""
 "Leaving will end the live chat with %(channel_name)s. Are you sure you want "
 "to continue?"
 msgstr ""
+"Ayrılmak, %(channel_name)s ile olan canlı sohbeti sonlandıracak. Devam etmek "
+"istediğinizden emin misiniz?"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1638,7 +1675,7 @@ msgstr "Canlı Sohbet Butonu"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "Live Chat Channel Search"
-msgstr ""
+msgstr "Canlı Sohbet Kanalı Arama"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
@@ -1666,7 +1703,7 @@ msgstr "Canlı Sohbet Uzmanlığı"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Live Chat Name"
-msgstr ""
+msgstr "Canlı Sohbet Adı"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
@@ -1684,7 +1721,7 @@ msgstr "Canlı Sohbet Oturumu Hatası"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Live Chat Support Statistics"
-msgstr ""
+msgstr "Canlı Sohbet Destek İstatistikleri"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1730,12 +1767,12 @@ msgstr "Canlı Sohbet Kanalı Üye Geçmişi"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rule"
-msgstr ""
+msgstr "Livechat Kanal Kuralı"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_expertise_ids
 msgid "Livechat Expertise"
-msgstr ""
+msgstr "Canlı Sohbet Uzmanlığı"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.unit_embed_suite
@@ -1787,7 +1824,7 @@ msgstr "Canlı Sohbet Katılımcı Geçmişi"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_rating
 msgid "Livechat Rating Text"
-msgstr ""
+msgstr "Canlı Sohbet Değerlendirme Metni"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
@@ -1824,12 +1861,14 @@ msgid ""
 "Looking for help date should only be set if the channel is looking for help "
 "and must be empty otherwise."
 msgstr ""
+"\"Yardım aranıyor\" tarihi, yalnızca kanal yardım arıyorsa ayarlanmalı, aksi "
+"takdirde boş bırakılmalıdır."
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "Looking for help for: %(duration)s"
-msgstr ""
+msgstr "Şunun için yardım aranıyor: %(duration)s"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
@@ -1956,11 +1995,13 @@ msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
 msgstr ""
+"Gerçek adınızı ziyaretçilerden korumak için canlı sohbet görüşmelerinde "
+"kullanılan takma ad."
 
 #. module: im_livechat
 #: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
@@ -1976,7 +2017,7 @@ msgstr "Başarısızlık Yok"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "No Livechat Session!"
-msgstr ""
+msgstr "Canlı Sohbet Oturumu Yok!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1987,7 +2028,7 @@ msgstr "Mevcut ortak çalışan yok, lütfen daha sonra tekrar deneyin."
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "No chatbots found. Let's create one!"
-msgstr ""
+msgstr "Sohbet botu bulunamadı. Bir tane oluşturalım!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2014,7 +2055,7 @@ msgstr "Tarih bulunamadı"
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid "No live chat channel found. Let's create one!"
-msgstr ""
+msgstr "Canlı sohbet kanalı bulunamadı. Bir tane oluşturalım!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2072,12 +2113,12 @@ msgstr "Devam eden oturum sayısı"
 msgid ""
 "Number of conversations and percentage of positive ratings in the last 30 "
 "days"
-msgstr ""
+msgstr "Son 30 gündeki görüşme sayısı ve olumlu değerlendirme yüzdesi"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversations in the past 30 days"
-msgstr ""
+msgstr "Son 30 gündeki görüşme sayısı"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -2107,7 +2148,7 @@ msgstr "Devam eden"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Ongoing Conversations"
-msgstr ""
+msgstr "Devam Eden Görüşmeler"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2130,7 +2171,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Only customers can rate a live chat conversation."
-msgstr ""
+msgstr "Yalnızca müşteriler bir canlı sohbet görüşmesini değerlendirebilir."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
@@ -2189,7 +2230,7 @@ msgstr "İş Ortağı"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Percentage of positive ratings in the last 30 days"
-msgstr ""
+msgstr "Son 30 gündeki olumlu değerlendirme yüzdesi"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -2216,7 +2257,7 @@ msgstr "Soru"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: im_livechat
 #. odoo-python
@@ -2273,7 +2314,7 @@ msgstr "İlgili Mail İletisi"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 msgid "Relevant to your expertise"
-msgstr ""
+msgstr "Uzmanlığınızla ilgili"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
@@ -2288,7 +2329,7 @@ msgstr "Raporlama"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Requested At"
-msgstr ""
+msgstr "Talep Zamanı"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2369,7 +2410,7 @@ msgstr "Komut dosyası (harici)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external_text
 msgid "Script (external) Text"
-msgstr ""
+msgstr "Betik (harici) Metni"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
@@ -2493,7 +2534,7 @@ msgstr "Oturumlar"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Sessions Analysis"
-msgstr ""
+msgstr "Oturum Analizi"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
@@ -2508,6 +2549,11 @@ msgid ""
 "and generate leads or\n"
 "                support tickets automatically."
 msgstr ""
+"Websitenizin ziyaretçileriyle sohbet etmek için tanımlanmış bir komut "
+"dosyasına sahip bir bot kurun.\n"
+"                Sohbetleri değerlendirip Canlı Sohbet temsilcilerinize "
+"yönlendirin ve potansiyel müşterileri veya\n"
+"                destek biletlerini otomatik olarak oluşturun."
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
@@ -2610,7 +2656,7 @@ msgstr "Destek Botu"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 msgid "Tab to next live chat"
-msgstr ""
+msgstr "Sonraki canlı sohbete sekme"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__text
@@ -2632,7 +2678,7 @@ msgstr "Geri bildiriminiz için teşekkür ederiz"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "The URL Regex '%(regex)s' is not valid."
-msgstr ""
+msgstr "URL Regex '%(regex)s' geçerli değil."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -2700,12 +2746,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/discuss_channel_model_patch.js:0
 msgid "This live chat conversation has ended."
-msgstr ""
+msgstr "Bu Canlı Sohbet konuşması sona erdi."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "This message has been removed"
-msgstr ""
+msgstr "Bu mesaj kaldırılmıştır"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2811,7 +2857,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "UTM Karışımı"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
@@ -2844,7 +2890,7 @@ msgstr "Sınırsız"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Unread"
-msgstr ""
+msgstr "Okunmamış"
 
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
@@ -2853,6 +2899,9 @@ msgid ""
 "To load a canned response, start your sentence with '::' and select the "
 "template."
 msgstr ""
+"Canlı Sohbet uygulamasında mesaj şablonlarını tanımlamak için hazır "
+"yanıtları kullanın. Bir hazır yanıtı yüklemek için cümlenize '::' ile "
+"başlayın ve şablonu seçin."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2890,13 +2939,13 @@ msgstr "Kullanıcının ham cevabı"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
-msgstr ""
+msgstr "Kanalı Görüntüle"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
 msgid "View Chat"
-msgstr ""
+msgstr "Sohbeti Görüntüle"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3130,13 +3179,13 @@ msgstr "bir çağrıda"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "invited %s to the conversation"
-msgstr ""
+msgstr "sohbete %s davet edildi"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "joined the conversation"
-msgstr ""
+msgstr "sohbete katıldı"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3162,7 +3211,7 @@ msgstr "websocket mesaj işleme"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
-msgstr ""
+msgstr "width:40px; height:40px; border-radius:0.5rem; display:block;"
 
 #~ msgid ""
 #~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "

@@ -21,19 +21,20 @@
 # İlknur Gözütok, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 14:22+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 10:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "mass_mailing_sms/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +65,7 @@ msgstr " (abonelikten çıkma bağlantısı dahil)"
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s ignored (no email/phone)"
-msgstr ""
+msgstr "%(count)s yok sayıldı (eposta/telefon yok)"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -81,6 +82,11 @@ msgid ""
 "Contacts\n"
 "                    </span>"
 msgstr ""
+"<br/>\n"
+"                    <span class=\"text-muted\">\n"
+"                        <i class=\"oi oi-filled\" data-icon=\"phone\"/> "
+"Telefon Kontağı\n"
+"                    </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_kanban
@@ -88,6 +94,8 @@ msgid ""
 "<i class=\"oi oi-filled text-primary me-2\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled text-primary me-2\" data-icon=\"phone\" "
+"title=\"Phone\"/>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -193,7 +201,7 @@ msgstr "Aksiyon Gerekiyor"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact_to_list
 msgid "Add (Mailing) Contacts to Mailing List"
-msgstr ""
+msgstr "Posta Kontaklarını Posta Listesine Ekle"
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -310,7 +318,7 @@ msgstr "Ayarlar"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_country_not_supported
@@ -325,7 +333,7 @@ msgstr "Ülkeye Özel Kayıt Gerekli"
 #. module: mass_mailing_sms
 #: model:ir.model,website_form_label:mass_mailing_sms.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturun"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
@@ -355,7 +363,7 @@ msgstr "Oluşturuldu"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_database_non_active
 msgid "Database non active"
-msgstr ""
+msgstr "Veritabanı etkin değil"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -366,7 +374,7 @@ msgstr "Tarih"
 #. module: mass_mailing_sms
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
 msgid "Design, send and track SMS"
-msgstr ""
+msgstr "SMS tasarlayın, gönderin ve takip edin"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_link_tracker_click__display_name
@@ -582,7 +590,7 @@ msgstr "Bağlantı İzleyici"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr ""
+msgstr "Bağlantı İzleyici Tıklaması"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -600,7 +608,7 @@ msgstr "Posta ile İletişim"
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mailing_contact_menu_sms
 msgid "Mailing Contacts"
-msgstr ""
+msgstr "E-posta İletişim Bilgileri"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_list
@@ -693,7 +701,7 @@ msgstr "SMS Pazarlamam"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "New SMS"
-msgstr ""
+msgstr "Yeni SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
@@ -797,7 +805,7 @@ msgstr "Çıkış Bekleyen SMS"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
@@ -830,7 +838,7 @@ msgstr "Değerlendirmeler"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "Ready to unleash your text messages?"
-msgstr ""
+msgstr "Kısa mesajlarınızı serbest bırakmaya hazır mısınız?"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -1090,7 +1098,7 @@ msgstr "UTM Kampanyası"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "UTM Karışımı"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
@@ -1169,7 +1177,7 @@ msgstr "başarılı bir şekilde kaldırıldı"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_tree
 msgid "📵 Blacklisted"
-msgstr ""
+msgstr "🔕 Kara listeye alındı"
 
 #~ msgid ""
 #~ "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "

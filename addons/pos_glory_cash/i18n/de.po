@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-11-06 13:12+0000\n"
+"POT-Creation-Date: 2026-11-13 17:40+0000\n"
+"PO-Revision-Date: 2026-11-09 06:52+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "pos_glory_cash/de/>\n"
@@ -168,8 +168,8 @@ msgstr "Authentifizierung fehlgeschlagen"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "Failed to cancel cash machine transaction."
-msgstr "Stornierung der Transaktion am Geldautomaten fehlgeschlagen."
+msgid "Failed to cancel cash machine transaction: %s."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -195,6 +195,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_glory_cash.pos_payment_method_view_form_inherit_pos_glory_cash
 msgid "Glory Settings"
 msgstr "Glory-Einstellungen"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Glory error animation."
+msgstr ""
 
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__id
@@ -227,6 +233,9 @@ msgid ""
 "Local Network Access for the Glory machine is not supported on this browser. "
 "Please update your browser or disable Local Network Access."
 msgstr ""
+"Der lokale Netzwerkzugriff für die Glory-Maschine wird in diesem Browser "
+"nicht unterstützt. Bitte aktualisieren Sie Ihren Browser oder deaktivieren "
+"Sie den lokalen Netzwerkzugriff."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -305,6 +314,12 @@ msgstr "Zahlung wird gestartet"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "The Glory machine is in an unknown error state."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr ""
@@ -379,10 +394,8 @@ msgstr "Der Automat hat nicht mehr viele der folgenden Münzen/Scheine:"
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is unable to return the inserted cash, please refund the "
-"client via another method."
+"client %s via another method."
 msgstr ""
-"Der Geldautomat kann das eingezahlte Bargeld nicht ausgeben. Bitte erstatten "
-"Sie dem Kunden den Betrag auf anderem Wege."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -410,11 +423,18 @@ msgstr "Die Zahlung ist aus unbekannten Gründen fehlgeschlagen: %s"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
-"There is insufficient cash in the machine to give change. You will need to "
-"refund the difference via another method."
+"There is an error with the bill or coin device. The machine will now be "
+"reset and the contents verified. Once this is complete, the amount that must "
+"be returned to the customer will be displayed."
 msgstr ""
-"Es ist nicht genügend Bargeld im Automaten, um Wechselgeld herauszugeben. "
-"Sie müssen die Differenz auf anderem Wege erstatten."
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"There is insufficient cash in the machine to give change. You will need to "
+"refund %s via another method."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -467,6 +487,23 @@ msgstr "Wartet auf Bargeldeingabe"
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Waiting for inventory"
 msgstr "Wartet auf Inventur"
+
+#~ msgid "Failed to cancel cash machine transaction."
+#~ msgstr "Stornierung der Transaktion am Geldautomaten fehlgeschlagen."
+
+#~ msgid ""
+#~ "The cash machine is unable to return the inserted cash, please refund the "
+#~ "client via another method."
+#~ msgstr ""
+#~ "Der Geldautomat kann das eingezahlte Bargeld nicht ausgeben. Bitte "
+#~ "erstatten Sie dem Kunden den Betrag auf anderem Wege."
+
+#~ msgid ""
+#~ "There is insufficient cash in the machine to give change. You will need "
+#~ "to refund the difference via another method."
+#~ msgstr ""
+#~ "Es ist nicht genügend Bargeld im Automaten, um Wechselgeld herauszugeben. "
+#~ "Sie müssen die Differenz auf anderem Wege erstatten."
 
 #~ msgid "There is insufficient cash in the machine to give change."
 #~ msgstr ""

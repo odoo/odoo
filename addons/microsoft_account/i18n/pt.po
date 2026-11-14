@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-10-28 16:47+0000\n"
+"PO-Revision-Date: 2026-11-10 11:37+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-20/"
 "microsoft_account/pt/>\n"
@@ -28,12 +28,15 @@ msgid ""
 "The module adds Microsoft user in res user.\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"O módulo adiciona o utilizador da Microsoft aos utilizadores do sistema.\n"
+"===========================================\n"
 
 #. module: microsoft_account
 #: model:ir.model.fields,field_description:microsoft_account.field_microsoft_service__display_name
 #: model:ir.model.fields,field_description:microsoft_account.field_res_users__display_name
 msgid "Display Name"
-msgstr "Nome"
+msgstr "Nome a apresentar"
 
 #. module: microsoft_account
 #: model:ir.model.fields,field_description:microsoft_account.field_microsoft_service__id
@@ -46,7 +49,8 @@ msgstr "ID"
 #: code:addons/microsoft_account/models/microsoft_service.py:0
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr ""
-"Método não suportado [%s] não está em [GET, POST, PUT, PATCH ou DELETE]]!"
+"Método não suportado [%s]. Os métodos permitidos são GET, POST, PUT, PATCH "
+"ou DELETE!"
 
 #. module: microsoft_account
 #: model:ir.model.fields,field_description:microsoft_account.field_res_users__microsoft_calendar_rtoken
@@ -56,22 +60,22 @@ msgstr "Token de atualização da Microsoft"
 #. module: microsoft_account
 #: model:ir.model,name:microsoft_account.model_microsoft_service
 msgid "Microsoft Service"
-msgstr "Serviço Microsoft"
+msgstr "Serviço do Microsoft"
 
 #. module: microsoft_account
 #: model:ir.model.fields,field_description:microsoft_account.field_res_users__microsoft_calendar_token_validity
 msgid "Microsoft Token Validity"
-msgstr "Validade do token da Microsoft"
+msgstr "Validade do token do Microsoft"
 
 #. module: microsoft_account
 #: model:ir.model.fields,field_description:microsoft_account.field_res_users__microsoft_calendar_token
 msgid "Microsoft User token"
-msgstr "Token de usuário da Microsoft"
+msgstr "Token de utilizador do Microsoft"
 
 #. module: microsoft_account
 #: model:ir.module.module,shortdesc:base.module_microsoft_account
 msgid "Microsoft Users"
-msgstr ""
+msgstr "Utilizadores do Microsoft"
 
 #. module: microsoft_account
 #. odoo-python
@@ -80,10 +84,10 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
 msgstr ""
-"Erro ao gerar seu token de acesso. Talvez seu código de autorização seja "
+"Ocorreu um erro ao gerar o seu token. O código de autorização pode ser "
 "inválido"
 
 #. module: microsoft_account
 #: model:ir.model,name:microsoft_account.model_res_users
 msgid "User"
-msgstr "Usuário"
+msgstr "Utilizador"

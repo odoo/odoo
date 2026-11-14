@@ -3,17 +3,18 @@
 # * stock_delivery
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 09:38+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "stock_delivery/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -32,6 +33,12 @@ msgid ""
 "When creating invoices from picking, the system is able to add and compute "
 "the shipping line.\n"
 msgstr ""
+"\n"
+"Toplamalarda teslimat yöntemleri eklemenize izin verir.\n"
+"===============================================\n"
+"\n"
+"Toplamalardan fatura oluştururken, sistem nakliye satırını ekleyebilir ve "
+"hesaplayabilir.\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -43,17 +50,17 @@ msgstr "%(name)s (Tahmini Maliyet: %(cost)s)"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 msgid "%(weight_name)s: %(weight)s %(uom)s"
-msgstr ""
+msgstr "%(weight_name)s: %(weight)s %(uom)s"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
 msgid "'Shipping-Document-%s' % object.name"
-msgstr ""
+msgstr "'Gönderim-Belgesi-%s' % object.name"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_labels
 msgid "'Shipping-Label-%s' % object.name"
-msgstr ""
+msgstr "'Gönderim-Etiketi-%s' % object.name"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
@@ -64,25 +71,29 @@ msgstr "(hesaplanan:"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "1. Download and print the Return label and place it in your package."
-msgstr ""
+msgstr "1. İade etiketini indirin, yazdırın ve paketinize yerleştirin."
 
 #. module: stock_delivery
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "2. Download and print the Shipping label and place it on your package."
-msgstr ""
+msgstr "2. Gönderim etiketini indirin, yazdırın ve paketinize yapıştırın."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Carrier Labels"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Taşıyıcı Etiketlerini "
+"Yapılandır"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Export Documents"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Belgeleri Dışa Aktar "
+"Yapılandırması"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -146,7 +157,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "A payment totaling"
-msgstr ""
+msgstr "Toplam tutarı ..."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
@@ -155,16 +166,18 @@ msgid ""
 "weight if the transfer is added to it.\n"
 "Leave this value as '0' if no weight limit."
 msgstr ""
+"Bu ağırlığı aşacak partilere transfer eklenmesi durumunda otomatik olarak "
+"transfer eklenmeyecektir. Ağırlık limiti yoksa bu değeri '0' olarak bırakın."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "Teslimat Emirleri onaylanırken gerçekleştirilecek eylem."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "All"
-msgstr ""
+msgstr "Tümü"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
@@ -174,33 +187,34 @@ msgstr "İzin Verilen Taşıyıcı"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
 msgid "Amount To Collect"
-msgstr ""
+msgstr "Tahsil Edilecek Tutar"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Delivery Methods"
-msgstr ""
+msgstr "Teslimat Yöntemlerinde uygulanabilir"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid "Auto Print Carrier Labels"
-msgstr ""
+msgstr "Taşıyıcı Etiketleri Otomatik Yazdır"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_export_documents
 msgid "Auto Print Export Documents"
-msgstr ""
+msgstr "Dışa Aktarılan Belgeleri Otomatik Yazdır"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 msgid "Automatically group batches by carriers"
-msgstr ""
+msgstr "Toplu işi taşıyıcılara göre otomatik olarak gruplandırın"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid ""
 "Automatically print the carrier labels of the picking when they are created."
 msgstr ""
+"Toplama oluşturulduğunda taşıyıcı etiketlerini otomatik olarak yazdırır."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_export_documents
@@ -209,11 +223,14 @@ msgid ""
 "created. Availability of export documents depends on the carrier and the "
 "destination."
 msgstr ""
+"Toplama oluşturulduğunda ihracat belgelerini otomatik olarak yazdırır. "
+"İhracat belgelerinin kullanılabilirliği taşıyıcıya ve varış noktasına "
+"bağlıdır."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_batch
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Toplu Transfer"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -247,7 +264,7 @@ msgstr "Nakliyeci Kodu"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Carrier Labels"
-msgstr ""
+msgstr "Taşıyıcı Etiketler"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
@@ -262,19 +279,19 @@ msgstr "Nakliyeci Adı"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Etiket basımı için kağıt yerleşimini seç"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Collect Payment"
-msgstr ""
+msgstr "Tahsilat Yap"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/ir_actions_report.py:0
 msgid "Configure a printer to print this report: '%s'"
-msgstr ""
+msgstr "Bu raporu yazdırmak için bir yazıcı yapılandırın: '%s'"
 
 #. module: stock_delivery
 #. odoo-python
@@ -283,16 +300,18 @@ msgid ""
 "Configure the carrier to generate labels in PDF format, or use a ZPL/ePOS "
 "printer to print %s from the chatter."
 msgstr ""
+"Etiketleri PDF formatında oluşturmak için taşıyıcıyı yapılandırın veya %s "
+"öğesini sohbetten yazdırmak için bir ZPL/ePOS yazıcı kullanın."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Confirm Payment"
-msgstr ""
+msgstr "Ödemeyi Onayla"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: stock_delivery
 #. odoo-python
@@ -303,37 +322,37 @@ msgstr "Maliyet: %(price).2f %(currency)s"
 #. module: stock_delivery
 #: model:ir.model,website_form_label:stock_delivery.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturun"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Tarafından oluşturuldu"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturuldu"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Kur"
 
 #. module: stock_delivery
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
 msgid "Delivery - Stock"
-msgstr ""
+msgstr "Teslimat - Stok"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "Teslim Yöntemi"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "Teslimat Yöntemi Seçim Sihirbazı"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -385,7 +404,7 @@ msgstr "Takip linklerini göster"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Shipping Label"
-msgstr ""
+msgstr "Gönderim Etiketini İndir"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -416,12 +435,12 @@ msgstr "Exception:"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export Documents"
-msgstr ""
+msgstr "Belgeleri Dışa Aktar"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export documents"
-msgstr ""
+msgstr "Belgeleri dışa aktar"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -462,7 +481,7 @@ msgstr "Entegrasyon Seviyesi"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Stok Rotası"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
@@ -477,17 +496,17 @@ msgstr "Ters Transfer"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
 msgid "Manage Printers"
-msgstr ""
+msgstr "Yazıcıları Yönet"
 
 #. module: stock_delivery
 #. odoo-python
@@ -498,7 +517,7 @@ msgstr "Manuel işlemler gerekebilir."
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_max_weight
 msgid "Maximum weight"
-msgstr ""
+msgstr "Maksimum ağırlık"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -513,7 +532,7 @@ msgstr "Tamam"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__order_ids
 msgid "Order"
-msgstr ""
+msgstr "Sipariş"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
@@ -536,23 +555,23 @@ msgstr "Paket çok ağır!"
 #: model:ir.model,name:stock_delivery.model_pay_on_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Pay on Delivery"
-msgstr ""
+msgstr "Teslimatta Öde"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "İşlem Tipi"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
 #: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Teslim Alma Noktası Verileri"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_label_layout
 msgid "Prepare Package Labels"
-msgstr ""
+msgstr "Paket Etiketlerini Hazırla"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -572,7 +591,7 @@ msgstr "Ürün Harketleri (Stok Hareket Satırları)"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Ürün Varyantı"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -592,17 +611,17 @@ msgstr "Gerçek Maliyet"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Rapor işlemi"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_section
 msgid "Reporting"
-msgstr ""
+msgstr "Raporlama"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_action
 msgid "Reset Linked Printers"
-msgstr ""
+msgstr "Bağlı Yazıcıları Sıfırla"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
@@ -666,12 +685,12 @@ msgstr "Nakliye Maliyeti"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_docs
 msgid "Shipping Documents"
-msgstr ""
+msgstr "Nakliye Belgeleri"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_export_docs_report
 msgid "Shipping Documents Report"
-msgstr ""
+msgstr "Sevkiyat Belgeleri Raporu"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -681,12 +700,12 @@ msgstr "Nakliye Bilgileri"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_labels
 msgid "Shipping Labels"
-msgstr ""
+msgstr "Nakliye Etiketleri"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_shipping_labels_report
 msgid "Shipping Labels Report"
-msgstr ""
+msgstr "Sevkiyat Etiketleri Raporu"
 
 #. module: stock_delivery
 #. odoo-python
@@ -728,6 +747,8 @@ msgid ""
 "Technical field: information needed by delivery providers in case of pickup "
 "point addresses."
 msgstr ""
+"Teknik alan: teslim alma noktası adresleri durumunda teslimat sağlayıcıları "
+"tarafından ihtiyaç duyulan bilgiler."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -789,6 +810,9 @@ msgid ""
 "still due are in different currencies. Validate the transfers one currency "
 "at a time to collect them."
 msgstr ""
+"Bu transferler, teslimatta ödemeli siparişler içindir ve ödenmesi gereken "
+"tutarlar farklı para birimlerindedir. Tahsil etmek için transferleri her "
+"seferinde bir para birimi olacak şekilde onaylayın."
 
 #. module: stock_delivery
 #. odoo-python
@@ -796,7 +820,7 @@ msgstr ""
 msgid ""
 "This action is meant to print %s attachments from the chatter: none was "
 "found."
-msgstr ""
+msgstr "Bu eylem, sohbetten %s eklerini yazdırmak içindir: hiçbiri bulunamadı."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
@@ -902,17 +926,17 @@ msgstr "Posta Kodu"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.package_zpl_label_delivery
 msgid "^FO310,200^A0N,44,33^FH^FD"
-msgstr ""
+msgstr "^FO310,200^A0N,44,33^FH^FD"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
 msgid "^FO35,180^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,180^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_normal_label
 msgid "^FO35,220^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,220^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
@@ -924,7 +948,7 @@ msgstr "^FS"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "and"
-msgstr ""
+msgstr "ve"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
@@ -934,6 +958,9 @@ msgid ""
 "configure a printer on the\n"
 "                    report form.<br/>"
 msgstr ""
+"toplama onaylandığında sohbet alanına yüklenir. Bunları onaylama sırasında "
+"otomatik olarak yazdırmak isterseniz, rapor formu üzerinde bir yazıcı "
+"yapılandırmanız gerekir.<br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -941,6 +968,8 @@ msgid ""
 "must be collected for\n"
 "                the delivery of the following orders:"
 msgstr ""
+"aşağıdaki siparişlerin teslimatı için\n"
+"                tahsil edilmelidir:"
 
 #~ msgid "<span>Shipping Weight: </span>"
 #~ msgstr "<span>Nakliye Ağırlığı: </span>"

@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-10-29 18:57+0000\n"
+"PO-Revision-Date: 2026-11-09 18:33+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-20/pos_stripe/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"20/pos_stripe/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr "Nome exibido"
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to fetch the Stripe account"
-msgstr ""
+msgstr "Não tem acesso para buscar a conta do Stripe"
 
 #. module: pos_stripe
 #. odoo-python
@@ -148,7 +148,7 @@ msgstr "Os leitores Stripe %s não estão listados na sua conta"
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Stripe's documentation"
-msgstr ""
+msgstr "Documentação do Stripe"
 
 #. module: pos_stripe
 #. odoo-python
@@ -168,6 +168,10 @@ msgid ""
 "(mccMessage)s To check whether your business is eligible, see %(link)s or "
 "contact Stripe support."
 msgstr ""
+"Gorjetas não podem ser adicionadas a este pagamento Stripe. O Stripe só "
+"permite gorjetas após o pagamento (sobrecaptura) para certas categorias de "
+"comerciante e marcas de cartão. %(mccMessage)s Para verificar se sua empresa "
+"é elegível, veja %(link)s ou entre em contato com o suporte do Stripe."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -180,12 +184,16 @@ msgstr "Não é possível reembolsar um pagamento não Stripe através do Stripe
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Your current Stripe account's merchant category code (MCC) is %(mcc)s."
 msgstr ""
+"O código de categoria de comerciante (MCC) da sua conta Stripe atual é %(mcc)"
+"s."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Your current Stripe account's merchant category code (MCC) is not set."
 msgstr ""
+"O código de categoria de comerciante (MCC) da sua conta Stripe atual não "
+"está definido."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number

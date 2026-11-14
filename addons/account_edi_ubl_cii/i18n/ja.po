@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-16 02:03+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
@@ -49,8 +49,8 @@ msgstr ""
 "電子請求モジュール\n"
 "===========================\n"
 "\n"
-"以下のフォーマットのエクスポートおよびインポートが可能です：E-FFF、UBL Bis 3"
-"、EHF3、NLCIUS、Factur-X (CII)、XRechnung (UBL)。\n"
+"以下のフォーマットのエクスポートおよびインポートが可能です：E-FFF、UBL Bis "
+"3、EHF3、NLCIUS、Factur-X (CII)、XRechnung (UBL)。\n"
 "請求書のPDFを生成する際、すべてのUBLフォーマットにおいて、PDFはXML内に埋め込"
 "まれます。これにより、\n"
 "受信者はXMLファイルだけでPDFを取得することが可能になります。 なお、**EHF3は"
@@ -58,8 +58,8 @@ msgstr ""
 "<HTTPS://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
 "#_implementation>`_）。\n"
 "\n"
-"なお、E-FFF、NLCIUS、およびXRechnung（UBL）は、それぞれベルギー、オランダ、"
-"ドイツの企業のみに\n"
+"なお、E-FFF、NLCIUS、およびXRechnung（UBL）は、それぞれベルギー、オランダ、ド"
+"イツの企業のみに\n"
 "利用可能です。UBL Bis 3は、`EASリスト\n"
 "<HTTPS://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_に記載されている国"
 "の企業のみに利用可能です。\n"
@@ -285,6 +285,7 @@ msgstr "元のファイルが見つかりません。再度インポートして
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
 msgstr "請求項目"
@@ -333,6 +334,14 @@ msgstr "設定"
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
 msgid "Contact"
 msgstr "連絡先"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -447,6 +456,7 @@ msgstr "Directorates of the European Commission"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "割引"
@@ -483,7 +493,8 @@ msgstr "表示名"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
-msgstr "ドキュメント許容値%(charge)s の明細行%(line)s ：金額が未設定です [IBR-031]。"
+msgstr ""
+"ドキュメント許容値%(charge)s の明細行%(line)s ：金額が未設定です [IBR-031]。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -500,7 +511,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
-msgstr "ドキュメント請求%(charge)s の明細行%(line)s ：金額が未設定です [IBR-036]。"
+msgstr ""
+"ドキュメント請求%(charge)s の明細行%(line)s ：金額が未設定です [IBR-036]。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -978,7 +990,8 @@ msgstr "明細行 %s: 品目の正味価格(単価)が未入力です [IBR-026]�
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr "明細行 %s: 品目の税カテゴリコード(税区分コード)が未入力です [IBR-SR-58]。"
+msgstr ""
+"明細行 %s: 品目の税カテゴリコード(税区分コード)が未入力です [IBR-SR-58]。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0200
@@ -1137,9 +1150,9 @@ msgid ""
 "penalties due in relation to this condition."
 msgstr ""
 "リバースチャージ：請求書受領後1か月以内に書面による異議申立てがない場合、顧客"
-"は、定期申告を行う義務を有する課税事業者であることを認めたものとみなされます"
-"。この条件が満たされない場合、顧客は、本条件に関連して支払うべき税額、利息お"
-"よび罰金の支払い責任を負うものとします。"
+"は、定期申告を行う義務を有する課税事業者であることを認めたものとみなされま"
+"す。この条件が満たされない場合、顧客は、本条件に関連して支払うべき税額、利息"
+"および罰金の支払い責任を負うものとします。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1533,6 +1546,16 @@ msgstr "UN/ECEコード"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
 msgid "USA EIN"
 msgstr "USA EIN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason

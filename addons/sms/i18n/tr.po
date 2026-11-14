@@ -19,18 +19,19 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-10-14 13:35+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 09:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/sms/tr/>"
 "\n"
 "Language: tr\n"
@@ -49,6 +50,10 @@ msgid ""
 "\n"
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
+"\n"
+"Bu modül, SMS mesajlaşması için bir çerçeve verir.\n"
+"\n"
+"Bu hizmet Odoo Satın Alma Uygulama platformu tarafından sağlanır.\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -142,7 +147,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span class=\"text-muted\">To</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Kime</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -170,7 +175,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A message can only be scheduled in comment mode"
-msgstr ""
+msgstr "Bir mesaj yalnızca yorum modunda planlanabilir"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
@@ -181,7 +186,7 @@ msgstr "Bu UUID için bir kayıt zaten mevcut"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "Bir mesaj planlamak için planlanmış bir tarih gereklidir"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -203,7 +208,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__alert
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__alert
 msgid "Alert"
-msgstr ""
+msgstr "İkaz"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
@@ -310,7 +315,7 @@ msgstr "Gönderen adınızı seçin"
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -347,7 +352,7 @@ msgstr "Ülkeye Özel Kayıt Gerekli"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Create an SMS Template"
-msgstr ""
+msgstr "Bir SMS Taslağı Oluştur"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -396,7 +401,7 @@ msgstr "Müşteri: otomatik SMS"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_database_non_active
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_database_non_active
 msgid "Database non active"
-msgstr ""
+msgstr "Veritabanı etkin değil"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
@@ -433,7 +438,7 @@ msgstr "İsim Göster"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
 msgid "Document Follower"
-msgstr ""
+msgstr "Belge Takipçisi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
@@ -464,12 +469,12 @@ msgstr "Kopyala"
 #. odoo-python
 #: code:addons/sms/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled SMS"
-msgstr ""
+msgstr "Planlanmış SMS'i Düzenle"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__email
 msgid "Email"
-msgstr ""
+msgstr "E-posta"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -597,7 +602,7 @@ msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Impossible to determine the model for the template."
-msgstr ""
+msgstr "Şablon için model belirlenemedi."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -719,7 +724,7 @@ msgstr "Silinmek üzere işaretlendi"
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__marketing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__marketing
 msgid "Marketing"
-msgstr ""
+msgstr "Pazarlama"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -731,7 +736,7 @@ msgstr "Mesaj"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notification"
-msgstr ""
+msgstr "Mesaj Bildirimi"
 
 #. module: sms
 #. odoo-javascript
@@ -744,7 +749,7 @@ msgstr "Kayıp Numara"
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
@@ -774,7 +779,7 @@ msgstr "Teslim Edilmedi"
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Not enough credits to send SMS"
-msgstr ""
+msgstr "SMS göndermek için yeterli kredi yok"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -849,7 +854,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Please provide a name for the template."
-msgstr ""
+msgstr "Lütfen şablon için bir isim belirtin."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -1120,7 +1125,7 @@ msgstr "SMS Şablonları sıfırlandı"
 #. module: sms
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr ""
+msgstr "SMS Metin Mesajı"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
@@ -1135,7 +1140,7 @@ msgstr "SMS içeriği"
 #. module: sms
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "SMS Ağ Geçidi"
 
 #. module: sms
 #. odoo-python
@@ -1167,34 +1172,34 @@ msgstr "Temizlenmiş Numara"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save Template"
-msgstr ""
+msgstr "Şablonu Kaydet"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save as SMS Template"
-msgstr ""
+msgstr "SMS Şablonu Olarak Kaydet"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Schedule"
-msgstr ""
+msgstr "Programlayın"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planlanan Tarih"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_scheduled_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mail_scheduled_message_id
 msgid "Scheduled Message"
-msgstr ""
+msgstr "Planlanmış Mesaj"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Scheduling messages is only supported on mail.thread models."
-msgstr ""
+msgstr "Mesaj zamanlama yalnızca mail.thread modellerinde desteklenir."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1206,7 +1211,7 @@ msgstr "SMS Şablonlarında Ara"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/sms_composer_template_selector.js:0
 msgid "Select a Template"
-msgstr ""
+msgstr "Bir Şablon Seçin"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1222,7 +1227,7 @@ msgstr "Gönder %(template_name)s"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__send_method
 msgid "Send Method"
-msgstr ""
+msgstr "Gönderim Yöntemi"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1354,7 +1359,7 @@ msgstr "SMS Şablonu"
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sms_type
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_type
 msgid "Sms Type"
-msgstr ""
+msgstr "SMS Türü"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
@@ -1381,7 +1386,7 @@ msgstr "Şablon Dosya Adı"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_name
 msgid "Template Name"
-msgstr ""
+msgstr "Şablon Adı"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
@@ -1672,13 +1677,13 @@ msgstr "SMS hesabınız başarıyla kaydedildi."
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your country is not supported due to sender registration legislation"
-msgstr ""
+msgstr "Gönderen kayıt mevzuatı nedeniyle ülkeniz desteklenmemektedir"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your database is not activated"
-msgstr ""
+msgstr "Veritabanınız etkinleştirilmemiş"
 
 #. module: sms
 #. odoo-python
@@ -1733,7 +1738,7 @@ msgstr "örn. en_US veya {{ object.partner_id.lang }}"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "e.g: Send order confirmation"
-msgstr ""
+msgstr "örn: Sipariş onayı gönderin"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

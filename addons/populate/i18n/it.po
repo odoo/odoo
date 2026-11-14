@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-10-22 14:17+0000\n"
+"PO-Revision-Date: 2026-11-13 10:37+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/populate/"
 "it/>\n"
@@ -29,7 +29,7 @@ msgstr "Errori in %(count)s lavori paralleli"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "%(operation)s blocks cannot define 'arg'."
-msgstr ""
+msgstr "%(operation)s blocchi non possono definire 'arg'."
 
 #. module: populate
 #. odoo-python
@@ -48,24 +48,26 @@ msgstr "'%(groupby)s' non è un campo valido per il modello '%(comodel_name)s'."
 #: code:addons/populate/models/blueprint.py:0
 msgid "'%(import_ref)s' refers to '%(model)s', not a populate blueprint."
 msgstr ""
+"'%(import_ref)s' fa riferimento a '%(model)s' e non a uno schema di "
+"popolamento."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for generated values."
-msgstr ""
+msgstr "'comodel_name' deve essere fornito per i valori generati."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "<import> may only contain inheritance specifications."
-msgstr ""
+msgstr "<import> può contenere solo specifiche di ereditarietà."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "<import> requires a fully qualified XML ID in 'ref'."
-msgstr ""
+msgstr "<import> richiede un ID XML completo in 'ref'."
 
 #. module: populate
 #. odoo-python
@@ -79,6 +81,9 @@ msgid ""
 "A job with this reference already exists in this session. References must be "
 "unique for create operations within a session."
 msgstr ""
+"Un lavoro con questo riferimento esiste già in questa sessione. I "
+"riferimenti devono essere univoci per le operazioni di creazione all'interno "
+"di una sessione."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -87,6 +92,9 @@ msgid ""
 "function jobs are allowed to have no record_count, whose cardinality is "
 "unknown at creation time."
 msgstr ""
+"Il record_count di un lavoro deve essere un intero positivo non nullo. Solo "
+"i lavori di scrittura e di funzione possono non avere un record_count, la "
+"cui cardinalità è sconosciuta al momento della creazione."
 
 #. module: populate
 #. odoo-python
@@ -100,12 +108,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "An import namespace cannot be empty."
-msgstr ""
+msgstr "Uno spazio dei nomi di importazione non può essere vuoto."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__batched
 msgid "Batched"
-msgstr ""
+msgstr "In lotti"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id
@@ -122,6 +130,9 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"Schema '%(blueprint)s': %(reason)s\n"
+"Definizione fallita:\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
@@ -172,6 +183,8 @@ msgid ""
 "Cannot infer valid targets for a generated value. The 'valid_targets' "
 "parameter must be explicitly provided."
 msgstr ""
+"Impossibile dedurre destinazioni valide per un valore generato. Il parametro "
+"'valid_targets' deve essere fornito esplicitamente."
 
 #. module: populate
 #. odoo-python
@@ -234,7 +247,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Couldn't find a unique value for target %(target)s."
-msgstr ""
+msgstr "Impossibile trovare un valore univoco per la destinazione %(target)s."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__create
@@ -245,13 +258,13 @@ msgstr "Crea"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks cannot define 'batched'."
-msgstr ""
+msgstr "I blocchi di creazione non possono definire 'batched'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks use 'id', not 'ref'."
-msgstr ""
+msgstr "I blocchi di creazione utilizzano 'id' e non 'ref'."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_create_job_without_domain
@@ -262,7 +275,7 @@ msgstr "La creazione di lavori non può definire un dominio."
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create reference '%(ref)s' is declared more than once."
-msgstr ""
+msgstr "Il riferimento di creazione '%(ref)s' è dichiarato più di una volta."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
@@ -325,6 +338,8 @@ msgid ""
 "Error applying blueprint inheritance from '%(parent)s' to '%(child)s': %"
 "(error)s"
 msgstr ""
+"Errore durante l'applicazione dell'ereditarietà dello schema da '%(parent)s' "
+"a '%(child)s': %(error)s"
 
 #. module: populate
 #. odoo-python
@@ -342,34 +357,36 @@ msgid ""
 "For write/function jobs: generate one value set and perform one call per "
 "executable job."
 msgstr ""
+"Per i job di scrittura/funzione: genera un insieme di valori ed eseguire una "
+"chiamata per ogni job eseguibile."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__function
 msgid "Function"
-msgstr ""
+msgstr "Funzione"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks require 'name'."
-msgstr ""
+msgstr "I blocchi funzione richiedono un 'nome'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'arg', not 'field'."
-msgstr ""
+msgstr "I blocchi funzione utilizzano 'arg', non 'campo'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "I blocchi funzione utilizzano 'ref', non 'id'."
 
 #. module: populate
 #: model:ir.module.module,summary:base.module_populate
 msgid "Generate synthetic data for an Odoo database"
-msgstr ""
+msgstr "Genera dati sintetici per un database Odoo"
 
 #. module: populate
 #: model:ir.module.module,description:base.module_populate
@@ -416,13 +433,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' must use XML."
-msgstr ""
+msgstr "Lo schema importato '%(import_ref)s' deve utilizzare XML."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' was not found."
-msgstr ""
+msgstr "Lo schema importato '%(import_ref)s' non è stato trovato."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
@@ -438,7 +455,7 @@ msgstr "Istruzioni"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Invalid import namespace '%(namespace)s'."
-msgstr ""
+msgstr "Spazio dei nomi di importazione non valido '%(namespace)s'."
 
 #. module: populate
 #. odoo-python
@@ -457,6 +474,8 @@ msgid ""
 "Invalid target dependencies: %(invalid_targets)s. These targets do not exist "
 "in the operation block."
 msgstr ""
+"Dipendenze di destinazione non valide: %(invalid_targets)s. Queste "
+"destinazioni non esistono nel blocco operativo."
 
 #. module: populate
 #. odoo-python
@@ -475,6 +494,8 @@ msgid ""
 "Invalid values %(invalid_values)s for %(target_type)s target. Allowed values "
 "are: %(possible_values)s."
 msgstr ""
+"Valori non validi %(invalid_values)s per la destinazione %(target_type)s. I "
+"valori consentiti sono: %(possible_values)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__is_done
@@ -522,24 +543,24 @@ msgstr "Ultimo aggiornamento il"
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__method_name
 msgid "Method Name"
-msgstr ""
+msgstr "Nome metodo"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__method_name
 msgid "Method called by function jobs."
-msgstr ""
+msgstr "Metodo chiamato dai job di funzione."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'model'."
-msgstr ""
+msgstr "'model' mancante."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'operation'."
-msgstr ""
+msgstr "'operation' mancante."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
@@ -565,7 +586,7 @@ msgstr "Nome modello"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Names used for multiple generated targets: %(names)s."
-msgstr ""
+msgstr "Nomi utilizzati per più destinazioni generate: %(names)s."
 
 #. module: populate
 #. odoo-python
@@ -574,6 +595,8 @@ msgid ""
 "No generator specified for target '%(target)s' of type '%(type)s', and no "
 "default generator is registered for that target type."
 msgstr ""
+"Nessun generatore specificato per il target '%(target)s' di tipo '%(type)s' "
+"e nessun generatore predefinito è registrato per quel tipo di destinazione."
 
 #. module: populate
 #. odoo-python
@@ -592,7 +615,7 @@ msgstr "Numero di worker paralleli che eseguiranno i lavori contemporaneamente"
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__operation
 msgid "Operation"
-msgstr ""
+msgstr "Operazione"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
@@ -612,13 +635,15 @@ msgstr "Percorso primario"
 #. module: populate
 #: model:ir.module.module,shortdesc:base.module_populate
 msgid "Populate"
-msgstr ""
+msgstr "Popola"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Positional arg names must be contiguous indexes from '0'."
 msgstr ""
+"I nomi degli argomenti posizionali devono essere indici contigui a partire "
+"da '0'."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_json
@@ -644,7 +669,7 @@ msgstr "Numero di record"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Recursive blueprint composition detected for '%(blueprint)s'."
-msgstr ""
+msgstr "Rilevata composizione ricorsiva dello schema per '%(blueprint)s'."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__ref
@@ -669,6 +694,12 @@ msgid ""
 "said reference.\n"
 "    "
 msgstr ""
+"Riferimento al lotto di record utilizzato dal processo.\n"
+"    Se l'operazione del processo è 'create' -> Annotare i record per il "
+"riferimento.\n"
+"    Se l'operazione del processo è 'write' o 'function' -> Fare riferimento "
+"ai record con tale riferimento.\n"
+"    "
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_model_data
@@ -709,7 +740,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Some blueprint definition(s) are invalid."
-msgstr ""
+msgstr "Alcune definizioni di schema non sono valide."
 
 #. module: populate
 #. odoo-python
@@ -735,7 +766,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Target: '%s'"
-msgstr ""
+msgstr "Destinazione: '%s'"
 
 #. module: populate
 #. odoo-python
@@ -744,6 +775,7 @@ msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
 "inherits from it."
 msgstr ""
+"Lo schema '%(parent)s' non ha una definizione XML ma '%(child)s' ne eredita."
 
 #. module: populate
 #. odoo-python
@@ -814,32 +846,32 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown <import> attribute(s): %(attributes)s."
-msgstr ""
+msgstr "Attributo/i <import> sconosciuto/i: %(attributes)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown field(s) on '%(model)s': %(fields)s."
-msgstr ""
+msgstr "Campo/i sconosciuto/i in '%(model)s': %(fields)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown model '%(model)s'."
-msgstr ""
+msgstr "Modello '%(model)s' sconosciuto."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown operation '%(operation)s'."
-msgstr ""
+msgstr "Operazione '%(operation)s' sconosciuta."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 #: code:addons/populate/models/job.py:0
 msgid "Unknown or non-callable method '%(method)s' on '%(model)s'."
-msgstr ""
+msgstr "Metodo '%(method)s' sconosciuto o non richiamabile su '%(model)s'."
 
 #. module: populate
 #. odoo-python
@@ -886,7 +918,7 @@ msgstr "Scrivi"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Write blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "I blocchi di scrittura utilizzano 'ref', non 'id'."
 
 #. module: populate
 #. odoo-python

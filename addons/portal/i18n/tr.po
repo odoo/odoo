@@ -22,19 +22,20 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-10-14 13:35+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 14:54+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/portal/"
 "tr/>\n"
 "Language: tr\n"
@@ -57,6 +58,16 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Bu modül, tam entegre bir müşteri portalı için gerekli temel kodu ekler.\n"
+"Temel denetleyici sınıfını ve temel şablonları içerir. İş eklentileri\n"
+"müşteriyi genişletmek için özel şablonlarını ve denetleyicilerini "
+"ekleyecektir\n"
+"portal.\n"
+"\n"
+"Bu modül, odoo v10 website_portal'dan gelen çoğu kodu içerir. Amaç\n"
+"Bu modülün amacı, bir müşteri portalının görüntülenmesine izin vermektir.\n"
+"web sitesi düzenleme ve özelleştirme yeteneklerine bağımlılık."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -67,25 +78,25 @@ msgstr "\" İşleminizi doğrulamak için."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "\"Authorization\": f\"bearer {mcp_key}\","
-msgstr ""
+msgstr "\"Authorization\": f\"bearer {mcp_key}\","
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "\"Content-Type\": \"application/json\","
-msgstr ""
+msgstr "\"Content-Type\": \"application/json\","
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "# Store the API key securely, not in the code."
-msgstr ""
+msgstr "# API anahtarını kodun içinde değil, güvenli bir şekilde saklayın."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "%(model_name)s shared with %(partner_names)s"
-msgstr ""
+msgstr "%(model_name)s, %(partner_names)s ile paylaşıldı"
 
 #. module: portal
 #. odoo-javascript
@@ -96,7 +107,7 @@ msgstr "%s gecikmiş günler"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_docs_entry
 msgid "'Icon for %s' % entry.name"
-msgstr ""
+msgstr "'%s için simge' % entry.name"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -117,7 +128,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid ""
 "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Discard"
-msgstr ""
+msgstr "<i class=\"fw-light oi me-2\" data-icon=\"keyboard_arrow_left\"/>Vazgeç"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
@@ -125,11 +136,13 @@ msgid ""
 "<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
 "label=\"Send Message\"/>"
 msgstr ""
+"<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Send Message\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/>Ekle"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -165,6 +178,8 @@ msgid ""
 "<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
 "Logout"
 msgstr ""
+"<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
+"Çıkış Yap"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -234,7 +249,7 @@ msgstr "<span class=\"small me-1 navbar-text\">Sıralama:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
 msgid "<span class=\"small text-muted\">Your Contact</span>"
-msgstr ""
+msgstr "<span class=\"small text-muted\">İletişim Bilginiz</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -268,7 +283,7 @@ msgstr "Erişim uyarısı"
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Account Details"
-msgstr ""
+msgstr "Hesap Detayları"
 
 #. module: portal
 #. odoo-python
@@ -332,13 +347,13 @@ msgstr "Zaten Kayıtlı"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "An email invitation has been sent to the selected users."
-msgstr ""
+msgstr "Seçilen kullanıcılara bir e-posta davetiyesi gönderildi."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
-msgstr ""
+msgstr "Profiliniz kaydedilirken bir hata oluştu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -369,12 +384,12 @@ msgstr "Fatura adresi"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing addresses"
-msgstr ""
+msgstr "Fatura adresleri"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__category
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -388,6 +403,9 @@ msgid ""
 "Changing %(field_description)s is not allowed once document(s) have been "
 "issued for your account. Please contact us directly for this operation."
 msgstr ""
+"Hesabınız için belge(ler) düzenlendikten sonra %(field_description)s alanını "
+"değiştirmeye izin verilmemektedir. Bu işlem için lütfen doğrudan bizimle "
+"iletişime geçin."
 
 #. module: portal
 #. odoo-python
@@ -396,6 +414,8 @@ msgid ""
 "Changing country is not allowed once document(s) have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"Hesabınız için belge(ler) düzenlendikten sonra ülkeyi değiştirmeye izin "
+"verilmemektedir. Bu işlem için lütfen doğrudan bizimle iletişime geçin."
 
 #. module: portal
 #. odoo-python
@@ -421,7 +441,7 @@ msgstr "Semt/İlçe"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "City..."
-msgstr ""
+msgstr "Şehir..."
 
 #. module: portal
 #. odoo-javascript
@@ -441,17 +461,17 @@ msgstr "Kapat"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.message_thread
 msgid "Communication History"
-msgstr ""
+msgstr "İletişim Geçmişi"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
 msgid "Config Card"
-msgstr ""
+msgstr "Yapılandırma Kartı"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
@@ -472,7 +492,7 @@ msgstr "Parolayı Doğrula"
 #. module: portal
 #: model:portal.entry,name:portal.portal_entry_base
 msgid "Connection & Security"
-msgstr ""
+msgstr "Bağlantı ve Güvenlik"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -497,7 +517,7 @@ msgstr "Kontaklar"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Panoya kopyalandı"
 
 #. module: portal
 #. odoo-javascript
@@ -514,13 +534,13 @@ msgstr "Ülke"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
-msgstr ""
+msgstr "Ülke..."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Create Key"
-msgstr ""
+msgstr "Anahtar Oluştur"
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -552,7 +572,7 @@ msgstr "Müşteri API Anahtarları"
 #: model:ir.module.module,shortdesc:base.module_portal
 #: model:ir.module.module,summary:base.module_portal
 msgid "Customer Portal"
-msgstr ""
+msgstr "Müşteri Portalı"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -593,7 +613,7 @@ msgstr "Teslimat adresi"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery addresses"
-msgstr ""
+msgstr "Teslimat adresleri"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -603,7 +623,7 @@ msgstr "Açıklama"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__description
 msgid "Description of Card"
-msgstr ""
+msgstr "Kart Açıklaması"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -635,7 +655,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Discard"
-msgstr ""
+msgstr "İptal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
@@ -697,7 +717,7 @@ msgstr "Son Kullanma Tarihi"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Expires"
-msgstr ""
+msgstr "Son Kullanma Tarihi"
 
 #. module: portal
 #. odoo-javascript
@@ -774,7 +794,7 @@ msgstr "Değiştirmek istiyorsanız, güncelleyin"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
-msgstr ""
+msgstr "Görsel"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -828,7 +848,7 @@ msgstr "Portal"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Key Name — your only way to identify that key"
-msgstr ""
+msgstr "Anahtar Adı — bu anahtarı tanımanızı sağlayan tek yol"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -906,7 +926,7 @@ msgstr "Adreslerim"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: portal
 #. odoo-javascript
@@ -978,7 +998,7 @@ msgstr "Telefon"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__placeholder_count
 msgid "Placeholder Count"
-msgstr ""
+msgstr "Yer tutucu Sayısı"
 
 #. module: portal
 #. odoo-javascript
@@ -1001,7 +1021,7 @@ msgstr "Portal Erişim URL"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_entry
 msgid "Portal Entry"
-msgstr ""
+msgstr "Portal Girişi"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -1152,7 +1172,7 @@ msgstr "Belgeyi Paylaş"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "Shared successfully"
-msgstr ""
+msgstr "Başarıyla paylaşıldı"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1162,7 +1182,7 @@ msgstr "İsteğe Bağlı Devralma Olarak Göster"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__show_in_portal
 msgid "Show in Portal"
-msgstr ""
+msgstr "Portalda Göster"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
@@ -1198,7 +1218,7 @@ msgstr "İl / Eyalet"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "State / Province..."
-msgstr ""
+msgstr "Eyalet / İl..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
@@ -1213,7 +1233,7 @@ msgstr "Cadde/Sokak ve Numara"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__url
 msgid "Target URL"
-msgstr ""
+msgstr "Hedef URL"
 
 #. module: portal
 #. odoo-javascript
@@ -1225,13 +1245,13 @@ msgstr "Teşekkürler!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_description)s is managed on your company account."
-msgstr ""
+msgstr "%(field_description)s, şirket hesabınız üzerinden yönetilmektedir."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_description)s is managed on your main account address."
-msgstr ""
+msgstr "%(field_description)s, ana hesap adresiniz üzerinden yönetilmektedir."
 
 #. module: portal
 #. odoo-python
@@ -1258,6 +1278,8 @@ msgstr "Ek mevcut değil veya eke erişim haklarınız yok."
 #: code:addons/portal/controllers/portal.py:0
 msgid "The company billing details can only be updated on the company account."
 msgstr ""
+"Şirket faturalandırma bilgileri yalnızca şirket hesabı üzerinden "
+"güncellenebilir."
 
 #. module: portal
 #. odoo-python
@@ -1331,6 +1353,8 @@ msgid ""
 "This key won't be shown again. Please copy it and store it securely. Treat "
 "it like a password, it grants full access to your account."
 msgstr ""
+"Bu anahtar bir daha gösterilmeyecek. Lütfen kopyalayın ve güvenli bir "
+"şekilde saklayın. Bir parola gibi davranın, hesabınıza tam erişim sağlar."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1357,13 +1381,13 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__name
 msgid "Title of Card"
-msgstr ""
+msgstr "Kart Başlığı"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "To login, use the following parameters (Python):"
-msgstr ""
+msgstr "Giriş yapmak için aşağıdaki parametreleri kullanın (Python):"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1377,6 +1401,8 @@ msgid ""
 "Updating VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Hesabınız için belge(ler) düzenlendikten sonra KDV numarasını güncellemeye "
+"izin verilmemektedir. Bu işlem için lütfen doğrudan bizimle iletişime geçin."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1458,7 +1484,7 @@ msgstr "Ana adresinizi arşivleyemezsiniz"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot edit another user's profile."
-msgstr ""
+msgstr "Başka bir kullanıcının profilini düzenleyemezsiniz."
 
 #. module: portal
 #. odoo-python
@@ -1487,7 +1513,7 @@ msgstr "Önce portala \"%s\" iş ortağına erişim izni vermelisiniz."
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "hesabınız"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1503,7 +1529,7 @@ msgstr "Posta Kodu"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "e.g. \"Odoo MCP\""
-msgstr ""
+msgstr "örn. \"Odoo MCP\""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1514,13 +1540,13 @@ msgstr "sizi aşağıdaki bilgilere erişmeye davet etti"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "headers = {"
-msgstr ""
+msgstr "headers = {"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "import requests"
-msgstr ""
+msgstr "import requests"
 
 #. module: portal
 #. odoo-javascript
@@ -1532,7 +1558,7 @@ msgstr "oturum açıldı"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
-msgstr ""
+msgstr "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1542,7 +1568,7 @@ msgstr "odoo"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__sequence
 msgid "sequence"
-msgstr ""
+msgstr "sıra"
 
 #. module: portal
 #. odoo-javascript
@@ -1554,7 +1580,7 @@ msgstr "bir yorum gönder."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "url = \""
-msgstr ""
+msgstr "url = \""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields

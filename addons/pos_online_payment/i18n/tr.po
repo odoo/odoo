@@ -3,17 +3,18 @@
 # * pos_online_payment
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-08-31 19:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 11:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "pos_online_payment/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -28,16 +29,18 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"lock\"/>Payment secured · Don't close this "
 "window"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"lock\"/>Ödeme güvence altında · Bu "
+"pencereyi kapatmayın"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Order</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Sipariş</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Total</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Toplam</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -87,7 +90,7 @@ msgstr "İzin Verilen Sağlayıcılar"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Almost there!"
-msgstr ""
+msgstr "Az kaldı!"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -182,6 +185,10 @@ msgid ""
 "from this device, maybe from another. If you continue, you risk to pay the "
 "order twice. Only continue if you're sure the earlier attempt was abandoned."
 msgstr ""
+"Bu sipariş için bir ödeme zaten işleniyor gibi görünüyor — belki bu "
+"cihazdan, belki başkasından. Devam ederseniz, siparişi iki kez ödeme "
+"riskiniz vardır. Yalnızca daha önceki denemenin terk edildiğinden eminseniz "
+"devam edin."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
@@ -208,7 +215,7 @@ msgstr "Çevrim İçi Ödeme Yöntemi"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Online Payment Transfer"
-msgstr ""
+msgstr "Çevrim İçi Ödeme Transferi"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -263,7 +270,7 @@ msgstr "POS Siparişi"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "POS Receivable Transfer"
-msgstr ""
+msgstr "Satış Noktası Alacak Transferi"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -285,13 +292,14 @@ msgstr "Ödeme İşlemi"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Payment provider requirement"
-msgstr ""
+msgstr "Ödeme sağlayıcı gereksinimi"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Please ensure you have a customer with an email address on this order."
 msgstr ""
+"Lütfen bu siparişte e-posta adresi olan bir müşteriniz olduğundan emin olun."
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_config
@@ -301,22 +309,22 @@ msgstr "Satış Noktası Yapılandırması"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Satış Noktası Siparişi"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Satış Noktası Ödemesi"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Satış Noktası Ödeme Yöntemi"
 
 #. module: pos_online_payment
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "Satış Noktası çevrim içi ödeme"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -332,13 +340,13 @@ msgstr "Sunucu hatası"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Skip <i class=\"oi ms-1\" data-icon=\"east\"/>"
-msgstr ""
+msgstr "Atla <i class=\"oi ms-1\" data-icon=\"east\"/>"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "The %s already has one online payment."
-msgstr ""
+msgstr "%s için zaten bir çevrim içi ödeme bulunuyor."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -376,7 +384,7 @@ msgstr "Bu ödemeyle ilişkilendirilmiş Satış Noktası siparişi"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The QR code payment could not be generated."
-msgstr ""
+msgstr "QR kodlu ödeme oluşturulamadı."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -538,7 +546,7 @@ msgstr "İşlem Referansı"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
-msgstr ""
+msgstr "Çevrim İçi Ödeme transferi %(account_name)s => %(pos_receivable_name)s"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -559,7 +567,7 @@ msgstr "Güncellenmiş çevrim içi ödemeler"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "We're confirming your payment."
-msgstr ""
+msgstr "Ödemenizi onaylıyoruz."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -579,11 +587,14 @@ msgid ""
 ">\n"
 "                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
+"Ödemenizi onaylayan bir e-postayı birkaç dakika içinde almalısınız.<br/>\n"
+"                        Eğer almazsanız bizimle iletişime geçmekten "
+"çekinmeyin."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "Ödemeniz yolda!"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment

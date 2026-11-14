@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-05 09:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-13 08:40+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/nl/>\n"
@@ -327,6 +327,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"></t>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hallo <t t-"
+"out=\"client_name\">Naam van de klant</t>,</t>\n"
+"                        <t t-else=\"\">Hallo,</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Bedankt voor je aankoop bij <t t-"
+"out=\"store_name\">Naam van de winkel</t>!</div>\n"
+"                    <div>In de bijlage vind je je aankoopbewijs voor "
+"<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">datum</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">tijd</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Met vriendelijke groet,</div>\n"
+"                    <br>\n"
+"                    <t t-out=\"store_name\">Naam van de winkel</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -1742,7 +1772,7 @@ msgstr "Vóór 19.1:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr ""
+msgstr "Kassabon"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1759,7 +1789,7 @@ msgstr "Facturatie-adres:"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "Bills"
-msgstr "Leveranciersfacturen"
+msgstr "Kassabonnen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1813,7 +1843,7 @@ msgstr "Broden"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Break Combo"
-msgstr ""
+msgstr "Combo splitsen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4742,7 +4772,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -9820,7 +9850,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/loader.js:0
 msgid "Still loading, thank you for your patience…"
-msgstr ""
+msgstr "Nog steeds aan het laden. Bedankt voor je geduld."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10461,6 +10491,15 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The order was validated with a total of %(paid)s, but its lines now amount "
+"to %(total)s because they were changed on another device. The order stays "
+"open until the difference is settled."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
 msgstr "Het betaalde bedrag is anders dan het totaalbedrag van de order."
 
@@ -10482,6 +10521,15 @@ msgid "The password is located on the back of the printer (remove covers)."
 msgstr ""
 "Het wachtwoord bevindt zich aan de achterkant van de printer (verwijder de "
 "afdekkingen)."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The payment method %(payment_method)s has no outstanding account, its "
+"payments cannot be posted.\n"
+"Set an outstanding account on it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -12253,7 +12301,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr "Je {{ object.config_id.name }} ticket"
+msgstr "Je bon {{ object.config_id.name }}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details

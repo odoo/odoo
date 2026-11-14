@@ -15,18 +15,20 @@
 # abc Def <hdogan1974@gmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 19:45+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
-"resource/tr/>\n"
+"PO-Revision-Date: 2026-11-12 10:38+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/resource/"
+"tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +49,13 @@ msgid ""
 "it wants, optionally up to an hours target.\n"
 "        "
 msgstr ""
+"\n"
+"    - Sabit: her hafta aynı şekilde tekrarlanan haftalık katılım düzeni.\n"
+"    - Değişken: tekrarlayan bir haftalık düzen yerine, tek seferlik bir plan "
+"veya çok haftalık dönüş gibi belirli tarihlerde ayarlanan katılımlar.\n"
+"    - Tanımlanmamış: hiçbir önceden tanımlanmış aralık yok. Kaynak, isteğe "
+"bağlı olarak bir saat hedefine kadar dilediği zaman çalışabilir.\n"
+"        "
 
 #. module: resource
 #: model:ir.module.module,description:base.module_resource
@@ -61,6 +70,15 @@ msgid ""
 "calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 msgstr ""
+"\n"
+"Kaynak yönetimi için modül.\n"
+"===============================\n"
+"\n"
+"Bir kaynak, planlanabilecek bir şeyi temsil eder (bir görevdeki geliştirici "
+"veya üretim\n"
+"emirlerindeki bir iş merkezi gibi). Bu modül, her kaynakla ilişkilendirilmiş "
+"bir kaynak\n"
+"takvimini yönetir. Ayrıca her kaynağın izinlerini de yönetir.\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -71,7 +89,7 @@ msgstr "İş Kaynakları"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "%(duration)s hours A"
-msgstr ""
+msgstr "%(duration)s saat A"
 
 #. module: resource
 #. odoo-python
@@ -80,23 +98,25 @@ msgid ""
 "%(header)s\n"
 "%(issue)s"
 msgstr ""
+"%(header)s\n"
+"%(issue)s"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "%(hour_from)s - %(hour_to)s (%(duration)s) A"
-msgstr ""
+msgstr "%(hour_from)s - %(hour_to)s (%(duration)s) A"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/res_company.py:0
 msgid "40 hours/week"
-msgstr ""
+msgstr "40 saat/hafta"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "<i class=\"oi\" data-icon=\"east\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"east\" title=\"-\"/>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -106,22 +126,22 @@ msgstr "<span class=\"o_stat_text\">İzin</span>"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"text-muted ms-2\">(</span>"
-msgstr ""
+msgstr "<span class=\"text-muted ms-2\">(</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"text-muted\">/d</span><span class=\"text-muted\">)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">/g</span><span class=\"text-muted\">)</span>"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_recurrency_until
 msgid "A recurrency should finish after the first occurence"
-msgstr ""
+msgstr "Bir yineleme ilk oluşumdan sonra bitmelidir"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__count_as__absence
 msgid "Absence"
-msgstr ""
+msgstr "İzinli"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -138,7 +158,7 @@ msgstr "Öğleden Sonra"
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "All events"
-msgstr ""
+msgstr "Tüm Etkinlikler"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -155,6 +175,8 @@ msgid ""
 "Are you sure? This calendar is already used.\n"
 "All the attendances will be deleted for this calendar"
 msgstr ""
+"Emin misiniz? Bu takvim zaten kullanılıyor.\n"
+"Bu takvim için tüm katılımcılar silinecek"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
@@ -177,19 +199,19 @@ msgstr "Bir kaynağın bu takvimle çalışması gereken günde ortalama saat."
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Average hours per day must be between 0 and 24."
-msgstr ""
+msgstr "Günlük ortalama saat 0 ile 24 arasında olmalıdır."
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_attendance_calendar_one2many/resource_calendar_attendance_calendar_one2many_field.js:0
 msgid "Calendar One2Many"
-msgstr ""
+msgstr "Takvim One2Many"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__calendar_type
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_type
 msgid "Calendar Type"
-msgstr ""
+msgstr "Takvim Türü"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -199,7 +221,7 @@ msgstr "Kapanış Günleri"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__color
 msgid "Color"
-msgstr ""
+msgstr "Renk"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_company
@@ -216,28 +238,28 @@ msgstr "Firma"
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
 msgid "Confirm the calendar type change"
-msgstr ""
+msgstr "Takvim türü değişikliğini onayla"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
 msgid "Continue"
-msgstr ""
+msgstr "Devam edin"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__count_as
 msgid "Count As"
-msgstr ""
+msgstr "Olarak Say"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_id
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Ülke Kodu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
@@ -274,12 +296,12 @@ msgstr "Haftanın Günü"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_type__days
 msgid "Days"
-msgstr ""
+msgstr "Gün"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__days_per_week
 msgid "Days per Week"
-msgstr ""
+msgstr "Haftalık gün"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
@@ -295,6 +317,8 @@ msgid ""
 "Define the working schedule of the resource. Assign a flexible calendar for "
 "fully flexible working hours."
 msgstr ""
+"Kaynağın çalışma planını tanımlayın. Tamamen esnek çalışma saatleri için "
+"esnek bir takvim atayın."
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -309,13 +333,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "İptal"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__display_name
@@ -331,12 +355,12 @@ msgstr "İsim Göster"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "Duration"
-msgstr ""
+msgstr "Süre"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_based
 msgid "Duration Based"
-msgstr ""
+msgstr "Süreye Dayalı"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
@@ -363,12 +387,12 @@ msgstr "Sadece veri paylaşımı amaçlı, kısıtlı erişimi olan dış kullan
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__fixed
 msgid "Fixed"
-msgstr ""
+msgstr "Sabit"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "Sonsuza dek"
 
 #. module: resource
 #. odoo-javascript
@@ -411,7 +435,7 @@ msgstr "Saat"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "Günde Saat"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
@@ -424,7 +448,7 @@ msgstr "Haftalık Saat"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Hours per week must be between 0 and 168."
-msgstr ""
+msgstr "Haftalık toplam saat 0 ile 168 arasında olmalıdır."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -473,7 +497,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_interval
 msgid "Interval"
-msgstr ""
+msgstr "Aralık"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
@@ -484,19 +508,19 @@ msgstr "Tam Zamanlı mı"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Issue on %(date)s:"
-msgstr ""
+msgstr "Tarihindeki sorun %(date)s:"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Issue on %(dayofweek)s:"
-msgstr ""
+msgstr "Sorun: %(dayofweek)s"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Issue:"
-msgstr ""
+msgstr "Sorun:"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -523,7 +547,7 @@ msgstr "Malzeme"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_material_from_calendar
 msgid "Material Resources"
-msgstr ""
+msgstr "Maddi Kaynaklar"
 
 #. module: resource
 #. odoo-javascript
@@ -546,7 +570,7 @@ msgstr "Adı"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_count
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "Tekrar Sayısı"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__recurrency_interval
@@ -564,13 +588,13 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__times
 msgid "Occurrences"
-msgstr ""
+msgstr "Karşılaşılan durumlar"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Overlap of attendances"
-msgstr ""
+msgstr "Katılımcı çakışması"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -590,7 +614,7 @@ msgstr "Telefon"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Preview"
-msgstr ""
+msgstr "Önizle"
 
 #. module: resource
 #. odoo-python
@@ -608,37 +632,38 @@ msgstr "Sebep"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_end_type
 msgid "Recurrence End Condition"
-msgstr ""
+msgstr "Yineleme Bitiş Koşulu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_until
 msgid "Recurrence End Date"
-msgstr ""
+msgstr "Yineleme Bitiş Tarihi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency
 msgid "Recurrency"
-msgstr ""
+msgstr "Yinelenme"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_excluded_occurences
 msgid "Recurrency Excluded Occurences"
-msgstr ""
+msgstr "Yinelemeden Hariç Tutulan Oluşumlar"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
-msgstr ""
+msgstr "Yineleme Türü"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference Calendar"
-msgstr ""
+msgstr "Referans Takvim"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference working hours used to compute the full-time equivalent."
 msgstr ""
+"Tam zamanlı eşdeğeri hesaplamak için kullanılan referans çalışma saatleri."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
@@ -648,7 +673,7 @@ msgstr "Kaynağın erişimini yönetmek için ilişkilendirilmiş kullanıcı."
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "Repeat every"
-msgstr ""
+msgstr "Tekrarlama Durumu"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -692,7 +717,7 @@ msgstr "Kaynağın Takvimi"
 #. module: resource
 #: model:ir.actions.server,name:resource.ir_cron_calendar_clean_up_ir_actions_server
 msgid "Resource: Clean up calendar attendances"
-msgstr ""
+msgstr "Kaynak: Takvim katılımcılarını temizle"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -732,7 +757,7 @@ msgstr "Cumartesi"
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -796,21 +821,23 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"İki karakterde ISO ülke kodu.\n"
+"Hızlı arama için bu alanı kullanabilirsiniz."
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_duration_hours
 msgid "The attendance should have a duration between 0 and 24 hours"
-msgstr ""
+msgstr "Katılımcı süresi 0 ile 24 saat arasında olmalıdır"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_count
 msgid "The recurrency count should be greater than 0"
-msgstr ""
+msgstr "Yineleme sayısı 0'dan büyük olmalıdır"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_interval
 msgid "The recurrency interval should be greater than 0"
-msgstr ""
+msgstr "Yineleme aralığı 0'dan büyük olmalıdır"
 
 #. module: resource
 #. odoo-python
@@ -822,7 +849,7 @@ msgstr "İzin başlangıç tarihi bitiş tarihinden önce olmalıdır."
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "This and following events"
-msgstr ""
+msgstr "Bu ve aşağıdaki olaylar"
 
 #. module: resource
 #. odoo-python
@@ -831,12 +858,14 @@ msgid ""
 "This date is excluded of the recurrency, to start a new one on this date you "
 "should create it from scratch"
 msgstr ""
+"Bu tarih yinelemenin dışında bırakılmıştır, bu tarihte yeni bir tane "
+"başlatmak için sıfırdan oluşturmanız gerekir"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "This event"
-msgstr ""
+msgstr "Bu etkinlik"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
@@ -871,7 +900,7 @@ msgstr "Perşembe"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "Time"
-msgstr ""
+msgstr "Zaman"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
@@ -900,13 +929,13 @@ msgstr "Saat Dilimi"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Too Complex Calendar"
-msgstr ""
+msgstr "Çok Karmaşık Takvim"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Total duration of attendances cannot exceed 24 hours"
-msgstr ""
+msgstr "Toplam katılımcı süresi 24 saati aşamaz"
 
 #. module: resource
 #. odoo-javascript
@@ -924,12 +953,12 @@ msgstr "Tip"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__undefined
 msgid "Undefined"
-msgstr ""
+msgstr "Tanımlanmamış"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__date
 msgid "Until"
-msgstr ""
+msgstr "Bitiş"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_users
@@ -941,14 +970,14 @@ msgstr "Kullanıcı"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__variable
 msgid "Variable"
-msgstr ""
+msgstr "Değişken"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
 msgid "Variable (%(hours)sh on %(days)s days / week)"
-msgstr ""
+msgstr "Değişken (%(hours)ss, haftada %(days)s gün)"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -966,7 +995,7 @@ msgstr "Çarşamba"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_type__weeks
 msgid "Weeks"
-msgstr ""
+msgstr "Hafta"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__count_as
@@ -1027,7 +1056,7 @@ msgstr "Çalışma Saatleri"
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 msgid "Working Hours by Day"
-msgstr ""
+msgstr "Günlük Çalışma Saatleri"
 
 #. module: resource
 #. odoo-python
@@ -1061,17 +1090,18 @@ msgstr "Çalışma Süresi"
 msgid ""
 "You can't have duration based and time based attendances on the same day"
 msgstr ""
+"Aynı gün içinde hem süreye dayalı hem de zamana dayalı katılımcılar olamaz"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "You cannot compute the intervals without a calendar on no resource."
-msgstr ""
+msgstr "Hiçbir kaynakta takvim olmadan aralıkları hesaplayamazsınız."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "from company"
-msgstr ""
+msgstr "şirketten"
 
 #~ msgid ""
 #~ "Define the working schedule of the resource. If not set, the resource "

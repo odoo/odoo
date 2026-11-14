@@ -10,15 +10,16 @@
 # Jolien De Paepe, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 18:18+0000\n"
-"PO-Revision-Date: 2026-08-31 13:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
-"l10n_be/fr/>\n"
+"PO-Revision-Date: 2026-11-10 15:32+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/l10n_be/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +70,45 @@ msgid ""
 "Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
 msgstr ""
+"Ce module de base permet de gérer le plan comptable belge dans Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Après l'installation de ce module, l'assistant de configuration comptable "
+"est lancé.\n"
+"    * Des modèles de comptes sont disponibles pour faciliter la génération "
+"des plans comptables.\n"
+"    * Dans cet assistant, il vous sera demandé de renseigner le nom de la "
+"société,\n"
+"      le modèle de plan comptable à utiliser, le nombre de chiffres à "
+"générer, le code de votre\n"
+"      compte comptable et de votre compte bancaire, ainsi que la devise pour "
+"créer les journaux.\n"
+"\n"
+"Une copie conforme du modèle de plan comptable est ainsi générée.\n"
+"\n"
+"Assistants fournis par ce module :\n"
+"--------------------------------\n"
+"    * Relevé intracommunautaire : répertorie les partenaires avec leurs "
+"numéros de TVA et les montants\n"
+"      facturés correspondants. Prépare un fichier au format XML.\n"
+"\n"
+"        **Chemin d'accès :** Facturation/Rapports/Rapports légaux/"
+"Déclarations belges/Relevé intracommunautaire\n"
+"    * Déclaration périodique de TVA : prépare un fichier XML pour la "
+"déclaration de TVA de\n"
+"      la société principale de l'utilisateur actuellement connecté.\n"
+"\n"
+"        **Chemin d'accès :** Facturation/Rapports/Rapports légaux/"
+"Déclarations belges/Déclaration périodique de TVA\n"
+"    * Listing annuel des clients assujettis à la TVA : prépare un fichier "
+"XML pour la\n"
+"      déclaration de TVA de la société principale de l'utilisateur "
+"actuellement connecté, sur la base de\n"
+"      l'exercice fiscal.\n"
+"\n"
+"        **Chemin d'accès :** Facturation/Rapports/Rapports légaux/"
+"Déclarations belges/Listing annuel des clients assujettis à la TVA\n"
+"\n"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_account_chart_template
@@ -100,7 +140,7 @@ msgstr "Belgique (+++000/2024/00182+++)"
 #. module: l10n_be
 #: model:ir.module.module,shortdesc:base.module_l10n_be
 msgid "Belgium - Accounting"
-msgstr ""
+msgstr "Belgique - Comptabilité"
 
 #. module: l10n_be
 #: model:ir.model.fields,field_description:l10n_be.field_account_journal__invoice_reference_model
@@ -116,7 +156,7 @@ msgstr "Sociétés"
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: l10n_be
 #: model:ir.model.fields,field_description:l10n_be.field_account_chart_template__display_name

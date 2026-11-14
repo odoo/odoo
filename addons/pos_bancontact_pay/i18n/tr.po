@@ -3,13 +3,15 @@
 # * pos_bancontact_pay
 #
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-11-03 12:33+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 10:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "pos_bancontact_pay/tr/>\n"
 "Language: tr\n"
@@ -28,67 +30,75 @@ msgid ""
 "This currency is not supported.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"Bir Bancontact Pay ödeme yöntemi, şirketin varsayılan para birimini kullanan "
+"bir yevmiyeye bağlanmıştır.\n"
+"Bu para birimi desteklenmemektedir.\n"
+"Desteklenen para birimleri: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has expired."
-msgstr ""
+msgstr "Sipariş %s için yapılan bir ödemenin süresi doldu."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has failed."
-msgstr ""
+msgstr "Sipariş %s için yapılan bir ödeme başarısız oldu."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s was cancelled."
-msgstr ""
+msgstr "Sipariş %s için yapılan bir ödeme iptal edildi."
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,summary:base.module_pos_bancontact_pay
 msgid "Accept Bancontact Pay and Wero QR code payments in POS (Payconiq)."
 msgstr ""
+"Satış Noktası'nda Bancontact Pay ve Wero QR kodlu ödemeleri kabul edin "
+"(Payconiq)."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Access denied. Please check your Bancontact permissions."
-msgstr ""
+msgstr "Erişim engellendi. Lütfen Bancontact izinlerinizi kontrol edin."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Authentication with Bancontact failed. Please verify your API key."
 msgstr ""
+"Bancontact ile kimlik doğrulama başarısız oldu. Lütfen API anahtarınızı "
+"doğrulayın."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
 msgid "Bancontact API Key"
-msgstr ""
+msgstr "Bancontact API Anahtarı"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment__bancontact_id
 msgid "Bancontact ID"
-msgstr ""
+msgstr "Bancontact Kimliği"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid "Bancontact PPID"
-msgstr ""
+msgstr "Bancontact PPID"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
 msgid "Bancontact PPID must be set to generate the sticker URL."
-msgstr ""
+msgstr "Etiket URL'sini oluşturmak için Bancontact PPID ayarlanmalıdır."
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Bancontact Pay"
-msgstr ""
+msgstr "Bancontact Pay"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -97,6 +107,8 @@ msgid ""
 "Bancontact Pay only supports these currencies: %(currencies)s.\n"
 "The linked journal uses a different currency."
 msgstr ""
+"Bancontact Pay yalnızca şu para birimlerini destekler: %(currencies)s.\n"
+"Bağlı yevmiye farklı bir para birimi kullanmaktadır."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
@@ -104,6 +116,8 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a product "
 "> Manage API keys > View API key"
 msgstr ""
+"Bancontact Pro Portal > Yönetim Merkezi > Mağazalar ve ürünler > Bir ürün "
+"seçin > API anahtarlarını yönetin > API anahtarını görüntüleyin"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
@@ -111,12 +125,14 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > "
 "Read the product ID from the card"
 msgstr ""
+"Bancontact Pro Portal > Yönetim Merkezi > Mağazalar ve ürünler > Bir mağaza "
+"seçin > Karttan ürün kimliğini okuyun"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Bancontact is currently unavailable. Please try again later."
-msgstr ""
+msgstr "Bancontact şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -125,6 +141,8 @@ msgid ""
 "Bancontact payments can only be cancelled for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"Bancontact ödemeleri yalnızca sağlayıcı olarak Bancontact Pay kullanan ödeme "
+"yöntemleri için iptal edilebilir."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -133,6 +151,8 @@ msgid ""
 "Bancontact payments can only be created for payment methods using Bancontact "
 "Pay as provider."
 msgstr ""
+"Bancontact ödemeleri yalnızca sağlayıcı olarak Bancontact Pay kullanan ödeme "
+"yöntemleri için oluşturulabilir."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -141,6 +161,8 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods configured "
 "with 'Static Sticker' usage."
 msgstr ""
+"Bancontact etiket URL'si yalnızca 'Sabit Etiket' kullanımı ile "
+"yapılandırılmış ödeme yöntemleri için oluşturulabilir."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -149,17 +171,19 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"Bancontact etiket URL'si yalnızca sağlayıcı olarak Bancontact Pay kullanan "
+"ödeme yöntemleri için oluşturulabilir."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
@@ -170,6 +194,11 @@ msgid ""
 "- Static Sticker: A fixed QR sticker placed near the counter is used for "
 "scanning with every order."
 msgstr ""
+"QR Kodunun müşteriye nasıl sunulacağını tanımlar:\n"
+"- Ekran Üzerinde Görüntüleme: Her sipariş için ekranda dinamik olarak yeni "
+"bir QR kodu gösterilir.\n"
+"- Sabit Etiket: Her siparişte tarama için tezgahın yanına yerleştirilmiş "
+"sabit bir QR etiketi kullanılır."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__display_name
@@ -183,13 +212,13 @@ msgstr "Görüntülenen Ad"
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Download Sticker"
-msgstr ""
+msgstr "Çıkartmayı İndir"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "Zorla İptal Et"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__id
@@ -212,17 +241,19 @@ msgid ""
 "Merchant profile not found on Bancontact. Please check your Payment Profile "
 "ID (ppid)."
 msgstr ""
+"Bancontact'ta satıcı profili bulunamadı. Lütfen Ödeme Profili Kimliğinizi "
+"(ppid) kontrol edin."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Hay aksi !"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__display
 msgid "On-Screen Display"
-msgstr ""
+msgstr "Ekran Görüntüsü"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -231,11 +262,13 @@ msgid ""
 "One Bancontact Pay sticker payment method can only be linked to one POS "
 "configuration."
 msgstr ""
+"Bir Bancontact Pay çıkartmalı ödeme yöntemi yalnızca bir Satış Noktası "
+"yapılandırmasına bağlanabilir."
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,shortdesc:base.module_pos_bancontact_pay
 msgid "POS Bancontact Pay & Wero"
-msgstr ""
+msgstr "Satış Noktası Bancontact Pay & Wero"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -244,78 +277,81 @@ msgid ""
 "Payment at %s\n"
 "POS %s"
 msgstr ""
+"Ödeme yeri: %s\n"
+"Satış Noktası %s"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment cancelled"
-msgstr ""
+msgstr "Ödeme iptal edildi"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment expired"
-msgstr ""
+msgstr "Ödeme süresi doldu"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment failed"
-msgstr ""
+msgstr "Ödeme başarısız"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment received"
-msgstr ""
+msgstr "Ödeme alındı"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Satış Noktası Yapılandırması"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Satış Noktası Ödemesi"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Satış Noktası Ödeme Yöntemi"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Preprod"
-msgstr ""
+msgstr "Preprod"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/pos_bancontact_pay/static/src/customer_display/customer_display.xml:0
 msgid "QR Code"
-msgstr ""
+msgstr "QR kod"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
 msgid "QR Usage"
-msgstr ""
+msgstr "QR Kullanımı"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Rate limit reached with Bancontact. Please wait and try again."
 msgstr ""
+"Bancontact ile hız sınırına ulaşıldı. Lütfen bekleyin ve tekrar deneyin."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Run transactions in Bancontact's preprod environment."
-msgstr ""
+msgstr "İşlemleri Bancontact'ın preprod ortamında çalıştırın."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
 msgid "Static Sticker"
-msgstr ""
+msgstr "Sabit Çıkartma"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -325,18 +361,24 @@ msgid ""
 "to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
+"Bancontact çıkartmalı ödeme yöntemi '%(method_name)s' zaten başka bir Satış "
+"Noktası yapılandırmasına (%(config_names)s) atanmış durumda.\n"
+"Bir çıkartma aynı anda yalnızca bir Satış Noktası yapılandırmasına "
+"bağlanabilir."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "The action could not be completed. Please try again or contact support."
 msgstr ""
+"İşlem tamamlanamadı. Lütfen tekrar deneyin veya destek ekibiyle iletişime "
+"geçin."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "The amount must be positive to use this payment method."
-msgstr ""
+msgstr "Bu ödeme yöntemini kullanmak için tutar pozitif olmalıdır."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -344,7 +386,7 @@ msgstr ""
 msgid ""
 "The cancellation could not be completed. Do you want to force the "
 "cancellation?"
-msgstr ""
+msgstr "İptal işlemi tamamlanamadı. İptali zorlamak istiyor musunuz?"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -355,6 +397,10 @@ msgid ""
 "If you need to cancel it, please ask the customer to do so on their device "
 "or force the cancellation."
 msgstr ""
+"Müşteri şu anda ödeme işlemini tamamlıyor, bu nedenle şu anda iptal "
+"edilemez.\n"
+"İptal etmeniz gerekiyorsa, lütfen müşteriden kendi cihazından iptal etmesini "
+"isteyin veya iptali zorlayın."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -372,14 +418,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "This sticker is already processing another payment."
-msgstr ""
+msgstr "Bu etiket zaten başka bir ödemeyi işlemekte."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
 msgid ""
 "Unable to cancel payment. The payment may not be in a cancellable state."
-msgstr ""
+msgstr "Ödeme iptal edilemedi. Ödeme iptal edilebilir bir durumda olmayabilir."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -388,3 +434,5 @@ msgid ""
 "Unable to process the request. Please verify your configuration or try again "
 "later."
 msgstr ""
+"İstek işlenemedi. Lütfen yapılandırmanızı doğrulayın veya daha sonra tekrar "
+"deneyin."

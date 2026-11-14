@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-27 12:15+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-12 06:39+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "purchase/ja/>\n"
 "Language: ja\n"
@@ -57,7 +57,7 @@ msgstr "明細数"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "%(added_lines_count)s PO lines added to the bill."
-msgstr ""
+msgstr "%(added_lines_count)s 件の購買オーダ明細が請求書に追加されました。"
 
 #. module: purchase
 #. odoo-python
@@ -66,6 +66,8 @@ msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
 msgstr ""
+"%(matched_lines_count)s 件の請求書明細が照合されました。残り %"
+"(unmatched_lines_count)s 件が未照合です。"
 
 #. module: purchase
 #. odoo-python
@@ -74,12 +76,14 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s 仕入先より請求済、 %"
+"(quantity_received)s 入荷済、単価%(unit_price)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; %(product)sの価格差"
 
 #. module: purchase
 #. odoo-python
@@ -122,7 +126,7 @@ msgstr "-&gt;"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "0 bill lines matched with this PO."
-msgstr ""
+msgstr "この購買オーダに一致する仕入先請求明細が0件でした。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -451,7 +455,7 @@ msgstr "<strong>納入予定日</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>貿易条件:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -534,7 +538,7 @@ msgstr "プロダクトまたは取引先に警告設定可(購買)"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "アクセスグループ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -565,6 +569,8 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"請求済みで未入荷の商品の見越額を保持する勘定科目です。継続記録評価において、"
+"期末処理時に在庫評価勘定と相殺されます。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
@@ -573,11 +579,13 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"入荷済みで未請求の商品の見越額を保持する勘定科目です。継続記録評価において、"
+"期末処理時に在庫評価勘定と相殺されます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
 msgid "Accrual Entries"
-msgstr ""
+msgstr "経過勘定仕訳"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
@@ -585,6 +593,9 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
+"この明細行には経過勘定仕訳がすでに生成されています。そのため、未処理の仕訳(計"
+"上済みで、まだ逆仕訳・取消されていないもの)が残っている間は、再度計上されませ"
+"ん。"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
@@ -594,13 +605,13 @@ msgstr "未払経費仕訳"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "未払オーダウィザード"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr ""
+msgstr "未払金合計"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -772,7 +783,7 @@ msgstr "すべての送信済見積依頼"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
 msgid "All variants"
-msgstr ""
+msgstr "すべてのバリアント"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -933,7 +944,7 @@ msgstr "ビルライン"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
 msgid "Bill Matched Ratio"
-msgstr ""
+msgstr "請求書照合率"
 
 #. module: purchase
 #. odoo-python
@@ -945,7 +956,7 @@ msgstr "仕入先請求書照合"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Bill Qty"
-msgstr ""
+msgstr "請求数量"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -955,7 +966,7 @@ msgstr "仕入先請求書から購買オーダ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
 msgid "Bill to Receive"
-msgstr ""
+msgstr "請求済未入荷"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -973,12 +984,12 @@ msgstr "請求書金額税抜"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
 msgid "Billed Not Received Account"
-msgstr ""
+msgstr "請求済未入荷勘定"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
 msgid "Billed Not Received Account Active"
-msgstr ""
+msgstr "請求済未入荷勘定を有効化"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1015,12 +1026,12 @@ msgstr "請求書受領済"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
 msgid "Bills to Receive Account"
-msgstr ""
+msgstr "請求済未入荷勘定"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
 msgid "Bills to Receive Account Active"
-msgstr ""
+msgstr "請求済未入荷勘定有効"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1137,7 +1148,7 @@ msgstr "1ステップで購買オーダを確定"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Confirm the price."
-msgstr ""
+msgstr "価格を確定します。"
 
 #. module: purchase
 #. odoo-javascript
@@ -1171,7 +1182,7 @@ msgstr "自社のシステムと連携"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "連結通貨"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1344,7 +1355,7 @@ msgstr "説明"
 #: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
 msgid ""
 "Difference between demand and quantity but not affected by invoice policy"
-msgstr ""
+msgstr "請求ポリシーの影響を受けない、需要数量と数量との差分"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
@@ -1372,7 +1383,7 @@ msgstr "自動入力フィールドを表示"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
 msgid "Display Matching Tag"
-msgstr ""
+msgstr "一致するタグを表示"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__display_name
@@ -1413,7 +1424,7 @@ msgstr "分配分析勘定"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "ドキュメントの税モード"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1469,7 +1480,7 @@ msgstr "複製されたオーダ"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Enter a Description..."
-msgstr ""
+msgstr "説明を入力..."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1524,7 +1535,7 @@ msgstr "説明責任のない発注書行の禁止値"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Forecasted"
-msgstr ""
+msgstr "予測"
 
 #. module: purchase
 #. odoo-python
@@ -1689,7 +1700,7 @@ msgstr "インコタームズ"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "Incoterm Location"
-msgstr ""
+msgstr "インコタームズ指定地"
 
 #. module: purchase
 #. odoo-javascript
@@ -1767,7 +1778,7 @@ msgstr "仕訳明細"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
 msgid "Label"
-msgstr ""
+msgstr "ラベル"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -1910,30 +1921,30 @@ msgstr "突合"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Matched"
-msgstr ""
+msgstr "照合済"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
 msgid "Matched Invoices Count"
-msgstr ""
+msgstr "照合済請求書数"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Matching"
-msgstr ""
+msgstr "照合"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Matching Invoices"
-msgstr ""
+msgstr "照合対象の請求書"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols のアイコン (例：checklist)"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -2056,7 +2067,7 @@ msgstr "名称"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "名称/適格請求書発行事業者番号/Eメール/参照"
+msgstr "名称/適格請求書発行事業者番号/メール/参照番号"
 
 #. module: purchase
 #. odoo-javascript
@@ -2101,7 +2112,7 @@ msgstr "次の活動タイプ"
 #. module: purchase
 #: model:res.groups.privilege,placeholder:purchase.res_groups_privilege_purchase
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #. module: purchase
 #. odoo-javascript
@@ -2155,12 +2166,12 @@ msgstr "通常"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Not Acknowledged"
-msgstr "未確認"
+msgstr "受領未確認"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
 msgid "Not Invoiced Quantity"
-msgstr ""
+msgstr "未請求数量"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
@@ -2390,6 +2401,8 @@ msgid ""
 "Ordered quantity not invoiced. This may or may not include quantities that "
 "won't be invoiced, depending on the product's Control Policy."
 msgstr ""
+"オーダ数量のうち未請求の数量です。これは、プロダクトの管理ポリシーによって、"
+"請求対象外となる数量を含む場合と含まない場合があります。"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -2417,12 +2430,12 @@ msgstr "オーダ一覧"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "PO Matching"
-msgstr ""
+msgstr "購買オーダ照合"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "PO Qty"
-msgstr ""
+msgstr "購買オーダ数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
@@ -2473,6 +2486,12 @@ msgid "Please select bill lines with the same vendor."
 msgstr "同じ仕入先の請求書明細を選択してください。"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_bill_line_match.py:0
+msgid "Please select purchase order lines with the same vendor."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
 msgid "Pol"
 msgstr "Pol"
@@ -2485,7 +2504,7 @@ msgstr "ポータルアクセスURL"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__prepaid_expense
 msgid "Prepaid Expense"
-msgstr ""
+msgstr "前払費用"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2555,7 +2574,7 @@ msgstr "プロダクト単位数量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty_to_invoice
 msgid "Product Uom Qty To Invoice"
-msgstr ""
+msgstr "請求予定数量(プロダクト単位)"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2658,7 +2677,7 @@ msgstr "購買明細と仕入先請求書明細の照合ビュー"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
 msgid "Purchase Matched Ratio"
-msgstr ""
+msgstr "購買照合率"
 
 #. module: purchase
 #. odoo-python
@@ -2669,7 +2688,7 @@ msgstr "購買照合"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
 msgid "Purchase Matching Issue Msg"
-msgstr ""
+msgstr "購買照合のエラーメッセージ"
 
 #. module: purchase
 #. odoo-python
@@ -2811,7 +2830,7 @@ msgstr "未請求明細を含む購買オーダ"
 #. module: purchase
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase orders, tenders and agreements"
-msgstr ""
+msgstr "購買オーダ・入札・契約を管理"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2854,6 +2873,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
 "orders not received, or partially received"
 msgstr ""
+"過去365日間の購買実績。入荷予定は、未受領または一部入荷の確定済み購買オーダを"
+"表します"
 
 #. module: purchase
 #. odoo-python
@@ -2901,12 +2922,12 @@ msgstr "入荷済数量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
 msgid "Qty not invoiced"
-msgstr ""
+msgstr "未請求数量"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Qty to Invoice"
-msgstr ""
+msgstr "請求予定数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
@@ -2933,6 +2954,8 @@ msgid ""
 "Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
 "quantity from Purchase Orders"
 msgstr ""
+"手持在庫数から販売オーダの出庫予定数量を差し引き、購買オーダの入荷予定数量を"
+"加えた数量"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2983,7 +3006,7 @@ msgstr "見積依頼と購買"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "レート"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -3164,7 +3187,7 @@ msgstr "SMS配信エラー"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Save the line."
-msgstr ""
+msgstr "明細行を保存します。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3207,7 +3230,7 @@ msgstr "購買オーダに追加する仕入先請求書明細を選択"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Select a Product"
-msgstr ""
+msgstr "プロダクトを選択"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -3218,7 +3241,7 @@ msgstr "購買ドキュメントを選択"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Select price"
-msgstr ""
+msgstr "価格を選択"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
@@ -3437,12 +3460,12 @@ msgstr "課税国"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
 msgid "Tax Excl."
-msgstr ""
+msgstr "税抜"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "税込"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
@@ -3543,6 +3566,8 @@ msgid ""
 "The following purchase orders %(invalid_orders)s can't be received. "
 "Cancelled all receptions."
 msgstr ""
+"以下の購買オーダ %(invalid_orders)s は入荷できません。すべての入荷を取り消し"
+"ました。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -3559,6 +3584,8 @@ msgstr "オーダ数量が更新されました。"
 #: code:addons/purchase/models/res_partner.py:0
 msgid "The partner cannot be deleted because it is used as a dropship address"
 msgstr ""
+"この取引先は、ドロップシップ(直送)先住所として使用されているため削除できませ"
+"ん"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3812,7 +3839,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Unmatched"
-msgstr ""
+msgstr "未照合"
 
 #. module: purchase
 #. odoo-python
@@ -3931,7 +3958,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
 msgid "Vendor Incoterm Location"
-msgstr ""
+msgstr "仕入先インコタームズ指定場所"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -4026,11 +4053,11 @@ msgid ""
 "dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"購買オーダを作成するときは、仕入先の<i>納期厳守</i>率（納期どおりに出荷された"
-"プロダクトの割合）を確認してください。低すぎる場合は、<i>自動リマインダ</i>を"
-"有効にします。出荷予定日の数日前にOdooは仕入先にEメールを送信して、出荷日の確"
-"認を求め、遅延が発生した場合に通知します。仕入先の実績統計を取得するには、OTD"
-"レートをクリックします。"
+"購買オーダを作成する際は、仕入先の<i>納期遵守率</i>(予定通りに出荷されたプロ"
+"ダクトの割合)を確認してください。数値が低すぎる場合は、<i>自動リマインダー</"
+"i>を有効にします。出荷予定日の数日前に、Odooから仕入先へ出荷日の確認メールが"
+"自動送信され、遅延が発生した場合も通知を受け取ることができます。仕入先のパ"
+"フォーマンス統計を確認するには、OTD(納期遵守率)をクリックしてください。"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -4126,7 +4153,7 @@ msgstr "例: この仕入先は 8 月末まで休暇中です。"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -4189,7 +4216,7 @@ msgstr "{{ object.company_id.name }} オーダ (Ref {{ object.name or 'n/a' }})"
 msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }}見積依頼 (参照 {{ object.name or 'n/a' }})"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

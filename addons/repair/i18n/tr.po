@@ -23,17 +23,18 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # İlknur Gözütok, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-11-03 12:33+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 11:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/repair/"
 "tr/>\n"
 "Language: tr\n"
@@ -58,6 +59,18 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"Bu modülün amacı, tüm ürün onarımlarını yönetmek için eksiksiz bir modül "
+"sağlamaktır.\n"
+"====================================================================\n"
+"\n"
+"Bu modül şu konuları kapsar:\n"
+"------------------------------------------------------\n"
+"    * Onarıma ürün ekleme/çıkarma\n"
+"    * Stoklara etkisi\n"
+"    * Garanti kavramı\n"
+"    * Onarım teklif raporu\n"
+"    * Teknisyen ve nihai müşteri için notlar\n"
 
 #. module: repair
 #. odoo-python
@@ -89,6 +102,11 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* 'Yeni' durumu, kullanıcı yeni ve onaylanmamış bir onarım emri oluştururken "
+"kullanılır.\n"
+"* 'Onaylandı' durumu, kullanıcı onarım emrini onayladığında kullanılır.\n"
+"* 'Bitti' durumu, onarım tamamlandığında ayarlanır.\n"
+"* 'İptal edildi' durumu, kullanıcı onarım emrini iptal ettiğinde kullanılır."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -178,7 +196,7 @@ msgstr "Etkinlik İstisna Dekorasyonu"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivite Planları"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
@@ -301,12 +319,12 @@ msgstr "BoM Bileşenleri"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__can_create_extra_invoice
 msgid "Can Create Extra Invoice"
-msgstr ""
+msgstr "Ekstra Fatura Oluşturabilir"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__can_create_sale_or_invoice
 msgid "Can Create Sale Or Invoice"
-msgstr ""
+msgstr "Satış Veya Fatura Oluşturabilir"
 
 #. module: repair
 #. odoo-python
@@ -317,7 +335,7 @@ msgstr "Üretim yeri bulunamadı."
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
@@ -376,7 +394,7 @@ msgstr "Ayarlar"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Confirm"
-msgstr ""
+msgstr "Onayla"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -394,18 +412,18 @@ msgstr "Doğrulanmış"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__product_consumed_qty_uom
 msgid "Consumed"
-msgstr ""
+msgstr "Tüketilen"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_consumption_warning
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Consumption Warning"
-msgstr ""
+msgstr "Tüketim Uyarısı"
 
 #. module: repair
 #: model:ir.model,name:repair.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: repair
 #. odoo-python
@@ -417,7 +435,7 @@ msgstr "Onarım Oluştur"
 #. module: repair
 #: model:ir.model,website_form_label:repair.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturun"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -484,7 +502,7 @@ msgstr "Detaylar"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Discard"
-msgstr ""
+msgstr "İptal"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__display_name
@@ -514,7 +532,7 @@ msgstr "İsim Göster"
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Done"
-msgstr ""
+msgstr "Yapıldı"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -651,28 +669,28 @@ msgstr "Stok Hareketleri"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
 msgid "Invisible"
-msgstr ""
+msgstr "Görünmez"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Fatura Sayısı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "Fatura Kalemi"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "Faturalar"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
@@ -692,7 +710,7 @@ msgstr "John Doe"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Yevmiye Kaydı"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
@@ -750,7 +768,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_repair_consumption_warning_line
 msgid "Line of issue consumption"
-msgstr ""
+msgstr "Tüketim sorunu satırı"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_lot
@@ -761,7 +779,7 @@ msgstr "Lot/Seri"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Malzeme Sembolleri simgesi, örn. kontrol listesi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
@@ -776,7 +794,7 @@ msgstr "Mesajlar"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__move_id
 msgid "Move"
-msgstr ""
+msgstr "Hareket"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -821,7 +839,7 @@ msgstr "Sonraki Aktivitie Türü"
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "No location of type Inventory Loss found"
-msgstr ""
+msgstr "Stok Kaybı türünde konum bulunamadı"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -909,7 +927,7 @@ msgstr "Siparişler"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__repair_consumption_warning_id
 msgid "Parent Wizard"
-msgstr ""
+msgstr "Üst Sihirbaz"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_ids
@@ -952,7 +970,7 @@ msgstr "Lütfen ilk Seri Numarasını veya varsayılan bir sırayı ayarlayın"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
 msgid "Primary"
-msgstr ""
+msgstr "Birincil"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -1046,7 +1064,7 @@ msgstr "Miktar"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quote"
-msgstr ""
+msgstr "Alıntı"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1111,7 +1129,7 @@ msgstr "Onarım"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning__repair_consumption_warning_line_ids
 msgid "Repair Consumption Warning Line"
-msgstr ""
+msgstr "Onarım Tüketim Uyarı Satırı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_mto_pull_id
@@ -1147,7 +1165,7 @@ msgstr "Onarım Siparişi"
 #: model:ir.model.fields,field_description:repair.field_res_partner__repair_order_count
 #: model:ir.model.fields,field_description:repair.field_res_users__repair_order_count
 msgid "Repair Order Count"
-msgstr ""
+msgstr "Onarım Siparişi Sayısı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
@@ -1211,18 +1229,18 @@ msgstr "Onarım Servisleri"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 msgid "Repair Tag"
-msgstr ""
+msgstr "Onarım Etiketi"
 
 #. module: repair
 #: model:ir.module.module,summary:base.module_repair
 msgid "Repair damaged products"
-msgstr ""
+msgstr "Hasarlı ürünleri onarın"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Repair must be confirmed in order to end reparation."
-msgstr ""
+msgstr "Onarımı bitirmek için onarımın onaylanması gerekir."
 
 #. module: repair
 #. odoo-python
@@ -1273,7 +1291,7 @@ msgstr "Raporlama"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Reserve"
-msgstr ""
+msgstr "Rezerv"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__user_id
@@ -1298,7 +1316,7 @@ msgstr "SMS İleti hatası"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Satış Satırı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_id
@@ -1349,12 +1367,12 @@ msgstr "Onarım Siparişlerini Ara"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
 msgid "Secondary"
-msgstr ""
+msgstr "İkincil"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sıralama"
 
 #. module: repair
 #. odoo-python
@@ -1365,22 +1383,22 @@ msgstr "Ürünün onarılabilmesi için seri numarası gereklidir: %s"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__product_id
 msgid "Service"
-msgstr ""
+msgstr "Hizmet"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_service_line_ids
 msgid "Service Lines"
-msgstr ""
+msgstr "Hizmet Satırları"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Services"
-msgstr ""
+msgstr "Hizmetler"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "Miktarları Ayarla ve Doğrula"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1445,6 +1463,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Takip yöntemini içeren teknik alan. Depolanabilir bir üründe \"false\" "
+"değeri, ürünün yalnızca miktar bazında takip edildiği anlamına gelir."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1536,11 +1556,14 @@ msgid ""
 "Please create a new line to link to a new invoice or reset the invoice to "
 "draft."
 msgstr ""
+"Bu satır onaylanmış bir faturaya bağlıdır ve değiştirilemez.\n"
+"Lütfen yeni bir faturaya bağlanmak için yeni bir satır oluşturun veya "
+"faturayı taslağa döndürün."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_consumption_warning_line__product_expected_qty_uom
 msgid "To Consume"
-msgstr ""
+msgstr "Tüketilecek"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
@@ -1625,7 +1648,7 @@ msgstr "Acil"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
 msgid "Validate Button Style"
-msgstr ""
+msgstr "Doğrula Düğmesi Stili"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse
@@ -1644,6 +1667,8 @@ msgid ""
 "Wizard for warning about mismatching expected vs actual component "
 "consumption quantities for ROs"
 msgstr ""
+"Onarım emirleri (RO) için beklenen ve gerçekleşen bileşen tüketim miktarları "
+"arasındaki uyuşmazlık hakkında uyarı veren sihirbaz"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__yesterday
@@ -1692,7 +1717,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_consumption_warning_form
 msgid ""
 "You consumed a different quantity than expected for the following products."
-msgstr ""
+msgstr "Aşağıdaki ürünler için beklenenden farklı bir miktar tükettiniz."
 
 #. module: repair
 #. odoo-python
@@ -1723,7 +1748,7 @@ msgstr "sale_order_id"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "text"
-msgstr ""
+msgstr "metin"
 
 #~ msgid "Ensure the traceability of a storable product in your warehouse."
 #~ msgstr "Deponuzda stoklanabilir bir ürünün izlenebilirliğini sağlayın."

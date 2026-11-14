@@ -8,14 +8,15 @@
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:33+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-10 09:34+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "hr_presence/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +40,16 @@ msgid ""
 "\n"
 "Allows to contact directly the employee in case of unjustified absence.\n"
 msgstr ""
+"\n"
+"Contrôle de la présence des employés\n"
+"==========================\n"
+"\n"
+"Basé sur :\n"
+"* L'adresse IP\n"
+"* La session de l'utilisateur\n"
+"* Les e-mails envoyés\n"
+"\n"
+"Permet de contacter directement l'employé en cas d'absence injustifiée.\n"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -58,6 +69,20 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Bonjour <t t-out=\"object.name or ''\">Abigail Peterson</"
+"t>,<br><br>\n"
+"Nous espérons que vous allez bien. Nous avons constaté que vous êtes "
+"actuellement absent de votre lieu de travail et qu'aucune demande de congé "
+"de votre part n'a été enregistrée. Si cette absence est due à une erreur de "
+"notre part, nous vous prions de nous excuser pour toute confusion.\n"
+"Veuillez prendre les mesures nécessaires pour régulariser cette absence "
+"imprévue. Si vous avez des questions ou besoin d'aide, n'hésitez pas à "
+"contacter votre responsable ou le service RH dans les meilleurs délais.\n"
+"Merci de votre attention rapide à ce sujet.\n"
+"                    <br>Cordialement,<br><br>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
@@ -103,7 +128,7 @@ msgstr "Employé"
 #. module: hr_presence
 #: model:ir.module.module,shortdesc:base.module_hr_presence
 msgid "Employee Presence Control"
-msgstr ""
+msgstr "Contrôle de la présence des employés"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence

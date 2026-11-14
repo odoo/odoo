@@ -9,7 +9,7 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # İlknur Gözütok, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 13:38+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 10:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "event_sms/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -77,6 +77,16 @@ msgid ""
 "object.event_id._fields else 'Join us on %s/event/%i!' % "
 "(object.get_base_url(), object.event_id.id) }}"
 msgstr ""
+"\"{{ object.event_id.name }}\" {{ object.event_date_range }} için hazır "
+"mısınız?\n"
+"{{ 'It starts at %s' % format_time(time=object.event_begin_date, "
+"tz=object.event_id.date_tz, time_format='short', "
+"lang_code=object.partner_id.lang) + (', at %s' % "
+"object.event_id.contact_address_inline if "
+"object.event_id.contact_address_inline else '') + '.\\n"
+"See you there!' if object.event_id.contact_address_inline or "
+"'website_published' not in object.event_id._fields else 'Join us on %s/event/"
+"%i!' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
@@ -101,12 +111,12 @@ msgstr "SMS Şablonları"
 #. module: event_sms
 #: model:ir.module.module,shortdesc:base.module_event_sms
 msgid "SMS on Events"
-msgstr ""
+msgstr "Etkinliklerde SMS"
 
 #. module: event_sms
 #: model:ir.module.module,description:base.module_event_sms
 msgid "Schedule SMS in event management"
-msgstr ""
+msgstr "Etkinlik yönetiminde SMS zamanlama"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type

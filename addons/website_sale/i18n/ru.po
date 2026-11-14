@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-28 14:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-09 08:33+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-20/"
 "website_sale/ru/>\n"
@@ -1739,6 +1739,16 @@ msgid ""
 "page.\n"
 "e.g. this option can be useful to share Product description files."
 msgstr ""
+"Позволяет делиться документом с вашими клиентами в рамках продажи.\n"
+"Из коммерческого предложения: документ будет отправлен клиентам и доступен "
+"им в любое время.\n"
+"напр., эта опция может быть полезна для отправки файлов с описанием товара.\n"
+"При подтверждении заказа: документ будет отправлен клиентам и станет им "
+"доступен.\n"
+"напр., эта опция может быть полезна для отправки руководства пользователя "
+"или цифрового контента, купленного в интернет-магазине.\n"
+"На странице товара: документ будет доступен покупателям на странице товара.\n"
+"напр., эта опция может быть полезна для отправки файлов с описанием товара."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -3105,7 +3115,6 @@ msgstr "Показать"
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
@@ -3874,7 +3883,6 @@ msgstr "Я согласен(на) с"
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__id
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
 #: model:ir.model.fields,field_description:website_sale.field_website_menu__id
-#: model:ir.model.fields,field_description:website_sale.field_website_page__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
 #: model:ir.model.fields,field_description:website_sale.field_website_track__id
@@ -4359,6 +4367,12 @@ msgstr "Цвет ссылок"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__contact_us_link_url
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_link_url
 msgid "Link URL"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "Linked lines must be added to the cart with their parent."
 msgstr ""
 
 #. module: website_sale
@@ -5225,11 +5239,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.packaging_title
 msgid "Packaging"
 msgstr "Упаковка"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_website_page
-msgid "Page"
-msgstr "Страница"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8168,6 +8177,12 @@ msgid "You can't use a video as the template's main image."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "You cannot add a combo item separately from its combo."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -8565,6 +8580,9 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Page"
+#~ msgstr "Страница"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

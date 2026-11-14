@@ -6,13 +6,14 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-10-14 13:34+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"POT-Creation-Date: 2026-11-13 17:40+0000\n"
+"PO-Revision-Date: 2026-11-09 09:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "pos_glory_cash/tr/>\n"
 "Language: tr\n"
@@ -54,7 +55,7 @@ msgstr "Nakit Makinesi IP"
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__glory_use_lna
 msgid "Cash Machine Local Network Access"
-msgstr ""
+msgstr "Nakit Makinesi Yerel Ağ Erişimi"
 
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__glory_password
@@ -77,7 +78,7 @@ msgstr "Para çekme makinesi hatası"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
 msgid "Cash machine is disconnected"
-msgstr ""
+msgstr "Nakit makinesi bağlantısı kesildi"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -124,7 +125,7 @@ msgstr "Tamamlanan nakit tutarı sayılıyor"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
 msgid "Current cash machine status:"
-msgstr ""
+msgstr "Mevcut nakit makinesi durumu:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -146,7 +147,6 @@ msgstr "İsim Göster"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
-#, fuzzy
 msgid "Download Logs"
 msgstr "Logları İndir"
 
@@ -160,7 +160,7 @@ msgstr "Hata"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Error code:"
-msgstr ""
+msgstr "Hata kodu:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -171,7 +171,7 @@ msgstr "Kimlik doğrulama başarısız"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "Failed to cancel cash machine transaction."
+msgid "Failed to cancel cash machine transaction: %s."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -200,6 +200,12 @@ msgid "Glory Settings"
 msgstr "Glory Ayarları"
 
 #. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Glory error animation."
+msgstr ""
+
+#. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__id
 msgid "ID"
 msgstr "ID"
@@ -219,7 +225,7 @@ msgstr "Başlatılıyor"
 #. module: pos_glory_cash
 #: model:ir.module.module,summary:base.module_pos_glory_cash
 msgid "Integrate your POS with a Glory automatic cash payment device"
-msgstr ""
+msgstr "Satış Noktası'nızı Glory otomatik nakit ödeme cihazı ile entegre edin"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -228,6 +234,8 @@ msgid ""
 "Local Network Access for the Glory machine is not supported on this browser. "
 "Please update your browser or disable Local Network Access."
 msgstr ""
+"Glory makinesi için Yerel Ağ Erişimi bu tarayıcıda desteklenmiyor. Lütfen "
+"tarayıcınızı güncelleyin veya Yerel Ağ Erişimini devre dışı bırakın."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -239,18 +247,18 @@ msgstr "Bankamatikten sadece yöneticiler nakit para çekebilir."
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
 msgid "Open Admin Page"
-msgstr ""
+msgstr "Yönetici Sayfasını Aç"
 
 #. module: pos_glory_cash
 #: model:ir.module.module,shortdesc:base.module_pos_glory_cash
 msgid "POS Glory Cash Machines"
-msgstr ""
+msgstr "Satış Noktası Glory Nakit Makinaları"
 
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
 msgid "Please configure the IP address before opening the admin page"
-msgstr ""
+msgstr "Yönetici sayfasını açmadan önce lütfen IP adresini yapılandırın"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -259,29 +267,30 @@ msgid ""
 "Please remove the cash from the exit of the cash machine before starting a "
 "transaction."
 msgstr ""
+"Lütfen bir işleme başlamadan önce nakit makinesinin çıkışındaki parayı alın."
 
 #. module: pos_glory_cash
 #: model:ir.model,name:pos_glory_cash.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Satış Noktası Ödeme Yöntemi"
 
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Reset"
-msgstr ""
+msgstr "Sıfırla"
 
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
 msgid "Reset Cash Machine"
-msgstr ""
+msgstr "Nakit Makinesini Sıfırla"
 
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
 msgid "Reset complete"
-msgstr ""
+msgstr "Sıfırlama tamamlandı"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -293,13 +302,19 @@ msgstr "Sıfırlama"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
 msgid "Resetting cash machine..."
-msgstr ""
+msgstr "Nakit makinesi sıfırlanıyor..."
 
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Starting payment"
 msgstr "Başlangıç ödemesi"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "The Glory machine is in an unknown error state."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -320,6 +335,8 @@ msgid ""
 "The cash machine is busy counting its inventory, please wait a few seconds "
 "and retry."
 msgstr ""
+"Nakit makinesi stoğunu saymakla meşgul, lütfen birkaç saniye bekleyip tekrar "
+"deneyin."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -357,6 +374,8 @@ msgid ""
 "The cash machine is not ready to start a transaction. Check all the covers "
 "are closed and then try again."
 msgstr ""
+"Nakit makinesi işlem başlatmaya hazır değil. Tüm kapakların kapalı "
+"olduğundan emin olun ve tekrar deneyin."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -369,7 +388,7 @@ msgstr "Bankamatikte aşağıdaki bozuk paralar/faturalar azalıyor:"
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is unable to return the inserted cash, please refund the "
-"client via another method."
+"client %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -392,6 +411,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The payment failed for an unknown reason: %s"
+msgstr "Ödeme bilinmeyen bir nedenle başarısız oldu: %s"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"There is an error with the bill or coin device. The machine will now be "
+"reset and the contents verified. Once this is complete, the amount that must "
+"be returned to the customer will be displayed."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -399,7 +427,7 @@ msgstr ""
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "There is insufficient cash in the machine to give change. You will need to "
-"refund the difference via another method."
+"refund %s via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -453,6 +481,23 @@ msgstr "Nakit para girişi için bekleniyor"
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Waiting for inventory"
 msgstr "Envanter için bekleniyor"
+
+#~ msgid "Failed to cancel cash machine transaction."
+#~ msgstr "Nakit makinesi işlemi iptal edilemedi."
+
+#~ msgid ""
+#~ "The cash machine is unable to return the inserted cash, please refund the "
+#~ "client via another method."
+#~ msgstr ""
+#~ "Nakit makinesi yatırılan nakdi iade edemiyor, lütfen müşteriye başka bir "
+#~ "yöntemle para iadesi yapın."
+
+#~ msgid ""
+#~ "There is insufficient cash in the machine to give change. You will need "
+#~ "to refund the difference via another method."
+#~ msgstr ""
+#~ "Makinede para üstü vermek için yeterli nakit yok. Aradaki farkı başka bir "
+#~ "yöntemle iade etmeniz gerekecek."
 
 #~ msgid "There is insufficient cash in the machine to give change."
 #~ msgstr "Para üstü vermek için makinede yeterli nakit yok."

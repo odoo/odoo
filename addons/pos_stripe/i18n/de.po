@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-10-27 08:34+0000\n"
+"PO-Revision-Date: 2026-11-12 09:00+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "pos_stripe/de/>\n"
@@ -35,7 +35,7 @@ msgstr "Anzeigename"
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to fetch the Stripe account"
-msgstr ""
+msgstr "Kein Zugriff zum Abrufen des Stripe-Kontos"
 
 #. module: pos_stripe
 #. odoo-python
@@ -147,7 +147,7 @@ msgstr "Stripe-Lesegerät %s nicht in Ihrem Konto aufgelistet"
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Stripe's documentation"
-msgstr ""
+msgstr "Stripe-Dokumentation"
 
 #. module: pos_stripe
 #. odoo-python
@@ -167,6 +167,11 @@ msgid ""
 "(mccMessage)s To check whether your business is eligible, see %(link)s or "
 "contact Stripe support."
 msgstr ""
+"Trinkgelder können dieser Stripe-Zahlung nicht hinzugefügt werden. Stripe "
+"erlaubt Trinkgelder nach der Zahlung (Übererfassung) nur für bestimmte "
+"Händlerkategorien und Kartenanbieter. %(mccMessage)s Um zu prüfen, ob Ihr "
+"Unternehmen berechtigt ist, konsultieren Sie %(link)s oder kontaktieren Sie "
+"den Stripe-Support."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -180,12 +185,16 @@ msgstr ""
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Your current Stripe account's merchant category code (MCC) is %(mcc)s."
 msgstr ""
+"Der Merchant Category Code (MCC) Ihres aktuellen Stripe-Kontos lautet %(mcc)"
+"s."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Your current Stripe account's merchant category code (MCC) is not set."
 msgstr ""
+"Der Merchant Category Code (MCC) Ihres aktuellen Stripe-Kontos ist nicht "
+"festgelegt."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number

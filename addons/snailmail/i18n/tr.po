@@ -14,17 +14,18 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 20:27+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 09:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "snailmail/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -40,6 +41,9 @@ msgid ""
 "Allows users to send documents by post\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"Kullanıcıların belgeleri posta yoluyla göndermesine izin verir\n"
+"=====================================================\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
@@ -108,7 +112,7 @@ msgstr "Her iki taraf da"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Bounced"
-msgstr ""
+msgstr "İletilmeyen"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -188,7 +192,7 @@ msgstr "Oluşturuldu"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Dispatched"
-msgstr ""
+msgstr "Sevk Edildi"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
@@ -279,7 +283,7 @@ msgstr "Geçersiz alıcı adı."
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__letter_undeliverable
 msgid "LETTER_UNDELIVERABLE"
-msgstr ""
+msgstr "LETTER_UNDELIVERABLE"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -301,13 +305,13 @@ msgstr "Mektup"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Letter Undeliverable"
-msgstr ""
+msgstr "Mektup Teslim Edilemedi"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter is delivered successfully"
-msgstr ""
+msgstr "Mektup başarıyla teslim edildi"
 
 #. module: snailmail
 #. odoo-python
@@ -319,7 +323,7 @@ msgstr "Snailmail ile posta yoluyla gönderilen mektup"
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter was unable to be delivered"
-msgstr ""
+msgstr "Mektup teslim edilemedi"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -339,7 +343,7 @@ msgstr "Mesaj"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notification"
-msgstr ""
+msgstr "Mesaj Bildirimi"
 
 #. module: snailmail
 #. odoo-javascript
@@ -409,7 +413,7 @@ msgstr "Renkli Yazdır"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
 msgid "Processing"
-msgstr ""
+msgstr "İşleniyor"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -454,7 +458,7 @@ msgstr "Gönderen"
 #: model:iap.service,name:snailmail.iap_service_snailmail
 #: model:ir.module.module,shortdesc:base.module_snailmail
 msgid "Snail Mail"
-msgstr ""
+msgstr "Snail Mail"
 
 #. module: snailmail
 #. odoo-python
@@ -530,7 +534,7 @@ msgstr "Snailmail Deneme Hatası"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
 msgid "Snailmail Undeliverable"
-msgstr ""
+msgstr "Normal Posta Teslim Edilemedi"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
@@ -540,7 +544,7 @@ msgstr "Snailmail Bilinmeyen Hata"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
 msgid "Snailmail letter ID"
-msgstr ""
+msgstr "Normal posta mektup kimliği"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
@@ -612,12 +616,14 @@ msgid ""
 "The document has been accepted by postal service provider and is being "
 "processed.<br>The tracking id is %s"
 msgstr ""
+"Belge posta hizmet sağlayıcısı tarafından kabul edildi ve işleniyor.<br>"
+"Takip kimliği: %s"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
-msgstr ""
+msgstr "Gönderilecek belge, izin verilen maksimum 8 sayfa sınırını aşıyor."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -669,6 +675,11 @@ msgid ""
 "If not sent or delivered, it will got in state 'Error' and the error message "
 "will be displayed in the field 'Error Message'."
 msgstr ""
+"Bir mektup oluşturulduğunda durum 'Beklemede' olur.\n"
+"Mektup sağlayıcıya doğru şekilde gönderilirse durum 'işleniyor' olur.\n"
+"Sağlayıcı mektubun teslim edildiğini onaylarsa durum 'Gönderildi' olur.\n"
+"Gönderilemez veya teslim edilemezse, durum 'Hata'ya geçer ve hata mesajı "
+"'Hata Mesajı' alanında görüntülenir."
 
 #. module: snailmail
 #. odoo-python

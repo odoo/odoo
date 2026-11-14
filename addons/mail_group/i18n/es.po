@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-11-05 11:40+0000\n"
+"PO-Revision-Date: 2026-11-13 13:49+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "mail_group/es/>\n"
@@ -82,6 +82,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola:<br><br>\n"
+"                Has solicitado cancelar la subscripción a la lista de correo "
+"<strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Para confirmarlo, visita el siguiente enlace: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Si se trata de un error o no eres tú quien lo ha solicitado, "
+"por favor, ignora este mensaje.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -100,6 +113,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola:<br><br>\n"
+"                Has solicitado suscribirte a la lista de correo <strong t-"
+"out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Para confirmarlo, visita el siguiente enlace: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Si se trata de un error o no eres tú quien lo ha solicitado, "
+"por favor, ignora este mensaje.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -114,6 +140,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hola, <t t-out=\"object.partner_id.name or ''\"></t>:</p>"
+"\n"
+"                <p>A continuación encontrarás las normas de uso de la <t t-"
+"out=\"object.mail_group_id.name\"></t> lista de correo.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -551,7 +586,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email

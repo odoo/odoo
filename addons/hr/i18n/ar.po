@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-05 12:11+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-10 13:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/hr/ar/>\n"
 "Language: ar\n"
@@ -916,7 +916,7 @@ msgstr "إعدادات التطبيق"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 msgid "Apply"
-msgstr "تطبيق"
+msgstr "تقديم"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_apply_date
@@ -1271,7 +1271,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Cancel End of Collaboration"
-msgstr ""
+msgstr "إلغاء إنهاء التعاون"
 
 #. module: hr
 #. odoo-python
@@ -1555,7 +1555,7 @@ msgstr "العقد"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract End"
-msgstr ""
+msgstr "نهاية العقد"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_end
@@ -1857,11 +1857,8 @@ msgid "Date Start"
 msgstr "تاريخ البدء"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_date
-#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
-#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
 msgstr "التاريخ الذي يتم فيه المغادرة فعلياً."
@@ -1874,6 +1871,17 @@ msgid ""
 "Date at which the departure process starts. Differs from the actual "
 "departure date in case of a notice period."
 msgstr "تاريخ بدء إجراءات المغادرة وإخلاء الطرف."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
+#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
+msgid ""
+"Date at which the employee (and their user, if they have no other active "
+"employee) is archived, by default the day after the departure. If it is "
+"today or earlier, the departure is applied on confirmation; otherwise it is "
+"scheduled for that date."
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -2441,7 +2449,7 @@ msgstr "نوع الموظف"
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "Employee Types"
-msgstr ""
+msgstr "أنواع الموظفين"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
@@ -2586,19 +2594,19 @@ msgstr "تاريخ انتهاء الفترة التجريبية (إذا وجدت
 #: model:ir.actions.server,name:hr.action_hr_employee_departure
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
-msgstr ""
+msgstr "إنهاء التعاون"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "End of Collaboration cancelled"
-msgstr ""
+msgstr "تم إلغاء إنهاء التعاون"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "End of Collaboration planned"
-msgstr ""
+msgstr "تم التخطيط لإنهاء التعاون"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -2610,7 +2618,7 @@ msgstr "نهاية الفترة التجريبية"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "End of collaboration"
-msgstr ""
+msgstr "إنهاء التعاون"
 
 #. module: hr
 #. odoo-javascript
@@ -2842,7 +2850,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Fixed-term Contract"
-msgstr ""
+msgstr "عقد محدد المدة"
 
 #. module: hr
 #. odoo-javascript
@@ -4037,7 +4045,7 @@ msgstr "الملاحظات"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Notice Period"
-msgstr ""
+msgstr "فترة الإخطار"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__11
@@ -4264,7 +4272,7 @@ msgstr ""
 msgid ""
 "Only one default work location and one exceptional work location per day per "
 "employee."
-msgstr ""
+msgstr "موقع عمل افتراضي واحد فقط وموقع عمل استثنائي واحد يوميًا لكل موظف."
 
 #. module: hr
 #. odoo-python
@@ -4443,7 +4451,7 @@ msgstr "المزايا"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Permanent Contract"
-msgstr ""
+msgstr "عقد دائم"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__hr_responsible_id
@@ -5716,7 +5724,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_working_times
 msgid "Time Management"
-msgstr ""
+msgstr "إدارة الوقت"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -6019,7 +6027,7 @@ msgstr "شريك المستخدم"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Usual Work Location"
-msgstr ""
+msgstr "مكان العمل المعتاد"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -6183,7 +6191,7 @@ msgstr "ما إذا كانت جهة الاتصال هذه موظفاً أم لا
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Why did you change the contract end date?"
-msgstr ""
+msgstr "لماذا قمت بتغيير تاريخ نهاية العقد؟"
 
 #. module: hr
 #. odoo-python
@@ -6332,7 +6340,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Work location"
-msgstr ""
+msgstr "مكان العمل"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-17 17:38+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-09 03:35+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/lo/>\n"
@@ -309,6 +309,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"></t>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">ສະບາຍດີ <t t-"
+"out=\"client_name\">ຊື່ລູກຄ້າ</t>,</t>\n"
+"                        <t t-else=\"\">ສະບາຍດີ,</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>ຂອບໃຈທີ່ຊື້ສິນຄ້າຈາກ <t t-out=\"store_name\">ຊື່ຮ້ານຄ້າ</t>!</"
+"div>\n"
+"                    <div>ທີ່ຕິດຄັດມານີ້ ແມ່ນໃບຮັບເງິນຂອງທ່ານ ສຳລັບການຊື້ສິນຄ້າເມື່ອ <span><t "
+"t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">ວັນທີ</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">ເວລາ</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>ດ້ວຍຄວາມນັບຖື,</div>\n"
+"                    <br>\n"
+"                    <t t-out=\"store_name\">ຊື່ຮ້ານຄ້າ</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -571,7 +601,7 @@ msgstr "? ການກົດ \"ຢືນຢັນ\" ຈະເປັນການ�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "A customer is required on the order to create an invoice."
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງເລືອກລູກຄ້າໃນໃບສັ່ງຊື້ ເພື່ອສ້າງໃບແຈ້ງໜີ້."
 
 #. module: point_of_sale
 #. odoo-python
@@ -583,7 +613,7 @@ msgstr "ຈຳເປັນຕ້ອງມີຂໍ້ມູນລູກຄ້າ
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "A customer must be set on the order to pay with a customer account."
-msgstr ""
+msgstr "ຕ້ອງກຳນົດລູກຄ້າໃນໃບສັ່ງຊື້ ເພື່ອຊຳລະເງິນດ້ວຍບັນຊີລູກຄ້າ."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1689,7 +1719,7 @@ msgstr "ກ່ອນ 19.1:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr ""
+msgstr "ໃບບິນ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1759,7 +1789,7 @@ msgstr "ເຂົ້າຈີ່"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Break Combo"
-msgstr ""
+msgstr "ແຍກຊຸດສິນຄ້າ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2913,7 +2943,7 @@ msgstr "ສ້າງຄູ່ຄ້າ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Create Product"
-msgstr ""
+msgstr "ສ້າງສິນຄ້າ"
 
 #. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
@@ -4628,7 +4658,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Info"
-msgstr ""
+msgstr "ຂໍ້ມູນ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -4639,7 +4669,7 @@ msgstr "ຂໍ້ມູນກ່ຽວກັບສິນຄ້າຂອງທ່
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Install App"
-msgstr ""
+msgstr "ຕິດຕັ້ງແອັບ"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -7934,7 +7964,7 @@ msgstr "ປະຫວັດການພິມ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/burger_menu/burger_menu_dialog.xml:0
 msgid "Print Report"
-msgstr ""
+msgstr "ພິມລາຍງານ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9033,7 +9063,7 @@ msgstr "ເລືອກລູກຄ້າທີ່ມີທີ່ຢູ່ຖື
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Select a journal"
-msgstr ""
+msgstr "ເລືອກບັນຊີລາຍວັນ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9069,7 +9099,7 @@ msgstr "ເລືອກສິນຄ້າທີ່ຈະສົ່ງເງິນ
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 msgid "Select your default payment method"
-msgstr ""
+msgstr "ເລືອກວິທີການຊຳລະເງິນເລີ່ມຕົ້ນຂອງທ່ານ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -9624,7 +9654,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/loader.js:0
 msgid "Still loading, thank you for your patience…"
-msgstr ""
+msgstr "ກຳລັງໂຫຼດຢູ່, ຂອບໃຈທີ່ທ່ານລໍຖ້າ…"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10228,6 +10258,15 @@ msgstr "ວັນທີຈັດສົ່ງ / ຮັບອໍເດີແມ່
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"The order was validated with a total of %(paid)s, but its lines now amount "
+"to %(total)s because they were changed on another device. The order stays "
+"open until the difference is settled."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
 msgstr "ຈຳນວນເງິນທີ່ຊຳລະແລ້ວບໍ່ກົງກັບຍອດລວມທັງໝົດຂອງອໍເດີ."
 
@@ -10250,6 +10289,15 @@ msgstr "ລະຫັດຜ່ານຢູ່ດ້ານຫຼັງຂອງເ
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"The payment method %(payment_method)s has no outstanding account, its "
+"payments cannot be posted.\n"
+"Set an outstanding account on it."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
@@ -10262,6 +10310,8 @@ msgid ""
 "The payment method you choose will be linked to your device. You can change "
 "it later from the menu on top right."
 msgstr ""
+"ວິທີການຊຳລະເງິນທີ່ທ່ານເລືອກຈະຖືກເຊື່ອມໂຍງກັບອຸປະກອນຂອງທ່ານ. "
+"ທ່ານສາມາດປ່ຽນແປງໄດ້ພາຍຫຼັງຈາກເມນູຢູ່ມຸມຂວາເທິງ."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids

@@ -22,17 +22,18 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 11:34+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "purchase_requisition/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -55,6 +56,14 @@ msgid ""
 "are agreements you have with vendors to benefit from a predetermined "
 "pricing.\n"
 msgstr ""
+"\n"
+"Bu modül, Satın Alma Anlaşmalarını yönetmenizi sağlar.\n"
+"\n"
+"Teklif ve genel sipariş çağrılarını yönetin. Teklifler için çağrılar farklı "
+"satıcılardan rakip teklifler almak ve en iyi olanları seçmek için "
+"kullanılır.\n"
+"Genel siparişler, önceden belirlenmiş bir fiyatlandırmadan yararlanmak için "
+"satıcılarla yaptığınız sözleşmelerdir.\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -84,19 +93,19 @@ msgstr "<strong>Referans:</strong><br/>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "A note"
-msgstr ""
+msgstr "Bir not"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A product is required on purchase agreement lines."
-msgstr ""
+msgstr "Satınalma sözleşmesi satırlarında bir ürün gereklidir."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A section or note line cannot have a product."
-msgstr ""
+msgstr "Bir bölüm veya not satırında ürün olamaz."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -121,7 +130,7 @@ msgstr "Etkinlik İstisna Dekorasyonu"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivite Planları"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -136,17 +145,17 @@ msgstr "Aktivite Türü İmgesi"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a note"
-msgstr ""
+msgstr "Bir Not Ekle"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a product"
-msgstr ""
+msgstr "Bir Ürün Ekle"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a section"
-msgstr ""
+msgstr "Bir Bölüm Ekle"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -177,7 +186,7 @@ msgstr "Sözleşme Geçerlilik Süresi:"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Amount"
-msgstr ""
+msgstr "Tutar"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -320,7 +329,7 @@ msgstr "İsim Göster"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Görünüm Türü"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
@@ -446,12 +455,12 @@ msgstr "Geciken Aktiviteler"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__name
 msgid "Line Description"
-msgstr ""
+msgstr "Hat Tanımı"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Malzeme Sembolleri simgesi, örn. kontrol listesi"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -528,7 +537,7 @@ msgstr "Sonraki Aktivitie Türü"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Note"
-msgstr ""
+msgstr "Not"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -574,7 +583,7 @@ msgstr "Siparişler"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Üst Bölüm Satırı"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
@@ -727,22 +736,22 @@ msgstr "Satınalma Sözleşmelerinde Ara"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_section
 msgid "Section"
-msgstr ""
+msgstr "Bölüm"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Section Name"
-msgstr ""
+msgstr "Bölüm Adı"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Section title"
-msgstr ""
+msgstr "Bölüm başlığı"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sıralama"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -782,17 +791,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Alt bölüm"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Alt Bölüm Adı"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Subsection title"
-msgstr ""
+msgstr "Alt bölüm başlığı"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -807,7 +816,7 @@ msgstr "Tedarikçi Fiyat Listesi"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "UX için teknik alan."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -900,6 +909,8 @@ msgid ""
 "You cannot change the type of a purchase agreement line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Bir Satınalma sözleşmesi satırının türünü değiştiremezsiniz. Bunun yerine "
+"mevcut satırı silmeli ve uygun türde yeni bir satır oluşturmalısınız."
 
 #. module: purchase_requisition
 #. odoo-python

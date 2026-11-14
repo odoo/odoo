@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-21 06:33+0000\n"
+"PO-Revision-Date: 2026-11-12 03:46+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/crm/th/>\n"
 "Language: th\n"
@@ -128,28 +128,29 @@ msgstr "<b>เขียนไม่กี่ตัวอักษร</b> เพ�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"oi oi-filled\" data-icon=\"mail\" title=\"Contact Email\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"mail\" title=\"Contact Email\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Contact\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Contact\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid ""
 "<i class=\"oi oi-lg\" data-icon=\"smartphone\" title=\"Contact Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-lg\" data-icon=\"smartphone\" title=\"Contact Phone\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"oi\" data-icon=\"payments\" title=\"Expected Revenue\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"payments\" title=\"Expected Revenue\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"oi\" data-icon=\"refresh\" title=\"Recurring Revenue\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"refresh\" title=\"Recurring Revenue\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -157,11 +158,13 @@ msgid ""
 "<i class=\"oi\" data-icon=\"warning\" title=\"Exceeded\" invisible=\"not "
 "lead_all_assigned_month_exceeded\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"warning\" title=\"Exceeded\" invisible=\"not "
+"lead_all_assigned_month_exceeded\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"oi\" data-icon=\"work\" title=\"Opportunity Name\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"work\" title=\"Opportunity Name\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -180,7 +183,7 @@ msgstr "<span class=\"me-1\"> ของ </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
-msgstr ""
+msgstr "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> ที่</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -348,6 +351,27 @@ msgid ""
 "</t>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"สวัสดีค่ะ/ครับ<t t-out=\"object.partner_id and object.partner_id.name or ''\">"
+"Acme Corporation</t>,<br><br>\n"
+"ยินดีต้อนรับสู่<t t-out=\"object.company_id.name or ''\">บริษัทของฉัน (ซานฟรานซิสโก)</"
+"t>.\n"
+"ยินดีที่ได้รู้จักคุณค่ะ! ตอนนี้ที่คุณได้เข้าร่วมกับเราแล้ว คุณจะค้นพบสิ่งที่<t t-"
+"out=\"object.company_id.name or ''\">บริษัทของฉัน (ซานฟรานซิสโก)</t> มีให้คุณค่ะ ชื่อขอ"
+"งฉันคือ<t t-out=\"object.user_id.name or ''\">Marc Demo</t> และฉันจะช่วยคุณให้ได้ประ"
+"โยชน์สูงสุดจาก Odoo เราสามารถนัดหมายการสาธิตอย่างรวดเร็วได้ในเร็วๆ นี้ได้หรือไม่?<br>\n"
+"คุณสามารถติดต่อฉันได้ตลอดเวลา!<br><br>\n"
+"ขอแสดงความนับถือ<br>\n"
+"<t t-if=\"object.user_id\">\n"
+"   <b><t t-out=\"object.user_id.name or ''\"> Marc Demo</t></b>\n"
+"   <br> อีเมล:<t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@example.com</t>\n"
+"    <br>โทร:<t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    <t t-out=\"object.company_id.name or ''\">บริษัทของฉัน (ซานฟรานซิสโก)</t>\n"
+"</t>\n"
+"       </t>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -406,7 +430,7 @@ msgstr "ยอมรับฟอร์มอีเมล"
 #. module: crm
 #: model:ir.model,name:crm.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "กลุ่มการเข้าถึง"
 
 #. module: crm
 #. odoo-javascript
@@ -600,7 +624,7 @@ msgstr "โมเดลนามแฝง"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
 msgid "All Teams"
-msgstr ""
+msgstr "ทีมทั้งหมด"
 
 #. module: crm
 #. odoo-javascript
@@ -631,6 +655,7 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the entire Pipeline.<br/"
 ">"
 msgstr ""
+"เนื่องจากคุณไม่ได้เป็นสมาชิกของทีมการขายใดๆ คุณจึงมองเห็นไปป์ไลน์ทั้งหมด<br/>"
 
 #. module: crm
 #. odoo-javascript
@@ -752,7 +777,7 @@ msgstr "การตีกลับ"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Bring Odoo into your inbox:"
-msgstr ""
+msgstr "นำ Odoo มาไว้ในกล่องจดหมายของคุณ:"
 
 #. module: crm
 #: model:ir.module.module,shortdesc:base.module_crm
@@ -954,7 +979,7 @@ msgstr "ยินดีด้วย ขอให้โชคดีในกา�
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Connect to Gmail or Outlook accounts."
-msgstr ""
+msgstr "เชื่อมต่อกับบัญชี Gmail หรือ Outlook"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -1088,7 +1113,7 @@ msgstr "ประเทศ"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Create Contacts, Leads, Tickets, Projects and Tasks."
-msgstr ""
+msgstr "สร้างรายชื่อผู้ติดต่อ, ลีด, ทิเก็ต, โปรเจกต์ และงาน"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
@@ -1149,7 +1174,7 @@ msgstr "สร้างโอกาสในการเริ่มเล่น
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Create your new contact."
-msgstr ""
+msgstr "สร้างผู้ติดต่อใหม่ของคุณ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid
@@ -1318,7 +1343,7 @@ msgstr "ไดเจส"
 #. module: crm
 #: model:ir.model,name:crm.model_discuss_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "ช่องแชท"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
@@ -1585,7 +1610,7 @@ msgstr "ฟิลด์ที่สามารถใช้สำหรับค
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Find any Odoo record without leaving your inbox."
-msgstr ""
+msgstr "ค้นหาบันทึก Odoo ใดๆ โดยไม่ต้องออกจากกล่องจดหมายของคุณ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
@@ -1680,19 +1705,19 @@ msgstr "รับเหตุผลที่ไม่สำเร็จ"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Get it for Gmail"
-msgstr ""
+msgstr "รับสำหรับ Gmail"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Get it for Outlook"
-msgstr ""
+msgstr "รับสำหรับ Outlook"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Get our Mail Plugins!"
-msgstr ""
+msgstr "รับปลั๊กอินอีเมลของเรา!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -1703,7 +1728,7 @@ msgstr "ให้ลำดับความสำคัญหาก"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Gmail"
-msgstr ""
+msgstr "Gmail"
 
 #. module: crm
 #. odoo-python
@@ -2418,7 +2443,7 @@ msgstr "จัดการแผนการที่เกิดซ้ำ"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/team_switcher/team_switcher.xml:0
 msgid "Manage Teams"
-msgstr ""
+msgstr "จัดการทีม"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2469,7 +2494,7 @@ msgstr "การตลาด:"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "ไอคอน Material Symbols เช่น รายการตรวจสอบ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
@@ -2606,7 +2631,7 @@ msgstr "ลูกค้าเป้าหมายของฉัน"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Opportunities"
-msgstr ""
+msgstr "โอกาสของฉัน"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
@@ -2795,7 +2820,7 @@ msgstr "โน้ต:"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Now, <b>add your Opportunity</b> to your Pipeline."
-msgstr "ตอนนี้  <b>เพิ่มโอกาสของคุณ</b> ไปยังไปป์ไลน์ของคุณ"
+msgstr "ตอนนี้ <b>เพิ่มโอกาสของคุณ</b> ไปยังไปป์ไลน์ของคุณ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
@@ -3237,7 +3262,7 @@ msgstr "ไม่อยู่ในรอบหมุนเวียน"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -3429,7 +3454,7 @@ msgstr "โดเมนการกำหนดกิจกรรมที่ต
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Preview records and open their forms in one click."
-msgstr ""
+msgstr "ดูตัวอย่างบันทึกและเปิดฟอร์มได้ในคลิกเดียว"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3687,7 +3712,7 @@ msgstr "เบอร์ถูกต้อง"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Save emails and attachments directly to Odoo."
-msgstr ""
+msgstr "บันทึกอีเมลและไฟล์แนบโดยตรงไปยัง Odoo"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -3993,7 +4018,7 @@ msgstr "แท็ก:"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_search_model.js:0
 msgid "Team"
-msgstr ""
+msgstr "ทีม"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
@@ -4224,7 +4249,7 @@ msgstr "เคล็ดลับ: เปลี่ยนการเลือก�
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Tired of copy-pasting emails?"
-msgstr ""
+msgstr "เบื่อกับการคัดลอกและวางอีเมลใช่ไหม?"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_list_simplified
@@ -4250,12 +4275,14 @@ msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
 "tabindex=\"-1\">join a Team.</a>"
 msgstr ""
+"เพื่อทำงานกับระบบ CRM โปรด<a name=\"%d\" type=\"action\" tabindex=\"-1\">เข้าร่วมที"
+"ม</a>"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "To work with the CRM, you should be added to a Team."
-msgstr ""
+msgstr "โปรดเข้าร่วมกับทีมเพื่อที่จะใช้งาน CRM"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4283,7 +4310,7 @@ msgstr "จุดเด่นหลัก"
 #. module: crm
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr ""
+msgstr "ติดตามลูกค้าเป้าหมายและปิดดีลกับผู้ที่มีโอกาสจะซื้อ"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4676,7 +4703,7 @@ msgstr "มอบหมายแล้ว)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "at"
-msgstr ""
+msgstr "ที่"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

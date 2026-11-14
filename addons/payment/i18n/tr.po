@@ -21,18 +21,19 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 20:35+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
-"payment/tr/>\n"
+"PO-Revision-Date: 2026-11-09 11:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/payment/"
+"tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +108,7 @@ msgstr "<small class=\"text-600\">Ödeme ayrıntılarımı kaydet</small>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.amount_input
 msgid "<small>Amount</small>"
-msgstr ""
+msgstr "<small>Tutar</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -154,6 +155,10 @@ msgid ""
 "                            Test Mode\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning fs-"
+"6\">\n"
+"                            Test Modu\n"
+"                        </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -174,12 +179,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment methods are available</strong>"
-msgstr ""
+msgstr "<strong>Kullanılabilir ödeme yöntemi yok</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment providers are configured</strong>"
-msgstr ""
+msgstr "<strong>Yapılandırılmış ödeme sağlayıcısı yok</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -210,6 +215,8 @@ msgid ""
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>Uyarı:</strong> Sıfırdan ödeme sağlayıcı oluşturma "
+"desteklenmemektedir; lütfen bunun yerine <em>Yinele</em> eylemini kullanın."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -235,7 +242,7 @@ msgstr "<strong>Uyarı</strong> Ödeme yapabilmek için giriş yapmış olmalıs
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Account"
-msgstr ""
+msgstr "Hesap"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -247,7 +254,7 @@ msgstr "Etkin"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_add_payment_method
 msgid "Add a Payment Method"
-msgstr ""
+msgstr "Ödeme Yöntemi Ekle"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -262,12 +269,12 @@ msgstr "Adyen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Countries"
-msgstr ""
+msgstr "Tüm Ülkeler"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Currencies"
-msgstr ""
+msgstr "Tüm Para Birimleri"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -282,7 +289,7 @@ msgstr "Ödeme Yöntemlerini Kaydetmeye İzin Ver"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
 msgid "Allow splitting payments across several payment methods."
-msgstr ""
+msgstr "Ödemelerin birden fazla ödeme yöntemine bölünmesine izin verin."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -311,7 +318,7 @@ msgstr "Tutar"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
 msgid "Amount Selection"
-msgstr ""
+msgstr "Tutar Seçimi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -350,6 +357,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? "
 "This                                  action can't be undone."
 msgstr ""
+"Yetkilendirilmiş işlemi iptal etmek istediğinizden emin misiniz? Bu işlem "
+"geri alınamaz."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -445,11 +454,15 @@ msgid ""
 "you want to charge your customers cards only when you are sure you can ship "
 "the goods to them."
 msgstr ""
+"Teslimat tamamlandığında miktarı Odoo'dan yakalayın.\n"
+"Müşteri kartlarınızdan yalnızca şu durumlarda ücret almak istiyorsanız bunu "
+"kullanın:\n"
+"malları onlara gönderebileceğinizden eminsiniz."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
 msgid "Child Transaction Count"
-msgstr ""
+msgstr "Alt İşlem Sayısı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -516,7 +529,7 @@ msgstr "Doğrulanmış"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Connect"
-msgstr ""
+msgstr "Bağlan"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -550,7 +563,7 @@ msgstr "Ülke"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Create"
-msgstr ""
+msgstr "Oluştur"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -566,7 +579,7 @@ msgstr "Müşteri Oluşturma"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 msgid "Created On"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -673,7 +686,7 @@ msgstr "Taslak"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -694,7 +707,7 @@ msgstr "Hata"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__error_traceback
 msgid "Error Traceback"
-msgstr ""
+msgstr "Hata İzleme"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
@@ -722,17 +735,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Express checkout not supported"
-msgstr ""
+msgstr "Hızlı ödeme desteklenmiyor"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__errored
 msgid "Failed"
-msgstr ""
+msgstr "Başarısız"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Bir Ödeme Sağlayıcısı Bulun"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -823,6 +836,8 @@ msgid ""
 "If live mode is disabled, a fake payment is processed through a test payment "
 "interface. This mode is advised when setting up the provider."
 msgstr ""
+"Canlı mod devre dışı bırakıldığında, bir test ödeme arayüzü üzerinden sahte "
+"bir ödeme işleme alınır. Bu mod, sağlayıcı ayarları yapılırken önerilir."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -833,19 +848,19 @@ msgstr "Görsel"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible country"
-msgstr ""
+msgstr "Uyumsuz ülke"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible currency"
-msgstr ""
+msgstr "Uyumsuz para birimi"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible website"
-msgstr ""
+msgstr "Uyumsuz Websitesi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -876,7 +891,7 @@ msgstr "Yüklü"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__installed_provider_id
 msgid "Installed Provider"
-msgstr ""
+msgstr "Yüklü Sağlayıcı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
@@ -955,12 +970,12 @@ msgstr "Son Güncelleme"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Live"
-msgstr ""
+msgstr "Canlı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
 
 #. module: payment
 #: model:portal.entry,description:payment.payment_methods_portal_entry
@@ -981,18 +996,18 @@ msgstr "Manuel Yakalama Desteklenir"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Manual capture not supported"
-msgstr ""
+msgstr "Manuel yakalama desteklenmiyor"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Manually confirmed by the user."
-msgstr ""
+msgstr "Kullanıcı tarafından manuel olarak onaylandı."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.action_confirm_payment_transaction
 msgid "Mark as Confirmed"
-msgstr ""
+msgstr "Onaylandı Olarak İşaretle"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1026,18 +1041,18 @@ msgstr "Mesajlar"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Method"
-msgstr ""
+msgstr "Yöntem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
-msgstr ""
+msgstr "Minimum Tutar"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Minimum or maximum amount exceeded"
-msgstr ""
+msgstr "Minimum veya maksimum tutar aşıldı"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -1137,12 +1152,12 @@ msgstr "Operasyon"
 #: code:addons/payment/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Operations"
-msgstr ""
+msgstr "Operasyonlar"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
-msgstr ""
+msgstr "Seçenekler"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1152,7 +1167,7 @@ msgstr "Diğer ödeme seçenekleri"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Others"
-msgstr ""
+msgstr "Diğerleri"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1180,17 +1195,17 @@ msgstr "Ödeme İşlemi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_later_label
 msgid "Pay Later Label"
-msgstr ""
+msgstr "'Daha Sonra Öde' Etiketi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_now_label
 msgid "Pay Now Label"
-msgstr ""
+msgstr "'Hemen Öde' Etiketi"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_pay_on_invoice
 msgid "Pay on Invoice"
-msgstr ""
+msgstr "Fatura ile Ödeme"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
@@ -1200,12 +1215,12 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__payload
 msgid "Payload"
-msgstr ""
+msgstr "Yük"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1226,7 +1241,7 @@ msgstr "Ödeme Onayı"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_data_count
 msgid "Payment Data Count"
-msgstr ""
+msgstr "Ödeme Verisi Sayısı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1236,13 +1251,13 @@ msgstr "Ödeme detayları"
 #. module: payment
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Engine"
-msgstr ""
+msgstr "Ödeme Motoru"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Payment History"
-msgstr ""
+msgstr "Ödeme Geçmişi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1351,13 +1366,13 @@ msgstr "Ödeme Yöntemi"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment method unavailable"
-msgstr ""
+msgstr "Ödeme yöntemi kullanılamıyor"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Payment method with duplicate code"
-msgstr ""
+msgstr "Mükerrer koda sahip ödeme yöntemi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -1389,16 +1404,20 @@ msgid ""
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
+"Ödeme işlemleri doğrudan güncellenmemelidir. İşleme alınacak ödeme "
+"verilerini sıraya almak için _record() kullanın ya da güncellemenin bir geri "
+"alma işlemine tolerans gösterebileceğinden emin olduktan sonra bağlama "
+"payment_safe_write=True parametresini geçin."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
 msgid "Payment: Run Post-processing"
-msgstr ""
+msgstr "Ödeme: İşlem Sonrasını Çalıştır"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
 msgid "Payment: Run Processing"
-msgstr ""
+msgstr "Ödeme: İşlemeyi Çalıştır"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1428,12 +1447,12 @@ msgstr "Bekleme Mesajı"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Pending Updates"
-msgstr ""
+msgstr "Bekleyen Güncellemeler"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_data
 msgid "Pending payment data payload to process"
-msgstr ""
+msgstr "İşlenecek bekleyen ödeme verisi yükü"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1444,12 +1463,12 @@ msgstr "Telefon"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Please choose another payment method."
-msgstr ""
+msgstr "Lütfen başka bir ödeme yöntemi seçin."
 
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Please find the payment details below."
-msgstr ""
+msgstr "Lütfen ödeme detaylarını aşağıda bulabilirsiniz."
 
 #. module: payment
 #. odoo-python
@@ -1470,17 +1489,17 @@ msgstr "Lütfen bekleyin..."
 #. module: payment
 #: model:ir.model,name:payment.model_portal_entry
 msgid "Portal Entry"
-msgstr ""
+msgstr "Portal Girişi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-process"
-msgstr ""
+msgstr "Son işlem"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-processed"
-msgstr ""
+msgstr "İşlem sonrası işlenmiş"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
@@ -1491,12 +1510,12 @@ msgstr "Birincil Ödeme Yöntemi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__primary_payment_method_ids
 msgid "Primary Payment Methods"
-msgstr ""
+msgstr "Birincil Ödeme Yöntemleri"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__processed_amount
 msgid "Processed Amount"
-msgstr ""
+msgstr "İşlenmiş Tutar"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1609,12 +1628,12 @@ msgstr "İlgili Döküman Modeli"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Restrictions"
-msgstr ""
+msgstr "Kısıtlamalar"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Run the post-processing step for this transaction."
-msgstr ""
+msgstr "Bu işlem için son işlem adımını çalıştırın."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
@@ -1698,7 +1717,7 @@ msgstr "Tarafından desteklenmektedir"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1858,6 +1877,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Later' payment "
 "methods."
 msgstr ""
+"'Daha Sonra Öde' ödeme yöntemleri için ödeme butonlarında görüntülenecek "
+"etiket."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_res_company__pay_now_label
@@ -1865,6 +1886,7 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Now' payment "
 "methods."
 msgstr ""
+"'Hemen Öde' ödeme yöntemleri için ödeme butonlarında görüntülenecek etiket."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
@@ -1937,11 +1959,13 @@ msgid ""
 "The minimum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"Bu ödeme sağlayıcısının kullanılabileceği minimum ödeme tutarı. Herhangi bir "
+"ödeme tutarı için kullanılabilir olmasını sağlamak için boş bırakın."
 
 #. module: payment
 #: model:ir.module.module,summary:base.module_payment
 msgid "The payment engine used by payment provider modules."
-msgstr ""
+msgstr "Ödeme sağlayıcı modülleri tarafından kullanılan ödeme motoru."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -1973,13 +1997,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_method_provider_id_code_uniq
 msgid "The provider already has a payment method with this code."
-msgstr ""
+msgstr "Sağlayıcıda bu koda sahip bir ödeme yöntemi zaten mevcut."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The provider must not be archived to make a request."
-msgstr ""
+msgstr "Bir istekte bulunmak için sağlayıcı arsivlenmemiş olmalıdır."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -1994,7 +2018,7 @@ msgstr "İşlemin sağlayıcı referansı"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_id
 msgid "The provider supporting this payment method."
-msgstr ""
+msgstr "Bu ödeme yöntemini destekleyen sağlayıcı."
 
 #. module: payment
 #. odoo-python
@@ -2102,6 +2126,7 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider."
 msgstr ""
+"Bu eylem, bu sağlayıcıya kayıtlı %s belirteçlerini de ar\\u015hivleyecektir."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2111,6 +2136,12 @@ msgid ""
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"Bu, müşterilerin ödeme yöntemlerini ödeme belirteci olarak kaydedip "
+"kaydedemeyeceğini kontrol eder.\n"
+"Ödeme belirteci, ödeme yöntemi ayrıntılarının kaydedildiği anonim bir "
+"bağlantıdır.\n"
+"sağlayıcının veritabanına kaydedilir ve müşterinin bir sonraki satın alma "
+"işlemi için yeniden kullanmasına olanak tanır."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2138,13 +2169,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment method is not available."
-msgstr ""
+msgstr "Bu ödeme yöntemi kullanılabilir değil."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment provider is not available."
-msgstr ""
+msgstr "Bu ödeme sağlayıcısı kullanılabilir değil."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
@@ -2160,12 +2191,12 @@ msgstr "Şirket değiştiricideki ana şirketi değiştirin."
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
-msgstr ""
+msgstr "Jeton Sayısı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2192,23 +2223,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization not supported"
-msgstr ""
+msgstr "Tokenleştirme desteklenmiyor"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization without payment no supported"
-msgstr ""
+msgstr "Ödemesiz tokenleştirme desteklenmiyor"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Tokens"
-msgstr ""
+msgstr "Jetonlar"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
 msgid "Toss Payments"
-msgstr ""
+msgstr "Toss Payments"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
@@ -2219,7 +2250,7 @@ msgstr "İşlem"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "İşlem sayısı"
 
 #. module: payment
 #. odoo-python
@@ -2234,7 +2265,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Transactions"
-msgstr ""
+msgstr "İşlemler"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2344,6 +2375,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or archived "
 "providers."
 msgstr ""
+"Etkin olmayan ödeme yöntemlerine veya arşivlenmiş sağlayıcılara bağlı "
+"jetonları arşivden çıkaramazsınız."
 
 #. module: payment
 #. odoo-python
@@ -2366,6 +2399,7 @@ msgstr "Varsayılan ödeme yöntemini silemezsiniz."
 msgid ""
 "You cannot delete the payment provider %s; archive or uninstall it instead."
 msgstr ""
+"Ödeme sağlayıcısını silemezsiniz %s; bunun yerine arşivleyin veya kaldırın."
 
 #. module: payment
 #. odoo-python
@@ -2385,7 +2419,7 @@ msgstr ""
 #. module: payment
 #: model_terms:payment.provider,done_msg:payment.payment_provider_pay_on_invoice
 msgid "Your order is confirmed, you will receive your invoice shortly."
-msgstr ""
+msgstr "Siparişiniz onaylandı, faturanız kısa süre içinde size ulaşacaktır."
 
 #. module: payment
 #. odoo-python
@@ -2518,7 +2552,7 @@ msgstr "Ödemeniz henüz işleme alınmadı."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is being processed."
-msgstr ""
+msgstr "Ödemeniz işleniyor."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2535,7 +2569,7 @@ msgstr "Ödeme yönteminiz kaydedildi."
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment method has not been saved yet."
-msgstr ""
+msgstr "Ödeme yönteminiz henüz kaydedilmedi."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2559,7 +2593,7 @@ msgstr "Ödeme işleminiz başarıyla gerçekleştirilmiştir."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip Code"
-msgstr ""
+msgstr "Posta Kodu"
 
 #. module: payment
 #. odoo-python
@@ -2576,12 +2610,12 @@ msgstr "sağlayıcı"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "source_transaction_id"
-msgstr ""
+msgstr "source_transaction_id"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "the website administrator."
-msgstr ""
+msgstr "Websitesi yöneticisi."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -2596,12 +2630,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "transaction_id"
-msgstr ""
+msgstr "transaction_id"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "websocket mesaj işleme"
 
 #~ msgid "Zip"
 #~ msgstr "PK"

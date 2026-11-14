@@ -12,17 +12,18 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-14 13:35+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 09:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "hr_skills/tr/>\n"
 "Language: tr\n"
@@ -41,6 +42,11 @@ msgid ""
 "\n"
 "This module introduces skills and resume management for employees.\n"
 msgstr ""
+"\n"
+"İK için Beceriler ve Öz Geçmiş\n"
+"========================\n"
+"\n"
+"Bu modül, çalışanlar için beceri ve öz geçmiş yönetimini sunar.\n"
 
 #. module: hr_skills
 #: model:ir.actions.report,print_report_name:hr_skills.action_report_employee_cv
@@ -61,7 +67,7 @@ msgstr ""
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">No Certifications available!</p>"
-msgstr ""
+msgstr "<p class=\"o_view_nocontent_smiling_face\">Sertifika bulunamadı!</p>"
 
 #. module: hr_skills
 #. odoo-python
@@ -74,6 +80,12 @@ msgid ""
 "                Show Skill Types\n"
 "                </a>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">Sertifika bulunamadı. Yetenek "
+"türlerine gidin!</p>\n"
+"                <a type=\"action\" name=\"hr_skills.hr_skill_type_action\" "
+"class=\"btn btn-primary\">\n"
+"                Yetenek Türlerini Göster\n"
+"                </a>"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_7
@@ -222,7 +234,7 @@ msgstr "Burtho Inc."
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_csharp
 msgid "C#"
-msgstr ""
+msgstr "C#"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_c
@@ -590,7 +602,7 @@ msgstr "Dijital reklamcılık"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_certification_page
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_certification_page
 msgid "Display Certification Page"
-msgstr ""
+msgstr "Sertifika Sayfasını Görüntüle"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
@@ -1279,7 +1291,7 @@ msgstr "Dergi muhabiri"
 #. module: hr_skills
 #: model:ir.module.module,summary:base.module_hr_skills
 msgid "Manage skills, knowledge and resume of your employees"
-msgstr ""
+msgstr "Çalışanlarınızın yeteneklerini, bilgilerini ve özgeçmişlerini yönetin"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_mandarin_chinese
@@ -1411,7 +1423,7 @@ msgstr "Yeni Özgeçmiş Satırı"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 msgid "No certifications found."
-msgstr ""
+msgstr "Sertifika bulunamadı."
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_nosql
@@ -1665,7 +1677,7 @@ msgstr "Python"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_r
 msgid "R"
-msgstr ""
+msgstr "R"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_sql
@@ -1685,7 +1697,7 @@ msgstr "React"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_resource_resource
 msgid "Resource"
-msgstr ""
+msgstr "Kaynak"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_resourcefulness
@@ -1937,7 +1949,7 @@ msgstr "Yetenek Türü"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_job_skill
 msgid "Skill for job position"
-msgstr ""
+msgstr "İş pozisyonu için yetenek"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_individual_skill_mixin
@@ -1986,7 +1998,7 @@ msgstr "Beceri Envanteri"
 #. module: hr_skills
 #: model:ir.module.module,shortdesc:base.module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "Yetenek Yönetimi"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -2289,7 +2301,7 @@ msgstr "Becerileri Güncelleme"
 #. odoo-python
 #: code:addons/hr_skills/models/hr_employee.py:0
 msgid "Upload a document for a missing certification"
-msgstr ""
+msgstr "Eksik bir sertifika için belge yükleyin"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_urdu

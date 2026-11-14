@@ -14,14 +14,15 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 09:39+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "hr_recruitment_survey/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -38,6 +39,10 @@ msgid ""
 "This module is integrated with the survey module\n"
 "to allow you to define interviews for different jobs.\n"
 msgstr ""
+"\n"
+"İşe alım sürecinde mülakat formlarını kullanın.\n"
+"Bu modül, farklı pozisyonlar için mülakat tanımlamanıza olanak tanıyan\n"
+"anket modülü ile entegredir.\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -73,11 +78,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sayın <t t-out=\"object.partner_id.name or 'applicant'\">[başvuru "
+"sahibi adı]</t><br><br>\n"
+"        <t>\n"
+"            İşe alım sürecinde ilerlediniz ve bazı soruları yanıtlamanızı "
+"istiyoruz.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t>\n"
+"                    Yazılı mülakatı başlat\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Lütfen <t t-out=\"format_date(object.deadline)\">[son tarih]</t> "
+"tarihine kadar mülakatı yanıtlayın.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            Bol şans dileriz! Katılımınız için şimdiden teşekkür ederiz.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
 msgid "<i class=\"oi me-2\" data-icon=\"east\"/>Go to Recruitment"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"east\"/>İşe Alım'a git"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -91,7 +125,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.survey_survey_view_form
 msgid "<span class=\"o_stat_text\">Jobs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">İş İlanları</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -101,12 +135,12 @@ msgstr "Senin hakkında"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_current_user
 msgid "Accessible By Current User"
-msgstr ""
+msgstr "Mevcut Kullanıcı Tarafından Erişilebilir"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_interviewer_user
 msgid "Accessible By Interviewer User"
-msgstr ""
+msgstr "Görüşmeci Kullanıcı Tarafından Erişilebilir"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -120,18 +154,16 @@ msgstr "Yeni bir anket ekle"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__emails
-#, fuzzy
 msgid "Additional emails"
 msgstr "Ek e-postalar"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__all_surveys_are_recruitment
 msgid "All Surveys Are Recruitment"
-msgstr ""
+msgstr "Tüm Anketler İşe Alım Kapsamındadır"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__deadline
-#, fuzzy
 msgid "Answer deadline"
 msgstr "Yanıt Zaman Sınırı"
 
@@ -154,25 +186,21 @@ msgstr "İş Başvurusu Yapın"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__attachment_ids
-#, fuzzy
 msgid "Attachments"
 msgstr "Ekler"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__author_id
-#, fuzzy
 msgid "Author"
 msgstr "Üretici"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body_has_template_value
-#, fuzzy
 msgid "Body content is the same as the template"
 msgstr "Gövde içeriği şablonla aynı"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__can_edit_body
-#, fuzzy
 msgid "Can Edit Body"
 msgstr "Gövdeyi Düzenleyebilir"
 
@@ -188,19 +216,16 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body
-#, fuzzy
 msgid "Contents"
 msgstr "İçerikler"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_uid
-#, fuzzy
 msgid "Created by"
 msgstr "Tarafından oluşturuldu"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_date
-#, fuzzy
 msgid "Created on"
 msgstr "Oluşturuldu"
 
@@ -225,13 +250,11 @@ msgstr "Eğitim"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_partner_ids
-#, fuzzy
 msgid "Existing Partner"
 msgstr "Mevcut Ortak"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_emails
-#, fuzzy
 msgid "Existing emails"
 msgstr "Mevcut e-postalar"
 
@@ -252,14 +275,13 @@ msgstr "Ücretsiz otopark, spor salonu girişleri gibi avantajlar elde etme"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_mode
-#, fuzzy
 msgid "Handle existing"
 msgstr "Mevcut olanları ele al"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__has_many_applicants
 msgid "Has Many Applicants"
-msgstr ""
+msgstr "Birçok Adaya Sahip"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
@@ -279,12 +301,12 @@ msgstr "Çay, kahve ve kırtasiye gibi ücretsiz eşyaların olması"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__hide_url
 msgid "Hide Url"
-msgstr ""
+msgstr "URL'yi Gizle"
 
 #. module: hr_recruitment_survey
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
 msgid "Hr Recruitment Interview Forms"
-msgstr ""
+msgstr "İK İşe Alım Görüşme Formları"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -297,7 +319,6 @@ msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
-#, fuzzy
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
@@ -325,13 +346,13 @@ msgstr "Mülakat Formu: %s"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation"
-msgstr ""
+msgstr "Mülakat Daveti"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation: %(survey_name)s"
-msgstr ""
+msgstr "Mülakat Daveti: %(survey_name)s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -347,21 +368,19 @@ msgstr "Röportajlar"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__is_mail_template_editor
-#, fuzzy
 msgid "Is Editor"
 msgstr "İş Düzenleyicisi"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
-#, fuzzy
 msgid "Job"
 msgstr "İş"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__job_count
 msgid "Job Count"
-msgstr ""
+msgstr "İş Sayısı"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -376,25 +395,21 @@ msgstr "Bilgi Birikimi"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__lang
-#, fuzzy
 msgid "Language"
 msgstr "Dil"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_uid
-#, fuzzy
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_date
-#, fuzzy
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__template_id
-#, fuzzy
 msgid "Mail Template"
 msgstr "E-Posta Şablonu"
 
@@ -415,20 +430,19 @@ msgstr "Ofis konumu"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__lang
-#, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"Bir e-posta gönderirken isteğe bağlı çeviri dilini (ISO kodu) seçin. "
-"Ayarlanmazsa, ana partnerin dili kullanılacaktır. Bu genellikle uygun dili "
-"sağlayan bir pl ifade olmalıdır, örneğin {{ object.partner_id.lang }}."
+"Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
+"Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin {{ object.partner_id.lang }}"
+"."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__mail_server_id
-#, fuzzy
 msgid "Outgoing mail server"
 msgstr "Giden mail sunucusu"
 
@@ -487,7 +501,6 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__partner_ids
-#, fuzzy
 msgid "Recipients"
 msgstr "Alıcılar"
 
@@ -505,23 +518,20 @@ msgstr "İşe Alım Formu"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
 msgid "Related Jobs"
-msgstr ""
+msgstr "İlgili İşler"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__render_model
-#, fuzzy
 msgid "Rendering Model"
 msgstr "İşleme Modeli"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
-#, fuzzy
 msgid "Require Login"
 msgstr "Giriş Gerektir"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_text
-#, fuzzy
 msgid "Resend Comment"
 msgstr "Yorumu Tekrar Gönder"
 
@@ -532,7 +542,6 @@ msgstr "Yanıtlar"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
-#, fuzzy
 msgid "Scheduled Date"
 msgstr "Planlanan Tarih"
 
@@ -543,7 +552,6 @@ msgstr "Görüşme raporuna bakın"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__send_email
-#, fuzzy
 msgid "Send Email"
 msgstr "E-posta Gönder"
 
@@ -556,22 +564,21 @@ msgstr "Mülakat Bağlantısı Gönder"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_tree_view_job_inherit
 msgid "Send Interviews"
-msgstr ""
+msgstr "Mülakatları Gönder"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send interviews"
-msgstr ""
+msgstr "Mülakatları gönder"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__single_survey_id
 msgid "Single Survey"
-msgstr ""
+msgstr "Tek Anket"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__subject
-#, fuzzy
 msgid "Subject"
 msgstr "Konu"
 
@@ -587,7 +594,7 @@ msgstr "Anket"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_access_mode
 msgid "Survey Access Mode"
-msgstr ""
+msgstr "Anket Erişim Modu"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
@@ -596,7 +603,6 @@ msgstr "Anket Türü"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_start_url
-#, fuzzy
 msgid "Survey URL"
 msgstr "Anket URL"
 
@@ -608,7 +614,6 @@ msgstr "Anket Kullanıcı Girişi"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_ids
 #: model:ir.module.module,summary:base.module_hr_recruitment_survey
-#, fuzzy
 msgid "Surveys"
 msgstr "Anketler"
 
@@ -632,11 +637,12 @@ msgid ""
 "The following emails you just entered are invalid:\n"
 "%s"
 msgstr ""
+"Girdiğiniz aşağıdaki e-postalar geçersiz:\n"
+"%s"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
-#, fuzzy
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
@@ -653,7 +659,6 @@ msgstr "%(survey_link)s anketi %(partner_link)s adresine gönderildi"
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
-#, fuzzy
 msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
@@ -663,7 +668,6 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_can_signup
-#, fuzzy
 msgid "Users can signup"
 msgstr "Kullanıcılar kaydolabilir"
 
@@ -698,6 +702,8 @@ msgid ""
 "Wizard for sending interview invitations to job applicants during "
 "recruitment process"
 msgstr ""
+"İşe alım süreci sırasında iş başvurusunda bulunanlara mülakat davetleri "
+"göndermek için sihirbaz"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
@@ -717,13 +723,11 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
-#, fuzzy
 msgid "id"
 msgstr "kimlik"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
-#, fuzzy
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."

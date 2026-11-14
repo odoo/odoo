@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 15:02+0000\n"
+"PO-Revision-Date: 2026-11-13 06:33+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
-"im_livechat/th/>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/im_livechat/"
+"th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,8 +36,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        การให้คะแนนแชทสดควรเป็น 1 (ไม่พอใจ), 3 (ปานกลาง), 5 (พอใจ)\n"
-"        หรือเว้นว่างไว้ และสามารถตั้งค่าได้เฉพาะในช่องทางแชทสดเท่านั้น\n"
+"        การให้คะแนนไลฟ์แชทควรเป็น 1 (ไม่พอใจ), 3 (ปานกลาง), 5 (พอใจ)\n"
+"        หรือเว้นว่างไว้ และสามารถตั้งค่าได้เฉพาะในช่องทางไลฟ์แชทเท่านั้น\n"
 "        "
 
 #. module: im_livechat
@@ -54,6 +54,14 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 msgstr ""
+"\n"
+"รองรับไลฟ์แชท\n"
+"==========================\n"
+"\n"
+"อนุญาตให้วางวิดเจ็ตการส่งข้อความแบบทันทีบนหน้าเว็บใดก็ได้ซึ่งจะสื่อสารกับเซิร์ฟเวอร์ปัจจุบันและส่งคำข"
+"อของผู้เยี่ยมชมให้กับผู้ดำเนินการไลฟ์แชทหลายคน\n"
+"ช่วยเหลือลูกค้าของคุณด้วยการสนทนานี้และวิเคราะห์คำติชมของพวกเขา\n"
+"\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -74,22 +82,22 @@ msgstr "# การให้คะแนน"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__message_count
 msgid "# of Messages per Session"
-msgstr ""
+msgstr "# จำนวนข้อความต่อเซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_count
 msgid "# of Sessions with Calls"
-msgstr ""
+msgstr "# จำนวนเซสชันที่มีการโทร"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
 msgid "# of Sessions with calls"
-msgstr ""
+msgstr "# จำนวนเซสชันที่มีการโทร"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "# of calls"
-msgstr ""
+msgstr "# จำนวนการโทร"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
@@ -100,37 +108,37 @@ msgstr "% แห่งความสุข"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
-msgstr ""
+msgstr "%(days)sวัน"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(hours)sh"
-msgstr ""
+msgstr "%(hours)sชม."
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
-msgstr ""
+msgstr "%(minutes)sนาที"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_service.js:0
 msgid "%(name)s left a rating:"
-msgstr ""
+msgstr "%(name)s ได้ทำการให้คะแนน:"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "%(title)s - Step %(sequence)d"
-msgstr ""
+msgstr "%(title)s - ขั้นตอน %(sequence)d"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/res_users.py:0
 msgid "%(visitor)s authenticated as %(user)s."
-msgstr ""
+msgstr "%(visitor)s ได้รับการยืนยันตัวตนในนาม %(user)s"
 
 #. module: im_livechat
 #. odoo-python
@@ -146,12 +154,13 @@ msgid ""
 "'%(input_phone)s' does not look like a valid phone number. Can you please "
 "try again?"
 msgstr ""
+"'%(input_phone)s' ดูเหมือนจะไม่ใช่หมายเลขโทรศัพท์ที่ถูกต้อง กรุณาลองใหม่อีกครั้ง?"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "'%s' is not a valid phone number."
-msgstr ""
+msgstr "'%s' ไม่ใช่หมายเลขโทรศัพท์ที่ถูกต้อง"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -164,22 +173,27 @@ msgid ""
 "'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
+"* 'แสดง' จะแสดงปุ่มแชทบนหน้าเพจต่างๆ\n"
+"* 'แสดงพร้อมการแจ้งเตือน' คือ 'แสดง' เพิ่มเติมด้วยข้อความลอยถัดจากปุ่ม\n"
+"* 'เปิดอัตโนมัติ' จะแสดงปุ่มและเปิดบานหน้าต่างการสนทนาโดยอัตโนมัติบนหน้าจอขนาดใหญ่ สำหรับหน้า"
+"จอขนาดเล็กการตั้งค่านี้จะทำงานเหมือนกับ 'แสดง'\n"
+"* 'ซ่อน' จะซ่อนปุ่มแชทบนหน้าต่างๆ\n"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
-msgstr ""
+msgstr "< 1 นาที"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Join"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>เข้าร่วม"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Leave"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>ออก"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -192,6 +206,8 @@ msgid ""
 "<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
 "aria-label=\"Happy face\"/>"
 msgstr ""
+"<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
+"aria-label=\"Happy face\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -208,17 +224,17 @@ msgstr "<span class=\"fw-bold\">ประเทศ: </span>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Happy</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">มีความสุข</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Sessions</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">เซสชัน</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span>Ongoing Sessions:</span>"
-msgstr ""
+msgstr "<span>เซสชันที่กำลังดำเนินอยู่:</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -283,18 +299,18 @@ msgstr "เปิดใช้งาน"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.js:0
 msgid "Add expertise"
-msgstr ""
+msgstr "ระบุความเชี่ยวชาญ"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Add the following code to the &lt;head&gt; section of your website:"
-msgstr ""
+msgstr "เพิ่มโค้ดต่อไปนี้ลงในส่วน&lt;หัว&gt;ของเว็บไซต์ของคุณ:"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Add your notes here..."
-msgstr ""
+msgstr "เพิ่มบันทึกของคุณที่นี่..."
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -316,7 +332,7 @@ msgstr "ตัวแทน"
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__agent_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__agent_expertise_ids
 msgid "Agent Expertise"
-msgstr ""
+msgstr "ความเชี่ยวชาญของเอเจนต์"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_partner_ids
@@ -329,18 +345,18 @@ msgstr "ตัวแทน"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_history_ids
 msgid "Agents (History)"
-msgstr ""
+msgstr "เอเจนต์ (ประวัติ)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids_count
 msgid "Agents Connected"
-msgstr ""
+msgstr "เอเจนต์ที่เชื่อมต่อแล้ว"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
 msgid "Agents Performance"
-msgstr ""
+msgstr "ประสิทธิภาพของเอเจนต์"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -348,6 +364,7 @@ msgid ""
 "Agents who are inactive in Odoo for more than 30 minutes will be considered "
 "disconnected."
 msgstr ""
+"เอเจนต์ที่ไม่มีการใช้งานใน Odoo เป็นเวลามากกว่า 30 นาทีจะถือว่าตัดการเชื่อมต่อ"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -358,7 +375,7 @@ msgstr "ประเทศทั้งหมด"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Alternatively, share this URL with your customers or suppliers via email:"
-msgstr ""
+msgstr "หรือแชร์ URL นี้กับลูกค้าหรือซัพพลายเออร์ของคุณทางอีเมล:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__always
@@ -369,7 +386,7 @@ msgstr "เสมอ"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "An error occurred while processing your answer."
-msgstr ""
+msgstr "เกิดข้อผิดพลาดขณะประมวลผลคำตอบของคุณ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -417,7 +434,7 @@ msgstr "อวตาร 128"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Average time in hours to give the first answer to the visitor"
-msgstr ""
+msgstr "เวลาเฉลี่ยเป็นชั่วโมงในการให้คำตอบแรกแก่ผู้เยี่ยมชม"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
@@ -427,12 +444,12 @@ msgstr "บอทตัวดำเนินการ"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_partner_ids
 msgid "Bots"
-msgstr ""
+msgstr "แชตบอท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_history_ids
 msgid "Bots (History)"
-msgstr ""
+msgstr "แชทบอท (ประวัติ)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
@@ -442,7 +459,7 @@ msgstr "สีพื้นหลังของปุ่ม"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Button Colors"
-msgstr ""
+msgstr "สีของปุ่ม"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -453,18 +470,18 @@ msgstr "สีข้อความของปุ่ม"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_duration_hour
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__call_duration_hour
 msgid "Call Duration"
-msgstr ""
+msgstr "ระยะเวลาการโทร"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_history_ids
 msgid "Call History"
-msgstr ""
+msgstr "ประวัติการโทร"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/livechat_command_dialog.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "ยกเลิก"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
@@ -477,6 +494,7 @@ msgstr "การตอบกลับสำเร็จรูป"
 msgid ""
 "Cannot create history as it is only available for live chats: %(histories)s."
 msgstr ""
+"ไม่สามารถสร้างประวัติได้ เนื่องจากมีให้ใช้งานเฉพาะการแชทสดเท่านั้น: %(histories)s"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_id
@@ -526,12 +544,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
-msgstr ""
+msgstr "แชทกับเรา"
 
 #. module: im_livechat
 #: model:ir.module.module,summary:base.module_im_livechat
 msgid "Chat with your website visitors"
-msgstr ""
+msgstr "พูดคุยกับผู้เยี่ยมชมเว็บไซต์ของคุณ"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -540,6 +558,8 @@ msgid ""
 "Chat with your website visitors in real time by creating a\n"
 "                channel for each website where you want live chat enabled."
 msgstr ""
+"แชทกับผู้เยี่ยมชมเว็บไซต์ของคุณแบบเรียลไทม์โดยการสร้าง\n"
+"                ช่องทางสำหรับแต่ละเว็บไซต์ที่คุณต้องการเปิดใช้งานไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -559,12 +579,12 @@ msgstr "แชทบอท"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Chatbot Answers"
-msgstr ""
+msgstr "คำตอบจากแชทบอต"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path_str
 msgid "Chatbot Answers (String)"
-msgstr ""
+msgstr "คำตอบจากแชทบอต (สตริง)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_current_step_id
@@ -616,7 +636,7 @@ msgstr "ขั้นตอนของแชทบอท"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Chatbot answers"
-msgstr ""
+msgstr "คำตอบจากแชทบอต"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.chatbot_config
@@ -627,7 +647,7 @@ msgstr "แชทบอท"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Choose the live chat channel you want to display on your website."
-msgstr ""
+msgstr "เลือกช่องทางไลฟ์แชทที่คุณต้องการแสดงบนเว็บไซต์ของคุณ"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
@@ -646,12 +666,12 @@ msgstr "ปิด"
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
-msgstr ""
+msgstr "ปิดการสนทนา"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
 msgid "Closed Live Chat session should not have a status."
-msgstr ""
+msgstr "เซสชันไลฟ์แชทที่ปิดแล้วไม่ควรมีสถานะ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -660,16 +680,18 @@ msgid ""
 "Closing this will end the live chat with %(channel_name)s. Are you sure you "
 "want to proceed?"
 msgstr ""
+"การปิดหน้านี้จะเป็นการสิ้นสุดการไลฟ์แชทกับ %(channel_name)s คุณแน่ใจหรือไม่ว่าต้องการดำเนินการ"
+"ต่อ?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__color
 msgid "Color"
-msgstr ""
+msgstr "สี"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
 msgid "Concurrent session number should be greater than zero."
-msgstr ""
+msgstr "จำนวนเซสชันพร้อมกันควรมากกว่าศูนย์"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
@@ -679,13 +701,13 @@ msgstr "การกำหนดค่า"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Configure Channel"
-msgstr ""
+msgstr "กำหนดค่าช่อง"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Connect"
-msgstr ""
+msgstr "เชื่อมต่อ"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -706,19 +728,19 @@ msgstr "การสนทนา"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
 msgid "Conversation Type"
-msgstr ""
+msgstr "ประเภทการสนทนา"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 msgid "Conversation has ended"
-msgstr ""
+msgstr "การสนทนาสิ้นสุดลงแล้ว"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
-msgstr ""
+msgstr "สนทนากับ %s"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
@@ -746,7 +768,7 @@ msgstr "ประเทศ"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Country & Language"
-msgstr ""
+msgstr "ประเทศและภาษา"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
@@ -798,17 +820,17 @@ msgstr "ลูกค้า"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_guest_ids
 msgid "Customers (Guests)"
-msgstr ""
+msgstr "ลูกค้า (ผู้เยี่ยมชม)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_history_ids
 msgid "Customers (History)"
-msgstr ""
+msgstr "ลูกค้า (ประวัติ)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_partner_ids
 msgid "Customers (Partners)"
-msgstr ""
+msgstr "ลูกค้า (พาร์ทเนอร์)"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
@@ -826,18 +848,18 @@ msgstr "วันที่:"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Date: Last month"
-msgstr ""
+msgstr "วันที่: เดือนที่แล้ว"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Date: Last week"
-msgstr ""
+msgstr "วันที่: สัปดาห์ที่แล้ว"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Datetime when the chat entered the 'Looking for help' status."
-msgstr ""
+msgstr "วันที่และเวลาที่แชทเข้าสู่สถานะ 'กำลังมองหาความช่วยเหลือ'"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
@@ -850,7 +872,7 @@ msgstr "วันของสัปดาห์"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_week_day
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
 msgid "Day of the Week"
-msgstr ""
+msgstr "วันในสัปดาห์"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
@@ -897,7 +919,7 @@ msgstr "ไดเจส"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "ละทิ้ง"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
@@ -908,7 +930,7 @@ msgstr "แชท"
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_livechat_demo
 msgid "Discuss and Livechat"
-msgstr ""
+msgstr "แชทและการไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel
@@ -946,13 +968,13 @@ msgstr "แสดงชื่อ"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Do not redirect visitors"
-msgstr ""
+msgstr "ไม่ต้องเปลี่ยนเส้นทางผู้เยี่ยมชม"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Download"
-msgstr ""
+msgstr "ดาวน์โหลด"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -965,7 +987,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Download a copy of this conversation"
-msgstr ""
+msgstr "ดาวน์โหลดสำเนาของการสนทนานี้"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__duration
@@ -975,12 +997,12 @@ msgstr "ระยะเวลา"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
 msgid "Duration (min)"
-msgstr ""
+msgstr "ระยะเวลา (นาที)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 msgid "Duration of the conversation (in minutes)"
-msgstr ""
+msgstr "ระยะเวลาของการสนทนา (เป็นนาที)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
@@ -1001,18 +1023,19 @@ msgstr "อีเมล"
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "Email: "
-msgstr ""
+msgstr "อีเมล: "
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_enabled_condition
 msgid "Enable ChatBot"
-msgstr ""
+msgstr "เปิดใช้งาน ChatBot"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Engage with visitors to convert leads or offer services."
 msgstr ""
+"สร้างการมีส่วนร่วมกับผู้เยี่ยมชมเพื่อเปลี่ยนเป็นลูกค้าเป้าหมายหรือนำเสนอการบริการ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1024,7 +1047,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Escalated"
-msgstr ""
+msgstr "ยกระดับแล้ว"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1040,22 +1063,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Expertise"
-msgstr ""
+msgstr "ความเชี่ยวชาญ"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "Expertises"
-msgstr ""
+msgstr "ความเชี่ยวชาญ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertise_ids
 msgid "Expertises used in this session"
-msgstr ""
+msgstr "ความเชี่ยวชาญที่ใช้ในเซชชันนี้"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
 msgid "Expertises used in this session (String)"
-msgstr ""
+msgstr "ความเชี่ยวชาญที่ใช้ในเซสชันนี้ (สตริง)"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1066,18 +1089,18 @@ msgstr "อธิบายหมายเหตุของคุณ"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "FOR OTHER WEBSITES"
-msgstr ""
+msgstr "สำหรับเว็บไซต์อื่น"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "FOR WEBSITES BUILT WITH ODOO"
-msgstr ""
+msgstr "สำหรับเว็บไซต์ที่สร้างด้วย ODOO"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "File"
-msgstr ""
+msgstr "ไฟล์"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
@@ -1124,7 +1147,7 @@ msgstr "วันศุกร์"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
 msgid "Give your feedback"
-msgstr ""
+msgstr "ให้ข้อเสนอแนะของคุณ"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1141,12 +1164,14 @@ msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
 "<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
+"ไปที่<strong>เว็บไซต์</strong> &gt; <strong>การกำหนดค่า</strong> &gt; <strong>ตั้งค่"
+"า</strong> &gt; <strong>ทั่วไป</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/discuss_template.xml:0
 msgid "Go to Sessions"
-msgstr ""
+msgstr "ไปที่เซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
@@ -1156,7 +1181,7 @@ msgstr "ลูกค้า"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "การกำหนด HTTP"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
@@ -1183,7 +1208,7 @@ msgstr "มีความสุข"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__has_call
 msgid "Has Call"
-msgstr ""
+msgstr "มีการโทร"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__has_access_livechat
@@ -1203,46 +1228,46 @@ msgstr "สวัสดี ฉันจะช่วยคุณได้อย�
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__provided
 msgid "Help Provided"
-msgstr ""
+msgstr "ได้รับการช่วยเหลือ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_providing_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_providing_help_history
 msgid "Help Provided (Agent)"
-msgstr ""
+msgstr "ได้รับการช่วยเหลือ (เอเจนต์)"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__requested
 msgid "Help Requested"
-msgstr ""
+msgstr "ได้เรียกขอความช่วยเหลือ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_requesting_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_requesting_help_history
 msgid "Help Requested (Agent)"
-msgstr ""
+msgstr "ได้เรียกขอความช่วยเหลือ (เอเจนต์)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
-msgstr ""
+msgstr "สถานะการช่วยเหลือ"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Help needed"
-msgstr ""
+msgstr "ต้องการความช่วยเหลือ"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Here's a copy of your conversation with"
-msgstr ""
+msgstr "นี่คือสำเนาบทสนทนาของคุณกับ"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Here's the most recent message:"
-msgstr ""
+msgstr "นี่คือข้อความล่าสุด:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1258,6 +1283,8 @@ msgstr "ประวัติ"
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_partner_id_or_guest_3b134909
 msgid "History should either be linked to a partner or a guest but not both"
 msgstr ""
+"ประวัติควรเชื่อมโยงกับพาร์ทเนอร์หรือผู้เยี่ยมชมอย่างใดอย่างหนึ่งเท่านั้น แต่ไม่สามารถเชื่อมโยงทั้งสองอ"
+"ย่างได้"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
@@ -1270,7 +1297,7 @@ msgstr "อืมมม...ให้ฉันตรวจสอบว่าฉั
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Hour of Day"
-msgstr ""
+msgstr "ชั่วโมงของวัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
@@ -1338,7 +1365,7 @@ msgstr "ไอดี"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_message__user_raw_script_answer_id
 msgid "Id of the script answer. Useful for statistics when answer is deleted."
-msgstr ""
+msgstr "ID ของคำตอบในสคริปต์ มีประโยชน์สำหรับการดูสถิติเมื่อคำตอบถูกลบออก"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions_mode
@@ -1346,6 +1373,7 @@ msgid ""
 "If limited, operators will only handle the selected number of sessions at a "
 "time."
 msgstr ""
+"หากมีการจำกัดไว้ ผู้ดำเนินการจะจัดการได้เพียงจำนวนเซสชันที่เลือกไว้ในแต่ละครั้งเท่านั้น"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
@@ -1381,19 +1409,19 @@ msgstr "รูปภาพ 512"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "In Call"
-msgstr ""
+msgstr "กำลังโทร"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.xml:0
 msgid "In a Call"
-msgstr ""
+msgstr "ระหว่างการโทร"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.js:0
 msgid "In call"
-msgstr ""
+msgstr "กำลังโทร"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1416,6 +1444,7 @@ msgstr "ข้อมูล"
 msgid ""
 "Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
 msgstr ""
+"URL '%s' ไม่ถูกต้อง ลิงก์ตรวจสอบต้องเริ่มต้นด้วย 'http://' หรือ 'https://'"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -1425,7 +1454,7 @@ msgstr "เป็นการส่งต่อตัวดำเนินกา
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_is_escalated
 msgid "Is session escalated"
-msgstr ""
+msgstr "เซสชันได้รับการยกระดับ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1446,7 +1475,7 @@ msgstr "เก็บประวัติการโทร"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_member_history
 msgid "Keep the channel member history"
-msgstr ""
+msgstr "รักษาประวัติสมาชิกของช่อง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
@@ -1473,7 +1502,7 @@ msgstr "ภาษา"
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_lang_id
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__lang_id
 msgid "Lang of the visitor of the channel."
-msgstr ""
+msgstr "ภาษาของผู้เยี่ยมชมช่อง"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1493,12 +1522,12 @@ msgstr "ภาษา"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Languages you can speak for live chat conversations."
-msgstr ""
+msgstr "ภาษาที่คุณสามารถใช้สำหรับการสนทนาไลฟ์แชท"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Last 24 Hours"
-msgstr ""
+msgstr "24 ชม.ที่ผ่านมา"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1565,17 +1594,19 @@ msgid ""
 "Leaving will end the live chat with %(channel_name)s. Are you sure you want "
 "to continue?"
 msgstr ""
+"การออกจากหน้านี้จะเป็นการสิ้นสุดการไลฟ์แชทกับ %(channel_name)s คุณแน่ใจหรือไม่ว่าต้องการดำเนิ"
+"นการต่อ?"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.js:0
 msgid "Leaving will end the live chat. Do you want to proceed?"
-msgstr ""
+msgstr "การออกจากหน้านี้จะเป็นการสิ้นสุดไลฟ์แชท คุณต้องการดำเนินการต่อหรือไม่?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
 msgid "Let me check if I can connect you with the right expert..."
-msgstr ""
+msgstr "ขอให้ฉันตรวจสอบว่าจะเชื่อมต่อคุณกับผู้เชี่ยวชาญที่เหมาะสมได้หรือไม่..."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
@@ -1609,14 +1640,14 @@ msgstr ""
 #: model:ir.ui.menu,name:im_livechat.livechat_channels_config
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Live Chat Channels"
-msgstr ""
+msgstr "ช่องไลฟ์แชท"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 #: model:ir.actions.report,name:im_livechat.action_report_livechat_conversation
 msgid "Live Chat Conversation"
-msgstr ""
+msgstr "บทสนทนาไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_expertise
@@ -1634,12 +1665,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
 msgid "Live Chat Note"
-msgstr ""
+msgstr "โน๊ตไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
 msgid "Live Chat Session Failure"
-msgstr ""
+msgstr "การเชื่อมต่อไลฟ์แชทล้มเหลว"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
@@ -1647,24 +1678,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Live Chat Support Statistics"
-msgstr ""
+msgstr "สถิติการสนับสนุนผ่านไลฟ์แชท"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Live Chat Window"
-msgstr ""
+msgstr "หน้าไลฟ์แชท"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chats"
-msgstr ""
+msgstr "ไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_livechat_channel_id
 msgid "Live chat channel"
-msgstr ""
+msgstr "ช่องไลฟ์แชท"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_livechat_demo
@@ -1688,17 +1719,17 @@ msgstr "จำนวนช่องไลฟ์แชท"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_member_history_ids
 msgid "Livechat Channel Member History"
-msgstr ""
+msgstr "ประวัติสมาชิกช่องไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rule"
-msgstr ""
+msgstr "กฎของช่องไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_expertise_ids
 msgid "Livechat Expertise"
-msgstr ""
+msgstr "ผู้เชี่ยวชาญไลฟ์แชท"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.unit_embed_suite
@@ -1708,7 +1739,7 @@ msgstr "การทดสอบภายนอกของไลฟ์แชท
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_is_in_call
 msgid "Livechat Is In Call"
-msgstr ""
+msgstr "ไลฟ์แชทกำลังติดสาย"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
@@ -1718,44 +1749,44 @@ msgstr "ภาษาของไลฟ์แชท"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_expertise
 msgid "Livechat Matches Self Expertise"
-msgstr ""
+msgstr "ไลฟ์แชทจับคู่กับความเชี่ยวชาญของตนเอง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_lang
 msgid "Livechat Matches Self Lang"
-msgstr ""
+msgstr "ไลฟ์แชทจับคู่กับภาษาของตนเอง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_history_ids
 msgid "Livechat Member History"
-msgstr ""
+msgstr "ประวัติสมาชิกไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_type
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__livechat_member_type
 msgid "Livechat Member Type"
-msgstr ""
+msgstr "ประเภทสมาชิกไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_outcome
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_outcome
 msgid "Livechat Outcome"
-msgstr ""
+msgstr "ผลลัพธ์ไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__livechat_participant_history_ids
 msgid "Livechat Participant History"
-msgstr ""
+msgstr "ประวัติผู้เข้าร่วมไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_rating
 msgid "Livechat Rating Text"
-msgstr ""
+msgstr "ข้อความให้คะแนนไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
 msgid "Livechat Status"
-msgstr ""
+msgstr "สถานะไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -1779,7 +1810,7 @@ msgstr "ภาษาของไลฟ์แชท"
 #: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
 msgid "Looking for help"
-msgstr ""
+msgstr "กำลังมองหาความช่วยเหลือ"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_looking_for_help_since_dt_constraint
@@ -1787,12 +1818,14 @@ msgid ""
 "Looking for help date should only be set if the channel is looking for help "
 "and must be empty otherwise."
 msgstr ""
+"ควรตั้งค่าวันที่กำลังต้องการความช่วยเหลือเฉพาะเมื่อช่องทางกำลังต้องการความช่วยเหลือเท่านั้น และต้อ"
+"งเว้นว่างไว้ในกรณีอื่น"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "Looking for help for: %(duration)s"
-msgstr ""
+msgstr "กำลังมองหาความช่วยเหลือสำหรับ: %(duration)s"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
@@ -1807,12 +1840,12 @@ msgstr "ลำดับที่ตรงกัน"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum Sessions"
-msgstr ""
+msgstr "เซสชันสูงสุด"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum number of concurrent sessions per operator."
-msgstr ""
+msgstr "จำนวนเซสชันพร้อมกันสูงสุดต่อผู้ปฏิบัติงาน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__member_id
@@ -1824,18 +1857,18 @@ msgstr "สมาชิก"
 #: model:ir.ui.menu,name:im_livechat.menu_member_history
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
 msgid "Member History"
-msgstr ""
+msgstr "ประวัติสมาชิก"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
 msgid "Member Type"
-msgstr ""
+msgstr "ประเภทสมาชิก"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_member_id_unique
 msgid "Members can only be linked to one history"
-msgstr ""
+msgstr "สมาชิกสามารถเชื่อมโยงกับประวัติได้เพียงรายการเดียวเท่านั้น"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1856,7 +1889,7 @@ msgstr "ข้อความต่อเซสชัน"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "Messages:"
-msgstr ""
+msgstr "ข้อความ:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__0
@@ -1885,7 +1918,7 @@ msgstr "ชื่อ"
 #: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
 #: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
 msgid "Need help? Chat with us."
-msgstr ""
+msgstr "ต้องการความช่วยเหลือหรือไม่? แชทกับเราได้เลย"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_rating__3
@@ -1904,7 +1937,7 @@ msgstr "เป็นกลาง"
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_answer
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_answer
 msgid "Never Answered"
-msgstr ""
+msgstr "ไม่เคยตอบ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1918,28 +1951,28 @@ msgstr "เซสชันใหม่"
 msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
-msgstr ""
+msgstr "ชื่อเล่นที่ใช้ในการสนทนาไลฟ์แชทเพื่อปกป้องชื่อจริงของคุณจากผู้เยี่ยมชม"
 
 #. module: im_livechat
 #: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
 msgid "No"
-msgstr ""
+msgstr "ไม่"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
 msgid "No Chats During Call"
-msgstr ""
+msgstr "ไม่มีแชทระหว่างการโทร"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
-msgstr ""
+msgstr "ไม่พบข้อผิดพลาด"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "No Livechat Session!"
-msgstr ""
+msgstr "ไม่มีเซชชันไลฟ์แชท!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1950,7 +1983,7 @@ msgstr "ไม่มีผู้ทำงานร่วมกัน โปร�
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "No chatbots found. Let's create one!"
-msgstr ""
+msgstr "ไม่พบแชทบอต มาสร้างกันเลย!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1977,7 +2010,7 @@ msgstr "ไม่พบประวัติ"
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid "No live chat channel found. Let's create one!"
-msgstr ""
+msgstr "ไม่พบช่องทางไลฟ์แชท มาสร้างกันเลย!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1987,13 +2020,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "No one Available"
-msgstr ""
+msgstr "ไม่มีผู้ใดว่าง"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Not Answered"
-msgstr ""
+msgstr "ยังไม่ได้ตอบกลับ"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_note
@@ -2001,6 +2034,7 @@ msgid ""
 "Note about the session, visible to all internal users having access to the "
 "session."
 msgstr ""
+"บันทึกเกี่ยวกับเซสชัน ซึ่งผู้ใช้ภายในทุกคนที่มีสิทธิ์เข้าถึงเซสชันสามารถมองเห็นได้"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2011,7 +2045,7 @@ msgstr "โน้ต"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Notification Text"
-msgstr ""
+msgstr "ข้อความการแจ้งเตือน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
@@ -2021,24 +2055,24 @@ msgstr "จำนวนแชทบอท"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__ongoing_session_count
 msgid "Number of Ongoing Sessions"
-msgstr ""
+msgstr "จำนวนเซสชันที่กำลังดำเนินอยู่"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_ongoing_session_count
 msgid "Number of Ongoing sessions"
-msgstr ""
+msgstr "จำนวนเซสชันที่กำลังดำเนินอยู่"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Number of conversations and percentage of positive ratings in the last 30 "
 "days"
-msgstr ""
+msgstr "จำนวนบทสนทนาและเปอร์เซ็นต์ของการให้คะแนนเชิงบวกในช่วง 30 วันที่ผ่านมา"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversations in the past 30 days"
-msgstr ""
+msgstr "จำนวนบทสนทนาในช่วง 30 วันที่ผ่านมา"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -2053,12 +2087,13 @@ msgstr "Odoo"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_guest_id_unique
 msgid "One guest can only be linked to one history on a channel"
-msgstr ""
+msgstr "แขกหนึ่งคนสามารถเชื่อมโยงกับประวัติได้เพียงรายการเดียวในหนึ่งช่องทาง"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_partner_id_unique
 msgid "One partner can only be linked to one history on a channel"
 msgstr ""
+"พาร์ทเนอร์หนึ่งรายสามารถเชื่อมโยงกับประวัติได้เพียงรายการเดียวในหนึ่งช่องทาง"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -2068,12 +2103,12 @@ msgstr "กำลังดำเนินการ"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Ongoing Conversations"
-msgstr ""
+msgstr "บทสนทนาที่กำลังดำเนินการ"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Ongoing Sessions"
-msgstr ""
+msgstr "เซสชันที่กำลังดำเนินอยู่"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
@@ -2084,23 +2119,23 @@ msgstr "หากเท่านั้น"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "Only Live Chat operators can join Live Chat channels"
-msgstr ""
+msgstr "เฉพาะเจ้าหน้าที่ ไลฟ์แชทเท่านั้นที่สามารถเข้าร่วมช่องทางไลฟ์แชทได้"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Only customers can rate a live chat conversation."
-msgstr ""
+msgstr "เฉพาะลูกค้าเท่านั้นที่สามารถให้คะแนนบทสนทนาไลฟ์แชทได้"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
 msgid "Only when an operator is available"
-msgstr ""
+msgstr "เฉพาะเมื่อมีเจ้าหน้าที่ให้บริการเท่านั้น"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_no_operator
 msgid "Only when no operator is available"
-msgstr ""
+msgstr "เฉพาะเมื่อไม่มีเจ้าหน้าที่ให้บริการเท่านั้น"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
@@ -2110,7 +2145,7 @@ msgstr "เปิดอัตโนมัติ"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
 msgid "Operator Expertise"
-msgstr ""
+msgstr "ความเชี่ยวชาญของผู้ให้บริการ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__user_ids
@@ -2149,7 +2184,7 @@ msgstr "พาร์ทเนอร์"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Percentage of positive ratings in the last 30 days"
-msgstr ""
+msgstr "เปอร์เซ็นต์ของการให้คะแนนเชิงบวกในช่วง 30 วันที่ผ่านมา"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -2160,7 +2195,7 @@ msgstr "โทรศัพท์"
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "Phone: "
-msgstr ""
+msgstr "โทรศัพท์: "
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
@@ -2176,7 +2211,7 @@ msgstr "คำถาม"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: im_livechat
 #. odoo-python
@@ -2195,7 +2230,7 @@ msgstr "การให้คะแนน"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_percentage
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Rating (%)"
-msgstr ""
+msgstr "การให้คะแนน (%)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
@@ -2211,7 +2246,7 @@ msgstr "ข้อความการให้คะแนน"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Receive a copy of this conversation"
-msgstr ""
+msgstr "รับสำเนาการสนทนานี้"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
@@ -2233,12 +2268,12 @@ msgstr "ข้อความเมลที่เกี่ยวข้อง"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 msgid "Relevant to your expertise"
-msgstr ""
+msgstr "ที่เกี่ยวข้องกับความเชี่ยวชาญของคุณ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
 msgid "Remaining Session Capacity"
-msgstr ""
+msgstr "ความจุเซสชันที่เหลืออยู่"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -2248,7 +2283,7 @@ msgstr "การรายงาน"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Requested At"
-msgstr ""
+msgstr "ร้องขอเมื่อ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2263,7 +2298,7 @@ msgstr "รีเซ็ตเป็นสีเริ่มต้น"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Response Time"
-msgstr ""
+msgstr "เวลาในการตอบสนอง"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2280,7 +2315,7 @@ msgstr "กำลังเริ่มการสนทนาใหม่..."
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__review_link
 msgid "Review Link"
-msgstr ""
+msgstr "ลิงก์ตรวจสอบ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
@@ -2292,7 +2327,7 @@ msgstr "กฏ"
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_safari_demo
 msgid "Safari"
-msgstr ""
+msgstr "Safari"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating
@@ -2329,7 +2364,7 @@ msgstr "สคริปต์ (ภายนอก)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external_text
 msgid "Script (external) Text"
-msgstr ""
+msgstr "ข้อความสคริปต์ (ภายนอก)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
@@ -2344,12 +2379,12 @@ msgstr "ขั้นตอนสคริปต์"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 msgid "Search Agent"
-msgstr ""
+msgstr "ค้นหาเอเจนต์"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
 msgid "Search History"
-msgstr ""
+msgstr "ประวัติการค้นหา"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -2377,7 +2412,7 @@ msgstr "ส่ง"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Send conversation"
-msgstr ""
+msgstr "ส่งการสนทนา"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__sequence
@@ -2394,7 +2429,7 @@ msgstr "วันที่ของเซสชั่น"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
 msgid "Session Duration"
-msgstr ""
+msgstr "ระยะเวลาของเซสชัน"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
@@ -2404,36 +2439,36 @@ msgstr "แบบฟอร์มเซสชัน"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Session Limits"
-msgstr ""
+msgstr "ขีดจำกัดของเซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_outcome
 msgid "Session Outcome"
-msgstr ""
+msgstr "ผลลัพธ์ของเซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_start_hour
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_start_hour
 msgid "Session Start Hour"
-msgstr ""
+msgstr "ชั่วโมงเริ่มเซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_end_dt
 msgid "Session end date"
-msgstr ""
+msgstr "วันที่สิ้นสุดเซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_end_dt
 msgid ""
 "Session is closed when either the visitor or the last agent leaves the "
 "conversation."
-msgstr ""
+msgstr "เซสชันจะถูกปิดเมื่อผู้เยี่ยมชมหรือเอเจนต์คนสุดท้ายออกจากบทสนทนา"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_percentage
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__percentage_of_calls
 msgid "Session with Calls (%)"
-msgstr ""
+msgstr "เซสชันที่มีการโทร (%)"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
@@ -2451,12 +2486,12 @@ msgstr "เซสชั่น"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Sessions Analysis"
-msgstr ""
+msgstr "การวิเคราะห์เซสชัน"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
 msgid "Sessions per Operator"
-msgstr ""
+msgstr "เซสชันต่อผู้ให้บริการ"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
@@ -2466,6 +2501,9 @@ msgid ""
 "and generate leads or\n"
 "                support tickets automatically."
 msgstr ""
+"ตั้งค่าบอตพร้อมสคริปต์ที่กำหนดไว้เพื่อแชทกับผู้เยี่ยมชมเว็บไซต์ของคุณ\n"
+"                คัดกรองและส่งต่อการสนทนาไปยังเจ้าหน้าที่ไลฟ์แชทของคุณ\n"
+"                และสร้างลูกค้าเป้าหมายหรือใบแจ้งงานสนับสนุนโดยอัตโนมัติ"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
@@ -2491,13 +2529,13 @@ msgstr "แสดงพร้อมการแจ้งเตือน"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
 msgid "Someone has already joined this conversation"
-msgstr ""
+msgstr "มีคนเข้าร่วมการสนทนานี้แล้ว"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Spoken Languages"
-msgstr ""
+msgstr "ภาษาที่พูด"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
@@ -2507,7 +2545,7 @@ msgstr "วันที่เริ่มเซสชัน"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_minutes
 msgid "Start Date of session, truncated to minutes"
-msgstr ""
+msgstr "วันที่เริ่มต้นของเซสชัน ตัดเศษวินาทีออกให้เหลือเพียงนาที"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_hour
@@ -2518,7 +2556,7 @@ msgstr "ชั่วโมงที่เริ่มเซสชัน"
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
 msgid "Start a conversation to populate your chat history."
-msgstr ""
+msgstr "เริ่มต้นการสนทนาเพื่อให้มีข้อมูลในประวัติการแชทของคุณ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2542,7 +2580,7 @@ msgstr "ประเภทขั้นตอน"
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script.py:0
 msgid "Step of type 'Question' must have answers."
-msgstr ""
+msgstr "ขั้นตอนประเภท 'คำถาม' จะต้องมีคำตอบ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2562,13 +2600,13 @@ msgstr "วันอาทิตย์"
 #. module: im_livechat
 #: model:chatbot.script,title:im_livechat.chatbot_script_support_bot_demo
 msgid "Support Bot"
-msgstr ""
+msgstr "บอตสนับสนุน"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 msgid "Tab to next live chat"
-msgstr ""
+msgstr "แท็บไปยังไลฟ์แชทถัดไป"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__text
@@ -2590,7 +2628,7 @@ msgstr "ขอบคุณสำหรับความคิดเห็นข
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "The URL Regex '%(regex)s' is not valid."
-msgstr ""
+msgstr "URL Regex '%(regex)s' ไม่ถูกต้อง"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -2653,12 +2691,12 @@ msgstr "นี่คือข้อความ 'ยินดีต้อนร�
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/discuss_channel_model_patch.js:0
 msgid "This live chat conversation has ended."
-msgstr ""
+msgstr "การสนทนาไลฟ์แชทนี้สิ้นสุดลงแล้ว"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "This message has been removed"
-msgstr ""
+msgstr "ข้อความนี้ถูกลบออกแล้ว"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2674,12 +2712,12 @@ msgstr "วันพฤหัสบดี"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
 msgid "Time spent by the persona in the session in hours"
-msgstr ""
+msgstr "เวลาที่บุคคลใช้ในเซสชันเป็นชั่วโมง"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Time to Open"
-msgstr ""
+msgstr "เวลาในการเปิด"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
@@ -2727,6 +2765,8 @@ msgid ""
 "Track and improve live chat performance with insights on session activity, "
 "response times, customer ratings, and call interactions."
 msgstr ""
+"ติดตามและปรับปรุงประสิทธิภาพของไลฟ์แชทด้วยข้อมูลเชิงลึกเกี่ยวกับกิจกรรมในเซสชัน เวลาในการตอบก"
+"ลับ การให้คะแนนจากลูกค้า และการสนทนาทางโทรศัพท์"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_troubleshooting_demo
@@ -2742,7 +2782,7 @@ msgstr "วันอังคาร"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Turn on the <strong>Live Chat</strong> feature."
-msgstr ""
+msgstr "เปิดใช้งานฟีเจอร์ <strong>ไลฟ์แชท</strong>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -2759,7 +2799,7 @@ msgstr "URL ไปยังเพจคงที่ลูกค้าของ�
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "UTM Mixin"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
@@ -2774,7 +2814,7 @@ msgstr "UUID"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Unhappy"
-msgstr ""
+msgstr "ไม่พอใจ"
 
 #. module: im_livechat
 #. odoo-python
@@ -2792,7 +2832,7 @@ msgstr "ไม่จำกัด"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Unread"
-msgstr ""
+msgstr "ยังไม่อ่าน"
 
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
@@ -2801,6 +2841,8 @@ msgid ""
 "To load a canned response, start your sentence with '::' and select the "
 "template."
 msgstr ""
+"ใช้ข้อความสำเร็จรูปเพื่อกำหนดเทมเพลตข้อความในแอปไลฟ์แชท เพื่อโหลดข้อความสำเร็จรูป ให้เริ่มต้นป"
+"ระโยคของคุณด้วย '::' แล้วเลือกเทมเพลต"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2818,7 +2860,7 @@ msgstr "ผู้ใช้ ชื่อผู้ใช้ไลฟ์แชท"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_script_answer_id
 msgid "User Raw Script Answer"
-msgstr ""
+msgstr "คำตอบชุดคำสั่งต้นฉบับของผู้ใช้"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
@@ -2838,19 +2880,19 @@ msgstr "คำตอบเบื้องต้นของผู้ใช้"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
-msgstr ""
+msgstr "ดูช่อง"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
 msgid "View Chat"
-msgstr ""
+msgstr "ดูแชท"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
-msgstr ""
+msgstr "ดูข้อมูลผู้ติดต่อ"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2867,19 +2909,19 @@ msgstr "ผู้เยี่ยมชม"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "Visitor is disconnected"
-msgstr ""
+msgstr "ผู้เข้าชมถูกตัดการเชื่อมต่อ"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "Visitor is disconnected since %(time)s"
-msgstr ""
+msgstr "ผู้เข้าชมถูกตัดการเชื่อมต่อตั้งแต่ %(time)s"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "Visitor is disconnected since yesterday at %(time)s"
-msgstr ""
+msgstr "ผู้เข้าชมถูกตัดการเชื่อมต่อตั้งแต่เมื่อวานตอน %(time)s"
 
 #. module: im_livechat
 #. odoo-python
@@ -2892,7 +2934,7 @@ msgstr "ผู้เยี่ยมชมออกจากการสนทน
 msgid ""
 "Visitors who leave a positive review will be redirected to this optional "
 "link."
-msgstr ""
+msgstr "ผู้เข้าชมที่เขียนรีวิวในเชิงบวกจะถูกเปลี่ยนเส้นทางไปยังลิงก์เสริมนี้"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -2924,7 +2966,7 @@ msgstr "ยินดีต้อนรับสู่ ชื่อบริษ�
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
 msgid "Welcome to the Support! How can I assist you today?"
-msgstr ""
+msgstr "ยินดีต้อนรับสู่ฝ่ายสนับสนุน! มีอะไรให้เราช่วยเหลือคุณในวันนี้ไหม?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
@@ -2935,12 +2977,12 @@ msgstr "คุณกำลังมองหาอะไรอยู่?"
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_troubleshooting_step_browser_demo
 msgid "What browser are you using?"
-msgstr ""
+msgstr "คุณกำลังใช้เบราว์เซอร์อะไรอยู่?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_selection_demo
 msgid "What module are you interested in?"
-msgstr ""
+msgstr "คุณสนใจโมดูลไหนอยู่?"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__operator_expertise_ids
@@ -2950,11 +2992,12 @@ msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
 msgstr ""
+"เมื่อมีการส่งต่อบทสนทนาไลฟ์แชท แชทบอตจะให้ความสำคัญกับผู้ใช้ที่มีความเชี่ยวชาญตรงกับความต้องการ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__has_call
 msgid "Whether the session had a call"
-msgstr ""
+msgstr "เซสชันมีการโทรหรือไม่"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_is_in_call
@@ -2962,11 +3005,12 @@ msgid ""
 "Whether the user is in a call, only available if the user is in a live chat "
 "agent"
 msgstr ""
+"ว่าผู้ใช้กำลังติดสายอยู่หรือไม่ ใช้ได้เฉพาะในกรณีที่ผู้ใช้เป็นเอเจนต์ไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__block_assignment_during_call
 msgid "While on a call, agents will not receive new conversations."
-msgstr ""
+msgstr "ในขณะที่ติดสายอยู่ เอเจนต์จะไม่ได้รับบทสนทนาใหม่"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2976,7 +3020,7 @@ msgstr "วิดเจ็ต"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Window Colors"
-msgstr ""
+msgstr "สีของหน้าต่าง"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
@@ -2989,7 +3033,7 @@ msgstr "คุณช่วยให้ที่อยู่อีเมลขอ
 #. odoo-python
 #: code:addons/im_livechat/controllers/channel.py:0
 msgid "Write expertises: Only LINK and UNLINK commands are allowed."
-msgstr ""
+msgstr "เขียนความเชี่ยวชาญ: อนุญาตเฉพาะคำสั่ง LINK และ UNLINK เท่านั้น"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3054,7 +3098,7 @@ msgstr "เช่น สวัสดี ฉันจะช่วยคุณไ�
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Need help? Chat with us."
-msgstr ""
+msgstr "เช่น ต้องการความช่วยเหลือใช่ไหม? แชทกับเราได้เลย"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -3065,19 +3109,19 @@ msgstr "เช่น YourWebsite.com"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
 msgid "in a call"
-msgstr ""
+msgstr "กำลังติดสาย"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "invited %s to the conversation"
-msgstr ""
+msgstr "รับเชิญ %s เข้าสู่บทสนทนา"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "joined the conversation"
-msgstr ""
+msgstr "เข้าร่วมบทสนทนาแล้ว"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3103,4 +3147,4 @@ msgstr "การจัดการข้อความของ websocket"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
-msgstr ""
+msgstr "width:40px; height:40px; border-radius:0.5rem; display:block;"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-22 05:33+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -93,11 +93,6 @@ msgid "%s (copy)"
 msgstr "%s（副本）"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid "<span class=\"fw-bold\">Availability</span>"
-msgstr "<span class=\"fw-bold\">可用性</span>"
-
-#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid ""
 "<span class=\"o_form_label\" invisible=\"threshold_operator == "
@@ -108,15 +103,8 @@ msgid ""
 "invisible=\"threshold_operator != 'less_than'\">Set Deficit to <sup "
 "class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"You can define a "
 "time type that will be created to count the amount of time missing to "
-"fullfill the condition.\">?</sup></span>"
+"fulfill the condition.\">?</sup></span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"threshold_operator == 'less_than'\">"
-"将超出部分设为 <sup class=\"d-print-none text-info p-1 ms-1\" data-"
-"tooltip=\"您可以定义一个工时类型，用于统计超出的时间。\">?</sup></span>\n"
-"                                <span class=\"o_form_label\" "
-"invisible=\"threshold_operator != 'less_than'\">将不足部分设为 <sup "
-"class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"您可以定义一个工时类"
-"型，用于统计距离满足条件所缺的时间。\">?</sup></span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -127,6 +115,17 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">工作日 <sup class=\"d-print-none text-info p-1 "
 "ms-1\" data-tooltip=\"根据工时记录的时间定义条件。\">?</sup></span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"o_wrap_label\">\n"
+"                                <span class=\"o_form_label "
+"oe_edit_only\">Availability</span>\n"
+"                                <span class=\"o_form_label "
+"o_form_label_readonly oe_read_only\">Availability</span>\n"
+"                            </span>"
+msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -521,6 +520,11 @@ msgstr "出勤 - 特别非工作日假日（休息日）"
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
 msgid "August"
 msgstr "八月"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_time_rule_action
+msgid "Automatic Rules"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
@@ -1398,8 +1402,8 @@ msgstr "发放工资"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
-msgid "Guaranted monthly wage accident"
-msgstr "工伤的保障月工资"
+msgid "Guaranteed monthly wage accident"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_sick_leave
@@ -1432,23 +1436,23 @@ msgstr "工伤的保障月工资"
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_sick_leave
-msgid "Guaranted monthly wage illness"
-msgstr "病假的保障月工资"
+msgid "Guaranteed monthly wage illness"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
-msgid "Guaranted wage interrupted day illness"
-msgstr "病假中断日的保障工资"
+msgid "Guaranteed wage interrupted day illness"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_first_week
-msgid "Guaranted weekly wage illness"
-msgstr "病假的保障周工资"
+msgid "Guaranteed weekly wage illness"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
-msgid "Guaranted weekly wage industrial accident"
-msgstr "工伤的保障周工资"
+msgid "Guaranteed weekly wage industrial accident"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_home_working
@@ -3722,11 +3726,6 @@ msgid "Time Rule Source Mixin"
 msgstr "工时规则源 Mixin"
 
 #. module: hr_work_entry
-#: model:ir.actions.act_window,name:hr_work_entry.hr_time_rule_action
-msgid "Time Rules"
-msgstr "工时规则"
-
-#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__condition_work_entry_type_ids
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
@@ -4357,6 +4356,47 @@ msgstr "workentries_"
 #: code:addons/hr_work_entry/models/hr_time_rule_source_mixin.py:0
 msgid "… and %d more"
 msgstr "… 以及另外 %d 项"
+
+#~ msgid "<span class=\"fw-bold\">Availability</span>"
+#~ msgstr "<span class=\"fw-bold\">可用性</span>"
+
+#~ msgid ""
+#~ "<span class=\"o_form_label\" invisible=\"threshold_operator == "
+#~ "'less_than'\">Set Excess to <sup class=\"d-print-none text-info p-1 "
+#~ "ms-1\" data-tooltip=\"You can define a time type that will be created to "
+#~ "count the amount of time in excess.\">?</sup></span>\n"
+#~ "                                <span class=\"o_form_label\" "
+#~ "invisible=\"threshold_operator != 'less_than'\">Set Deficit to <sup "
+#~ "class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"You can define a "
+#~ "time type that will be created to count the amount of time missing to "
+#~ "fullfill the condition.\">?</sup></span>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label\" invisible=\"threshold_operator == "
+#~ "'less_than'\">将超出部分设为 <sup class=\"d-print-none text-info p-1 "
+#~ "ms-1\" data-tooltip=\"您可以定义一个工时类型，用于统计超出的时间。\">?</"
+#~ "sup></span>\n"
+#~ "                                <span class=\"o_form_label\" "
+#~ "invisible=\"threshold_operator != 'less_than'\">将不足部分设为 <sup "
+#~ "class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"您可以定义一个工"
+#~ "时类型，用于统计距离满足条件所缺的时间。\">?</sup></span>"
+
+#~ msgid "Guaranted monthly wage accident"
+#~ msgstr "工伤的保障月工资"
+
+#~ msgid "Guaranted monthly wage illness"
+#~ msgstr "病假的保障月工资"
+
+#~ msgid "Guaranted wage interrupted day illness"
+#~ msgstr "病假中断日的保障工资"
+
+#~ msgid "Guaranted weekly wage illness"
+#~ msgstr "病假的保障周工资"
+
+#~ msgid "Guaranted weekly wage industrial accident"
+#~ msgstr "工伤的保障周工资"
+
+#~ msgid "Time Rules"
+#~ msgstr "工时规则"
 
 #~ msgid "autoCompleteItemScope.label"
 #~ msgstr "autoCompleteItemScope.label"

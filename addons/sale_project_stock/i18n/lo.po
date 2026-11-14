@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project_stock
+# * sale_project_stock
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-10 12:14+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "sale_project_stock/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -23,12 +24,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_project_stock
 msgid ""
 "Adds a full traceability of inventory operations on the profitability report."
-msgstr ""
+msgstr "ເພີ່ມການຕິດຕາມການເຄື່ອນໄຫວສາງສິນຄ້າຢ່າງຄົບຖ້ວນໃນບົດລາຍງານຜົນກຳໄລ."
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "ລາຍການວິເຄາະ"
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_account_analytic_line__display_name
@@ -36,7 +37,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: sale_project_stock
 #: model:ir.model.fields,field_description:sale_project_stock.field_account_analytic_line__id
@@ -44,34 +45,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__id
 #: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: sale_project_stock
 #. odoo-python
 #: code:addons/sale_project_stock/models/account_analytic_line.py:0
 msgid "Inventory Transfers (Costs)"
-msgstr ""
+msgstr "ການໂອນຍ້າຍສາງ (ຕົ້ນທຶນ)"
 
 #. module: sale_project_stock
 #. odoo-python
 #: code:addons/sale_project_stock/models/account_analytic_line.py:0
 msgid "Inventory Transfers (Revenue)"
-msgstr ""
+msgstr "ການໂອນຍ້າຍສາງ (ລາຍຮັບ)"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: sale_project_stock
 #: model:ir.module.module,shortdesc:base.module_sale_project_stock
 msgid "Sale Project - Sale Stock"
-msgstr ""
+msgstr "ໂຄງການຂາຍ - ສາງສິນຄ້າການຂາຍ"
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "ການເຄື່ອນຍ້າຍສິນຄ້າ"
 
 #. module: sale_project_stock
 #. odoo-python
@@ -80,6 +81,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
 "You cannot validate a stock picking on a cancelled Sales Order."
 msgstr ""
+"ໃບສັ່ງຂາຍ %(order)s ທີ່ເຊື່ອມໂຍງກັບໂຄງການ %(project)s ຖືກຍົກເລີກແລ້ວ. ທ່ານບໍ່ສາມາດຢືນຢັນການເບີ"
+"ກຈ່າຍສິນຄ້າໃນໃບສັ່ງຂາຍທີ່ຖືກຍົກເລີກໄດ້."
 
 #. module: sale_project_stock
 #. odoo-python
@@ -89,6 +92,8 @@ msgid ""
 "locked. You cannot validate a stock picking on a locked Sales Order. Please "
 "create a new SO linked to this Project."
 msgstr ""
+"ໃບສັ່ງຂາຍ %(order)s ທີ່ເຊື່ອມໂຍງກັບໂຄງການ %(project)s ຖືກລັອກຢູ່ໃນຕອນນີ້. ທ່ານບໍ່ສາມາດຢືນຢັນການ"
+"ເບີກຈ່າຍສິນຄ້າໃນໃບສັ່ງຂາຍທີ່ຖືກລັອກໄດ້. ກະລຸນາສ້າງໃບສັ່ງຂາຍໃໝ່ທີ່ເຊື່ອມໂຍງກັບໂຄງການນີ້."
 
 #. module: sale_project_stock
 #. odoo-python
@@ -97,8 +102,10 @@ msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s must be "
 "validated before validating the stock picking."
 msgstr ""
+"ໃບສັ່ງຂາຍ %(order)s ທີ່ເຊື່ອມໂຍງກັບໂຄງການ %(project)s ຕ້ອງໄດ້ຮັບການຢືນຢັນກ່ອນ ຈຶ່ງຈະສາມາດຢືນຢັ"
+"ນການເບີກຈ່າຍສິນຄ້າໄດ້."
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "ການໂອນຍ້າຍ"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:40+0000\n"
+"POT-Creation-Date: 2026-11-13 17:40+0000\n"
 "PO-Revision-Date: 2026-11-03 14:33+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
@@ -169,8 +169,8 @@ msgstr "Authenticatie mislukt"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "Failed to cancel cash machine transaction."
-msgstr "Het annuleren van de geldautomaat-transactie is mislukt."
+msgid "Failed to cancel cash machine transaction: %s."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -196,6 +196,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_glory_cash.pos_payment_method_view_form_inherit_pos_glory_cash
 msgid "Glory Settings"
 msgstr "Glory-instellingen"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Glory error animation."
+msgstr ""
 
 #. module: pos_glory_cash
 #: model:ir.model.fields,field_description:pos_glory_cash.field_pos_payment_method__id
@@ -303,6 +309,12 @@ msgstr "Betaling wordt gestart"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "The Glory machine is in an unknown error state."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr "Fout met de geldautomaat. Bekijk het beeldscherm voor meer details."
@@ -373,10 +385,8 @@ msgstr "De volgende munten/biljetten zijn bijna op bij de geldautomaat:"
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is unable to return the inserted cash, please refund the "
-"client via another method."
+"client %s via another method."
 msgstr ""
-"De geldautomaat kan het ingebrachte contante geld niet retourneren, betaal "
-"de klant via een andere methode terug."
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -405,11 +415,18 @@ msgstr "De betaling is om onbekende redenen mislukt: %s"
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
-"There is insufficient cash in the machine to give change. You will need to "
-"refund the difference via another method."
+"There is an error with the bill or coin device. The machine will now be "
+"reset and the contents verified. Once this is complete, the amount that must "
+"be returned to the customer will be displayed."
 msgstr ""
-"Er is onvoldoende contant geld in de automaat om wisselgeld te geven. Je "
-"zult het verschil via een andere methode moeten terugbetalen."
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"There is insufficient cash in the machine to give change. You will need to "
+"refund %s via another method."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -462,6 +479,23 @@ msgstr "Wachten tot geld wordt ingevoerd"
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Waiting for inventory"
 msgstr "Wachten op voorraad"
+
+#~ msgid "Failed to cancel cash machine transaction."
+#~ msgstr "Het annuleren van de geldautomaat-transactie is mislukt."
+
+#~ msgid ""
+#~ "The cash machine is unable to return the inserted cash, please refund the "
+#~ "client via another method."
+#~ msgstr ""
+#~ "De geldautomaat kan het ingebrachte contante geld niet retourneren, "
+#~ "betaal de klant via een andere methode terug."
+
+#~ msgid ""
+#~ "There is insufficient cash in the machine to give change. You will need "
+#~ "to refund the difference via another method."
+#~ msgstr ""
+#~ "Er is onvoldoende contant geld in de automaat om wisselgeld te geven. Je "
+#~ "zult het verschil via een andere methode moeten terugbetalen."
 
 #~ msgid "There is insufficient cash in the machine to give change."
 #~ msgstr "Er zit onvoldoende geld in de automaat om wisselgeld te geven."

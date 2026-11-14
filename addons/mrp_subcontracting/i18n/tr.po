@@ -20,19 +20,20 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # İlknur Gözütok, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:38+0000\n"
-"PO-Revision-Date: 2026-10-14 13:34+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 09:39+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "mrp_subcontracting/tr/>\n"
 "Language: tr\n"
@@ -58,7 +59,7 @@ msgstr "%(name)s Fason Sırası"
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s To %(route)s"
-msgstr ""
+msgstr "%(qty)s için %(route)s"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
@@ -68,7 +69,7 @@ msgstr "/my/productions"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Özet</span>"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -85,7 +86,7 @@ msgstr "Üretim emrine seri numaraları atayın"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Availabilities on subcontract location."
-msgstr ""
+msgstr "Fason konumundaki stok durumu."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -126,7 +127,6 @@ msgstr "Ürünü fasonda yapmak istiyorsanız fason tipi bir satıcı seçin"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
-#, fuzzy
 msgid "Company"
 msgstr "Firma"
 
@@ -247,7 +247,6 @@ msgstr "Gelen transfer"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
-#, fuzzy
 msgid "Inventory Location"
 msgstr "Envanter Konumu"
 
@@ -268,7 +267,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "ÜE Genel Raporu"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -279,7 +278,7 @@ msgstr "İş Ortağının alt yüklenici olduğu MRP Üretimleri"
 #. module: mrp_subcontracting
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "MRP Subcontracting"
-msgstr ""
+msgstr "MRP Alt Yüklenicilik"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -364,7 +363,6 @@ msgstr "Üretimler"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
-#, fuzzy
 msgid "Quant"
 msgstr "Miktar"
 
@@ -389,7 +387,7 @@ msgstr "(MTO) Sipariş Üzerine İkmal"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
 msgid "Reserve"
-msgstr ""
+msgstr "Rezerv"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -450,7 +448,7 @@ msgstr "Stok Kuralı"
 #. module: mrp_subcontracting
 #: model:ir.module.module,summary:base.module_mrp_subcontracting
 msgid "Subcontract Productions"
-msgstr ""
+msgstr "Fason Üretim"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -460,7 +458,7 @@ msgstr "Fason"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracted Productions"
-msgstr ""
+msgstr "Fason Üretimler"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -551,7 +549,7 @@ msgstr "Fason Firma Konumu"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom
 msgid "Subcontractor Stock"
-msgstr ""
+msgstr "Fason Stok"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
@@ -594,7 +592,7 @@ msgstr "Şu anda hesabınız için herhangi bir üretim bulunmamaktadır."
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_mo_overview.py:0
 msgid "To Order"
-msgstr ""
+msgstr "Sipariş Ver"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
@@ -610,7 +608,7 @@ msgstr "Aktarım"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "Transfers"
-msgstr ""
+msgstr "Transferler"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id

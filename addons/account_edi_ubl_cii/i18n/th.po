@@ -9,10 +9,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 19:37+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
+"PO-Revision-Date: 2026-11-10 09:33+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_ubl_cii/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -55,14 +55,14 @@ msgstr "%(invoice_name)s - ใบแจ้งหนี้ที่สร้า�
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "%s ควรมีชุดตัวเลข KVK หรือ OIN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
-msgstr ""
+msgstr "%s ควรมีชุดหมายเลข KBO/BCE ที่ถูกต้องกำหนดไว้เป็นตัวระบุเพิ่มเติม (BE_EN)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -78,10 +78,14 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        ดูตัวอย่าง\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-#, fuzzy
 msgid "A"
 msgstr "A"
 
@@ -89,7 +93,7 @@ msgstr "A"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
-msgstr ""
+msgstr "ต้องระบุหมายเลขอ้างอิงของผู้ซื้อหรือหมายเลขอ้างอิงใบการจัดซื้อ"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -103,7 +107,7 @@ msgstr "ตรวจพบการชำระเงินของ %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "A rounding amount of %s was detected."
-msgstr ""
+msgstr "ตรวจพบจำนวนปัดเศษสำหรับ %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -118,7 +122,7 @@ msgstr "AE - ภาษีมูลค่าเพิ่มแบบเรีย�
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__as
 msgid "AS2 exchange"
-msgstr ""
+msgstr "รับ-ส่งผ่านระบบ AS2"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9923
@@ -134,7 +138,7 @@ msgstr "ภาษีมูลค่าเพิ่มประเทศอัน
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "At least one Invoice Line is required [IBR-016]."
-msgstr ""
+msgstr "จำเป็นต้องมีรายการในใบแจ้งหนี้อย่างน้อยหนึ่งรายการ [IBR-016]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -153,7 +157,7 @@ msgstr "การแนบ"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
 msgid "Australia (BIS Billing 3.0 A-NZ)"
-msgstr ""
+msgstr "ออสเตรเลีย (BIS Billing 3.0 A-NZ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0151
@@ -174,7 +178,7 @@ msgstr "VOKZ ประเทศออสเตรีย"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_routing_schemes
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_routing_schemes
 msgid "Available Routing Schemes"
-msgstr ""
+msgstr "รูปแบบการกำหนดเส้นทางที่มีอยู่"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
@@ -189,12 +193,12 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "ตัวช่วยพื้นฐานสำหรับ CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "ตัวช่วยพื้นฐานสำหรับ UBL"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0208
@@ -225,7 +229,7 @@ msgstr "เครือข่ายการจดทะเบียนธุร
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Country Code is missing [IBR-011]."
-msgstr ""
+msgstr "รหัสประเทศของผู้ซื้อหายไป [IBR-011]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -243,22 +247,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Name is missing [IBR-007]."
-msgstr ""
+msgstr "ชื่อผู้ซื้อหายไป [IBR-007]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot decode origin file, try by importing it again"
-msgstr ""
+msgstr "ไม่สามารถถอดรหัสไฟล์ต้นฉบับได้ โปรดลองนำเข้าใหม่อีกครั้ง"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot find the origin file, try by importing it again"
-msgstr ""
+msgstr "ไม่พบไฟล์ต้นฉบับ โปรดลองนำเข้าใหม่อีกครั้ง"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
 msgstr ""
@@ -288,7 +293,7 @@ msgstr "ฟังก์ชันทั่วไปสำหรับเอกส
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "บริษัท"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -312,9 +317,19 @@ msgstr "ติดต่อ"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"ไม่สามารถดึงข้อมูลพาร์ทเนอร์ที่สอดคล้องกับ '%s' ที่มีเลขประจำตัวผู้เสียภาษีเดียวกันได้ "
+"จึงมีการสร้างพาร์ทเนอร์รายการใหม่ขึ้น"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -340,6 +355,8 @@ msgid ""
 "Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, "
 "Phone: %(phone)s, Email: %(email)s"
 msgstr ""
+"ไม่สามารถดึงข้อมูลพาร์ทเนอร์ที่มีรายละเอียด: ชื่อ: %(name)s, เลขประจำตัวผู้เสียภาษี: %(vat)s, "
+"โทรศัพท์: %(phone)s, อีเมล: %(email)s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -373,7 +390,7 @@ msgstr "ภาษีมูลค่าเพิ่มของประเทศ
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Currency Code is missing [IBR-005]."
-msgstr ""
+msgstr "รหัสสกุลเงินหายไป [IBR-005]"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9928
@@ -412,8 +429,8 @@ msgstr "คณะกรรมาธิการยุโรป"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
-#, fuzzy
 msgid "Discount"
 msgstr "ส่วนลด"
 
@@ -449,7 +466,7 @@ msgstr "แสดงชื่อ"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
-msgstr ""
+msgstr "ส่วนลดเอกสาร %(charge)s ของบรรทัดที่ %(line)s: ข้อมูลจำนวนเงินหายไป [IBR-031]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -458,6 +475,8 @@ msgid ""
 "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-033]."
 msgstr ""
+"ส่วนลดเอกสาร %(charge)s ของบรรทัดที่ %(line)s: จำเป็นต้องระบุเหตุผลหรือรหัสเหตุผล "
+"[IBR-033]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -465,6 +484,7 @@ msgstr ""
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
 msgstr ""
+"ค่าธรรมเนียมเอกสาร %(charge)s ของบรรทัดที่ %(line)s: ข้อมูลจำนวนเงินหายไป [IBR-036]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -473,12 +493,13 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
+"ค่าธรรมเนียมเอกสาร %(charge)s ของบรรทัดที่ %(line)s: จำเป็นต้องระบุเหตุผลหรือรหัสเหตุผล "
+"[IBR-038]"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
-#, fuzzy
 msgid "Draft"
 msgstr "ร่าง"
 
@@ -502,7 +523,7 @@ msgstr "รหัสตำแหน่ง EAN"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_identifier
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_identifier
 msgid "EDI Routing Address"
-msgstr ""
+msgstr "ที่อยู่การรับส่งข้อมูล EDI"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -553,7 +574,7 @@ msgstr "ภาษีมูลค่าเพิ่มของประเทศ
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 msgid "Exempt from tax"
-msgstr ""
+msgstr "ได้รับยกเว้นภาษี"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -604,12 +625,11 @@ msgstr "สำหรับการจัดหาภายในคอมมู
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Format used to import the document: %s"
-msgstr ""
+msgstr "รูปแบบที่ใช้ในการนำเอกสารเข้า: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, fuzzy
 msgid "Format used to import the invoice: %s"
 msgstr "รูปแบบที่ใช้ในการนำเข้าใบแจ้งหนี้: %s"
 
@@ -617,12 +637,12 @@ msgstr "รูปแบบที่ใช้ในการนำเข้าใ
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format: %s"
-msgstr ""
+msgstr "รูปแบบ: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
 msgid "France (FacturX)"
-msgstr ""
+msgstr "ฝรั่งเศส (FacturX)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0225
@@ -1480,6 +1500,16 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
 msgid "USA EIN"
 msgstr "EIN สหรัฐอเมริกา"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason

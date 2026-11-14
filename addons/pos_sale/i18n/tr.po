@@ -16,17 +16,18 @@
 # Martin Trigaux, 2022
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-11-05 08:15+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 10:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/pos_sale/"
 "tr/>\n"
 "Language: tr\n"
@@ -44,6 +45,10 @@ msgid ""
 "This module adds a custom Sales Team for the Point of Sale. This enables you "
 "to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Bu modül, Satış Noktası için özel bir Satış Ekibi ekler. Bu, satış noktası "
+"üzerinden yaptığınız satışları daha kolay görmenizi ve yönetmenizi sağlar.\n"
 
 #. module: pos_sale
 #. odoo-python
@@ -66,7 +71,7 @@ msgstr "(vergi dahil)"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_orderline_receipt_information
 msgid "<strong>Sale Order: </strong>"
-msgstr ""
+msgstr "<strong>Satış Siparişi: </strong>"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -110,12 +115,12 @@ msgstr "Geçerli Kur"
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__default_product_id
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "Default Product"
-msgstr ""
+msgstr "Varsayılan Ürün"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Default Sale Product"
-msgstr ""
+msgstr "Varsayılan Satış Ürünü"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
@@ -125,7 +130,7 @@ msgstr "Teslim Miktarı"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_name
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -182,7 +187,7 @@ msgstr "Vadesi gelen bakiye: %s"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__has_default_product
 msgid "Has Default Product"
-msgstr ""
+msgstr "Varsayılan Ürünü Var"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__id
@@ -220,7 +225,7 @@ msgstr "Yevmiye Kalemi"
 #. module: pos_sale
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
-msgstr ""
+msgstr "Satış ve Satış Noktası arasındaki bağlantı modülü"
 
 #. module: pos_sale
 #. odoo-python
@@ -258,7 +263,7 @@ msgstr "Satış Noktasına Aktarılan Sipariş Satırları"
 #. module: pos_sale
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "POS - Sales"
-msgstr ""
+msgstr "POS - Satış"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
@@ -278,17 +283,17 @@ msgstr "Satış Noktası Yapılandırması"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Satış Noktası Siparişi"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Satış Noktası Sipariş Satırı"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Satış Noktası Sipariş Fişi Oluşturucu"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -320,7 +325,7 @@ msgstr "Ürün"
 #: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.js:0
 #: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Teklif / Sipariş"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -399,7 +404,7 @@ msgstr "Para biriminin sipariş tarihinde geçerli olan para birimine oranı"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "There is nothing left to settle on this sale order."
-msgstr ""
+msgstr "Bu satış siparişinde kapatılacak bir şey kalmadı."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -412,6 +417,7 @@ msgstr "Bu Satış Noktasının satışları bu Satış Ekibi ile ilgili olacakt
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied on description only Sale order lines."
 msgstr ""
+"Bu ürün yalnızca açıklama içeren Satış Siparişi satırlarına uygulanacaktır."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -423,6 +429,8 @@ msgstr "Bu ürün peşinat yapıldığında uygulanacaktır"
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "This product will be used as default product on productless SOLs."
 msgstr ""
+"Bu ürün, ürünü olmayan Satış Siparişi satırlarında varsayılan ürün olarak "
+"kullanılacaktır."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
@@ -436,6 +444,9 @@ msgid ""
 "To check whether the product is default product from pos.config or not. In "
 "case of description only SOLs we use default product from pos.config."
 msgstr ""
+"Ürünün pos.config'den gelen varsayılan ürün olup olmadığını kontrol etmek "
+"için. Sadece açıklama içeren Satış Siparişi satırları durumunda, "
+"pos.config'deki varsayılan ürünü kullanırız."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -478,7 +489,7 @@ msgstr "kimlik"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Down Payment (POS)"
 #~ msgstr "Peşinat (POS)"

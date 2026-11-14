@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 20:29+0000\n"
+"PO-Revision-Date: 2026-11-10 04:37+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,21 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"Modul Akuntansi WMS\n"
+"======================\n"
+"Modul ini membuat link antara modul 'stok' dan 'akun' serta memungkinkan "
+"pembuatan entri akuntansi untuk menilai pergerakan stok\n"
+"\n"
+"Fitur Utama\n"
+"------------\n"
+"* Penilaian Stok (periodik atau otomatis)\n"
+"* Faktur dari Picking\n"
+"\n"
+"Dashboard / Laporan untuk Manajemen Gudang termasuk:\n"
+"------------------------------------------------------\n"
+"* Nilai Persediaan Stok pada tanggal terpilih (mendukung tanggal yang sudah "
+"berlalu)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -58,6 +73,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"Pembaruan biaya %(lot)s dari %(old_value)s menjadi %(new_value)s untuk %"
+"(quantity)s oleh %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -66,6 +83,8 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"Pembaruan biaya %(move)s dari %(old_value)s menjadi %(new_value)s untuk %"
+"(quantity)s oleh %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -76,7 +95,7 @@ msgstr "%(quantity)s%(uom)s pada biaya produk"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nilai Produk</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -100,6 +119,7 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"Nomor lot/seri diperlukan untuk produk '%s' karena penilaian lot diaktifkan."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -109,17 +129,19 @@ msgstr "AVCO Value"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grup Akses"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Pergerakan Akun"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"Baris pergerakan akun yang menggunakan pergerakan ini untuk menghitung HPP-"
+"nya"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -171,12 +193,12 @@ msgstr "Disesuaikan pada %(date)s oleh %(user)s"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "Penyesuaian"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "Penyesuaian"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -227,18 +249,18 @@ msgstr "Baconm"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "Baris HPP"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "Pergerakan stok HPP"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
 #: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
 msgid "Closing Date"
-msgstr ""
+msgstr "Tanggal Penutupan"
 
 #. module: stock_account
 #. odoo-python
@@ -303,6 +325,8 @@ msgstr "Biaya Produksi"
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"Pembaruan biaya dari %(old_value)s menjadi %(new_value)s untuk %(quantity)s "
+"oleh %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -408,7 +432,7 @@ msgstr "Tampilkan Nomor Seri & Lot pada Faktur"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "Diselesaikan oleh"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -480,6 +504,8 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Jika pergerakan berasal dari dokumen perusahaan lain, berisi partner "
+"perusahaan tersebut, atau berisi partner pergerakan tersebut."
 
 #. module: stock_account
 #. odoo-python
@@ -508,17 +534,17 @@ msgstr "Kerugian Persediaan"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
-msgstr ""
+msgstr "Pergerakan inventaris yang digunakan untuk menghitung nilai HPP."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Inventaris, Logistik, Penilaian, Akuntansi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "Baris Faktur"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -610,23 +636,23 @@ msgstr "Pergerakan"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "Biaya Satuan Baru"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
-msgstr ""
+msgstr "Nilai Baru"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "Biaya Satuan Lama"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Nilai Lama"
 
 #. module: stock_account
 #. odoo-python
@@ -639,17 +665,17 @@ msgstr "Only is set (= True) is supported in search for remaining_qty."
 msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
-msgstr ""
+msgstr "Hanya diatur jika pergerakan dibuat dari dokumen milik perusahaan lain"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "Partner Order"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "Perusahaan Asal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -714,6 +740,8 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Produk harus diberikan sebagai argumen agar mendapatkan harga satuan untuk "
+"pergerakan dalam kit."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -733,7 +761,7 @@ msgstr "Kuant"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Kuantitas"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -743,7 +771,7 @@ msgstr "Referensi"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
 msgid "Remaining"
-msgstr ""
+msgstr "Sisa"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -780,6 +808,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Harga Standar: Produk dinilai berdasarkan harga standar yang ditentukan pada "
+"produk tersebut.\n"
+"        Biaya Rata-rata (AVCO): Produk dinilai berdasarkan biaya rata-rata "
+"tertimbang.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -816,6 +849,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Field teknis yang memuat metode pelacakan. False pada produk yang dapat "
+"disimpan berarti produk hanya dilacak berdasarkan kuantitas."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -855,7 +890,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -865,7 +900,7 @@ msgstr "Total Kuantitas"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Qty"
-msgstr ""
+msgstr "Total Kuantitas Tersisa"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
@@ -884,7 +919,7 @@ msgstr "Nilai Total"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
 msgid "Tracking Method"
-msgstr ""
+msgstr "Metode Pelacakan"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -938,7 +973,7 @@ msgstr "Penilaian"
 #: model:ir.actions.act_window,name:stock_account.product_value_list_action
 #: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Penyesuaian Penilaian"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
@@ -971,7 +1006,7 @@ msgstr "Deskripsi Value"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Nilai di Tangan:"
 
 #. module: stock_account
 #. odoo-python
@@ -983,7 +1018,7 @@ msgstr "Value berdasarkan pergerakan awal %(reference)s"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "Nilai dari pergerakan sebelumnya %(references)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1001,12 +1036,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "Lihat Pergerakan Akun"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Akuntansi WMS"
 
 #. module: stock_account
 #. odoo-python
@@ -1023,6 +1058,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"Anda tidak dapat mengaktifkan penilaian lot karena produk berikut memiliki "
+"kuantitas di tangan tanpa nomor lot/seri:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python
@@ -1031,6 +1069,8 @@ msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
 msgstr ""
+"Anda tidak dapat mengubah tanggal operasi yang dijadwalkan %s karena tanggal "
+"tersebut berada dalam periode fiskal yang terkunci."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id

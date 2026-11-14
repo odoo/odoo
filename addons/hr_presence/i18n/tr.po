@@ -11,18 +11,19 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:34+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 09:40+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "hr_presence/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -45,6 +46,17 @@ msgid ""
 "\n"
 "Allows to contact directly the employee in case of unjustified absence.\n"
 msgstr ""
+"\n"
+"Çalışanın Mevcudiyetini Kontrol Etme\n"
+"==========================\n"
+"\n"
+"Aşağıdakilere dayanır:\n"
+"    * IP Adresi\n"
+"    * Kullanıcı Oturumu\n"
+"    * Gönderilen e-postalar\n"
+"\n"
+"Gerekçesiz devamsızlık durumunda çalışanla doğrudan iletişime geçilmesini "
+"sağlar.\n"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -64,6 +76,20 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Sayın <t t-out=\"object.name or ''\">Abigail Peterson</t>"
+",<br><br>\n"
+"Umarız her şey yolundadır. Şu anda iş yerinde bulunmadığınızı ve sizden "
+"gelen bir izin talebi kaydı olmadığını fark ettik. Bu durum bizim "
+"tarafımızdan bir dikkatsizlikten kaynaklanıyorsa, karışıklık için içtenlikle "
+"özür dileriz.\n"
+"Lütfen bu planlanmamış devamsızlığı ele almak için gerekli adımları atın. "
+"Herhangi bir sorunuz olması veya yardıma ihtiyaç duymanız halinde, en kısa "
+"sürede yöneticinize veya İK departmanına ulaşmaktan çekinmeyin.\n"
+"Bu konu ile acilen ilgilendiğiniz için teşekkür ederiz.\n"
+"                    <br>Saygılarımızla,<br><br>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
@@ -73,7 +99,7 @@ msgstr "Mevcut Değil"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
@@ -109,7 +135,7 @@ msgstr "Çalışan"
 #. module: hr_presence
 #: model:ir.module.module,shortdesc:base.module_hr_presence
 msgid "Employee Presence Control"
-msgstr ""
+msgstr "Çalışan Durum Kontrolü"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence

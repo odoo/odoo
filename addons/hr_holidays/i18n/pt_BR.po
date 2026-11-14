@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-02 22:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-09 18:33+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/hr_holidays/pt_BR/>\n"
@@ -389,6 +389,23 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Prezado(a) <b><t t-"
+"out=\"object.env.context.get('manager')\"></t></b>,\n"
+"                    <br><br>\n"
+"                    <p>Estou solicitando uma Folga. Eu agradeceria se "
+"pudesse aprová-la assim que possível!</p>\n"
+"                    <ul>\n"
+"                        <li>Tipo de folga: <t t-"
+"out=\"object.work_entry_type_id.name\"></t></li>\n"
+"                        <li><t t-out=\"object.request_date_from\"></t> → <t "
+"t-out=\"object.request_date_to\"></t> (<t t-"
+"out=\"object.duration_display\"></t>)</li>\n"
+"                        <li t-if=\"object.name\">Motivo: <t t-"
+"out=\"object.name\"></t></li>\n"
+"                    </ul>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model:mail.template,body_html:hr_holidays.mail_template_allocation_confirmed
@@ -416,42 +433,57 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Prezado(a) <t t-out=\"object.employee_id.name or "
+"'Funcionário'\"></t>,<br><br>\n"
+"                    Sua alocação de folgas foi confirmada.<br><br>\n"
+"                    Detalhes:<br>\n"
+"                    <ul>\n"
+"                        <li>Tipo de folga: <t t-"
+"out=\"object.work_entry_type_id.name or ''\"></t></li>\n"
+"                        <li>Alocação: <t t-out=\"object.duration_display or "
+"''\"></t></li>\n"
+"                        <li>Válido de: <t t-out=\"object.date_from or ''\"></"
+"t> <t t-if=\"not object.date_to\">(Sem validade)</t><t t-else=\"\"> até <t t-"
+"out=\"object.date_to or ''\"></t></t></li>\n"
+"                        <li t-if=\"object.accrual_plan_id\">Plano de "
+"Acúmulo: <t t-out=\"object.accrual_plan_id.name or ''\"></t></li>\n"
+"                    </ul>\n"
+"                    <br>\n"
+"                    Para qualquer dúvida, entre em contato com o RH "
+"Responsável.<br><br>\n"
+"                    Atenciosamente,<br>\n"
+"                    <t t-out=\"object.env.user.name or ''\"></t>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id\"/>"
 msgstr ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid ""
-"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id\"/>"
 msgstr ""
-"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time Off "
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
-"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time Off "
-"Type\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -964,10 +996,9 @@ msgstr "Frequência de acúmulo:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
-msgid "Accrual will stop until next carry-over date if accrued time's reach"
+msgid ""
+"Accrual will stop until next carry-over date if the accrued time reaches"
 msgstr ""
-"O acúmulo será interrompido até a próxima data de transferência, se o tempo "
-"acumulado atingir"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1644,21 +1675,6 @@ msgstr "Cancelado"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Cancelled Time Off"
 msgstr "Folga cancelada"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_time_rule.py:0
-msgid ""
-"Cannot reduce %(employee)s's '%(leave_type)s' balance by %(days).4g day(s): %"
-"(taken).4g day(s) have already been taken against it (balance would drop to %"
-"(after).4g, below the minimum of %(floor).4g). Please ask %(manager)s to "
-"refuse or reduce those taken leaves first, or adjust the allocation manually."
-msgstr ""
-"Não é possível reduzir o saldo de “%(leave_type)s ” de %(employee)s em %"
-"(days).4g dia(s): já foram descontados %(taken).4g dia(s) desse saldo (o "
-"saldo cairia para %(after).4g, abaixo do mínimo de %(floor).4g). Solicite a %"
-"(manager)s que recuse ou reduza primeiro essas licenças já descontadas, ou "
-"ajuste a alocação manualmente."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4010,20 +4026,6 @@ msgid "Save & New"
 msgstr "Salvar & Novo"
 
 #. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_time_rule.py:0
-msgid ""
-"Saving %(record)s requires reducing %(employee)s's '%(leave_type)s' balance "
-"by %(days).4g day(s), but %(taken).4g day(s) have already been taken against "
-"it. Please ask %(manager)s to refuse or reduce those taken leaves first, or "
-"adjust the allocation manually."
-msgstr ""
-"Para salvar %(record)s, é necessário reduzir o saldo de %(employee)s's '%"
-"(leave_type)s' em %(days).4g dia(s), mas %(taken).4g dia(s) já foram "
-"descontados desse saldo. Peça a %(manager)s para recusar ou reduzir essas "
-"licenças já descontadas primeiro, ou ajuste a alocação manualmente."
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_report_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -4374,6 +4376,13 @@ msgstr ""
 "acúmulo é usado."
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
+msgid ""
+"The allocation balance can go negative when the deficit exceeds the "
+"available balance."
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
@@ -4453,8 +4462,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
-msgid "The plan will be on hold if the balance reach"
-msgstr "O plano será suspenso se o saldo atingir"
+msgid "The plan will be on hold if the balance reaches"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -4514,29 +4523,6 @@ msgstr "As folgas estão fora do horário de trabalho do funcionário"
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
 msgstr "A solicitação de folga foi cancelada pelo seguinte motivo:%(reason)s"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid ""
-"The time off type created for the deficit. Must not require allocation. The "
-"output unit may be finer than the condition unit (e.g. hour output on a day "
-"leave trims the source to sub-day)."
-msgstr ""
-"O tipo de folga criado para o déficit. Não deve exigir alocação. A unidade "
-"de saída pode ser mais detalhada do que a unidade de condição (por exemplo, "
-"a saída em horas em uma folga diária reduz a fonte a um período inferior a "
-"um dia)."
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid ""
-"The time off type created for the excess. Must not require allocation. The "
-"output unit may be finer than the condition unit (e.g. hour output on a day "
-"leave trims the source to sub-day)."
-msgstr ""
-"O tipo de folga criado para o excedente. Não deve exigir alocação. A unidade "
-"de saída pode ser mais detalhada do que a unidade de condição (por exemplo, "
-"a saída em horas em uma folga diária reduz a fonte para menos de um dia)."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5551,6 +5537,24 @@ msgstr ""
 "disponíveis"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
+msgid ""
+"You can define a time type that will be created to count the amount of time "
+"in excess. It cannot be a time type requiring an allocation. The output unit "
+"may be finer than the condition unit (e.g. hour output on a day leave trims "
+"the source to sub-day)."
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
+msgid ""
+"You can define a time type that will be created to count the amount of time "
+"missing to fulfill the condition. It cannot be a time type requiring an "
+"allocation. The output unit may be finer than the condition unit (e.g. hour "
+"output on a day leave trims the source to sub-day)."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
 msgid "You can limit the accrued time carried over for the next period."
 msgstr ""
@@ -6181,11 +6185,88 @@ msgstr "validar"
 msgid "year(s)"
 msgstr "ano(s)"
 
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_time_rule.py:0
-msgid "your HR manager"
-msgstr "seu gerente de RH"
+#~ msgid ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
+#~ "Off Type\" name=\"work_entry_type_id\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
+#~ "Off Type\" name=\"work_entry_type_id\"/>"
+
+#~ msgid "Accrual will stop until next carry-over date if accrued time's reach"
+#~ msgstr ""
+#~ "O acúmulo será interrompido até a próxima data de transferência, se o "
+#~ "tempo acumulado atingir"
+
+#~ msgid ""
+#~ "Cannot reduce %(employee)s's '%(leave_type)s' balance by %(days).4g "
+#~ "day(s): %(taken).4g day(s) have already been taken against it (balance "
+#~ "would drop to %(after).4g, below the minimum of %(floor).4g). Please ask %"
+#~ "(manager)s to refuse or reduce those taken leaves first, or adjust the "
+#~ "allocation manually."
+#~ msgstr ""
+#~ "Não é possível reduzir o saldo de “%(leave_type)s ” de %(employee)s em %"
+#~ "(days).4g dia(s): já foram descontados %(taken).4g dia(s) desse saldo (o "
+#~ "saldo cairia para %(after).4g, abaixo do mínimo de %(floor).4g). Solicite "
+#~ "a %(manager)s que recuse ou reduza primeiro essas licenças já "
+#~ "descontadas, ou ajuste a alocação manualmente."
+
+#~ msgid ""
+#~ "Saving %(record)s requires reducing %(employee)s's '%(leave_type)s' "
+#~ "balance by %(days).4g day(s), but %(taken).4g day(s) have already been "
+#~ "taken against it. Please ask %(manager)s to refuse or reduce those taken "
+#~ "leaves first, or adjust the allocation manually."
+#~ msgstr ""
+#~ "Para salvar %(record)s, é necessário reduzir o saldo de %(employee)s's '%"
+#~ "(leave_type)s' em %(days).4g dia(s), mas %(taken).4g dia(s) já foram "
+#~ "descontados desse saldo. Peça a %(manager)s para recusar ou reduzir essas "
+#~ "licenças já descontadas primeiro, ou ajuste a alocação manualmente."
+
+#~ msgid "The plan will be on hold if the balance reach"
+#~ msgstr "O plano será suspenso se o saldo atingir"
+
+#~ msgid ""
+#~ "The time off type created for the deficit. Must not require allocation. "
+#~ "The output unit may be finer than the condition unit (e.g. hour output on "
+#~ "a day leave trims the source to sub-day)."
+#~ msgstr ""
+#~ "O tipo de folga criado para o déficit. Não deve exigir alocação. A "
+#~ "unidade de saída pode ser mais detalhada do que a unidade de condição "
+#~ "(por exemplo, a saída em horas em uma folga diária reduz a fonte a um "
+#~ "período inferior a um dia)."
+
+#~ msgid ""
+#~ "The time off type created for the excess. Must not require allocation. "
+#~ "The output unit may be finer than the condition unit (e.g. hour output on "
+#~ "a day leave trims the source to sub-day)."
+#~ msgstr ""
+#~ "O tipo de folga criado para o excedente. Não deve exigir alocação. A "
+#~ "unidade de saída pode ser mais detalhada do que a unidade de condição "
+#~ "(por exemplo, a saída em horas em uma folga diária reduz a fonte para "
+#~ "menos de um dia)."
+
+#~ msgid "your HR manager"
+#~ msgstr "seu gerente de RH"
 
 #~ msgid ""
 #~ "<div>\n"

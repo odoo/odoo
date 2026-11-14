@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-11-05 13:33+0000\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
+"PO-Revision-Date: 2026-11-10 11:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_ubl_cii/es/>\n"
@@ -44,6 +44,25 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Módulo de facturación electrónica\n"
+"===========================\n"
+"\n"
+"Permite exportar e importar los siguientes formatos: E-FFF, UBL Bis 3, EHF3, "
+"NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Al generar el PDF en la factura, el archivo PDF se incrustará dentro del XML "
+"para todos los formatos UBL. Esto permite al\n"
+"destinatario recuperar el PDF utilizando únicamente el archivo XML. Ten en "
+"cuenta que **EHF3 está completamente implementado mediante UBL Bis 3** "
+"(`referencia\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"Ten en cuenta que E-FFF, NLCIUS y XRechnung (UBL) solo están disponibles "
+"para compañías belgas, neerlandesas y alemanas,\n"
+"respectivamente. UBL Bis 3 solo está disponible para compañías cuyo país "
+"figure en la `lista EAS\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -56,7 +75,7 @@ msgstr "%(invoice_name)s - Generada por Odoo"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "%s debe tener configurado un número KVK u OIN."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -64,6 +83,8 @@ msgstr ""
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
 msgstr ""
+"%s debe tener configurado un número KBO/BCE válido como identificador "
+"adicional (BE_EN)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -79,6 +100,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Vista previa\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -90,6 +116,8 @@ msgstr "A"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
 msgstr ""
+"Se debe indicar una referencia del comprador o una referencia del pedido de "
+"compra."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -134,7 +162,7 @@ msgstr "Andorra - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "At least one Invoice Line is required [IBR-016]."
-msgstr ""
+msgstr "Se requiere al menos una línea de factura [IBR-016]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -176,7 +204,7 @@ msgstr "Austria - VOKZ"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_routing_schemes
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_routing_schemes
 msgid "Available Routing Schemes"
-msgstr ""
+msgstr "Esquemas de enrutamiento disponibles"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
@@ -191,7 +219,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Asistentes base para CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -227,25 +255,29 @@ msgstr "Red de registros mercantiles"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Country Code is missing [IBR-011]."
-msgstr ""
+msgstr "Falta el código de país del comprador [IBR-011]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
 msgstr ""
+"Falta la dirección electrónica o punto final (Endpoint ID) del comprador "
+"[IBR-080]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
 msgstr ""
+"Falta el identificador de esquema de la dirección electrónica del comprador "
+"[IBR-063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Name is missing [IBR-007]."
-msgstr ""
+msgstr "Falta el nombre del comprador [IBR-007]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -263,9 +295,10 @@ msgstr "No es posible encontrar el archivo de origen. Impórtalo de nuevo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
-msgstr ""
+msgstr "Cargo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -317,9 +350,19 @@ msgstr "Contacto"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"No se ha podido encontrar ningún contacto correspondiente a «%s» con el "
+"mismo NIF. Se ha creado un nuevo contacto."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -387,7 +430,7 @@ msgstr "Croacia - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Currency Code is missing [IBR-005]."
-msgstr ""
+msgstr "Falta el código de la moneda [IBR-005]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9928
@@ -426,6 +469,7 @@ msgstr "Direcciones de la Comisión Europea"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "Descuento"
@@ -455,7 +499,7 @@ msgstr "Descuento"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -463,6 +507,8 @@ msgstr "Nombre para mostrar"
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
 msgstr ""
+"Descuento del documento %(charge)s de la línea %(line)s: falta el importe "
+"[IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -471,6 +517,8 @@ msgid ""
 "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-033]."
 msgstr ""
+"Descuento del documento %(charge)s de la línea %(line)s: el motivo o el "
+"código de motivo es obligatorio [IBR-033]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -478,6 +526,8 @@ msgstr ""
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
 msgstr ""
+"Cargo del documento %(charge)s de la línea %(line)s: falta el importe "
+"[IBR-036]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -486,6 +536,8 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
+"Cargo del documento %(charge)s de la línea %(line)s: se requiere un motivo o "
+"código de motivo [IBR-038]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -514,7 +566,7 @@ msgstr "Código de ubicación EAN"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_identifier
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_identifier
 msgid "EDI Routing Address"
-msgstr ""
+msgstr "Dirección de enrutamiento EDI"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -576,7 +628,7 @@ msgstr "Exportar fuera de la UE"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -680,6 +732,7 @@ msgstr "Claves de identificación GS1"
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
 msgstr ""
+"Claves de identificación GS1 para la gestión de la cadena de suministro."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -697,7 +750,7 @@ msgstr "Venta adicional general"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Generated by Odoo"
-msgstr ""
+msgstr "Generado por Odoo"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0246
@@ -739,7 +792,7 @@ msgstr "Líneas agrupadas por impuesto"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "Tiene líneas agrupadas"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -750,7 +803,7 @@ msgstr "Hungría - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_cii__id
@@ -805,6 +858,7 @@ msgstr "Instalar Chorus Pro"
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
 msgstr ""
+"Número de cuenta bancaria internacional, utilizado como identificador EDI."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -816,7 +870,7 @@ msgstr "Suministro intracomunitario"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Invoice Issue Date is missing [IBR-003]."
-msgstr ""
+msgstr "Falta la fecha de expedición de la factura [IBR-003]."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -848,13 +902,13 @@ msgstr "Es formato UBL"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__is_unece_code_supported
 msgid "Is Unece Code Supported"
-msgstr ""
+msgstr "Es compatible con el código UNECE"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Is move lines Grouped"
-msgstr ""
+msgstr "¿Están agrupados los apuntes contables?"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -922,43 +976,45 @@ msgstr "Liechtenstein - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoice line net amount is missing [IBR-024]."
-msgstr ""
+msgstr "Línea %s: falta el importe neto de la línea de factura [IBR-024]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity is missing [IBR-022]."
-msgstr ""
+msgstr "Línea %s: falta la cantidad facturada [IBR-022]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity unit of measure code is missing [IBR-023]."
 msgstr ""
+"Línea %s: falta el código de unidad de medida de la cantidad facturada "
+"[IBR-023]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item name is missing [IBR-025]."
-msgstr ""
+msgstr "Línea %s: falta el nombre del elemento [IBR-025]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr ""
+msgstr "Línea %s: el precio neto del elemento NO DEBE ser negativo [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price is missing [IBR-026]."
-msgstr ""
+msgstr "Línea %s: falta el precio neto del elemento [IBR-026]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr ""
+msgstr "Línea %s: falta el código de tipo impositivo del elemento [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0200
@@ -1000,7 +1056,7 @@ msgstr "Malta - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Missing '_title' for multi-level constraints."
-msgstr ""
+msgstr "Falta '_title' para restricciones multinivel."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9940
@@ -1061,7 +1117,7 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Other Errors:"
-msgstr ""
+msgstr "Otros errores:"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1103,7 +1159,7 @@ msgstr "Portugal - IVA"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unidad de medida del producto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -1120,6 +1176,12 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Inversión del sujeto pasivo: a falta de objeción por escrito en el plazo de "
+"un mes desde la recepción de la factura, se considerará que el cliente "
+"reconoce su condición de sujeto pasivo obligado a presentar declaraciones "
+"periódicas. Si no se cumple esta condición, el cliente será responsable del "
+"pago del impuesto, los intereses y las sanciones adeudadas en relación con "
+"dicha condición."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1139,7 +1201,7 @@ msgstr "Redondeo"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Endpoint de enrutamiento"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__routing_scheme
@@ -1147,13 +1209,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_scheme
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Routing ID"
-msgstr ""
+msgstr "ID de enrutamiento"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "Routing identifier should be in the format 'SCHEME:ENDPOINT'."
 msgstr ""
+"El identificador de enrutamiento debe tener el formato «ESQUEMA:ENDPOINT»."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__s
@@ -1199,30 +1262,33 @@ msgstr "San Marino - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Country Code is missing [IBR-009]."
-msgstr ""
+msgstr "Falta el código de país del vendedor [IBR-009]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
 msgstr ""
+"Falta la dirección electrónica o ID de endpoint del vendedor [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
 msgstr ""
+"Falta el identificador de esquema de la dirección electrónica del vendedor "
+"[IBR-062]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Name is missing [IBR-006]."
-msgstr ""
+msgstr "Falta el nombre del vendedor [IBR-006]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
-msgstr ""
+msgstr "Asistente de envío de facturas"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9948
@@ -1232,7 +1298,7 @@ msgstr "Serbia - IVA"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "Funciones compartidas del asistente de envío de facturas"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
@@ -1334,7 +1400,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique
 msgid "The UN/ECE code already exists!"
-msgstr ""
+msgstr "¡El código UN/ECE ya existe!"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1344,6 +1410,10 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"Se ha omitido la unidad de medida «%(uom)s» (del código de unidad «%"
+"(code)s») en la línea del producto «%(product)s» por no ser compatible con "
+"la unidad de medida del producto «%(product_uom)s». El campo de UdM se ha "
+"dejado vacío."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1380,6 +1450,7 @@ msgstr "No se ha podido obtener la cuenta bancaria: %s"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "The code element for units of measurement (UoM) as specified by UN/ECE"
 msgstr ""
+"El código para unidades de medida (UdM) según lo especificado por UN/ECE"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1447,6 +1518,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Esta es una representación visual del contenido xml.<br/>\n"
+"                    <strong style=\"color: #495057;\">No es un documento "
+"oficial.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9952
@@ -1476,17 +1550,17 @@ msgstr "Facturación UBL BIS 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "Capa de UBL PINT-EU"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0193
@@ -1508,12 +1582,22 @@ msgstr "Nombre de archivo UBL/CII"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "UN/ECE Code"
-msgstr ""
+msgstr "Código UN/ECE"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
 msgid "USA EIN"
 msgstr "Estados Unidos - EIN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason
@@ -1535,7 +1619,7 @@ msgstr "Reino Unido - IVA"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Tipo de archivo no compatible mediante %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
@@ -2291,7 +2375,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F - Ventas de bienes de segunda mano"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2301,12 +2385,12 @@ msgstr "VATEX-FR-FRANCHISE - IVA doméstico de franquicia de Francia en base"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I - Ventas de objetos de arte"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J - Ventas de antigüedades"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953
@@ -2351,7 +2435,7 @@ msgstr "Solo se pueden agrupar líneas de una factura"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You need at least two lines to group them."
-msgstr ""
+msgstr "Se necesitan al menos dos líneas para agruparlas."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2377,6 +2461,8 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] Se debe indicar una dirección electrónica (EAS) para "
+"el cliente «%s»."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2385,6 +2471,8 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] Se debe indicar una dirección electrónica (EAS) para "
+"la empresa «%s»."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format

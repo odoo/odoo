@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
 "PO-Revision-Date: 2026-10-11 06:34+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -408,38 +408,30 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" title=\"箭头"
-"\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id\"/>"
 msgstr ""
-"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" title=\"箭头"
-"\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid ""
-"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id\"/>"
 msgstr ""
-"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" "
-"title=\"箭头\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time Off "
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
-"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"休假类型"
-"\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -931,8 +923,9 @@ msgstr "累积频率："
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
-msgid "Accrual will stop until next carry-over date if accrued time's reach"
-msgstr "若累计时长达到上限，累计将暂停，直至下一结转日期恢复"
+msgid ""
+"Accrual will stop until next carry-over date if the accrued time reaches"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1600,19 +1593,6 @@ msgstr "已取消"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Cancelled Time Off"
 msgstr "取消休假"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_time_rule.py:0
-msgid ""
-"Cannot reduce %(employee)s's '%(leave_type)s' balance by %(days).4g day(s): %"
-"(taken).4g day(s) have already been taken against it (balance would drop to %"
-"(after).4g, below the minimum of %(floor).4g). Please ask %(manager)s to "
-"refuse or reduce those taken leaves first, or adjust the allocation manually."
-msgstr ""
-"无法将 %(employee)s 的“%(leave_type)s”余额减少 %(days).4g 天：已有 %"
-"(taken).4g 天据此支取（余额将降至 %(after).4g，低于下限 %(floor).4g）。请先"
-"让 %(manager)s 拒绝或减少这些已支取的休假，或手动调整该分配。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -3896,19 +3876,6 @@ msgid "Save & New"
 msgstr "保存并新建"
 
 #. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_time_rule.py:0
-msgid ""
-"Saving %(record)s requires reducing %(employee)s's '%(leave_type)s' balance "
-"by %(days).4g day(s), but %(taken).4g day(s) have already been taken against "
-"it. Please ask %(manager)s to refuse or reduce those taken leaves first, or "
-"adjust the allocation manually."
-msgstr ""
-"保存 %(record)s 需要将 %(employee)s 的“%(leave_type)s”余额减少 %(days).4g "
-"天，但已有 %(taken).4g 天据此支取。请先让 %(manager)s 拒绝或减少这些已支取的"
-"休假，或手动调整该分配。"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_report_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -4244,6 +4211,13 @@ msgstr ""
 "年数。"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
+msgid ""
+"The allocation balance can go negative when the deficit exceeds the "
+"available balance."
+msgstr ""
+
+#. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
@@ -4318,8 +4292,8 @@ msgstr "最大超额金额应大于 0。如果要设置 0，请禁用负上限�
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
-msgid "The plan will be on hold if the balance reach"
-msgstr "若结余到达以下水平，该计划将会暂停："
+msgid "The plan will be on hold if the balance reaches"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -4373,26 +4347,6 @@ msgstr "该休假不在员工的工作安排范围内"
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
 msgstr "休假申请已因以下原因取消：%(reason)s"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid ""
-"The time off type created for the deficit. Must not require allocation. The "
-"output unit may be finer than the condition unit (e.g. hour output on a day "
-"leave trims the source to sub-day)."
-msgstr ""
-"为缺少的时长创建的休假类型。不得要求分配。输出单位可以比条件单位更细（例如，"
-"天假上的小时输出会将来源裁剪到不足一天）。"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid ""
-"The time off type created for the excess. Must not require allocation. The "
-"output unit may be finer than the condition unit (e.g. hour output on a day "
-"leave trims the source to sub-day)."
-msgstr ""
-"为超出的时长创建的休假类型。不得要求分配。输出单位可以比条件单位更细（例如，"
-"天假上的小时输出会将来源裁剪到不足一天）。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5359,6 +5313,24 @@ msgid ""
 msgstr "您可以定义可以使用结转天数的时间段"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
+msgid ""
+"You can define a time type that will be created to count the amount of time "
+"in excess. It cannot be a time type requiring an allocation. The output unit "
+"may be finer than the condition unit (e.g. hour output on a day leave trims "
+"the source to sub-day)."
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
+msgid ""
+"You can define a time type that will be created to count the amount of time "
+"missing to fulfill the condition. It cannot be a time type requiring an "
+"allocation. The output unit may be finer than the condition unit (e.g. hour "
+"output on a day leave trims the source to sub-day)."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
 msgid "You can limit the accrued time carried over for the next period."
 msgstr "您可为下一期间可结转的累积休假时间设限制。"
@@ -5957,11 +5929,79 @@ msgstr "完成送出"
 msgid "year(s)"
 msgstr "年"
 
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_time_rule.py:0
-msgid "your HR manager"
-msgstr "您的人力资源经理"
+#~ msgid ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" title=\"箭"
+#~ "头\" invisible=\"accrual_plan_id or state != 'confirm'\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" title=\"箭"
+#~ "头\" invisible=\"accrual_plan_id\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "
+#~ "title=\"Arrow\" invisible=\"accrual_plan_id\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"箭头图标\" "
+#~ "title=\"箭头\" invisible=\"accrual_plan_id\"/>"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
+#~ "Off Type\" name=\"work_entry_type_id\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"休假类"
+#~ "型\" name=\"work_entry_type_id\"/>"
+
+#~ msgid "Accrual will stop until next carry-over date if accrued time's reach"
+#~ msgstr "若累计时长达到上限，累计将暂停，直至下一结转日期恢复"
+
+#~ msgid ""
+#~ "Cannot reduce %(employee)s's '%(leave_type)s' balance by %(days).4g "
+#~ "day(s): %(taken).4g day(s) have already been taken against it (balance "
+#~ "would drop to %(after).4g, below the minimum of %(floor).4g). Please ask %"
+#~ "(manager)s to refuse or reduce those taken leaves first, or adjust the "
+#~ "allocation manually."
+#~ msgstr ""
+#~ "无法将 %(employee)s 的“%(leave_type)s”余额减少 %(days).4g 天：已有 %"
+#~ "(taken).4g 天据此支取（余额将降至 %(after).4g，低于下限 %(floor).4g）。请"
+#~ "先让 %(manager)s 拒绝或减少这些已支取的休假，或手动调整该分配。"
+
+#~ msgid ""
+#~ "Saving %(record)s requires reducing %(employee)s's '%(leave_type)s' "
+#~ "balance by %(days).4g day(s), but %(taken).4g day(s) have already been "
+#~ "taken against it. Please ask %(manager)s to refuse or reduce those taken "
+#~ "leaves first, or adjust the allocation manually."
+#~ msgstr ""
+#~ "保存 %(record)s 需要将 %(employee)s 的“%(leave_type)s”余额减少 %(days).4g "
+#~ "天，但已有 %(taken).4g 天据此支取。请先让 %(manager)s 拒绝或减少这些已支取"
+#~ "的休假，或手动调整该分配。"
+
+#~ msgid "The plan will be on hold if the balance reach"
+#~ msgstr "若结余到达以下水平，该计划将会暂停："
+
+#~ msgid ""
+#~ "The time off type created for the deficit. Must not require allocation. "
+#~ "The output unit may be finer than the condition unit (e.g. hour output on "
+#~ "a day leave trims the source to sub-day)."
+#~ msgstr ""
+#~ "为缺少的时长创建的休假类型。不得要求分配。输出单位可以比条件单位更细（例"
+#~ "如，天假上的小时输出会将来源裁剪到不足一天）。"
+
+#~ msgid ""
+#~ "The time off type created for the excess. Must not require allocation. "
+#~ "The output unit may be finer than the condition unit (e.g. hour output on "
+#~ "a day leave trims the source to sub-day)."
+#~ msgstr ""
+#~ "为超出的时长创建的休假类型。不得要求分配。输出单位可以比条件单位更细（例"
+#~ "如，天假上的小时输出会将来源裁剪到不足一天）。"
+
+#~ msgid "your HR manager"
+#~ msgstr "您的人力资源经理"
 
 #~ msgid ""
 #~ "<div>\n"

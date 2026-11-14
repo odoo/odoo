@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
 "PO-Revision-Date: 2026-11-03 14:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
@@ -93,11 +93,6 @@ msgid "%s (copy)"
 msgstr "%s (Kopie)"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid "<span class=\"fw-bold\">Availability</span>"
-msgstr "<span class=\"fw-bold\">Verfügbarkeit</span>"
-
-#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid ""
 "<span class=\"o_form_label\" invisible=\"threshold_operator == "
@@ -108,17 +103,8 @@ msgid ""
 "invisible=\"threshold_operator != 'less_than'\">Set Deficit to <sup "
 "class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"You can define a "
 "time type that will be created to count the amount of time missing to "
-"fullfill the condition.\">?</sup></span>"
+"fulfill the condition.\">?</sup></span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"threshold_operator == "
-"'less_than'\">Überschuss auf <sup class=\"d-print-none text-info p-1 ms-1\" "
-"data-tooltip=\"Sie können eine Zeitart definieren, mit der die zusätzlich "
-"geleistete Zeit erfasst wird.\"> festlegen?</sup></span>\n"
-"                               <span class=\"o_form_label\" "
-"invisible=\"threshold_operator != 'less_than'\"> Defizit auf <sup class=\"d-"
-"print-none text-info p-1 ms-1\" data-tooltip=\"Sie können eine Zeitart "
-"definieren, mit der die fehlende Zeit erfasst wird, die zur Erfüllung der "
-"Bedingung erforderlich ist.\"> festlegen?</sup></span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -130,6 +116,17 @@ msgstr ""
 "<span class=\"o_form_label\">Arbeitstage <sup class=\"d-print-none text-info "
 "p-1 ms-1\" data-tooltip=\"Definieren Sie eine Bedingung basierend auf dem "
 "Zeitpunkt der Zeiterfassung.\">?</sup></span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"o_wrap_label\">\n"
+"                                <span class=\"o_form_label "
+"oe_edit_only\">Availability</span>\n"
+"                                <span class=\"o_form_label "
+"o_form_label_readonly oe_read_only\">Availability</span>\n"
+"                            </span>"
+msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -529,6 +526,11 @@ msgstr "Anwesenheiten – Besonderer arbeitsfreier Urlaub (Ruhetag)"
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
 msgid "August"
 msgstr "August"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_time_rule_action
+msgid "Automatic Rules"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
@@ -1413,8 +1415,8 @@ msgstr "Gehalt zuweisen"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
-msgid "Guaranted monthly wage accident"
-msgstr "Garantierter Monatslohn bei Unfall"
+msgid "Guaranteed monthly wage accident"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_sick_leave
@@ -1447,23 +1449,23 @@ msgstr "Garantierter Monatslohn bei Unfall"
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_sick_leave
-msgid "Guaranted monthly wage illness"
-msgstr "Garantierter Monatslohn bei Krankheit"
+msgid "Guaranteed monthly wage illness"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
-msgid "Guaranted wage interrupted day illness"
-msgstr "Garantierter Lohn bei krankheitsbedingter Arbeitsunterbrechung"
+msgid "Guaranteed wage interrupted day illness"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_first_week
-msgid "Guaranted weekly wage illness"
-msgstr "Garantierter Wochenlohn bei Krankheit"
+msgid "Guaranteed weekly wage illness"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
-msgid "Guaranted weekly wage industrial accident"
-msgstr "Garantierter Wochenlohn bei Arbeitsunfall"
+msgid "Guaranteed weekly wage industrial accident"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_home_working
@@ -3783,11 +3785,6 @@ msgid "Time Rule Source Mixin"
 msgstr "Mixin für Zeitregelquelle"
 
 #. module: hr_work_entry
-#: model:ir.actions.act_window,name:hr_work_entry.hr_time_rule_action
-msgid "Time Rules"
-msgstr "Zeitregeln"
-
-#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__condition_work_entry_type_ids
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
@@ -4426,6 +4423,48 @@ msgstr "workentries_"
 #: code:addons/hr_work_entry/models/hr_time_rule_source_mixin.py:0
 msgid "… and %d more"
 msgstr "… und %d weitere"
+
+#~ msgid "<span class=\"fw-bold\">Availability</span>"
+#~ msgstr "<span class=\"fw-bold\">Verfügbarkeit</span>"
+
+#~ msgid ""
+#~ "<span class=\"o_form_label\" invisible=\"threshold_operator == "
+#~ "'less_than'\">Set Excess to <sup class=\"d-print-none text-info p-1 "
+#~ "ms-1\" data-tooltip=\"You can define a time type that will be created to "
+#~ "count the amount of time in excess.\">?</sup></span>\n"
+#~ "                                <span class=\"o_form_label\" "
+#~ "invisible=\"threshold_operator != 'less_than'\">Set Deficit to <sup "
+#~ "class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"You can define a "
+#~ "time type that will be created to count the amount of time missing to "
+#~ "fullfill the condition.\">?</sup></span>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label\" invisible=\"threshold_operator == "
+#~ "'less_than'\">Überschuss auf <sup class=\"d-print-none text-info p-1 "
+#~ "ms-1\" data-tooltip=\"Sie können eine Zeitart definieren, mit der die "
+#~ "zusätzlich geleistete Zeit erfasst wird.\"> festlegen?</sup></span>\n"
+#~ "                               <span class=\"o_form_label\" "
+#~ "invisible=\"threshold_operator != 'less_than'\"> Defizit auf <sup "
+#~ "class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"Sie können eine "
+#~ "Zeitart definieren, mit der die fehlende Zeit erfasst wird, die zur "
+#~ "Erfüllung der Bedingung erforderlich ist.\"> festlegen?</sup></span>"
+
+#~ msgid "Guaranted monthly wage accident"
+#~ msgstr "Garantierter Monatslohn bei Unfall"
+
+#~ msgid "Guaranted monthly wage illness"
+#~ msgstr "Garantierter Monatslohn bei Krankheit"
+
+#~ msgid "Guaranted wage interrupted day illness"
+#~ msgstr "Garantierter Lohn bei krankheitsbedingter Arbeitsunterbrechung"
+
+#~ msgid "Guaranted weekly wage illness"
+#~ msgstr "Garantierter Wochenlohn bei Krankheit"
+
+#~ msgid "Guaranted weekly wage industrial accident"
+#~ msgstr "Garantierter Wochenlohn bei Arbeitsunfall"
+
+#~ msgid "Time Rules"
+#~ msgstr "Zeitregeln"
 
 #~ msgid "autoCompleteItemScope.label"
 #~ msgstr "autoCompleteItemScope.label"

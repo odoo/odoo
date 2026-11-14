@@ -15,17 +15,18 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Halil, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-10-14 13:34+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 11:34+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "website_links/tr/>\n"
 "Language: tr\n"
@@ -45,6 +46,12 @@ msgid ""
 "or in Odoo reports to analyze the efficiency of those campaigns in terms of "
 "lead generation, related revenues (sales orders), recruitment, etc.\n"
 msgstr ""
+"\n"
+"Sayfalarınızı pazarlama kampanyalarında paylaşmak için analiz izleyicileri "
+"(UTM) ile kısa bağlantılar oluşturun.\n"
+"Bu izleyiciler Google Analytics’te tıklamaları ve ziyaretçileri izlemek veya "
+"Odoo raporlarında bu kampanyaların (satış siparişleri), işe alım vb. "
+"açısından verimliliğini analiz etmek için kullanılabilir.\n"
 
 #. module: website_links
 #. odoo-javascript
@@ -62,12 +69,19 @@ msgid ""
 "info text-nowrap o_translate_inline\"><i class=\"oi align-middle me-2\" data-"
 "icon=\"qr_code\"/>Download QR Code</a>"
 msgstr ""
+"<a class=\"copy-to-clipboard btn btn-success text-nowrap "
+"o_translate_inline\"><i class=\"oi me-2\" data-icon=\"content_copy\"/>"
+"Kopyala</a>\n"
+"                                        <a class=\"download-qr-code btn btn-"
+"info text-nowrap o_translate_inline\"><i class=\"oi align-middle me-2\" data-"
+"icon=\"qr_code\"/>QR Kodunu İndir</a>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid ""
 "<i class=\"oi align-middle me-2\" data-icon=\"qr_code\"/>Download QR Code"
 msgstr ""
+"<i class=\"oi align-middle me-2\" data-icon=\"qr_code\"/>QR Kodunu İndir"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -111,6 +125,18 @@ msgid ""
 "a>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_website_links_short_url d-flex align-items-center text-"
+"nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
+"class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
+"                                       <span "
+"class=\"o_website_links_edit_tools text-nowrap d-none\">\n"
+"                                            <a role=\"button\" "
+"class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
+"href=\"#\"> tamam</a> veya\n"
+"                                           <a "
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\"> iptal "
+"et</a>\n"
+"                                        </span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -203,7 +229,7 @@ msgstr "Bağlantı İzleyici Oluştur"
 #. module: website_links
 #: model:ir.module.module,summary:base.module_website_links
 msgid "Generate trackable & short URLs"
-msgstr ""
+msgstr "İzlenebilir ve kısa URL'ler oluşturun"
 
 #. module: website_links
 #: model:ir.model.fields,field_description:website_links.field_link_tracker__id
@@ -267,6 +293,8 @@ msgid ""
 "Only letters (A–Z, a–z), numbers (0–9), underscores (_) and hyphens (-) are "
 "allowed. No spaces."
 msgstr ""
+"Sadece harfler (A-Z, a-z), rakamlar (0-9), alt çizgiler (_) ve tireler (-) "
+"kullanılabilir. Boşluk bırakmayın."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url

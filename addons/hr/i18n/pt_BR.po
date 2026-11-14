@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-10-29 13:33+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"PO-Revision-Date: 2026-11-09 18:33+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/hr/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -1929,11 +1929,8 @@ msgid "Date Start"
 msgstr "Data de início"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_date
-#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
 #: model:ir.model.fields,help:hr.field_hr_employee_departure__departure_date
-#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
 msgstr "Data em que a partida realmente ocorre."
@@ -1948,6 +1945,17 @@ msgid ""
 msgstr ""
 "Data em que o processo de saída tem início. Difere da data de saída efetiva "
 "no caso de um período de aviso prévio."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__departure_action_date
+#: model:ir.model.fields,help:hr.field_hr_employee_departure__action_date
+#: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
+msgid ""
+"Date at which the employee (and their user, if they have no other active "
+"employee) is archived, by default the day after the departure. If it is "
+"today or earlier, the departure is applied on confirmation; otherwise it is "
+"scheduled for that date."
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -2670,13 +2678,13 @@ msgstr "Fim da colaboração"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "End of Collaboration cancelled"
-msgstr ""
+msgstr "Fim da colaboração cancelado"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "End of Collaboration planned"
-msgstr ""
+msgstr "Fim da colaboração planejado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -6749,6 +6757,7 @@ msgstr ""
 #: code:addons/hr/wizard/hr_bank_account_allocation_wizard_line.py:0
 msgid "You do not have the rights to trust or un-trust accounts."
 msgstr ""
+"Você não tem permissão para marcar ou desmarcar contas como confiáveis."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee

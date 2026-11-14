@@ -10,13 +10,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-10-29 13:33+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-11-09 10:13+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "pos_adyen/tr/>\n"
 "Language: tr\n"
@@ -33,7 +34,6 @@ msgstr "Ödeme terminali (Adyen) aracılığıyla bahşiş ekleme"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_payment_method_view_form_inherit_pos_adyen
-#, fuzzy
 msgid "Adyen"
 msgstr "Adyen"
 
@@ -100,7 +100,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/utils/payment/payment_adyen.js:0
 msgid "Cannot refund non-Adyen transactions via Adyen."
-msgstr ""
+msgstr "Adyen olmayan işlemler Adyen üzerinden iade edilemez."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_res_config_settings
@@ -143,7 +143,7 @@ msgstr "ID"
 #. module: pos_adyen
 #: model:ir.module.module,summary:base.module_pos_adyen
 msgid "Integrate your POS with an Adyen payment terminal"
-msgstr ""
+msgstr "POS'unuzu bir Adyen ödeme terminaliyle entegre edin"
 
 #. module: pos_adyen
 #. odoo-python
@@ -160,7 +160,7 @@ msgstr "Adyen'in Mesajı: %s"
 #. module: pos_adyen
 #: model:ir.module.module,shortdesc:base.module_pos_adyen
 msgid "POS Adyen"
-msgstr ""
+msgstr "POS Adyen"
 
 #. module: pos_adyen
 #. odoo-python
@@ -179,17 +179,17 @@ msgstr "Satış Noktası Yapılandırması"
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Satış Noktası Siparişi"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Satış Noktası Ödemesi"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Satış Noktası Ödeme Yöntemi"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip

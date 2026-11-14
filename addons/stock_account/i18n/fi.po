@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-10-20 08:48+0000\n"
+"PO-Revision-Date: 2026-11-12 08:34+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/fi/>\n"
@@ -56,6 +56,21 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"WMS-kirjanpitomoduuli\n"
+"======================\n"
+"Tämä moduuli muodostaa yhteyden 'varasto'- ja 'kirjanpito'-moduulien "
+"välille, ja sen avulla voit luoda kirjanpidon kirjauksia varastosi siirtojen "
+"arvon määrittämiseksi\n"
+"\n"
+"Tärkeimmät ominaisuudet\n"
+"------------\n"
+"* Varaston arvonmääritys (säännöllinen tai automaattinen)\n"
+"* Laskutus keräilystä\n"
+"\n"
+"Varastonhallinnan koontinäyttö/raportit sisältää:\n"
+"------------------------------------------------------\n"
+"* Varaston inventaarion arvo tiettynä päivänä (tukee menneitä päivämääriä)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -70,6 +85,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"%(lot)s kustannuspäivitys arvosta %(old_value)s arvoon %(new_value)s "
+"määrälle %(quantity)s, tekijä %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -78,6 +95,8 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"%(move)s kustannuspäivitys arvosta %(old_value)s arvoon %(new_value)s "
+"määrälle %(quantity)s, tekijä %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -88,7 +107,7 @@ msgstr "%(quantity)s %(uom)s tuotteen hinnalla"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tuotteen arvo</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -122,17 +141,19 @@ msgstr "AVCO-arvo"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Käyttöoikeusryhmät"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Tilikirjaus"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"Tilikirjausrivit, jotka käyttävät tätä kirjausta myytyjen tuotteiden "
+"kustannusten (COGS) laskemiseksi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -183,12 +204,12 @@ msgstr "%(user)s muokkasi %(date)s"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "Korjaus"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "Korjaukset"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -239,18 +260,18 @@ msgstr "Pekoni"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "COGS-rivit"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "COGS-varastokirjaukset"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
 #: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
 msgid "Closing Date"
-msgstr ""
+msgstr "Sulkemispäivä"
 
 #. module: stock_account
 #. odoo-python
@@ -315,6 +336,8 @@ msgstr "Tuotantokustannukset"
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"Kustannuspäivitys arvosta %(old_value)s arvoon %(new_value)s määrälle %"
+"(quantity)s, tekijä %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -421,7 +444,7 @@ msgstr "Sarja- ja eränumeron näyttäminen laskuissa"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "Tekijä"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -496,6 +519,8 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Jos kirjaus on peräisin toisen yrityksen asiakirjasta, sisältää kyseisen "
+"yrityksen kumppanin, muussa tapauksessa kirjauksen kumppani."
 
 #. module: stock_account
 #. odoo-python
@@ -511,7 +536,7 @@ msgstr "Varaston oikaisun viite / syy"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "Varastoinnin sijainti"
 
 #. module: stock_account
 #. odoo-javascript
@@ -525,16 +550,18 @@ msgstr "Varastohävikki"
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
 msgstr ""
+"Varastoinnin kirjaukset, joita käytetään myytyjen tuotteiden hankintamenojen "
+"(COGS) laskemiseen."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Varastointi, logistiikka, arvostus, kirjanpito"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "Laskurivi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -626,7 +653,7 @@ msgstr "Siirto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "Uusi yksikkökustannus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
@@ -637,12 +664,12 @@ msgstr "Uusi arvo"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "Vanha yksikkökustannus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Vanha arvo"
 
 #. module: stock_account
 #. odoo-python
@@ -656,16 +683,18 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"Asetetaan vain, jos kirjaus on luotu toiseen yritykseen kuuluvasta "
+"asiakirjasta"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "Tilauskumppani"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "Alkuperäinen yritys"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -730,26 +759,28 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Tuote pitäisi välittää argumenttina, jotta sarjan siirtojen yksikköhinta "
+"saadaan laskettua."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr "Tuotannon WIP-tili"
+msgstr "Keskeneräisen tuotannon tili"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr "Tuotannon WIP-yleiskustannustili"
+msgstr "Keskeneräisen tuotannon yleiskustannustili"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "Määrä"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Määrä"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -796,6 +827,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Normaalihinta: Tuotteiden arvo määritetään niiden normaalihinnan "
+"perusteella.\n"
+"        Keskihinta (AVCO): Tuotteiden arvo määritetään painotetun "
+"keskihinnan perusteella.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -832,6 +868,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Tekninen kenttä, joka sisältää seurantamenetelmän. 'False' varastoitavassa "
+"tuotteessa tarkoittaa, että sitä seurataan vain määrän perusteella."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -871,7 +909,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Total"
-msgstr ""
+msgstr "Yhteensä"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -900,7 +938,7 @@ msgstr "Kokonaisarvo"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
 msgid "Tracking Method"
-msgstr ""
+msgstr "Seurantamenetelmä"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -999,7 +1037,7 @@ msgstr "Arvo perustuen alkuperäiseen siirtoon %(reference)s"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "Arvo edellisestä kirjauksesta %(references)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1017,12 +1055,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "Näytä tilikirjaus"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "WMS Kirjanpito"
 
 #. module: stock_account
 #. odoo-python

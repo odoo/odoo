@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"POT-Creation-Date: 2026-11-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-18 06:37+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
@@ -46,8 +46,8 @@ msgstr ""
 "ໂມດູນໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ\n"
 "===========================\n"
 "\n"
-"ອະນຸຍາດໃຫ້ນຳອອກ ແລະ ນຳເຂົ້າຮູບແບບ: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII)"
-", XRechnung (UBL).\n"
+"ອະນຸຍາດໃຫ້ນຳອອກ ແລະ ນຳເຂົ້າຮູບແບບ: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X "
+"(CII), XRechnung (UBL).\n"
 "ເມື່ອສ້າງ PDF ໃນໃບແຈ້ງໜີ້, PDF ຈະຖືກຝັງໄວ້ພາຍໃນ xml ສຳລັບທຸກຮູບແບບ UBL. ສິ່ງນີ້ຊ່ວຍໃຫ້\n"
 "ຜູ້ຮັບສາມາດດຶງເອົາ PDF ໄດ້ໂດຍໃຊ້ພຽງໄຟລ໌ xml ເທົ່ານັ້ນ. ໝາຍເຫດ **EHF3 ຖືກຮອງຮັບຢ່າງສົມບູນໂດຍ "
 "UBL Bis 3** (`ເອກະສານອ້າງອີງ\n"
@@ -77,8 +77,7 @@ msgstr "%s ຄວນມີການກຳນົດເລກ KVK ຫຼື OIN."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
-msgstr ""
-"%s ຄວນມີການກຳນົດເລກ KBO/BCE ທີ່ຖືກຕ້ອງເປັນລະຫັດລະບຸຕົວຕົນເພີ່ມເຕີມ (BE_EN)."
+msgstr "%s ຄວນມີການກຳນົດເລກ KBO/BCE ທີ່ຖືກຕ້ອງເປັນລະຫັດລະບຸຕົວຕົນເພີ່ມເຕີມ (BE_EN)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -162,8 +161,7 @@ msgstr "ຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງລາຍການ
 msgid ""
 "At least one of the following fields %(field_list)s is required on %"
 "(record)s."
-msgstr ""
-"ຢ່າງໜ້ອຍໜຶ່ງໃນຊ່ອງຂໍ້ມູນເຫຼົ່ານີ້ %(field_list)s ແມ່ນຈຳເປັນຕ້ອງມີໃນ %(record)s."
+msgstr "ຢ່າງໜ້ອຍໜຶ່ງໃນຊ່ອງຂໍ້ມູນເຫຼົ່ານີ້ %(field_list)s ແມ່ນຈຳເປັນຕ້ອງມີໃນ %(record)s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
@@ -280,6 +278,7 @@ msgstr "ບໍ່ພົບໄຟລ໌ຕົ້ນສະບັບ, ກະລຸ�
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
 msgstr "ຄ່າທຳນຽມ"
@@ -333,10 +332,17 @@ msgstr "ຜູ້ຕິດຕໍ່"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT and "
+"country. A new partner was created."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
-msgstr ""
-"ບໍ່ສາມາດຄົ້ນຫາຄູ່ຄ້າທີ່ກົງກັບ '%s' ທີ່ມີເລກອາກອນດຽວກັນ. ຄູ່ຄ້າໃໝ່ຖືກສ້າງຂຶ້ນແລ້ວ."
+msgstr "ບໍ່ສາມາດຄົ້ນຫາຄູ່ຄ້າທີ່ກົງກັບ '%s' ທີ່ມີເລກອາກອນດຽວກັນ. ຄູ່ຄ້າໃໝ່ຖືກສ້າງຂຶ້ນແລ້ວ."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -436,6 +442,7 @@ msgstr "ກົມກອງຂອງຄະນະກຳມາທິການເອ
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
 msgstr "ສ່ວນຫຼຸດ"
@@ -472,8 +479,7 @@ msgstr "ຊື່ທີ່ສະແດງ"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
-msgstr ""
-"ສ່ວນຫຼຸດເອກະສານ %(charge)s ຂອງລາຍການ %(line)s: ຈຳນວນເງິນບໍ່ຄົບຖ້ວນ [IBR-031]."
+msgstr "ສ່ວນຫຼຸດເອກະສານ %(charge)s ຂອງລາຍການ %(line)s: ຈຳນວນເງິນບໍ່ຄົບຖ້ວນ [IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -499,8 +505,8 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
-"ຄ່າທຳນຽມເອກະສານ %(charge)s ຂອງລາຍການ %(line)s: ຕ້ອງມີເຫດຜົນ ຫຼື ລະຫັດເຫດຜົນ [IBR-"
-"038]."
+"ຄ່າທຳນຽມເອກະສານ %(charge)s ຂອງລາຍການ %(line)s: ຕ້ອງມີເຫດຜົນ ຫຼື ລະຫັດເຫດຜົນ "
+"[IBR-038]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -619,8 +625,7 @@ msgstr "ອາກອນຟິນແລນ"
 msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
-msgstr ""
-"ສຳລັບການສະໜອງພາຍໃນກຸ່ມປະເທດ, ຄວນລະບຸວັນທີຈັດສົ່ງຕົວຈິງ ຫຼື ໄລຍະເວລາການອອກໃບແຈ້ງໜີ້."
+msgstr "ສຳລັບການສະໜອງພາຍໃນກຸ່ມປະເທດ, ຄວນລະບຸວັນທີຈັດສົ່ງຕົວຈິງ ຫຼື ໄລຍະເວລາການອອກໃບແຈ້ງໜີ້."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1085,8 +1090,7 @@ msgstr "ກະລຸນາປ້ອນເລກອາກອນ ຫຼື ທີ�
 msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
-msgstr ""
-"ກະລຸນາປ້ອນເລກອາກອນ ຫຼື ທີ່ຢູ່ Peppol ຂອງບໍລິສັດທ່ານເພື່ອສ້າງໄຟລ໌ XML ທີ່ສົມບູນ."
+msgstr "ກະລຸນາປ້ອນເລກອາກອນ ຫຼື ທີ່ຢູ່ Peppol ຂອງບໍລິສັດທ່ານເພື່ອສ້າງໄຟລ໌ XML ທີ່ສົມບູນ."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1125,10 +1129,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
-"ອາກອນແບບປີ້ນກັບ (Reverse charge): ຫາກບໍ່ມີການຄັດຄ້ານເປັນລາຍລັກອັກສອນພາຍໃນໜຶ່ງເດືອນນັບແຕ່ມື້ໄດ້ຮັບ"
-"ໃບແຈ້ງໜີ້, ຈະຖືວ່າລູກຄ້າຍອມຮັບວ່າຕົນເປັນຜູ້ເສຍອາກອນທີ່ຕ້ອງຍື່ນແຈ້ງເສຍອາກອນຕາມກຳນົດເວລາ. ຫາກບໍ່ປະຕິບັດ"
-"ຕາມເງື່ອນໄຂນີ້, ລູກຄ້າຈະຕ້ອງຮັບຜິດຊອບໃນການຊຳລະອາກອນ, ດອກເບ້ຍ ແລະ ຄ່າປັບໃໝທີ່ເກີດຂຶ້ນກ່ຽວຂ້ອງກັບເງື່"
-"ອນໄຂດັ່ງກ່າວ."
+"ອາກອນແບບປີ້ນກັບ (Reverse charge): "
+"ຫາກບໍ່ມີການຄັດຄ້ານເປັນລາຍລັກອັກສອນພາຍໃນໜຶ່ງເດືອນນັບແຕ່ມື້ໄດ້ຮັບໃບແຈ້ງໜີ້, "
+"ຈະຖືວ່າລູກຄ້າຍອມຮັບວ່າຕົນເປັນຜູ້ເສຍອາກອນທີ່ຕ້ອງຍື່ນແຈ້ງເສຍອາກອນຕາມກຳນົດເວລາ. "
+"ຫາກບໍ່ປະຕິບັດຕາມເງື່ອນໄຂນີ້, ລູກຄ້າຈະຕ້ອງຮັບຜິດຊອບໃນການຊຳລະອາກອນ, ດອກເບ້ຍ ແລະ "
+"ຄ່າປັບໃໝທີ່ເກີດຂຶ້ນກ່ຽວຂ້ອງກັບເງື່ອນໄຂດັ່ງກ່າວ."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1326,8 +1331,7 @@ msgstr "ເລກປະຈຳຕົວຜູ້ເສຍພາສີ"
 msgid ""
 "Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
 "line '%(line)s'."
-msgstr ""
-"ບໍ່ສາມາດດຶງຂໍ້ມູນອາກອນທີ່ມີເງື່ອນໄຂກົງກັນ: '%(exigibility)s' ສຳລັບລາຍການ '%(line)s'."
+msgstr "ບໍ່ສາມາດດຶງຂໍ້ມູນອາກອນທີ່ມີເງື່ອນໄຂກົງກັນ: '%(exigibility)s' ສຳລັບລາຍການ '%(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1336,8 +1340,8 @@ msgid ""
 "Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
 "from other categories. You should split your invoice in two"
 msgstr ""
-"ອາກອນປະເພດ 'ການບໍລິການທີ່ຢູ່ນອກຂອບເຂດອາກອນ' ບໍ່ຄວນປົນກັບອາກອນປະເພດອື່ນ. ທ່ານຄວນແຍກໃບແຈ້ງໜີ້ອອ"
-"ກເປັນສອງໃບ"
+"ອາກອນປະເພດ 'ການບໍລິການທີ່ຢູ່ນອກຂອບເຂດອາກອນ' ບໍ່ຄວນປົນກັບອາກອນປະເພດອື່ນ. "
+"ທ່ານຄວນແຍກໃບແຈ້ງໜີ້ອອກເປັນສອງໃບ"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique
@@ -1353,8 +1357,8 @@ msgid ""
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
 "ຫົວໜ່ວຍວັດແທກ '%(uom)s' (ຈາກລະຫັດຫົວໜ່ວຍ '%(code)s') ຖືກລະເວັ້ນໃນລາຍການສຳລັບສິນຄ້າ '%"
-"(product)s' ຍ້ອນວ່າມັນບໍ່ເຂົ້າກັນກັບຫົວໜ່ວຍວັດແທກຂອງສິນຄ້າ '%(product_uom)s'. ຫົວໜ່ວຍວັດແທກຈຶ່ງຖື"
-"ກປະວ່າງໄວ້."
+"(product)s' ຍ້ອນວ່າມັນບໍ່ເຂົ້າກັນກັບຫົວໜ່ວຍວັດແທກຂອງສິນຄ້າ '%(product_uom)s'. "
+"ຫົວໜ່ວຍວັດແທກຈຶ່ງຖືກປະວ່າງໄວ້."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1367,8 +1371,7 @@ msgstr "ລະຫັດປະເພດອາກອນມູນຄ່າເພີ
 msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
-msgstr ""
-"ເລກອາກອນຂອງຜູ້ສະໜອງເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ. ມັນຄວນຈະຢູ່ໃນຮູບແບບ: NO179728982MVA."
+msgstr "ເລກອາກອນຂອງຜູ້ສະໜອງເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ. ມັນຄວນຈະຢູ່ໃນຮູບແບບ: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1441,8 +1444,8 @@ msgid ""
 "The reason why the amount is exempted from VAT or why no VAT is being "
 "charged, used for electronic invoicing purposes."
 msgstr ""
-"ເຫດຜົນທີ່ຈຳນວນເງິນຖືກຍົກເວັ້ນອາກອນ ຫຼື ເປັນຫຍັງຈຶ່ງບໍ່ຄິດໄລ່ອາກອນ, ໃຊ້ສຳລັບການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິ"
-"ກ."
+"ເຫດຜົນທີ່ຈຳນວນເງິນຖືກຍົກເວັ້ນອາກອນ ຫຼື ເປັນຫຍັງຈຶ່ງບໍ່ຄິດໄລ່ອາກອນ, "
+"ໃຊ້ສຳລັບການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
@@ -1523,6 +1526,16 @@ msgid "USA EIN"
 msgstr "USA EIN"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_category_codes
+msgid "Ubl Cii Available Tax Category Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_available_tax_exemption_reason_codes
+msgid "Ubl Cii Available Tax Exemption Reason Codes"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_requires_exemption_reason
 msgid "Ubl Cii Requires Exemption Reason"
 msgstr "Ubl Cii ຕ້ອງການເຫດຜົນການຍົກເວັ້ນ"
@@ -1556,8 +1569,8 @@ msgid ""
 "VATEX-EU-132-1A - Exempt based on article 132, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1A - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (a) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1A - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (a) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1b
@@ -1565,8 +1578,8 @@ msgid ""
 "VATEX-EU-132-1B - Exempt based on article 132, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1B - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (b) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1B - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (b) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1c
@@ -1574,8 +1587,8 @@ msgid ""
 "VATEX-EU-132-1C - Exempt based on article 132, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1C - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (c) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1C - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (c) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1d
@@ -1583,8 +1596,8 @@ msgid ""
 "VATEX-EU-132-1D - Exempt based on article 132, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1D - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (d) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1D - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (d) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1e
@@ -1592,8 +1605,8 @@ msgid ""
 "VATEX-EU-132-1E - Exempt based on article 132, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1E - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (e) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1E - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (e) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1f
@@ -1601,8 +1614,8 @@ msgid ""
 "VATEX-EU-132-1F - Exempt based on article 132, section 1 (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1F - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (f) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1F - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (f) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1g
@@ -1610,8 +1623,8 @@ msgid ""
 "VATEX-EU-132-1G - Exempt based on article 132, section 1 (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1G - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (g) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1G - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (g) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1h
@@ -1619,8 +1632,8 @@ msgid ""
 "VATEX-EU-132-1H - Exempt based on article 132, section 1 (h) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1H - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (h) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1H - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (h) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1i
@@ -1628,8 +1641,8 @@ msgid ""
 "VATEX-EU-132-1I - Exempt based on article 132, section 1 (i) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1I - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (i) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1I - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (i) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1j
@@ -1637,8 +1650,8 @@ msgid ""
 "VATEX-EU-132-1J - Exempt based on article 132, section 1 (j) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1J - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (j) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1J - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (j) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1k
@@ -1646,8 +1659,8 @@ msgid ""
 "VATEX-EU-132-1K - Exempt based on article 132, section 1 (k) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1K - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (k) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1K - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (k) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1l
@@ -1655,8 +1668,8 @@ msgid ""
 "VATEX-EU-132-1L - Exempt based on article 132, section 1 (l) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1L - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (l) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1L - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (l) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1m
@@ -1664,8 +1677,8 @@ msgid ""
 "VATEX-EU-132-1M - Exempt based on article 132, section 1 (m) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1M - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (m) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1M - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (m) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1n
@@ -1673,8 +1686,8 @@ msgid ""
 "VATEX-EU-132-1N - Exempt based on article 132, section 1 (n) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1N - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (n) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1N - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (n) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1o
@@ -1682,8 +1695,8 @@ msgid ""
 "VATEX-EU-132-1O - Exempt based on article 132, section 1 (o) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1O - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (o) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1O - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (o) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1p
@@ -1691,8 +1704,8 @@ msgid ""
 "VATEX-EU-132-1P - Exempt based on article 132, section 1 (p) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1P - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (p) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1P - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (p) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1q
@@ -1700,8 +1713,8 @@ msgid ""
 "VATEX-EU-132-1Q - Exempt based on article 132, section 1 (q) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1Q - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (q) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-132-1Q - ຍົກເວັ້ນຕາມມາດຕາ 132, ພາກ 1 (q) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-135-1
@@ -1723,8 +1736,8 @@ msgid ""
 "VATEX-EU-143-1A - Exempt based on article 143, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1A - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (a) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1A - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (a) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1b
@@ -1732,8 +1745,8 @@ msgid ""
 "VATEX-EU-143-1B - Exempt based on article 143, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1B - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (b) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1B - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (b) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1c
@@ -1741,8 +1754,8 @@ msgid ""
 "VATEX-EU-143-1C - Exempt based on article 143, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1C - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (c) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1C - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (c) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1d
@@ -1750,8 +1763,8 @@ msgid ""
 "VATEX-EU-143-1D - Exempt based on article 143, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1D - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (d) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1D - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (d) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1e
@@ -1759,8 +1772,8 @@ msgid ""
 "VATEX-EU-143-1E - Exempt based on article 143, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1E - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (e) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1E - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (e) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1f
@@ -1768,8 +1781,8 @@ msgid ""
 "VATEX-EU-143-1F - Exempt based on article 143, section 1 (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1F - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (f) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1F - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (f) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1fa
@@ -1777,8 +1790,8 @@ msgid ""
 "VATEX-EU-143-1FA - Exempt based on article 143, section 1 (fa) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1FA - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (fa) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1FA - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (fa) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1g
@@ -1786,8 +1799,8 @@ msgid ""
 "VATEX-EU-143-1G - Exempt based on article 143, section 1 (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1G - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (g) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1G - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (g) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1h
@@ -1795,8 +1808,8 @@ msgid ""
 "VATEX-EU-143-1H - Exempt based on article 143, section 1 (h) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1H - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (h) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1H - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (h) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1i
@@ -1804,8 +1817,8 @@ msgid ""
 "VATEX-EU-143-1I - Exempt based on article 143, section 1 (i) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1I - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (i) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1I - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (i) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1j
@@ -1813,8 +1826,8 @@ msgid ""
 "VATEX-EU-143-1J - Exempt based on article 143, section 1 (j) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1J - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (j) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1J - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (j) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1k
@@ -1822,8 +1835,8 @@ msgid ""
 "VATEX-EU-143-1K - Exempt based on article 143, section 1 (k) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1K - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (k) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1K - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (k) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1l
@@ -1831,8 +1844,8 @@ msgid ""
 "VATEX-EU-143-1L - Exempt based on article 143, section 1 (l) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1L - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (l) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-143-1L - ຍົກເວັ້ນຕາມມາດຕາ 143, ພາກ 1 (l) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-144
@@ -1923,8 +1936,8 @@ msgid ""
 "VATEX-EU-151-1A - Exempt based on article 151, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1A - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (a) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-151-1A - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (a) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1aa
@@ -1932,8 +1945,8 @@ msgid ""
 "VATEX-EU-151-1AA - Exempt based on article 151, section 1 (aa) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1AA - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (aa) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-151-1AA - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (aa) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1b
@@ -1941,8 +1954,8 @@ msgid ""
 "VATEX-EU-151-1B - Exempt based on article 151, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1B - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (b) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-151-1B - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (b) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1c
@@ -1950,8 +1963,8 @@ msgid ""
 "VATEX-EU-151-1C - Exempt based on article 151, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1C - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (c) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-151-1C - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (c) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1d
@@ -1959,8 +1972,8 @@ msgid ""
 "VATEX-EU-151-1D - Exempt based on article 151, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1D - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (d) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-151-1D - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (d) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1e
@@ -1968,8 +1981,8 @@ msgid ""
 "VATEX-EU-151-1E - Exempt based on article 151, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1E - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (e) ຂອງ Council Directive 2006/"
-"112/EC"
+"VATEX-EU-151-1E - ຍົກເວັ້ນຕາມມາດຕາ 151, ພາກ 1 (e) ຂອງ Council Directive "
+"2006/112/EC"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-153
@@ -2299,8 +2312,7 @@ msgstr "Z - ສິນຄ້າອັດຕາສູນ"
 msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
-msgstr ""
-"[PEPPOL-EN16931-R010] ຕ້ອງລະບຸທີ່ຢູ່ເອເລັກໂຕຣນິກ (EAS) ສຳລັບລູກຄ້າ '%s'."
+msgstr "[PEPPOL-EN16931-R010] ຕ້ອງລະບຸທີ່ຢູ່ເອເລັກໂຕຣນິກ (EAS) ສຳລັບລູກຄ້າ '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2308,8 +2320,7 @@ msgstr ""
 msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
-msgstr ""
-"[PEPPOL-EN16931-R020] ຕ້ອງລະບຸທີ່ຢູ່ເອເລັກໂຕຣນິກ (EAS) ສຳລັບບໍລິສັດ '%s'."
+msgstr "[PEPPOL-EN16931-R020] ຕ້ອງລະບຸທີ່ຢູ່ເອເລັກໂຕຣນິກ (EAS) ສຳລັບບໍລິສັດ '%s'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format

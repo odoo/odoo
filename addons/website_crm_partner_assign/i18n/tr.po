@@ -20,19 +20,20 @@
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2022
 # Halil, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 18:30+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-09 11:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "website_crm_partner_assign/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +57,19 @@ msgid ""
 "the geolocalization. Partners get leads that are located around them.\n"
 "\n"
 msgstr ""
+"\n"
+"Bu modül, gelen potansiyel müşterileri/fırsatları bayilerinize/ortaklarınıza "
+"iletmenize olanak tanır.\n"
+"\n"
+"Potansiyel müşterilerin iletilmesi, bir seferde bir veya birkaç potansiyel "
+"müşteri için yapılabilir. Bu işlem, potansiyel müşteri/fırsat form "
+"görünümündeki *Atanan Ortak* bölümünde ve liste görünümündeki *Eylem* "
+"menüsünde mevcuttur.\n"
+"\n"
+"Otomatik atama, ortak seviyelerinin ağırlığı ve coğrafi konum bilgisine göre "
+"belirlenir. Ortaklar, bulundukları bölgenin çevresindeki potansiyel "
+"müşterileri alırlar.\n"
+"\n"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
@@ -76,7 +90,7 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner_detail
 msgid "<i class=\"oi me-2\" data-icon=\"chevron_backward\"/>Back"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"chevron_backward\"/>Geri"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -90,6 +104,9 @@ msgid ""
 "            There are no matching partners found for the selected country. "
 "Displaying results across all countries instead."
 msgstr ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"info\"/>\n"
+"            Seçili ülke için eşleşen bir ortak bulunamadı. Bunun yerine tüm "
+"ülkelerdeki sonuçlar gösteriliyor."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -188,7 +205,7 @@ msgstr "<span> de </span>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_content
 msgid "<span>Find a partner</span>"
-msgstr ""
+msgstr "<span>Bir iş ortağı bul</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -257,6 +274,49 @@ msgid ""
 "</t>\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Merhaba,<br>\n"
+"Bölgenizdeki adaylar tarafından bize ulaşıldı. Bu nedenle, aşağıdaki adaylar "
+"<t t-out=\"ctx['partner_id'].name if ctx.get('partner_id') else ''\"></t> "
+"hesabına atanmıştır:<br>\n"
+"<ol>\n"
+"    <li t-foreach=\"ctx.get('partner_leads', [])\" t-as=\"lead\"><a t-att-"
+"href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Konu "
+"Tanımlanmamış'\">Konu Tanımlanmamış</a>, <t t-"
+"out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Kişi "
+"Adı Tanımlanmamış'\">Kişi Adı Tanımlanmamış</t>, <t t-"
+"out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or "
+"'Ülke Tanımlanmamış'\">Ülke Tanımlanmamış</t>, <t t-"
+"out=\"lead['lead_id'].email_from or 'E-posta Tanımlanmamış' or ''\">E-posta "
+"Tanımlanmamış</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</"
+"t> </li><br>\n"
+"</ol>\n"
+"<t t-if=\"ctx.get('partner_in_portal')\">\n"
+"    Detaylar için lütfen <a t-att-href=\"'%s?db=%s' % (object.get_base_url()"
+", object.env.cr.dbname)\">Ortak Portalınıza</a> bağlanın.\n"
+"    <t t-if=\"any(lead['lead_id'].type == 'lead' for lead in "
+"ctx['partner_leads'])\">Her aday üzerinde, aday ile iletişime geçtikten "
+"sonra basmanız gereken iki düğme vardır: \"İlgileniyorum\" &amp; "
+"\"İlgilenmiyorum\".</t><br>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    Veritabanımıza henüz portal erişiminiz bulunmamaktadır. Lütfen\n"
+"    <t t-out=\"ctx.get('partner_id') and ctx['partner_id'].user_id and "
+"ctx['partner_id'].user_id.email and 'hesap yöneticiniz %s (%s)' % "
+"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or "
+"'bizimle'\">bizimle</t> iletişime geçin.<br>\n"
+"</t>\n"
+"Eğer aday ile 20 gün içinde iletişime geçmezseniz, aday başka bir ortağa "
+"gönderilecektir.<br><br>\n"
+"Teşekkürler,<br>\n"
+"<t t-out=\"ctx.get('partner_id') and ctx['partner_id'].user_id and "
+"ctx['partner_id'].user_id.signature or ''\"></t>\n"
+"<br>\n"
+"<t t-if=\"not ctx.get('partner_id') or not ctx['partner_id'].user_id\">\n"
+"    Not: Size atanmış bir hesap yöneticisi yok gibi görünüyor, lütfen "
+"bizimle iletişime geçin.\n"
+"</t>\n"
+"            </t>"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -401,12 +461,12 @@ msgstr "İçerikler"
 #. odoo-javascript
 #: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.xml:0
 msgid "Countries"
-msgstr ""
+msgstr "Ülke"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Countries..."
-msgstr ""
+msgstr "Ülkeler..."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__country_id
@@ -498,7 +558,7 @@ msgstr "Sonraki Faaliyet Detayları"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Discard"
-msgstr ""
+msgstr "İptal"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__display_name
@@ -602,7 +662,7 @@ msgstr "Sonraki Aktiviteler"
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: {{ ctx['partner_id'].name if ctx.get('partner_id') else ''}}"
-msgstr ""
+msgstr "Fwd: Aday: {{ ctx['partner_id'].name if ctx.get('partner_id') else ''}}"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -737,7 +797,7 @@ msgstr "En Son İnceleme"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "Latitude"
-msgstr ""
+msgstr "Enlem"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -799,7 +859,7 @@ msgstr "Aday Bağlantısı"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_longitude
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "Longitude"
-msgstr ""
+msgstr "Meridyen"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -959,7 +1019,7 @@ msgstr "İş Ortağı Konumu"
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_partner_pages_list
 msgid "Partner Pages"
-msgstr ""
+msgstr "Ortak Sayfaları"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
@@ -1021,7 +1081,7 @@ msgstr "Planlanan Gelir"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_portal_entry
 msgid "Portal Entry"
-msgstr ""
+msgstr "Portal Girişi"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1039,6 +1099,7 @@ msgstr "Olasılık"
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
 msgstr ""
+"Bayilerinizi / ortaklarınızı yayınlayın ve olası satışları onlara iletin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1173,7 +1234,7 @@ msgstr "Aşama:"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "States..."
-msgstr ""
+msgstr "Eyaletler..."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1289,7 +1350,7 @@ msgstr "Dünya Haritası"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:0
 msgid "Your leads"
-msgstr ""
+msgstr "Adaylarınız"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
