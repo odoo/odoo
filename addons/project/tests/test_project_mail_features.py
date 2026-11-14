@@ -113,6 +113,25 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 elif key == 'user':
                     self.assertTrue(has_button_access)
 
+    def test_task_message_post_portal_author(self):
+        """ A portal user posting on a task of a portal-visible project must
+        not raise an AccessError when followers are notified by email. """
+        self.project_followers.privacy_visibility = 'portal'
+        self.test_task.message_subscribe(
+            partner_ids=(self.user_portal.partner_id + self.user_projectuser.partner_id).ids,
+        )
+
+        with self.mock_mail_gateway():
+            message = self.test_task.with_user(self.user_portal).message_post(
+                body='Portal comment',
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+            )
+            self.flush_tracking()
+
+        self.assertEqual(message.author_id, self.user_portal.partner_id)
+        self.assertSentEmail(message.author_id, [self.user_projectuser.partner_id])
+
     def test_task_creation_no_stage(self):
         """ Test receiving email in a project without stage, should create task as intended """
         internal_followers = self.user_projectuser.partner_id + self.user_projectmanager.partner_id
