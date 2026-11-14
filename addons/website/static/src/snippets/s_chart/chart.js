@@ -182,7 +182,7 @@ export class Chart extends Interaction {
             };
         }
 
-        if (this.noAnimation) {
+        if (this.noAnimation || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
             chartData.options.animation = { duration: 0 };
         }
 

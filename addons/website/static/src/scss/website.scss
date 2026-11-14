@@ -1814,6 +1814,9 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
         &.s_parallax_is_fixed {
             > .s_parallax_bg, > .s_parallax_bg_wrap > .s_parallax_bg {
                 background-attachment: fixed;
+                @media (prefers-reduced-motion: reduce) {
+                    background-attachment: scroll;
+                }
             }
         }
     }
@@ -2485,7 +2488,7 @@ header {
 }
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
-    @media (min-width: 992px) {
+    @media (min-width: 992px) and (prefers-reduced-motion: no-preference) {
         #wrapwrap.o_footer_effect_enable {
             > main {
                 @if o-website-value('layout') == 'full' {
@@ -3617,6 +3620,22 @@ input[value*="data-oe-translation-source-sha"] {
     backface-visibility: visible;
     animation-name: o_anim_flip_in_y;
     transition-timing-function: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Replace motion (slide, bounce, rotate, zoom, ...) by a plain fade. The
+       animation still runs so that "animationend" fires and the animation
+       interaction completes its lifecycle. Two classes of specificity, defined
+       after the animation rules, override ".o_anim_xxx.o_anim_from_yyy" while
+       the inline "animation-name" used by the JS reset still wins. */
+    .o_animate:not(.o_animate_on_scroll, .o_anim_fade_out) {
+        animation-name: o_anim_fade_in;
+    }
+    /* Scroll-driven animations are scrubbed with the scroll position: show
+       their end state instead. */
+    .o_animate.o_animate_on_scroll {
+        animation: none;
+    }
 }
 
 /* Compatibility <= 13.0 */
