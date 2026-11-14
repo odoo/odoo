@@ -1352,7 +1352,10 @@ class PosOrder(models.Model):
         return not self.session_id.update_stock_at_closing or self._force_create_picking_real_time()
 
     def _force_create_picking_real_time(self):
-        return (self.company_id.anglo_saxon_accounting and self.to_invoice) or bool(self.refunded_order_id.shipping_date)
+        return (
+            self.to_invoice
+            and any(line.product_id.is_storable and line.product_id.valuation == 'real_time' for line in self.lines)
+        ) or bool(self.refunded_order_id.shipping_date)
 
     def _create_order_picking(self):
         self.ensure_one()
