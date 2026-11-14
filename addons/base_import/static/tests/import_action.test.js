@@ -482,6 +482,39 @@ describe("Import view", () => {
         );
     });
 
+    test("reimport recovers from a preview error", async () => {
+        let shouldFail = true;
+        onRpc("base_import.import", "parse_preview", ({ args }) => {
+            if (shouldFail) {
+                return { error: "Invalid file encoding" };
+            }
+            return parsePreview(args[1], { rowCount: 101 });
+        });
+
+        await mountWebClient();
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        expect(".o_import_data_content .alert-danger p:first").toHaveText(
+            'Import preview failed due to: " Invalid file encoding ".'
+        );
+        expect(".o_import_data_content .alert-danger p:eq(1)").toHaveText(
+            "For CSV files, you may need to select the correct separator."
+        );
+        expect(".o_import_data_content table").toHaveCount(0);
+        expect(".o_import_batch_alert").toHaveCount(0);
+
+        shouldFail = false;
+        await contains(".o_import_formatting button").click();
+
+        expect(".o_import_data_content .alert-danger").toHaveCount(0);
+        expect(".o_import_data_content table").toHaveCount(1);
+        expect(".o_import_batch_alert").toHaveCount(1);
+    });
+
     test("default import options are correctly", async () => {
         onRpc("base_import.import", "execute_import", ({ args }) => {
             expect.step("execute_import");
