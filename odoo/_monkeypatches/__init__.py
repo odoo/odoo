@@ -13,7 +13,7 @@ import os
 import pkgutil
 import sys
 import time
-from types import ModuleType, SimpleNamespace
+from types import ModuleType
 
 
 class PatchImportHook:
@@ -38,15 +38,39 @@ class PatchImportHook:
         for finder in sys.meta_path[idx + 1:]:
             spec = finder.find_spec(fullname, path, target)
             if spec is not None:
-                # we found a spec, change the loader
-
-                def exec_module(module: ModuleType, exec_module=spec.loader.exec_module) -> None:
-                    exec_module(module)
-                    patch_module(module.__name__)
-
-                spec.loader = SimpleNamespace(create_module=spec.loader.create_module, exec_module=exec_module)
+                # we found a spec, wrap the loader
+                spec.loader = PatchingLoader(spec.loader, fullname)
                 return spec
         raise ImportError(f"Could not load the module {fullname!r} to patch")
+
+
+class PatchingLoader:
+    """Delegate to the real loader, then run the module's patch hook.
+
+    Everything but ``exec_module`` is forwarded, so the loader keeps
+    ``get_data`` and ``get_resource_reader``: ``importlib.resources`` reads a
+    package's data files through them, and without them ``files()`` returns an
+    orphan path whose read raises ``FileNotFoundError``.
+    """
+
+    def __init__(self, loader, name):
+        self._loader = loader
+        self._name = name
+
+    @property
+    def __class__(self):
+        # isinstance() reads this, so the proxy still passes the loader checks
+        return type(self._loader)
+
+    def __getattr__(self, attr):
+        return getattr(self._loader, attr)
+
+    def create_module(self, spec):
+        return self._loader.create_module(spec)
+
+    def exec_module(self, module: ModuleType) -> None:
+        self._loader.exec_module(module)
+        patch_module(self._name)
 
 
 HOOK_IMPORT = PatchImportHook()
