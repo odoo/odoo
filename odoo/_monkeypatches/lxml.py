@@ -16,20 +16,21 @@ def patch_lxml():
     # libxml2 >= 2.14.0 stopped implicitly wrapping plain text in <p> tags.
     # We patch lxml.html parsers here to maintain compatibility across versions.
     if LIBXML_VERSION >= (2, 14, 0):
-        RE_STARTS_WITH_TAG = r'^\s*<[\w!-]'
-        RE_STARTS_WITH_TAG_STR = re.compile(RE_STARTS_WITH_TAG)
-        RE_STARTS_WITH_TAG_BYTES = re.compile(RE_STARTS_WITH_TAG.encode('ascii'))
+        WHITESPACE = ' \t\n\r\f\v'
+        RE_NO_WRAP = rf'[{WHITESPACE}]*(?:<[\w!-]|\Z)'
+        RE_NO_WRAP_STR = re.compile(RE_NO_WRAP)
+        RE_NO_WRAP_BYTES = re.compile(RE_NO_WRAP.encode('ascii'))
 
         orig_fromstring = lxml.html.fromstring
         orig_document_fromstring = lxml.html.document_fromstring
 
         def _wrap_text_node(html):
             if isinstance(html, bytes):
-                if not RE_STARTS_WITH_TAG_BYTES.match(html):
+                if not RE_NO_WRAP_BYTES.match(html):
                     return b"<p>%s</p>" % html.lstrip()
             else:
-                if not RE_STARTS_WITH_TAG_STR.match(html):
-                    return "<p>%s</p>" % html.lstrip()
+                if not RE_NO_WRAP_STR.match(html):
+                    return "<p>%s</p>" % html.lstrip(WHITESPACE)
             return html
 
         def fromstring(html, *args, **kwargs):
