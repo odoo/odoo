@@ -1004,6 +1004,41 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertIn('Address zip code must not exceed 10 characters.', errors)
         self.assertIn('Missing address country.', errors)
 
+    def test_b2bi_invoice_ignores_vat_formatting_characters_for_length_check(self):
+        swiss_customer = self.env['res.partner'].create({
+            'name': 'PDP Swiss Customer',
+            'street': 'Bahnhofstrasse 1',
+            'zip': '8001',
+            'city': 'Zurich',
+            'country_id': self.env.ref('base.ch').id,
+            'vat': 'CHE-123.456.788 TVA',
+        })
+        invoice = self._create_reporting_invoice(partner=swiss_customer)
+
+        errors = invoice._get_l10n_fr_pdp_errors()
+
+        self.assertFalse(errors)
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+        self.assertEqual(invoice_node.findtext('Buyer/CompanyId'), 'CHPDP Swiss Custom')
+        self.assertEqual(invoice_node.find('Buyer/CompanyId').get('schemeId'), '0227')
+        self.assertEqual(invoice_node.findtext('Buyer/TaxRegistrationId'), 'CHE123456788TVA')
+
+    def test_b2bi_invoice_ignores_vat_formatting_characters_for_eu_identifier(self):
+        self.b2bi_customer.with_context(no_vat_validation=True).vat = 'BE 0477.472.701'
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+
+        errors = invoice._get_l10n_fr_pdp_errors()
+
+        self.assertFalse(errors)
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+        self.assertEqual(invoice_node.findtext('Buyer/CompanyId'), 'BE0477472701')
+        self.assertEqual(invoice_node.find('Buyer/CompanyId').get('schemeId'), '0223')
+        self.assertEqual(invoice_node.findtext('Buyer/TaxRegistrationId'), 'BE0477472701')
+
     def test_b2bi_service_on_debits_reports_tax_due_date_type_code(self):
         service_tax_on_debits = self._get_tax_on_payment_20_tax_included().copy({
             'name': '20% Service on debits',
