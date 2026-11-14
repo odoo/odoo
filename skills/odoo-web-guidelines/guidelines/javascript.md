@@ -68,6 +68,41 @@ no longer tells you what will run, and harder to maintain, since the patch and t
 it targets drift apart. Usually there is a better solution: design a proper extension
 point.
 
+# Import the patch a patch relies on
+
+A patch that relies on another patch of the same object (it calls `super` on a method
+the other patch adds or changes, or reads what it sets) imports the file of that patch,
+even with nothing to import from it.
+
+```js
+import { Book } from "@library/core/book_model";
+
+import { patch } from "@web/core/utils/patch";
+
+import "@library/core/web/book_model_patch";
+
+patch(Book.prototype, {
+    open() {
+        super.open(); // the version of book_model_patch.js
+    },
+});
+```
+
+## Why
+
+Patches apply in the order their files run. Files run in the order of the bundle, except
+that a file waits for the files it imports: an import added to either file, or a new
+file, can run the two patches the other way round. Without the import, the patch works
+by luck and breaks later with no change of its own.
+
+## Exceptions
+
+- Two patches of the same object that change different methods, and read nothing of
+  each other, need no import.
+- The imported patch must be in every bundle that loads this file (same folder, or a
+  more common one such as `common`): otherwise the loader skips this file there. Move
+  the patch it relies on down instead.
+
 # Use `window` members directly, not the `browser` object
 
 Write `setTimeout`, `clearTimeout`, `localStorage`, `navigator` or `addEventListener`
