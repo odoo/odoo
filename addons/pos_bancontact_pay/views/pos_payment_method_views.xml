@@ -9,11 +9,12 @@
                 <notebook invisible="payment_provider != 'bancontact_pay'">
                     <page name="settings" string="Bancontact Pay">
                         <group>
-                            <field name="bancontact_api_key" password="True" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
-                            <field name="bancontact_ppid" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
-                            <field name="bancontact_usage" invisible="payment_provider != 'bancontact_pay'"/>
-                            <field name="bancontact_test_mode" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
-                            <button name="download_bancontact_sticker" type="object" string="Download Sticker" class="btn btn-primary" invisible="payment_provider != 'bancontact_pay' or bancontact_usage != 'sticker'"/>
+                            <field name="bancontact_product_id"/>
+                            <field name="bancontact_sticker_id"
+                                invisible="bancontact_usage != 'sticker'"
+                                required="bancontact_usage == 'sticker'"
+                                context="{'default_product_id': bancontact_product_id}"/>
+                            <button name="download_bancontact_sticker" type="object" string="Download Sticker" class="btn btn-primary" invisible="bancontact_usage != 'sticker' or not bancontact_sticker_id"/>
                         </group>
                     </page>
                 </notebook>
