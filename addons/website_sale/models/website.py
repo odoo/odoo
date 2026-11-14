@@ -343,16 +343,7 @@ class Website(models.Model):
         )
 
     def _inverse_pricelist_id(self):
-        self.ensure_one()
-        if not request:
-            return
-        if self.pricelist_id:
-            request.session[PRICELIST_SESSION_CACHE_KEY] = self.pricelist_id.id
-            request.pricelist = self.pricelist_id.with_env(request.env).sudo()
-        else:
-            request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
-            request.pricelist = lazy(self.with_env(request.env)._get_and_cache_current_pricelist)
-        self.invalidate_model(["pricelist_id"], flush=False)
+        self._set_current_pricelist(self.pricelist_id)
 
     @api.depends("pricelist_id", "company_id")
     def _compute_currency_id(self):
@@ -753,6 +744,24 @@ class Website(models.Model):
             "website_id": self.id,
         }
 
+    def _set_current_pricelist(self, pricelist):
+        """Set the pricelist of the current request, or reset it if `pricelist` is falsy.
+
+        Use it instead of assigning `pricelist_id`: assigning it writes the website, which clears
+        the page cache of every worker.
+        """
+        self.ensure_one()
+        if not request:
+            return
+        if pricelist:
+            request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist.id
+            request.pricelist = pricelist.with_env(request.env).sudo()
+        else:
+            request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+            request.pricelist = lazy(self.with_env(request.env)._get_and_cache_current_pricelist)
+        self.modified(["pricelist_id"])
+        self.invalidate_model(["pricelist_id"], flush=False)
+
     def _get_and_cache_current_pricelist(self):
         """Retrieve and cache the current pricelist for the session.
 
@@ -937,7 +946,7 @@ class Website(models.Model):
     def sale_reset(self):  # noqa: PLR6301
         request.session.pop(CART_SESSION_CACHE_KEY, None)
         request.session.pop("website_sale_cart_quantity", None)
-        self.env.website.sudo().pricelist_id = False
+        self.env.website._set_current_pricelist(False)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
         request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 

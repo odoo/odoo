@@ -1165,7 +1165,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         :param 'product.pricelist'|None pricelist: The new pricelist. If None resets the pricelist.
         """
-        self.env.website.sudo().pricelist_id = pricelist
+        self.env.website._set_current_pricelist(pricelist)
 
         if not (order_sudo := request.cart):
             return
