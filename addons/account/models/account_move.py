@@ -1767,7 +1767,7 @@ class AccountMove(models.Model):
         for line in non_deductible_product_lines:
             percentage = 1 - line.deductible_amount / 100
             non_deductible_subtotal = line.currency_id.round(line.price_subtotal * percentage)
-            non_deductible_base_currency = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
+            non_deductible_base_currency = line.currency_id.round(non_deductible_subtotal)
             non_deductible_lines_base_total_currency += non_deductible_base_currency
 
             non_deductible_lines += [
@@ -1775,11 +1775,13 @@ class AccountMove(models.Model):
                     None,
                     price_unit=-non_deductible_base_currency,
                     quantity=1.0,
-                    sign=1,
+                    sign=sign,
+                    is_refund=self.move_type in ('out_refund', 'in_refund'),
                     special_mode='total_excluded',
                     special_type='non_deductible',
                     tax_ids=line.tax_ids.filtered(lambda tax: tax.amount_type != 'fixed'),
                     currency_id=self.currency_id,
+                    rate=rate,
                 )
             ]
         non_deductible_lines += [
@@ -1787,10 +1789,12 @@ class AccountMove(models.Model):
                 None,
                 price_unit=non_deductible_lines_base_total_currency,
                 quantity=1.0,
-                sign=1,
+                sign=sign,
+                is_refund=self.move_type in ('out_refund', 'in_refund'),
                 special_mode='total_excluded',
                 special_type=False,
                 currency_id=self.currency_id,
+                rate=rate,
             )
         ]
         return non_deductible_lines
@@ -3525,7 +3529,11 @@ class AccountMove(models.Model):
         # Collect data to avoid recomputing value unecessarily
         product_lines_before = {
             move: Counter(
-                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount, line.account_id)
+                (
+                    line.name, line.price_subtotal, line.tax_ids,
+                    line.deductible_amount, line.account_id, line.currency_id,
+                    move.invoice_currency_rate, move.direction_sign,
+                )
                 for line in move.line_ids
                 if line.display_type == 'product'
             )
@@ -3538,7 +3546,11 @@ class AccountMove(models.Model):
         to_create = []
         for move in container['records']:
             product_lines_now = Counter(
-                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount, line.account_id)
+                (
+                    line.name, line.price_subtotal, line.tax_ids,
+                    line.deductible_amount, line.account_id, line.currency_id,
+                    move.invoice_currency_rate, move.direction_sign,
+                )
                 for line in move.line_ids
                 if line.display_type == 'product'
             )
@@ -3569,8 +3581,8 @@ class AccountMove(models.Model):
 
                 percentage = (1 - line.deductible_amount / 100)
                 non_deductible_subtotal = line.currency_id.round(line.price_subtotal * percentage)
-                non_deductible_base = line.currency_id.round(sign * non_deductible_subtotal)
-                non_deductible_base_currency = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
+                non_deductible_base_currency = line.currency_id.round(sign * non_deductible_subtotal)
+                non_deductible_base = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
                 non_deductible_base_total += non_deductible_base
                 non_deductible_base_currency_total += non_deductible_base_currency
 
