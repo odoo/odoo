@@ -356,10 +356,12 @@ class MailMessage(models.Model):
     def _compute_record_name(self):
         free = self.filtered(lambda m: not m.model or not m.res_id or m.model not in self.env)
         free.record_name = False
-        # sudo here, as it behaves like a m2o -> can read message, can read name_get
+        # access error placeholder here, as it behaves like a m2o
         for message, record in (self - free)._record_by_message().items():
             try:
-                message.record_name = record.sudo().display_name
+                message.record_name = record.display_name
+            except AccessError:
+                message.record_name = message.env._("Restricted Record")
             except MissingError:
                 message.record_name = False
 
