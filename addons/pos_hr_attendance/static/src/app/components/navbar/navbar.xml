@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr_attendance.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('orders-button')]" position="after">
+            <button t-if="this.pos.config.module_pos_hr and !this.ui.isSmall"
+                    class="attendance-button btn btn-outline-secondary btn-lg lh-lg"
+                    t-att-class="{'active': this.mainButton === 'attendance'}"
+                    t-on-click="() => this.pos.navigate('AttendanceScreen')">
+                <span>Attendance</span>
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="pos_hr_attendance.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]" position="inside">
+            <t t-if="this.pos.config.module_pos_hr and this.ui.isSmall"
+                t-call="point_of_sale.BurgerDialogMenuButton"
+                dataIcon="'badge'"
+                onClick="() => this.pos.navigate('AttendanceScreen')"
+                btnLabel.translate="Attendance"
+            />
+        </xpath>
+    </t>
+
+</templates>

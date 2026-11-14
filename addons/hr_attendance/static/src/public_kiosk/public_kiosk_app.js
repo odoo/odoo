@@ -32,7 +32,7 @@ class kioskAttendanceApp extends Component {
         fromTrialMode: t.boolean(),
         deviceTrackingEnabled: t.boolean(),
         captureCheckInImage: t.boolean(),
-        lang: { type: String },
+        lang: t.string(),
     });
     static components = {
         KioskBarcodeScanner,
@@ -110,7 +110,7 @@ class kioskAttendanceApp extends Component {
     }
 
     async fetchEmployeeData(employeeId) {
-        const employee = await rpc("attendance_employee_data", {
+        const employee = await rpc("/hr_attendance/attendance_employee_data", {
             token: this.props.token,
             employee_id: employeeId,
         });
@@ -194,7 +194,7 @@ class kioskAttendanceApp extends Component {
 
     async onManualSelection(employeeId, enteredPin) {
         const checkInImage = await this.cameraCapture?.();
-        const result = await this.makeRpcWithGeolocation("manual_selection", {
+        const result = await this.makeRpcWithGeolocation("/hr_attendance/manual_selection", {
             token: this.props.token,
             employee_id: employeeId,
             pin_code: enteredPin,
@@ -225,7 +225,7 @@ class kioskAttendanceApp extends Component {
 
         let result;
         try {
-            result = await this.makeRpcWithGeolocation('attendance_barcode_scanned',{
+            result = await this.makeRpcWithGeolocation('/hr_attendance/attendance_barcode_scanned',{
                 barcode: barcode,
                 token: this.props.token,
                 check_in_image: checkInImage,
@@ -288,7 +288,7 @@ class kioskAttendanceApp extends Component {
                 this.lastIdentification?.employeeId === employee.id
                     ? this.lastIdentification.params
                     : { employee_id: employee.id };
-            const result = await rpc("update_break_duration", {
+            const result = await rpc("/hr_attendance/update_break_duration", {
                 token: this.props.token,
                 ...identificationParams,
                 attendance_id: employee.attendance.id,
