@@ -357,10 +357,12 @@
                             </t>
 
                             <div t-cache="pricelist,products" t-if="products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
-                                <table class="table table-borderless h-100 m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr" t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
+                                <table class="table table-borderless h-100 m-0"
+                                    data-ppg="20"
+                                    data-ppr="6"
+                                    t-att-data-default-sort="website.shop_default_sort" t-att-data-name="grid_block_name">
                                     <colgroup t-ignore="true">
-                                        <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
-                                        <col t-foreach="ppr" t-as="p"/>
+                                        <col t-foreach="[0,1,2,3,4,5]" t-as="i"/>
                                     </colgroup>
                                     <tbody>
                                         <tr t-foreach="bins" t-as="tr_product">
@@ -1726,16 +1728,6 @@
                                     </div>
                                 </div>
                             </t>
-                            <div class="d-flex justify-content-between mt-3">
-                                <a role="button" href="/shop/cart" class="btn btn-secondary mb32">
-                                    <i class="fa fa-chevron-left"/>
-                                    <span>Return to Cart</span>
-                                </a>
-                                <a role="button" href="/shop/confirm_order" class="btn btn-primary mb32">
-                                    <span>Confirm</span>
-                                    <i class="fa fa-chevron-right"/>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
