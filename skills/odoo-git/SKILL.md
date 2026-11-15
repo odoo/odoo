@@ -126,6 +126,11 @@ a question; a missing section is a review round trip.
   (a GitHub issue this commit closes), `Co-authored-by: Name <email>`. Ask
   the author for the task, ticket, or issue; link what exists and leave the
   trailer out otherwise. Never invent a reference.
+- `Co-authored-by` names a person. Credit no AI tool or agent, in the
+  commit message or in the PR description: no `Co-authored-by: Claude
+  <noreply@anthropic.com>`, `Co-authored-by: Copilot <copilot@github.com>`
+  or "Generated with ..." line. The author answers for the change, whatever
+  tool wrote it. Remove the lines a tool adds by default.
 - Leave generated metadata to the bots: the merge bot adds PR linkage
   (`closes odoo/odoo#123` or `Part-of: odoo/odoo#123`), `Signed-off-by`, and
   `Related: odoo/enterprise#123`. Forward-port tooling adds provenance such as
