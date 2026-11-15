@@ -10,7 +10,7 @@
       ซึ่งตามแผนจะไม่ย้ายประวัติธุรกรรม
 
 วิธีรัน (จาก root โปรเจกต์ c:\\odoo-dev\\odoo19):
-    $env:OD15_USER="odoo"; $env:OD15_PASSWORD="odoo123"
+    $env:OD15_USER="odoo"; $env:OD15_PASSWORD="<your-password>"
     $env:MIG_LIMIT="50"    # ไม่ใส่ = ทั้งหมด (0 = ไม่จำกัด)
     venv19\\Scripts\\python.exe odoo-bin shell -c odoo.conf -d odoo19_dash_test --no-http `
         --db-filter=^odoo19_dash_test$ < migration\\import\\dash_sales_history.py

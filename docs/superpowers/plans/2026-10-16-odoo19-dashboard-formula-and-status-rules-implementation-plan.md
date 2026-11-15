@@ -3033,7 +3033,7 @@ from .dashboard_rule import COMPARE_TYPES, OPERATORS
 > ⚠️ **ต้องทำก่อน Step 7** — การอัปเดตโมดูลจะลบคอลัมน์ `threshold_mode` / `warning_value` / `critical_value` ทิ้งทันที (Odoo ลบคอลัมน์ของฟิลด์ที่ถูกถอดออกจากโมเดล) ถ้าสคริปต์ migration ยังไม่มี (Task 9) และ `version` ยังไม่ถูก bump (Task 10) ข้อมูล threshold เดิมจะหายถาวร และ `pre-migrate` จะไม่มีอะไรให้คัดลอกในภายหลัง
 
 ```powershell
-$env:PGPASSWORD = "odoo123"
+$env:PGPASSWORD = "<your-db-password>"
 createdb -h localhost -p 5432 -U odoo -T odoo19 odoo19_dashboard_baseline
 ```
 
@@ -4909,7 +4909,7 @@ Expected: **ไม่มีผลลัพธ์เลย** (ที่ยัง�
 ก่อนอัปเดต ให้ยืนยันว่าสำเนายังมี threshold เดิมอยู่จริง:
 
 ```powershell
-$env:PGPASSWORD = "odoo123"
+$env:PGPASSWORD = "<your-db-password>"
 psql -h localhost -p 5432 -U odoo -d odoo19_dashboard_baseline -c "SELECT COUNT(*) AS widgets_with_thresholds FROM od19_dashboard_widget WHERE threshold_mode IS NOT NULL AND threshold_mode <> 'none';"
 ```
 
@@ -5241,7 +5241,7 @@ Expected: PASS ทุกคลาส รวม `TestDashboardAcceptance` ทั�
 - [ ] **Step 5: Fresh install on a clean database (spec 10.1)**
 
 ```powershell
-$env:PGPASSWORD = "odoo123"
+$env:PGPASSWORD = "<your-db-password>"
 dropdb -h localhost -p 5432 -U odoo --if-exists odoo19_dashboard_fresh
 createdb -h localhost -p 5432 -U odoo odoo19_dashboard_fresh
 venv19\Scripts\python.exe odoo-bin -c odoo.conf -d odoo19_dashboard_fresh -i od19_dashboard --without-demo=all --stop-after-init --log-level=info
