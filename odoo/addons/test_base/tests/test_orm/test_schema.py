@@ -1,6 +1,10 @@
+from types import SimpleNamespace
+from unittest.mock import patch
+
+from odoo import fields, models
 from odoo.models import MetaModel
 from odoo.tests import Like, common, tagged
-from odoo.tools import SQL
+from odoo.tools import SQL, mute_logger
 from odoo.tools.translate import FIELD_TRANSLATE
 
 from odoo.addons.base.models.ir_model import field_xmlid, model_xmlid, selection_xmlid
@@ -87,15 +91,82 @@ class TestReflection(common.TransactionCase):
                         elif field.store and field.column_type:
                             self.assertEqual(field_description['sortable'], field.type != 'binary')
 
+    def test_init_models_follows_field_dependencies(self):
+        """Follow current fields transitively, without following unrelated fields on added models."""
+        self.env.transaction.will_change_registry()
+        registry = self.registry
+        body = registry['test_orm.message']._fields['body']
+        message_name = registry['test_orm.related']._fields['message_name']
+        inherited_message_name = registry['test_orm.related_inherits']._fields['message_name']
+        foo_id = registry['test_orm.related']._fields['foo_id']
+        bar_id = registry['test_orm.related_foo']._fields['bar_id']
+        metadata = self.env['ir.model']
+        # Simulate a replaced field, repeated paths, and a cycle; record the
+        # initialized scope at its reflection boundary without replacing init_models().
+        old_message_name = SimpleNamespace(model_name=message_name.model_name, name=message_name.name)
+        with (
+            patch.dict(registry.field_setup_dependents, {
+                body: (old_message_name,),
+                message_name: (inherited_message_name, inherited_message_name),
+                inherited_message_name: (message_name,),
+                foo_id: (bar_id,),
+            }, clear=True),
+            patch.object(type(metadata), '_reflect_models', wraps=metadata._reflect_models) as reflect_models,
+        ):
+            reflected = registry.init_models(self.cr, ['test_orm.message'], {})
+            self.assertEqual(list(reflect_models.call_args.args[0]), ['test_orm.message'])
+            self.assertEqual(reflected, [
+                'test_orm.message', 'test_orm.related', 'test_orm.related_inherits',
+            ])
+            # Selecting the related model explicitly also makes its other fields traversal roots.
+            reflected = registry.init_models(self.cr, [
+                'test_orm.message', 'test_orm.related', 'test_orm.message',
+            ], {})
+            self.assertEqual(list(reflect_models.call_args.args[0]), [
+                'test_orm.message', 'test_orm.related', 'test_orm.related_foo',
+            ])
+            self.assertEqual(reflected, [
+                'test_orm.message', 'test_orm.related', 'test_orm.related_inherits', 'test_orm.related_foo',
+            ])
+            reflect_models.reset_mock()
+            self.assertEqual(registry.init_models(self.cr, [], {}), [])
+            reflect_models.assert_not_called()
+            # Visit test_orm.related through non-stored message_name first,
+            # then through stored foo_id. The second path must request initialization.
+            with patch.dict(registry.field_setup_dependents, {inherited_message_name: (foo_id,)}):
+                reflected = registry.init_models(self.cr, ['test_orm.message'], {})
+                initialized = reflect_models.call_args.args[0]
+                self.assertIn('test_orm.related', initialized)
+                self.assertLessEqual(set(initialized), set(reflected))
 
-@tagged('at_install', '-post_install')
-class TestSchema(common.TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.model = cls.env['test_orm.schema']
-        cls.columns_data = cls._get_columns_data(cls.model._table)
+    def test_init_models_follows_fields_of_loaded_module(self):
+        """When loading a module, only fields defined by that module are traversal roots."""
+        self.env.transaction.will_change_registry()
+        registry = self.registry
+        body = registry['test_orm.message']._fields['body']
+        message_name = registry['test_orm.related']._fields['message_name']
+        self.assertIn('test_base', body._modules)
+        self.assertNotIn('test_unrelated_module', body._modules)
+        with patch.dict(registry.field_setup_dependents, {body: (message_name,)}, clear=True):
+            # the module defines body: follow it
+            reflected = registry.init_models(self.cr, ['test_orm.message'], {'module': 'test_base'})
+            self.assertEqual(reflected, ['test_orm.message', 'test_orm.related'])
+            # the module defines none of the fields (e.g. methods-only extension): do not follow
+            reflected = registry.init_models(self.cr, ['test_orm.message'], {'module': 'test_unrelated_module'})
+            self.assertEqual(reflected, ['test_orm.message'])
 
+    def test_partial_setup_discards_dependencies_of_rebuilt_delegated_fields(self):
+        """Rebuilding a delegated model must not retain dependency caches for its old fields."""
+        self.env.transaction.will_change_registry()
+        old_fields = set(self.registry['test_orm.related_inherits']._fields.values())
+        self.registry._setup_models__(self.cr, ['test_orm.message'])
+        replaced_fields = old_fields - set(self.registry['test_orm.related_inherits']._fields.values())
+        self.assertTrue(replaced_fields)
+        self.assertFalse(replaced_fields & self.registry.field_depends.keys())
+        self.assertFalse(replaced_fields & self.registry.field_depends_context.keys())
+
+
+class SchemaCommon:
     def _get_table_data(self, table_name):
         query = SQL("""
             SELECT table_catalog, table_schema, table_type,
@@ -177,6 +248,15 @@ class TestSchema(common.TransactionCase):
             'udt_catalog': self.cr.dbname,
             'udt_schema': 'pg_catalog',
         } | (override or {})
+
+
+@tagged('at_install', '-post_install')
+class TestSchema(SchemaCommon, common.TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.model = cls.env['test_orm.schema']
+        cls.columns_data = cls._get_columns_data(cls.model._table)
 
     def test_table(self):
         table = self.env['test_orm.schema_table']._table
@@ -529,3 +609,211 @@ class TestSchema(common.TransactionCase):
             {'indexdef': Like('...USING btree...very_very_very_very_very_long_field_name_1...')},
             {'indexdef': Like('...USING btree...very_very_very_very_very_long_field_name_2...')},
         ])
+
+
+@tagged('at_install', '-post_install')
+class TestRelatedFieldReflection(SchemaCommon, common.TransactionCase):
+    """Check that changing a source field also updates fields related to it on other models.
+
+    setUp() extends fields on test_orm.message after creating records with their
+    original definitions. test_orm.related exposes stored and non-stored related fields,
+    test_orm.related_inherits obtains copies through _inherits, and
+    test_orm.related_stored stores related values in its own table.
+
+    Initialization starts from only the changed source and its inheritance
+    descendants. The tests check that related models are discovered, their Python
+    definitions and ir.model.fields metadata are refreshed, and stored columns
+    are migrated without losing data. Models reached only through non-stored fields
+    need no table initialization.
+    """
+
+    def setUp(self):
+        super().setUp()
+        source_model_class = self.registry['test_orm.message']
+
+        self.env['test_orm.message'].search([('code', '=', False)]).write({'code': 'Code'})
+        self.message = self.env['test_orm.message'].create({
+            'body': 'Existing message body', 'subject': 'Existing message subject', 'code': 'Initial', 'score': 1.25,
+            'content': '<p>Existing content</p>',
+        })
+        self.stored_message = self.env['test_orm.related_stored'].create({'message': self.message.id})
+
+        # Flush pending computes with the old field types before changing their definition.
+        self.env.flush_all()
+        self.columns_before = self._get_columns_data(self.stored_message._table)
+        self.reference_table_before = self._get_foreign_keys(
+            self.stored_message._table, 'message_reference_id',
+        )['table_used_by_constraint']
+        self.related_auto_init = self.startPatcher(patch.object(self.registry['test_orm.related'], '_auto_init'))
+        self.inherited_auto_init = self.startPatcher(patch.object(self.registry['test_orm.related_inherits'], '_auto_init'))
+        self.related_init = self.startPatcher(patch.object(self.registry['test_orm.related'], 'init'))
+        self.inherited_init = self.startPatcher(patch.object(self.registry['test_orm.related_inherits'], 'init'))
+
+        module = SimpleNamespace(name='test_base')
+        self.env.transaction.will_change_registry()
+        # Load only the extension below, rather than all original test_base model
+        # definitions. Cleanup restores the module's list and removes the extension.
+        self.startPatcher(patch.dict(MetaModel._module_to_models__, {module.name: []}))
+        # registry.load() changes this tuple of Python base classes. SQL rollback
+        # cannot undo that change, so restore it before rollback rebuilds the registry.
+        self.addCleanup(setattr, source_model_class, '_base_classes__', source_model_class._base_classes__)
+
+        class MessageExtension(models.Model):
+            _inherit = 'test_orm.message'
+
+            body = fields.Text(
+                translate=True, string='Updated body', help='Updated message help', groups='base.group_system',
+            )
+            subject = fields.Char(translate=True, help='Updated message help', groups='base.group_system')
+            code = fields.Char(size=32, trim=False, string='Expanded code', required=True, index=True)
+            score = fields.Float(digits=(16, 4), min_display_digits=2, aggregator='avg')
+            reference_id = fields.Many2one(
+                'res.partner', context={'active_test': False}, domain=[('is_company', '=', True)],
+            )
+            content = fields.Html(
+                sanitize=False, sanitize_tags=False, sanitize_attributes=False,
+                sanitize_style=True, strip_style=True, strip_classes=True,
+            )
+            state = fields.Selection(selection_add=[('done', 'Done')])
+
+        with patch.object(self.registry, 'ready', False):
+            model_names = self.registry.load(module)
+
+        # Stored translated related fields warn about multilingual recomputation;
+        # these tests exercise schema and metadata updates instead.
+        with mute_logger('py.warnings'):
+            self.registry._setup_models__(self.cr, [])
+        initial_models = self.registry.descendants(model_names, '_inherit', '_inherits')
+        reflected = self.registry.init_models(self.cr, initial_models, {'module': module.name}, install=False)
+        self.env['ir.model.fields']._reflect_field_groups(reflected)
+
+    def test_related_models_are_initialized_only_for_stored_fields(self):
+        """Initialize stored related fields, while only reflecting non-stored delegated fields."""
+        self.related_auto_init.assert_called_once_with()
+        self.inherited_auto_init.assert_not_called()
+        self.related_init.assert_called_once_with()
+        self.inherited_init.assert_not_called()
+
+    def test_related_translation_updates_columns_and_preserves_values(self):
+        """Inherited translation converts stored columns to JSONB without losing values or overriding translate=False."""
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            with self.subTest(model=model_name):
+                self.assertTrue(self.registry[model_name]._fields['message_name'].translate)
+                self.assertEqual(self.env['ir.model.fields']._get(model_name, 'message_name').translate, 'standard')
+
+        columns = self._get_columns_data(self.stored_message._table)
+        self.assertEqual(columns['message_name']['udt_name'], 'jsonb')
+        self.assertEqual(columns['message_name_untranslated']['udt_name'], 'varchar')
+        self.assertFalse(self.stored_message._fields['message_name_untranslated'].translate)
+        self.assertFalse(
+            self.env['ir.model.fields']
+            ._get(self.stored_message._name, 'message_name_untranslated')
+            .translate,
+        )
+        self.assertEqual(self.env.execute_query(SQL(
+            """
+            SELECT message_name, message_name_untranslated
+              FROM %s
+             WHERE id = %s
+            """,
+            SQL.identifier(self.stored_message._table),
+            self.stored_message.id,
+        )), [
+            ({'en_US': 'Existing message subject'}, 'Existing message subject'),
+        ])
+        self.assertEqual(self.stored_message.message_name, 'Existing message subject')
+
+    def test_related_char_size_and_attributes(self):
+        """Source Char changes widen the stored column and refresh size, trim, and labels on related fields."""
+        table = self.env['test_orm.related_stored']._table
+        self.assertEqual(self.columns_before['message_code']['character_maximum_length'], 8)
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            with self.subTest(model=model_name):
+                field = self.registry[model_name]._fields['message_code']
+                self.assertEqual(field.size, 32)
+                self.assertFalse(field.trim)
+                self.assertEqual(field.string, 'Expanded code')
+                metadata = self.env['ir.model.fields']._get(model_name, 'message_code')
+                self.assertEqual(metadata.size, 32)
+                self.assertEqual(metadata.field_description, 'Expanded code')
+                # Ordinary related fields do not inherit required or index.
+                self.assertFalse(metadata.required)
+                self.assertFalse(metadata.index)
+
+        self.assertEqual(self._get_columns_data(table)['message_code']['character_maximum_length'], 32)
+        self.assertEqual(self.stored_message.message_code, 'Initial')
+        source_table = self.env['test_orm.message']._table
+        self.assertEqual(self._get_columns_data(source_table)['code']['is_nullable'], 'NO')
+        self.assertEqual(self._get_indexdef(source_table, '%(code)%'), [
+            {'indexdef': Like('...USING btree (code)...')},
+        ])
+        self.assertTrue(self.registry['test_orm.emailmessage']._fields['code'].required)
+
+    def test_related_float_digits_change_column_type(self):
+        """Adding source Float digits converts the stored related column to numeric and preserves its value."""
+        table = self.env['test_orm.related_stored']._table
+        self.assertEqual(self.columns_before['message_score']['udt_name'], 'float8')
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            with self.subTest(model=model_name):
+                field = self.registry[model_name]._fields['message_score']
+                self.assertEqual(field.get_digits(self.env), (16, 4))
+                self.assertEqual(field.get_min_display_digits(self.env), 2)
+                self.assertEqual(field.aggregator, 'avg')
+
+        self.assertEqual(self._get_columns_data(table)['message_score']['udt_name'], 'numeric')
+        self.assertEqual(self.stored_message.message_score, 1.25)
+
+    def test_related_comodel_changes_foreign_key(self):
+        """Changing the source relation from res.users to res.partner updates related metadata and the stored foreign key."""
+        table = self.env['test_orm.related_stored']._table
+        self.assertEqual(self.reference_table_before, 'res_users')
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            with self.subTest(model=model_name):
+                field = self.registry[model_name]._fields['message_reference_id']
+                self.assertEqual(field.comodel_name, 'res.partner')
+                self.assertEqual(field.context, {'active_test': False})
+                self.assertEqual(field.domain, [('is_company', '=', True)])
+                self.assertEqual(self.env['ir.model.fields']._get(model_name, field.name).relation, 'res.partner')
+
+        self.assertEqual(
+            self._get_foreign_keys(table, 'message_reference_id')['table_used_by_constraint'],
+            'res_partner',
+        )
+
+    def test_related_html_options_are_reflected(self):
+        """Source HTML sanitization options must update related Python fields and their database metadata."""
+        expected = {
+            'sanitize': False, 'sanitize_tags': False, 'sanitize_attributes': False,
+            'sanitize_style': True, 'strip_style': True, 'strip_classes': True,
+        }
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            field = self.registry[model_name]._fields['message_content']
+            metadata = self.env['ir.model.fields']._get(model_name, field.name)
+            for attribute, value in expected.items():
+                with self.subTest(model=model_name, attribute=attribute):
+                    self.assertEqual(getattr(field, attribute), value)
+                    self.assertEqual(metadata[attribute], value)
+
+    def test_related_help_groups_and_explicit_labels(self):
+        """Help and groups follow the source, while labels explicitly set on related fields remain unchanged."""
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            with self.subTest(model=model_name):
+                field = self.registry[model_name]._fields['message_name']
+                metadata = self.env['ir.model.fields']._get(model_name, field.name)
+                self.assertEqual(field.help, 'Updated message help')
+                self.assertEqual(metadata.help, 'Updated message help')
+                self.assertEqual(field.groups, 'base.group_system')
+                self.assertEqual(metadata.groups, self.env.ref('base.group_system'))
+                label = 'Stored Message Subject' if model_name == 'test_orm.related_stored' else 'Message Body'
+                self.assertEqual(field.string, label)
+                self.assertEqual(metadata.field_description, label)
+
+    def test_related_selection_follows_source_options(self):
+        """Adding a source selection option updates related choices without changing the existing stored value."""
+        for model_name in ('test_orm.related', 'test_orm.related_inherits', 'test_orm.related_stored'):
+            with self.subTest(model=model_name):
+                self.assertEqual(
+                    self.registry[model_name]._fields['message_state']._description_selection(self.env),
+                    (('new', 'New'), ('done', 'Done')),
+                )
+        self.assertEqual(self.stored_message.message_state, 'new')
