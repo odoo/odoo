@@ -29,7 +29,7 @@ export class CalendarTypeConfirmRadioField extends RadioField {
             );
             if (isCalendarReferenced) {
                 this.dialog.add(ConfirmationDialog, {
-                    title: "Calendar Type Change",
+                    title: _t("Calendar Type Change"),
                     body: _t(
                         "Are you sure? This calendar is already used.\nAll the attendances will be deleted for this calendar"
                     ),
