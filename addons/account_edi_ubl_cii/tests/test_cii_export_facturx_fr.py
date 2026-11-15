@@ -2,6 +2,7 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestCiiFacturXCommon, T
 from odoo.tests import tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -104,6 +105,32 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_price_amount_rounding_precision_with_price_included_taxes')
+
+    def test_invoice_price_amount_precision_on_several_units(self):
+        """ [PEPPOL-EN16931-R120] BT-131 (line net amount) = BT-129 (quantity) * BT-146 (item net
+        price), with a tolerance of 0.02. BT-146 is a unit price amount, so it is not bound by the
+        BR-DEC rules that cap the document amounts at 2 decimals; rounding it to 2 anyway breaks
+        the rule as soon as the quantity multiplies the rounding error.
+        """
+        tax_20_incl = self.percent_tax(20, price_include_override='tax_included')
+
+        invoice = self._create_invoice_one_line(
+            price_unit=19.99,
+            quantity=20,
+            product_id=self.product,
+            partner_id=self.partner_fr,
+            tax_ids=tax_20_incl,
+            partner_bank_id=self.recipient_bank,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+
+        line = etree.fromstring(invoice.ubl_cii_xml_id.raw).find('.//{*}IncludedSupplyChainTradeLineItem')
+        net_price = float(line.findtext('.//{*}NetPriceProductTradePrice/{*}ChargeAmount'))
+        quantity = float(line.findtext('.//{*}BilledQuantity'))
+        line_amount = float(line.findtext('.//{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount'))
+        self.assertLessEqual(abs(line_amount - quantity * net_price), 0.02)
 
     def test_invoice_product_uom_and_discounts(self):
         invoice = self._create_invoice(
