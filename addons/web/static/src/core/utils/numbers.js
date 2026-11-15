@@ -100,7 +100,8 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
 
 function formatFixedDecimals(value, decimals) {
     const rounded = roundDecimals(value, decimals);
-    const [intPart, decPart = ""] = rounded.toString().split(".");
+    // toFixed: toString uses the exponential notation for numbers below 1e-6
+    const [intPart, decPart = ""] = rounded.toFixed(decimals).split(".");
     const paddedDecimals = decPart.padEnd(decimals, "0").slice(0, decimals);
     return decimals === 0 ? intPart : `${intPart}.${paddedDecimals}`;
 }

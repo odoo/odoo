@@ -325,6 +325,19 @@ describe("formatFloat", () => {
         expect(formatFloat(6000)).toBe("60@00!00");
     });
 
+    test("small numbers", () => {
+        patchWithCleanup(localization, {
+            decimalPoint: ".",
+            grouping: [3, 0],
+            thousandsSep: ",",
+        });
+        const options = { digits: [16, 8] };
+        expect(formatFloat(0.0000001, options)).toBe("0.00000010");
+        expect(formatFloat(-0.0000001, options)).toBe("-0.00000010");
+        expect(formatFloat(0.00000001, options)).toBe("0.00000001");
+        expect(formatFloat(0.000000004, options)).toBe("0.00000000");
+    });
+
     test("humanReadable", () => {
         patchTranslations();
         patchWithCleanup(localization, {
