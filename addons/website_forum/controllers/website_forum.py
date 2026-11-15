@@ -3,13 +3,13 @@ import json
 import logging
 
 import lxml
-import requests
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 
 from odoo import _, http, tools
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.tools.urls import UnsafeUrlError, safe_requests
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
@@ -274,11 +274,11 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/get_url_title', type='jsonrpc', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
-            req = requests.get(kwargs.get('url'), timeout=10)
+            req = safe_requests.get(kwargs.get('url'), timeout=10)
             req.raise_for_status()
             arch = lxml.html.fromstring(req.content)
             return arch.find(".//title").text
-        except IOError:
+        except (OSError, UnsafeUrlError):
             return False
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
