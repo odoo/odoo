@@ -1423,6 +1423,9 @@ class PosSession(models.Model):
                 'name': 'Rounding line',
                 'move_id': self.move_id.id,
             }
+            # The per-order conversions can add up to the opposite sign of `amount`.
+            if amount * amount_converted < 0:
+                amount_converted = self._amount_converter(amount, self.stop_at, True)
             if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) > 0:    # loss
                 partial_args['account_id'] = self.config_id.rounding_method.loss_account_id.id
                 return self._debit_amounts(partial_args, -amount, -amount_converted)

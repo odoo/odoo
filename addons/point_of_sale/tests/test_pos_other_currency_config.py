@@ -451,3 +451,54 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         extra_prices = {rec['product_id']: rec['extra_price'] for rec in combo_item_read}
         self.assertAlmostEqual(extra_prices[self.product1.product_variant_id.id], 10.0)
         self.assertAlmostEqual(extra_prices[self.product3.product_variant_id.id], 0.0)
+
+    def test_cash_rounding_difference_sign_in_company_currency(self):
+        """ Each order's rounding difference is converted on its own, so their
+        sum in company currency can end up with the opposite sign of the sum in
+        the PoS currency. The closing rounding line must keep consistent signs.
+        """
+        self.other_currency.rate_ids.unlink()
+        self.env['res.currency.rate'].create({
+            'rate': 300,
+            'currency_id': self.other_currency.id,
+            'name': fields.Date.subtract(fields.Date.today(), days=1),
+        })
+        rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Round to 5',
+            'rounding': 5,
+            'rounding_method': 'HALF-UP',
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company.default_cash_difference_income_account_id.id,
+            'loss_account_id': self.company.default_cash_difference_expense_account_id.id,
+        })
+        self.config.write({
+            'cash_rounding': True,
+            'rounding_method': rounding_method.id,
+            'only_round_cash_method': False,
+        })
+        product_999 = self.create_product('Product 999', self.categ_basic, 1.0)
+        product_1002 = self.create_product('Product 1002', self.categ_basic, 1.0)
+        self.env['product.pricelist.item'].create([{
+            'pricelist_id': self.config.pricelist_id.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'fixed_price': price,
+        } for product, price in [(product_999, 999), (product_1002, 1002)]])
+
+        session = self.open_new_session()
+        # Rounding differences: 3 x +1 (0.0033 -> 0.00) and 1 x -2 (-0.0067 -> -0.01),
+        # i.e. +1 in the PoS currency but -0.01 in the company currency.
+        orders = [self.create_ui_order_data([(product_999, 1)], payments=[(self.cash_pm2, 1000)]) for _ in range(3)]
+        orders.append(self.create_ui_order_data([(product_1002, 1)], payments=[(self.cash_pm2, 1000)]))
+        self.env['pos.order'].sync_from_ui(orders)
+        session.post_closing_cash_details(4000)
+        # The sales (-13.33) and cash (+13.32) lines leave 0.01 to balance, as in
+        # the Force Close Session wizard.
+        session.action_pos_session_closing_control(session._get_balancing_account(), -0.01)
+
+        self.assertEqual(session.state, 'closed')
+        rounding_line = session.move_id.line_ids.filtered(lambda line: line.name == 'Rounding line')
+        self.assertRecordValues(rounding_line, [{
+            'account_id': rounding_method.profit_account_id.id,
+            'amount_currency': -1.0,
+            'balance': 0.0,
+        }])
