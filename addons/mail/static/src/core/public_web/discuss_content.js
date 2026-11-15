@@ -94,7 +94,7 @@ export class DiscussContent extends Component {
 
     get threadNameAttClass() {
         return {
-            "o-mail-DiscussContent-threadNameBox fw-bold flex-shrink-0 py-0": true,
+            "o-mail-DiscussContent-threadNameBox fw-bold py-0": true,
             "fs-5": this.hasHeaderSubline,
             "fs-4": !this.hasHeaderSubline,
         };
