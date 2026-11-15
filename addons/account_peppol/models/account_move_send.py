@@ -354,11 +354,17 @@ class AccountMoveSend(models.AbstractModel):
                     if attachments_not_linked:
                         invoice._message_log(body=attachments_not_linked_message, attachment_ids=attachments_not_linked.mapped('id'))
 
-                    base_attachments = [
-                        (invoice_data[key]['name'], invoice_data[key]['raw'])
-                        for key in ['pdf_attachment_values', 'ubl_cii_xml_attachment_values']
-                        if invoice_data.get(key)
-                    ]
+                    # the pdf/xml values only exist when they were just generated, if the invoice was
+                    # already sent another way before, fallback on the ones linked to the invoice
+                    base_attachments = []
+                    for key, existing_attachment in (
+                        ('pdf_attachment_values', invoice.invoice_pdf_report_id),
+                        ('ubl_cii_xml_attachment_values', invoice.ubl_cii_xml_id),
+                    ):
+                        if invoice_data.get(key):
+                            base_attachments.append((invoice_data[key]['name'], invoice_data[key]['raw']))
+                        elif existing_attachment:
+                            base_attachments.append((existing_attachment.name, existing_attachment.raw))
 
                     attachments_embedded = [
                         (attachment.name, attachment.raw)
