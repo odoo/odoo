@@ -71,3 +71,41 @@ parameter instead.
 Not needed for what a request of an `HttpCase` writes (a tour, `url_open`): that
 request runs on a test cursor that takes its time from `datetime.now()`, which
 `freeze_time` moves.
+
+# Assert only on the records the test created
+
+A search, a count or a name lookup that a test asserts on must not depend on
+records the test did not create: give the test records a name no demo or data
+record carries, restrict the domain to them, or assert the difference from a
+count taken before. Never unlink or archive the records already there to get
+an empty model.
+
+```python
+# bad: a demo book named "Dune" is found too, demo books are counted too
+book = Book.create({'name': 'Dune'})
+self.assertEqual(Book.search([('name', 'ilike', 'Dune')]), book)
+self.assertEqual(Book.search_count([]), 1)
+
+# good
+count_before = Book.search_count([])
+book = Book.create({'name': 'Dune Test Edition'})
+self.assertEqual(Book.search([('name', 'ilike', 'Dune Test Edition')]), book)
+self.assertEqual(Book.search_count([]), count_before + 1)
+```
+
+## Why
+
+- Demo data is not installed by default, so the CI of a pull request runs
+  without it, but some runbot builds install it. There the search also finds
+  the demo records of every installed module: the test is green on the pull
+  request and red after the merge.
+- The data records of other modules are there whenever those modules are
+  installed, as on the builds that install every module.
+- Unlinking or archiving the existing records in the setup ties the test to the data of
+  other modules: which records must be canceled first, which fields exist
+  without the enterprise modules.
+
+## Exceptions
+
+- A model that only the test creates records of, such as a model of a test
+  module.
