@@ -41,6 +41,9 @@ touching instead of loading whole files.
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
 | [Freeze the cursor time with mock_datetime_and_now](guidelines/tests.md#freeze-the-cursor-time-with-mock_datetime_and_now) | a test that uses `freeze_time`, or checks `create_date`, `write_date` or a value taken from `cr.now()` |
+| [Check a JSON-RPC call by its result, never by its status](guidelines/tests.md#check-a-json-rpc-call-by-its-result-never-by-its-status) | a test that calls a route with `url_open` or `make_jsonrpc_request` |
+| [Run the postcommit hooks a test depends on](guidelines/tests.md#run-the-postcommit-hooks-a-test-depends-on) | a test of a webhook, a sync, or anything else queued on `cr.postcommit` |
+| [Clear the cache before acting as a restricted user](guidelines/tests.md#clear-the-cache-before-acting-as-a-restricted-user) | a test that calls code with `with_user`, `with_company` or `@users` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
 | [Changes in a stable version](guidelines/stable.md#changes-in-a-stable-version) | any change targeting a released branch rather than master |
 
