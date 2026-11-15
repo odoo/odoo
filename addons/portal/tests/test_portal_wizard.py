@@ -198,3 +198,54 @@ class TestPortalWizard(MailCommon):
             self.assertTrue(portal_user.user_id._is_portal())
             self.assertFalse(portal_user.is_portal)
             self.assertFalse(self.partner.signup_type)
+
+    @users('admin')
+    def test_portal_wizard_login_follows_email(self):
+        """The login of an existing portal user follows the invitation email,
+        unless it is not an email or the new email is already used as login."""
+        def open_wizard_user():
+            return self.env['portal.wizard'].with_context(active_ids=[self.partner.id]).create({}).user_ids
+
+        self.partner.email = 'old@example.com'
+        open_wizard_user().action_grant_access()
+        user = self.partner.user_ids
+        open_wizard_user().action_revoke_access()
+
+        # re-grant after an email change on the contact: archived user reused
+        self.partner.email = 'new@example.com'
+        wizard_user = open_wizard_user()
+        self.assertEqual(wizard_user.user_id, user)
+        with self.mock_mail_gateway():
+            wizard_user.action_grant_access()
+        self.assertTrue(user.active)
+        self.assertEqual(user.login, 'new@example.com')
+        invitation = self._new_mails.filtered(lambda mail: mail.subject.startswith('Your account at'))
+        self.assertIn('new@example.com', invitation.body_html)
+        self.assertNotIn('old@example.com', invitation.body_html)
+        # login change alerts the user, the email change (on the partner) does not (written on partner)
+        self.assertEqual(
+            (self._new_mails - invitation).filtered(lambda m: m.subject.startswith('Security')).mapped('subject'),
+            ['Security Update: Login Changed'])
+
+        # re-send invitation after an email change in the wizard
+        wizard_user = open_wizard_user()
+        wizard_user.email = 'newer@example.com'
+        wizard_user.action_invite_again()
+        self.assertEqual(self.partner.email, 'newer@example.com')
+        self.assertEqual(user.login, 'newer@example.com')
+
+        # email already used as login by another user: nothing written nor sent
+        self.internal_user.login = 'taken@example.com'
+        wizard_user = open_wizard_user()
+        wizard_user.email = 'taken@example.com'
+        with self.assertRaises(UserError), self.mock_mail_gateway():
+            wizard_user.action_invite_again()
+        self.assertEqual(user.login, 'newer@example.com')
+        self.assertNotSentEmail()
+
+        # non-email login is kept
+        user.login = 'jdoe'
+        wizard_user = open_wizard_user()
+        wizard_user.email = 'newest@example.com'
+        wizard_user.action_invite_again()
+        self.assertEqual(user.login, 'jdoe')
