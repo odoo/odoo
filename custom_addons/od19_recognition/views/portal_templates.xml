@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inject the Team Wall into the employee portal, right after the anchor -->
+    <template id="portal_employee_wall" inherit_id="od19_website.od19_employee_portal">
+        <xpath expr="//div[@id='od19-recognition-anchor']" position="after">
+            <t t-call="od19_recognition.portal_wall_strip"/>
+        </xpath>
+    </template>
+
+    <!-- Short block shown on the portal home page -->
+    <template id="portal_wall_strip" name="Team Wall Strip">
+        <div class="od19-recognition-panel od19-team-wall"
+             data-od19-recognition-summary="/my/recognition/summary">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                <h5 class="mb-0">
+                    <i class="fa fa-heart me-2" style="color:var(--od19-primary);"/>
+                    ขอบคุณเพื่อนร่วมงาน (Team Wall)
+                </h5>
+                <a href="/my/recognition" class="btn btn-sm btn-outline-primary">ให้ Kudos / ดูทั้งหมด</a>
+            </div>
+            <div class="od19-kudos-feed">
+                <p class="text-muted small mb-0">
+                    <i class="fa fa-spinner fa-spin me-1"/>กำลังโหลด…
+                </p>
+            </div>
+            <div class="od19-celebrations mt-3 d-none"></div>
+        </div>
+    </template>
+
+    <!-- Full page -->
+    <template id="portal_recognition_page" name="Recognition">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <t t-if="given">
+                    <div class="alert alert-success py-2">
+                        <i class="fa fa-check-circle me-1"/>ส่ง Kudos เรียบร้อยแล้ว ขอบคุณ!
+                    </div>
+                </t>
+                <t t-if="error">
+                    <div class="alert alert-danger py-2">
+                        <i class="fa fa-exclamation-triangle me-1"/><span t-esc="error"/>
+                    </div>
+                </t>
+
+                <h3 class="mb-3">
+                    <i class="fa fa-heart me-2" style="color:var(--od19-primary);"/>
+                    ขอบคุณเพื่อนร่วมงาน (Recognition)
+                </h3>
+
+                <div class="row g-4">
+                    <div class="col-lg-5">
+                        <div class="od19-recognition-panel">
+                            <h5 class="mb-3">ให้ Kudos</h5>
+                            <form action="/my/recognition/give" method="post" class="od19-kudos-form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="mb-2">
+                                    <label class="od19-field-label">เพื่อนร่วมงาน</label>
+                                    <select name="recipient_id" class="form-control" required="required">
+                                        <option value="">-- เลือกเพื่อนร่วมงาน --</option>
+                                        <t t-foreach="employees" t-as="emp">
+                                            <option t-att-value="emp.id" t-att-selected="'selected' if prefill_recipient_id and prefill_recipient_id == emp.id else None" t-esc="emp.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="od19-field-label">ป้าย</label>
+                                    <select name="badge_id" class="form-control">
+                                        <option value="">-- ไม่ระบุ --</option>
+                                        <t t-foreach="badges" t-as="badge">
+                                            <option t-att-value="badge.id" t-att-selected="'selected' if prefill_badge_id and prefill_badge_id == badge.id else None" t-esc="badge.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="od19-field-label">ข้อความขอบคุณ</label>
+                                    <textarea name="message" class="form-control" rows="3"
+                                              maxlength="500" required="required"
+                                              placeholder="ขอบคุณสำหรับ..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100"
+                                        style="background:var(--od19-primary);border:none;">
+                                    <i class="fa fa-paper-plane me-1"/>ส่ง Kudos
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="od19-recognition-panel">
+                            <h5 class="mb-3">
+                                <i class="fa fa-birthday-cake me-2" style="color:var(--od19-secondary);"/>
+                                เดือนนี้มีอะไร
+                            </h5>
+                            <t t-if="celebrations['birthdays']">
+                                <div class="od19-celebration-title">วันเกิด</div>
+                                <ul class="list-unstyled mb-2">
+                                    <t t-foreach="celebrations['birthdays']" t-as="b">
+                                        <li><i class="fa fa-birthday-cake me-1" style="color:#e91e63;"/><span t-esc="b['name']"/> · วันที่ <span t-esc="b['day']"/><a class="od19-celebration-greet" t-attf-href="/my/recognition?recipient_id=#{b['employee_id']}&amp;badge_id=#{b['badge_id'] or ''}">อวยพร</a></li>
+                                    </t>
+                                </ul>
+                            </t>
+                            <t t-if="celebrations['anniversaries']">
+                                <div class="od19-celebration-title">ครบรอบการทำงาน</div>
+                                <ul class="list-unstyled mb-0">
+                                    <t t-foreach="celebrations['anniversaries']" t-as="a">
+                                        <li><i class="fa fa-trophy me-1" style="color:var(--od19-secondary);"/><span t-esc="a['name']"/> · <span t-esc="a['years']"/> ปี<a class="od19-celebration-greet" t-attf-href="/my/recognition?recipient_id=#{a['employee_id']}&amp;badge_id=#{a['badge_id'] or ''}">อวยพร</a></li>
+                                    </t>
+                                </ul>
+                            </t>
+                            <t t-if="not celebrations['birthdays'] and not celebrations['anniversaries']">
+                                <p class="text-muted small mb-0">ไม่มีวันสำคัญในเดือนนี้</p>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="od19-recognition-panel">
+                            <h5 class="mb-3">ฟีดล่าสุด</h5>
+                            <t t-if="feed">
+                                <t t-foreach="feed" t-as="item">
+                                    <div class="od19-kudos-item mb-3 pb-3 border-bottom">
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="od19-kudos-badge" t-att-style="'background:%s;' % item['badge_color']">
+                                                <i t-attf-class="fa #{item['badge_icon']}"/>
+                                            </span>
+                                            <strong t-esc="item['author']"/>
+                                            <i class="fa fa-arrow-right text-muted"/>
+                                            <strong t-esc="item['recipient']"/>
+                                            <small class="text-muted ms-auto" t-esc="item['date']"/>
+                                        </div>
+                                        <div t-esc="item['message']"/>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted small mb-0">ยังไม่มี Kudos</p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

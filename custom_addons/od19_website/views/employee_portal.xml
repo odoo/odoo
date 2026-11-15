@@ -9,17 +9,29 @@
             <t t-set="no_footer" t-value="True"/>
             <div id="wrap" class="oe_structure">
 
-                <!-- Welcome Hero -->
+                <!-- [A] Welcome Hero — time-aware, personal -->
                 <section class="od19-portal-hero">
-                    <div class="container d-flex justify-content-between align-items-center">
-                        <div>
-                            <h2>
-                                <i class="fa fa-user-circle me-2"/>
-                                สวัสดีค่ะ <span t-esc="user.name"/>
-                            </h2>
-                            <p class="mb-0" style="opacity:0.85;">
-                                ยินดีต้อนรับสู่ Employee Portal ของ The Auto-Info
-                            </p>
+                    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="od19-avatar">
+                                <t t-if="user.partner_id.image_128">
+                                    <img t-att-src="image_data_uri(user.partner_id.image_128)" alt=""/>
+                                </t>
+                                <t t-else="">
+                                    <span t-esc="initials"/>
+                                </t>
+                            </div>
+                            <div class="ms-3">
+                                <h2 class="mb-1">
+                                    <span t-esc="greeting"/>, <span t-esc="user.name"/>
+                                </h2>
+                                <p class="mb-0" style="opacity:0.85;">
+                                    <t t-if="job_title"><span t-esc="job_title"/></t>
+                                    <t t-if="job_title and department_name"> · </t>
+                                    <t t-if="department_name"><span t-esc="department_name"/></t>
+                                    <t t-if="not job_title and not department_name">ยินดีต้อนรับสู่ Employee Portal ของ The Auto-Info</t>
+                                </p>
+                            </div>
                         </div>
                         <div class="text-end">
                             <small class="d-block mb-2" style="opacity:0.7;" t-esc="datetime.datetime.now().strftime('%A, %d %B %Y')"/>
@@ -31,6 +43,89 @@
                 </section>
 
                 <div class="container">
+
+                    <!-- [B] My Day Strip (theme 1) — lazy, filled by od19_my_day.js -->
+                    <div class="row g-3 mb-4" id="od19-my-day"
+                         data-od19-me-summary="/employee-portal/me-summary">
+                        <div class="col-6 col-lg-3">
+                            <a class="od19-day-card" href="/web#action=hr_attendance.hr_attendance_action">
+                                <div class="od19-day-icon"><i class="fa fa-clock-o"/></div>
+                                <div class="od19-day-body">
+                                    <div class="od19-day-value" data-od19-field="attendance">—</div>
+                                    <div class="od19-day-label">ลงเวลาวันนี้</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <a class="od19-day-card" href="/my/approvals">
+                                <div class="od19-day-icon"><i class="fa fa-check-square-o"/></div>
+                                <div class="od19-day-body">
+                                    <div class="od19-day-value" data-od19-field="approvals">—</div>
+                                    <div class="od19-day-label">รออนุมัติ</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <a class="od19-day-card" href="/web#action=od19_meeting_room_booking.action_meeting_room_booking">
+                                <div class="od19-day-icon"><i class="fa fa-calendar-check-o"/></div>
+                                <div class="od19-day-body">
+                                    <div class="od19-day-value" data-od19-field="next_booking">—</div>
+                                    <div class="od19-day-label">นัดถัดไป</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <a class="od19-day-card" href="/web#action=hr_holidays.hr_leave_action_my">
+                                <div class="od19-day-icon"><i class="fa fa-plane"/></div>
+                                <div class="od19-day-body">
+                                    <div class="od19-day-value" data-od19-field="leave">—</div>
+                                    <div class="od19-day-label">วันลาคงเหลือ</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- [C] My Schedule + frequent shortcuts (theme 3) -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-8">
+                            <div class="od19-panel">
+                                <h5 class="od19-panel-title">
+                                    <i class="fa fa-calendar-o me-2" style="color:var(--od19-primary);"/>
+                                    ตารางของฉัน (My Schedule)
+                                </h5>
+                                <div id="od19-my-schedule" data-od19-schedule="1">
+                                    <p class="text-muted small mb-0">
+                                        <i class="fa fa-spinner fa-spin me-1"/>กำลังโหลดตาราง…
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="od19-panel">
+                                <h5 class="od19-panel-title">
+                                    <i class="fa fa-bolt me-2" style="color:var(--od19-secondary);"/>
+                                    ใช้บ่อย (Shortcuts)
+                                </h5>
+                                <div class="od19-shortcut-grid">
+                                    <a class="od19-shortcut" href="/web#action=hr_attendance.hr_attendance_action">
+                                        <i class="fa fa-clock-o"/><span>ลงเวลา</span>
+                                    </a>
+                                    <a class="od19-shortcut" href="/my/approvals">
+                                        <i class="fa fa-check-square-o"/><span>อนุมัติ</span>
+                                    </a>
+                                    <a class="od19-shortcut" href="/web#action=hr_expense.hr_expense_actions_my_all">
+                                        <i class="fa fa-money"/><span>ค่าใช้จ่าย</span>
+                                    </a>
+                                    <a class="od19-shortcut" href="/web#action=od19_meeting_room_booking.action_meeting_room_booking">
+                                        <i class="fa fa-calendar-check-o"/><span>จองห้อง</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Anchor: od19_recognition injects the Team Wall here (additive) -->
+                    <div id="od19-recognition-anchor"/>
 
                     <!-- Announcements -->
                     <div class="row mb-4">
@@ -291,13 +386,17 @@
                         </div>
                     </div>
 
-                    <!-- Quick Access -->
+                    <!-- [G] Quick Access — grouped by function (theme 3) -->
                     <div class="row mb-4">
                         <div class="col-12">
                             <h5 style="color:var(--od19-dark);font-weight:700;margin-bottom:20px;">
                                 <i class="fa fa-th-large me-2" style="color:var(--od19-primary);"/>
                                 เมนูด่วน (Quick Access)
                             </h5>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="od19-portal-group-title">งานของฉัน (My Work)</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                             <div class="od19-portal-card">
@@ -318,46 +417,6 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                             <div class="od19-portal-card">
-                                <div class="od19-portal-icon"><i class="fa fa-ticket"/></div>
-                                <h5>แจ้งปัญหาภายใน</h5>
-                                <p>Internal Issue / Helpdesk</p>
-                                <a href="/web#action=helpdesk_mgmt.helpdesk_ticket_action">เปิดใช้งาน →</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                            <div class="od19-portal-card">
-                                <div class="od19-portal-icon"><i class="fa fa-archive"/></div>
-                                <h5>ยืมอุปกรณ์</h5>
-                                <p>Asset &amp; Tool Loan</p>
-                                <a href="/web#action=od19_asset_loan.asset_loan_action">เปิดใช้งาน →</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                            <div class="od19-portal-card">
-                                <div class="od19-portal-icon"><i class="fa fa-calendar-check-o"/></div>
-                                <h5>จองห้องประชุม</h5>
-                                <p>Meeting Room Booking</p>
-                                <a href="/web#action=od19_meeting_room_booking.action_meeting_room_booking">เปิดใช้งาน →</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                            <div class="od19-portal-card">
-                                <div class="od19-portal-icon"><i class="fa fa-book"/></div>
-                                <h5>ฐานความรู้</h5>
-                                <p>Knowledge Base</p>
-                                <a href="/web#action=document_page.action_browse_all_content">เปิดใช้งาน →</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                            <div class="od19-portal-card">
-                                <div class="od19-portal-icon"><i class="fa fa-bullhorn"/></div>
-                                <h5>ประกาศ</h5>
-                                <p>Announcements</p>
-                                <a href="/web#action=od19_announcement.announcement_action">เปิดใช้งาน →</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                            <div class="od19-portal-card">
                                 <div class="od19-portal-icon"><i class="fa fa-money"/></div>
                                 <h5>ค่าใช้จ่าย</h5>
                                 <p>HR Expense</p>
@@ -374,10 +433,58 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                             <div class="od19-portal-card">
+                                <div class="od19-portal-icon"><i class="fa fa-calendar-check-o"/></div>
+                                <h5>จองห้องประชุม</h5>
+                                <p>Meeting Room Booking</p>
+                                <a href="/web#action=od19_meeting_room_booking.action_meeting_room_booking">เปิดใช้งาน →</a>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="od19-portal-group-title">HR &amp; สวัสดิการ (HR &amp; Welfare)</div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <div class="od19-portal-card">
                                 <div class="od19-portal-icon"><i class="fa fa-users"/></div>
                                 <h5>ฝ่ายบุคคล</h5>
                                 <p>Employee Directory</p>
                                 <a href="/web#action=hr.open_view_employee_list_my">เปิดใช้งาน →</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <div class="od19-portal-card">
+                                <div class="od19-portal-icon"><i class="fa fa-archive"/></div>
+                                <h5>ยืมอุปกรณ์</h5>
+                                <p>Asset &amp; Tool Loan</p>
+                                <a href="/web#action=od19_asset_loan.asset_loan_action">เปิดใช้งาน →</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <div class="od19-portal-card">
+                                <div class="od19-portal-icon"><i class="fa fa-bullhorn"/></div>
+                                <h5>ประกาศ</h5>
+                                <p>Announcements</p>
+                                <a href="/web#action=od19_announcement.announcement_action">เปิดใช้งาน →</a>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="od19-portal-group-title">ความรู้ &amp; แจ้งปัญหา (Knowledge &amp; Support)</div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <div class="od19-portal-card">
+                                <div class="od19-portal-icon"><i class="fa fa-book"/></div>
+                                <h5>ฐานความรู้</h5>
+                                <p>Knowledge Base</p>
+                                <a href="/web#action=document_page.action_browse_all_content">เปิดใช้งาน →</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <div class="od19-portal-card">
+                                <div class="od19-portal-icon"><i class="fa fa-ticket"/></div>
+                                <h5>แจ้งปัญหาภายใน</h5>
+                                <p>Internal Issue / Helpdesk</p>
+                                <a href="/web#action=helpdesk_mgmt.helpdesk_ticket_action">เปิดใช้งาน →</a>
                             </div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">

@@ -2969,3 +2969,147 @@ a.od19-room-tile:focus {
     .od19-proj-card:hover .od19-proj-media img { transform: none; }
 }
 
+/* ---------- Employee Portal — My Day / Schedule / Shortcuts ---------- */
+.od19-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex: 0 0 auto;
+}
+.od19-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.od19-day-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 16px;
+    height: 100%;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.od19-day-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(158, 36, 36, 0.15);
+}
+.od19-day-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--od19-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex: 0 0 auto;
+}
+.od19-day-value {
+    font-weight: 700;
+    color: var(--od19-dark);
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+.od19-day-label {
+    color: var(--od19-gray);
+    font-size: 0.82rem;
+}
+.od19-panel {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+    height: 100%;
+}
+.od19-panel-title {
+    font-weight: 700;
+    color: var(--od19-dark);
+    margin-bottom: 16px;
+    font-size: 1.05rem;
+}
+.od19-schedule-item {
+    display: flex;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+.od19-schedule-item:last-child {
+    border-bottom: none;
+}
+.od19-schedule-time {
+    font-weight: 600;
+    color: var(--od19-primary);
+    min-width: 92px;
+    font-size: 0.85rem;
+}
+.od19-schedule-main {
+    font-size: 0.9rem;
+    color: var(--od19-dark);
+}
+.od19-schedule-detail {
+    color: var(--od19-gray);
+}
+.od19-schedule-leave .od19-schedule-time {
+    color: var(--od19-secondary);
+}
+.od19-shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+.od19-shortcut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 8px;
+    border-radius: 10px;
+    background: var(--od19-light);
+    color: var(--od19-dark);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.od19-shortcut:hover {
+    background: var(--od19-primary);
+    color: #fff;
+}
+.od19-shortcut i {
+    font-size: 1.3rem;
+}
+@media (max-width: 767.98px) {
+    .od19-schedule-time {
+        min-width: 74px;
+    }
+    .od19-avatar {
+        width: 52px;
+        height: 52px;
+        font-size: 1.2rem;
+    }
+}
+.od19-portal-group-title {
+    font-weight: 700;
+    color: var(--od19-primary);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-left: 4px solid var(--od19-secondary);
+    padding-left: 10px;
+    margin: 6px 0 14px;
+}
+
