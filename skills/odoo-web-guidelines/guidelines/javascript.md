@@ -60,6 +60,21 @@ and it can take an argument the day the computation needs one.
 When the value is derived state, an Owl `computed` is the better answer: unlike a
 getter, it recomputes only when what it reads changes.
 
+# Name a value for what it holds
+
+Name a variable, a function or a prop for what its value really is, and let its JSDoc
+say the same: a date formatted as a string is `dateStr`, not `date`; `isPublished` is
+true only when the record is published; `hasAttachments` returns true only when there
+are attachments. When a change makes a value hold something else, rename it in the
+same change.
+
+A name that matches the value lets the reader follow the code without opening what
+builds the value. A name that says more or other than the value holds makes the reader
+check it each time.
+
+A name that other modules use (a field, a prop, a route parameter) is an API: in a
+stable version it stays, and the JSDoc says what the value really holds.
+
 # Avoid patching JavaScript code
 
 Patching (the `patch` function) is strongly discouraged inside Odoo itself. It is fine

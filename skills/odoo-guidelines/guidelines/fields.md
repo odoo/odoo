@@ -25,3 +25,22 @@
   fields is fine; reusing one **inverse** is discouraged: while the inverse
   runs, every field sharing it is protected and reads as `False` when not
   cached, so the method sees wrong sibling values.
+
+# Save a written non-stored computed field through its inverse or create and write
+
+When a value written on a non-stored computed field must be saved, the field has
+an `inverse` that writes the fields its compute reads, or a `create` or `write`
+override takes the value out of `vals`. An editable field that is only a form
+input, whose `@api.onchange` sets the stored fields its compute reads, needs
+neither. Code that needs another value writes the fields the compute reads, not
+the computed field.
+
+## Why
+
+A non-stored field has no column. Writing it only puts the value in the cache
+(on an x2many, only a `Command.update` of an existing line reaches the
+database), with no error and no warning, and the next recompute replaces it.
+The form still shows the typed value after the save, and the value is gone when
+the record is opened again; an imported value is dropped the same way. A read
+right after the write still returns the value, so a test that writes the field
+and reads it back passes.
