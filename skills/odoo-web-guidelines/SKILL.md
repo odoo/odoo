@@ -35,5 +35,6 @@ touching instead of loading whole files.
 | [Freeze the time when a test meets a timer](guidelines/tests.md#freeze-the-time-when-a-test-meets-a-timer) | writing a Hoot test that types in a search, opens a delayed popover, or acts on code that debounces a call |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
+| [No comment unless the code cannot show why](../odoo-guidelines/guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
 
 To add a guideline, follow [AUTHORING.md](AUTHORING.md).
