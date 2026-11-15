@@ -306,6 +306,32 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         move = order.account_move
         self.assertNotIn(move, session.sale_move_ids)
 
+    def test_invoiced_order_payment_reconciled_again(self):
+        """ A payment unreconciled from its invoice pays its own term line again. """
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[
+                [self.customer_pm, {'amount': 5.0}],
+                [self.bank_pm, {'amount': 5.6}],
+            ],
+            products=[[self.product_6, {}]],
+            extra_data={
+                'partner_id': self.partner_1.id,
+                'to_invoice': True,
+            },
+        )
+        invoice = order.account_move
+        customer_account_line = invoice.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term' and not line.reconciled,
+        )
+        bank_line = invoice.line_ids.filtered('reconciled')
+        payment = bank_line.matched_credit_ids.credit_move_id
+
+        invoice.js_remove_outstanding_partial(bank_line.matched_credit_ids.id)
+        invoice.js_assign_outstanding_line(payment.id)
+        self.assertEqual(payment.matched_debit_ids.debit_move_id, bank_line)
+        self.assertEqual(customer_account_line.amount_residual, 5.0)
+
     def test_cash_statement_opening_and_closing_consistency(self):
         def open_and_close_session_with_cash_amounts(init, start, end):
             cash_pm = self.pos_config._get_cash_payment_method()
