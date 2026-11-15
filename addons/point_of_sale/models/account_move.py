@@ -71,6 +71,23 @@ class AccountMove(models.Model):
         results['pos_payment_name'] = counterpart_line.move_id.sudo().pos_payment_ids[:1].payment_method_id.name
         return results
 
+    def js_assign_outstanding_line(self, line_id):
+        # EXTENDS account
+        # A POS invoice has one payment_term line per payment: a payment given
+        # back to the invoice pays its own line instead of all the open ones.
+        self.ensure_one()
+        if self.sudo().pos_order_ids:
+            line = self.env['account.move.line'].browse(line_id)
+            term_line = self.line_ids.filtered(
+                lambda term: term.display_type == 'payment_term'
+                and term.account_id == line.account_id
+                and not term.reconciled
+                and self.company_currency_id.is_zero(term.amount_residual + line.amount_residual)
+            )[:1]
+            if term_line:
+                return (line | term_line).reconcile()
+        return super().js_assign_outstanding_line(line_id)
+
     def _compute_amount(self):
         super()._compute_amount()
         for move in self:
