@@ -25,12 +25,13 @@ touching instead of loading whole files.
 | [Imports](guidelines/python.md#imports) | writing Python anywhere in an addon |
 | [Naming and model layout](guidelines/python.md#naming-and-model-layout) | naming a model, field, method or variable; laying out a model class |
 | [Translate only static literals](guidelines/python.md#translate-only-static-literals) | user-facing strings in Python |
-| [Recordsets, domains and context](guidelines/orm.md#recordsets-domains-and-context) | reading records, building domains, passing context |
+| [Recordsets, domains and context](guidelines/orm.md#recordsets-domains-and-context) | reading or comparing records, writing x2many values, building domains, passing context |
 | [Computes, onchange and constraints](guidelines/orm.md#computes-onchange-and-constraints) | computes, onchange, constraints, indexes, `create` overrides |
 | [End `_order` on a unique field](guidelines/orm.md#end-_order-on-a-unique-field) | setting a model's `_order`, or fixing records that come back in a random order |
 | [Methods and extension points](guidelines/orm.md#methods-and-extension-points) | adding a model method, or one another module will override |
 | [Set a state, never flip it](guidelines/orm.md#set-a-state-never-flip-it) | adding a method or a button that changes a state (archive, publish, favorite, follow) |
 | [Transactions and exceptions](guidelines/orm.md#transactions-and-exceptions) | cursors, commits, savepoints, `try`/`except` |
+| [Raw SQL: flush, invalidate, recompute](guidelines/orm.md#raw-sql-flush-invalidate-recompute) | `cr.execute`, `execute_query`, or any raw SQL on a model's table |
 | [Fields](guidelines/fields.md#fields) | declaring or modifying field definitions |
 | [Controllers](guidelines/controllers.md#controllers) | touching `controllers/` or `@route` |
 | [Views, actions and data records](guidelines/xml.md#views-actions-and-data-records) | touching `views/`, `data/`, or any XML records |
