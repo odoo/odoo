@@ -12,6 +12,7 @@ from PIL import Image
 
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Domain
 from odoo.tests import new_test_user, tagged
 from odoo.tools import BinaryBytes, file_open, file_path, mute_logger
 from odoo.tools.image import image_apply_opt
@@ -472,6 +473,25 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # Assert the attachment related to the field can't be read
         with self.assertRaises(AccessError):
             attachment.raw
+
+    def test_search_res_access(self):
+        self.rule.perm_read = True
+        self.attachment.invalidate_recordset()
+        assert not self.attachment.has_access('read')
+
+        # prevent search access on record
+        assert self.attachment.sudo().name == 'attach'
+        self.assertFalse(self.attachment.search([('name', '=', 'attach'), ('id', '>=', self.attachment.id)]))
+        self.assertEqual(self.attachment.sudo().search([('name', '=', 'attach'), ('id', '>=', self.attachment.id)]), self.attachment)
+
+        # need to patch it to inject a search_domain and avoid getting all records
+        res_access_orig = self.registry['ir.attachment']._search_res_access
+
+        def res_access_mock(model, *a):
+            return res_access_orig(model.with_context(search_domain=Domain('id', '=', self.attachment.id)), *a)
+
+        with patch.object(self.registry['ir.attachment'], '_search_res_access', res_access_mock):
+            self.assertFalse(self.attachment.sudo().search([('name', '=', 'attach'), ('id', '>=', self.attachment.id), ('res_access_read', '=', True)]))
 
     def test_with_write_permissions(self):
         """With write permissions to the linked record, attachment can be

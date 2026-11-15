@@ -1,6 +1,6 @@
 from freezegun import freeze_time
 
-from odoo import exceptions
+from odoo import exceptions, models
 from odoo.addons.mail.models import mail_activity as mail_activity_module
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.tests import tagged, HttpCase
@@ -92,10 +92,10 @@ class TestMailActivityIntegrity(ActivityScheduleCase):
         self.assertEqual(activities.search(domain, limit=100), accessible)
         self.assertEqual(activities.sudo().search(domain, limit=100), activities)
 
-        Activity = self.registry[activities._name]
         with (
             patch.object(mail_activity_module, 'PREFETCH_MAX', 3),
-            patch.object(Activity, '_search', autospec=True, side_effect=Activity._search) as search_func,
+            # super is called x times
+            patch.object(models.BaseModel, '_search', autospec=True, side_effect=models.BaseModel._search) as search_func,
         ):
             self.assertEqual(activities.search(domain, limit=100), accessible)
             self.assertGreaterEqual(search_func.call_count, 4)
