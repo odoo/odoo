@@ -26,12 +26,13 @@ Steps to reproduce:
 - Archive a book that still has open orders
 - Open the customer's portal page
 
-The open orders of that book are gone from the page, so the customer
-loses track of what they are still waiting for. They should stay listed
-until they are delivered.
+Issue: the open orders of that book are gone from the page, so the
+customer loses track of what they are still waiting for. They should
+stay listed until they are delivered.
 
-The order list was searched through the book with the default active
-filter, so archiving the book filtered its orders out.
+This happens because the order list was searched through the book
+with the default active filter, so archiving the book filtered its
+orders out.
 
 After this commit, the order list searches orders directly, with
 active_test disabled on the book relation, so an archived book still shows
@@ -104,8 +105,14 @@ a question; a missing section is a review round trip.
   happens, what should happen. Lead with the reported case; the test shows
   which cases the fix covers, and the other ones can follow. A fix message
   without the reported steps is not finished.
-- "Before this commit, ... After this commit, ..." is a common shape for the
-  why and the outcome; use it when it fits.
+- In a body of three paragraphs or more, each paragraph opens with the
+  words that say its role: the steps ("Steps to reproduce:"), what goes
+  wrong ("Issue:", "Before this commit,"), the cause ("This happens
+  because"), the fix ("After this commit,"), a side fact ("Note that").
+  The tense alone does not tell the reader whether a paragraph describes
+  the old code, criticizes it, or describes the fix, so an unmarked body
+  gets read again and again. "Before this commit, ... After this
+  commit, ..." is a common shape for the why and the outcome.
 - For `[PERF]` commits, include a Benchmark section in the commit message.
   Describe the workload and relevant record counts, and report before/after
   measurements with the speedup or reduction for the metric improved.
