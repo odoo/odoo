@@ -568,7 +568,6 @@ describe("pos.order - loyalty", () => {
 
         const loyalty_program = models["loyalty.program"].get(1);
         const loyalty_reward = models["loyalty.reward"].get(4);
-        const loyalty_card = models["loyalty.card"].get(1);
 
         const code_program = models["loyalty.program"].get(9);
         const code_rule = models["loyalty.rule"].get(3);
@@ -599,7 +598,10 @@ describe("pos.order - loyalty", () => {
             qty: 1,
         });
 
-        order._applyReward(loyalty_reward, loyalty_card.id);
+        const { coupon_id } = order
+            .getClaimableRewards()
+            .find(({ reward }) => reward.id === loyalty_reward.id);
+        order._applyReward(loyalty_reward, coupon_id);
         await store.activateCode("EXPIRED");
 
         expect(order.getOrderlines().length).toBe(3);

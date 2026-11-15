@@ -1,18 +1,11 @@
 /** @odoo-module */
 
-import { after, describe, expect, mockFetch, test } from "@odoo/hoot";
+import { describe, expect, mockFetch, test } from "@odoo/hoot";
 import { parseUrl } from "../local_helpers";
 
-/**
- * @param {Blob | MediaSource} obj
- */
-function createObjectURL(obj) {
-    const url = URL.createObjectURL(obj);
-    after(() => URL.revokeObjectURL(url));
-    return url;
-}
-
 describe(parseUrl(import.meta.url), () => {
+    let objectURL;
+
     test("setup network values", async () => {
         expect(document.cookie).toBe("");
 
@@ -32,7 +25,7 @@ describe(parseUrl(import.meta.url), () => {
         const blob = new Blob([JSON.stringify({ name: "coucou" })], {
             type: "application/json",
         });
-        const blobUrl = createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
         const blobResponse = await fetch(blobUrl).then((res) => res.json());
         const dataResponse = await fetch("data:text/html,<body></body>").then((res) => res.text());
 
@@ -62,7 +55,7 @@ describe(parseUrl(import.meta.url), () => {
         const blob = new Blob([JSON.stringify({ name: "coucou" })], {
             type: "application/json",
         });
-        const blobUrl = createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
         const response = await fetch(blobUrl);
         const json = await response.json();
 
@@ -80,7 +73,7 @@ describe(parseUrl(import.meta.url), () => {
         const blob = new Blob([JSON.stringify({ name: "coucou" })], {
             type: "application/json",
         });
-        const blobUrl = createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
         const response = await fetch(blobUrl);
 
         expect(response.headers).toEqual(new Headers([["Content-Type", "text/plain"]]));
@@ -90,6 +83,19 @@ describe(parseUrl(import.meta.url), () => {
         expect(text).toBe("Some other content");
 
         expect.verifySteps([blobUrl]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests object URLs cleanup.
+    test("object URLs are revoked between tests: setup", async () => {
+        objectURL = URL.createObjectURL(new Blob(["coucou"]));
+
+        expect(await fetch(objectURL).then((res) => res.text())).toBe("coucou");
+    });
+    test("object URLs are revoked between tests: check", async () => {
+        expect(objectURL).toMatch(/^blob:/);
+
+        await expect(fetch(objectURL)).rejects.toThrow();
     });
 
     test("mock response with nested blobs", async () => {

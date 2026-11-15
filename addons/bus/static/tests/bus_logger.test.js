@@ -1,6 +1,6 @@
 import { Logger } from "@bus/workers/bus_worker_utils";
 
-import { after, before, describe, expect, test } from "@odoo/hoot";
+import { after, before, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -8,6 +8,10 @@ describe.current.tags("desktop");
 
 before(() => indexedDB.deleteDatabase("test_db"));
 after(() => indexedDB.deleteDatabase("test_db"));
+
+// Loggers of other tests (and modules) hold connections closed between tests:
+// garbage-collecting them would re-open their databases
+beforeEach(() => patchWithCleanup(Logger, { instances: [] }));
 
 test("logs are saved and garbage-collected after TTL", async () => {
     indexedDB.deleteDatabase("test_db");

@@ -22,8 +22,10 @@ import { ensureTest } from "../main_runner";
 const {
     Blob,
     ClipboardItem = class NonSecureClipboardItem {},
+    DOMException,
     navigator,
-    Object: { assign: $assign },
+    Object: { assign: $assign, entries: $entries },
+    queueMicrotask,
     Set,
     TypeError,
 } = globalThis;
@@ -54,6 +56,27 @@ function getMockValues() {
         /** @type {Navigator["vibrate"]} */
         vibrate: throwNotImplemented("vibrate"),
     };
+}
+
+/**
+ * Returns the descriptors of the mocked permission-gated APIs, only for those that
+ * are natively available, to keep feature detection intact (e.g. `if (navigator.x)`).
+ */
+function getPermissionGatedDescriptors() {
+    const mocks = {
+        credentials: new MockCredentialsContainer(),
+        geolocation: new MockGeolocation(),
+        storage: new MockStorageManager(),
+        wakeLock: new MockWakeLock(),
+    };
+    /** @type {Record<string, PropertyDescriptor>} */
+    const descriptors = {};
+    for (const [name, value] of $entries(mocks)) {
+        if (name in navigator) {
+            descriptors[name] = { value };
+        }
+    }
+    return descriptors;
 }
 
 /**
@@ -179,6 +202,36 @@ function makeUserAgent(platform) {
 }
 
 /**
+ * @param {string} apiName
+ */
+function notAllowed(apiName) {
+    return new DOMException(
+        `${apiName}: not allowed in tests (mock it to provide actual results)`,
+        "NotAllowedError"
+    );
+}
+
+/**
+ * @param {PositionErrorCallback | null} [errorCallback]
+ */
+function rejectPosition(errorCallback) {
+    if (typeof errorCallback !== "function") {
+        return;
+    }
+    const code =
+        currentPermissions.geolocation.state === "granted"
+            ? GEOLOCATION_ERROR_CODES.POSITION_UNAVAILABLE
+            : GEOLOCATION_ERROR_CODES.PERMISSION_DENIED;
+    const error = {
+        ...GEOLOCATION_ERROR_CODES,
+        code,
+        message: "navigator.geolocation: no position available in tests",
+    };
+    // Native callbacks are always called asynchronously
+    queueMicrotask(() => errorCallback(error));
+}
+
+/**
  * @param {string} fnName
  */
 function throwNotImplemented(fnName) {
@@ -187,8 +240,15 @@ function throwNotImplemented(fnName) {
     };
 }
 
+const GEOLOCATION_ERROR_CODES = {
+    PERMISSION_DENIED: 1,
+    POSITION_UNAVAILABLE: 2,
+    TIMEOUT: 3,
+};
+
 /** @type {Set<MockPermissionStatus>} */
 const permissionStatuses = new Set();
+let geolocationWatchId = 0;
 const userAgentBrowser = getUserAgentBrowser();
 const mockValues = getMockValues();
 
@@ -228,6 +288,52 @@ export class MockClipboardItem extends ClipboardItem {
 
     async getType(type) {
         return getSyncValue(this, false)[type];
+    }
+}
+
+/**
+ * Permission-gated APIs (credentials, geolocation, storage, wake lock) are mocked
+ * to behave as if their permission were not granted: production code has to handle
+ * that case anyway, and no prompt nor actual device/storage access is triggered.
+ * Tests requiring actual results are expected to patch them.
+ */
+export class MockCredentialsContainer {
+    async create() {
+        throw notAllowed("navigator.credentials.create");
+    }
+
+    async get() {
+        throw notAllowed("navigator.credentials.get");
+    }
+
+    async preventSilentAccess() {}
+
+    async store() {
+        throw notAllowed("navigator.credentials.store");
+    }
+}
+
+export class MockGeolocation {
+    /**
+     * @param {number} _watchId
+     */
+    clearWatch(_watchId) {}
+
+    /**
+     * @param {PositionCallback} _successCallback
+     * @param {PositionErrorCallback | null} [errorCallback]
+     */
+    getCurrentPosition(_successCallback, errorCallback) {
+        rejectPosition(errorCallback);
+    }
+
+    /**
+     * @param {PositionCallback} _successCallback
+     * @param {PositionErrorCallback | null} [errorCallback]
+     */
+    watchPosition(_successCallback, errorCallback) {
+        rejectPosition(errorCallback);
+        return ++geolocationWatchId;
     }
 }
 
@@ -388,6 +494,33 @@ export class MockServiceWorkerRegistration {
     async update() {}
 }
 
+export class MockStorageManager {
+    async estimate() {
+        return { quota: 0, usage: 0 };
+    }
+
+    /**
+     * The origin private file system would otherwise persist between tests.
+     */
+    async getDirectory() {
+        throw notAllowed("navigator.storage.getDirectory");
+    }
+
+    async persist() {
+        return currentPermissions["persistent-storage"].state === "granted";
+    }
+
+    async persisted() {
+        return currentPermissions["persistent-storage"].state === "granted";
+    }
+}
+
+export class MockWakeLock {
+    async request() {
+        throw notAllowed("navigator.wakeLock.request");
+    }
+}
+
 export const currentPermissions = getPermissions();
 
 export const mockClipboard = new MockClipboard();
@@ -397,6 +530,7 @@ export const mockPermissions = new MockPermissions();
 export const mockServiceWorker = new MockServiceWorkerContainer();
 
 export const mockNavigator = createMock(navigator, {
+    ...getPermissionGatedDescriptors(),
     clipboard: { value: mockClipboard },
     maxTouchPoints: { get: () => (globalThis.ontouchstart === undefined ? 0 : 1) },
     permissions: { value: mockPermissions },
@@ -407,6 +541,7 @@ export const mockNavigator = createMock(navigator, {
 });
 
 export function cleanupNavigator() {
+    geolocationWatchId = 0;
     permissionStatuses.clear();
     $assign(currentPermissions, getPermissions());
     $assign(mockValues, getMockValues());

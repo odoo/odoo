@@ -26,7 +26,7 @@ describe("pos_store.js", () => {
         const order = await getFilledOrder(store);
         store.navigate("ProductScreen", { orderUuid: order.uuid });
 
-        store.clickSaveOrder();
+        await store.clickSaveOrder();
         const newOrder = store.getOrder();
         expect(newOrder.uuid).not.toBe(order.uuid);
         expect(store.router.state.params.orderUuid).toBe(newOrder.uuid);
