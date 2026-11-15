@@ -49,6 +49,17 @@ class TestMailMail(MailCommon):
             'res_partner_id': cls.partner_employee.id,  # not really used for matching except multi-recipients
         })
 
+        # document (hence messages) of another company, not accessible to admin
+        # when working in main company
+        cls.test_record_restricted = cls.env['mail.test.multi.company'].create({
+            'company_id': cls.company_2.id,
+            'name': 'Restricted',
+        })
+        cls.test_message_restricted = cls.test_record_restricted.message_post(
+            author_id=cls.partner_employee.id,
+            body=Markup('<p>Restricted</p>'),
+        )
+
         cls.emails_falsy = [False, '', ' ']
         cls.emails_invalid = ['buggy', 'buggy, wrong']
         cls.emails_invalid_ascii = ['raoul@example¢¡.com']
@@ -58,6 +69,25 @@ class TestMailMail(MailCommon):
         self._init_mail_mock()
         self.test_mail.write({'failure_reason': False, 'failure_type': False, 'state': 'outgoing'})
         self.test_notification.write({'failure_reason': False, 'failure_type': False, 'notification_status': 'ready'})
+
+    def _create_mails_restricted(self, state):
+        """ Create a standalone email (e.g. from a template) and a notification
+        email, both linked to a document admin cannot access. """
+        return self.env['mail.mail'].sudo().create([
+            {
+                'author_id': self.partner_employee.id,
+                'body_html': '<p>Standalone</p>',
+                'email_to': 'test.standalone@example.com',
+                'model': self.test_record_restricted._name,
+                'res_id': self.test_record_restricted.id,
+                'state': state,
+            }, {
+                'body_html': '<p>Notification</p>',
+                'email_to': 'test.notification@example.com',
+                'mail_message_id': self.test_message_restricted.id,
+                'state': state,
+            },
+        ])
 
     @users('admin')
     def test_mail_mail_attachment_access(self):
@@ -421,6 +451,19 @@ class TestMailMail(MailCommon):
             self.env['mail.mail'].process_email_queue()
             for mail, expected_state in zip(mails, expected_states):
                 self.assertEqual(mail.state, expected_state)
+
+    @users('admin')
+    def test_mail_mail_send_access(self):
+        """ Admin can send emails without access to their document, as the queue
+        does: they should not be flagged as failed once sent. """
+        mails = self._create_mails_restricted('outgoing').sudo(False).with_company(self.company_admin)
+        self.assertFalse(mails.mail_message_id.has_access('write'))
+
+        with self.mock_mail_gateway():
+            mails.send()
+        self.assertEqual(len(self._mails), 2)
+        self.assertEqual(mails.mapped('state'), ['sent', 'sent'])
+        self.assertFalse(any(mails.mapped('failure_reason')))
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_mail_send_configuration(self):
@@ -825,6 +868,20 @@ class TestMailMail(MailCommon):
                 self.assertEqual(notification.failure_reason, msg)
                 self.assertEqual(notification.failure_type, failure_type)
                 self.assertEqual(notification.notification_status, 'exception')
+
+    @users('admin')
+    def test_mail_mail_unlink_access(self):
+        """ Admin can delete emails without access to their document: standalone
+        message is deleted with its email, notified message is kept. """
+        mails = self._create_mails_restricted('sent').sudo(False).with_company(self.company_admin)
+        standalone_message = mails[0].mail_message_id
+        with self.assertRaises(AccessError):
+            standalone_message.unlink()
+
+        mails.unlink()
+        self.assertFalse(mails.exists())
+        self.assertFalse(standalone_message.exists())
+        self.assertTrue(self.test_message_restricted.exists())
 
     def test_mail_mail_values_misc(self):
         """ Test various values on mail.mail, notably default values """
