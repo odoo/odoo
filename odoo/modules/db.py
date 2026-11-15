@@ -43,7 +43,7 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 DB_NAME_RE = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_.-]+$')
-RANDOM_SERIAL = any(map(os.getenv, ('ODOO_RUNBOT', 'ODOO_TEST')))
+RANDOM_SERIAL = bool(os.getenv('ODOO_TEST'))
 
 
 def is_initialized(cr: Cursor) -> bool:
