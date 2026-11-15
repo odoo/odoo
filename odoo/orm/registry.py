@@ -561,13 +561,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
                     models_field_depends_done.discard(model_cls)
 
-                elif model_cls._setup_done__ and field.related and field.manual:
-                    # manually-added related field (e.g. added via Studio) that has
-                    # no _base_fields__ so it cannot be partially reset; mark the
-                    # whole model for full re-setup so that setup_model_classes()
-                    # recreates the field pointing to the updated target field
+                elif model_cls._setup_done__ and field.related and (field.inherited or field.manual):
+                    # Manual related fields (e.g. Studio) and generated _inherits fields
+                    # have no _base_fields__ and cannot be partially reset. Mark the
+                    # whole model for full re-setup so setup_model_classes() recreates
+                    # those fields pointing to the updated target field.
                     model_cls._setup_done__ = False
                     models_field_depends_done.discard(model_cls)
+                    todo.extend(model_cls._fields.values())
 
                 # partial invalidation of field_depends[_context]
                 self.field_depends.pop(field, None)
@@ -880,17 +881,60 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 _schema.warning("Constraint not added during finalize: %s", e)
         self._constraint_queue.clear()
 
-    def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True):
-        """ Initialize a list of models (given by their name). Call methods
-            ``_auto_init`` and ``init`` on each model to create or update the
-            database tables supporting the models.
+    def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True) -> list[str]:
+        """Initialize the given models and update their dependent fields after model setup.
+
+            Calls ``_auto_init`` and ``init`` on the given models and on models
+            with dependent stored fields. Reflects all field metadata on those
+            models and on models with dependent non-stored fields.
+
+            Returns the names of all models whose field metadata was reflected.
+            The loader uses them to reflect field groups after loading module data.
 
             The ``context`` may contain the following items:
              - ``module``: the name of the module being installed/updated, if any;
              - ``update_custom_fields``: whether custom fields should be updated.
         """
-        if not model_names:
-            return
+        # first determine the models requiring database initialization and field
+        # reflection
+
+        # models_to_init contains the given models and models with dependent stored
+        # related fields. These may need schema changes, so they must run
+        # _auto_init() and init() and have their model, constraint, and
+        #  inheritance metadata reflected.
+        models_to_init = OrderedSet(model_names)
+        # models_to_reflect_fields contains all models in models_to_init, plus
+        # models with dependent non-stored related fields. Their field
+        # attributes may also have changed, even though they have no related
+        # columns to update. This broader scope is used for field metadata,
+        # selections, and groups.
+        models_to_reflect_fields = OrderedSet(models_to_init)
+
+        # only propagate attributes from fields defined or extended by this module
+        module = context.get('module')
+        fields_todo = deque(
+            field
+            for model_name in models_to_init
+            for field in self[model_name]._fields.values()
+            if module is None or module in field._modules
+        )
+        fields_seen = set(fields_todo)
+        while fields_todo:
+            field = fields_todo.popleft()
+            for related_field in self.field_setup_dependents[field]:
+                # model setup can replace generated _inherits fields
+                related_field = self[related_field.model_name]._fields.get(related_field.name)
+                if related_field is None or related_field in fields_seen:
+                    continue
+                fields_seen.add(related_field)
+                fields_todo.append(related_field)
+                models_to_reflect_fields.add(related_field.model_name)
+                # Stored dependencies may need schema changes, such as text-to-jsonb conversion.
+                if related_field.store:
+                    models_to_init.add(related_field.model_name)
+
+        if not (models_to_init or models_to_reflect_fields):
+            return []
 
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
@@ -899,7 +943,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         from .environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, context)
-        models = [env[model_name] for model_name in model_names]
+        models = [env[model_name] for model_name in models_to_init]
         env.transaction.will_change_registry()
 
         try:
@@ -912,11 +956,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 model._auto_init()
                 model.init()
 
-            env['ir.model']._reflect_models(model_names)
-            env['ir.model.fields']._reflect_fields(model_names)
-            env['ir.model.fields.selection']._reflect_selections(model_names)
-            env['ir.model.constraint']._reflect_constraints(model_names)
-            env['ir.model.inherit']._reflect_inherits(model_names)
+            env['ir.model']._reflect_models(models_to_init)
+            env['ir.model.fields']._reflect_fields(models_to_reflect_fields)
+            env['ir.model.fields.selection']._reflect_selections(models_to_reflect_fields)
+            env['ir.model.constraint']._reflect_constraints(models_to_init)
+            env['ir.model.inherit']._reflect_inherits(models_to_init)
 
             self._ordinary_tables = None
 
@@ -924,7 +968,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 func = self._post_init_queue.popleft()
                 func()
 
-            self.check_indexes(cr, model_names)
+            self.check_indexes(cr, models_to_init)
             self.check_foreign_keys(cr)
 
             env.flush_all()
@@ -936,6 +980,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             del self._post_init_queue
             del self._foreign_keys
             del self._is_install
+
+        return list(models_to_reflect_fields)
 
     def check_null_constraints(self, cr: Cursor) -> None:
         """ Check that all not-null constraints are set. """

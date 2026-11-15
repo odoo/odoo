@@ -192,10 +192,10 @@ def load_module_graph(
 
         if update_operation:
             model_names = registry.descendants(model_names, '_inherit', '_inherits')
-            models_updated |= model_names
             registry._models_to_check -= model_names
             registry._setup_models__(env.cr, [])  # incremental setup
-            registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+            models_to_reflect_fields = registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
+            models_updated.update(models_to_reflect_fields)
         elif update_module and package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -242,7 +242,7 @@ def load_module_graph(
             migrations.migrate_module(package, 'post')
 
             # Group reflection can be done only after loading the data
-            env['ir.model.fields']._reflect_field_groups(model_names)
+            env['ir.model.fields']._reflect_field_groups(models_to_reflect_fields)
 
             # Update translations for all installed languages
             overwrite = tools.config["overwrite_existing_translations"]
