@@ -58,7 +58,11 @@ export class TableBorderPlugin extends Plugin {
 
     /** @type {import("plugins").EditorResources} */
     resources = {
-        toolbar_groups: withSequence(25, { id: "table_border", namespaces: ["expanded", "table"] }),
+        toolbar_groups: withSequence(25, {
+            id: "table_border",
+            description: _t("Table border"),
+            namespaces: ["expanded", "table"],
+        }),
         toolbar_items: [
             withSequence(10, {
                 id: "table_border_color",

@@ -257,13 +257,27 @@ test("toolbar should have the toolbar role and a label", async () => {
 test("toolbar button groups should have the group role", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
+    await expandToolbar();
     const groups = queryAll(".o-we-toolbar > .btn-group");
     expect(groups.length).toBeGreaterThan(1);
     for (const group of groups) {
+        const groupId = group.dataset.groupId;
         expect(group).toHaveAttribute("role", "group");
-        expect(group).toHaveAttribute("data-group-id");
+        expect(!!groupId).toBe(true);
         expect(group).not.toHaveAttribute("name");
+        // Only groups of several buttons are named, as the name of a single
+        // button group would repeat the one of its button
+        if (group.querySelectorAll(":scope > button, :scope > * > button").length > 1) {
+            expect(!!group.getAttribute("aria-label")).toBe(true, {
+                message: `"${groupId}" group should be named`,
+            });
+        } else {
+            expect(group).not.toHaveAttribute("aria-label", undefined, {
+                message: `"${groupId}" group should not be named`,
+            });
+        }
     }
+    expect(".btn-group[data-group-id='decoration']").toHaveAttribute("aria-label", "Decoration");
 });
 
 test("toolbar separators between button groups should have the separator role", async () => {

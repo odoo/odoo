@@ -24,6 +24,8 @@ import { removeStyle } from "@html_editor/utils/dom";
 /**
  * @typedef {Object} ToolbarGroup
  * @property {string} id
+ * @property {TranslatedString} [description] Name of the group, used as its
+ *   accessible name when it displays several buttons
  * @property {string[]} [namespaces]
  *
  *
@@ -173,8 +175,8 @@ export class ToolbarPlugin extends Plugin {
             },
         },
         toolbar_groups: [
-            withSequence(100, { id: "expand_toolbar" }),
-            withSequence(30, { id: "layout" }),
+            withSequence(100, { id: "expand_toolbar", description: _t("More options") }),
+            withSequence(30, { id: "layout", description: _t("Layout") }),
         ],
         toolbar_items: {
             id: "expand_toolbar",
@@ -547,6 +549,7 @@ export class ToolbarPlugin extends Plugin {
         this.state.buttonGroups = this.buttonGroups
             .map((group) => ({
                 id: group.id,
+                description: group.description,
                 buttons: group.buttons
                     .filter((button) => availableButtons.has(button))
                     .map((button) => ({

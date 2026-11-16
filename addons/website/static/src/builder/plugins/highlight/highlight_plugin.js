@@ -53,7 +53,9 @@ export class HighlightPlugin extends Plugin {
                 },
             },
         ],
-        toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
+        toolbar_groups: [
+            withSequence(50, { id: "websiteDecoration", description: _t("Text effects") }),
+        ],
         toolbar_items: [
             {
                 id: "highlight",
