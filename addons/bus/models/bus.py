@@ -171,7 +171,8 @@ class BusBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
-        notifications_by_channel = fetch_bus_notifications(
+        # The fetch may be cut. The client then asks for the rest with the last id it got.
+        notifications_by_channel, _has_more = fetch_bus_notifications(
             self.env.cr, {last: list(channels)}, ignore_ids
         )
         return sorted(

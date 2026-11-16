@@ -166,6 +166,9 @@ class ChannelTopic:
         # Snapshot of the waiting room taken when the topic is claimed, for the worker
         # that currently owns this topic.
         self._waiting_room_snapshot: dict[Websocket, LastFetchedId] = {}
+        # Websockets kept in the waiting room after a cut fetch. Their last id comes from
+        # the cut-off, not from the client.
+        self._waiting_after_cut: set[Websocket] = set()
         # Frozen so `_dispatch/_kick_invalid_sessions` can iterate it while `unsubscribe`
         # removes a websocket concurrently.
         self._websockets: frozenset[Websocket] = frozenset()
@@ -225,17 +228,22 @@ class ChannelTopic:
         """
         if not notifications:
             return
-        # Websockets in the waiting room can have different starting points: catch each of
-        # them up from its own last id.
-        for websocket, last_id in self._waiting_room_snapshot.items():
-            catchup_from_idx = bisect_right(notifications, last_id, key=itemgetter("id"))
-            if catchup_from_idx == len(notifications):
-                continue  # Already up to date, nothing to catch up.
-            self._forward_notifications(notifications[catchup_from_idx:], (websocket,))
         new_from_idx = bisect_right(notifications, self._last_fetched_id, key=itemgetter("id"))
         new_notifications = notifications[new_from_idx:]
         if excluded_ids := self.excluded_ids:
             new_notifications = [n for n in new_notifications if n["id"] not in excluded_ids]
+        # Websockets in the waiting room can have different starting points: catch each of
+        # them up from its own last id.
+        for websocket, last_id in self._waiting_room_snapshot.items():
+            catchup_notifications = notifications[
+                bisect_right(notifications, last_id, key=itemgetter("id")):
+            ]
+            if websocket in self._waiting_after_cut:
+                # Notifications committed after the cut fetch can be below its last id.
+                # Send them as the subscribers get them.
+                late_to_idx = bisect_right(new_notifications, last_id, key=itemgetter("id"))
+                catchup_notifications = new_notifications[:late_to_idx] + catchup_notifications
+            self._forward_notifications(catchup_notifications, (websocket,))
         if new_notifications:
             self._forward_notifications(new_notifications, self._websockets)
             self._update_history(new_notifications)
@@ -366,10 +374,11 @@ class BusDispatcher(threading.Thread):
                 # picked it up.
                 continue
             success = False
+            cutoff_id = None
             try:
                 with acquire_cursor(dbname) as cr:
                     self._kick_invalid_sessions(cr, topics)
-                    notifications_by_channel = self._fetch(cr, topics)
+                    notifications_by_channel, cutoff_id = self._fetch(cr, topics)
                 self._dispatch(topics, notifications_by_channel)
                 success = True
             except psycopg2.Error:
@@ -382,7 +391,7 @@ class BusDispatcher(threading.Thread):
                     )
                     stop_event.wait(BATCH_RETRY_DELAY)
             finally:
-                self._release_claims(dbname, topics, rollback=not success)
+                self._release_claims(dbname, topics, rollback=not success, cutoff_id=cutoff_id)
 
     def _worker_run(self):
         self._run_with_retry(self._worker_loop, "Bus._worker_run")
@@ -424,6 +433,7 @@ class BusDispatcher(threading.Thread):
                     continue
                 topic._websockets = topic._websockets - {websocket}
                 topic._waiting_room.pop(websocket, None)
+                topic._waiting_after_cut.discard(websocket)
                 self._drop_topic_if_empty(topic)
             self._topics_by_websocket[websocket] = next_topics
         self._ensure_started()
@@ -433,6 +443,7 @@ class BusDispatcher(threading.Thread):
             for topic in self._topics_by_websocket.pop(websocket, set()):
                 topic._websockets = topic._websockets - {websocket}
                 topic._waiting_room.pop(websocket, None)
+                topic._waiting_after_cut.discard(websocket)
                 self._drop_topic_if_empty(topic)
 
     def _lock_for_db(self, dbname: str):
@@ -513,11 +524,17 @@ class BusDispatcher(threading.Thread):
         topics: set[ChannelTopic] | frozenset[ChannelTopic],
         *,
         rollback=False,
+        cutoff_id: LastFetchedId | None = None,
     ):
         """Release topics back to the dispatcher and resolve their waiting room.
 
         If ``rollback`` is False, waiting websockets are promoted to full subscribers and
         topics are re-queued only if ``DIRTY``.
+
+        If ``cutoff_id`` is set, the fetch was cut there. The topics are re-queued for the
+        next page. A waiting websocket is promoted only if ``cutoff_id`` reaches both its
+        last id and the highest id the subscribers got. Otherwise, it stays in the
+        waiting room from ``cutoff_id``.
 
         If ``rollback`` is True, the waiting room snapshot is restored to its pre-claim
         state and topics are re-queued for a retry.
@@ -536,28 +553,48 @@ class BusDispatcher(threading.Thread):
                 if rollback:
                     topic._waiting_room.update(retained_snapshot)
                 else:
-                    topic._websockets = topic._websockets.union(ws for ws, _ in retained_snapshot)
+                    promoted = set()
+                    # Highest id the subscribers got.
+                    reached_id = topic._history[-1][0] if topic._history else topic._last_fetched_id
+                    for websocket, last_id in retained_snapshot:
+                        if cutoff_id is None or cutoff_id >= max(last_id, reached_id):
+                            # Has every notification the subscribers have. The next
+                            # ones come from the regular path.
+                            promoted.add(websocket)
+                        else:
+                            topic._waiting_room[websocket] = max(last_id, cutoff_id)
+                            topic._waiting_after_cut.add(websocket)
+                    topic._websockets = topic._websockets.union(promoted)
+                    topic._waiting_after_cut -= promoted
                 topic._waiting_room_snapshot = {}
                 if self._drop_topic_if_empty(topic):
                     continue
-                if is_dirty or rollback:
+                if is_dirty or rollback or cutoff_id is not None:
                     self._queue_topic(topic)
 
     def _fetch(self, cr, topics: set[ChannelTopic] | frozenset[ChannelTopic]):
-        """Fetch pending notifications for the given topics, grouped by channel."""
+        """Fetch pending notifications for the given topics, grouped by channel. Also
+        return the cut-off id, the highest fetched id if the fetch was cut, else None."""
         channels_by_last_fetched_id = defaultdict(list)
         excluded_ids = set()
         for topic in topics:
             if topic._waiting_room_snapshot:
-                last_fetched_id = min(  # noqa: PLW3301
-                    topic._last_fetched_id,
-                    min(topic._waiting_room_snapshot.values()),
-                )
+                waiting_from_id = min(topic._waiting_room_snapshot.values())
+                last_fetched_id = min(topic._last_fetched_id, waiting_from_id)
+                # Sent notifications are only needed above the lowest waiting id. The
+                # others would be fetched again by every page of a cut catch-up.
+                excluded_ids.update(i for i in topic.excluded_ids if i <= waiting_from_id)
             else:
                 last_fetched_id = topic._last_fetched_id
                 excluded_ids.update(topic.excluded_ids)
             channels_by_last_fetched_id[last_fetched_id].append(topic._channel)
-        return fetch_bus_notifications(cr, channels_by_last_fetched_id, excluded_ids)
+        notifications_by_channel, has_more = fetch_bus_notifications(
+            cr, channels_by_last_fetched_id, excluded_ids,
+        )
+        cutoff_id = None
+        if has_more:
+            cutoff_id = max(notifs[-1]["id"] for notifs in notifications_by_channel.values())
+        return notifications_by_channel, cutoff_id
 
     def _dispatch(
         self,
