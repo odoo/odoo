@@ -95,7 +95,7 @@
                         <div class="oe_structure"/>
                         <div class="mt8 mb-5">
                             <t t-set="lines" t-value="doc.timesheet_ids if from_project else timesheets_per_task.get(doc, doc.env['account.analytic.line'])"/>
-                            <h2 t-if="lines">
+                            <h2 t-if="lines" style="page-break-inside: avoid;">
                                 <t t-out="title"/>: <t t-out="doc.name"/>
                                 <t t-if="doc._name == 'project.task' and doc.project_id">
                                     <br/>
@@ -119,7 +119,7 @@
         <t t-set="data_report_landscape" t-value="True"/>
         <t t-foreach="subtasks.sorted('sequence')" t-as="subtask">
             <t t-if="subtask in timesheets_per_task">
-                <h2 class="my-4">
+                <h2 class="my-4" style="page-break-inside: avoid;">
                     Sub-Task of '<t t-out="doc.name"/>': <t t-out="subtask.name"/>
                 </h2>
                 <t t-set="lines" t-value="timesheets_per_task[subtask]"/>
