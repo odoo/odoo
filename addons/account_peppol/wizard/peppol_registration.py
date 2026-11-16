@@ -182,6 +182,15 @@ class PeppolRegistration(models.TransientModel):
                         'action_text': pdp_info['action_name'],
                         'action': pdp_info['action'],
                     }
+            if wizard.company_id.country_code == 'SK':
+                sk_module_info = self.env['res.config.settings']._get_sk_peppol_module_info()
+                if not sk_module_info['is_installed']:
+                    peppol_warnings['company_sk_module_warning'] = {
+                        'level': 'warning',
+                        'message': sk_module_info['warning_message'],
+                        'action_text': sk_module_info['action_name'],
+                        'action': sk_module_info['action'],
+                    }
             if (
                 wizard.peppol_eas
                 and wizard.peppol_endpoint
@@ -308,7 +317,23 @@ class PeppolRegistration(models.TransientModel):
             button_text=pdp_info['action_name'],
         )
 
+    def _ensure_sk_peppol_module_is_installed(self):
+        if self.company_id.country_code != 'SK':
+            return
+        sk_module_info = self.env['res.config.settings']._get_sk_peppol_module_info()
+        if sk_module_info['is_installed']:
+            return
+        if not sk_module_info['action']:
+            raise UserError(sk_module_info['warning_message'])
+        raise RedirectWarning(
+            message=sk_module_info['warning_message'],
+            action=sk_module_info['action'],
+            button_text=sk_module_info['action_name'],
+        )
+
     def _action_open_peppol_form(self, reopen=True):
+        self._ensure_sk_peppol_module_is_installed()
+
         view = self.env.ref('account_peppol.peppol_registration_form').sudo()
         # TODO remove in master this hack to get the branches management
         if 'use_parent_connection' not in view.arch_db:
@@ -357,6 +382,7 @@ class PeppolRegistration(models.TransientModel):
             self.peppol_eas = self.company_id.peppol_eas
         self._ensure_mandatory_fields()
         self._ensure_pdp_not_sent_through_peppol()
+        self._ensure_sk_peppol_module_is_installed()
         company = self.company_id
 
         if self.use_parent_connection:
@@ -488,6 +514,7 @@ class PeppolRegistration(models.TransientModel):
             self.peppol_eas = self.company_id.peppol_eas
         self._ensure_mandatory_fields()
         self._ensure_pdp_not_sent_through_peppol()
+        self._ensure_sk_peppol_module_is_installed()
 
         if self.use_parent_connection:
             self.company_id.write({**self._get_peppol_registration_data()})
