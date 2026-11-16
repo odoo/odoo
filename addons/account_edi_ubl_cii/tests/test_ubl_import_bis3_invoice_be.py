@@ -226,3 +226,24 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
             all(bill.invoice_line_ids.mapped('name')),
             "All invoice lines should have a name",
         )
+
+    def test_import_tax_split_allowance(self):
+        """Ensure a net-zero charge and allowance do not reduce imported VAT when goods use a separate tax at the same rate."""
+        service_tax = self.percent_tax(20, type_tax_use='purchase')
+        goods_tax = service_tax.copy({'name': 'Goods 20%'})
+        self.patch(
+            self.env.registry['account.tax'],
+            '_import_retrieve_tax',
+            lambda _self, search_plan, company, tax_values_list: [
+                tax_values.update(tax=goods_tax if tax_values.get('invoice_predictive') else service_tax)
+                for tax_values in tax_values_list
+            ],
+        )
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_tax_split_allowance',
+        )
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 35.79,
+            'amount_tax': 7.16,
+            'amount_total': 42.95,
+        }])
