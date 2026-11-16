@@ -1162,6 +1162,27 @@ class TestPartnerAddressCompany(TransactionCase):
             "Formatted display name should show parent name and type when child contact has no name",
         )
 
+    def test_display_name_formatted_parent_not_readable(self):
+        """ A contact the user can read must get its formatted display name
+        even when a record rule hides its parent. """
+        hidden_parent = self.env['res.partner'].create({'name': 'Hidden Company', 'is_company': True})
+        child = self.env['res.partner'].create({'parent_id': hidden_parent.id, 'type': 'delivery'})
+        self.env['ir.rule'].create({
+            'name': 'Hide the parent company',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'domain_force': [('id', '!=', hidden_parent.id)],
+            'groups': [Command.link(self.env.ref('base.group_user').id)],
+        })
+        child_as_user = child.with_user(self.test_user)
+        with self.assertRaises(AccessError):
+            hidden_parent.with_user(self.test_user).check_access('read')
+
+        self.assertEqual(child_as_user.display_name, "Hidden Company, Delivery")
+        self.assertEqual(
+            child_as_user.with_context(formatted_display_name=True).display_name,
+            "Hidden Company \t --Delivery--",
+        )
+
     def test_accessibility_of_company_partner_from_branch(self):
         """ Check accessibility of company partner from branch. """
         company = self.env['res.company'].create({'name': 'company'})
