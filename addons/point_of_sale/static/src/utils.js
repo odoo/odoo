@@ -35,8 +35,16 @@ export function deduceUrl(url) {
 
 export function constructAttributeString(line) {
     let attributeString = "";
+    // Values auto-selected because every line has a single value were never
+    // a choice: name the line like product display_name, without them.
+    const hasChosenValue = line.attribute_value_ids?.some(
+        (value) =>
+            value.is_custom ||
+            value.attribute_id.display_type === "multi" ||
+            value.attribute_line_id?.product_template_value_ids.length !== 1
+    );
 
-    if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
+    if (hasChosenValue) {
         for (const value of line.attribute_value_ids) {
             if (value.is_custom) {
                 const customValue = line.custom_attribute_value_ids.find(
