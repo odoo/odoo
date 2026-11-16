@@ -5,8 +5,8 @@ from odoo.tests import TransactionCase, loaded_demo_data, tagged
 class TestImportFiles(TransactionCase):
 
     def test_import_requests_for_quotation_template_xlsx(self):
-        azure_interior = bool(self.env.ref('base.res_partner_12', raise_if_not_found=False))
-        if not loaded_demo_data(self.env) or not azure_interior:
+        acme_corporation = bool(self.env.ref('base.res_partner_2', raise_if_not_found=False))
+        if not loaded_demo_data(self.env) or not acme_corporation:
             self.skipTest('Needs demo data to be able to import those files')
         model = "purchase.order"
         filename = "requests_for_quotation_import_template.xlsx"
