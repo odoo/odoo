@@ -21,6 +21,7 @@ export class Activity extends Component {
 
     setup() {
         super.setup();
+        this.action = useService("action");
         this.store = useService("mail.store");
         this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
         this.onActivityChanged = useProps.static("onActivityChanged", t.function([]));
