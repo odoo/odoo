@@ -627,6 +627,34 @@ class test_convert_import_data(TransactionCase):
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
 
+    def test_parse_deeply_nested_relational_fields(self):
+        """ Ensure that date and float fields are correctly parsed in deeply
+        nested relational fields (depth >= 2).
+        """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.complex',
+            'file_type': 'text/csv',
+        })
+        options = {
+            'date_format': '%d/%m/%Y',
+            'float_decimal_separator': ',',
+            'float_thousand_separator': '.',
+        }
+        data = [['complex_1', '1.250,50', '25/12/2024']]
+        import_fields = ['c', 'parent_id/parent_id/f', 'parent_id/parent_id/d']
+        result = import_wizard._parse_import_data(data, import_fields, options)
+        self.assertEqual(float(result[0][1]), 1250.50)
+        self.assertEqual(result[0][2], '2024-12-25')
+
+    def test_extract_binary_filenames_nested(self):
+        """ Ensure binary filenames are correctly extracted for deeply nested relational fields. """
+        import_wizard = self.env['base_import.import'].create({'res_model': 'res.partner'})
+        data = [['parent', 'child_avatar.png']]
+        import_fields = ['name', 'child_ids/child_ids/image_1920']
+        binary_filenames = import_wizard._extract_binary_filenames(import_fields, data)
+        self.assertEqual(binary_filenames['child_ids/child_ids/image_1920'], ['child_avatar.png'])
+        self.assertEqual(data[0][1], '')
+
     def test_parse_scientific_notation(self):
         """ Ensure that scientific notation is correctly converted to decimal """
         import_wizard = self.env['base_import.import']

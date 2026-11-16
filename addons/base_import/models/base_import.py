@@ -1290,10 +1290,9 @@ class Import(models.TransientModel):
                 index = import_fields.index(name)
                 self._parse_date_from_data(data, index, name, field['type'], options)
             # Check if the field is in import_field and is a relational (followed by /)
-            # Also verify that the field name exactly match the import_field at the correct level.
-            elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+            elif field['type'] in ('many2one', 'one2many', 'many2many') and any(f.startswith(f"{name}/") for f in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
-                self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
+                self._parse_import_data_recursive(field['relation'], f"{name}/", data, import_fields, options)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
                 # We should be able to manage both case
@@ -1513,9 +1512,9 @@ class Import(models.TransientModel):
         binary_filenames = binary_filenames or defaultdict(list)
         for name, field in self.env[model]._fields.items():
             name = prefix + name
-            if any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+            if field.relational and any(f.startswith(f"{name}/") for f in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
-                binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames)
+                binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, f"{name}/", binary_filenames)
             elif field.type == 'binary' and field.attachment and name in import_fields:
                 index = import_fields.index(name)
                 for line in data:
