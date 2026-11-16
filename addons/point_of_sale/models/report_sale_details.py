@@ -132,7 +132,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             method_name = PosPaymentMethod._field_to_sql('method', 'name')
             self.env.cr.execute(SQL("""
                 SELECT method.id as id, payment.session_id as session, %(method_name)s as name, method.type = 'cash' as cash,
-                     sum(amount) total, method.journal_id journal_id
+                     sum(amount)::float total, method.journal_id journal_id
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id

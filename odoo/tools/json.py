@@ -1,5 +1,6 @@
 from collections.abc import Mapping
 from datetime import date, datetime
+from decimal import Decimal
 import json as json_
 import re
 
@@ -59,7 +60,6 @@ scriptsafe = JSON()
 
 
 def json_default(obj):
-    from decimal import Decimal  # noqa: PLC0415
     from odoo import fields  # noqa: PLC0415
     if isinstance(obj, datetime):
         return fields.Datetime.to_string(obj)

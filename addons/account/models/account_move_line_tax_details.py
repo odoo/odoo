@@ -198,20 +198,20 @@ class AccountMoveLine(models.Model):
                 tax_exigible,
                 base_account_id,
                 tax_repartition_line_id,
-                base_amount,
+                base_amount::float AS base_amount,
                 COALESCE(
                     ROUND(tax_amount * base_cumul / NULLIF(base, 0), comp_curr_prec)
                     - LAG(ROUND(tax_amount * base_cumul / NULLIF(base, 0), comp_curr_prec), 1, 0.0)
                         OVER tax_detail_partition,
                     0.0
-                ) AS tax_amount,
-                base_amount_currency,
+                )::float AS tax_amount,
+                base_amount_currency::float AS base_amount_currency,
                 COALESCE(
                     ROUND(tax_amount_currency * base_cumul_currency / NULLIF(base_currency, 0), curr_prec)
                     - LAG(ROUND(tax_amount_currency * base_cumul_currency / NULLIF(base_currency, 0), curr_prec), 1, 0.0)
                         OVER tax_detail_partition,
                     0.0
-                ) AS tax_amount_currency
+                )::float AS tax_amount_currency
             FROM aggregated
             WINDOW tax_detail_partition AS (PARTITION BY tax_line_id, tax_id ORDER BY tax_line_id, base_line_id)
             ORDER BY tax_line_id, base_line_id

@@ -146,7 +146,7 @@ class SaleReport(models.Model):
             'line_name': table.name,
             'line_invoice_status': SQL("%s", table.invoice_status),
             'product_uom_id': SQL("CASE WHEN %s IS NULL THEN %s ELSE %s END", table.product_id, table.product_id.uom_id, table.product_uom_id),
-            'product_uom_qty': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.product_uom_qty, uom_ratio),
+            'product_uom_qty': SQL("(CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END)::float", table.is_downpayment, table.product_uom_qty, uom_ratio),
             'qty_delivered': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.qty_delivered, uom_ratio),
             'qty_to_deliver': SQL("CASE WHEN %s IS NOT TRUE THEN SUM((%s - %s) * %s) ELSE 0 END", table.is_downpayment, table.product_uom_qty, table.qty_delivered, uom_ratio),
             'qty_invoiced': SQL("CASE WHEN %s IS NOT TRUE THEN SUM(%s * %s) ELSE 0 END", table.is_downpayment, table.qty_invoiced, uom_ratio),

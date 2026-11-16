@@ -1050,6 +1050,40 @@ class TestPrivateReadGroup(common.TransactionCase):
         self.assertIsInstance(result, list)
         self.assertIsInstance(result[0], float)
 
+    def test_numeric_aggregate_types(self):
+        """ Aggregates of decimal fields (Float with digits, Monetary) are computed in numeric
+        and returned as floats, like plain Float and Integer aggregates. """
+        records = self.env['test_orm.mixed'].create([
+            {'integer': 1, 'float': 0.1, 'number': 0.1, 'numeric': 0.1, 'monetary': 0.1},
+            {'integer': 2, 'float': 0.2, 'number': 0.2, 'numeric': 0.2, 'monetary': 0.2},
+        ])
+        aggregates = [
+            f'{fname}:{func}'
+            for fname in ('integer', 'float', 'number', 'numeric', 'monetary')
+            for func in ('sum', 'avg', 'max', 'min', 'count', 'count_distinct', 'array_agg')
+        ]
+        [values] = records._read_group([('id', 'in', records.ids)], [], aggregates)
+
+        for aggregate, value in zip(aggregates, values):
+            fname, func = aggregate.split(':')
+            # Decimal fields are aggregated in numeric but must be returned as floats.
+            number_type = int if fname == 'integer' else float
+            with self.subTest(aggregate=aggregate):
+                if func in ('count', 'count_distinct'):
+                    self.assertIsInstance(value, int)
+                elif func == 'avg':
+                    self.assertIsInstance(value, float)
+                elif func == 'array_agg':
+                    self.assertIsInstance(value, list)
+                    self.assertTrue(all(isinstance(v, number_type) for v in value))
+                else:
+                    self.assertIsInstance(value, number_type)
+
+        # Summing in numeric is exact: no float accumulation (0.30000000000000004).
+        for fname in ('number', 'monetary'):
+            [[total]] = records._read_group([('id', 'in', records.ids)], [], [f'{fname}:sum'])
+            self.assertEqual(total, 0.3)
+
     def test_related(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']

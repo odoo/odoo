@@ -530,10 +530,7 @@ class IrQwebFieldMonetary(models.AbstractModel):
     def value_to_html(self, value, options):
         display_currency = options.get('display_currency') or self.env.company.currency_id
 
-        if isinstance(value, Decimal):
-            value = float(value)
-
-        if not isinstance(value, (int, float)):
+        if not isinstance(value, (int, float, Decimal)):
             raise ValueError(_("The value send to monetary field is not a number."))
 
         # lang.format mandates a sprintf-style format. These formats are non-
@@ -550,9 +547,9 @@ class IrQwebFieldMonetary(models.AbstractModel):
                 company = self.env['res.company'].browse(company_id)
             else:
                 company = self.env.company
-            value = options['from_currency']._convert(value, display_currency, company, date)
+            value = options['from_currency']._convert(float(value), display_currency, company, date)
 
-        if float_is_zero(value, precision_digits=display_currency.decimal_places):
+        if float_is_zero(float(value), precision_digits=display_currency.decimal_places):
             value = 0.0
 
         lang = self.user_lang()

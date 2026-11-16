@@ -476,7 +476,7 @@ class ResPartner(models.Model):
                 ['parent_id'],
             )
             query_res = self.env.execute_query(SQL(
-                """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
+                """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))::float
                      FROM account_move move
                      LEFT JOIN res_partner partner
                        ON partner.id = move.partner_id
