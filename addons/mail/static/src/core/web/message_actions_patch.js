@@ -4,9 +4,15 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToMarkup } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
 
-export function messageActionOpenFullComposer(title, context, component) {
-    const message = component.props.message;
-    const thread = component.props.thread;
+/**
+ * @param {string} title
+ * @param {Object} context
+ * @param {Object} params
+ * @param {import("models").Message} params.message
+ * @param {import("models").Store} params.store
+ * @param {import("models").Thread} params.thread
+ */
+export function messageActionOpenFullComposer(title, context, { message, store, thread }) {
     const action = {
         name: title,
         type: "ir.actions.act_window",
@@ -22,7 +28,7 @@ export function messageActionOpenFullComposer(title, context, component) {
             default_subtype_xmlid: "mail.mt_comment",
         },
     };
-    component.env.services.action.doAction(action, {
+    store.env.services.action.doAction(action, {
         onClose: () => thread.fetchThreadData(thread.fullComposerCloseRequestList),
     });
 }
@@ -31,7 +37,7 @@ registerMessageAction("reply-all", {
     condition: ({ ancestors, message }) => !ancestors.inMessagingMenu && message.canReplyAll,
     icon: "reply",
     name: _t("Reply All"),
-    onSelected: async ({ message, owner, store, thread }) => {
+    onSelected: async ({ message, store, thread }) => {
         const recipients = await rpc("/mail/thread/recipients", {
             thread_model: thread.model,
             thread_id: thread.id,
@@ -65,7 +71,7 @@ registerMessageAction("reply-all", {
                 .filter((r) => r.recipient_type === "cc")
                 .map((r) => r.id),
         };
-        messageActionOpenFullComposer(_t("Reply All"), context, owner);
+        messageActionOpenFullComposer(_t("Reply All"), context, { message, store, thread });
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 55 : 20),
 });
@@ -73,7 +79,7 @@ registerMessageAction("forward", {
     condition: ({ ancestors, message }) => !ancestors.inMessagingMenu && message.canForward,
     icon: "forward",
     name: _t("Forward"),
-    onSelected: async ({ message, owner, store }) => {
+    onSelected: async ({ message, store, thread }) => {
         // usually reply_to is what you want people to see as being "from"
         // showing this avoids "leaking" the actual user when reply_to is an alias
         const emailFrom = message.reply_to || message.email_from || message.author_id?.displayEmail;
@@ -101,7 +107,7 @@ registerMessageAction("forward", {
             default_composition_comment_option: "forward",
             default_email_add_signature: false,
         };
-        messageActionOpenFullComposer(_t("Forward Message"), context, owner);
+        messageActionOpenFullComposer(_t("Forward Message"), context, { message, store, thread });
     },
     sequence: 30,
 });
@@ -109,7 +115,7 @@ registerMessageAction("send-again", {
     condition: ({ ancestors, message }) => !ancestors.inMessagingMenu && message.canForward,
     icon: "send",
     name: _t("Send Again"),
-    onSelected: ({ message, owner }) => {
+    onSelected: ({ message, store, thread }) => {
         const context = {
             default_attachment_ids: message.attachment_ids.map((a) => a.id),
             default_body: prepareBodyForEditing(message.body),
@@ -118,7 +124,7 @@ registerMessageAction("send-again", {
             default_partner_ids: message.partner_ids.map((p) => p.id),
             default_partner_cc_ids: message.partner_cc_ids.map((p) => p.id),
         };
-        messageActionOpenFullComposer(_t("Send Again"), context, owner);
+        messageActionOpenFullComposer(_t("Send Again"), context, { message, store, thread });
     },
     sequence: 35,
 });

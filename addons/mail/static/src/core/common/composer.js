@@ -1149,7 +1149,7 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.props.composer.message.showDeleteConfirm(this, this.rootRef, this.ancestors);
+            this.props.composer.message.showDeleteConfirm(this.rootRef, this.ancestors);
         }
         this.clearRawMentions();
     }
