@@ -87,6 +87,12 @@ class TestBaseUrl(TestUrlCommon):
         self._assertCanonical('/en_US', self.website.get_base_url() + '/')
         self._assertCanonical('/fr_FR', self.website.get_base_url() + '/fr')
 
+    def test_03_mixed_scripts_in_domain(self):
+        # Check that mixing two scripts (Arabic and Latin) raises Validation
+        with self.assertRaises(ValidationError):
+            self.website.domain = "https://pثا.com"
+            self.url_open(self.website.get_base_url())
+
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestGetBaseUrl(odoo.tests.TransactionCase):
