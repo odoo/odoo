@@ -196,6 +196,17 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             called_proxies = {call.args[1] for call in mock_download.call_args_list}
             self.assertEqual(called_proxies, {self.proxy_user, second_proxy})
 
+    def test_cron_update_send_state_multiple_invoices_demo_mode(self):
+        """Test that the cron updates the SdI state of multiple invoices in demo mode."""
+        self.proxy_user.edi_mode = 'demo'
+
+        invoices = self._create_invoice_it() + self._create_invoice_it()
+        self.env['account.move.send']._generate_and_send_invoices(invoices)
+
+        with patch.object(self.env.cr, 'commit'):
+            self.env['account.move']._l10n_it_edi_check_send_state()
+        self.assertEqual(invoices.mapped('l10n_it_edi_state'), ['forwarded'] * 2)
+
     def test_l10n_it_edi_send_success(self):
         invoice = self._create_invoice_it()
         self.generate_l10n_it_edi_send_attachments(invoice)
