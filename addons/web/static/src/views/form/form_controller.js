@@ -384,6 +384,7 @@ export class FormController extends Component {
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onRecordChanged: this.onRecordChanged.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
+                onRecordAccessLost: this.onRecordAccessLost.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
                 onRootLoaded: this.onRootLoaded.bind(this),
                 onRootUpdated: this.onRootUpdated.bind(this),
@@ -447,6 +448,20 @@ export class FormController extends Component {
                     translationChanges,
                 ]);
             }
+        }
+    }
+
+    /**
+     * onRecordAccessLost is a callback that will be executed after the
+     * save if the user lost access to the record from the changes made
+     * to it.
+     */
+    async onRecordAccessLost(record) {
+        this.skipSaveOnLeave = true;
+        if (this.env.inDialog) {
+            await this.env.dialogData.close();
+        } else {
+            this.env.config.historyBack();
         }
     }
 

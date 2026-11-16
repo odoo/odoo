@@ -1377,6 +1377,10 @@ export class Record extends DataPoint {
             throw e;
         }
         if (reload && !records.length) {
+            if (this.config.isRoot && !nextId) {
+                await this.model.hooks.onRecordAccessLost(this);
+                return false;
+            }
             throw new FetchRecordError([nextId || this.resId]);
         }
         if (creation) {
@@ -1404,7 +1408,7 @@ export class Record extends DataPoint {
 
     _commitSave(records) {
         this._values = markRaw({ ...this._values, ...this._changes });
-        if ("id" in this.activeFields && records) {
+        if ("id" in this.activeFields && records?.length) {
             this._values.id = records[0].id;
         }
         for (const fieldName in this.activeFields) {
