@@ -9,7 +9,6 @@ declare module "services" {
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
     import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
     import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
-    import { rtcService } from "@mail/discuss/call/common/rtc_service";
     import { storeService } from "@mail/core/common/store_plugin";
     import { voiceMessageService } from "@mail/discuss/voice_message/common/voice_message_service";
 
@@ -18,7 +17,6 @@ declare module "services" {
         "discuss.core.public": typeof discussCorePublic;
         "discuss.core.public.web": typeof discussCorePublicWeb;
         "discuss.core.web": typeof discussCoreWeb;
-        "discuss.rtc": typeof rtcService;
         "discuss.voice_message": typeof voiceMessageService;
         "mail.attachment_upload": typeof attachmentUploadService;
         "mail.core.common": typeof mailCoreCommon;

@@ -3,7 +3,7 @@ import { Meeting } from "@mail/discuss/call/common/meeting";
 
 import { Plugin, signal, usePlugin } from "@odoo/owl";
 
-/** Shows the meeting of the call of `discuss.rtc` in a picture-in-picture window. */
+/** Shows the meeting of the call of `store.rtc` in a picture-in-picture window. */
 export class PipPlugin extends Plugin {
     #popout = usePlugin(MailPopoutPlugin).createManager("discuss.native.pip");
     isActive = signal(false);

@@ -22,7 +22,7 @@ test("Starting a video call asks for permissions", async () => {
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Video Call']:count(1)").click();
     await waitFor(".modal[role='dialog']:count(1)");
@@ -36,7 +36,7 @@ test("Starting a meeting asks for microphone permission", async () => {
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await contains("[title='New Meeting']:count(1)").click();
     await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
@@ -54,7 +54,7 @@ test("Starting a meeting with camera granted asks for microphone permission", as
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     rtc.cameraPermission = "granted";
     await contains("[title='New Meeting']:count(1)").click();
@@ -69,7 +69,7 @@ test("Starting a meeting with microphone granted asks for camera permission", as
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     rtc.microphonePermission = "granted";
     await contains("[title='New Meeting']:count(1)").click();
@@ -84,7 +84,7 @@ test("Turning on the microphone asks for permissions", async () => {
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-CallActionList button[title='Turn camera on']:count(1)");
@@ -102,7 +102,7 @@ test("Turning on the camera asks for permissions", async () => {
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='Turn camera on']:count(1)").click();
@@ -118,7 +118,7 @@ test("Turn on both microphone and camera from permission dialog", async () => {
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-CallActionList button[title='Turn camera on']:count(1)");
@@ -137,7 +137,7 @@ test("Combined mic+camera button only shown when both permissions not granted", 
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='Turn camera on']:count(1)").click();
@@ -157,7 +157,7 @@ test("Microphone permission warning is hidden while the permission dialog is ope
     mockGetMedia();
     mockPermissionsPrompt();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o_popover:text('No microphone permissions'):count(1)");
@@ -192,7 +192,7 @@ test("Pressing Escape key on voice & video wizard does not trigger permission di
     mockGetMedia();
     mockPermissionsPrompt();
     const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    const rtc = env.services["mail.store"].rtc;
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer.o-focused:count(1)");
     await contains("[title='Start Call']:count(1)").click();

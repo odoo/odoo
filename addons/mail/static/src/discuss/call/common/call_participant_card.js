@@ -41,8 +41,8 @@ export class CallParticipantCard extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.cardBgColor = signal();
-        this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.attClassObjectToString = attClassObjectToString;
         this.props = useProps({
             cardData: types.object({
@@ -277,7 +277,7 @@ export class CallParticipantCard extends Component {
     }
 
     async onClickReplay() {
-        this.env.bus.trigger("RTC-SERVICE:PLAY_MEDIA");
+        this.env.bus.trigger("RTC:PLAY_MEDIA");
     }
 
     onMouseDown() {

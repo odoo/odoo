@@ -1,9 +1,5 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
-import { BusPlugin } from "@bus/services/bus_plugin";
-import { PresencePlugin } from "@bus/services/presence_plugin";
-import { DiscussP2PPlugin } from "@mail/discuss/call/common/discuss_p2p_plugin";
-import { CallInvitationsPlugin } from "@mail/discuss/call/common/call_invitations";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -11,10 +7,9 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
+import { markup, proxy, toRaw } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -26,17 +21,10 @@ import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
-import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
-import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
-import { PipPlugin } from "@mail/discuss/call/common/pip_plugin";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/connection_types";
 
 let sequence = 1;
 const getSequence = () => sequence++;
-
-/**
- * @typedef {import("services").ServiceFactories} Services
- */
 
 /**
  * @typedef {import("@mail/../lib/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE} SfuClientState
@@ -133,7 +121,7 @@ export const CROSS_TAB_CLIENT_MESSAGE = {
 export const CROSS_TAB_INIT_TIMEOUT = 2000;
 const PING_INTERVAL = 30_000;
 const UNAVAILABLE_AS_REMOTE = _t("This action can only be done in the call tab.");
-const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
+export const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
 /**
  * Meeting view state that {@link Rtc.viewToRestore} brings back when leaving the temporary mode
  * that replaced it (PIP or true browser fullscreen). The meeting view is always restored as the
@@ -145,7 +133,7 @@ const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
  *
  * @typedef {"none"|"fullscreen"} ViewToRestore
  */
-const VIEW_TO_RESTORE = Object.freeze({
+export const VIEW_TO_RESTORE = Object.freeze({
     NONE: "none",
     FULLSCREEN: "fullscreen",
 });
@@ -435,7 +423,7 @@ export class Rtc extends Record {
         return undefined;
     });
     /**
-     * Html element embedding the rtc service. Used to scope the dialog to the correct
+     * Html element embedding the rtc. Used to scope the dialog to the correct
      * document fragment (either the actual document or the active shadow root).
      * @type {HTMLElement|undefined}
      */
@@ -551,23 +539,23 @@ export class Rtc extends Record {
             () => [this.channel],
             (channel) => () => channel.clearActiveSpeakers()
         );
-        // the services and the dialog the record holds, assigned when the service starts or
+        // the plugins and the dialog the record holds, assigned when RtcPlugin starts or
         // when a call runs
         /** @type {SfuClientState} */
         this.SFU_CLIENT_STATE = undefined;
         /** @type {() => Promise<void>} */
         this.closeCallPermissionDialog = undefined;
-        /** @type {DialogPlugin} */
+        /** @type {import("@web/core/dialog/dialog_plugin").DialogPlugin} */
         this.dialog = undefined;
-        /** @type {MailFullscreenPlugin} */
+        /** @type {import("@mail/core/common/mail_fullscreen").MailFullscreenPlugin} */
         this.fullscreen = undefined;
         /** @type {import("@web/core/notifications/notification_plugin").NotificationPlugin} */
         this.notification = undefined;
         /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
         this.p2pService = undefined;
-        /** @type {PipPlugin} */
+        /** @type {import("@mail/discuss/call/common/pip_plugin").PipPlugin} */
         this.pip = undefined;
-        /** @type {PttExtensionPlugin} */
+        /** @type {import("@mail/discuss/call/common/ptt_extension_plugin").PttExtensionPlugin} */
         this.pttExtService = undefined;
         /** @type {import("@mail/core/common/sound_effects_plugin").SoundEffectsPlugin} */
         this.soundEffects = undefined;
@@ -663,7 +651,7 @@ export class Rtc extends Record {
         );
         this.onChange(
             () => [this.store.settings.useBlur],
-            function onChangeUseBlur(useBlur) {
+            function onChangeUseBlur() {
                 if (this.isSendingCamera) {
                     this.toggleVideo("camera", { force: true });
                 }
@@ -682,14 +670,14 @@ export class Rtc extends Record {
         );
         this.onChange(
             () => [this.store.settings.voiceActivationThreshold, this.store.settings.usePushToTalk],
-            function onChangeVoiceActivation(voiceActivationThreshold, usePushToTalk) {
+            function onChangeVoiceActivation() {
                 this.linkVoiceActivationDebounce();
             },
             { initialRun: false }
         );
         this.onChange(
             () => [this.store.settings.audioInputDeviceId],
-            function onChangeAudioInputDeviceId(audioInputDeviceId) {
+            function onChangeAudioInputDeviceId() {
                 if (this.localSession) {
                     this.resetMicAudioTrack({ force: true });
                 }
@@ -707,14 +695,14 @@ export class Rtc extends Record {
         );
         this.onChange(
             () => [this.store.settings.cameraInputDeviceId],
-            function onChangeCameraInputDeviceId(cameraInputDeviceId) {
+            function onChangeCameraInputDeviceId() {
                 if (this.localSession && this.cameraTrack) {
                     this.toggleVideo("camera", { force: true, refreshStream: true });
                 }
             },
             { initialRun: false }
         );
-        this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
+        this.store.env.bus.addEventListener("RTC:PLAY_MEDIA", () => {
             const channel = this.localChannel;
             if (!channel) {
                 return;
@@ -1662,7 +1650,7 @@ export class Rtc extends Record {
                     if (value === this.localSession.is_deaf) {
                         break;
                     }
-                    value ? promises.push(this.deafen()) : promises.push(this.undeafen());
+                    promises.push(value ? this.deafen() : this.undeafen());
                     break;
                 case "raisingHand":
                     if (value === Boolean(this.localSession.raisingHand)) {
@@ -2876,7 +2864,7 @@ export class Rtc extends Record {
     /**
      * @param {import("models").RtcSession} session
      * @param {Object} [param1]
-     * @param {import("@mail/discuss/call/common/rtc_service").VideoType} [param1.type]
+     * @param {import("@mail/discuss/call/common/rtc_model").VideoType} [param1.type]
      * @param {boolean} [param1.cleanup] when removing streams from the local session, we may still want to keep
      * them alive, set to false to prevent the streams from being closed.
      */
@@ -3006,136 +2994,3 @@ export class Rtc extends Record {
 }
 
 Rtc.register();
-
-export const rtcService = {
-    dependencies: ["mail.store"],
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    start(env, services) {
-        const store = services["mail.store"];
-        const rtc = store.rtc;
-        rtc.pttExtService = usePlugin(PttExtensionPlugin);
-        usePlugin(CallInvitationsPlugin);
-        rtc.pip = usePlugin(PipPlugin);
-        rtc.onChange(
-            () => [rtc.pip.isActive()],
-            function onChangePipMode(isPipMode) {
-                if (!isPipMode) {
-                    if (rtc.viewToRestore !== VIEW_TO_RESTORE.NONE && rtc.channel) {
-                        rtc.enterFullscreen();
-                    }
-                    rtc.viewToRestore = VIEW_TO_RESTORE.NONE;
-                    rtc.channel?.openChatWindow();
-                }
-                rtc.isPipMode = isPipMode;
-                rtc._postToTabs({
-                    type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
-                    changes: { isPipMode },
-                });
-            },
-            { immediate: true, initialRun: false }
-        );
-        rtc.onChange(
-            () => [store.meetingViewOpened],
-            function onChangeMeetingViewOpened(meetingViewOpened) {
-                if (!meetingViewOpened) {
-                    rtc.channel?.resetCallFocus();
-                }
-            },
-            { immediate: true, initialRun: false }
-        );
-        rtc.dialog = usePlugin(DialogPlugin);
-        rtc.fullscreen = usePlugin(MailFullscreenPlugin);
-        rtc.onChange(
-            () => [rtc.fullscreen.id()],
-            function onChangeFullscreen(fullscreenId) {
-                const wasFullscreen = rtc.isFullscreen;
-                rtc.isFullscreen = fullscreenId === CALL_FULLSCREEN_ID;
-                if (
-                    rtc.screenTrack &&
-                    rtc.displaySurface !== "browser" &&
-                    fullscreenId === CALL_FULLSCREEN_ID
-                ) {
-                    rtc.setScreenTrackPaused(true);
-                } else if (!rtc.isFullscreen) {
-                    if (wasFullscreen && rtc.screenTrack) {
-                        rtc.setScreenTrackPaused(false);
-                    }
-                }
-            },
-            { immediate: true, initialRun: false }
-        );
-        rtc.mediaPermissionsPromise = Promise.all([
-            window.navigator.permissions
-                ?.query({ name: "microphone" })
-                .then((status) => {
-                    rtc.microphonePermission = status.state;
-                    status.onchange = () => (rtc.microphonePermission = status.state);
-                })
-                .catch(() => {}),
-            window.navigator.permissions
-                ?.query({ name: "camera" })
-                .then((status) => {
-                    rtc.cameraPermission = status.state;
-                    status.onchange = () => (rtc.cameraPermission = status.state);
-                })
-                .catch(() => {}),
-        ]);
-        rtc.p2pService = usePlugin(DiscussP2PPlugin).p2p;
-        rtc.p2pService.acceptOffer = async (id, sequence) => {
-            const session = await store["discuss.channel.rtc.session"].getWhenReady(Number(id));
-            /**
-             * We only accept offers for new connections (higher sequence),
-             * or offers that renegotiate an existing connection (same sequence).
-             */
-            return sequence >= session?.sequence;
-        };
-        const bus = usePlugin(BusPlugin);
-        bus.subscribe("discuss.channel.rtc.session/sfu_hot_swap", async ({ serverInfo }) => {
-            if (!rtc.localSession) {
-                return;
-            }
-            if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
-                // we clear peers as inbound p2p connections may still be active
-                rtc.p2pService.removeALlPeers();
-                // no reason to swap if the server is the same, if at some point we want to force a swap
-                // there should be an explicit flag in the event payload.
-                return;
-            }
-            rtc.serverInfo = serverInfo;
-            await rtc._initConnection();
-        });
-        bus.subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
-            if (rtc.localSession?.id === sessionId) {
-                rtc.notifyServerDisconnect();
-                rtc.endCall();
-            }
-        });
-        bus.subscribe("discuss.channel.rtc.session/update_and_broadcast", (payload) => {
-            const { store_data, channelId } = payload;
-            /**
-             * If this event comes from the channel of the current call, information is shared in real time
-             * through the peer to peer connection. So we do not use this less accurate broadcast.
-             */
-            if (channelId !== rtc.channel?.id) {
-                rtc.store.insert(store_data);
-            }
-        });
-        /**
-         * Attempts to play RTC medias when a user shows signs of presence (interaction with the page) as
-         * they cannot be played on windows that have not been interacted with.
-         */
-        usePlugin(PresencePlugin).bus.addEventListener(
-            "presence",
-            () => {
-                env.bus.trigger("RTC-SERVICE:PLAY_MEDIA");
-            },
-            { once: true }
-        );
-        return rtc;
-    },
-};
-
-registry.category("services").add("discuss.rtc", rtcService);

@@ -193,9 +193,9 @@ export class RtcSession extends Record {
     /** @type {Date|undefined} */
     raisingHand;
     videoComponentCount = 0;
-    /** @type {Map<import("@mail/discuss/call/common/rtc_service").VideoType, MediaStream>} */
+    /** @type {Map<import("@mail/discuss/call/common/rtc_model").VideoType, MediaStream>} */
     videoStreams = fields.Attr(new Map(), { asProxy: true });
-    /** @type {import("@mail/discuss/call/common/rtc_service").VideoType} */
+    /** @type {import("@mail/discuss/call/common/rtc_model").VideoType} */
     mainVideoStreamType;
     /**
      * Represents the sequence of the last valid connection with that session. This can be used to
@@ -310,7 +310,7 @@ export class RtcSession extends Record {
     }
 
     /**
-     * @param {import("@mail/discuss/call/common/rtc_service").StreamType} type
+     * @param {import("@mail/discuss/call/common/rtc_model").StreamType} type
      * @param {boolean} state
      */
     updateStreamState(type, state) {

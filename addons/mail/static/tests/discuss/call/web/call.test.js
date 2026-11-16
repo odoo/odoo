@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { Settings } from "@mail/core/common/settings_model";
 import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
-import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
+import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, test, waitFor, waitForNone } from "@odoo/hoot";

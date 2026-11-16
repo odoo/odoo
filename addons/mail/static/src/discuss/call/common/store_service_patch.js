@@ -1,8 +1,12 @@
 import { fields } from "@mail/model/export";
 import { Store } from "@mail/core/common/store_plugin";
 import { router } from "@web/core/browser/router";
+import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 import { patch } from "@web/core/utils/patch";
+
+const { DateTime } = luxon;
 
 /**
  * Shareable meeting link currently mirrored in the address bar, or `undefined` when not in the
@@ -117,6 +121,41 @@ const StorePatch = {
         } else {
             return m2HasRtc - m1HasRtc;
         }
+    },
+    async requestStartMeeting() {
+        if (this.rtc.channel) {
+            const hasConfirmed = await this.rtc.askCallSwitchConfirmation({
+                confirmIcon: "videocam",
+                confirmLabel: _t("Start Meeting"),
+                description: _t(
+                    "You will leave the ongoing call and automatically join the new meeting."
+                ),
+                message: _t("Start a new Meeting?"),
+                title: _t("New Meeting Confirmation"),
+            });
+            if (!hasConfirmed) {
+                return;
+            }
+        }
+        await this.startMeeting();
+    },
+    async startMeeting() {
+        const localizedDatetime = this.store.self?.tz
+            ? DateTime.now().setZone(this.store.self?.tz)
+            : DateTime.now().toLocal();
+        const formatDate = localizedDatetime.toLocaleString(
+            { month: "short", day: "numeric" },
+            { locale: user.lang }
+        );
+        /** @type {import("models").DiscussChannel} */
+        const channel = await this.createGroupChat({
+            name: _t("Meeting, %(date)s", { date: formatDate }),
+            default_display_mode: "video_full_screen",
+            users_to: [this.self_user.id],
+        });
+        await this.chatHub.initPromise;
+        channel.chatWindow?.update({ autofocus: 0 });
+        await this.rtc.startMeetingCall(channel, { fullscreen: true });
     },
 };
 patch(Store.prototype, StorePatch);

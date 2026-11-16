@@ -23,6 +23,6 @@ import { session } from "@web/session";
         name: "Odoo livechat",
     });
     env.rootId = root.getAttribute("id");
-    env.services["discuss.rtc"].rootEl = target;
+    env.services["mail.store"].rtc.rootEl = target;
     odoo.isReady = true;
 })();

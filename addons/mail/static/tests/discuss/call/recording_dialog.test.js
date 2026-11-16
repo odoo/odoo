@@ -9,7 +9,7 @@ describe.current.tags("desktop");
 defineMailModels();
 
 function configureRecording() {
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.can_record_audio = true;
     rtc.can_record_transcription = true;
     rtc.can_record_video = true;
@@ -86,7 +86,7 @@ test("start is disabled without a selected output", async () => {
 
 test("audio-only permission can stop a legacy cycle but cannot start one", async () => {
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.can_record_audio = true;
 
     expect(rtc.canRecord()).toBe(false);
