@@ -1669,6 +1669,12 @@ class AccountEdiCommon(models.AbstractModel):
                 continue
 
             target_tax_amount_currency = taxes_to_tax_amount_currency[taxes]
+            delta_tax_amount_currency = target_tax_amount_currency - values['tax_amount_currency']
+            if currency.is_zero(delta_tax_amount_currency):
+                continue
+
+            # Keep the computed tax contributions, especially negative allowances.
+            # Only the rounding difference with the XML needs to be distributed.
             target_factors = [
                 {
                     'factor': tax_data['raw_tax_amount_currency'],
@@ -1679,12 +1685,12 @@ class AccountEdiCommon(models.AbstractModel):
             ]
             amounts_to_distribute = AccountTax._distribute_delta_amount_smoothly(
                 precision_digits=currency.decimal_places,
-                delta_amount=target_tax_amount_currency,
+                delta_amount=delta_tax_amount_currency,
                 target_factors=target_factors,
             )
             for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                 tax_data = target_factor['tax_data']
-                tax_data['tax_amount_currency'] = amount_to_distribute
+                tax_data['tax_amount_currency'] += amount_to_distribute
 
         AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, invoice.company_id, include_caba_tags=invoice.always_tax_exigible)
         tax_results = AccountTax._prepare_tax_lines(base_lines, invoice.company_id, tax_lines=tax_lines)

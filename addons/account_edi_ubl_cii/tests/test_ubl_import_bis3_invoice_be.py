@@ -9,6 +9,26 @@ from lxml import etree
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
+    def test_import_tax_split_allowance(self):
+        service_tax = self.percent_tax(20, type_tax_use='purchase', sequence=1)
+        goods_tax = service_tax.copy({'name': 'Goods 20%', 'sequence': 2})
+        # Emulate predictive tax matching, which is provided by account_accountant.
+        # Document allowances/charges still use the regular fallback tax search.
+        def predict_goods_tax(tax_model, tax_values):
+            if 'Tax split goods' in tax_values.get('invoice_predictive', {}).get('name', ''):
+                return {'criteria': [{'domain': [('id', '=', goods_tax.id)]}]}
+
+        self.patch(self.env.registry['account.tax'], '_import_retrieve_tax_from_invoice_predictive', predict_goods_tax)
+        invoice = self._import_invoice_as_attachment_on(test_name='test_import_tax_split_allowance')
+        goods_line = invoice.invoice_line_ids.filtered(lambda line: 'Tax split goods' in line.name)
+        self.assertEqual(goods_line.tax_ids, goods_tax)
+        self.assertEqual((invoice.invoice_line_ids - goods_line).tax_ids, service_tax)
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 35.79,
+            'amount_tax': 7.16,
+            'amount_total': 42.95,
+        }])
+
     @classmethod
     def subfolders(cls):
         subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
