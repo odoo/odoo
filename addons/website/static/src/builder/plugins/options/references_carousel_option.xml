@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ReferencesCarouselOption">
+    <BuilderRow label.translate="Reference">
+        <BuilderButton action="'addItem'" actionParam="'.s_references_carousel_item:last-child'" type="'success'" preview="false">Add Reference</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Title">
+        <BuilderButtonGroup applyTo="'.s_references_carousel_title'">
+            <t t-set="left">Left</t>
+            <t t-set="right">Right</t>
+            <BuilderButton label.translate="Top" classAction="'col-12 text-center mb-4'"/>
+            <BuilderButton label="this.env.langDir.content === 'ltr' ? left : right"
+                classAction="'col-12 col-lg-3 text-center text-lg-start mb-4 mb-lg-0 pe-lg-4'"/>
+            <BuilderButton label.translate="None"
+                title.translate="No title"
+                classAction="'d-none'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <t t-call="website.MarqueeOptions" prefix="'s_references_carousel'"/>
+    <BuilderRow label.translate="Logo Size">
+        <BuilderRange styleAction="'--references-carousel-logo-height'"
+            min="24"
+            max="120"
+            step="8"
+            unit="'px'"
+            withNumberInput="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Gap">
+        <BuilderRange styleAction="'--references-carousel-gap'"
+            min="0"
+            max="64"
+            step="4"
+            unit="'px'"
+            withNumberInput="true"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <references_carousel_option
+            template="website.ReferencesCarouselOption"
+            selector="section.s_references_carousel"/>
+        <website_background_option
+            selector=".s_references_carousel_item"
+            title="Reference"
+            props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
+    </xpath>
+    <!-- Logos are sized by the "Logo Size" option. -->
+    <xpath expr="//image_tool_option[@selector='img']" position="after">
+        <image_tool_option selector=".s_references_carousel_item img" props='{ "withSize": false }'/>
+    </xpath>
+</t>
+
+</templates>

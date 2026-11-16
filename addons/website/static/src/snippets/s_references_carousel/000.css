@@ -1,0 +1,67 @@
+.s_references_carousel {
+    /* Defaults of the "Logo Size" and "Gap" options, which set them inline. */
+    --references-carousel-logo-height: 72px;
+    --references-carousel-gap: 32px;
+    --references-carousel-cell-padding: calc(var(--references-carousel-logo-height) / 6);
+
+    /* Animation options, read by website/static/src/interactions/marquee.css */
+    &.s_references_carousel_direction_right {
+        --marquee-animation: o-marquee-scroll-right;
+    }
+    &.s_references_carousel_direction_none {
+        --marquee-animation: none;
+    }
+    &.s_references_carousel_hover_pause {
+        --marquee-hover-play-state: paused;
+    }
+    &.s_references_carousel_hover_slow {
+        --marquee-hover-play-state: running;
+        --marquee-animation-hover-multiplier: 2;
+    }
+    &.s_references_carousel_hover_direction {
+        --marquee-hover-play-state: paused, running;
+    }
+    &.s_references_carousel_parallax {
+        --marquee-scroll-play-state: paused;
+    }
+
+    /* Clips the logos so that they do not run under a title set aside: the
+       parallax translates their container, which cannot clip itself. */
+    .s_references_carousel_marquee_wrapper {
+        overflow-x: clip;
+        /* Instead of the width of the logos, which would push the strip below
+           a title set aside. */
+        min-width: 50%;
+    }
+
+    .s_references_carousel_marquee_item {
+        gap: var(--references-carousel-gap);
+        /* Part of the strip width, so that the -100% translation also covers
+           the gap before the next clone. */
+        padding-inline-end: var(--references-carousel-gap);
+    }
+
+    .s_references_carousel_item {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        /* The width follows the logo, so that the space between logos stays
+           even. The padding keeps a logo off the cell edges without shrinking
+           it. */
+        height: calc(var(--references-carousel-logo-height) + 2 * var(--references-carousel-cell-padding));
+        padding: var(--references-carousel-cell-padding);
+        /* Keeps a transformed (e.g. rotated) logo inside its cell. */
+        overflow: hidden;
+
+        & img {
+            /* Caps only, as a cropped or upscaled logo is a broken logo. They
+               are absolute: a percentage of a cell sized by its content would
+               be circular. */
+            max-width: calc(var(--references-carousel-logo-height) * 2.5);
+            max-height: var(--references-carousel-logo-height);
+            /* Keeps the ratio when the image options set an explicit width. */
+            object-fit: contain;
+        }
+    }
+}
