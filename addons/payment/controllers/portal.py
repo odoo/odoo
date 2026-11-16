@@ -123,8 +123,11 @@ class PaymentPortal(portal.CustomerPortal):
         }
 
         # Prepare the payment form values
+        payment_options_context = self._get_payment_options_context(
+            company_id, partner_sudo.id, amount, currency.id
+        )
         payment_form_values = self._prepare_payment_form_values(
-            company_id, partner_sudo.id, amount, currency_id=currency.id, **kwargs
+            **(kwargs | payment_options_context)
         )
 
         # Prepare the payment context
@@ -164,13 +167,11 @@ class PaymentPortal(portal.CustomerPortal):
         partner_sudo = self.env.user.partner_id  # env.user is always sudoed
 
         # Prepare the payment form values
+        payment_options_context = self._get_payment_options_context(
+            self.env.company.id, partner_sudo.id, 0.0, None, is_validation=True
+        )
         payment_form_values = self._prepare_payment_form_values(
-            self.env.company.id,
-            partner_sudo.id,
-            0.0,
-            force_tokenization=True,
-            is_validation=True,
-            **kwargs,
+            **(kwargs | payment_options_context)
         )
         payment_form_values.update({
             "mode": "validation",
@@ -195,6 +196,34 @@ class PaymentPortal(portal.CustomerPortal):
         }
         return request.render("payment.payment_methods", rendering_context)
 
+    def _get_payment_options_context(
+        self, company_id, partner_id, amount, currency_id, is_validation=False
+    ):
+        """Return the payment context from which the available payment options are computed.
+
+        The `/payment/pay` and `/my/payment_method` pages and the `/payment/transaction` route use
+        this context, so the transaction route accepts the same payment options that the pages show.
+        The document-specific builders start from this context. Override this method to add a filter
+        to all the payment options.
+
+        :param int company_id: The company to which providers must belong, as a `res.company` id
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param float amount: The amount to pay
+        :param int|None currency_id: The payment currency, as a `res.currency` id
+        :param bool is_validation: Whether the operation is a validation
+        :return: The kwargs of `_get_available_payment_options`
+        :rtype: dict
+        """
+        context = {
+            "company_id": company_id,
+            "partner_id": partner_id,
+            "amount": amount,
+            "currency_id": currency_id,
+        }
+        if is_validation:
+            context.update(force_tokenization=True, is_validation=True)
+        return context
+
     def _prepare_payment_form_values(
         self,
         company_id,
@@ -217,6 +246,52 @@ class PaymentPortal(portal.CustomerPortal):
         :param bool is_validation: Whether the operation is a validation
         :param dict kwargs: Forwarded to underlying methods
         :return: The prepared payment form values
+        :rtype: dict
+        """
+        payment_options = self._get_available_payment_options(
+            company_id,
+            partner_id,
+            amount,
+            currency_id=currency_id,
+            force_tokenization=force_tokenization,
+            is_express_checkout=is_express_checkout,
+            is_validation=is_validation,
+            **kwargs,
+        )
+        payment_options["payment_methods_sudo"] = payment_options[
+            "payment_methods_sudo"
+        ]._deduplicate_by_code(report=payment_options["availability_report"])
+        show_tokenize_input_mapping = self._compute_show_tokenize_input_mapping(
+            payment_options["providers_sudo"], **kwargs
+        )
+        return {**payment_options, "show_tokenize_input_mapping": show_tokenize_input_mapping}
+
+    def _get_available_payment_options(
+        self,
+        company_id,
+        partner_id,
+        amount,
+        *,
+        currency_id=None,
+        force_tokenization=False,
+        is_express_checkout=False,
+        is_validation=False,
+        **kwargs,
+    ):
+        """Find the payment providers, methods, and tokens available for the payment context.
+
+        The payment form shows these options, and the transaction routes accept only these options.
+
+        :param int company_id: The company to which providers must belong, as a `res.company` id
+        :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param float amount: The amount to pay (`0` for validation transactions)
+        :param int currency_id: The payment currency, as a `res.currency` id
+        :param bool force_tokenization: Whether providers and methods must allow tokenization
+        :param bool is_express_checkout: Whether providers and methods must allow express checkout
+        :param bool is_validation: Whether the operation is a validation
+        :param dict kwargs: Forwarded to underlying methods
+        :return: The available providers, payment methods (not deduplicated by code), and tokens,
+                 and the availability report
         :rtype: dict
         """
         availability_report = {}  # The report in which availability statuses are to be logged
@@ -247,7 +322,7 @@ class PaymentPortal(portal.CustomerPortal):
             is_express_checkout=is_express_checkout,
             report=availability_report,
             **kwargs,
-        )._deduplicate_by_code(report=availability_report)
+        )
 
         # Find available tokens
         if not is_validation:  # Payment flow
@@ -257,18 +332,46 @@ class PaymentPortal(portal.CustomerPortal):
             partner_sudo = self.env["res.partner"].sudo().browse(partner_id)
             tokens_sudo = partner_sudo._get_payment_tokens(**kwargs)
 
-        # Determine tokenization input mapping
-        show_tokenize_input_mapping = self._compute_show_tokenize_input_mapping(
-            providers_sudo, **kwargs
-        )
-
         return {
             "providers_sudo": providers_sudo,
             "payment_methods_sudo": payment_methods_sudo,
             "tokens_sudo": tokens_sudo,
-            "show_tokenize_input_mapping": show_tokenize_input_mapping,
             "availability_report": availability_report,
         }
+
+    def _check_payment_option(
+        self,
+        payment_options_context,
+        *,
+        provider_id=None,
+        payment_method_id=None,
+        token_id=None,
+        flow=None,
+        **_kwargs,
+    ):
+        """Check that the payment option of the customer is one of the available payment options.
+
+        :param dict payment_options_context: The kwargs of `_get_available_payment_options`
+        :param int provider_id: The provider of the payment option, as a `payment.provider` id
+        :param int|None payment_method_id: The payment method, if any, as a `payment.method` id
+        :param int|None token_id: The token, if any, as a `payment.token` id
+        :param str flow: The online payment flow of the transaction: redirect, direct or token
+        :param dict _kwargs: The other transaction route values; not used
+        :return: None
+        :raise ValidationError: If the payment option is not available.
+        """
+        payment_options = self._get_available_payment_options(**payment_options_context)
+        if flow in ("direct", "redirect"):
+            is_available = (
+                provider_id in payment_options["providers_sudo"].ids
+                and payment_method_id in payment_options["payment_methods_sudo"].ids
+            )
+        elif flow == "token":
+            is_available = token_id in payment_options["tokens_sudo"].ids
+        else:
+            is_available = False
+        if not is_available:
+            raise ValidationError(self.env._("This payment option is not available."))
 
     @staticmethod
     def _compute_show_tokenize_input_mapping(providers_sudo, **kwargs):
@@ -319,6 +422,20 @@ class PaymentPortal(portal.CustomerPortal):
             raise Forbidden
 
         self._validate_transaction_kwargs(kwargs, additional_allowed_keys=("reference_prefix",))
+
+        is_validation = amount is None and currency_id is None
+        kwargs["is_validation"] = is_validation  # Do not trust the value of the client
+        provider_sudo = self.env["payment.provider"].sudo().browse(kwargs.get("provider_id"))
+        payment_options_context = self._get_payment_options_context(
+            # The access token does not bind the company: `/payment/pay` takes it from the URL
+            provider_sudo.exists().company_id.id,
+            partner_id,
+            amount or 0.0,
+            currency_id,
+            is_validation=is_validation,
+        )
+        self._check_payment_option(payment_options_context, **kwargs)
+
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
@@ -396,6 +513,8 @@ class PaymentPortal(portal.CustomerPortal):
             partner_sudo = self.env["res.partner"].sudo().browse(partner_id)
             if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
                 raise AccessError(self.env._("You do not have access to this payment token."))
+            if token_sudo.provider_id != provider_sudo:
+                raise ValidationError(self.env._("This payment token is not available."))
 
             payment_method_id = token_sudo.payment_method_id.id
 

@@ -5,6 +5,6 @@ from odoo.addons.account_payment.controllers.portal import PortalAccount as Acco
 
 class Portal(AccountPaymentPortal):
 
-    def _get_common_page_view_values(self, *args, **kwargs):
-        """Override of `account_payment` to inject is_invoice=True in the kwargs."""
-        return super()._get_common_page_view_values(*args, is_invoice=True, **kwargs)
+    def _get_invoice_payment_options_context(self, *args, **kwargs):
+        """Override of `account_payment` to exclude pay_on_invoice providers for invoices."""
+        return {**super()._get_invoice_payment_options_context(*args, **kwargs), 'is_invoice': True}

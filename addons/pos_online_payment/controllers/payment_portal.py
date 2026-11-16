@@ -267,6 +267,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         else:
             if kwargs.get('provider_id') not in providers_sudo.ids:
                 raise UserError(_("The payment provider is invalid."))
+            payment_methods_sudo = providers_sudo._find_available_payment_methods(
+                partner_sudo.id, currency_id=currency_id.id
+            )
+            if kwargs.get('payment_method_id') not in payment_methods_sudo.ids:
+                raise UserError(self.env._("The payment method is invalid."))
 
         kwargs['reference_prefix'] = None  # Computed with pos_order_id
         kwargs.pop('pos_order_id', None) # _create_transaction kwargs keys must be different than custom_create_values keys

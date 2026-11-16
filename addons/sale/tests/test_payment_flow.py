@@ -134,10 +134,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         amount."""
         self.sale_order.prepayment_percent = 0.5  # This should not impact the 'full amount' option.
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
-                self.sale_order,
-                is_down_payment=False,
-            )
+            tx_values = CustomerPortal()._get_payment_values(self.sale_order, is_down_payment=False)
         self.assertEqual(tx_values["amount"], self.sale_order.amount_total)
 
     def test_confirmed_transactions_confirms_so_with_multiple_transaction(self):
@@ -546,6 +543,27 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         }
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    def _order_transaction(self, payment_method_id):
+        """Make a direct payment of `self.sale_order` through `/my/orders/<id>/transaction`."""
+        route_values = self._prepare_transaction_values(payment_method_id, None, "direct")
+        for key in ("currency_id", "partner_id", "reference_prefix"):
+            route_values.pop(key)  # The route takes these values from the order
+        route_values["access_token"] = self.sale_order._portal_ensure_token()
+        return self._portal_transaction(
+            tx_route=f"/my/orders/{self.sale_order.id}/transaction", **route_values
+        )
+
+    def test_order_transaction_accepts_available_payment_option(self):
+        with mute_logger("odoo.addons.payment.models.payment_transaction"):
+            processing_values = self._order_transaction(self.payment_method_id)
+        self.assertTrue(self._get_tx(processing_values["reference"]))
+
+    @mute_logger("odoo.http")
+    def test_order_transaction_rejects_unavailable_payment_method(self):
+        self.payment_method.active = False
+        with self.assertRaisesRegex(JsonRpcException, "ValidationError"):
+            self._order_transaction(self.payment_method_id)
 
     def test_partial_payment_confirm_order(self):
         """
