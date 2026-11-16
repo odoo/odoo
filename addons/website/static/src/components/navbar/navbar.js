@@ -101,4 +101,16 @@ patch(NavBar.prototype, {
         }
         return super.onNavBarDropdownItemSelection(menu);
     },
+
+    /**
+     * @override
+     */
+    async _onMenuClicked(menu) {
+        const websiteMenu = this.websiteCustomMenus.get(menu.xmlid);
+        if (websiteMenu) {
+            this._closeAppMenuSidebar();
+            return this.websiteCustomMenus.open(menu);
+        }
+        return super._onMenuClicked(menu);
+    },
 });
