@@ -12,6 +12,7 @@ export class SelectionPopup extends Component {
         close: t.function(),
         size: t.string().optional("lg"),
         bodyClass: t.string().optional(""),
+        displayType: t.selection(["list", "pills"]).optional("list"),
     });
 
     /**
@@ -20,6 +21,7 @@ export class SelectionPopup extends Component {
      *
      * @param {Object} props
      * @param {String} [props.title='Select']
+     * @param {'list'|'pills'} [props.displayType='list']
      * @param {Array<Selection>} [props.list=[]]
      *      Selection {
      *          id: integer,
@@ -42,5 +44,13 @@ export class SelectionPopup extends Component {
     confirm() {
         this.props.getPayload(this.computePayload());
         this.props.close();
+    }
+    getItemBtnClass(item) {
+        return {
+            "selected active": item.isSelected,
+            "w-100 p-3 justify-content-between": this.props.displayType === "list",
+            "btn-secondary rounded-2 px-4 py-3 gap-2 justify-content-center fs-2":
+                this.props.displayType === "pills",
+        };
     }
 }

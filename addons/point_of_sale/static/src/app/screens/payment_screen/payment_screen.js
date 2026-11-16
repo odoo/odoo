@@ -14,6 +14,8 @@ import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -453,6 +455,53 @@ export class PaymentScreen extends Component {
 
     get orderTotalDue() {
         return this.currentOrder.paymentAmountInCurrency;
+    }
+
+    hasPaymentForCurrency(paymentMethod, currency) {
+        return (
+            this.currentOrder.orderCurrency === currency &&
+            this.currentOrder.payment_ids.some(
+                (payment) => payment.payment_method_id === paymentMethod
+            )
+        );
+    }
+
+    async onClickPaymentMethod(paymentMethod) {
+        const availableCurrencies = paymentMethod.availableCurrencies;
+        const orderCurrency = this.currentOrder.orderCurrency;
+        if (
+            this.paymentLines.length &&
+            !availableCurrencies.some((currency) => currency.id === orderCurrency.id)
+        ) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Oh snap !"),
+                body: "Only one currency by order is allowed",
+            });
+            return;
+        }
+        if (
+            this.paymentLines.length ||
+            !this.ui.isSmall || // Desktop provides inline buttons for currency selection.
+            availableCurrencies.length === 1
+        ) {
+            return this.addNewPaymentLine(paymentMethod, { currency: orderCurrency });
+        }
+
+        const currencyOptions = availableCurrencies.map((currency) => ({
+            id: currency.id,
+            label: currency.name,
+            item: currency,
+        }));
+        const selectedCurrency = await makeAwaitable(this.dialog, SelectionPopup, {
+            title: _t("Select currency"),
+            list: currencyOptions,
+            displayType: "pills",
+            size: "md",
+            bodyClass: "pb-4",
+        });
+        if (selectedCurrency) {
+            return this.addNewPaymentLine(paymentMethod, { currency: selectedCurrency });
+        }
     }
 }
 
