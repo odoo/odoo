@@ -340,6 +340,40 @@ test("Search does not fetch when term is more specific after empty result", asyn
     await waitFor(".o-discuss-ChannelMember:text('Bob'):count(1)");
 });
 
+test("Search stops loading when term is skipped during a fetch", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Alice" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    let blockedFetchMembers;
+    listenStoreFetch("/discuss/channel/members", {
+        onRpc: () => blockedFetchMembers?.promise,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitStoreFetch("/discuss/channel/members");
+    await waitFor(".o-discuss-ChannelMember:count(2)");
+    const searchInput = ".o-discuss-ChannelMemberList-search .o-mail-SearchInput";
+    blockedFetchMembers = Promise.withResolvers();
+    await insertText("input[placeholder='Search members']", "z");
+    await waitFor(`${searchInput}.o-searching:count(1)`);
+    blockedFetchMembers.resolve();
+    await waitStoreFetch("/discuss/channel/members"); // no member found
+    await waitFor(`${searchInput}:not(.o-searching):count(1)`);
+    blockedFetchMembers = Promise.withResolvers();
+    await insertText("input[placeholder='Search members']", "Alice", { replace: true });
+    await waitFor(".o-discuss-ChannelMember:count(1)");
+    await waitFor(`${searchInput}.o-searching:count(1)`);
+    await insertText("input[placeholder='Search members']", "zz", { replace: true });
+    await waitFor(`${searchInput}:not(.o-searching):count(1)`);
+});
+
 test("Shows a hint to narrow member search when there's more than 100 matches", async () => {
     const pyEnv = await startServer();
     const channel_member_ids = [Command.create({ partner_id: serverState.partnerId })];
