@@ -31,8 +31,16 @@ export class PosOrderline extends PosOrderlineAccounting {
 
     constructAttributeString() {
         let attributeString = "";
+        // Values auto-selected because every line has a single value were never
+        // a choice: name the line like product display_name, without them.
+        const hasChosenValue = this.attribute_value_ids.some(
+            (value) =>
+                value.is_custom ||
+                value.attribute_id.display_type === "multi" ||
+                value.attribute_line_id?.product_template_value_ids.length !== 1
+        );
 
-        if (this.attribute_value_ids.length > 0) {
+        if (hasChosenValue) {
             for (const value of this.attribute_value_ids) {
                 if (value.is_custom) {
                     const customValue = this.custom_attribute_value_ids.find(
