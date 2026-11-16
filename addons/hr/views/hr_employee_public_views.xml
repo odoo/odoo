@@ -33,7 +33,7 @@
             <field name="path">org-chart-public</field>
             <field name="view_mode">hierarchy,kanban,list,form,graph,pivot</field>
             <field name="mobile_view_mode">hierarchy</field>
-            <field name="domain">[('parent_id', '=', context.get('hierarchy_parent_id'))] if context.get('hierarchy_parent_id') else []</field>
+            <field name="domain">['|', ('id', '=', context.get('hierarchy_parent_id')), ('parent_id', '=', context.get('hierarchy_parent_id'))] if context.get('hierarchy_parent_id') else []</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="help" type="html">

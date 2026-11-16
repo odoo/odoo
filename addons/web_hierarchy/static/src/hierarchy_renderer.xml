@@ -2,35 +2,56 @@
 <templates>
 
     <t t-name="web_hierarchy.HierarchyRenderer">
-        <div class="o_hierarchy_renderer o_renderer w-100 d-flex justify-content-center" t-ref="this.rendererRef">
-            <div class="o_hierarchy_container d-flex flex-column w-100 h-100 p-2">
-                <div t-foreach="this.rows()" t-as="row" t-key="row_index">
-                    <div
-                        t-att-data-row-id="row_index"
-                        class="o_hierarchy_row d-flex justify-content-center align-items-stretch flex-wrap"
-                    >
-                        <div
-                            t-foreach="row"
-                            t-as="record"
-                            t-key="record.resId"
-                            class="o_hierarchy_node_container m-2"
-                        >
-                            <HierarchyCard
-                                classNames="'o_hierarchy_node'"
-                                archInfo="this.props.archInfo.cardArchInfo"
-                                openRecord="this.props.openRecord"
-                                record="record"
-                                showAncestorBtn="row_first"
-                                showChildrenBtn="row_last"
-                            />
-                        </div>
-                    </div>
-                    <div t-if="row_first and !row_last" class="position-relative">
-                        <div class="o_hierarchy_separator d-flex mt-4">
-                            <div class="o_hierarchy_line_part o_hierarchy_line_left"></div>
-                            <div class="o_hierarchy_line_part o_hierarchy_line_right"></div>
-                        </div>
-                    </div>
+        <div
+            class="o_hierarchy_renderer o_renderer flex-grow-1 position-relative overflow-hidden bg-100"
+            t-ref="this.editor"
+            t-att-style="this.editorStyle"
+        >
+            <svg class="o_hierarchy_edges" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    t-foreach="this.graph().edges"
+                    t-as="edge"
+                    t-key="edge.key"
+                    class="o_hierarchy_edge"
+                    t-att-data-edge="edge.key"
+                    t-att-d="this.getEdgePath(edge)"
+                    t-attf-stroke-width="calc({{ this.state.scale }} * var(--o-hierarchy-edge-width))"
+                    fill="transparent"
+                />
+            </svg>
+            <div
+                t-foreach="this.graph().nodes"
+                t-as="node"
+                t-key="node.record.resId"
+                class="o_hierarchy_node_container"
+                t-att-class="{ 'o_hierarchy_node_dragged': this.state.draggedId === node.record.resId }"
+                t-att-data-id="node.record.resId"
+                t-att-style="this.getNodeStyle(node.position)"
+                t-on-pointerdown="(ev) => this.startNodeDrag(ev, node.record.resId)"
+            >
+                <HierarchyCard
+                    classNames="'o_hierarchy_node'"
+                    archInfo="this.props.archInfo.cardArchInfo"
+                    openRecord="this.props.openRecord"
+                    record="node.record"
+                    showAncestorBtn="node.hasHiddenParent"
+                    showChildrenBtn="node.hasHiddenChildren"
+                />
+            </div>
+            <div class="o_hierarchy_controls d-flex align-items-center p-3 gap-2">
+                <div class="d-flex gap-1 p-1 bg-view border rounded-3 shadow-sm" role="group" aria-label="Zoom">
+                    <button class="btn btn-light" t-on-click="this.zoomOut" title="Zoom Out">
+                        <i class="oi" data-icon="remove" aria-hidden="true"/>
+                    </button>
+                    <button type="button" class="o_hierarchy_zoom_level btn btn-light px-0" title="Reset Zoom" t-on-click="() => this.zoom(1)">
+                        <t t-out="Math.round(100 * this.state.scale)"/>%
+                    </button>
+                    <button class="btn btn-light" t-on-click="this.zoomIn" title="Zoom In">
+                        <i class="oi" data-icon="add" aria-hidden="true"/>
+                    </button>
+                    <button class="btn btn-light" t-on-click="() => this.fitGraphToView()" title="Fit Graph to View">
+                        <i class="oi" data-icon="fullscreen" aria-hidden="true"/>
+                    </button>
                 </div>
             </div>
         </div>

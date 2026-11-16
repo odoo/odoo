@@ -69,6 +69,9 @@ export class HierarchyCard extends CardRenderer {
         return this._openHierarchyOf(id, displayName);
     }
 
+    /**
+     * Opens the hierarchy view on the record `resId` and its children.
+     */
     _openHierarchyOf(resId, name) {
         const { resModel, model: { parentFieldName }, context } = this.props.record;
         return this.action.doAction(
@@ -77,8 +80,8 @@ export class HierarchyCard extends CardRenderer {
                 name,
                 res_model: resModel,
                 views: this.env.config.views,
-                domain: [[parentFieldName, "=", resId]],
-                context: { ...context, hierarchy_parent_id: resId },
+                domain: ["|", ["id", "=", resId], [parentFieldName, "=", resId]],
+                context,
                 target: "current",
             },
             { viewType: "hierarchy" },

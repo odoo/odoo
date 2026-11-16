@@ -1,5 +1,5 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, describe, expect, test } from "@odoo/hoot";
+import { drag, queryAllTexts, queryOne, queryRect } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -15,19 +15,25 @@ import {
     onRpc,
     pagerNext,
     patchWithCleanup,
-    removeFacet,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
-import { hierarchyRead } from "./hierarchy_test_helpers";
+import { computeHierarchyLayout } from "@web_hierarchy/hierarchy_layout";
+
+const NODE = ".o_hierarchy_node";
+const NODE_CONTENT = ".o_hierarchy_node > .flex-fill";
 
 async function enableFilters(filterNames = []) {
     await toggleSearchBarMenu();
     for (const filter of filterNames) {
         await toggleMenuItem(filter);
     }
+}
+
+function getEdges() {
+    return [...document.querySelectorAll(".o_hierarchy_edge")].map((el) => el.dataset.edge);
 }
 
 class Employee extends models.Model {
@@ -40,7 +46,6 @@ class Employee extends models.Model {
         relation: "hr.employee",
         relation_field: "parent_id",
     });
-    avatar_128 = fields.Image();
 
     _records = [
         { id: 1, name: "Albert", parent_id: false, child_ids: [2, 3] },
@@ -75,86 +80,192 @@ class Employee extends models.Model {
             </form>
         `,
     };
-
-    hierarchy_read() {
-        return hierarchyRead.call(this, ...arguments);
-    }
 }
 
 defineModels([Employee]);
 
 describe.current.tags("desktop");
 
-test("load hierarchy view: a single root is unfolded", async () => {
-    onRpc("hierarchy_read", ({ kwargs }) => {
-        expect.step([kwargs.parent_field_name, kwargs.roots_only]);
+describe("layout", () => {
+    const size = () => ({ width: 100, height: 50 });
+
+    const tree = [
+        { id: 1, parentId: false },
+        { id: 2, parentId: 1 },
+        { id: 3, parentId: 1 },
+    ];
+
+    test("vertical: a child is placed in the row below its parent, the parent is centered", () => {
+        const { positions, edges } = computeHierarchyLayout(tree, size);
+        expect(edges).toEqual([
+            { source: 1, target: 2 },
+            { source: 1, target: 3 },
+        ]);
+        const [p1, p2, p3] = [1, 2, 3].map((id) => positions.get(id));
+        expect(p2.y).toBe(p3.y);
+        expect(p2.y).toBeGreaterThan(p1.y + 50);
+        expect(p3.x).toBeGreaterThan(p2.x + 100);
+        expect(p1.x).toBe((p2.x + p3.x) / 2);
+    });
+
+    test("horizontal: a child is placed in the column after its parent, the parent is centered", () => {
+        const { positions } = computeHierarchyLayout(tree, size, { direction: "horizontal" });
+        const [p1, p2, p3] = [1, 2, 3].map((id) => positions.get(id));
+        expect(p2.x).toBe(p3.x);
+        expect(p2.x).toBeGreaterThan(p1.x + 100);
+        expect(p3.y).toBeGreaterThan(p2.y + 50);
+        expect(p1.y).toBe((p2.y + p3.y) / 2);
+    });
+
+    test("a parent which is not displayed does not create a link", () => {
+        const { positions, edges } = computeHierarchyLayout(
+            [
+                { id: 2, parentId: 1 },
+                { id: 3, parentId: 1 },
+            ],
+            size
+        );
+        expect(edges).toEqual([]);
+        expect(positions.size).toBe(2);
+    });
+
+    test("cycles and self-parents do not loop", () => {
+        const { positions, edges } = computeHierarchyLayout(
+            [
+                { id: 1, parentId: 2 },
+                { id: 2, parentId: 1 },
+                { id: 3, parentId: 3 },
+            ],
+            size
+        );
+        expect(edges).toEqual([
+            { source: 2, target: 1 },
+            { source: 1, target: 2 },
+        ]);
+        expect(positions.size).toBe(3);
+    });
+
+    test("nodes never overlap", () => {
+        const nodes = [
+            { id: 1, parentId: false },
+            { id: 2, parentId: 1 },
+            { id: 3, parentId: false },
+            { id: 4, parentId: 3 },
+            { id: 5, parentId: 3 },
+            { id: 6, parentId: false },
+        ];
+        const getSize = (id) => ({ width: id === 3 ? 300 : 100, height: id === 3 ? 300 : 50 });
+        for (const direction of ["vertical", "horizontal"]) {
+            const { positions } = computeHierarchyLayout(nodes, getSize, { direction });
+            const boxes = nodes.map(({ id }) => {
+                const { x, y } = positions.get(id);
+                const { width, height } = getSize(id);
+                return { x1: x - width / 2, x2: x + width / 2, y1: y - height / 2, y2: y + height / 2 };
+            });
+            for (const [i, a] of boxes.entries()) {
+                for (const b of boxes.slice(i + 1)) {
+                    const overlap = a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
+                    expect(overlap).toBe(false);
+                }
+            }
+        }
+    });
+});
+
+test("display all the records of the domain, linked to their displayed parent", async () => {
+    onRpc("web_search_read", ({ kwargs }) => {
+        expect.step(kwargs.domain);
     });
     await mountView({
         type: "hierarchy",
         resModel: "hr.employee",
     });
 
-    expect.verifySteps([["parent_id", true]]);
-    expect(".o_hierarchy_view").toHaveCount(1);
-    expect(".o_hierarchy_button_add").toHaveCount(1);
+    expect.verifySteps([[]]);
     expect(".o_hierarchy_view .o_hierarchy_renderer").toHaveCount(1);
-    expect(".o_hierarchy_view .o_hierarchy_renderer > .o_hierarchy_container").toHaveCount(1);
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_separator").toHaveCount(1);
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > div").toHaveText("Albert", {
-        message: "the only root is displayed as the parent",
-    });
-    expect(queryAllTexts(".o_hierarchy_row:eq(1) .o_hierarchy_node > div")).toEqual([
+    expect(".o_hierarchy_button_add").toHaveCount(1);
+    expect(queryAllTexts(NODE_CONTENT)).toEqual([
+        "Albert",
         "Georges\nAlbert",
         "Josephine\nAlbert",
-    ]);
-    expect(".o_hierarchy_node > button").toHaveCount(1, {
-        message: "Albert has no parent (no ancestor button), Georges has no children",
-    });
-    expect(".o_hierarchy_row:eq(1) .o_hierarchy_node > button[title='Unfold']").toHaveText(
-        "1 Subordinates"
-    );
-});
-
-test("several roots are displayed without being unfolded", async () => {
-    Employee._records.push({ id: 5, name: "Zoe", parent_id: false, child_ids: [] });
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-    });
-
-    expect(".o_hierarchy_row").toHaveCount(1);
-    expect(".o_hierarchy_separator").toHaveCount(0);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["Albert", "Zoe"]);
-    expect(".o_hierarchy_node > button[title='Unfold']").toHaveCount(1);
-    expect(".o_hierarchy_node > button[title='Unfold']").toHaveText("2 Subordinates");
-    expect(".o_hierarchy_node > button[title='Show ancestor']").toHaveCount(0);
-});
-
-test("the domain of the action targets a node: it is displayed with its children", async () => {
-    Employee._records.push({ id: 5, name: "Lisa", parent_id: 3, child_ids: [] });
-    Employee._records.find((rec) => rec.id === 3).child_ids.push(5);
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-        domain: [["parent_id", "=", 3]],
-    });
-
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > div").toHaveText("Josephine\nAlbert");
-    expect(queryAllTexts(".o_hierarchy_row:eq(1) .o_hierarchy_node > div")).toEqual([
         "Louis\nJosephine",
-        "Lisa\nJosephine",
     ]);
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > button[title='Unfold']").toHaveCount(0, {
-        message: "the parent node can't be unfolded, its children are already displayed",
+    expect(getEdges()).toEqual(["1_2", "1_3", "3_4"]);
+    expect(`${NODE} button`).toHaveCount(0, {
+        message: "all the parents and children are displayed: nothing to unfold",
     });
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > button[title='Show ancestor']").toHaveText(
-        "Show manager"
-    );
+    expect(".o_hierarchy_controls .o_hierarchy_zoom_level").toHaveCount(1);
 });
 
-test("unfold opens the hierarchy of the record in a new action", async () => {
+// 1: Albert, 2: Georges, 3: Josephine, 4: Louis
+const nodeRect = (id) => queryRect(`.o_hierarchy_node_container[data-id='${id}']`);
+
+test("the nodes are laid out from top to bottom", async () => {
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+    expect(nodeRect(2).top).toBeGreaterThan(nodeRect(1).bottom);
+    expect(nodeRect(3).top).toBe(nodeRect(2).top);
+    expect(nodeRect(4).top).toBeGreaterThan(nodeRect(3).bottom);
+    expect(nodeRect(3).left).toBeGreaterThan(nodeRect(2).right);
+});
+
+test("a card can be moved with the mouse, without opening the record", async () => {
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        selectRecord: (resId) => expect.step(`open ${resId}`),
+    });
+    const edge = queryOne(".o_hierarchy_edge[data-edge='1_2']");
+    const initialPath = edge.getAttribute("d");
+    const initialRect = nodeRect(2);
+
+    const { drop } = await drag(".o_hierarchy_node_container[data-id='2'] .o_hierarchy_node");
+    await drop(".o_hierarchy_renderer", { position: { x: 5, y: 5 }, relative: true });
+    await animationFrame();
+    expect(nodeRect(2).top).not.toBe(initialRect.top);
+    expect(nodeRect(2).left).not.toBe(initialRect.left);
+    expect(edge.getAttribute("d")).not.toBe(initialPath, {
+        message: "the link follows the moved card",
+    });
+    expect(nodeRect(3).top).toBe(initialRect.top, { message: "the other cards do not move" });
+    expect.verifySteps([]);
+
+    await contains(".o_hierarchy_node_container[data-id='2'] .o_hierarchy_node").click();
+    expect.verifySteps(["open 2"]);
+});
+
+test("a search only displays the matching records", async () => {
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="no_josephine" domain="[['id', '!=', 3]]"/>
+                <filter name="find_louis" domain="[['id', '=', 4]]"/>
+            </search>
+        `,
+    });
+
+    await enableFilters(["no_josephine"]);
+    expect(queryAllTexts(NODE_CONTENT)).toEqual(["Albert", "Georges\nAlbert", "Louis\nJosephine"]);
+    expect(getEdges()).toEqual(["1_2"], {
+        message: "Louis is not linked: his manager is not displayed",
+    });
+    expect(`${NODE}:contains(Albert) button[title='Unfold']`).toHaveText("2 Subordinates", {
+        message: "Albert has a child which is not displayed",
+    });
+    expect(`${NODE}:contains(Louis) button[title='Show ancestor']`).toHaveText("Show manager");
+
+    await toggleMenuItem("no_josephine");
+    await toggleMenuItem("find_louis");
+    expect(queryAllTexts(NODE_CONTENT)).toEqual(["Louis\nJosephine"]);
+    expect(getEdges()).toEqual([]);
+});
+
+test("unfold opens the record and its children in a new action", async () => {
     mockService("action", {
         doAction(action, options) {
             expect.step({
@@ -168,32 +279,21 @@ test("unfold opens the hierarchy of the record in a new action", async () => {
     await mountView({
         type: "hierarchy",
         resModel: "hr.employee",
-        viewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="no_georges" domain="[['id', '!=', 2]]"/>
-            </search>
-        `,
+        domain: [["id", "in", [1, 3]]],
     });
-    await enableFilters(["no_georges"]);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual([
-        "Albert",
-        "Josephine\nAlbert",
-        "Louis\nJosephine",
-    ]);
 
-    await contains(".o_hierarchy_node:contains(Josephine) > button[title='Unfold']").click();
+    await contains(`${NODE}:contains(Josephine) button[title='Unfold']`).click();
     expect.verifySteps([
         {
             name: "Josephine",
             res_model: "hr.employee",
-            domain: [["parent_id", "=", 3]],
+            domain: ["|", ["id", "=", 3], ["parent_id", "=", 3]],
             viewType: "hierarchy",
         },
     ]);
 });
 
-test("show ancestor opens the hierarchy of the parent of the parent node", async () => {
+test("show ancestor opens the parent and its children in a new action", async () => {
     mockService("action", {
         doAction(action, options) {
             expect.step({ name: action.name, domain: action.domain, viewType: options.viewType });
@@ -205,95 +305,14 @@ test("show ancestor opens the hierarchy of the parent of the parent node", async
         domain: [["parent_id", "=", 3]],
     });
 
-    await contains(".o_hierarchy_node > button[title='Show ancestor']").click();
+    await contains(`${NODE} button[title='Show ancestor']`).click();
     expect.verifySteps([
-        { name: "Albert", domain: [["parent_id", "=", 1]], viewType: "hierarchy" },
+        {
+            name: "Josephine",
+            domain: ["|", ["id", "=", 3], ["parent_id", "=", 3]],
+            viewType: "hierarchy",
+        },
     ]);
-});
-
-test("a search displays the matching records, without filtering on the roots", async () => {
-    onRpc("hierarchy_read", ({ kwargs }) => {
-        expect.step(kwargs.roots_only);
-    });
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-        viewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="find_josephine_louis" domain="[['id', 'in', [3, 4]]]"/>
-                <filter name="find_louis" domain="[['id', '=', 4]]"/>
-            </search>
-        `,
-    });
-    expect.verifySteps([true]);
-
-    await enableFilters(["find_josephine_louis"]);
-    expect.verifySteps([false]);
-    expect(".o_hierarchy_row").toHaveCount(1);
-    expect(".o_hierarchy_separator").toHaveCount(0);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual([
-        "Josephine\nAlbert",
-        "Louis\nJosephine",
-    ]);
-
-    await toggleMenuItem("find_josephine_louis");
-    await toggleMenuItem("find_louis");
-    expect.verifySteps([true, false]);
-    expect(".o_hierarchy_row").toHaveCount(1, {
-        message: "a single search result is not unfolded, only a single root is",
-    });
-    expect(".o_hierarchy_node > div").toHaveText("Louis\nJosephine");
-});
-
-test("Add a custom domain leaf on default state of the view with a globalDomain and search default filters", async () => {
-    Employee._records = [
-        { id: 1, name: "A", parent_id: false, child_ids: [] },
-        { id: 2, name: "B", parent_id: false, child_ids: [4] },
-        { id: 3, name: "C", parent_id: false, child_ids: [] },
-        { id: 4, name: "D", parent_id: 2, child_ids: [5, 6] },
-        { id: 5, name: "E", parent_id: 4, child_ids: [] },
-        { id: 6, name: "F", parent_id: 4, child_ids: [] },
-    ];
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-        viewId: false,
-        searchViewArch: `
-                <search>
-                    <filter name="exclude_third" domain="[['id', '!=', 3]]"/>
-                    <filter name="find_fifth" domain="[['id', '=', 5]]"/>
-                </search>
-            `,
-        context: { search_default_exclude_third: true },
-        domain: [["id", "not in", [1, 6]]],
-    });
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["B", "D\nB"], {
-        message: `A is hidden by the globalDomain and C by the search_default: the view is in its
-            "default state", so only the roots are fetched and B is the only one. It is then unfolded.`,
-    });
-
-    await removeFacet("exclude_third");
-    expect(".o_hierarchy_row").toHaveCount(1);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["B", "C"], {
-        message: `C is now visible because the search_default was removed. The query is empty, so only
-            the roots are displayed, and there are several of them: none is unfolded.`,
-    });
-
-    await enableFilters(["find_fifth"]);
-    expect(".o_hierarchy_row").toHaveCount(1);
-    expect(".o_hierarchy_node > div").toHaveText("E\nD", {
-        message: `E matches the query. The view is not in its "default state", nor is the query empty,
-            so the records are not restricted to the roots.`,
-    });
-
-    await removeFacet("find_fifth");
-    await enableFilters(["exclude_third"]);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["B", "D\nB"], {
-        message: `Manually going back to the "default state" of the view should give the same result as the
-            first load.`,
-    });
 });
 
 test("can properly evaluate invisible elements in a hierarchy card", async () => {
@@ -305,32 +324,17 @@ test("can properly evaluate invisible elements in a hierarchy card", async () =>
                     <field name="child_ids" invisible="1"/>
                     <templates>
                         <t t-name="card">
-                            <div>
-                                <field name="name"/>
-                            </div>
-                            <div>
-                                <field name="parent_id"/>
-                            </div>
+                            <field name="name"/>
                             <p invisible="not child_ids" class="o_children_text">withChildren</p>
                         </t>
                     </templates>
                 </hierarchy>
             `,
     });
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_node").toHaveCount(3);
-    expect(".o_hierarchy_node_container:eq(0) .o_hierarchy_node > div").toHaveText(
-        "Albert\n\nwithChildren"
-    );
-    expect(".o_hierarchy_node_container:eq(1) .o_hierarchy_node > div").toHaveText(
-        "Georges\nAlbert"
-    );
-    expect(".o_hierarchy_node_container:eq(2) .o_hierarchy_node > div").toHaveText(
-        "Josephine\nAlbert\n\nwithChildren"
-    );
     expect(".o_hierarchy_node_container:eq(0) .o_children_text").toHaveCount(1);
     expect(".o_hierarchy_node_container:eq(1) .o_children_text").toHaveCount(0);
     expect(".o_hierarchy_node_container:eq(2) .o_children_text").toHaveCount(1);
+    expect(".o_hierarchy_node_container:eq(3) .o_children_text").toHaveCount(0);
 });
 
 test("the card template can use parentId to know if the record has a parent", async () => {
@@ -349,9 +353,7 @@ test("the card template can use parentId to know if the record has a parent", as
             `,
     });
     expect(".o_root_marker").toHaveCount(1);
-    expect(".o_hierarchy_row:eq(0) .o_root_marker").toHaveCount(1, {
-        message: "only Albert, the root, has no parent",
-    });
+    expect(".o_hierarchy_node_container:contains(Albert) .o_root_marker").toHaveCount(1);
 });
 
 test("Reload the view with the same records when clicking with a view button", async () => {
@@ -370,30 +372,19 @@ test("Reload the view with the same records when clicking with a view button", a
                 <hierarchy child_field="child_ids">
                     <templates>
                         <t t-name="card">
-                            <div>
-                                <field name="name"/>
-                            </div>
-                            <div>
-                                <field name="parent_id"/>
-                            </div>
+                            <div><field name="name"/></div>
                             <button type="object" name="prefix_underscore">prefix</button>
                         </t>
                     </templates>
                 </hierarchy>
             `,
     });
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual([
-        "Albert\nprefix",
-        "Georges\nAlbert\nprefix",
-        "Josephine\nAlbert\nprefix",
-    ]);
     await contains(".o_hierarchy_node_container:eq(1) button[name='prefix_underscore']").click();
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(
-        ["Albert\nprefix", "_Georges\nAlbert\nprefix", "Josephine\nAlbert\nprefix"],
+    expect(queryAllTexts(NODE_CONTENT)).toEqual(
+        ["Albert\nprefix", "_Georges\nprefix", "Josephine\nprefix", "Louis\nprefix"],
         { message: "The view should have reloaded the same data" }
     );
+    expect(getEdges()).toEqual(["1_2", "1_3", "3_4"]);
 });
 
 test("The view displays the No Content help", async () => {
@@ -403,7 +394,7 @@ test("The view displays the No Content help", async () => {
         resModel: "hr.employee",
     });
     expect("div.o_view_nocontent").toHaveCount(1);
-    expect(".o_hierarchy_node").toHaveCount(0);
+    expect(NODE).toHaveCount(0);
 });
 
 test("Navigate in the hierarchy and come back with the breadcrumb", async () => {
@@ -411,37 +402,35 @@ test("Navigate in the hierarchy and come back with the breadcrumb", async () => 
     await getService("action").doAction({
         res_model: "hr.employee",
         type: "ir.actions.act_window",
+        domain: [["id", "!=", 4]],
         views: [
             [false, "hierarchy"],
             [false, "form"],
         ],
     });
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual([
+    expect(queryAllTexts(NODE_CONTENT)).toEqual([
         "Albert",
         "Georges\nAlbert",
         "Josephine\nAlbert",
     ]);
 
-    await contains(".o_hierarchy_node:contains(Josephine) > button[title='Unfold']").click();
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual([
-        "Josephine\nAlbert",
-        "Louis\nJosephine",
-    ]);
+    await contains(`${NODE}:contains(Josephine) button[title='Unfold']`).click();
+    expect(queryAllTexts(NODE_CONTENT)).toEqual(["Josephine\nAlbert", "Louis\nJosephine"]);
+    expect(getEdges()).toEqual(["3_4"]);
 
-    await contains(".o_hierarchy_row:eq(1) .o_hierarchy_node").click();
+    await contains(`${NODE}:contains(Louis)`).click();
     expect(".o_hierarchy_view").toHaveCount(0);
     expect(".o_form_view").toHaveCount(1);
 
     await contains(".o_back_button").click();
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(
-        ["Josephine\nAlbert", "Louis\nJosephine"],
-        { message: "coming back from the form restores the level of Josephine" }
-    );
+    expect(queryAllTexts(NODE_CONTENT)).toEqual(["Josephine\nAlbert", "Louis\nJosephine"], {
+        message: "coming back from the form restores the level of Josephine",
+    });
 
     await contains(".o_back_button").click();
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(
+    expect(queryAllTexts(NODE_CONTENT)).toEqual(
         ["Albert", "Georges\nAlbert", "Josephine\nAlbert"],
-        { message: "the previous action is the level of Albert" }
+        { message: "the previous action is the initial one" }
     );
 });
 
@@ -451,17 +440,6 @@ test("Open record on new window", async () => {
             expect.step(`opened in new window: ${url}`);
         },
     });
-    patchWithCleanup(browser.sessionStorage, {
-        setItem(key, value) {
-            expect.step(`set ${key}-${value}`);
-            super.setItem(key, value);
-        },
-        getItem(key) {
-            const res = super.getItem(key);
-            expect.step(`get ${key}-${res}`);
-            return res;
-        },
-    });
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         res_model: "hr.employee",
@@ -472,55 +450,33 @@ test("Open record on new window", async () => {
         ],
     });
 
-    await contains(".o_hierarchy_node_container .o_hierarchy_node").click({ ctrlKey: true });
+    await contains(`.o_hierarchy_node_container ${NODE}`).click({ ctrlKey: true });
     expect(".o_hierarchy_view").toHaveCount(1);
     expect(".o_form_view").toHaveCount(0);
-    expect.verifySteps([
-        "get menu_id-null",
-        "get current_lang-null",
-        "get current_state-null",
-        "get current_action-null",
-        'set current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
-        'set current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',
-        "set current_lang-en",
-        'get current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',
-        'get current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
-        'set current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',
-        'set current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"},{"displayName":"","model":"hr.employee","view_type":"form","resId":1}],"resId":1,"model":"hr.employee"}',
-        "opened in new window: /odoo/hr.employee/1",
-        'set current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',
-        'set current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
-    ]);
+    expect.verifySteps(["opened in new window: /odoo/hr.employee/1"]);
 });
 
-test("a cycle in the hierarchy does not loop", async () => {
-    Employee._records = [
-        { id: 1, name: "A", parent_id: 2, child_ids: [2] },
-        { id: 2, name: "B", parent_id: 1, child_ids: [1] },
-    ];
+test("zoom controls", async () => {
     await mountView({
         type: "hierarchy",
         resModel: "hr.employee",
-        domain: [["parent_id", "=", 1]],
     });
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["A\nB", "B\nA"]);
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > button[title='Show ancestor']").toHaveCount(1);
-    expect(".o_hierarchy_row:eq(1) .o_hierarchy_node > button[title='Unfold']").toHaveCount(1);
+    await contains(".o_hierarchy_zoom_level").click();
+    expect(".o_hierarchy_zoom_level").toHaveText("100%");
+
+    await contains(".o_hierarchy_controls button[title='Zoom Out']").click();
+    expect(".o_hierarchy_zoom_level").toHaveText("90%");
+
+    await contains(".o_hierarchy_controls button[title='Zoom In']").click();
+    await contains(".o_hierarchy_controls button[title='Zoom In']").click();
+    expect(".o_hierarchy_zoom_level").toHaveText("110%");
+
+    await contains(".o_hierarchy_controls button[title='Fit Graph to View']").click();
+    await contains(".o_hierarchy_zoom_level").click();
+    expect(".o_hierarchy_zoom_level").toHaveText("100%");
 });
 
-test("a record that is its own parent is displayed as parent and as child", async () => {
-    Employee._records = [{ id: 1, name: "Self", parent_id: 1, child_ids: [1] }];
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-        domain: [["parent_id", "=", 1]],
-    });
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["Self\nSelf", "Self\nSelf"]);
-});
-
-test("control panel pager without parent", async () => {
+test("control panel pager", async () => {
     Employee._records = Array.from({ length: 81 }, (_, i) => ({
         id: i + 1,
         name: `Emp ${i + 1}`,
@@ -530,75 +486,12 @@ test("control panel pager without parent", async () => {
     await mountView({ type: "hierarchy", resModel: "hr.employee" });
 
     const controlPanel = queryOne(".o_control_panel");
-    expect(".o_hierarchy_row").toHaveCount(1);
-    expect(".o_hierarchy_node").toHaveCount(80);
+    expect(NODE).toHaveCount(80);
     expect(getPagerValue(controlPanel)).toEqual([1, 80]);
     expect(getPagerLimit(controlPanel)).toBe(81);
 
     await pagerNext(controlPanel);
-    expect(".o_hierarchy_node").toHaveCount(1);
-    expect(".o_hierarchy_node > div").toHaveText("Emp 81");
+    expect(NODE).toHaveCount(1);
+    expect(NODE_CONTENT).toHaveText("Emp 81");
     expect(getPagerValue(controlPanel)).toEqual([81, 81]);
-});
-
-test("control panel pager paginates the children of the unfolded root", async () => {
-    Employee._records = [
-        { id: 1, name: "Albert", parent_id: false, child_ids: [] },
-        ...Array.from({ length: 81 }, (_, i) => ({
-            id: i + 2,
-            name: `Emp ${i + 2}`,
-            parent_id: 1,
-            child_ids: [],
-        })),
-    ];
-    Employee._records[0].child_ids = Employee._records.slice(1).map((r) => r.id);
-    await mountView({ type: "hierarchy", resModel: "hr.employee" });
-
-    const controlPanel = queryOne(".o_control_panel");
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > div").toHaveText("Albert");
-    expect(".o_hierarchy_row:eq(1) .o_hierarchy_node").toHaveCount(80);
-    expect(getPagerValue(controlPanel)).toEqual([1, 80]);
-    expect(getPagerLimit(controlPanel)).toBe(81, {
-        message: "the pager counts the children only, not the parent",
-    });
-
-    await pagerNext(controlPanel);
-    expect(".o_hierarchy_row").toHaveCount(2);
-    expect(".o_hierarchy_row:eq(0) .o_hierarchy_node > div").toHaveText("Albert", {
-        message: "the parent is still displayed on the next pages",
-    });
-    expect(".o_hierarchy_row:eq(1) .o_hierarchy_node").toHaveCount(1);
-    expect(".o_hierarchy_row:eq(1) .o_hierarchy_node > div").toHaveText("Emp 82\nAlbert");
-    expect(getPagerValue(controlPanel)).toEqual([81, 81]);
-});
-
-test("the user limit is kept when the search changes", async () => {
-    Employee._records.push(
-        { id: 5, name: "Zoe", parent_id: false, child_ids: [] },
-        { id: 6, name: "Yann", parent_id: false, child_ids: [] }
-    );
-    await mountView({
-        type: "hierarchy",
-        resModel: "hr.employee",
-        viewId: false,
-        searchViewArch: `
-            <search>
-                <filter name="no_louis" domain="[['id', '!=', 4]]"/>
-            </search>
-        `,
-    });
-    expect(queryAllTexts(".o_hierarchy_node > div")).toEqual(["Albert", "Zoe", "Yann"]);
-
-    await contains(".o_control_panel .o_pager_value").click();
-    await contains(".o_control_panel input.o_pager_value").edit("1-2");
-    expect(".o_hierarchy_node").toHaveCount(2);
-    expect(getPagerValue(queryOne(".o_control_panel"))).toEqual([1, 2]);
-
-    await enableFilters(["no_louis"]);
-    expect(".o_hierarchy_node").toHaveCount(2, {
-        message: "the user limit is kept when the search changes",
-    });
-    expect(getPagerValue(queryOne(".o_control_panel"))).toEqual([1, 2]);
-    expect(getPagerLimit(queryOne(".o_control_panel"))).toBe(5);
 });
