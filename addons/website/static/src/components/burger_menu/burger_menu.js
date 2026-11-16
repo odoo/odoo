@@ -20,34 +20,27 @@ patch(BurgerMenu.prototype, {
     },
 
     /**
-     * @override
+     * @deprecated The app sections are no longer displayed in the burger
+     * menu, but in the `NavBar` app menu sidebar.
      */
     get currentAppSections() {
-        const currentAppSections = super.currentAppSections;
-        if (this.currentApp && this.currentApp.xmlid === "website.menu_website_configuration") {
-            return this.websiteCustomMenus
-                .addCustomMenus(currentAppSections)
-                .filter((section) => section.childrenTree.length);
-        }
-        return currentAppSections;
+        return [];
     },
 
     /**
-     * This dummy setter is only here to prevent conflicts between the
-     * Enterprise BurgerMenue extension and the Website BurgerMenu patch.
+     * @deprecated Kept for backward compatibility with existing extensions.
      */
     set currentAppSections(_) {},
 
     /**
-     * @override
+     * @deprecated The app sections are no longer displayed in the burger
+     * menu, see `_onMenuClicked` in the `NavBar` patch.
      */
     async _onMenuClicked(menu) {
         const websiteMenu = this.websiteCustomMenus.get(menu.xmlid);
         if (websiteMenu) {
             await this.websiteCustomMenus.open(menu);
             this._closeBurger();
-        } else {
-            super._onMenuClicked(menu);
         }
     },
 });
