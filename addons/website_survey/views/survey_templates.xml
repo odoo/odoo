@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="survey_page_fill" inherit_id="survey.survey_page_fill">
+        <xpath expr="//t[@t-call='survey.layout']" position="attributes">
+            <attribute name="t-args">survey._get_website_layout_values()</attribute>
+        </xpath>
+    </template>
+
+    <template id="survey_page_print" inherit_id="survey.survey_page_print">
+        <xpath expr="//t[@t-call='survey.layout']" position="attributes">
+            <attribute name="t-args">survey._get_website_layout_values()</attribute>
+        </xpath>
+    </template>
+
+    <template id="survey_closed_expired" inherit_id="survey.survey_closed_expired">
+        <xpath expr="//t[@t-call='survey.layout']" position="attributes">
+            <attribute name="t-args">survey._get_website_layout_values()</attribute>
+        </xpath>
+    </template>
+
+    <template id="survey_void_content" inherit_id="survey.survey_void_content">
+        <xpath expr="//t[@t-call='survey.layout']" position="attributes">
+            <attribute name="t-args">survey._get_website_layout_values()</attribute>
+        </xpath>
+    </template>
+</odoo>
