@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeCardOption">
+    <BuilderRow label.translate="Roundness">
+        <t t-call="website.ThemeBorderRadiusOption"
+            variable="'card-border-radius'"
+            resetVisibility="this.state.customized"
+            resetTitle.translate="Reset to Global Roundness"
+        />
+    </BuilderRow>
+</t>
+
+</templates>
