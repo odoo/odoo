@@ -330,16 +330,28 @@
 
 
   /* Hide non-active indicators for each resize action */
-  $resize-dirs: n, e, s, w, ne, se, sw, nw;
-
-  @each $d in $resize-dirs {
-    &.action-resize-#{$d} {
-      .o_fp_handle:not(.#{$d}) .o_fp_handle_indicator {
-        display: none !important;
-      }
-      .o_fp_rotation_handle .o_fp_handle_indicator {
-        display: none !important;
-     }
+  &.action-resize-n .o_fp_handle:not(.n),
+  &.action-resize-e .o_fp_handle:not(.e),
+  &.action-resize-s .o_fp_handle:not(.s),
+  &.action-resize-w .o_fp_handle:not(.w),
+  &.action-resize-ne .o_fp_handle:not(.ne),
+  &.action-resize-se .o_fp_handle:not(.se),
+  &.action-resize-sw .o_fp_handle:not(.sw),
+  &.action-resize-nw .o_fp_handle:not(.nw) {
+    .o_fp_handle_indicator {
+      display: none !important;
+    }
+  }
+  &.action-resize-n,
+  &.action-resize-e,
+  &.action-resize-s,
+  &.action-resize-w,
+  &.action-resize-ne,
+  &.action-resize-se,
+  &.action-resize-sw,
+  &.action-resize-nw {
+    .o_fp_rotation_handle .o_fp_handle_indicator {
+      display: none !important;
     }
   }
 

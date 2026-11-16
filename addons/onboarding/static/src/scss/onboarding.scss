@@ -1,3 +1,9 @@
+@property --o-onboarding-animation-delay {
+    syntax: "<time>";
+    inherits: true;
+    initial-value: 0s;
+}
+
 /* = Animations */
 /* ------------------------------------------------------------------------ */
 @keyframes o_onboarding_slideInUp {
@@ -70,10 +76,8 @@
 
         flex: 1 1 0;
 
-        @for $i from 1 through 5 {
-            &.o_onboarding_step__todo:nth-child(#{$i}) {
-                @include print-variable('o-onboarding-animation-delay', $i * .15s);
-            }
+        &.o_onboarding_step__todo:nth-child(-n + 5) {
+            --o-onboarding-animation-delay: calc(.15s * sibling-index());
         }
 
         &:first-child, &:last-child {
