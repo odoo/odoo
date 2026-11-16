@@ -8,7 +8,7 @@ from collections import defaultdict
 from markupsafe import escape
 from psycopg2 import Error
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
@@ -1296,6 +1296,9 @@ class StockQuant(models.Model):
         }
         if self.env.context.get('inventory_name'):
             res['inventory_name'] = self.env.context.get('inventory_name')
+        elif self.user_id and self.user_id.id != SUPERUSER_ID:
+            name = _('Product Quantity Confirmed') if fields.Float.is_zero(qty, precision_rounding=self.product_uom_id.rounding) else _('Product Quantity Updated')
+            res['inventory_name'] = f'{name} ({self.user_id.display_name})'
 
         return res
 
