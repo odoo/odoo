@@ -15,7 +15,10 @@ import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scroll
  * component instance owned it, which may by then be disposed. Skip it in
  * that case: there is nothing left on screen for it to act on.
  */
-const bsExecuteAfterTransition = window.Index.executeAfterTransition;
+// Wrap Bootstrap's original function, even if this module runs more than
+// once (the hoot module loader does).
+const bsExecuteAfterTransition =
+    window.Index.executeAfterTransition.bsOriginal ?? window.Index.executeAfterTransition;
 window.Index.executeAfterTransition = function (callback, transitionElement, waitForTransition) {
     return bsExecuteAfterTransition(
         () => {
@@ -26,6 +29,16 @@ window.Index.executeAfterTransition = function (callback, transitionElement, wai
         transitionElement,
         waitForTransition
     );
+};
+window.Index.executeAfterTransition.bsOriginal = bsExecuteAfterTransition;
+
+/**
+ * Run the queued callbacks of a component even if its element has been removed
+ * (see above), as they may still have to release the body (e.g. `modal-open` for
+ * for a Modal). Only skip them once the component is disposed.
+ */
+window.BaseComponent.prototype._queueCallback = function (callback, element, isAnimated = true) {
+    bsExecuteAfterTransition(() => this._element && callback(), element, isAnimated);
 };
 
 if (window.Tooltip) {
