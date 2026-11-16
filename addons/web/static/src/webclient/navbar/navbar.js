@@ -7,6 +7,7 @@ import {
     signal,
     useEffect,
     useListener,
+    useOnChange,
     usePlugin,
     useScope,
 } from "@odoo/owl";
@@ -104,6 +105,13 @@ export class NavBar extends Component {
             isAppMenuSidebarOpened: false,
         });
         this.ui = proxy(useService("ui"));
+        useOnChange(
+            () => [this.state.isAppMenuSidebarOpened],
+            (isOpened) => {
+                document.body.classList.toggle("o-app-menu-sidebar-open", isOpened);
+                return () => document.body.classList.remove("o-app-menu-sidebar-open");
+            }
+        );
     }
 
     handleItemError(error, item) {
