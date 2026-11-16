@@ -430,6 +430,7 @@
             'website/static/tests/page_url_field.test.js',
             'website/static/tests/publish_website_systray_item.test.js',
             'website/static/tests/website_loader.test.js',
+            'website/static/tests/mobile/navbar.test.js',
         ],
         'web.assets_unit_tests_setup': [
             'html_builder/static/src/utils/scrolling.js',
