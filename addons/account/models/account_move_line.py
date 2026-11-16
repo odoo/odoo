@@ -533,7 +533,7 @@ class AccountMoveLine(models.Model):
                     name = f'{line.move_id.ref} - {line.move_id.payment_reference}'
                 elif line.move_id.payment_reference:
                     name = line.move_id.payment_reference
-                elif line.move_id.move_type in ['in_invoice', 'in_refund'] and line.move_id.ref:
+                elif line.move_id.is_purchase_document(include_receipts=True) and line.move_id.ref:
                     name = line.move_id.ref
                 else:
                     name = False
