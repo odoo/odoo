@@ -33,8 +33,8 @@
     <t t-call="website_forum.header"
         _page_name.f="guidelines"
         _page_name_label.translate="Guidelines">
-        <div t-field="forum.description" class="mb-4"/>
-        <div t-field="forum.faq"/>
+        <div t-field="forum.description" class="mb-4 text-break"/>
+        <div t-field="forum.faq" class="text-break"/>
     </t>
 </template>
 
@@ -150,8 +150,8 @@
         <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ 'pe-none' if not user_profile_url else '' }">
             <img t-attf-class="o_wforum_avatar rounded-circle object-fit-cover #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>
         </a>
-        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{ 'align-items-baseline' if compact else 'flex-column justify-content-around' } #{ 'ms-2' if show_image else '' }">
-            <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 #{ 'small' if compact else ''}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
+        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex overflow-hidden #{ 'align-items-baseline' if compact else 'flex-column justify-content-around' } #{ 'ms-2' if show_image else '' }">
+            <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 text-truncate #{ 'small' if compact else ''}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
             <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-out="object.create_uid.karma"/>xp</small>
 
             <div t-if="show_date or show_karma" t-attf-class="text-muted small #{ 'd-flex align-items-baseline' if compact else '' }">
