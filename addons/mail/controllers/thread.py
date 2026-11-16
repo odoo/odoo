@@ -101,9 +101,12 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_partner_from_email(self, thread_model, thread_id, emails):
+        thread = self._get_thread_with_access(thread_model, thread_id)
+        if not thread:
+            raise NotFound()
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
-            for partner in request.env[thread_model].browse(thread_id)._partner_find_from_emails_single(
+            for partner in thread._partner_find_from_emails_single(
                 emails, no_create=not request.env.user.has_group("base.group_partner_manager")
             )
         ]
