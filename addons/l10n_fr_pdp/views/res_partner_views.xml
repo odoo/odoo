@@ -19,7 +19,12 @@
                 <field name="routing_endpoint" position="replace">
                     <div class="d-flex justify-content-between">
                         <field name="routing_endpoint" class="w-100" nolabel="1"/>
-                        <button class="btn border-0 p-0 oi" data-icon="search" title="Search endpoint" name="action_pdp_annuaire_lookup" type="object"/>
+                        <button class="btn border-0 p-0 oi"
+                                data-icon="search"
+                                title="Search endpoint"
+                                name="action_pdp_annuaire_lookup"
+                                type="object"
+                                invisible="routing_scheme != '0225'"/>
                     </div>
                 </field>
             </data>
