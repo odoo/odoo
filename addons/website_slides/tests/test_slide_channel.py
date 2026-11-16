@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import date
+
+from odoo import fields
+from odoo.addons.base.tests.files import PNG_B64
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.exceptions import UserError
 from odoo.tests.common import HttpCase, tagged, users
@@ -378,6 +382,26 @@ class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
         with self.mock_mail_gateway():
             self.channel.slide_ids.with_user(self.user_manager).unlink()
         self.assertFalse(were_emails_sent(), "Participants should not receive emails when all remaining slides are deleted.")
+
+    def test_slide_last_update(self):
+        """ "Last Update" follows what the course shows, not what visitors do. """
+        old_date = date(2020, 1, 1)
+        self.channel.slide_last_update = old_date
+        self.channel._action_add_members(self.user_emp.partner_id)
+        self.slide.with_user(self.user_emp).action_like()
+        self.assertEqual(self.channel.slide_last_update, old_date)
+
+        for field, value in [
+            ('name', 'New Name'),
+            ('description', '<p>New text</p>'),
+            ('description_short', '<p>New text</p>'),
+            ('description_html', '<p>New text</p>'),
+            ('image_1920', PNG_B64),
+        ]:
+            with self.subTest(field=field):
+                self.channel.slide_last_update = old_date
+                self.channel[field] = value
+                self.assertEqual(self.channel.slide_last_update, fields.Date.context_today(self.channel))
 
 
 class TestSequencing(slides_common.SlidesCase):
