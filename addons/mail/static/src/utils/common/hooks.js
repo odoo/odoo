@@ -807,6 +807,8 @@ export class SearchState {
         if (this.lastEmptyTerm !== undefined && term.startsWith(this.lastEmptyTerm)) {
             // Broader term already had no results, so the narrower term
             // can't either — skip both the fetch and the local filter.
+            // A fetch still running for a previous term does not clear `loading`.
+            this.loading = false;
             return;
         }
         if (this.fetch && !skipFetch) {
