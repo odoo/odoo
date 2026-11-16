@@ -537,3 +537,71 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'cancel')
         self.assertEqual(leave.resource_calendar_id, self.calendar_40h)
         self.assertEqual(self.env['hr.leave'].search([('employee_id', '=', employee.id)]), leave)
+
+    def test_accrual_hours_with_unactive_version(self):
+        with freeze_time('2026-09-01'):
+            leave_type_hour = self.env['hr.leave.type'].create({
+                'name': 'Paid Time Off (hours)',
+                'time_type': 'leave',
+                'requires_allocation': True,
+                'allocation_validation_type': 'hr',
+                'request_unit': 'hour',
+            })
+
+            # Accrual test setup
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': '6 hours monthly',
+                'accrued_gain_time': 'start',
+                'can_be_carryover': True,
+                'carryover_date': 'year_start',
+                'level_ids': [(0, 0, {
+                    'milestone_date': 'creation',
+                    'added_value': 6,
+                    'added_value_type': 'hour',
+                    'frequency': 'monthly',
+                    'first_day': 1,
+                    'action_with_unused_accruals': 'all',
+                })],
+            })
+
+            # Version on Sept 1
+            employee = self.env['hr.employee'].create({'name': 'Accrual Test'})
+            sept_version = employee.version_id
+            sept_version.write({
+                'date_version': date(2026, 9, 1),
+                'contract_date_start': date(2026, 9, 1),
+                'resource_calendar_id': self.calendar_40h.id,
+            })
+
+            # Allocation of accrual test
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Monthly Accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type_hour.id,
+                'date_from': date(2026, 9, 1),
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_approve()
+            self.assertEqual(allocation.state, 'validate')
+
+        with freeze_time('2026-11-16'):
+            # Version on Oct 1 and archiving the Sept 1
+            employee.create_version({
+                'date_version': date(2026, 10, 1),
+                'resource_calendar_id': self.calendar_40h.id,
+            })
+            sept_version.action_archive()
+
+            # Accruals of Sept 1, Oct 1 and Nov 1: 3 x 6 hours
+            allocation._process_accrual_plans()
+            self.assertAlmostEqual(allocation.number_of_hours_display, 18, places=2,
+                msg="The plan is not based on worked time: 6 hours per month whatever the schedule.")
+
+            # Regression check: changing the schedule of the archived version must not affect the allocation
+            days_before = allocation.number_of_days
+            hours_before = allocation.number_of_hours_display
+            employee.with_context(version_id=sept_version.id).resource_calendar_id = self.calendar_35h
+            self.assertAlmostEqual(allocation.number_of_days, days_before)
+            self.assertAlmostEqual(allocation.number_of_hours_display, hours_before)

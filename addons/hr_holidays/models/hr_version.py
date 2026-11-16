@@ -112,7 +112,7 @@ class HrVersion(models.Model):
                                     "them. Please review these leaves and/or allocations before changing the contract.\n\n"
                                     "This error has been triggered by:\n") + str(e))
 
-        if 'resource_calendar_id' in vals:
+        if 'resource_calendar_id' in vals and self.filtered('active'):
             # Hour-based allocations store their duration in number_of_days, from
             # which the accrued hours (number_of_hours_display) are derived using
             # the employee's hours per day. When the working schedule changes
