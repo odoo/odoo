@@ -12,7 +12,7 @@ import { downloadFile } from "@web/core/network/download";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_plugin";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { UIPlugin } from "@web/core/ui/ui_plugin";

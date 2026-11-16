@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { downloadFile } from "@web/core/network/download";
-import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {

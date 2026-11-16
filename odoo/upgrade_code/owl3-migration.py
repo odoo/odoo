@@ -1126,6 +1126,7 @@ SERVICES_MAPPING = {
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
+    "fileViewer": ['FileViewerPlugin', '@web/core/file_viewer/file_viewer_plugin'],
     "home_menu": ['HomeMenuPlugin', '@web_enterprise/webclient/home_menu/home_menu_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
     "iapNotification": ['IapNotificationPlugin', '@iap_mail/js/services/iap_notification_plugin'],
