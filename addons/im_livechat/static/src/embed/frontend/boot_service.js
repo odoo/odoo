@@ -24,7 +24,7 @@ export const livechatBootService = {
         const rootEl = makeRoot(target);
         const createRoot = useRootCreator();
         makeShadow(rootEl).then((shadow) => {
-            env.services["discuss.rtc"].rootEl = shadow;
+            env.services["mail.store"].rtc.rootEl = shadow;
             const root = createRoot(LivechatRoot, {
                 env: Object.assign(Object.create(env), {
                     rootId: rootEl.getAttribute("id"),

@@ -28,8 +28,8 @@ export class WelcomePage extends Component {
         this.props = useProps({ proceed: types.function([]).optional() });
         this.description = signal();
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.ui = usePlugin(UIPlugin);
-        this.rtc = useService("discuss.rtc");
         useAncestors({ inDiscussCallTheme: true, inWelcomePage: true });
         this.state = proxy({
             userName: this.store.discuss.thread.getPersonaName(this.store.self) ?? "",

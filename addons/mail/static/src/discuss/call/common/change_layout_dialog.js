@@ -28,11 +28,11 @@ export class ChangeLayoutDialog extends Component {
         super.setup();
         this.CALL_GRID_LAYOUT = CALL_GRID_LAYOUT;
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]),
             close: t.function([]).optional(),
         });
-        this.rtc = useService("discuss.rtc");
         useEffect(() => {
             if (!this.props.channel.isSelfInCall) {
                 this.props.close?.();

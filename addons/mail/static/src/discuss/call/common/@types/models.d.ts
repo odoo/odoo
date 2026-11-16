@@ -1,5 +1,5 @@
 declare module "models" {
-    import { Rtc as RtcClass } from "@mail/discuss/call/common/rtc_service";
+    import { Rtc as RtcClass } from "@mail/discuss/call/common/rtc_model";
     import { RtcSession as RtcSessionClass } from "@mail/discuss/call/common/rtc_session_model";
 
     export interface Rtc extends RtcClass {}
@@ -49,10 +49,12 @@ declare module "models" {
         fullscreenChannel: DiscussChannel;
         meetingViewOpened: boolean;
         nextTalkingTime: number;
+        requestStartMeeting: () => Promise<void>;
         ringingChannels: DiscussChannel[];
         rtc: Rtc;
         Rtc: StaticMailRecord<Rtc, typeof RtcClass>;
         shareUrl: Readonly<string|undefined>;
+        startMeeting: () => Promise<void>;
     }
 
     export interface Models {

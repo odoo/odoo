@@ -291,6 +291,7 @@ export class CallActionList extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),
             className: types.string().optional(),
@@ -299,7 +300,6 @@ export class CallActionList extends Component {
             extraMoreActionGroups: types.array().optional(),
             pipExtraActions: types.array().optional(),
         });
-        this.rtc = useService("discuss.rtc");
         this.ui = usePlugin(UIPlugin);
         this.callActions = useCallActions(this.callActionsParams);
         this.fullscreenHintPopover = usePopover(FullscreenHint, {

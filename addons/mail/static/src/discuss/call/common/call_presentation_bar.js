@@ -1,16 +1,16 @@
+import { StorePlugin } from "@mail/core/common/store_plugin";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, usePlugin } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 export class CallPresentationBar extends Component {
     static template = "discuss.CallPresentationBar";
     static components = { AvatarStack };
 
     setup() {
-        this.rtc = useService("discuss.rtc");
+        this.rtc = usePlugin(StorePlugin).rtc;
         this.presentationAudio = proxy({ enabled: this.rtc.screenAudioTrack?.enabled });
     }
 

@@ -19,7 +19,7 @@ import { NotificationPlugin } from "@web/core/notifications/notification_plugin"
 import { useService } from "@web/core/utils/hooks";
 import { Mp3Encoder } from "./mp3_encoder";
 
-/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+/** @typedef {import("@mail/discuss/call/common/rtc_model").ContextOptions} ContextOptions */
 
 export class VoiceRecorder extends Component {
     static template = "mail.VoiceRecorder";
