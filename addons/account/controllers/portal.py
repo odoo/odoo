@@ -176,9 +176,9 @@ class PortalAccount(CustomerPortal):
             partner_lang = invoice_sudo.partner_id.lang
             if partner_lang and request.env['res.lang']._get_data(code=partner_lang).direction == 'rtl':
                 request.update_context(lang=partner_lang)
-            # Use the template set on the related partner if there is.
+            # Use the same default template as the sending flow (partner > journal > default).
             # This is not perfect as the invoice can still have been computed with another template, but it's a slight fix/imp for stable.
-            pdf_report_name = invoice_sudo.partner_id.invoice_template_pdf_report_id.report_name or 'account.account_invoices'
+            pdf_report_name = invoice_sudo.env['account.move.send']._get_default_pdf_report_id(invoice_sudo).report_name
             return self._show_report(model=invoice_sudo, report_type=report_type, report_ref=pdf_report_name, download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
