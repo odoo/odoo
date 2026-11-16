@@ -11,6 +11,7 @@ import {
     start,
     startServer,
     waitStoreFetch,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
@@ -175,6 +176,26 @@ test("Close button should close the search panel", async () => {
     await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
     await click(".o-mail-SearchMessageInput [title='Close']");
     await waitForNone(".o-mail-SearchMessageInput");
+});
+
+test("Search icon should close and reset the search", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter-topbar button[title='Search Messages']:count(1)").click();
+    await insertText(".o-mail-SearchInput input", "empty");
+    triggerHotkey("Enter");
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
+    await contains(".o-mail-Chatter-topbar button[title='Search Messages']:count(1)").click();
+    await waitForNone(".o-mail-SearchInput input");
+    await waitForNone(".o-mail-SearchMessageResult .o-mail-Message");
 });
 
 test("opening search in chatter hides files and pinned messages panels", async () => {
