@@ -83,7 +83,8 @@ class SaleOrderLine(models.Model):
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         domain = args or []
         # optimization for a SOL services name_search, to avoid joining on sale_order with too many lines
-        if domain and ('is_service', '=', True) in domain and operator in ('like', 'ilike') and limit is not None:
+        if domain and ('is_service', '=', True) in expression.normalize_domain(domain) and operator in ('like', 'ilike') and limit is not None:
+            domain = expression.AND([[('display_name', operator, name)], domain])
             sols = self.search_fetch(
                 domain, ['display_name'], limit=limit, order='order_id.id DESC, sequence, id',
             )
