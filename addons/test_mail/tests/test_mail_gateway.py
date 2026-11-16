@@ -32,7 +32,7 @@ class TestEmailParsing(MailCommon):
             with self.subTest(content_type=content_type):
                 received_mail = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=content_type)
                 self.assertIn(f"Content-Type: {content_type}", received_mail, f"{content_type} content-type not found")
-                with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as capture:
+                with self.assertLogs("odoo.addons.mail.tools.mime", level="WARNING") as capture:
                     extracted_mail = self.env['mail.thread'].message_parse(self.from_string(received_mail))
 
                 self.assertEqual(len(extracted_mail['attachments']), 1)
@@ -43,6 +43,20 @@ class TestEmailParsing(MailCommon):
                 self.assertEqual(capture.output, [
                     Like(f"...Message {message_id!r} containing an unexpected Content-Type '{content_type}', assuming 'application/octet-stream'..."),
                 ])
+
+    def test_message_parse_binary_attachment_with_unknown_main_type(self):
+        """Keep the bytes of a file whose main type the email package does not know."""
+        for content_type in ('font/woff', 'pdf/x'):
+            with self.subTest(content_type=content_type):
+                received_mail = self.format(
+                    test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=content_type)
+
+                extracted_mail = self.env['mail.thread'].message_parse(
+                    self.from_string(received_mail))
+
+                [attachment] = extracted_mail['attachments']
+                self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
+                self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
 
     def test_message_parse_body(self):
         # test pure plaintext
@@ -98,7 +112,7 @@ class TestEmailParsing(MailCommon):
 
         # Parsing the same email, but with content-type set to "pdf"
         mail_with_aliased_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="pdf")
-        with self.assertLogs('odoo.addons.mail.models.mail_thread') as log_catcher:
+        with self.assertLogs('odoo.addons.mail.tools.mime') as log_catcher:
             res_alias = self.env['mail.thread'].message_parse(self.from_string(mail_with_aliased_mime))
         message_id = res_alias['message_id']
         self.assertEqual(log_catcher.output, [
@@ -124,7 +138,7 @@ class TestEmailParsing(MailCommon):
             with self.subTest(mime_type=mime_type):
                 received_mail = self.from_string(self.format(
                     test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=mime_type))
-                with self.assertLogs('odoo.addons.mail.models.mail_thread') as log_catcher:
+                with self.assertLogs('odoo.addons.mail.tools.mime') as log_catcher:
                     res = self.env['mail.thread'].message_parse(received_mail)
 
                 [attachment] = res['attachments']
@@ -144,16 +158,164 @@ class TestEmailParsing(MailCommon):
 
         # message with empty body (including only void characters)
         res = self.env['mail.thread'].message_parse(self.from_string(test_mail_data.MAIL_NO_BODY))
-        self.assertEqual(res['body'], '\n \n', 'Gateway should not crash with void content')
+        self.assertFalse(res['body'].strip())
 
     def test_message_parse_eml(self):
-        # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to=f'generic@{self.alias_domain}',
                            msg_id='<cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>',
                            references='<f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>',
                            subject='Re: test attac',
                            )
-        self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.fname, 'original_msg.eml')
+        self.assertIn('princesse au petit pois', attachment.content.as_string())
+        self.assertIn('On 14/03/18 14:20', res['body'])
+        self.assertNotIn('princesse au petit pois', res['body'])
+
+    def test_message_parse_embedded_email_keeps_its_attachments(self):
+        mail = self.format(test_mail_data.MAIL_EMBEDDED_EMAIL_WITH_ATTACHMENT)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Outer body', res['body'])
+        self.assertNotIn('Inner body', res['body'])
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.fname, 'forwarded.eml')
+        self.assertIn('filename="invoice.pdf"', attachment.content.as_string())
+
+    def test_message_parse_encrypted(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_ENCRYPTED)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertFalse(res['body'].strip())
+        [attachment] = res['attachments']
+        self.assertIn(b'Content-Type: multipart/encrypted', attachment.content)
+        self.assertIn(b'Content-Type: application/pgp-encrypted', attachment.content)
+        self.assertIn(b'Version: 1', attachment.content)
+        self.assertIn(b'filename="encrypted.asc"', attachment.content)
+        self.assertIn(b'-----BEGIN PGP MESSAGE-----', attachment.content)
+
+    def test_message_parse_malformed_pgp_mime_keeps_whole_container(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_ENCRYPTED_INVALID)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertFalse(res['body'].strip())
+        [attachment] = res['attachments']
+        self.assertIn(b'Content-Type: multipart/encrypted', attachment.content)
+        self.assertIn(b'boundary="ienc-boundary"', attachment.content)
+        self.assertIn(b'Not an encrypted payload.', attachment.content)
+        self.assertIn(b'filename="blob.bin"', attachment.content)
+
+    def test_message_parse_attached_container_keeps_its_contents(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_ATTACHED_CONTAINER)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Outer body', res['body'])
+        self.assertNotIn('Archived page content', res['body'])
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.fname, 'archive.mht')
+        self.assertIn(b'<p>Archived page content.</p>', attachment.content)
+        self.assertIn(b'boundary="rl"', attachment.content)
+
+    def test_message_parse_digest_keeps_messages_encapsulated(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_DIGEST)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertFalse(res['body'].strip())
+        self.assertEqual(len(res['attachments']), 2)
+        self.assertIn('Subject: First bundled', res['attachments'][0].content.as_string())
+        self.assertIn('Subject: Second bundled', res['attachments'][1].content.as_string())
+        self.assertIn('First inner digest body', res['attachments'][0].content.as_string())
+        self.assertIn('Second inner digest body', res['attachments'][1].content.as_string())
+        self.assertNotIn('First inner digest body', res['body'])
+        self.assertNotIn('Second inner digest body', res['body'])
+
+    def test_message_parse_nested_mime_tree(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_DEEP_NEST)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Rich related html', res['body'])
+        self.assertNotIn('Plain fallback text', res['body'])
+        self.assertNotIn('Inner encapsulated body', res['body'])
+        attachments = {attachment.fname: attachment for attachment in res['attachments']}
+        self.assertEqual(
+            sorted(attachments),
+            ['attached.eml', 'contract.pdf', 'logo.gif', 'signature.asc'],
+        )
+        self.assertEqual(attachments['logo.gif'].info.get('cid'), 'logo@nest')
+
+    def test_message_parse_alternative_discards_only_unselected_resources(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_ALTERNATIVE_RELATED_CLASSIFICATION)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Selected body', res['body'])
+        self.assertNotIn('Discarded body', res['body'])
+        self.assertEqual([attachment.fname for attachment in res['attachments']], ['invoice.pdf'])
+
+    def test_message_parse_top_level_text_with_filename(self):
+        """A text message is a file only when it is explicitly sent as an attachment."""
+        mail = self.format(test_mail_data.MAIL_TOP_LEVEL_TEXT_WITH_FILENAME, disposition='inline')
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Root body text', res['body'])
+        self.assertFalse(res['attachments'])
+
+        mail = self.format(test_mail_data.MAIL_TOP_LEVEL_TEXT_WITH_FILENAME, disposition='attachment')
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertFalse(res['body'].strip())
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.fname, 'note.txt')
+        self.assertIn('Root body text', attachment.content)
+
+    def test_message_parse_top_level_multipart_ignores_attachment_disposition(self):
+        mail = self.format(test_mail_data.MAIL_TOP_LEVEL_MULTIPART_ATTACHMENT_DISPOSITION)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Visible root message body', res['body'])
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.fname, 'invoice.pdf')
+
+    def test_message_parse_related_root_ignores_attachment_disposition(self):
+        mail = self.format(test_mail_data.MAIL_MULTIPART_RELATED_ATTACHED_ROOT)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Attached root is the body', res['body'])
+        self.assertEqual(
+            [attachment.fname for attachment in res['attachments']],
+            ['image.png'],
+        )
+
+    def test_message_parse_alternative_uses_last_supported_body(self):
+        """Show the last alternative, the one the sender prefers (RFC 2046)."""
+        mail = self.format(test_mail_data.MAIL_MULTIPART_ALTERNATIVE_HTML_PLAIN)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Second plain variant', res['body'])
+        self.assertNotIn('First HTML variant', res['body'])
+
+    def test_message_parse_bounce_stops_after_failure_body(self):
+        mail = self.format(test_mail_data.MAIL_BOUNCE_WITH_TRAILING_PARTS)
+
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Delivery failed for the requested recipient', res['body'])
+        self.assertNotIn('Original message body', res['body'])
+        self.assertFalse(res['attachments'])
 
     def test_message_parse_eml_bounce_headers(self):
         # Test Text/RFC822-Headers MIME content-type
@@ -206,7 +368,7 @@ class TestEmailParsing(MailCommon):
                 to=f'generic@{self.alias_domain}',
             ),
         )
-        with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as log_catcher:
+        with self.assertLogs("odoo.addons.mail.tools.mime", level="WARNING") as log_catcher:
             res = self.env['mail.thread'].message_parse(received_mail)
 
         [attachment] = res['attachments']
@@ -214,6 +376,21 @@ class TestEmailParsing(MailCommon):
         self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
         self.assertEqual(log_catcher.output, [
             Like(f"...Message {message_id!r} has no Content-Type, assuming 'application/octet-stream'"),
+        ])
+
+    def test_message_parse_part_without_content_type(self):
+        """Treat an untyped part in multipart/mixed as binary to preserve its bytes."""
+        mail = self.format(test_mail_data.MAIL_MULTIPART_PART_WITHOUT_CONTENT_TYPE)
+
+        with self.assertLogs('odoo.addons.mail.tools.mime', level='WARNING') as capture:
+            res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn('Typed body', res['body'])
+        [attachment] = res['attachments']
+        self.assertEqual(attachment.fname, 'attachment')
+        self.assertEqual(attachment.content, b'\xff\xd8\xff\x00')
+        self.assertEqual(capture.output, [
+            Like(f"...Message {res['message_id']!r} has no Content-Type, assuming 'application/octet-stream'"),
         ])
 
     def test_message_parse_xhtml(self):

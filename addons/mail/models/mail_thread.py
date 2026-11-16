@@ -17,7 +17,7 @@ import textwrap
 import time
 import typing
 
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
@@ -29,6 +29,7 @@ from werkzeug import urls
 
 from odoo import _, api, Command, exceptions, fields, models, modules, tools
 from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
+from odoo.addons.mail.tools import mime
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import MissingError, AccessError
 from odoo.fields import Domain
@@ -42,7 +43,7 @@ from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
     email_normalize, email_normalize_all, email_split,
     email_split_and_format, email_split_and_format_normalize, email_split_and_normalize,
-    formataddr, html_sanitize,
+    formataddr,
     generate_tracking_message_id,
     unfold_references,
 )
@@ -54,8 +55,6 @@ if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
     from odoo.models import BaseModel
 
-
-BAD_CONTENT_TYPES = ('binary/octet-stream', '*/*', 'bin/plain')  # replaced by application/octet-stream
 
 _logger = logging.getLogger(__name__)
 
@@ -143,7 +142,7 @@ class MailThread(models.AbstractModel):
 
     _CUSTOMER_HEADERS_LIMIT_COUNT = 50
 
-    _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
+    _Attachment = mime.Attachment
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
@@ -1669,102 +1668,14 @@ class MailThread(models.AbstractModel):
         """Extract body as HTML and attachments from the mail message
         """
         attachments = []
-        body = ''
         if save_original:
             attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
 
-        # Be careful, content-type may contain tricky content like in the
-        # following example so test the MIME type with startswith()
-        #
-        # Content-Type: multipart/related;
-        #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
-        #   type="text/html"
-        if message.get_content_maintype() == 'text':
-            body = message.get_content()
-            if message.get_content_type() == 'text/plain':
-                # text/plain -> <pre/>
-                body = append_content_to_html('', body, preserve=True)
-            elif message.get_content_type() == 'text/html':
-                # we only strip_classes here everything else will be done in by html field of mail.message
-                body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
-        else:
-            alternative = False
-            mixed = False
-            html = False
-            for part in message.walk():
-                if message_dict.get('is_bounce') and body:
-                    # bounce email, keep only the first body and ignore
-                    # the parent email that might be added at the end
-                    # (e.g. for outlook / yahoo bounce email)
-                    break
-                if part.get_content_type() == 'multipart/alternative':
-                    alternative = True
-                if part.get_content_type() == 'multipart/mixed':
-                    mixed = True
-                if part.get_content_maintype() == 'multipart':
-                    continue  # skip container
+        body, extracted = mime.extract_body_and_attachments(
+            message, is_bounce=bool(message_dict.get('is_bounce')))
 
-                filename = part.get_filename()  # I may not properly handle all charsets
-
-                content_type = part.get('Content-Type')
-                if not content_type:
-                    _logger.warning(
-                        "Message %r has no Content-Type, assuming 'application/octet-stream'",
-                        message.get('Message-ID'),
-                    )
-                    content_type = 'application/octet-stream'
-                    part['Content-Type'] = content_type
-                mimetype, _, content_type_params = content_type.partition(';')
-                if not all(mimetype.partition('/')) or mimetype in BAD_CONTENT_TYPES:
-                    _logger.warning(
-                        "Message %r containing an unexpected Content-Type %r, assuming 'application/octet-stream'",
-                        message.get('Message-ID'), mimetype,
-                    )
-                    part.replace_header('Content-Type', f'application/octet-stream;{content_type_params}')
-                elif mimetype.startswith('pdf'):
-                    _logger.warning(
-                        "Message %r containing an unexpected Content-Type %r, assuming 'application/pdf'",
-                        message.get('Message-ID'), mimetype,
-                    )
-                    part.replace_header('Content-Type', f'application/pdf;{content_type_params}')
-
-                if part.get_content_type().startswith('text/') and not part.get_param('charset'):
-                    # for text/* with omitted charset, the charset is assumed to be ASCII by the `email` module
-                    # although the payload might be in UTF8
-                    part.set_charset('utf-8')
-                encoding = part.get_content_charset()  # None if attachment
-
-                content = part.get_content()
-                info = {'encoding': encoding}
-                # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
-                if filename and part.get('content-id'):
-                    info['cid'] = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, content, info))
-                    continue
-                # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
-                    continue
-                # 2) text/plain -> <pre/>
-                if part.get_content_type() == 'text/plain' and not (alternative and body):
-                    body = append_content_to_html(body, content, preserve=True)
-                # 3) text/html -> raw
-                elif part.get_content_type() == 'text/html':
-                    # multipart/alternative have one text and a html part, keep only the second
-                    if alternative and not (html and mixed):
-                        body = content
-                    else:
-                        # mixed allows several html parts, append html content
-                        body = append_content_to_html(body, content, plaintext=False)
-                    # TODO: maybe just setting to `True` is enough?
-                    html = html or bool(content)
-                    # we only strip_classes here everything else will be done in by html field of mail.message
-                    body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
-                # 4) Anything else -> attachment
-                else:
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
-
-        return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
+        return self._message_parse_extract_payload_postprocess(
+            message, {'body': body, 'attachments': attachments + extracted})
 
     def _message_parse_extract_bounce(self, email_message, message_dict):
         """ Parse email and extract bounce information to be used in future
