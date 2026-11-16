@@ -21,6 +21,22 @@ class ProductPricelist(models.Model):
         return [('id', 'in', list(set(all_ids + referenced_base_pricelist_ids)))]
 
     @api.model
+    def _server_date_to_domain(self, domain):
+        if domain is not False and (last_server_date := self._last_server_date_to_load()):
+            # Rules are only loaded for loaded pricelists: also resend the pricelists whose rules changed
+            PricelistItem = self.env['product.pricelist.item']
+            item_domain = PricelistItem._server_date_to_domain(Domain('pricelist_id', 'any', domain))
+            changed_pricelist_ids = PricelistItem.search_fetch(item_domain, ['pricelist_id']).pricelist_id.ids
+            return Domain.AND([
+                domain,
+                Domain.OR([
+                    [('write_date', '>', last_server_date)],
+                    [('id', 'in', changed_pricelist_ids)],
+                ]),
+            ])
+        return super()._server_date_to_domain(domain)
+
+    @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'display_name', 'currency_id', 'item_ids']
 
