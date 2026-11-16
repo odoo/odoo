@@ -310,7 +310,9 @@ export class Message extends Component {
 
     get messageActionsParams() {
         return {
+            closeMenu: () => this.optionsDropdown.close(),
             message: () => this.message,
+            messageActive: () => this.isActive(),
             rootRef: this.rootRef,
             thread: () => this.props.thread,
         };
