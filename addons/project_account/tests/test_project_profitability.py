@@ -73,6 +73,10 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
             'name': 'extra costs 2',
             'account_id': project.account_id.id,
             'amount': -50,
+        }, {
+            'name': 'extra revenues without project account',
+            self.analytic_plan._column_name(): self.analytic_account.id,
+            'amount': 10,
         }])
         # Ensures that multiple AAL from different companies are correctly computed for the project profitability
         self.assertDictEqual(
@@ -84,4 +88,10 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
                     'billed': -180.0, 'to_bill': 0.0}], 'total': {'billed': -180.0, 'to_bill': 0.0}}
             },
             'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
+        )
+        project.account_id = False
+        self.assertDictEqual(
+            project._get_profitability_items(False),
+            self.project_profitability_items_empty,
+            'The profitability data of a project without analytic account should not include the AAL without project account.'
         )
