@@ -41,7 +41,7 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.content, invoice_with_pdf.invoice_pdf_report_id.raw)
 
-    def test_portal_my_invoice_detail_download_proforma(self):
+    def test_portal_my_invoice_detail_download_not_sent(self):
         invoice_no_pdf = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.portal_partner.id,
@@ -54,4 +54,4 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         self.authenticate(self.user_portal.login, self.user_portal.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertIn("Proforma", res.content.decode('utf-8'))
+        self.assertNotIn("Proforma", res.content.decode('utf-8'))
