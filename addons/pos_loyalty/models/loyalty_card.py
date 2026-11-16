@@ -70,7 +70,7 @@ class LoyaltyCard(models.Model):
         in_config = card.program_id.id in config._get_program_ids().ids
         vals = card.read(self._load_pos_data_fields(config_id), load=False) if in_config else []
         if vals:
-            vals[0]['has_source_order'] = card._has_source_order()
+            vals[0]['_has_source_order'] = card._has_source_order()
         return {'loyalty.card': vals}
 
     def _get_or_create_pos_card(self, program, partner_id=False, code=False, expiration_date=False, source_order=False):

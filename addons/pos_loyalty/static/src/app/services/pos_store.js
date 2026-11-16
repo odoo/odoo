@@ -242,7 +242,7 @@ patch(PosStore.prototype, {
             return _t("That card has expired (%s).", code);
         }
 
-        if (result && card.program_id?.program_type === "gift_card" && !card.raw.has_source_order) {
+        if (result && card.program_id?.program_type === "gift_card" && !card._has_source_order) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Unpaid gift card"),
                 body: _t(
