@@ -2,7 +2,7 @@ import json
 
 from odoo import http
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon
-from odoo.tests import tagged
+from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 
@@ -138,6 +138,24 @@ class TestMessageController(MailControllerThreadCommon):
             self.env["res.partner"].search_count([('email', '=', "john2@test.be")]),
             "'mail/message/post' does not create another user if there's already a user with matching email",
         )
+
+    @mute_logger("odoo.http")
+    def test_thread_partner_from_email_no_access(self):
+        self._authenticate_pseudo_user(self.user_employee)
+        self.make_jsonrpc_request("/mail/partner/from_email", {
+            "thread_model": self.test_public_record._name,
+            "thread_id": self.test_public_record.id,
+            "emails": ["readable@test.example.com"],
+        })
+        self.assertTrue(self.env["res.partner"].search([("email", "=", "readable@test.example.com")]))
+        admin_record = self.env["mail.test.access"].create({"name": "Admin only", "access": "admin"})
+        with self.assertRaisesRegex(JsonRpcException, "werkzeug.exceptions.NotFound"):
+            self.make_jsonrpc_request("/mail/partner/from_email", {
+                "thread_model": admin_record._name,
+                "thread_id": admin_record.id,
+                "emails": ["hidden@test.example.com"],
+            })
+        self.assertFalse(self.env["res.partner"].search([("email", "=", "hidden@test.example.com")]))
 
     def test_thread_post_archived_record(self):
         self.authenticate(self.user_employee.login, self.user_employee.login)
