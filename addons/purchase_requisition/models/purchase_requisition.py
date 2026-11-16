@@ -290,6 +290,14 @@ class PurchaseRequisitionLine(models.Model):
         if vals.get('display_type'):
             vals = dict(vals, **self._get_display_line_vals())
         res = super().write(vals)
+        if 'product_id' in vals or 'uom_id' in vals:
+            # Keep the SupplierInfo in line with the product and the unit its price is expressed in
+            for line in self.filtered('supplier_info_ids'):
+                line.supplier_info_ids.sudo().write({
+                    'product_id': line.product_id.id,
+                    'product_tmpl_id': line.product_id.product_tmpl_id.id,
+                    'uom_id': line.uom_id.id,
+                })
         if 'price_unit' not in vals:
             return res
         if vals['price_unit'] <= 0.0 and any(
