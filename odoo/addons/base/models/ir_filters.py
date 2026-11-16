@@ -74,8 +74,9 @@ class IrFilters(models.Model):
         return filters
 
     def write(self, vals):
+        shared_filters = self.filtered(lambda f: f.user_ids - self.env.user)
         new_filter = super().write(vals)
-        self.check_access('write')
+        (self - shared_filters.filtered('user_ids')).check_access('write')
         if 'context' in vals or 'user_ids' in vals:
             self._sanitize_shared_context()
         return new_filter
