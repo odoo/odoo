@@ -123,6 +123,7 @@
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
             'mass_mailing/static/src/snippets/**/*.scss',
+            'mass_mailing/static/src/snippets/**/*.css',
         ],
         # Complete style assets required to view the mail content.
         # convert_inline ONLY uses this and inline styles.
@@ -153,7 +154,7 @@
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
         'mass_mailing.mailing_assets': [
-            'mass_mailing/static/src/scss/mailing_portal.scss',
+            'mass_mailing/static/src/scss/mailing_portal.css',
             'mass_mailing/static/src/interactions/subscribe.js',
             'mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
