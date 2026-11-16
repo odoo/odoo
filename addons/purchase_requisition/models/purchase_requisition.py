@@ -233,6 +233,14 @@ class PurchaseRequisitionLine(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        if 'product_id' in vals or 'product_uom_id' in vals:
+            # Keep the SupplierInfo in line with the product and the unit its price is expressed in
+            for line in self.filtered('supplier_info_ids'):
+                line.supplier_info_ids.sudo().write({
+                    'product_id': line.product_id.id,
+                    'product_tmpl_id': line.product_id.product_tmpl_id.id,
+                    'product_uom_id': line.product_uom_id.id,
+                })
         if 'price_unit' not in vals:
             return res
         if vals['price_unit'] <= 0.0 and any(
