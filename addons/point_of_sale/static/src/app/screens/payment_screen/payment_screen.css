@@ -20,6 +20,15 @@
   grid-column: span 2;
 }
 
+.paymentmethod .currency-wise-method {
+    --btn-bg: var(--o-view-background-color);
+    --btn-border-color: var(--o-gray-400);
+    --btn-hover-border-color: var(--btn-border-color);
+
+    flex: 1 0 calc((100% - 3 * var(--o-bs-spacer-1)) / 4);
+    min-width: 0;
+}
+
 .payment-method-icon {
     max-width: 50px;
     max-height: 50px;
