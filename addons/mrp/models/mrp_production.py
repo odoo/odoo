@@ -2584,12 +2584,16 @@ class MrpProduction(models.Model):
 
         self.move_dest_ids.created_production_id = production.id
 
-        if 'confirmed' in self.mapped('state'):
+        to_confirm = 'confirmed' in self.mapped('state')
+        if to_confirm:
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids).write({'state': 'confirmed'})
-            production.action_confirm()
 
         self.with_context(skip_activity=True)._action_cancel()
+        # confirm after the cancel, or the reordering rules count the components of both the old and new MOs
+        if to_confirm:
+            production.action_confirm()
+
         self_sudo = self.sudo()
         groups = {production.production_group_id for production in self_sudo if production.production_group_id}
         self_sudo.production_group_id = False

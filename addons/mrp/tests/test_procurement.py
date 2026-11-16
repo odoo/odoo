@@ -1119,6 +1119,37 @@ class TestProcurement(TestMrpCommon):
         # comp3 (2 + 2 extra) = 4
         self.assertEqual(sorted(mo.picking_ids.move_ids.mapped('product_uom_qty')), [1, 2, 4, 5, 6], 'Comp qty do not match expected')
 
+    def test_merge_mo_with_auto_replenished_component(self):
+        finished, component = self.env['product.product'].create([
+            {'name': 'Finished', 'is_storable': True},
+            {'name': 'Subassembly', 'is_storable': True, 'route_ids': [Command.link(self.route_manufacture.id)]},
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'location_id': self.stock_location.id,
+            'product_id': component.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+        mos = self.env['mrp.production'].create([
+            {'product_id': finished.id, 'bom_id': bom.id, 'product_qty': qty} for qty in (20, 10)
+        ])
+        mos.action_confirm()
+        component_mos = self.env['mrp.production'].search([('product_id', '=', component.id)])
+        self.assertEqual(sum(component_mos.mapped('product_qty')), 30)
+
+        merged_mo = self.env['mrp.production'].browse(mos.action_merge()['res_id'])
+        self.assertEqual(merged_mo.state, 'confirmed')
+        component_mos = self.env['mrp.production'].search([('product_id', '=', component.id), ('state', '!=', 'cancel')])
+        self.assertEqual(sum(component_mos.mapped('product_qty')), 30)
+
     def test_pbm_and_additionnal_components(self):
         """
         2-steps manufacturring.
