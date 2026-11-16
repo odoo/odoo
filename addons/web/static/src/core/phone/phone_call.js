@@ -12,14 +12,15 @@ import { registry } from "@web/core/registry";
 export const phoneCallHandlerRegistry = registry.category("phone_call_handlers");
 
 /**
- * Removes display formatting from a phone number.
+ * Removes display formatting from a phone number, and turns a leading `00`
+ * into `+`.
  *
  * @param {string} phoneNumber
  * @returns {string}
  */
 export function cleanPhoneNumber(phoneNumber) {
     // U+00AD is the “soft hyphen” character.
-    return phoneNumber.replace(/[-()\s/.\u00AD]/g, "");
+    return phoneNumber.replace(/[-()\s/.\u00AD]/g, "").replace(/^00/, "+");
 }
 
 /** @param {string} phoneNumber */
