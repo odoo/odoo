@@ -433,6 +433,26 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="be_work_entry_type_carpooling" model="hr.work.entry.type">
+        <field name="name">Carpooling Work</field>
+        <field name="display_code">CPL</field>
+        <field name="code">002.16</field>
+        <field name="color">10</field>
+        <field name="sequence">2</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="be_work_entry_type_bike_commute" model="hr.work.entry.type">
+        <field name="name">Bike Work</field>
+        <field name="display_code">BKW</field>
+        <field name="code">002.14</field>
+        <field name="color">10</field>
+        <field name="sequence">2</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="be_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid Leave</field>
         <field name="color">1</field>
