@@ -195,6 +195,30 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po.order_line[1].price_unit, purchase_template.line_ids[1].price_unit, 'The purchase template unit price should have been copied to purchase order')
         self.assertEqual(po.order_line[1].product_qty, purchase_template.line_ids[1].product_qty, 'The purchase template product quantity should have been copied to purchase order')
 
+    def test_blanket_order_line_update_vendor_pricelist(self):
+        """ Changing the unit or the product of a line of a confirmed blanket
+        order must update the vendor pricelist created for that line. """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        blanket_order = self.env['purchase.requisition'].create({
+            'requisition_type': 'blanket_order',
+            'vendor_id': self.res_partner_1.id,
+            'line_ids': [Command.create({
+                'product_id': self.product_09.id,
+                'product_qty': 10.0,
+                'price_unit': 10.0,
+            })],
+        })
+        blanket_order.action_confirm()
+        line = blanket_order.line_ids.with_user(self.user_purchase_requisition_user)
+        line.uom_id = uom_dozen
+        self.assertEqual(line.supplier_info_ids.uom_id, uom_dozen)
+
+        line.product_id = self.product_13
+        self.assertEqual(line.supplier_info_ids.product_id, self.product_13)
+        self.assertEqual(line.supplier_info_ids.product_tmpl_id, self.product_13.product_tmpl_id)
+        self.assertEqual(line.supplier_info_ids.uom_id, self.product_13.uom_id)
+        self.assertFalse(self.product_09.seller_ids)
+
     def test_purchase_requisition_with_same_product(self):
         """
         Create two requisitions with the same product, but only one of them has a PO linked.
