@@ -27,6 +27,7 @@ from odoo.exceptions import AccessDenied
 import odoo.release
 import odoo.sql_db
 import odoo.tools
+from odoo.modules.db import FunctionStatus, has_unaccent
 from odoo.sql_db import db_connect
 from odoo.release import version_info
 from odoo.tools import find_pg_tool, exec_pg_environ
@@ -148,7 +149,7 @@ def _create_empty_database(name):
         db = odoo.sql_db.db_connect(name)
         with db.cursor() as cr:
             cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-            if odoo.tools.config['unaccent']:
+            if odoo.tools.config['unaccent'] and has_unaccent(cr) != FunctionStatus.INDEXABLE:
                 cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
                 # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
                 # because it depends on external data - see
