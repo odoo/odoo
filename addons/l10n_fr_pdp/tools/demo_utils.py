@@ -78,8 +78,10 @@ def _mock_button_trigger_authentication(func, self):
     return self._action_open_pdp_form()
 
 
-def _mock_fetch_active_annuaire_lines(func, self, siren):
-    return {}
+def _mock_fetch_active_annuaire_lines(func, self, siren, *args, **kwargs):
+    if not siren:
+        return {}
+    return {'lines': [{'identifier': siren, 'platform_id': "2728", 'nature': 'D'}]}
 
 
 _demo_behaviour = {
