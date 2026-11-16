@@ -171,6 +171,9 @@ export class ConfirmationPage extends Component {
     }
 
     backToHome() {
+        if (this.state.continueDisabled) {
+            return;
+        }
         if (!this.setDefautLanguage()) {
             this.router.navigate("default");
         }

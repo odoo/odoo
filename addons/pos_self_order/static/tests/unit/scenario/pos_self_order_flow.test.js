@@ -680,6 +680,25 @@ test("test_duplicate_order_kiosk: order then close, no My Order button", async (
     await Utils.checkIsNoBtn("My Order");
 });
 
+test("click anywhere goes back to landing page", async () => {
+    await setupSelfPosEnv(
+        "kiosk",
+        "counter",
+        "each",
+        { use_presets: false, available_preset_ids: [] },
+        true
+    );
+    await Utils.clickOrderNow();
+    await Utils.clickCategory("Miscellaneous");
+    await Utils.clickProduct("Coca-Cola");
+    await Utils.clickBtn("Checkout");
+    await Utils.clickBtn("Order");
+    await Utils.checkConfirmationPage();
+    await Utils.clickConfirmationPage();
+    await Utils.checkBtn("Order Now");
+    expect(".confirmation-page").toHaveCount(0);
+});
+
 test("kiosk_order_price_null: zero-price product order", async () => {
     await setupSelfPosEnv(
         "kiosk",
