@@ -18,7 +18,7 @@ import { FIELD } from "./fields";
  *  _name: string;
  *  _fields: Record<string, object>;
  *  _extension: boolean;
- *  _tracked: boolean;
+ *  _editable: boolean;
  *  _reactivity: "field" | "model";
  *  _indexes: string[];
  *  extend<C extends ModelClass<any>, F extends Record<string, any> = {}>(
@@ -81,8 +81,13 @@ export class Model {
     static _fields = {};
     /** own and true on a class returned by `extend` without a name */
     static _extension = false;
-    /** local writes are tracked as changes (baseline + changes + versions) */
-    static _tracked = false;
+    /**
+     * Records are edited locally and saved back: a local write is kept as a
+     * change, apart from the last server value. That is what `isDirty`,
+     * `discard`, `ack` and `toCommands` work on. When false, a write replaces
+     * the value: for data the client only mirrors.
+     */
+    static _editable = false;
     /**
      * How reads subscribe: to each field of each record, or to the whole model
      * (one subscription for all records, for large read-mostly data).
