@@ -18,8 +18,26 @@ class StockPicking(models.Model):
                 return pickings_to_warn_expired._action_generate_expired_wizard()
         return res
 
+<<<<<<< db4e4225c2a977eb842bbea57e7d10727cd62907
+||||||| 1514295fc54bda6d51fac863647b5601ca772f93
+    def _check_expired_lots(self):
+        expired_pickings = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now())).picking_id
+        return expired_pickings
+
+=======
+    def _check_expired_lots(self):
+        expired_pickings = self._get_expired_move_lines().picking_id
+        return expired_pickings
+
+>>>>>>> bbf399ea8cf2afd1d9a63fb0ceb6363d30c6d61d
     def _action_generate_expired_wizard(self):
+<<<<<<< db4e4225c2a977eb842bbea57e7d10727cd62907
         expired_move_lines = self._get_move_lines_with_removal_warning()
+||||||| 1514295fc54bda6d51fac863647b5601ca772f93
+        expired_move_lines = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now()))
+=======
+        expired_move_lines = self._get_expired_move_lines()
+>>>>>>> bbf399ea8cf2afd1d9a63fb0ceb6363d30c6d61d
         view_id = self.env.ref('product_expiry.confirm_expiry_view').id
         context = dict(self.env.context)
 
@@ -42,6 +60,7 @@ class StockPicking(models.Model):
             'target': 'new',
             'context': context,
         }
+<<<<<<< db4e4225c2a977eb842bbea57e7d10727cd62907
 
     def action_detailed_operations(self):
         action = super().action_detailed_operations()
@@ -59,3 +78,12 @@ class StockPicking(models.Model):
                 (removal_date := ml._get_removal_date()) and removal_date <= current_datetime
             ))
         )
+||||||| 1514295fc54bda6d51fac863647b5601ca772f93
+=======
+
+    def _get_expired_move_lines(self):
+        return self.move_line_ids.filtered(lambda ml:
+            ml.picked and
+            (ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now()))
+        )
+>>>>>>> bbf399ea8cf2afd1d9a63fb0ceb6363d30c6d61d
