@@ -97,35 +97,49 @@
             }
         }
 
-        @each $status, $color in (danger: $danger, success: $success, primary: $primary) {
-            &.o-dropdown-item.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
-                &.focus {
-                    background-color: rgba($color, 0.75);
-                    color: white;
-                    &.o-tag-PRIMARY {
-                        background-color: rgba($color, .9);
-                    }
-                }
+        /* The color of each status, and the one it takes without background */
+        &.btn-danger {
+            --o-mail-ActionList-statusColor: var(--danger);
+            --o-mail-ActionList-statusNoBgColor: var(--o-mail-ActionList-dangerNoBgColor, var(--danger));
+        }
+
+        &.btn-success {
+            --o-mail-ActionList-statusColor: var(--success);
+            --o-mail-ActionList-statusNoBgColor: var(--o-mail-ActionList-successNoBgColor, var(--success));
+        }
+
+        &.btn-primary {
+            --o-mail-ActionList-statusColor: var(--primary);
+            --o-mail-ActionList-statusNoBgColor: var(--o-mail-ActionList-primaryNoBgColor, var(--primary));
+        }
+
+        &.o-dropdown-item:is(.btn-danger, .btn-success, .btn-primary):not(.o-tag-JOIN_LEAVE_CALL) {
+            &.focus {
+                background-color: rgb(from var(--o-mail-ActionList-statusColor) r g b / 0.75);
+                color: white;
                 &.o-tag-PRIMARY {
-                    background-color: rgba($color, .9);
-                }
-                &:not(.focus) {
-                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                    &.o-tag-PRIMARY {
-                        background-color: rgba($color, .35);
-                    }
+                    background-color: rgb(from var(--o-mail-ActionList-statusColor) r g b / .9);
                 }
             }
-
-            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
-                &.o-hasBtnBg {
-                    --btn-active-bg: var(--btn-bg);
+            &.o-tag-PRIMARY {
+                background-color: rgb(from var(--o-mail-ActionList-statusColor) r g b / .9);
+            }
+            &:not(.focus) {
+                color: var(--o-mail-ActionList-statusNoBgColor);
+                &.o-tag-PRIMARY {
+                    background-color: rgb(from var(--o-mail-ActionList-statusColor) r g b / .35);
                 }
-                &:not(.o-hasBtnBg) {
-                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                    &:active {
-                        background-color: inherit;
-                    }
+            }
+        }
+
+        &.o-inline:is(.btn-danger, .btn-success, .btn-primary):not(.o-tag-JOIN_LEAVE_CALL) {
+            &.o-hasBtnBg {
+                --btn-active-bg: var(--btn-bg);
+            }
+            &:not(.o-hasBtnBg) {
+                color: var(--o-mail-ActionList-statusNoBgColor);
+                &:active {
+                    background-color: inherit;
                 }
             }
         }

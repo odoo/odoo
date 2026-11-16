@@ -11,8 +11,6 @@
    Menu slide in effect
    ========================================================== */
 
-$quick-reaction-menu-slide-in-duration: 0.15s;
-
 @keyframes qrm-menuSlideInAnimation {
     to {
         transform: scaleX(1);
@@ -25,12 +23,14 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 }
 
 .o-mail-QuickReactionMenu {
+    --o-mail-QuickReactionMenu-slideInDuration: 0.15s;
+
     gap: 1px;
     padding-top: calc(var(--o-bs-spacer-1) / 2);
     padding-bottom: calc(var(--o-bs-spacer-1) / 2);
     transform: scaleX(0.3);
     transform-origin: left;
-    animation: qrm-menuSlideInAnimation $quick-reaction-menu-slide-in-duration cubic-bezier(0.6, 0, 0.4, 1) forwards;
+    animation: qrm-menuSlideInAnimation var(--o-mail-QuickReactionMenu-slideInDuration) cubic-bezier(0.6, 0, 0.4, 1) forwards;
 }
 
 .o-mail-QuickReactionMenu-emoji {
@@ -59,9 +59,6 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 /* ==========================================================
    Emoji buttons pop effect
    ========================================================== */
-
-$quick-reaction-menu-total-buttons: 7;
-$quick-reaction-menu-emoji-delay-increment: 0.045s;
 
 @keyframes qrm-emojiPopAnimation {
     0% {
@@ -92,10 +89,42 @@ $quick-reaction-menu-emoji-delay-increment: 0.045s;
     aspect-ratio: 1;
 }
 
-@for $i from 0 through $quick-reaction-menu-total-buttons {
-    .o-mail-QuickReactionMenu-popEffect:nth-child(#{$i + 1}) {
-        animation-delay: #{$quick-reaction-menu-slide-in-duration / 3 + $i * $quick-reaction-menu-emoji-delay-increment};
-    }
+.o-mail-QuickReactionMenu-popEffect:nth-child(1) {
+    --o-mail-QuickReactionMenu-emojiIndex: 0;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(2) {
+    --o-mail-QuickReactionMenu-emojiIndex: 1;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(3) {
+    --o-mail-QuickReactionMenu-emojiIndex: 2;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(4) {
+    --o-mail-QuickReactionMenu-emojiIndex: 3;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(5) {
+    --o-mail-QuickReactionMenu-emojiIndex: 4;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(6) {
+    --o-mail-QuickReactionMenu-emojiIndex: 5;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(7) {
+    --o-mail-QuickReactionMenu-emojiIndex: 6;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(8) {
+    --o-mail-QuickReactionMenu-emojiIndex: 7;
+}
+
+.o-mail-QuickReactionMenu-popEffect:nth-child(-n + 8) {
+    --o-mail-QuickReactionMenu-emojiDelayIncrement: 0.045s;
+
+    animation-delay: calc(var(--o-mail-QuickReactionMenu-slideInDuration) / 3 + var(--o-mail-QuickReactionMenu-emojiIndex) * var(--o-mail-QuickReactionMenu-emojiDelayIncrement));
 }
 
 
