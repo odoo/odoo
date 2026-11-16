@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from bisect import bisect_left, bisect_right
 from calendar import monthrange
 from collections import defaultdict
 from datetime import UTC, datetime, time, timedelta
@@ -11,6 +12,7 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import convert, float_compare, float_is_zero, format_datetime, format_duration
 from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
 from odoo.tools.intervals import Intervals
@@ -292,46 +294,56 @@ class HrAttendance(models.Model):
         attendances. Skipped when the context has ``skip_time_rules``, i.e. for the writes of
         the time rule pipeline, the refusal and the automatic check-out.
 
+        The attendances that can conflict with the batch are read in one search, restricted to
+        the periods of the batch (its attendances less than a day apart) and to the open
+        attendances. Each attendance is then compared to its neighbours: the previous attendance
+        of the employee must be over when it starts and no other may start before it ends,
+        e.g. 08:00-12:00 conflicts with 11:00-13:00 but not with 12:00-13:00.
+
         :raise ValidationError: if the attendance overlaps another one or if another attendance
             of the employee is still open
         """
         if self.env.context.get('skip_time_rules'):
             return
-        for attendance in self:
-            # we take the latest attendance before our check_in time and check it doesn't overlap with ours
-            last_attendance_before_check_in = self.env['hr.attendance'].search([
-                ('employee_id', '=', attendance.employee_id.id),
-                ('check_in', '<=', attendance.check_in),
-                ('id', '!=', attendance.id),
-            ], order='check_in desc', limit=1)
-            if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
-                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                   empl_name=attendance.employee_id.name,
-                                                   datetime=format_datetime(self.env, last_attendance_before_check_in.check_in, dt_format=False)))
-
-            if not attendance.check_out:
-                # if our attendance is "open" (no check_out), we verify there is no other "open" attendance
-                no_check_out_attendances = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_out', '=', False),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if no_check_out_attendances:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))
+        # one period per group of attendances less than a day apart, so that attendances far
+        # apart in time (e.g. 2024 and 2026) don't read all the attendances in between
+        periods = []
+        for start, stop in sorted((attendance.check_in, attendance.check_out or attendance.check_in) for attendance in self):
+            if periods and start <= periods[-1][1] + timedelta(days=1):
+                periods[-1][1] = max(periods[-1][1], stop)
             else:
-                # we verify that the latest attendance with check_in time before our check_out time
-                # is the same as the one before our check_in time computed before, otherwise it overlaps
-                last_attendance_before_check_out = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<', attendance.check_out),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
+                periods.append([start, stop])
+        candidates = self.env['hr.attendance'].search_fetch(
+            Domain('employee_id', 'in', self.employee_id.ids) & (
+                Domain.OR(Domain('check_in', '<=', stop) & Domain('check_out', '>=', start) for start, stop in periods)
+                | Domain('check_out', '=', False)
+            ),
+            ['employee_id', 'check_in', 'check_out'],
+            order='check_in, id',
+        )
+        candidates_by_employee = candidates.grouped('employee_id')
+        for employee, attendances in self.grouped('employee_id').items():
+            employee_candidates = list(candidates_by_employee[employee])
+            check_ins = [candidate.check_in for candidate in employee_candidates]
+            open_candidates = [candidate for candidate in employee_candidates if not candidate.check_out]
+            for attendance in attendances:
+                index = bisect_right(check_ins, attendance.check_in)
+                # the attendance itself is among the candidates starting before it: skip it
+                previous_candidates = [candidate for candidate in employee_candidates[max(index - 2, 0):index] if candidate != attendance]
+                previous = previous_candidates[-1] if previous_candidates else None
+                if previous and previous.check_out and previous.check_out > attendance.check_in:
                     raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
+                                                       empl_name=employee.name,
+                                                       datetime=format_datetime(self.env, previous.check_in, dt_format=False)))
+                if not attendance.check_out:
+                    if other_open := [candidate for candidate in open_candidates if candidate != attendance]:
+                        raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
+                                                           empl_name=employee.name,
+                                                           datetime=format_datetime(self.env, other_open[-1].check_in, dt_format=False)))
+                elif starting_during := employee_candidates[index:bisect_left(check_ins, attendance.check_out)]:
+                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
+                                                       empl_name=employee.name,
+                                                       datetime=format_datetime(self.env, starting_during[-1].check_in, dt_format=False)))
 
     # fields whose change on a source attendance should warn surviving outputs
     _STALE_TRIGGER_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'work_entry_type_id'})
