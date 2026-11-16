@@ -637,12 +637,16 @@ class test_convert_import_data(TransactionCase):
             ["1.20E-05"],
             ["1,9e5"],
             ["9,5e-5"],
+            ["1.23456789e-3"],
+            ["4.01234567e-5"],
         ]
         expected_result = [
-            ["100000.000000"],
+            ["100000.0"],
             ["0.000012"],
-            ["190000.000000"],
+            ["190000.0"],
             ["0.000095"],
+            ["0.00123456789"],
+            ["0.0000401234567"],
         ]
 
         import_wizard._parse_float_from_data(test_data, 0, 'test-name', test_options)

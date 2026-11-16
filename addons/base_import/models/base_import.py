@@ -21,6 +21,7 @@ import re
 import requests
 
 from collections import defaultdict
+from decimal import Decimal
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
@@ -1233,7 +1234,8 @@ class Import(models.TransientModel):
             if 'E' in line[index] or 'e' in line[index]:
                 tmp_value = line[index].replace(thousand_separator, '.')
                 try:
-                    tmp_value = '{:f}'.format(float(tmp_value))
+                    # keep all the significant digits, '{:f}' alone rounds to 6 decimals
+                    tmp_value = '{:f}'.format(Decimal(repr(float(tmp_value))))
                     line[index] = tmp_value
                     thousand_separator = ' '
                 except Exception:
