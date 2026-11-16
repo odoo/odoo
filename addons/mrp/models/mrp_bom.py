@@ -568,6 +568,9 @@ class MrpBom(models.Model):
             if list_of_domain_by_bom_to_unmark:
                 self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom_to_unmark)).write({'is_outdated_bom': False})
 
+    def _get_product_price_type(self) -> str:
+        return 'standard_price'
+
     def _update_order_line_info(self, *args, **kwargs):
         # for adding/removing products on boms using Catalog
         res = super()._update_order_line_info(*args, **kwargs)
