@@ -36,8 +36,6 @@
                         </div>
                         <div t-if="this.showVideoStream" class="d-flex justify-content-center p-3">
                             <AttendanceVideoStream
-                                height="200"
-                                width="240"
                                 exposeCameraCapture.bind="this.setCameraCapture"
                                 onStreamStateChange.bind="this.setStreamAvailable"
                             />

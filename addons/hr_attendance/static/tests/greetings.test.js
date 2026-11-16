@@ -40,10 +40,10 @@ test("check-in greeting displays the status and returns to the kiosk", async () 
         },
     });
 
-    expect(".o_hr_attendance_kiosk_card").toHaveText(/Welcome/);
-    expect(".o_hr_attendance_kiosk_card").toHaveText(/Checked in at/);
+    expect(".o_attendance_card").toHaveText(/Welcome/);
+    expect(".o_attendance_card").toHaveText(/Checked in at/);
     expect("button").not.toHaveText("Add my break times");
-    await contains(".o_hr_kiosk_mode_bottom button").click();
+    await contains(".o_attendance_btn_next").click();
 
     expect.verifySteps(["return"]);
 });
@@ -128,8 +128,8 @@ test("checkout greeting can continue to break entry", async () => {
         },
     });
 
-    expect(".o_hr_attendance_kiosk_card").toHaveText(/Goodbye/);
-    expect(".o_hr_attendance_kiosk_card").toHaveText(/Checked out at/);
+    expect(".o_attendance_card").toHaveText(/Goodbye/);
+    expect(".o_attendance_card").toHaveText(/Checked out at/);
     await contains("button", { text: "Add my break times" }).click();
 
     expect.verifySteps(["continue break"]);
@@ -148,7 +148,7 @@ test("check-out greeting hides the extra hours without overtime", async () => {
     await mountWithCleanup(KioskGreetings, {
         props: { employeeData, kioskReturn: () => {} },
     });
-    expect(".o_hr_attendance_kiosk_card").not.toHaveText(/extra hours/i);
+    expect(".o_attendance_card").not.toHaveText(/extra hours/i);
 });
 
 test("check-out greeting shows the extra hours of the day", async () => {
@@ -164,6 +164,6 @@ test("check-out greeting shows the extra hours of the day", async () => {
     await mountWithCleanup(KioskGreetings, {
         props: { employeeData, kioskReturn: () => {} },
     });
-    expect(".o_hr_attendance_kiosk_card").toHaveText(/extra hours/i);
-    expect(".o_hr_attendance_kiosk_card").not.toHaveText(/Total/);
+    expect(".o_attendance_card").toHaveText(/extra hours/i);
+    expect(".o_attendance_card").not.toHaveText(/Total/);
 });

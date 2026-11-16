@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="hr_attendance.public_kiosk_manual_selection">
         <div class="position-absolute top-0 start-0 w-100 h-100">
-            <div class="d-flex align-items-center gap-2 p-2 bg-white" style="top: 0px;">
+            <div class="d-flex align-items-center gap-2 p-2 bg-view" style="top: 0px;">
                     <button
                         t-on-click="() => this.props.onClickBack()"
                         class="o_hr_attendance_back_button btn btn-secondary rounded-pill d-flex flex-row align-items-center"
@@ -15,7 +15,7 @@
                         <div class="d-flex flex-row align-items-center rounded-pill border flex-grow-1">
                             <i class="o_searchview_icon oi d-print-none m-2" data-icon="search" aria-label="Search..." title="Search..."/>
                             <div class="o_searchview_input_container position-relative w-100">
-                                <input t-on-input="this.onSearchInput" type="text" class="d-print-none border-0" style="width: 95%; outline: none;" placeholder="Search..."/>
+                                <input t-on-input="this.onSearchInput" type="text" class="d-print-none border-0 bg-transparent" style="width: 95%; outline: none;" placeholder="Search..."/>
                             </div>
                         </div>
                     </div>
@@ -72,22 +72,21 @@
                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4 g-2">
                         <t t-foreach="this.state.employeesData.records" t-as="employee" t-key="employee.id">
                             <div t-on-click="() => this.props.onSelectEmployee(employee.id)" class="col">
-                                <div class="card d-flex flex-column align-items-center h-100 p-2 pt-1">
-                                    <div class="small ms-auto">
-                                        <t t-if="employee.status == 'checked_in'">
-                                            <span class="text-success">
+                                <div class="card h-100">
+                                    <div class="card-body d-flex flex-column align-items-center w-100">
+                                        <img class="rounded-circle" alt="Employee Avatar" loading="lazy" t-attf-src="{{employee.avatar}}"/>
+                                        <div class="d-flex flex-column align-items-center mt-2">
+                                            <h6 class="mb-0" t-out="employee.display_name"/>
+                                            <p class="small text-muted text-center mb-1" t-if="employee.job_id" t-out="employee.job_id"/>
+                                        </div>
+                                        <div class="badge mt-auto rounded-pill border small">
+                                            <t t-if="employee.status == 'checked_in'">
                                                 <t t-if="employee.mode == 'kiosk'">On site</t>
                                                 <t t-else="">Online</t>
-                                            </span>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="text-danger">Absent</span>
-                                        </t>
-                                    </div>
-                                    <img class="rounded-circle" alt="Employee Avatar" loading="lazy" t-attf-src="{{employee.avatar}}"/>
-                                    <div class="d-flex flex-column align-items-center mt-2">
-                                        <h6 class="mb-0" t-out="employee.display_name"/>
-                                        <p class="small text-muted text-center mb-1" t-if="employee.job_id" t-out="employee.job_id"/>
+                                            </t>
+                                            <t t-else="">Absent</t>
+                                            <i class="oi oi-filled ms-2" t-att-class="employee.status == 'checked_in' ? 'text-success' : 'text-danger'" data-icon="circle"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

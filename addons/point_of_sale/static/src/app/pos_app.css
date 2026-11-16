@@ -27,7 +27,8 @@
 
 .pos a {
     text-decoration: none;
-    color: var(--gray-700);
+    /* Preserve the correct text color when a contextual button is defined. */
+    color: var(--btn-color, var(--gray-700));
 }
 
 .pos li {

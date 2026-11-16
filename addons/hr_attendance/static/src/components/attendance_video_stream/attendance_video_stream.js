@@ -5,8 +5,8 @@ export class AttendanceVideoStream extends Component {
     static template = "hr_attendance.AttendanceVideoStream";
 
     props = useProps({
-        height: t.number(),
-        width: t.number(),
+        height: t.number().optional(),
+        width: t.number().optional(),
         exposeCameraCapture: t.function(),
         onStreamStateChange: t.function(),
     });

@@ -41,6 +41,7 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/**/*.js',
             'hr_attendance/static/src/**/*.xml',
             'hr_attendance/static/src/scss/views/*.css',
+            'hr_attendance/static/src/components/attendance_video_stream/*.css',
         ],
         'web.assets_unit_tests': [
             'hr_attendance/static/tests/*.test.js',
@@ -79,6 +80,7 @@ actions(Check in/Check out) performed by them.
             "hr_attendance/static/src/components/new_employee_dialog/**/*",
             "hr_attendance/static/src/components/pin_code/**/*",
 
+            'hr_attendance/static/src/scss/kiosk/kiosk_font_size.css',
             'hr_attendance/static/src/scss/kiosk/kiosk_root.css',
             'hr_attendance/static/src/scss/kiosk/hr_attendance.css',
             "web/static/src/views/fields/formatters.js",

@@ -1,9 +1,10 @@
 <templates xml:space="preserve">
     <t t-name="hr_attendance.AttendanceVideoStream">
-        <div class="d-flex justify-content-center align-items-center w-100 h-100 overflow-hidden rounded-3">
+        <div class="o_attendance_videostream d-flex justify-content-center align-items-center mx-auto rounded-circle overflow-hidden ratio ratio-1x1">
             <video
                 t-ref="this.attendanceVideoRef"
-                class="w-100 h-100 object-fit-cover"
+                class="object-fit-cover"
+                t-att-class="!this.props.height and !this.props.width ? 'w-100 h-100' : ''"
                 style="transform: scaleX(-1);"
                 t-on-contextmenu.prevent=""
             />

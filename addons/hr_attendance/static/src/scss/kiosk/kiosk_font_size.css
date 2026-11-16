@@ -1,0 +1,23 @@
+/* Font size of the attendance kiosk per screen size, shared by the public kiosk
+(kiosk_root.css) and the PoS attendance screen (pos_hr_attendance) */
+:root {
+    --o-attendance-font-size: 1rem;
+
+    @media (min-width: 992px) {
+        --o-attendance-font-size: var(--o-attendance-font-size-root-lg);
+    }
+
+    @media (min-width: 1400px) {
+        --o-attendance-font-size: var(--o-attendance-font-size-root-xxl);
+    }
+
+    /* UW */
+    @media (min-width: 2560px) {
+        --o-attendance-font-size: var(--o-attendance-font-size-root-uw);
+    }
+
+    /* 4K */
+    @media screen and (min-width: 3839px), (min-height: 3839px) {
+        --o-attendance-font-size: var(--o-attendance-font-size-root-4k);
+    }
+}

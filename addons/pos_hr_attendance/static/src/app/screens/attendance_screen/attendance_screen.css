@@ -1,4 +1,25 @@
 .attendance-screen {
+    /* The PoS root font size cannot be changed without affecting the entire PoS interface,
+    so the elements on the kiosk wrap are sized relatively to --o-attendance-font-size
+    (kiosk_font_size.css) instead of rem (Bootstrap ratios of the public kiosk, where
+    $font-size-base is 1rem) */
+    .o_hr_attendance_kiosk_wrap {
+        --body-font-size: var(--o-attendance-font-size);
+        font-size: var(--body-font-size);
+
+        h1, .h1 { font-size: calc(2.5 * var(--body-font-size)); }
+        h2, .h2 { font-size: calc(2 * var(--body-font-size)); }
+        h3, .h3 { font-size: calc(1.75 * var(--body-font-size)); }
+        h4, .h4 { font-size: calc(1.5 * var(--body-font-size)); }
+        h5, .h5 { font-size: calc(1.25 * var(--body-font-size)); }
+        h6, .h6 { font-size: var(--body-font-size); }
+        small, .small { font-size: .875em; }
+
+        .btn { --btn-font-size: var(--body-font-size); }
+        .btn-lg { --btn-font-size: calc(1.25 * var(--body-font-size)); }
+        .btn-sm { --btn-font-size: calc(.875 * var(--body-font-size)); }
+    }
+
     .o_pos_kiosk_body,
     .o_hr_kiosk_sidebar,
     .o_hr_kiosk_manual_selection {

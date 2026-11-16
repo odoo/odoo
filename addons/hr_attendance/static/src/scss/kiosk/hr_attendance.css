@@ -1,3 +1,56 @@
+.o_hr_attendance_kiosk_wrap {
+    .o_hr_attendance_kiosk_mode, .o_hr_kiosk_mode_main, .o_attendance_card {
+        min-height: 0;
+    }
+
+    /* Styles based on Frontdesk check in card */
+    .o_attendance_card {
+        max-width: 25rem;
+    }
+
+    .o_attendance_card_body {
+        scrollbar-color: color-mix(in srgb, var(--o-bs-body-color) 50%, transparent) transparent;
+        scrollbar-width: thin;
+    }
+
+    .o_attendance_scan_zone {
+        --border-style: dashed;
+
+        max-width: 15rem;
+    }
+
+    .o_attendance_barcode {
+        max-width: 6.5rem;
+    }
+
+    .o_attendance_barcode_laser {
+        position: absolute;
+        inset: 50% 0 auto;
+
+        height: 2px;
+        margin-top: -1px;
+        background-color: var(--o-enterprise-action-color);
+        box-shadow: 0 0 .75rem .25rem color-mix(in srgb, var(--o-enterprise-action-color) 35%, transparent);
+        animation: o_attendance_barcode_scan 4s ease-in-out infinite;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+}
+
+@keyframes o_attendance_barcode_scan {
+    0% {
+        top: -20%;
+    }
+    50% {
+        top: 120%;
+    }
+    100% {
+        top: -20%;
+    }
+}
+
 .o_hr_attendance_kiosk_mode {
     --kiosk-searchBar-height: 70px;
     --kiosk-searchBar-height--mobile: 110px;
@@ -13,12 +66,6 @@
 
 .o_mobile_barcode {
     width: max-content;
-    top: -200%;
-}
-
-.o_hr_attendance_install_btn {
-    transform: scale(0.75);
-    left: 115%;
     top: -200%;
 }
 
@@ -38,17 +85,6 @@
 
     @media (max-width: 767.98px) {
         height: calc(100dvh - var(--kiosk-searchBar-height--mobile));
-    }
-}
-
-
-.o_hr_attendance_kiosk_card {
-    min-width: 75%;
-    @media (min-width: 768px) {
-        min-width: 50%;
-    }
-    @media (min-width: 1200px) {
-        min-width: 35%;
     }
 }
 

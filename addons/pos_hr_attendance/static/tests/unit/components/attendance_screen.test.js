@@ -26,7 +26,7 @@ test("shows the attendance kiosk and loads its info once per session", async () 
     await mountWithCleanup(AttendanceScreen);
 
     expect(".o_attendance_background").toHaveCount(2);
-    expect(".o_hr_kiosk_mode_bottom button:first").toHaveText("Identify Manually");
+    expect(".o_attendance_identify_btn").toHaveText("Identify Manually");
     expect(calls).toBe(1);
 });
 

@@ -6,7 +6,6 @@ export class CardLayout extends Component {
     static template = "hr_attendance.CardLayout";
     props = useProps({
         fromTrialMode: t.boolean().optional(),
-        companyImageUrl: t.string(),
         kioskReturn: t.function(),
         activeDisplay: t.string(),
         kioskModeClasses: t.string().optional(""),

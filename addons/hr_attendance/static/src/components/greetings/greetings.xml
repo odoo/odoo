@@ -12,82 +12,70 @@
 
     <t t-name="hr_attendance.public_kiosk_greetings">
         <t t-if="this.attendance">
-            <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
-                <div class="o_hr_attendance_kiosk_card card rounded-3">
-                    <div class="card-body rounded-3 p-3">
-                        <div class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column
-                            align-items-center justify-content-center">
-                            <div class="o_hr_attendance_kiosk_card_main p-2 mx-3 mx-xl-0 text-center">
+            <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 flex-column gap-3 justify-content-center align-items-center">
+                <div class="o_attendance_card card w-100 border-0 shadow-lg">
+                    <div class="o_attendance_card_body card-body overflow-auto text-center">
+                        <div class="d-flex flex-column align-items-center justify-content-center gap-4">
+                            <div class="d-flex flex-column align-items-center mt-4">
                                 <t t-call="hr_attendance.EmployeeBadge"
                                     employeeAvatar="this.props.employeeData.employee_avatar"
-                                    employeeAvatarHeight="'88'"
+                                    employeeAvatarHeight="'128'"
                                 />
-                                <div class="d-flex flex-column gap-1 mt-2">
-                                    <h2 class="display-5 lh-1 fw-medium mb-1">
-                                        <t t-if="this.isCheckOut">Goodbye</t>
-                                        <t t-else="">Welcome</t>
-                                    </h2>
-                                    <div class="fs-2 lh-sm text-muted">
-                                        <t t-out="this.props.employeeData.employee_name"/>
-                                    </div>
-                                </div>
+                                <h1 class="d-block h5 mt-2 mb-1 text-muted">
+                                    <t t-if="this.isCheckOut">Goodbye</t>
+                                    <t t-else="">Welcome</t>
+                                </h1>
+                                <h2 class="mb-0 h4 fw-bold" t-out="this.props.employeeData.employee_name"/>
                             </div>
-                            <div class="o_hr_attendance_kiosk_card_bottom d-flex flex-column w-100 gap-2">
-                                <div t-attf-class="alert alert-{{ this.isCheckOut ? 'info' : 'success' }} text-center mb-0 p-2"
-                                    role="status">
-                                    <strong>
-                                        <t t-if="this.isCheckOut">
-                                            Checked out at <t t-out="this.checkOutTime()"/>
-                                        </t>
-                                        <t t-else="">
-                                            Checked in at <t t-out="this.checkInTime()"/>
-                                        </t>
-                                    </strong>
-                                </div>
-                                <div t-if="this.props.employeeData.hours_today" class="alert alert-info text-center mb-0 p-2"
-                                    role="status">
+                            <div class="d-flex flex-column gap-3" role="status">
+                                <h3 class="h5 mb-0 lh-base">
+                                    <t t-if="this.isCheckOut">
+                                        <span class="text-danger">Checked out at</span>
+                                        <span class="d-block fw-bold" t-out="this.checkOutTime()"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-success">Checked in at</span>
+                                        <span class="d-block fw-bold" t-out="this.checkInTime()"/>
+                                    </t>
+                                </h3>
+                                <p t-if="this.props.employeeData.hours_today" class="mb-0 text-muted" role="status">
                                     <t t-if="this.props.employeeData.is_employee_single_checkin and !this.attendance.check_out">
                                         You've already checked in.
                                     </t>
                                     <t t-else="">
-                                        <t t-if="this.isCheckOut">Hours Today</t>
-                                        <t t-else="">Hours Previously Today</t>:
-                                        <strong><t t-out="this.hoursToday()"/></strong>
+                                        <t t-if="this.isCheckOut">
+                                            <i class="oi me-1" data-icon="timer" title="Today"/>
+                                            Today:
+                                        </t>
+                                        <t t-else="">
+                                            <i class="oi me-1" data-icon="timer" title="Previously Today"/>
+                                            Previously Today:
+                                        </t>
+                                        <strong t-out="this.hoursToday()"/>
                                     </t>
-                                </div>
-                                <div t-if="this.attendance.check_out and this.overtimeToday()"
-                                    class="alert alert-warning d-flex flex-column gap-2 mb-0
-                                    p-2 p-xl-2 border border-warning text-center">
-                                    <div class="small fw-bolder text-uppercase">
-                                        Extra hours
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <div class="d-flex flex-column w-100 mb-0">
-                                            <span class="text-nowrap">Today</span>
-                                            <span class="fs-6"><strong><t t-out="this.overtimeToday()"/></strong></span>
-                                        </div>
-                                        <div t-if="this.totalOvertime()" class="d-flex flex-column w-100 mb-0">
-                                            <span class="text-nowrap">Total</span>
-                                            <span class="fs-6"><strong><t t-out="this.totalOvertime()"/></strong></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div t-if="this.isCheckOut and this.props.employeeData.break_management_enabled"
-                                    role="group" class="alert alert-secondary d-flex flex-column align-items-center">
-                                    <button type="button" class="btn btn-secondary px-4 fw-semibold"
-                                        t-on-click="this.continueBreak">
-                                        Add my break times
-                                    </button>
-                                </div>
+                                </p>
                             </div>
+                            <div
+                                t-if="this.attendance.check_out and this.overtimeToday()"
+                                class="alert alert-warning w-100 mb-0 text-center"
+                            >
+                                <h5 class="small fw-bolder text-uppercase">
+                                    Extra hours
+                                </h5>
+                                <p class="mb-0">Today: <strong t-out="this.overtimeToday()"/></p>
+                                <p t-if="this.totalOvertime()" class="mb-0">Total: <strong t-out="this.totalOvertime()"/></p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column gap-2 mt-4">
+                            <button t-if="this.isCheckOut and this.props.employeeData.break_management_enabled" type="button" class="btn btn-secondary" t-on-click="this.continueBreak">
+                                Add my break times
+                            </button>
+                            <button class="o_attendance_btn_next btn btn-primary" t-on-click="this.props.kioskReturn">
+                                Next
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="o_hr_kiosk_mode_bottom my-2 mx-auto flex-shrink-0">
-                <button class="btn btn-primary btn-lg rounded-pill px-5" t-on-click="this.props.kioskReturn">
-                    Next
-                </button>
             </div>
         </t>
         <t t-else="">

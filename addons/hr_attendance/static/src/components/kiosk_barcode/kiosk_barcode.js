@@ -16,6 +16,7 @@ export class KioskBarcodeScanner extends BarcodeScanner {
         exposeCameraCapture: t.function(),
         fromTrialMode: t.boolean(),
         kioskMode: t.string(),
+        onIdentifyManually: t.function(),
         token: t.string(),
     });
 
