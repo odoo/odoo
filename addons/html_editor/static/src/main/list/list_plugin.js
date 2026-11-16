@@ -43,7 +43,7 @@ import { getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting"
 import { TEXT_CLASSES_REGEX, getColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
-import { composeToolbarButton } from "../toolbar/toolbar";
+import { composeToolbarButton, getShortcutTooltip } from "../toolbar/toolbar";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
@@ -54,19 +54,22 @@ const listSelectorItems = [
         id: "bulleted_list",
         commandId: "toggleListUL",
         mode: "UL",
-        description: _t("Bulleted list (Ctrl + Shift + 8)"),
+        description: _t("Bulleted list"),
+        hotkey: "control+shift+8",
     },
     {
         id: "numbered_list",
         commandId: "toggleListOL",
         mode: "OL",
-        description: _t("Numbered list (Ctrl + Shift + 7)"),
+        description: _t("Numbered list"),
+        hotkey: "control+shift+7",
     },
     {
         id: "checklist",
         commandId: "toggleListCL",
         mode: "CL",
-        description: _t("Checklist (Ctrl + Shift + 9)"),
+        description: _t("Checklist"),
+        hotkey: "control+shift+9",
     },
 ];
 
@@ -1403,7 +1406,7 @@ export class ListPlugin extends Plugin {
                 return {
                     ...pick(button, "id", "icon", "run", "mode"),
                     // We want short descriptions for these buttons.
-                    description: item.description,
+                    description: getShortcutTooltip(button.description(), button.hotkey),
                 };
             });
     }

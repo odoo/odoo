@@ -133,7 +133,7 @@ export class FormatPlugin extends Plugin {
                 id: "removeFormat",
                 description: (sel, nodes) =>
                     nodes && this.canRemoveFormat(nodes)
-                        ? _t("Remove Format (Ctrl + Space)")
+                        ? _t("Remove Format")
                         : _t("Selection has no format"),
                 icon: "ink_eraser",
                 run: this.removeAllFormats.bind(this),
@@ -151,7 +151,8 @@ export class FormatPlugin extends Plugin {
         toolbar_items: [
             {
                 id: "bold",
-                description: _t("Bold (Ctrl + B)"),
+                description: _t("Bold"),
+                hotkey: "control+b",
                 groupId: "decoration",
                 namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatBold",
@@ -160,7 +161,8 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "italic",
-                description: _t("Italic (Ctrl + I)"),
+                description: _t("Italic"),
+                hotkey: "control+i",
                 groupId: "decoration",
                 namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatItalic",
@@ -169,7 +171,8 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "underline",
-                description: _t("Underline (Ctrl + U)"),
+                description: _t("Underline"),
+                hotkey: "control+u",
                 groupId: "decoration",
                 namespaces: ["compact", "expanded", "text", "table"],
                 commandId: "formatUnderline",
@@ -178,7 +181,8 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "strikethrough",
-                description: _t("Strikethrough (Ctrl + 5)"),
+                description: _t("Strikethrough"),
+                hotkey: "control+5",
                 groupId: "decoration",
                 commandId: "formatStrikethrough",
                 isActive: () =>
@@ -187,6 +191,7 @@ export class FormatPlugin extends Plugin {
             },
             withSequence(20, {
                 id: "remove_format",
+                hotkey: "control+space",
                 groupId: "decoration",
                 commandId: "removeFormat",
                 isDisabled: (sel, nodes) => !this.canRemoveFormat(nodes),
