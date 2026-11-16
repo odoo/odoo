@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import email_normalize_all
 from odoo.tools.sql import escape_like_value
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
@@ -34,7 +35,21 @@ class WithdrawalRequest(models.Model):
             )
         values["order_id"] = order.id
         values.pop("order_reference", None)
-        values["recipient_emails"] = request.params.get("recipient_emails")
+        recipient_emails = request.params.get("recipient_emails")
+        if recipient_emails:
+            normalized_emails = email_normalize_all(recipient_emails)
+            internal_emails = (
+                self
+                .env["res.users"]
+                .sudo()
+                .search([("email_normalized", "in", normalized_emails), ("share", "=", False)])
+                .mapped("email_normalized")
+            )
+            if not normalized_emails or set(normalized_emails) - set(internal_emails):
+                raise UserError(
+                    self.env._("Withdrawal notification recipients must be internal users.")
+                )
+        values["recipient_emails"] = recipient_emails
         if form_fields := dict(request.params):
             fields_info = self.fields_get(form_fields.keys(), attributes=["string"])
             blacklisted_fields = self._blacklisted_fields()
