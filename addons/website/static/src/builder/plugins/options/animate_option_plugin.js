@@ -6,9 +6,16 @@ import { AnimateOption } from "./animate_option";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
+import {
+    ancestors,
+    closestElement,
+    descendants,
+    findFurthest,
+} from "@html_editor/utils/dom_traversal";
+import { closestBlock } from "@html_editor/utils/blocks";
 import { ANIMATE } from "@html_builder/utils/option_sequence";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+import { isTextNode } from "@html_editor/utils/dom_info";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 import { handleImagesIfDataset } from "@html_builder/utils/image";
@@ -234,6 +241,7 @@ export class AnimateOptionPlugin extends Plugin {
      * (null if splits are prevented by an unsplittable node)
      */
     splitForAnimatedText({ anchorNode, focusNode, commonAncestorContainer }) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
         let commonAncestor = commonAncestorContainer;
         for (let [node, forward] of [
             [anchorNode, true],
@@ -255,7 +263,13 @@ export class AnimateOptionPlugin extends Plugin {
                 }
                 const updatingCommonAncestor = commonAncestor === node.parentNode;
                 const splitIndex = childNodeIndex(node);
-                if (forward ? splitIndex > 0 : splitIndex < node.parentNode.childNodes.length - 1) {
+                const siblingEls = [...node.parentNode.childNodes];
+                const hasContentToSplitOut = (
+                    forward ? siblingEls.slice(0, splitIndex) : siblingEls.slice(splitIndex + 1)
+                ).some(
+                    (sibling) => !(systemNodeSelectors && sibling.matches?.(systemNodeSelectors))
+                );
+                if (hasContentToSplitOut) {
                     // Split the node if needed, abort if unsplittable (unless it is animated text)
                     if (
                         this.dependencies.split.isUnsplittable(node.parentNode) &&
@@ -306,7 +320,11 @@ export class AnimateOptionPlugin extends Plugin {
         If these splits would split an unsplittable node, we abort
         */
         const selection = this.dependencies.split.splitSelection();
-        const commonAncestor = this.splitForAnimatedText(selection);
+        const commonAncestor = this.splitForAnimatedText({
+            anchorNode: selection.anchorNode,
+            focusNode: selection.focusNode,
+            commonAncestorContainer: closestBlock(selection.commonAncestorContainer),
+        });
         if (!commonAncestor) {
             return {};
         }
@@ -332,6 +350,15 @@ export class AnimateOptionPlugin extends Plugin {
         }
         span.classList.add("o_animated_text", "o_animate_preview");
         span.classList.add("o_animate", "o_anim_fade_in"); // default animation
+        // Splitting an animated text leaves the space between its two parts
+        // inside one of them, and the selection may itself end with a space:
+        // an animated text is displayed as an inline block, so a space at its
+        // edges is not rendered. Such spaces are moved out of it.
+        for (const el of [span.previousElementSibling, span, span.nextElementSibling]) {
+            if (el?.classList.contains("o_animated_text")) {
+                moveEdgeSpacesOut(el);
+            }
+        }
         this.dependencies.selection.setSelection(
             direction === DIRECTIONS.RIGHT
                 ? {
@@ -578,6 +605,25 @@ export class SetAnimationEffectAction extends BuilderAction {
 }
 
 registry.category("website-plugins").add(AnimateOptionPlugin.id, AnimateOptionPlugin);
+
+/**
+ * Moves the spaces at the edges of the given element out of it, as an inline
+ * block does not render them.
+ *
+ * @param {HTMLElement} el
+ */
+function moveEdgeSpacesOut(el) {
+    const getTextNodes = () => descendants(el).filter(isTextNode);
+    const firstTextNode = getTextNodes()[0];
+    if (firstTextNode?.textContent.startsWith(" ")) {
+        firstTextNode.splitText(1);
+        el.before(firstTextNode);
+    }
+    const lastTextNode = getTextNodes().at(-1);
+    if (lastTextNode?.textContent.endsWith(" ")) {
+        el.after(lastTextNode.splitText(lastTextNode.textContent.length - 1));
+    }
+}
 
 function intersect(a, b) {
     return a.filter((value) => b.includes(value));

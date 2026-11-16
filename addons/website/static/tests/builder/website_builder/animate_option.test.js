@@ -652,4 +652,68 @@ describe("animate text in toolbar", () => {
 
         expect("button[title='Animate Text']").toHaveClass("active");
     });
+
+    test("the highlight of an animated text is applied inside it", async () => {
+        await setupWebsiteBuilder(`<p class="test">Your section title</p>`);
+        const paragraphEl = queryOne(":iframe .test");
+        setSelection({
+            anchorNode: paragraphEl.firstChild,
+            anchorOffset: 0,
+            focusNode: paragraphEl.firstChild,
+            focusOffset: paragraphEl.firstChild.length,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+
+        // Reselect the animated text to apply the highlight on it.
+        await thirdClick(paragraphEl);
+        await advanceTime(500);
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Apply highlight']").click();
+        await contains(".o_popover .o_text_highlight_underline").click();
+
+        expect(paragraphEl.outerHTML).toBe(
+            `<p class="test"><span class="o_animated_text o_animate o_anim_fade_in o_animate_preview"><span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-color: var(--o-color-1); --text-highlight-width: 2px;">Your section title</span></span></p>`
+        );
+    });
+
+    test("animating a highlighted text wraps the highlight and its SVGs", async () => {
+        await setupWebsiteBuilder(
+            `<p class="test">Your <span class="o_text_highlight o_text_highlight_underline"><svg class="o_text_highlight_svg"></svg>section title</span></p>`
+        );
+        const textNode = queryOne(":iframe .o_text_highlight").childNodes[1];
+        setSelection({
+            anchorNode: textNode,
+            anchorOffset: 0,
+            focusNode: textNode,
+            focusOffset: textNode.length,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+        expect(queryOne(":iframe .test").outerHTML).toBe(
+            `<p class="test">Your <span class="o_animated_text o_animate o_anim_fade_in o_animate_preview"><span class="o_text_highlight o_text_highlight_underline"><svg class="o_text_highlight_svg"></svg>section title</span></span></p>`
+        );
+    });
+
+    test("animating a word of an animated text keeps the spaces around it", async () => {
+        await setupWebsiteBuilder(
+            `<p class="test"><span class="o_animated_text o_animate o_anim_slide_in">Your section title</span></p>`
+        );
+        const textNode = queryOne(":iframe .o_animated_text").firstChild;
+        setSelection({
+            anchorNode: textNode,
+            anchorOffset: 5,
+            focusNode: textNode,
+            focusOffset: 12,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+        expect(queryOne(":iframe .test").outerHTML).toBe(
+            `<p class="test"><span class="o_animated_text o_animate o_anim_slide_in o_animate_preview">Your</span> <span class="o_animated_text o_animate o_anim_fade_in o_animate_preview">section</span> <span class="o_animated_text o_animate o_anim_slide_in o_animate_preview">title</span></p>`
+        );
+    });
 });
