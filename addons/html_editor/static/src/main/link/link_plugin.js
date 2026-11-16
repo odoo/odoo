@@ -330,6 +330,7 @@ export class LinkPlugin extends Plugin {
             '[data-bs-toggle="tab"]',
             '[data-bs-toggle="collapse"]',
             '[data-bs-toggle="dropdown"]',
+            "[data-bs-slide]",
             ".dropdown-item",
             "[data-oe-model]",
             ":has(>[data-oe-model])",
