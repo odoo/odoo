@@ -1349,11 +1349,7 @@ class HrEmployee(models.Model):
         """
         from_datetime = fields.Datetime.now().replace(tzinfo=UTC)
         to_datetime = from_datetime + timedelta(hours=1)
-        work_intervals = self.filtered('resource_calendar_id')._work_intervals(
-            from_datetime, to_datetime,
-            # only the company-wide leaves, not the employee's own time off
-            domain=[('resource_id', '=', False), ('count_as', '=', 'absence')],
-        )
+        work_intervals = self._work_intervals(from_datetime, to_datetime)
         # The employees should be working now according to their work schedule
         return [employee.id for employee, intervals in work_intervals.items() if intervals]
 
@@ -3161,11 +3157,11 @@ class HrEmployee(models.Model):
         :return: versions ordered by ``date_version``
         :rtype: hr.version
         """
-        versions = self.env['hr.version'].union(*(
+        versions = self.env['hr.version'].union(
             version
             for periods in self._get_contract_version_periods(date_from, date_to).values()
             for _start, _stop, version in periods
-        ))
+        )
         return versions.sorted('date_version')
 
     def _get_contract_version_periods(self, date_from, date_to):
