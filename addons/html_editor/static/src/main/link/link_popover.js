@@ -25,6 +25,8 @@ import {
     getButtonType,
 } from "@html_editor/utils/button_style";
 
+const formatContentColor = (color) => (isCSSVariable(color) ? `var(--${color})` : color);
+
 function useContentChange(el, callback) {
     onMounted(() => {
         el.addEventListener("keyup", callback);
@@ -484,8 +486,62 @@ export class LinkPopover extends Component {
         });
     }
 
+<<<<<<< 71d0a74159349c78a825b1cf0f8f6056da32051d
     get showUrl() {
         return this.state.urlTitle && this.state.url && this.state.urlTitle !== this.state.url;
+||||||| 8196ff1a73f995472cffde5eb9af068024c3b6c8
+    get customStyles() {
+        if (!this.props.allowCustomStyle || this.state.type !== "custom") {
+            return false;
+        }
+        let customStyles = "";
+
+        const textColor = this.customTextColorState.selectedColor;
+        if (!isCSSVariable(textColor)) {
+            customStyles += `color: ${textColor}; `;
+        }
+
+        const fillColor = this.customFillColorState.selectedColor;
+        if (!isCSSVariable(fillColor)) {
+            const backgroundProperty = fillColor.includes("gradient")
+                ? "background-image"
+                : "background-color";
+            customStyles += `${backgroundProperty}: ${fillColor}; `;
+        }
+
+        const borderColor = this.customBorderColorState.selectedColor;
+        customStyles += `border-width: ${this.state.customBorderSize}px; `;
+        customStyles += `border-color: ${formatColor(borderColor)}; `;
+        customStyles += `border-style: ${this.state.customBorderStyle}; `;
+
+        return customStyles;
+=======
+    get customStyles() {
+        if (!this.props.allowCustomStyle || this.state.type !== "custom") {
+            return false;
+        }
+        let customStyles = "";
+
+        const textColor = this.customTextColorState.selectedColor;
+        if (!isCSSVariable(textColor)) {
+            customStyles += `color: ${textColor}; `;
+        }
+
+        const fillColor = this.customFillColorState.selectedColor;
+        if (!isCSSVariable(fillColor)) {
+            const backgroundProperty = fillColor.includes("gradient")
+                ? "background-image"
+                : "background-color";
+            customStyles += `${backgroundProperty}: ${fillColor}; `;
+        }
+
+        const borderColor = this.customBorderColorState.selectedColor;
+        customStyles += `border-width: ${this.state.customBorderSize}px; `;
+        customStyles += `border-color: ${formatContentColor(borderColor)}; `;
+        customStyles += `border-style: ${this.state.customBorderStyle}; `;
+
+        return customStyles;
+>>>>>>> 1d2ea99d24be40d02b87322986e1302f9e02add1
     }
 
     async uploadFile() {
