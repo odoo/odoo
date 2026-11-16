@@ -629,6 +629,31 @@
             background-color: var(--o-input-invalid-bg);
         }
     }
+
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        --ListRenderer-shadow-blur: 1.5rem;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: var(--ListRenderer-shadow-top, 0px) auto auto var(--ListRenderer-shadow-x, 0px);
+            z-index: 2;
+            width: var(--ListRenderer-shadow-width, 100%);
+            height: var(--ListRenderer-shadow-height, 0px);
+            pointer-events: none;
+            box-shadow:
+                inset var(--ListRenderer-shadow-left, 0 0 transparent),
+                inset var(--ListRenderer-shadow-right, 0 0 transparent);
+        }
+
+        &.o_list_has_shadow_left {
+            --ListRenderer-shadow-left: var(--ListRenderer-shadow-blur) 0 var(--ListRenderer-shadow-blur) calc(-1 * var(--ListRenderer-shadow-blur)) rgba(0, 0, 0, 0.35);
+        }
+
+        &.o_list_has_shadow_right {
+            --ListRenderer-shadow-right: calc(-1 * var(--ListRenderer-shadow-blur)) 0 var(--ListRenderer-shadow-blur) calc(-1 * var(--ListRenderer-shadow-blur)) rgba(0, 0, 0, 0.35);
+        }
+    }
 }
 
 .o_optional_columns_dropdown .dropdown-item {
