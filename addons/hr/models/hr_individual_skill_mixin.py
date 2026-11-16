@@ -18,7 +18,8 @@ class HrIndividualSkillMixin(models.AbstractModel):
         raise NotImplementedError()
 
     def _filter_company_visible(self):
-        """ Return the skills whose type is shared or dedicated to the company of the linked record.
+        """ Return the skills whose type is shared or dedicated to the company of the linked record
+        (stored in `is_company_visible`, used by the reports and the lists of skills).
 
         The skills of a type dedicated to another company (the record or the skill type changed of company)
         are kept but hidden, and shown again when both are in the same company again.
@@ -82,6 +83,14 @@ class HrIndividualSkillMixin(models.AbstractModel):
         export_string_translation=False)  # if is_certification change the model will not trigger the constrains
     display_warning_message = fields.Boolean()
     certificate_file = fields.Binary(string="Certificate")
+    is_company_visible = fields.Boolean(compute="_compute_is_company_visible", store=True, index=True,
+        export_string_translation=False)
+
+    @api.depends(lambda self: ['skill_type_id.company_id'] + (['company_id'] if 'company_id' in self._fields else []))
+    def _compute_is_company_visible(self):
+        visible_skills = self._filter_company_visible()
+        for skill in self:
+            skill.is_company_visible = skill in visible_skills
 
     @api.constrains(lambda self: [
         'valid_from', 'valid_to', 'skill_id', 'skill_type_id', 'skill_level_id', self._linked_field_name()

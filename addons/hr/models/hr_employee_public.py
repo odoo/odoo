@@ -91,7 +91,7 @@ class HrEmployeePublic(models.Model):
 
     resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")  # noqa: OLS03023
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",  # noqa: OLS03023
-        domain=[('skill_type_id.active', '=', True)])
+        domain=[('skill_type_id.active', '=', True), ('is_company_visible', '=', True)])
     current_employee_skill_ids = fields.One2many('hr.employee.skill', related='employee_id.current_employee_skill_ids')
     certification_ids = fields.One2many('hr.employee.skill', related='employee_id.certification_ids')
     display_certification_page = fields.Boolean(related="employee_id.display_certification_page")
