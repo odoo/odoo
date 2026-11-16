@@ -22,6 +22,7 @@ export class TranslatePlugin extends Plugin {
     resources = {
         toolbar_groups: withSequence(45, {
             id: "translate",
+            description: _t("Translation"),
         }),
         toolbar_items: [
             {

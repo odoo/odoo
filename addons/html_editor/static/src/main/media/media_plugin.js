@@ -87,7 +87,11 @@ export class MediaPlugin extends Plugin {
                 isAvailable: isMediaSupported,
             },
         ],
-        toolbar_groups: withSequence(31, { id: "image_replace", namespaces: ["image"] }),
+        toolbar_groups: withSequence(31, {
+            id: "image_replace",
+            description: _t("Image replacement"),
+            namespaces: ["image"],
+        }),
         toolbar_items: [
             {
                 id: "replace_image",
