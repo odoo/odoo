@@ -2468,7 +2468,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
-        user has only one allowed company. """
+        user has only one allowed company, and that a delivery address whose
+        customer location is a transit sublocation of it is delivered there. """
         company_a = self.env['res.company'].create({'name': 'Company A'})
         company_b = self.env['res.company'].create({'name': 'Company B'})
         user_a = self.env['res.users'].create({
@@ -2490,6 +2491,27 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         intercom_location = self.env.ref('stock.stock_location_inter_company')
         self.assertEqual(so.picking_ids.location_dest_id, intercom_location)
         self.assertEqual(so.picking_ids.move_ids.location_dest_id, intercom_location)
+
+        transit_location = self.env['stock.location'].create({
+            'name': 'Company B Transit',
+            'location_id': intercom_location.id,
+            'usage': 'transit',
+            'company_id': False,
+        })
+        # The customer location is company dependent: set it for Company A, the seller
+        delivery_address = self.env['res.partner'].with_company(company_a).create({
+            'name': 'Company B Delivery',
+            'parent_id': company_b.partner_id.id,
+            'property_stock_customer': transit_location.id,
+        })
+        so_to_delivery_address = self.env['sale.order'].with_user(user_a).create({
+            'partner_id': company_b.partner_id.id,
+            'partner_shipping_id': delivery_address.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        })
+        so_to_delivery_address.action_confirm()
+        self.assertEqual(so_to_delivery_address.picking_ids.location_dest_id, transit_location)
+        self.assertEqual(so_to_delivery_address.picking_ids.move_ids.location_dest_id, transit_location)
 
     def test_update_sol_quantity_without_packaging(self):
         """
