@@ -527,6 +527,8 @@ test(`simple calendar rendering on mobile`, async () => {
     await contains(`.dropdown-item:eq(0)`).click();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
+    // the bottom sheet resizes to the new filter, and the autocomplete closes on scroll
+    await animationFrame();
     await contains(`.o_calendar_sidepanel input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(1);
     expect(`.dropdown-item`).toHaveText("partner 4");
@@ -1032,6 +1034,8 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
     await contains(".o_data_row:eq(0)").click();
     expect("o_dialog").toHaveCount(0);
+    // the bottom sheet resizes to the new filters, and the autocomplete closes on scroll
+    await animationFrame();
 
     expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     expect(`.o_calendar_filter_item`).toHaveCount(4);
@@ -2245,9 +2249,9 @@ test(`set filter with many2many field on mobile`, async () => {
             </calendar>
         `,
     });
-    await contains(`.o_filter`).click();
+    await displayCalendarPanel();
     expect(`.o_calendar_filter_item`).toHaveCount(5);
-    await contains(`.o_filter`).click();
+    await hideCalendarPanel();
     expect(`.o_event[data-event-id="1"] .o_calendar_event_main`).toHaveCount(1);
     expect(`.o_event[data-event-id="5"] .o_calendar_event_main`).toHaveCount(1);
 
@@ -2301,7 +2305,7 @@ test("many2many filter handles archived records without crashing on mobile", asy
             </calendar>
         `,
     });
-    await contains(`.o_filter`).click();
+    await displayCalendarPanel();
     expect(`.o_calendar_filter_item`).toHaveCount(4);
 });
 
@@ -2352,9 +2356,9 @@ test(`set filter with one2many field on mobile`, async () => {
             </calendar>
         `,
     });
-    await contains(`.o_filter`).click();
+    await displayCalendarPanel();
     expect(`.o_calendar_filter_item`).toHaveCount(5);
-    await contains(`.o_filter`).click();
+    await hideCalendarPanel();
     expect(`.o_event[data-event-id="1"] .o_calendar_event_main`).toHaveCount(1);
     expect(`.o_event[data-event-id="5"] .o_calendar_event_main`).toHaveCount(1);
 
@@ -5512,31 +5516,48 @@ test("calendar sidebar reacts to isSmall changes", async () => {
     await mountView({
         resModel: "event",
         type: "calendar",
-        arch: `<calendar date_start="start" mode="week"/>`,
+        arch: `
+            <calendar date_start="start" mode="week">
+                <field name="partner_id" filters="1"/>
+            </calendar>`,
     });
     expect(".o_calendar_renderer").toHaveCount(1);
     expect(".o_calendar_sidepanel").toHaveCount(1);
     expect(".o_calendar_sidebar").toHaveCount(0);
-    expect(".o_other_calendar_panel").toHaveCount(0);
+    expect(".o_calendar_header .o_expand_filter_button").toHaveCount(0);
 
     // Reduce the viewport to a mobile size (isSmall = true)
     // The sidepanel (which is expanded by default) should be hidden without interaction,
-    // and swapped for the mobile filter panel's toggle bar instead of the desktop sidepanel.
+    // and swapped for the filter button of the header instead of the desktop sidepanel.
     await resize({ width: 500 });
     await animationFrame();
     expect(".o_calendar_renderer").toHaveCount(1);
     expect(".o_calendar_sidepanel").toHaveCount(0);
     expect(".o_calendar_sidebar").toHaveCount(0);
-    expect(".o_other_calendar_panel").toHaveCount(1);
+    expect(".o_calendar_header .o_expand_filter_button").toHaveCount(1);
 
     // Expand the viewport to desktop size, the sidepanel should show again,
-    // and the mobile filter panel should be removed.
+    // and the filter button should be removed.
     await resize({ width: 1200 });
     await animationFrame();
     expect(".o_calendar_renderer").toHaveCount(1);
     expect(".o_calendar_sidepanel").toHaveCount(1);
     expect(".o_calendar_sidebar").toHaveCount(0);
-    expect(".o_other_calendar_panel").toHaveCount(0);
+    expect(".o_calendar_header .o_expand_filter_button").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("no filter button when the filter sections have nothing to show", async () => {
+    Event._records = [];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" mode="week">
+                <field name="partner_id" filters="1"/>
+            </calendar>`,
+    });
+    expect(".o_calendar_header .o_expand_filter_button").toHaveCount(0);
 });
 
 test(`calendar should show date information on header`, async () => {
@@ -5949,22 +5970,21 @@ test("calendar: show and change other calendar", async () => {
         message: "should contain 2 child nodes -> 2 resources",
     });
 
-    expect(".o_calendar_sidepanel").toHaveCount(1);
-    expect(".o_calendar_renderer").toHaveCount(0);
+    expect(".o_bottom_sheet .o_calendar_sidepanel").toHaveCount(1);
     expect(".o_calendar_filter").toHaveCount(1);
     expect(".o_calendar_filter[data-name=partner_id]").toHaveCount(1);
 
     // Toggle the whole section filters by unchecking the all items checkbox
     await hideCalendarPanel();
     await toggleSectionFilter("partner_id");
-    await displayCalendarPanel();
-    expect(".o_other_calendar_panel .o_filter > *").toHaveCount(0, {
-        message: "should contain 0 child nodes -> no filters selected",
+    expect(".o_other_calendar_panel").toHaveCount(0, {
+        message: "no filter selected -> no legend",
     });
+    await displayCalendarPanel();
 
-    // Toggle again the other calendar panel should hide the sidebar and show the calendar view
-    await contains(".o_other_calendar_panel").click();
-    expect(".o_calendar_sidepanel").toHaveCount(0);
+    // Closing the bottom sheet leaves the calendar alone
+    await hideCalendarPanel();
+    expect(".o_bottom_sheet").toHaveCount(0);
     expect(".o_calendar_renderer").toHaveCount(1);
 });
 

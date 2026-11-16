@@ -75,6 +75,7 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
     const hasWritePermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
     const canCreate = options.no_create ? false : hasCreatePermission;
     return {
+        bottomSheet: !!options.bottom_sheet,
         canCreate,
         canCreateEdit: canCreate && !options.no_create_edit,
         canOpen: !options.no_open,
@@ -94,6 +95,7 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
 
 export const many2OneFieldProps = {
     ...standardFieldProps,
+    bottomSheet: t.boolean().optional(),
     canCreate: t.boolean().optional(),
     canCreateEdit: t.boolean().optional(),
     canOpen: t.boolean().optional(),
