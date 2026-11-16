@@ -37,6 +37,27 @@ class TestBuyGiftCard(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self.assertEqual(len(order._get_reward_coupons()), 1)
 
+    def test_buying_gift_card_in_foreign_currency(self):
+        """A gift card bought with a pricelist in another currency must get its value in the
+        currency of the program, not the amount paid in the currency of the order."""
+        self.immediate_promotion_program.active = False
+        foreign_currency = self.setup_other_currency('EUR', rates=[('2000-01-01', 2.0)])
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'EUR pricelist',
+            'currency_id': foreign_currency.id,
+        })
+        order = self.empty_order
+        order.write({
+            'pricelist_id': pricelist.id,
+            'order_line': [Command.create({'product_id': self.product_gift_card.id})],
+        })
+        self.assertEqual(order.amount_total, 100.0, "50 USD are 100 EUR")
+        order._update_programs_and_rewards()
+        order.action_confirm()
+        gift_card = order._get_reward_coupons()
+        self.assertEqual(gift_card.currency_id, self.env.company.currency_id)
+        self.assertEqual(gift_card.points, 50.0)
+
     def test_gift_card_email_sender(self):
         """Ensure that sending gift card emails have a sender.
         Either the order's salesman if available, otherwise the order's company.
