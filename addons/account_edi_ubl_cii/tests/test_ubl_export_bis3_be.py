@@ -1109,6 +1109,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         """
         tax_12 = self.percent_tax(12.0)
         tax_21 = self.percent_tax(21.0)
+        tax_6 = self.percent_tax(6.0)
         product_1 = self._create_product(lst_price=100, name="product_1")
         product_2 = self._create_product(lst_price=50, name="product_2")
         product_3 = self._create_product(lst_price=200, name="product_3")
@@ -1119,18 +1120,51 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             invoice_line_ids=[
                 # This section should be ignored, the product line should be exported instead.
                 self._prepare_invoice_line(name="Section 2", display_type='line_section', collapse_composition=False, price_unit=0.0),
-                self._prepare_invoice_line(product_id=product_4, tax_ids=[tax_21.id]),
+                self._prepare_invoice_line(product_id=product_4, tax_ids=tax_21),
                 # This section should be exported twice : one for 12%, other for 21%.
                 self._prepare_invoice_line(name="Section 1", display_type='line_section', collapse_composition=True, price_unit=0.0),
-                self._prepare_invoice_line(product_id=product_1, tax_ids=[tax_12.id]),
-                self._prepare_invoice_line(product_id=product_2, tax_ids=[tax_12.id]),
-                self._prepare_invoice_line(product_id=product_3, tax_ids=[tax_21.id]),
+                self._prepare_invoice_line(product_id=product_1, tax_ids=tax_12),
+                self._prepare_invoice_line(product_id=product_2, tax_ids=tax_12),
+                self._prepare_invoice_line(product_id=product_3, tax_ids=tax_21),
             ],
             post=True,
         )
 
         self._generate_invoice_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines_1')
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=product_1, tax_ids=tax_21),
+                self._prepare_invoice_line(name="Section 1", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(name="Section 1 1", display_type='line_section', collapse_composition=False, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_3, tax_ids=tax_21),  # will be swap with the one below
+                self._prepare_invoice_line(product_id=product_2, tax_ids=tax_12),  # will be swap with the one above
+                self._prepare_invoice_line(name="Section 2", display_type='line_section', collapse_prices=True, collapse_composition=False, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_1, tax_ids=tax_21),
+                self._prepare_invoice_line(name="Section 2 1", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_1, tax_ids=tax_21),
+                self._prepare_invoice_line(name="Section 2 2", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_2, tax_ids=tax_6),
+            ],
+        )
+
+        # The order of the lines in the UI (sequence, id) is different than the one in _order (id).
+        # To ensure there is an explicit filtering somewhere, we inverse 2 lines here.
+        invoice_line_ids = []
+        for index, aml in enumerate(invoice.invoice_line_ids):
+            if index == 3:
+                index += 1
+            elif index == 4:
+                index -= 1
+            invoice_line_ids.append(Command.update(aml.id, {'sequence': index}))
+        invoice.invoice_line_ids = invoice_line_ids
+
+        invoice.action_post()
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines_2')
 
     def test_export_collapsed_sections_amounts(self):
         """ Test that the amounts of collapsed sections are correctly exported. """

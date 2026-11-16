@@ -2020,10 +2020,22 @@ export const accountTaxHelpers = {
      */
     reduce_base_lines_with_grouping_function(
         base_lines,
-        { grouping_function = null, aggregate_function = null, computation_key = null } = {}
+        {
+            grouping_function = null,
+            aggregate_function = null,
+            filter_function = null,
+            computation_key = null,
+        } = {}
     ) {
-        const base_line_map = {};
+        const aggregated_base_lines_mapping = {};
+        const order_base_lines_mapping = [];
         for (const base_line of base_lines) {
+            const has_to_be_grouped = !filter_function || filter_function(base_line);
+            if (!has_to_be_grouped) {
+                order_base_lines_mapping.push(["line", base_line]);
+                continue;
+            }
+
             const price_unit_after_discount =
                 base_line.price_unit * (1 - base_line.discount / 100.0);
             const new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
@@ -2055,7 +2067,7 @@ export const accountTaxHelpers = {
             }
 
             const grouping_key_json = JSON.stringify(raw_grouping_key);
-            let target_base_line = base_line_map[grouping_key_json];
+            let target_base_line = aggregated_base_lines_mapping[grouping_key_json];
             if (target_base_line) {
                 target_base_line.price_unit += new_base_line.price_unit;
                 target_base_line.tax_details = this.merge_tax_details(
@@ -2076,18 +2088,31 @@ export const accountTaxHelpers = {
                         ),
                     },
                 });
-                base_line_map[grouping_key_json] = target_base_line;
+                aggregated_base_lines_mapping[grouping_key_json] = target_base_line;
+                order_base_lines_mapping.push(["group", grouping_key_json]);
                 if (aggregate_function) {
                     aggregate_function(target_base_line, base_line);
                 }
             }
         }
 
-        // Remove zero lines.
-        const reduced_base_lines = Object.values(base_line_map).filter(
-            (base_line) => !floatIsZero(base_line.price_unit, base_line.currency_id.decimal_places)
-        );
-        return reduced_base_lines;
+        const new_base_lines = [];
+        for (const [quid, item] of order_base_lines_mapping) {
+            if (quid === "line") {
+                new_base_lines.push(item);
+            } else {
+                const target_base_line = aggregated_base_lines_mapping[item];
+                const currency = target_base_line.currency_id;
+
+                // Remove zero lines.
+                if (floatIsZero(target_base_line.price_unit, currency.decimal_places)) {
+                    continue;
+                }
+
+                new_base_lines.push(target_base_line);
+            }
+        }
+        return new_base_lines;
     },
 
     /**
