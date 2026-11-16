@@ -328,6 +328,7 @@ export class PosTicketPrinterPlugin extends Plugin {
         retryChanges = new Map(),
     }) {
         let isPrinted = false;
+        let orderChanges = null;
         const unsuccessfulPrints = [];
         // Each printer has its own change (filtered on its categories) to print again on retry
         const failedChanges = new Map();
@@ -343,7 +344,7 @@ export class PosTicketPrinterPlugin extends Plugin {
             const tickets = printer.is_split_per_product
                 ? this._splitTicketsPerProduct(changes, generator)
                 : changes;
-            const orderChanges = changes.length ? changes[0]._rawChange : null;
+            orderChanges ||= changes[0]?._rawChange;
 
             for (const ticket of tickets) {
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
@@ -379,10 +380,12 @@ export class PosTicketPrinterPlugin extends Plugin {
                     this.displayPrinterWarning(result, printer.name);
                 }
             }
+        }
 
-            if (isPrinted && orderChanges) {
-                order.pushLastPrints(orderChanges);
-            }
+        const sentToPreparationDisplay =
+            !opts.prepOrderLines && Boolean(this.data.models["pos.prep.display"]?.length);
+        if (orderChanges && (sentToPreparationDisplay ? !retryChanges.size : isPrinted)) {
+            order.pushLastPrints(orderChanges);
         }
 
         if (unsuccessfulPrints.length) {
