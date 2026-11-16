@@ -81,3 +81,12 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
 
     def test_mass_mailing_dynamic_placeholder_tour(self):
         self.start_tour("/odoo", 'mass_mailing_dynamic_placeholder_tour', login="demo")
+
+    def test_mailing_form_tour(self):
+        mailing = self.env['mailing.mailing'].create({
+            'subject': 'Sent mailing',
+            'state': 'done',
+        })
+        self.start_tour(
+            f"/odoo/mailing.mailing/{mailing.id}", 'mailing_form_tour', login="user_marketing"
+        )
