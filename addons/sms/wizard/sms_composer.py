@@ -33,11 +33,13 @@ class SmsComposer(models.TransientModel):
             values = {
                 'res_model': result.get('res_model') or self.env.context.get('active_model'),
             }
-            active_ids = self.env.context.get('active_ids') or []
-            if len(active_ids) > 1:
-                values['res_ids'] = repr(active_ids)
-            elif active_id := self.env.context.get('active_id'):
-                values['res_id'] = active_id
+            # explicit defaults (default_res_id(s)) take precedence over active_* keys
+            if not result.get('res_ids') and not result.get('res_id'):
+                active_ids = self.env.context.get('active_ids') or []
+                if len(active_ids) > 1:
+                    values['res_ids'] = repr(active_ids)
+                elif active_id := self.env.context.get('active_id'):
+                    values['res_id'] = active_id
 
         for field, value in values.items():
             if not fields or field in fields:
