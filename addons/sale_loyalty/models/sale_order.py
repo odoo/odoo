@@ -1263,7 +1263,9 @@ class SaleOrder(models.Model):
                                 or line.product_uom_qty <= 0
                             ):
                                 continue
-                            line_price_total = self._get_order_line_price(line, 'price_total')
+                            line_price_total = self.currency_id._convert(
+                                self._get_order_line_price(line, 'price_total'), program.currency_id, self.company_id,
+                            )
                             points_per_unit = float_round(
                                 (rule.reward_point_amount * line_price_total / line.product_uom_qty),
                                 precision_digits=2, rounding_method='DOWN')
@@ -1291,6 +1293,8 @@ class SaleOrder(models.Model):
                                 else 0.0
                             )
 
+                        # Points are given per amount spent in the currency of the program
+                        amount_paid = self.currency_id._convert(amount_paid, program.currency_id, self.company_id)
                         points += float_round(rule.reward_point_amount * amount_paid, precision_digits=2, rounding_method='DOWN')
                     elif rule.reward_point_mode == 'unit':
                         points += rule.reward_point_amount * ordered_rule_products_qty
