@@ -1,6 +1,6 @@
 import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_record";
 import { useService } from "@web/core/utils/hooks";
-import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_plugin";
 
 export class ProductDocumentKanbanRecord extends KanbanRecord {
     setup() {
