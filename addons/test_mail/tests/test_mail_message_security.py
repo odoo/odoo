@@ -152,6 +152,21 @@ class TestMailMessageAccess(MessageAccessCommon):
         # prepare 'notified of parent' condition
         admin_msg = self.record_admin.message_ids[0]
         admin_msg.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
+        other_thread_msg = self.record_public.message_ids[-1]
+        other_thread_msg.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
+        private_msg, user_notification_msg = self.env['mail.message'].with_user(self.user_employee).create([
+            {
+                'body': 'Test',
+                'partner_ids': [(4, self.user_employee.partner_id.id)],
+            }, {
+                'body': 'Test',
+                'message_type': 'user_notification',
+                'model': self.record_admin._name,
+                'partner_ids': [(4, self.user_employee.partner_id.id)],
+                'reply_to': 'avoid.catchall@my.test.com',  # otherwise crashes
+                'res_id': self.record_admin.id,
+            },
+        ])
 
         # prepare 'followers' condition
         record_admin_fol = self.env['mail.test.access'].create({
@@ -175,6 +190,9 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin, {  # note: force reply_to normally computed by message_post avoiding ACLs issues
                 'parent_id': admin_msg.id,
             }, False, 'No access on record but reply to notified parent'),
+            (self.record_admin, {'parent_id': other_thread_msg.id}, True, 'Notified parent from another thread'),
+            (self.record_admin, {'parent_id': private_msg.id}, True, 'Notified parent is a private message'),
+            (self.record_admin, {'parent_id': user_notification_msg.id}, True, 'Notified parent is a user notification'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
                 final_vals = dict(
@@ -714,10 +732,23 @@ class TestMailMessageAccess(MessageAccessCommon):
         message.write({'partner_ids': [(4, self.user_portal_2.partner_id.id)]})
         with self.assertRaises(AccessError):
             message.write({'res_id': self.record_public.id})
+        with self.assertRaises(AccessError):
+            message.write({'message_type': 'notification'})
         # To change in 18+
         message.write({'notification_ids': [
             (0, 0, {'res_partner_id': self.user_portal_2.partner_id.id})
         ]})
+
+        user_notification = self.env['mail.message'].with_user(self.user_employee).create({
+            'body': 'Test',
+            'message_type': 'user_notification',
+            'model': self.record_admin._name,
+            'partner_ids': [(4, self.user_employee.partner_id.id)],
+            'reply_to': 'avoid.catchall@my.test.com',  # otherwise crashes
+            'res_id': self.record_admin.id,
+        })
+        with self.assertRaises(AccessError):
+            user_notification.write({'message_type': 'comment'})
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_access_write_portal_notification(self):
