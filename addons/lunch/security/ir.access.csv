@@ -14,7 +14,8 @@ product_category_manager,Product category user,lunch.product.category,lunch.grou
 ir_rule_lunch_product_category_multi_company,Lunch product category: Multi Company,lunch.product.category,,crud,"[('company_id', 'in', company_ids + [False])]"
 lunch_alert_access,access_lunch_alert_user,lunch.alert,base.group_user,r,
 lunch_alert_manager,access_lunch_alert_manager,lunch.alert,lunch.group_lunch_manager,crud,
-lunch_cashmove_report_manager,access_lunch_cashmove_report,lunch.cashmove.report,base.group_user,r,
+lunch_cashmove_report_manager,access_lunch_cashmove_report,lunch.cashmove.report,base.group_user,r,"[('user_id', '=', user.id)]"
+lunch_cashmove_report_lunch_manager,lunch.cashmove.report: do see other people's cashmove,lunch.cashmove.report,lunch.group_lunch_manager,r,
 lunch_location_user,access_lunch_location,lunch.location,lunch.group_lunch_user,ru,
 lunch_location_manager,access_lunch_location,lunch.location,lunch.group_lunch_manager,crud,
 ir_rule_lunch_location_multi_company,Lunch location: Multi Company,lunch.location,,crud,"[('company_id', 'in', company_ids + [False])]"
