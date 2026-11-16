@@ -404,6 +404,8 @@ class SaleProductConfiguratorController(Controller):
         :rtype: float
         :return: The extra price for the product template attribute value.
         """
+        if not ptav.show_price_extra:
+            return 0.0
         return ptav.currency_id._convert(
             ptav.price_extra,
             currency,
