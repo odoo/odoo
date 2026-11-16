@@ -1171,8 +1171,8 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.env.context.get("formatted_display_name"):
                 name = partner.name or ''
-                if partner.parent_id:
-                    name = (f"{partner.parent_id.name} \t "
+                if parent := partner.sudo().parent_id:
+                    name = (f"{parent.name} \t "
                             f"--{partner.name or type_description.get(partner.type, '')}--")
 
                 if partner.env.context.get('show_email') and partner.email:
