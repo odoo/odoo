@@ -19,11 +19,11 @@ class StockPicking(models.Model):
         return res
 
     def _check_expired_lots(self):
-        expired_pickings = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now())).picking_id
+        expired_pickings = self._get_expired_move_lines().picking_id
         return expired_pickings
 
     def _action_generate_expired_wizard(self):
-        expired_move_lines = self.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now()))
+        expired_move_lines = self._get_expired_move_lines()
         view_id = self.env.ref('product_expiry.confirm_expiry_view').id
         context = dict(self.env.context)
 
@@ -46,3 +46,9 @@ class StockPicking(models.Model):
             'target': 'new',
             'context': context,
         }
+
+    def _get_expired_move_lines(self):
+        return self.move_line_ids.filtered(lambda ml:
+            ml.picked and
+            (ml.lot_id.product_expiry_alert or (ml.removal_date and ml.removal_date <= datetime.datetime.now()))
+        )
