@@ -610,14 +610,17 @@ def load_modules(
         registry.check_null_constraints(cr)
 
         if update_module:
-            cr.execute(
-                """
-                INSERT INTO ir_config_parameter(key, value)
-                SELECT 'base.partially_updated_database', '1'
-                WHERE EXISTS(SELECT FROM ir_module_module WHERE state IN ('to upgrade', 'to install', 'to remove'))
-                ON CONFLICT DO NOTHING
-                """
-            )
+            # ignore pending modules the graph skips (not installable, missing
+            # dependencies, ...), or every registry load would update again
+            cr.execute("SELECT name FROM ir_module_module WHERE state IN ('to upgrade', 'to install', 'to remove')")
+            pending = [name for (name,) in cr.fetchall()]
+            graph.extend(pending)
+            if any(name in graph for name in pending):
+                cr.execute("""
+                    INSERT INTO ir_config_parameter(key, value)
+                    VALUES ('base.partially_updated_database', '1')
+                    ON CONFLICT DO NOTHING
+                """)
 
 
 def reset_modules_state(db_name: str) -> None:
