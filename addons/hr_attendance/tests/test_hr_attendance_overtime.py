@@ -2130,6 +2130,30 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertEqual(absence.check_in, datetime(2026, 8, 9, 22, 0))
         self.assertLess(absence.overtime_hours, 0)
 
+    def test_absence_detection_employee_timezone(self):
+        """ Absences are detected on the employee's own yesterday: an attendance
+        on that day is found whenever it starts and ends in UTC, and the absence
+        is created only once, however many times the cron runs that day. """
+        (self.company | self.company_1).absence_management = True
+        self.ruleset.company_id = self.company
+        attendances = self.env['hr.attendance'].create([{
+            # Monday 10 August 2026 from 00:00 to 00:30 in Europe/Brussels
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2026, 8, 9, 22, 0),
+            'check_out': datetime(2026, 8, 9, 22, 30),
+        }, {
+            # Sunday 9 at 08:00 to Tuesday 11 at 03:00 in Pacific/Honolulu
+            'employee_id': self.honolulu_employee.id,
+            'check_in': datetime(2026, 8, 9, 18, 0),
+            'check_out': datetime(2026, 8, 11, 13, 0),
+        }])
+        # Monday 10 is not worked in Asia/Tokyo
+        for now in ('2026-08-11 02:00:00', '2026-08-11 06:00:00'):
+            with freeze_time(now):
+                self.env['hr.attendance']._cron_absence_detection()
+        self.assertEqual((self.europe_employee | self.honolulu_employee).attendance_ids, attendances)
+        self.assertRecordValues(self.jpn_employee.attendance_ids, [{'check_in': datetime(2026, 8, 9, 15, 0), 'in_mode': 'technical'}])
+
     def test_absence_detection_weekly_rule_keeps_approved_extra_hours(self):
         """ With a weekly quantity rule, running the absence detection after a
         day worked as scheduled keeps the approved extra hours of the week. """
