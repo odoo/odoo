@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 class User(models.Model):
     _inherit = 'res.users'
 
-    microsoft_calendar_account_id = fields.Many2one('microsoft.calendar.credentials')
+    microsoft_calendar_account_id = fields.Many2one('microsoft.calendar.credentials', copy=False)
     microsoft_calendar_sync_token = fields.Char(related='microsoft_calendar_account_id.calendar_sync_token')
     microsoft_synchronization_stopped = fields.Boolean(related='microsoft_calendar_account_id.synchronization_stopped', readonly=False)
     microsoft_last_sync_date = fields.Datetime(related='microsoft_calendar_account_id.last_sync_date', readonly=False)
