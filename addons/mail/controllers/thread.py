@@ -134,7 +134,10 @@ class ThreadController(http.Controller):
         if context:
             request.update_context(**context)
         canned_response_ids = tuple(cid for cid in kwargs.get('canned_response_ids', []) if isinstance(cid, int))
-        if canned_response_ids:
+        canned_responses = request.env["mail.canned.response"]
+        if canned_response_ids and canned_responses.has_access("read"):
+            canned_responses = canned_responses.search([("id", "in", canned_response_ids)])
+        if canned_responses:
             # Avoid serialization errors since last used update is not
             # essential and should not block message post.
             request.env.cr.execute("""
@@ -145,7 +148,7 @@ class ThreadController(http.Controller):
                 )
             """, {
                 'last_used': datetime.now(),
-                'ids': canned_response_ids,
+                'ids': tuple(canned_responses.ids),
             })
         post_access = request.env[thread_model].sudo()._get_mail_message_access(thread_id, "create")
         thread = request.env[thread_model]._get_thread_with_access(thread_id, mode=post_access, **kwargs)

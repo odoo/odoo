@@ -2,6 +2,7 @@
 
 import odoo
 from odoo.tests import JsonRpcException
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.test_controller_common import TestControllerCommon
 
 
@@ -128,3 +129,28 @@ class TestThreadController(TestThreadControllerCommon):
                 test_partners(self.user_admin, True, partners),
             ),
         )
+
+    def test_partner_message_post_canned_response_last_used(self):
+        record = self.env["res.partner"].create({"name": "Test Partner"})
+        user = mail_new_test_user(
+            self.env, login="canned_user", groups="base.group_user,base.group_partner_manager"
+        )
+        own_response = self.env["mail.canned.response"].with_user(user).create({
+            "source": "own",
+            "substitution": "Own response",
+        })
+        other_response = self.env["mail.canned.response"].create({
+            "source": "other",
+            "substitution": "Other response",
+        })
+        deleted_response = self.env["mail.canned.response"].with_user(user).create({
+            "source": "deleted",
+            "substitution": "Deleted response",
+        })
+        deleted_response.unlink()
+        route_kw = {"canned_response_ids": (own_response + other_response + deleted_response).ids}
+        self._execute_message_post_subtests(
+            record, (MessagePostSubTestData(user, True, route_kw=route_kw),)
+        )
+        self.assertTrue(own_response.last_used)
+        self.assertFalse(other_response.last_used)
