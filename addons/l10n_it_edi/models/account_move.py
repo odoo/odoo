@@ -2489,7 +2489,7 @@ class AccountMove(models.Model):
         if proxy_user.edi_mode == 'demo':
             for move in self:
                 filename = move.l10n_it_edi_attachment_name or '???'
-                self._l10n_it_edi_write_send_state(
+                move._l10n_it_edi_write_send_state(
                     transformed_notification={
                         'l10n_it_edi_state': 'forwarded',
                         'l10n_it_edi_transaction': f'demo_{uuid.uuid4()}',
