@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="website_sale.CartSummary" t-inherit-mode="extension">
+        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/span" position="after">
+            <div
+                t-if="line.courses.length"
+                t-foreach="line.courses"
+                t-as="course_name"
+                t-key="course_name_index"
+                t-out="course_name"
+            />
+        </xpath>
+    </t>
+</templates>

@@ -22,6 +22,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            'website_sale_slides/static/src/components/**/*',
             'website_sale_slides/static/src/interactions/**/*',
             'website_sale_slides/static/src/xml/**/*',
         ],
