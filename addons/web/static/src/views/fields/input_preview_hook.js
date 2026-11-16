@@ -26,6 +26,7 @@ class InputPreviewPopover extends Component {
  * @param {(value: any) => string} params.format a function that formats the result of the parsing
  * @param {boolean} [params.onlyFormula] if true, show the preview only when the content is a formula
  *   or an operation
+ * @returns {{ close: () => void }}
  */
 export function useInputPreview(params) {
     const inputRef = params.ref;
@@ -72,4 +73,6 @@ export function useInputPreview(params) {
     useListener(inputRef, "input", updatePreview);
     useListener(inputRef, "focusin", updatePreview);
     useListener(inputRef, "focusout", () => popover.close());
+
+    return { close: popover.close };
 }
