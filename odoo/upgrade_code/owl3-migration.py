@@ -1129,6 +1129,7 @@ SERVICES_MAPPING = {
     "home_menu": ['HomeMenuPlugin', '@web_enterprise/webclient/home_menu/home_menu_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
     "iapNotification": ['IapNotificationPlugin', '@iap_mail/js/services/iap_notification_plugin'],
+    "iot_longpolling": ['IoTLongpollingPlugin', '@iot/network_utils/iot_longpolling_plugin'],
     "lazy_session": ['LazySessionPlugin', '@web/webclient/lazy_session_plugin'],
     "mail.sound_effects": ['SoundEffectsPlugin', '@mail/core/common/sound_effects_plugin'],
     "mail.store": ['StorePlugin', '@mail/core/common/store_plugin'],
