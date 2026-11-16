@@ -36,6 +36,7 @@ export class Toolbar extends Component {
             buttonGroups: t.array(
                 t.object({
                     id: t.string(),
+                    description: t.string().optional(),
                     buttons: t.array(
                         t.or([t.object(componentButtonSchema), t.object(genericButtonSchema)])
                     ),

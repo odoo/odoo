@@ -45,6 +45,7 @@ export class TableAlignPlugin extends Plugin {
         ],
         toolbar_groups: withSequence(30, {
             id: "table_alignment",
+            description: _t("Cell alignment"),
             namespaces: ["expanded", "table"],
         }),
         toolbar_items: [
