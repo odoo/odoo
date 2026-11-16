@@ -55,7 +55,7 @@ class StockPicking(models.Model):
     def _get_move_lines_with_removal_warning(self):
         current_datetime = datetime.now()
         return self.move_line_ids.filtered(
-            lambda ml: ml.use_expiration_date and (ml.lot_id.product_expiry_alert or (
+            lambda ml: ml.picked and ml.use_expiration_date and (ml.lot_id.product_expiry_alert or (
                 (removal_date := ml._get_removal_date()) and removal_date <= current_datetime
             ))
         )
