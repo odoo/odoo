@@ -2264,3 +2264,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         ).create({})
 
         self.assertEqual(register_wizard.currency_id, self.company_data['currency'])
+
+    def test_register_payment_grouped_without_batch_payment_sequence(self):
+        self.out_invoice_1.company_id.batch_payment_sequence_id = False
+        active_ids = (self.out_invoice_1 + self.out_invoice_2).ids
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'group_payment': True,
+            'currency_id': self.other_currency.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        self.assertRecordValues(payments, [{'memo': Like(f'BATCH/{self.current_year}/...')}])
+        self.assertTrue(self.out_invoice_1.company_id.batch_payment_sequence_id)
