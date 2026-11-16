@@ -853,3 +853,56 @@ class TestStockLot(TestStockCommon):
 
         wizard = self.env['expiry.picking.confirmation'].with_context(res['context']).create({})
         self.assertIn('new-expired-lot', wizard.description)
+
+    def test_no_expiration_wizard_for_zero_qty_done(self):
+        """ Test that validating a picking does not trigger the expiry wizard
+        for move lines where qty_done is 0, even if the lot is expired. """
+
+        expired_lot, good_lot = self.LotObj.create([{
+            'name': 'Expired Lot',
+            'product_id': self.apple_product.id,
+            'expiration_date': datetime.today() - timedelta(days=10),
+            'removal_date': datetime.today() - timedelta(days=10),
+        }, {
+            'name': 'Good Lot',
+            'product_id': self.apple_product.id,
+            'expiration_date': datetime.today() + timedelta(days=10),
+            'removal_date': datetime.today() + timedelta(days=10),
+        }])
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.apple_product.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        receipt.action_confirm()
+
+        receipt.move_line_ids = [
+            Command.clear(),
+            Command.create({
+                'product_id': self.apple_product.id,
+                'product_uom_id': self.apple_product.uom_id.id,
+                'location_id': receipt.location_id.id,
+                'location_dest_id': receipt.location_dest_id.id,
+                'lot_id': expired_lot.id,
+                'quantity': 10,
+                'picked': False,
+            }),
+            Command.create({
+                'product_id': self.apple_product.id,
+                'product_uom_id': self.apple_product.uom_id.id,
+                'location_id': receipt.location_id.id,
+                'location_dest_id': receipt.location_dest_id.id,
+                'lot_id': good_lot.id,
+                'quantity': 10,
+                'picked': True,
+            })
+        ]
+
+        res = receipt.button_validate()
+
+        self.assertEqual(res, True)
