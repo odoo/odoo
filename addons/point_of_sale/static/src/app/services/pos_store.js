@@ -1046,6 +1046,11 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
+        // The order may have been paid while awaiting one of the steps above
+        if (order.finalized) {
+            return;
+        }
+
         // Handle price unit
         this.handlePriceUnit(values, order, vals.price_unit);
 

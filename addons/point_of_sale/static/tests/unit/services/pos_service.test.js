@@ -1,4 +1,5 @@
 import { test, expect, describe } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -285,6 +286,22 @@ describe("pos_store.js", () => {
         expect(store.getOrder().lines[0].qty).toBe(1);
         await store.addLineToCurrentOrder({ product_tmpl_id: product.product_tmpl_id, qty: 3 }, {});
         expect(store.getOrder().lines[0].qty).toBe(4);
+    });
+
+    test("addLineToOrder does not add a line once the order is paid while fetching lots", async () => {
+        const lotsFetched = new Deferred();
+        onRpc("pos.order.line", "get_existing_lots", () => lotsFetched);
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const product = store.models["product.template"].get(14);
+        product.tracking = "lot";
+
+        const addLine = store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+        order.state = "paid";
+        lotsFetched.resolve([{ name: "LOT1", product_qty: 10 }]);
+
+        expect(await addLine).toBe(undefined);
+        expect(order.lines.length).toBe(2);
     });
 
     test("addLineToCurrentOrder keeps the given variant with a single-value dynamic attribute", async () => {
