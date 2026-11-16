@@ -2349,6 +2349,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange', login="pos_user")
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange_2', login="pos_user")
 
+    def test_combo_second_partial_refund(self):
+        """ A second partial refund of a combo must not take the combo lines of the first refund. """
+        setup_product_combo_items(self)
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_second_partial_refund', login="pos_user")
+
     def test_set_opening_note_without_cash_method(self):
         cash_method = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         self.main_pos_config.payment_method_ids -= cash_method
