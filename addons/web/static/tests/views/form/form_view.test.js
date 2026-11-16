@@ -9,6 +9,7 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    resize,
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
@@ -81,6 +82,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
 
 const fieldsRegistry = registry.category("fields");
 const widgetsRegistry = registry.category("view_widgets");
+const oldXXL = 1534;
 
 class Partner extends models.Model {
     name = fields.Char({ translate: true });
@@ -494,6 +496,7 @@ test(`button box rendering on big screen`, async () => {
         btnString += `<button class="oe_stat_button" id="btn${i}">My Button ${i}</button>`;
     }
 
+    await resize({ width: oldXXL });
     await mountView({
         resModel: "partner",
         type: "form",
@@ -509,6 +512,10 @@ test(`button box rendering on big screen`, async () => {
     for (const btn of buttonBox.children) {
         expect(btn).toHaveRect({ top: buttonBoxRect.top });
     }
+
+    await resize({ width: oldXXL - 2 });
+    await animationFrame();
+    expect(`.o-form-buttonbox > button`).toHaveCount(6);
 });
 
 test(`button box rendering invisible`, async () => {
@@ -8158,6 +8165,7 @@ test(`correct amount of buttons`, async () => {
         </button>
     `);
 
+    await resize({ width: oldXXL - 2 });
     const formView = await mountView({
         resModel: "partner",
         type: "form",

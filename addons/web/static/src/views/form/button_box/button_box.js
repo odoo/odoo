@@ -1,8 +1,9 @@
+import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-import { Component, onWillRender } from "@odoo/owl";
+import { Component, onWillRender, useExternalListener } from "@odoo/owl";
 export class ButtonBox extends Component {
     static template = "web.Form.ButtonBox";
     static components = { Dropdown, DropdownItem };
@@ -16,8 +17,14 @@ export class ButtonBox extends Component {
 
     setup() {
         const ui = useService("ui");
+        const oldXXL = browser.matchMedia("(min-width: 1534px)");
+        useExternalListener(oldXXL, "change", () => this.render());
         onWillRender(() => {
-            const maxVisibleButtons = [0, 0, 7, 4, 5, 8][ui.size] ?? 8;
+            let size = ui.size;
+            if (oldXXL.matches) {
+                size++;
+            }
+            const maxVisibleButtons = [0, 0, 7, 4, 5, 7][size] ?? 8;
             const allVisibleButtons = Object.entries(this.props.slots)
                 .filter(([_, slot]) => this.isSlotVisible(slot))
                 .map(([slotName]) => slotName);
