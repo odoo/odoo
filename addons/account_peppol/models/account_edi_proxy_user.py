@@ -177,12 +177,11 @@ class AccountEdiProxyClientUser(models.Model):
                     ),
                     attachment_ids=attachment.ids,
                 )
+                move._autopost_bill()
             else:
-                move.peppol_move_state = 'error'
                 move.message_post(
                     body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
                 )
-            move._autopost_bill()
         except Exception as err:
             _logger.exception(
                 "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s)",
