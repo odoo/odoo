@@ -1,3 +1,5 @@
+from lxml import html
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -110,3 +112,24 @@ class TestArDeliveryGuide(TestArCommon, MailCommon):
         for sequence in range(int(self.picking_type.l10n_ar_sequence_number_end) + 1):
             self.picking_type.invalidate_recordset(['l10n_ar_next_delivery_number'])
             self.get_stock_picking().l10n_ar_action_create_delivery_guide()
+
+    def test_delivery_guide_logo_follows_layout(self):
+        """The logo in the AR custom header must use the size of the company's
+        document layout instead of a fixed height."""
+        self.company.logo = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAwS2OUAAAAABJRU5ErkJggg=='
+        stock_picking = self.get_stock_picking()
+        stock_picking.l10n_ar_action_create_delivery_guide()
+
+        for layout_xmlid, logo_class in (
+            ('web.external_layout_standard', 'o_company_logo_big'),
+            ('web.external_layout_bubble', 'o_company_logo_xs'),
+        ):
+            with self.subTest(layout=layout_xmlid):
+                self.company.external_report_layout_id = self.env.ref(layout_xmlid)
+                content = self.env['ir.actions.report']._render_qweb_html(
+                    'l10n_ar_stock.action_delivery_guide_report_pdf', stock_picking.ids,
+                )[0]
+                logo = html.fromstring(content).xpath("//div[@name='left-upper-side']/img")
+                self.assertEqual(len(logo), 1, "The AR custom header should render the company logo.")
+                self.assertEqual(logo[0].get('class'), logo_class)
+                self.assertFalse(logo[0].get('style'), "The logo should not have a fixed inline size.")
