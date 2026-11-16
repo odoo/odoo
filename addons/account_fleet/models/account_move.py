@@ -113,6 +113,7 @@ class AccountMoveLine(models.Model):
         return {
             'service_type_id': vendor_bill_service.id,
             'vehicle_id': self.vehicle_id.id,
+            'company_id': self.company_id.id,
             'vendor_id': self.partner_id.id,
             'description': self.name,
             'account_move_line_id': self.id,
