@@ -283,12 +283,13 @@ export class UseSuggestion {
         if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
+        const search = { ...this.search };
         let resetFetchingState = true;
         try {
             this.abortController?.abort();
             this.abortController = new AbortController();
             this.state.isFetching = true;
-            await this.suggestionService.fetchSuggestions(this.search, {
+            await this.suggestionService.fetchSuggestions(search, {
                 thread: this.thread,
                 abortSignal: this.abortController.signal,
             });
@@ -308,11 +309,15 @@ export class UseSuggestion {
             return;
         }
         this.update();
-        this.lastFetchedSearch = {
-            ...this.search,
-            count: this.state.items?.suggestions.length ?? 0,
-        };
-        if (!this.state.items?.suggestions.length) {
+        const { suggestions } = this.suggestionService.searchSuggestions(search, {
+            thread: this.thread,
+        });
+        this.lastFetchedSearch = { ...search, count: suggestions.length };
+        const isCurrentSearch =
+            search.delimiter === this.search.delimiter &&
+            search.position === this.search.position &&
+            search.term === this.search.term;
+        if (isCurrentSearch && !suggestions.length) {
             this.clearSearch();
         }
     }
