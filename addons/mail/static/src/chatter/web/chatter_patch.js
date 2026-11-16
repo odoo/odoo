@@ -366,7 +366,11 @@ const chatterPatch = {
     },
     onClickSearch() {
         this.state.composerType = false;
-        this.state.isSearchOpen = !this.state.isSearchOpen;
+        if (this.state.isSearchOpen) {
+            this.closeSearch();
+        } else {
+            this.state.isSearchOpen = true;
+        }
     },
 
     onCloseFullComposerCallback(isDiscard) {
