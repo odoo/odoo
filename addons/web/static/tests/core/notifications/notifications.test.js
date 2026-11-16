@@ -4,8 +4,10 @@ import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { effect, markup } from "@odoo/owl";
 import { getService, makeTestApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { OPEN_DELAY } from "@web/core/tooltip/tooltip_service";
 
 test("can display a basic notification", async () => {
     await makeTestApp();
@@ -452,4 +454,31 @@ test("add() does not leak as a reactive dependency into an unrelated caller's ef
 
     expect(runCount).toBe(1);
     expect(".o_notification").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("notification tooltip is hidden when it repeats the visible message", async () => {
+    await makeTestApp();
+    await mountWithCleanup(MainComponentsContainer);
+    const message = markup`Meeting<br/><strong>Online</strong>`;
+    const expectedTooltip = "Meeting\nOnline";
+    getService(NotificationPlugin).add(message, { sticky: true });
+    await animationFrame();
+    expect(".o_notification_content").toHaveAttribute("data-tooltip", expectedTooltip);
+    await hover(".o_notification_content");
+    await advanceTime(OPEN_DELAY);
+    expect(".o-tooltip").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("notification tooltip shows the full message when the notification is clipped", async () => {
+    await makeTestApp();
+    await mountWithCleanup(MainComponentsContainer);
+    const message = "A long notification message ".repeat(10).trim();
+    getService(NotificationPlugin).add(message, { sticky: true });
+    await animationFrame();
+    expect(".o_notification_content").toHaveAttribute("data-tooltip", message);
+    await hover(".o_notification_content");
+    await advanceTime(OPEN_DELAY);
+    expect(".o-tooltip").toHaveText(message);
 });

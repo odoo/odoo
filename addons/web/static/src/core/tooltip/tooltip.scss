@@ -4,6 +4,10 @@
     user-select: none;
 }
 
+.o-overlay-item:has(.o-tooltip) {
+    z-index: $zindex-tooltip;
+}
+
 .o-tooltip {
     --#{$variable-prefix}tooltip-max-width: #{$tooltip-max-width};
     --#{$variable-prefix}tooltip-padding-x: #{$tooltip-padding-x};

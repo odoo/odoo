@@ -1,4 +1,4 @@
-import { Component, useEffect, useProps, signal, applyDefaults } from "@odoo/owl";
+import { Component, useEffect, useProps, signal, applyDefaults, onMounted } from "@odoo/owl";
 import { NotificationSchema } from "./notification_plugin";
 import { useTimer } from "@web/core/utils/timing";
 
@@ -7,6 +7,7 @@ export class Notification extends Component {
     props = applyDefaults(useProps(NotificationSchema.toShape()), NotificationSchema);
 
     autocloseProgress = signal.ref();
+    notificationContent = signal.ref();
 
     setup() {
         if (!this.props.sticky && this.props.autocloseDelay > 0) {
@@ -20,6 +21,10 @@ export class Notification extends Component {
                 }
             });
         }
+        onMounted(() => {
+            const content = this.notificationContent();
+            content.dataset.tooltip = content.innerText.trim();
+        });
     }
 
     freeze() {
