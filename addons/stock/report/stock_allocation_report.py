@@ -184,10 +184,6 @@ class StockAllocationReport(models.AbstractModel):
                 'res_model': 'res.partner',
                 'display_name': picking.partner_id.display_name,
             } if picking.partner_id else False
-        # To handle different UoM quantities, all qties will be expressed in product's UoM.
-        reserved_quantity = out_move.quantity
-        if out_move.uom_id != out_move.product_id.uom_id:
-            reserved_quantity = out_move.product_id.uom_id._compute_quantity(reserved_quantity, out_move.uom_id)
         return {
             **out_move.read(['date', 'priority', 'state'])[0],
             'favorite': out_move.priority == '1',
@@ -196,7 +192,8 @@ class StockAllocationReport(models.AbstractModel):
             'move_orig_ids': out_move.move_orig_ids.ids,
             'partner': partner_info,
             'picking': picking_info,
-            'reserved_quantity': reserved_quantity,
+            # To handle different UoM quantities, all qties will be expressed in product's UoM.
+            'reserved_quantity': out_move.quantity_product_uom,
             'quantity': out_move.product_qty,
             'source': source_info,
             'uom': out_move.product_id.uom_id.read(['display_name', 'factor'])[0],
