@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
         },
         {
             content: "Bold the text",
-            trigger: ".o-we-toolbar button[title='Bold (Ctrl + B)']",
+            trigger: ".o-we-toolbar button[name='bold']",
             run: "click",
         },
         {
@@ -73,12 +73,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
         },
         {
             content: "Remove the Bold",
-            trigger: `${fullComposerToolbar} button[title='Bold (Ctrl + B)']`,
+            trigger: `${fullComposerToolbar} button[name='bold']`,
             run: "click",
         },
         {
             content: "Italicize the text",
-            trigger: `${fullComposerToolbar} button[title='Italic (Ctrl + I)']`,
+            trigger: `${fullComposerToolbar} button[name='italic']`,
             run: "click",
         },
         {

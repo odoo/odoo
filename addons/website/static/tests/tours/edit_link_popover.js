@@ -24,12 +24,7 @@ registry.category("web_tour.tours").add("edit_link_popover", {
             trigger: FIRST_PARAGRAPH,
             run: "editor Paragraph", // Make sure the selection is set in the paragraph
         },
-        ...clickToolbarButton(
-            "Paragraph",
-            "#wrap .s_text_image p",
-            "Insert link (Ctrl + K)",
-            false
-        ),
+        ...clickToolbarButton("Paragraph", "#wrap .s_text_image p", "link", false),
         {
             content: `Type the link URL /contactus`,
             trigger: ".o-we-linkpopover .o_we_href_input_link",

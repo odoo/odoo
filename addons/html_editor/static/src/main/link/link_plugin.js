@@ -31,6 +31,7 @@ const FONT_SIZED_SPAN_SELECTOR = [
     'span[style*="font-size"]',
 ].join(", ");
 const FONT_SIZED_BUTTON_CLASS = "o_btn_with_font_size";
+const LINK_HOTKEY = "control+k";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
@@ -253,7 +254,8 @@ export class LinkPlugin extends Plugin {
         toolbar_items: [
             {
                 id: "link",
-                description: _t("Insert link (Ctrl + K)"),
+                description: _t("Insert link"),
+                hotkey: LINK_HOTKEY,
                 groupId: "link",
                 commandId: "openLinkPopover",
                 opensUi: true,
@@ -487,7 +489,7 @@ export class LinkPlugin extends Plugin {
                 setTimeout(() => this.openLinkPopover());
             },
             {
-                hotkey: "control+k",
+                hotkey: LINK_HOTKEY,
                 category: "shortcut_conflict",
                 isAvailable: () => {
                     const selectionData = this.dependencies.selection.getSelectionData();
