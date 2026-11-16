@@ -393,7 +393,7 @@ class HrEmployee(models.Model):
     # skills and resume
     resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
     employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",
-        domain=[('skill_type_id.active', '=', True)])
+        domain=[('skill_type_id.active', '=', True), ('is_company_visible', '=', True)])
     current_employee_skill_ids = fields.One2many('hr.employee.skill',
         compute='_compute_current_employee_skill_ids', readonly=False)
     skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_user")

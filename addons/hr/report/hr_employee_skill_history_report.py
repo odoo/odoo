@@ -28,6 +28,7 @@ class HrEmployeeSkillReport(models.BaseModel):
                         employee_id,
                         skill_id
                     FROM hr_employee_skill
+                    WHERE is_company_visible IS TRUE
                     ORDER BY employee_id, skill_id, valid_from ASC
                 ),
                 date_table AS (
@@ -63,6 +64,7 @@ class HrEmployeeSkillReport(models.BaseModel):
                 FROM hr_employee_skill AS emp_skill
                 INNER JOIN hr_skill_level AS level
                 ON emp_skill.skill_level_id = level.id
+                WHERE emp_skill.is_company_visible IS TRUE
             ) AS emp_skill_level
             WHERE date_table.date >= emp_skill_level.valid_from AND date_table.employee_id = emp_skill_level.employee_id AND (emp_skill_level.valid_to IS NULL OR date_table.date <= emp_skill_level.valid_to)
             ORDER BY date_table.date, emp_skill_level.employee_id, emp_skill_level.skill_id, emp_skill_level.valid_from DESC

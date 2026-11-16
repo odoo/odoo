@@ -616,3 +616,28 @@ class TestEmployeeSkills(TransactionCase):
         views = EmployeeSkill.get_views([(self.env.ref('hr.employee_skill_view_form').id, 'form')])
         self.assertIn('company_id', views['models']['hr.employee.skill']['fields'],
             "The company is loaded in the dialog to evaluate the skill type domain")
+
+    def test_company_specific_skill_type_hidden_in_reports(self):
+        """ The skills hidden from the employee are also left out of the lists and reports of skills. """
+        self.language.company_id = self.company_a
+        language_domain = [('employee_id', '=', self.employee.id), ('skill_type_id', '=', self.language.id)]
+        certification_domain = [('employee_id', '=', self.employee.id), ('is_certification', '=', True), ('is_company_visible', '=', True)]
+        self.assertTrue(self.env['hr.employee.skill.report'].search(language_domain))
+        self.assertTrue(self.env['hr.employee.skill.history.report'].search(language_domain))
+        self.assertTrue(self.employee.employee_skill_ids.filtered(lambda s: s.skill_type_id == self.language))
+
+        self.employee.company_id = self.company_b
+        self.env.flush_all()  # the reports are SQL views
+        self.assertFalse(self.env['hr.employee.skill.report'].search(language_domain))
+        self.assertFalse(self.env['hr.employee.skill.history.report'].search(language_domain))
+        self.assertFalse(self.employee.employee_skill_ids.filtered(lambda s: s.skill_type_id == self.language))
+        self.assertTrue(self.env['hr.employee.skill'].search(certification_domain), "The skills of a shared type stay visible")
+
+        self.certification.company_id = self.company_a
+        self.assertFalse(self.env['hr.employee.skill'].search(certification_domain))
+
+        self.employee.company_id = self.company_a
+        self.env.flush_all()
+        self.assertTrue(self.env['hr.employee.skill.report'].search(language_domain))
+        self.assertTrue(self.env['hr.employee.skill.history.report'].search(language_domain))
+        self.assertTrue(self.env['hr.employee.skill'].search(certification_domain))
