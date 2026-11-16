@@ -1519,6 +1519,18 @@ class TestReports(TestReportsCommon):
                 {'uom_id': uom_dozen_id, 'packaging_uom_id': uom_dozen_id, 'product_uom_qty': 2, 'product_qty': 24, 'state': 'confirmed', 'move_orig_ids': []},
             ])
 
+        # Reserve 6 units: all the report's quantities must be expressed in the product's UoM.
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 6)
+        delivery_1.action_assign()
+        self.assertRecordValues(delivery_1.move_ids, [{'state': 'partially_available', 'quantity': 0.5}])
+        for receipt in receipts:
+            report_values = self.allocation_report._get_report_values('stock.picking', receipt.ids)
+            product_line = report_values['product_lines'][0]
+            self.assertEqual(product_line['total_qty'], 12)
+            self.assertEqual(product_line['free_qty'], 12)
+            self.assertEqual(product_line['needs'][0]['quantity'], 24)
+            self.assertEqual(product_line['needs'][0]['reserved_quantity'], 6)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
