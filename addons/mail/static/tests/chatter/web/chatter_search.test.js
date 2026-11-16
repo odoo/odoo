@@ -78,6 +78,26 @@ test("Close button should close the search panel", async () => {
     await contains(".o-mail-SearchMessageInput", { count: 0 });
 });
 
+test("Search icon should close and reset the search", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Chatter-topbar button[title='Search Messages']");
+    await insertText(".o_searchview_input", "empty");
+    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageResult .o-mail-Message");
+    await click(".o-mail-Chatter-topbar button[title='Search Messages']");
+    await contains(".o_searchview_input", { count: 0 });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 0 });
+});
+
 test("opening search in chatter hides files and pinned messages panels", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
