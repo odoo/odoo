@@ -464,7 +464,8 @@ export class Thread extends Component {
             }
             if (
                 (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) &&
-                !this.isSmoothScrolling
+                !this.isSmoothScrolling &&
+                !this.scrollingToHighlight
             ) {
                 this.setScroll(value, {
                     smooth:
@@ -559,6 +560,7 @@ export class Thread extends Component {
             this.props.thread.loadNewer = false;
             this.state.showJumpPresent = false;
         }
+        this.scrollingToHighlight = false;
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
         if (!this.ui.isSmall) {
             this.props.thread.composer.autofocus++;
