@@ -156,6 +156,9 @@ For more specific needs, you may also assign custom-defined actions
     # payload to every bundle (bus is cross-tab) and receiving values for
     # undeclared model or field is not supported.
     #
+    # A lazy bundle loaded after the store is made never runs its patch of
+    # `Store.setup`: what it starts on the store (an `onChange`) goes in a service.
+    #
     # Overrides for a specific folder must be declared in all the corresponding
     # bundles. In particular, overrides of common need to be in all 4 bundles.
     #

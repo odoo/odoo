@@ -8,6 +8,10 @@ const messagePatch = {
     setup() {
         super.setup(...arguments);
         this.chatbotStep = fields.One("ChatbotStep", { inverse: "message" });
+        this.disableChatbotAnswers = false;
+        this.isWelcomeMessage = this.computed(() =>
+            this.eq(this.thread?.channel?.livechatWelcomeMessage)
+        );
     },
     get canReplyTo() {
         if (this.thread?.channel?.channel_type === "livechat") {

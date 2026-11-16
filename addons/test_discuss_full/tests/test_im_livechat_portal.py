@@ -51,3 +51,22 @@ class TestImLivechatPortal(TestLivechatChatbotUI):
         default_website.channel_id = livechat_channel.id
         self.env.ref("base.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "chatbot_redirect_to_portal")
+
+    def test_portal_chatter_reaction_with_livechat(self):
+        task = self.env["project.task"].create(
+            {
+                "name": "Test Task",
+                "partner_id": self.env["res.partner"].create({"name": "Task Customer"}).id,
+                "project_id": self.env["project.project"].create({"name": "Portal Project"}).id,
+            },
+        )
+        task.message_post(
+            body="Message on the task",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.livechat_channel.rule_ids = [Command.clear(), Command.create({"regex_url": "/"})]
+        self.start_tour(
+            f"/my/tasks/{task.id}?access_token={task.access_token}",
+            "portal_chatter_reaction_with_livechat",
+        )

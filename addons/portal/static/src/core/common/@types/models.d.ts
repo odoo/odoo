@@ -1,4 +1,7 @@
 declare module "models" {
+    export interface Composer {
+        portalComment: boolean;
+    }
     export interface Message {
         is_internal: boolean|undefined;
         is_message_subtype_note: boolean|undefined;

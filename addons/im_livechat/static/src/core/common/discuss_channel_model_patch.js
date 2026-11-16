@@ -74,6 +74,18 @@ const discussChannelPatch = {
                 .sort((a, b) => a.id - b.id)
                 .find((member) => member.livechat_member_type === "visitor");
         });
+        this.livechatWelcomeMessage = this.computed(() => this.computeLivechatWelcomeMessage());
+        this.storeAsActiveVisitorLivechats = fields.One("Store", {
+            /** @this {import("models").DiscussChannel} */
+            compute() {
+                return this.channel_type === "livechat" &&
+                    !this.livechat_end_dt &&
+                    (this.self_member_id?.eq(this.livechatVisitorMember) || this.isTransient)
+                    ? this.store
+                    : null;
+            },
+            inverse: "activeVisitorLivechats",
+        });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
     },
@@ -128,6 +140,8 @@ const discussChannelPatch = {
             ? formatList(memberNames, { style: "standard-narrow" })
             : super.computedDisplayName;
     },
+    /** @returns {import("models").Message|undefined} */
+    computeLivechatWelcomeMessage() {},
     get isHideUntilNewMessageSupported() {
         if (this.livechat_end_dt) {
             return false;

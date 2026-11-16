@@ -13,4 +13,9 @@ declare module "models" {
     export interface ResPartner {
         is_user_publisher: boolean|undefined;
     }
+    export interface Thread {
+        ratingChatter: boolean;
+        reviewChatter: boolean;
+        selectedRating: false|number;
+    }
 }

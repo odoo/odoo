@@ -17,7 +17,6 @@ patch(Thread.prototype, {
          */
         this.readyToSwapPromise = promise;
         this.resolveReadyToSwap = resolve;
-        this._prevComposerDisabled = false;
         this.onChange(
             () => [this.composerDisabled],
             function onChangeComposerDisabled(composerDisabled) {

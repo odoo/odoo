@@ -6,7 +6,7 @@ import {
     postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
-import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/store_service_patch";
+import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/misc";
 import {
     click,
     contains,
