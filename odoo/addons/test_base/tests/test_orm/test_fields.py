@@ -1016,6 +1016,34 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(count, 0, "Precommit not ran enough times")
         self.assertEqual(record.value, 10, "Flush not triggered correctly")
 
+    def test_18_flush_partial_constraint(self):
+        """ check that a partial flush does not write a row without the stored
+        computed fields that depend on its dirty fields """
+        record = self.env['test_orm.flush.constraint'].create({'name': 'foo'})
+        self.env.flush_all()
+
+        # 'done_date' must be computed from 'state' before the row is written,
+        # although only 'name' is requested
+        record.write({'state': 'done', 'name': 'bar'})
+        record.flush_model(['name'])
+        self.assertFalse(self.env.fields_to_compute())
+        self.env.cr.execute(
+            "SELECT state, done_date IS NOT NULL FROM test_orm_flush_constraint WHERE id = %s",
+            [record.id],
+        )
+        self.assertEqual(self.env.cr.fetchall(), [('done', True)])
+
+        # same with flush_recordset()
+        record.write({'state': 'draft', 'name': 'baz'})
+        record.flush_recordset(['name'])
+        record.write({'state': 'done', 'name': 'qux'})
+        record.flush_recordset(['name'])
+        self.env.cr.execute(
+            "SELECT state, done_date IS NOT NULL FROM test_orm_flush_constraint WHERE id = %s",
+            [record.id],
+        )
+        self.assertEqual(self.env.cr.fetchall(), [('done', True)])
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_orm.mixed'].create({})
