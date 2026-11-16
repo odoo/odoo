@@ -48,7 +48,7 @@ class IrQweb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+        return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed', 'draft_preview']
 
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)

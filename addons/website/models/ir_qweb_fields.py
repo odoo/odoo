@@ -7,6 +7,18 @@ from odoo import api, models, _
 from odoo.addons.website.tools import add_form_signature
 
 
+class IrQwebField(models.AbstractModel):
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def attributes(self, record, field_name, options, values=None):
+        attrs = super().attributes(record, field_name, options, values)
+        # Fields can't be edited in draft mode, only views are drafted.
+        if 'data-oe-model' in attrs and self.env.context.get('draft_preview'):
+            attrs['data-oe-readonly'] = 'draft'
+        return attrs
+
+
 class IrQwebFieldContact(models.AbstractModel):
     _inherit = 'ir.qweb.field.contact'
 
