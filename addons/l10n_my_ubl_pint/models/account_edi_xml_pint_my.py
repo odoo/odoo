@@ -62,7 +62,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
 
     def _get_tax_unece_codes(self, invoice, tax):
         """
-        In malaysia, only the following codes can be used: T, E, O
+        In malaysia, only the following codes can be used: SA, SE, HVG, LVG, TTX, E, O
         https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_category_code
         """
         # OVERRIDE account_edi_ubl_cii
@@ -79,7 +79,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
         if not supplier.sst_registration_number:
             codes['tax_category_code'] = 'O'
         elif tax.amount != 0:
-            codes['tax_category_code'] = 'T'
+            codes['tax_category_code'] = 'SE' if tax.tax_scope == 'service' else 'SA'
         else:
             codes['tax_category_code'] = 'E'
         return codes
