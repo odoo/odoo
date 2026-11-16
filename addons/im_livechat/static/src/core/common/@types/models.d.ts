@@ -53,6 +53,8 @@ declare module "models" {
         livechatNoteText: string|undefined;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
         livechatVisitorMember: ChannelMember;
+        livechatWelcomeMessage: Message;
+        storeAsActiveVisitorLivechats: Store;
         transcriptUrl: Readonly<string>;
     }
     export interface LivechatChannel {
@@ -60,6 +62,8 @@ declare module "models" {
     }
     export interface Message {
         chatbotStep: ChatbotStep;
+        disableChatbotAnswers: boolean;
+        isWelcomeMessage: boolean;
     }
     export interface ResPartner {
         invite_by_self_count: number|undefined;
@@ -78,6 +82,7 @@ declare module "models" {
         livechat_username: string|undefined;
     }
     export interface Store {
+        activeVisitorLivechats: DiscussChannel[];
         can_download_transcript: boolean|undefined;
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;
         "chatbot.message": StaticMailRecord<ChatbotMessage, typeof ChatbotMessageClass>;
@@ -85,11 +90,19 @@ declare module "models" {
         "chatbot.script.answer": StaticMailRecord<ChatbotScriptStepAnswer, typeof ChatbotScriptStepAnswerClass>;
         "chatbot.script.step": StaticMailRecord<ChatbotScriptStep, typeof ChatbotScriptStepClass>;
         ChatbotStep: StaticMailRecord<ChatbotStep, typeof ChatbotStepClass>;
+        guest_token: string|null;
         has_access_livechat: boolean;
         "im_livechat.channel": StaticMailRecord<LivechatChannel, typeof LivechatChannelClass>;
         "im_livechat.channel.member.history": StaticMailRecord<LivechatChannelMemberHistory, typeof LivechatChannelMemberHistoryClass>;
         "im_livechat.channel.rule": StaticMailRecord<LivechatChannelRule, typeof LivechatChannelRuleClass>;
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
+        livechat_available: boolean;
+        livechat_rule: LivechatChannelRule;
+    }
+    export interface Thread {
+        _prevComposerDisabled: boolean;
+        readyToSwapPromise: Promise<void>|undefined;
+        resolveReadyToSwap: ((value: unknown) => void)|undefined;
     }
 
     export interface Models {

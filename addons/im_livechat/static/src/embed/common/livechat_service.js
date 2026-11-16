@@ -6,7 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { canLoadLivechat } from "@im_livechat/embed/common/misc";
+import { canLoadLivechat, GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/misc";
 
 export const RATING = Object.freeze({
     GOOD: 5,
@@ -34,6 +34,29 @@ export class LivechatService {
         this.store = services["mail.store"];
         this.notificationService = this.store.notification;
         this.initializedPromise = new Promise((r) => (this._resolveInitializedPromise = r));
+        expirableStorage.onChange(
+            GUEST_TOKEN_STORAGE_KEY,
+            (value) => (this.store.guest_token = value)
+        );
+        this.store.guest_token = expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
+        this.store.onChange(
+            () => [this.store.guest_token],
+            (guestToken) => {
+                if (!guestToken) {
+                    expirableStorage.removeItem(GUEST_TOKEN_STORAGE_KEY);
+                    return;
+                }
+                expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guestToken);
+                const busService = this.env.services.bus_service;
+                const channel = `mail.guest_${guestToken}`;
+                busService.addChannel(channel);
+                return () => busService.deleteChannel(channel);
+            },
+            { immediate: true }
+        );
+        if (this.store.guest_token) {
+            this.store.ensureInitialized();
+        }
     }
 
     async initialize() {

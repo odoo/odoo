@@ -1,5 +1,5 @@
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
-import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/store_service_patch";
+import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/misc";
 import { livechatRoutingMap } from "@im_livechat/embed/cors/livechat_routing_map";
 import { ErrorPlugin } from "@web/core/errors/error_plugin";
 import { rpc } from "@web/core/network/rpc";

@@ -6,14 +6,6 @@ export const REVIEW_INITIAL_LIMIT = 3;
 export const REVIEW_LOAD_MORE_LIMIT = 10;
 
 patch(Thread.prototype, {
-    setup() {
-        super.setup();
-        /** @type {false|number} */
-        this.selectedRating = false;
-        this.ratingChatter = false;
-        this.reviewChatter = false;
-    },
-
     get initialFetchLimit() {
         if (this.reviewChatter) {
             return REVIEW_INITIAL_LIMIT;
