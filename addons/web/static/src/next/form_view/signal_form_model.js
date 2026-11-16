@@ -101,7 +101,7 @@ function buildSpecification(fields, fieldNames) {
 /**
  * The store knows the main model with the fields of the arch, and each
  * comodel with its display name. The fields come from the view, as
- * definitions: no class declares them. The models are tracked, so that local
+ * definitions: no class declares them. The models are editable, so that local
  * changes are kept apart from the server values (that is what `toCommands`
  * sends).
  *
@@ -123,7 +123,7 @@ function buildStoreParams(resModel, fields, fieldNames) {
     const models = Object.keys(definitions).map(
         (name) =>
             class extends RecordModel.extend({ name }) {
-                static _tracked = true;
+                static _editable = true;
             }
     );
     return { models, definitions };

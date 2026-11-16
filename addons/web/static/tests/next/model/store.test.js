@@ -45,7 +45,7 @@ class Order extends Model.extend({
         tag_ids: /** @type {Many2many<Tag>} */ (fields.Many2many("res.partner.tag")),
     },
 }) {
-    static _tracked = true;
+    static _editable = true;
 
     get total() {
         return this.line_ids().reduce((sum, line) => sum + line.qty() * line.price(), 0);
@@ -61,7 +61,7 @@ class Line extends Model.extend({
         price: fields.Float(),
     },
 }) {
-    static _tracked = true;
+    static _editable = true;
 }
 
 function makeStore(definitions) {
@@ -431,7 +431,7 @@ describe("change tracking", () => {
         expect(store.isDirty(order)).toBe(false);
     });
 
-    test("untracked models write directly", () => {
+    test("models that are not editable write directly", () => {
         const store = makeStore();
         const partner = store.load("res.partner", { id: 1, name: "Alice" });
         partner.name.set("Alice B.");

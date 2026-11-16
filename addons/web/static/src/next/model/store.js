@@ -30,7 +30,7 @@ import {
  *  checked: boolean;
  *  fields: StoreField[];
  *  fieldsByName: Record<string, StoreField>;
- *  tracked: boolean;
+ *  editable: boolean;
  *  reactivity: "field" | "model";
  *  records: Map<number | string, Model>;
  *  indexes: Map<string, Map<any, Model>>;
@@ -149,7 +149,7 @@ export function peek(rec, field) {
 }
 
 /**
- * Local write: a change on tracked models and in drafts, else a direct write.
+ * Local write: a change on editable models and in drafts, else a direct write.
  *
  * @param {Model} rec
  * @param {StoreField} field
@@ -158,7 +158,7 @@ export function peek(rec, field) {
 function setLocal(rec, field, value) {
     const previous = peek(rec, field);
     const store = rec[MODEL].store;
-    if (rec[OWNER] instanceof Draft || rec[MODEL].tracked) {
+    if (rec[OWNER] instanceof Draft || rec[MODEL].editable) {
         rec[CHANGES] ||= new Map();
         rec[CHANGES].set(field.index, { value, version: ++store.clock });
         signal.trigger(store.dirtyAtom);
@@ -590,7 +590,7 @@ export class Store {
         if (model.records.has(id)) {
             throw new Error(`Record ${model.name}(${id}) already exists`);
         }
-        const rec = this._newRecord(model, id, model.tracked ? NEW : 0);
+        const rec = this._newRecord(model, id, model.editable ? NEW : 0);
         initRecord(rec, model, values);
         rec.setup();
         return rec;
@@ -603,7 +603,7 @@ export class Store {
         rec = this.own(rec);
         const model = rec[MODEL];
         unlinkRelations(rec);
-        if (model.tracked && !(rec[FLAGS] & NEW)) {
+        if (model.editable && !(rec[FLAGS] & NEW)) {
             // keep a tombstone until the deletion is acknowledged
             rec[FLAGS] |= DELETED;
             this._membershipChanged(model);
@@ -1081,7 +1081,7 @@ export class Store {
             checked: generic,
             fields,
             fieldsByName: Object.fromEntries(fields.map((f) => [f.name, f])),
-            tracked: ModelClass._tracked,
+            editable: ModelClass._editable,
             reactivity: ModelClass._reactivity,
             records: new Map(),
             indexes: new Map(),
