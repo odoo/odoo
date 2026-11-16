@@ -395,6 +395,7 @@
                                         {{website.shop_opt_products_design_classes}}"
                                     t-attf-style="--o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}; --o-wsale-products-grid-gap: {{gap}};"
                                     t-att-data-name="grid_block_name"
+                                    t-att-data-wsale-sortable="editable and (order or website.shop_default_sort) == 'website_sequence asc'"
                                 >
                                     <t t-foreach="products" t-as="product">
                                         <t t-set="col_width" t-value="12 // ppr"/>
@@ -419,6 +420,7 @@
                                         <div
                                             t-attf-class="oe_product {{col_class}} {{col_class_md}} {{col_class_lg}}"
                                             t-att-data-name="product_block_name"
+                                            t-att-data-product-template-id="product.id"
                                         >
                                             <div class="o_wsale_product_grid_wrapper position-relative h-100">
                                                 <t
