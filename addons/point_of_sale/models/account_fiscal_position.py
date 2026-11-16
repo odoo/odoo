@@ -5,6 +5,6 @@ class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
 
     def action_archive(self):
-        configs = self.env['pos.config'].search([('default_fiscal_position_id', 'in', self.ids)])
+        configs = self.env['pos.config'].with_context(active_test=False).search([('default_fiscal_position_id', 'in', self.ids)])
         configs.default_fiscal_position_id = False
         return super().action_archive()
