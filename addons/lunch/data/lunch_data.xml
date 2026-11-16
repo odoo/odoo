@@ -50,6 +50,7 @@
         <field name="model_id" ref="model_lunch_order"/>
         <field name="binding_model_id" ref="model_lunch_order"/>
         <field name="binding_view_types">list,kanban</field>
+        <field name="group_ids" eval="[Command.link(ref('lunch.group_lunch_manager'))]"/>
         <field name="state">code</field>
         <field name="code">records.action_cancel()</field>
     </record>
@@ -59,6 +60,7 @@
         <field name="model_id" ref="model_lunch_order"/>
         <field name="binding_model_id" ref="model_lunch_order"/>
         <field name="binding_view_types">list,kanban</field>
+        <field name="group_ids" eval="[Command.link(ref('lunch.group_lunch_manager'))]"/>
         <field name="state">code</field>
         <field name="code">records.action_notify()</field>
     </record>

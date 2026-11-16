@@ -69,7 +69,7 @@
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
-                        <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type_id'}"/>
+                        <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type_id'}" groups="hr.group_hr_manager"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="_search_today_location" string="Work location" domain="[]" context="{'group_by':'today_location_name'}"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>

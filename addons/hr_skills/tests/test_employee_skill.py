@@ -5,8 +5,9 @@ import datetime
 from odoo import fields
 
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, Form
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import TransactionCase
+from odoo.tools.safe_eval import expr_eval
 
 
 class TestEmployeeSkills(TransactionCase):
@@ -129,6 +130,29 @@ class TestEmployeeSkills(TransactionCase):
                 'valid_to': datetime.date(2024, 1, 31),
             },
         ])
+
+    def test_training_attendances_active_companies(self):
+        """ The training attendances of the employees outside of the active companies are not
+        displayed: their employee (and avatar) can not be read by the HR officers """
+        company = self.employee.company_id
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        other_employee = self.env['hr.employee'].create({'name': 'Other Employee', 'company_id': other_company.id})
+        course_type = self.env['hr.resume.line.type'].create({'name': 'Course', 'is_course': True})
+        line, other_line = self.env['hr.resume.line'].create([{
+            'name': 'Training',
+            'employee_id': employee.id,
+            'line_type_id': course_type.id,
+        } for employee in (self.employee, other_employee)])
+        hr_officer = new_test_user(
+            self.env, login='skills_hr_officer', groups='hr.group_hr_user',
+            company_id=company.id, company_ids=[(6, 0, (company | other_company).ids)],
+        )
+        action = self.env.ref('hr_skills.hr_resume_lines_training_action')
+        domain = expr_eval(action.domain, {'allowed_company_ids': company.ids})
+        lines = self.env['hr.resume.line'].with_user(hr_officer).with_context(allowed_company_ids=company.ids).search(domain)
+        self.assertIn(line, lines)
+        self.assertNotIn(other_line, lines)
+        lines.employee_id.read(['avatar_128'])
 
     def test_add_english_b1(self):
         employee_form = Form(self.employee)

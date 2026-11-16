@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import common, new_test_user
 from odoo.addons.lunch.tests.common import TestsCommon
 
 
@@ -102,3 +102,27 @@ class TestOrder(TestsCommon):
         order.action_confirm()
         self.env.flush_all()
         self.assertAlmostEqual(Cashmove.get_wallet_balance(self.env.user, include_config=False), ordered_balance)
+
+    def test_cashmove_report_own_moves_only(self):
+        user = new_test_user(self.env, 'lunch-user-report', 'base.group_user,lunch.group_lunch_user')
+        self.env['lunch.cashmove'].create([
+            {'user_id': user.id, 'amount': 10, 'description': 'mine'},
+            {'user_id': self.manager.id, 'amount': 20, 'description': 'not mine'},
+        ])
+        Report = self.env['lunch.cashmove.report']
+        self.assertEqual(Report.with_user(user).search([]).mapped('description'), ['mine'])
+        self.assertEqual(self.env['lunch.cashmove'].with_user(user).get_wallet_balance(user, include_config=False), 10)
+        self.assertLessEqual(
+            {'mine', 'not mine'},
+            set(Report.with_user(self.manager).search([('user_id', 'in', (user | self.manager).ids)]).mapped('description')))
+
+    def test_order_manager_actions_bindings(self):
+        # like their buttons, cancelling the meals and notifying their users is for the lunch managers
+        user = new_test_user(self.env, 'lunch-user-actions', 'base.group_user,lunch.group_lunch_user')
+        manager_actions = (
+            self.env.ref('lunch.lunch_order_action_cancel') | self.env.ref('lunch.lunch_order_action_notify'))
+        for action_user, visible in ((user, False), (self.manager, True)):
+            bindings = self.env['ir.actions.actions'].with_user(action_user).get_bindings('lunch.order')
+            bound_ids = {action['id'] for action in bindings.get('action', [])}
+            self.assertEqual(bound_ids & set(manager_actions.ids), set(manager_actions.ids) if visible else set())
+            self.assertIn(self.env.ref('lunch.lunch_order_action_confirm').id, bound_ids)

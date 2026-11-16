@@ -125,7 +125,7 @@
                 <filter string="Department" name="group_by_department" domain="[]" context="{'group_by': 'department_id'}"/>
                 <separator />
                 <filter string="Working Schedule" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
-                <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
+                <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}" groups="hr.group_hr_manager"/>
             </search>
         </field>
     </record>

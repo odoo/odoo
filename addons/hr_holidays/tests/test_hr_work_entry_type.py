@@ -491,3 +491,17 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         })
 
         self.assertEqual(leave._get_durations()[leave.id], (0.125, 3.0))
+
+    def test_group_time_off_wizard_time_types(self):
+        """ The group time off only proposes the time types selectable in time off, except to the
+        time off administrators """
+        not_selectable_type = self.env['hr.work.entry.type'].create({
+            'name': 'Not Selectable',
+            'code': 'Not Selectable',
+            'requires_allocation': False,
+            'time_off_selectable': False,
+            'country_id': self.env.company.country_id.id,
+        })
+        for user, expected in ((self.user_responsible, False), (self.user_hrmanager, True)):
+            wizard = self.env['hr.leave.generate.multi.wizard'].with_user(user).new({})
+            self.assertEqual(not_selectable_type in wizard.allowed_work_entry_type_ids._origin, expected)
