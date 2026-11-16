@@ -114,6 +114,7 @@ export const barcodeService = {
         }
 
         function inputHandler() {
+            currentTarget ??= barcodeInput;
             clearTimeout(timeout);
             timeout = setTimeout(checkBarcode, barcodeService.maxTimeBetweenKeysInMs);
         }

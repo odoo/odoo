@@ -138,3 +138,23 @@ test("barcode without end character is scanned after the delay following the las
     await advanceTime(20);
     expect.verifySteps(["8901"]);
 });
+
+test.tags("mobile");
+test("barcodes inserted without keydown are scanned", async () => {
+    patchWithCleanup(barcodeService, { maxTimeBetweenKeysInMs: 50 });
+    await mountWithCleanup(Root);
+    getService("barcode").bus.addEventListener("barcode_scanned", ({ detail }) =>
+        expect.step(detail.barcode)
+    );
+
+    const input = queryFirst("input[name=barcode]", { root: document.body });
+    for (const barcode of ["8901", "1234"]) {
+        input.value = barcode;
+        await manuallyDispatchProgrammaticEvent(input, "input", {
+            data: barcode,
+            inputType: "insertText",
+        });
+        await advanceTime(50);
+    }
+    expect.verifySteps(["8901", "1234"]);
+});
