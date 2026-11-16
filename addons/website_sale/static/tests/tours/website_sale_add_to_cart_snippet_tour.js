@@ -33,7 +33,18 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
+        {
+            content: "Flag the current variant picker to tell it from the rebuilt one",
+            trigger: 'we-select[data-name="product_variant_picker_opt"]',
+            run() {
+                this.anchor.dataset.beforeRebuild = "true";
+            },
+        },
         ...selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 2', true),
+        {
+            content: "Wait for the variant picker to be rebuilt",
+            trigger: 'we-select[data-name="product_variant_picker_opt"]:not([data-before-rebuild])',
+        },
         ...selectElementInWeSelectWidget('product_variant_picker_opt', 'Product Yes Variant 2 (Pink)'),
         ...clickOnSave(),
         clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
@@ -41,6 +52,10 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
         ...selectElementInWeSelectWidget('product_template_picker_opt', 'Product No Variant', true),
+        {
+            content: "Wait for the variant picker to be hidden by the rebuild",
+            trigger: 'we-select[data-name="product_variant_picker_opt"]:not(:visible)',
+        },
         ...selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
         // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
