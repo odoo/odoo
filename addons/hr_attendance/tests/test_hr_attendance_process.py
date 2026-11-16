@@ -646,6 +646,33 @@ class TestAbsenceDetectionCron(TransactionCase):
             "Cron must not create technical attendances for employees who already checked in",
         )
 
+    @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
+    def test_attendance_overlapping_local_day_not_targeted(self):
+        """An attendance that starts before the local day of the employee and ends during or
+        after it covers that day: the employee is not absent."""
+        brussels_employee, tokyo_employee = self.env['hr.employee'].create([{
+            'name': f'Employee {tz}',
+            'tz': tz,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        } for tz in ('Europe/Brussels', 'Asia/Tokyo')])
+        attendances = self.env['hr.attendance'].create([{
+            # Sunday 23:30 to Monday 00:30 in Europe/Brussels
+            'employee_id': brussels_employee.id,
+            'check_in': datetime(2023, 12, 31, 22, 30),
+            'check_out': datetime(2023, 12, 31, 23, 30),
+        }, {
+            # Sunday 23:00 to Tuesday 01:00 in Asia/Tokyo
+            'employee_id': tokyo_employee.id,
+            'check_in': datetime(2023, 12, 31, 14, 0),
+            'check_out': datetime(2024, 1, 1, 16, 0),
+        }])
+
+        self.env['hr.attendance']._cron_absence_detection()
+
+        self.assertEqual((brussels_employee | tokyo_employee).attendance_ids, attendances)
+
 
 @tagged('attendance_process')
 class TestAttendanceValidationTimeRules(TransactionCase):

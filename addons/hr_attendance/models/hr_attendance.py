@@ -605,7 +605,21 @@ class HrAttendance(models.Model):
         if not companies:
             return
 
-        checked_in_employees = self.env['hr.attendance'].search([('date', '=', yesterday)]).employee_id
+        # An attendance is on the employee's yesterday when it starts on that day, or starts
+        # before and ends after the start of that day, in the employee's timezone.
+        attendances = self.env['hr.attendance'].search([
+            ('employee_id.company_id', 'in', companies.ids),
+            ('date', '<=', yesterday),
+            '|', ('date', '=', yesterday), ('check_out', '>=', yesterday - relativedelta(days=1)),
+        ])
+        tz_by_employee = attendances.employee_id._get_tz_batch()
+        day_start_by_tz = {
+            tz: yesterday.replace(tzinfo=ZoneInfo(tz)).astimezone(UTC).replace(tzinfo=None)
+            for tz in set(tz_by_employee.values())
+        }
+        checked_in_employees = attendances.filtered(
+            lambda a: a.date == yesterday.date() or a.check_out > day_start_by_tz[tz_by_employee[a.employee_id.id]]
+        ).employee_id
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([
