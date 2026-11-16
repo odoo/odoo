@@ -1506,7 +1506,8 @@ class SaleOrderLine(models.Model):
 
     def _get_downpayment_line_price_unit(self, invoices):
         return sum(
-            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+            # the discount is part of what the down payment invoice charged
+            l.price_unit * (1 - l.discount / 100) * (1 if l.move_id.move_type == 'out_invoice' else -1)
             for l in self.invoice_lines
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
