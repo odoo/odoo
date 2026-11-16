@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests.common import new_test_user
 
 
 @tagged('recruitment')
@@ -20,6 +21,28 @@ class TestRecruitment(MailCase, TransactionCase):
         cls.env.user.company_ids = [Command.set(cls.company.ids)]
 
         cls.Attachment = cls.env['ir.attachment']
+
+    def test_recruitment_officer_create_job(self):
+        """ A recruitment officer without access to the employees can create a job
+        position, and becomes one of its favorites if they have an employee. """
+        officer = new_test_user(
+            self.env, 'rec_officer',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_user',
+            company_id=self.company.id, company_ids=[Command.set(self.company.ids)],
+        )
+        self.assertFalse(officer.has_group('hr.group_hr_user'))
+
+        job = self.env['hr.job'].with_user(officer).create({'name': 'Job without employee'})
+        self.assertFalse(job.sudo().favorite_recruiter_ids)
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Recruitment Officer',
+            'user_id': officer.id,
+            'company_id': self.company.id,
+        })
+        job = self.env['hr.job'].with_user(officer).create({'name': 'Job with employee'})
+        self.assertEqual(job.sudo().favorite_recruiter_ids, employee)
+        self.assertTrue(job.is_favorite)
 
     def test_infer_applicant_lang_from_context(self):
         # Prerequisites

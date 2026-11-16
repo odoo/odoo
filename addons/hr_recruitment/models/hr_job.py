@@ -70,7 +70,7 @@ class HrJob(models.Model):
     alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.", groups="hr_recruitment.group_hr_recruitment_interviewer")
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sql="_compute_sql_is_favorite", compute_sudo=True)
-    favorite_recruiter_ids = fields.Many2many('hr.employee', 'job_favorite_recruiter_rel', 'job_id', 'recruiter_id', default=_get_default_favorite_recruiter_ids)
+    favorite_recruiter_ids = fields.Many2many('hr.employee', 'job_favorite_recruiter_rel', 'job_id', 'recruiter_id')
     interviewer_ids = fields.Many2many(
         "res.users",
         domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
@@ -334,6 +334,13 @@ class HrJob(models.Model):
     def create(self, vals_list):
         jobs = super().create(vals_list)
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
+        # The creator is a favorite of the new job. This is done as superuser, as recruitment
+        # users may not have access to the employees.
+        jobs_without_favorites = self.browse([
+            job.id for job, vals in zip(jobs, vals_list) if 'favorite_recruiter_ids' not in vals
+        ])
+        if jobs_without_favorites and self.env.user.employee_id:
+            jobs_without_favorites.sudo().favorite_recruiter_ids = self._get_default_favorite_recruiter_ids()
         return jobs
 
     def write(self, vals):
