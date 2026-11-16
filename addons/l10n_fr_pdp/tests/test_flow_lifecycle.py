@@ -734,7 +734,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         """OSS VAT remains on the invoice but is not reported as French VAT."""
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
         if not oss_tag:
-            oss_tag = self.env['account.account.tag'].create({'name': 'OSS'})
+            # Repartition lines require a tax tag, just like the real OSS tag.
+            oss_tag = self.env['account.account.tag'].create({'name': 'OSS', 'applicability': 'taxes'})
             self.env['ir.model.data'].create({
                 'module': 'l10n_eu_oss',
                 'name': 'tag_oss',
