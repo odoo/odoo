@@ -1404,7 +1404,7 @@ class Base_ImportImport(models.TransientModel):
                 self._parse_date_from_data(data, index, name, field['type'], options)
             # Check if the field is in import_field and is a relational (followed by /)
             # Also verify that the field name exactly match the import_field at the correct level.
-            elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+            elif any(import_field.startswith(name + '/') for import_field in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
                 self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
@@ -1580,6 +1580,9 @@ class Base_ImportImport(models.TransientModel):
             import_limit = options.pop('limit', None)
             model = self.env[self.res_model].with_context(
                 import_file=True,
+                import_return_record_ids=any(
+                    filename for filenames in binary_filenames.values() for filename in filenames
+                ),
                 name_create_enabled_fields=name_create_enabled_fields,
                 import_set_empty_fields=options.get('import_set_empty_fields', []),
                 import_skip_records=options.get('import_skip_records', []),
@@ -1645,7 +1648,7 @@ class Base_ImportImport(models.TransientModel):
         binary_filenames = binary_filenames or defaultdict(list)
         for name, field in self.env[model]._fields.items():
             name = prefix + name
-            if any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+            if any(import_field.startswith(name + '/') for import_field in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
                 binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames)
             elif field.type == 'binary' and field.attachment and name in import_fields:

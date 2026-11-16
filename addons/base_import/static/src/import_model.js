@@ -410,10 +410,8 @@ export class BaseImportModel {
             importRes.columns,
             this.formattedImportOptions,
         ];
-        const { ids, messages, nextrow, name, error, binary_filenames } = await this._callImport(
-            isTest,
-            importArgs
-        );
+        const { ids, messages, nextrow, name, error, binary_filenames, record_ids } =
+            await this._callImport(isTest, importArgs);
 
         // Handle server errors
         if (error) {
@@ -434,7 +432,7 @@ export class BaseImportModel {
         }
 
         // Push local image to records
-        await this._pushLocalImageToRecords(ids, binary_filenames, isTest);
+        await this._pushLocalImageToRecords(record_ids, binary_filenames, isTest);
 
         // Check if we should continue
         if (nextrow) {
@@ -448,46 +446,39 @@ export class BaseImportModel {
         return false;
     }
 
-    async _pushLocalImageToRecords(ids, binaryFilenames, isTest) {
-        if (typeof binaryFilenames === "object") {
-            const parameters = {
-                tracking_disable: this.importOptions.tracking_disable,
-                delayAfterEachBatch: this.binaryFilesParams.delayAfterEachBatch.value,
-                maxBatchSize: this.binaryFilesParams.maxSizePerBatch.value * 1024 * 1024,
-            };
-
-            if (!this.binaryFilesParams.binaryFiles) {
-                return;
+    async _pushLocalImageToRecords(recordIds, binaryFilenames, isTest) {
+        const binaryFiles = this.binaryFilesParams.binaryFiles?.value;
+        if (isTest || !recordIds || !binaryFilenames || !binaryFiles) {
+            return;
+        }
+        const parameters = {
+            tracking_disable: this.importOptions.tracking_disable,
+            delayAfterEachBatch: this.binaryFilesParams.delayAfterEachBatch.value,
+            maxBatchSize: this.binaryFilesParams.maxSizePerBatch.value * 1024 * 1024,
+        };
+        for (const [path, filenames] of Object.entries(binaryFilenames)) {
+            const parts = path.split("/");
+            const field = parts.pop();
+            const records = recordIds[parts.join("/")];
+            if (!records) {
+                continue;
             }
-            const binaryFiles = this.binaryFilesParams.binaryFiles.value;
-            const fields = Object.keys(binaryFilenames);
-            const binaryFileManager = new BinaryFileManager(
-                this.resModel,
-                fields,
+            const manager = new BinaryFileManager(
+                records.model,
+                [field],
                 parameters,
                 this.context,
                 this.orm,
                 this.notificationService
             );
-            for (let rowIndex = 0; rowIndex < ids.length; rowIndex++) {
-                const id = ids[rowIndex];
-                for (const field of fields) {
-                    const fileName = binaryFilenames[field][rowIndex];
-                    if (!fileName) {
-                        continue;
-                    }
-                    if (fileName in binaryFiles) {
-                        const file = binaryFiles[fileName];
-                        if (!file || isTest) {
-                            continue;
-                        }
-                        await binaryFileManager.addFile(id, field, file);
-                    }
+            for (const [row, filename] of filenames.entries()) {
+                const id = records.ids[row];
+                const file = binaryFiles[filename];
+                if (id && file) {
+                    await manager.addFile(id, field, file);
                 }
             }
-            if (!isTest) {
-                await binaryFileManager.sendLastPayload();
-            }
+            await manager.sendLastPayload();
         }
     }
 

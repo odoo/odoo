@@ -1085,6 +1085,8 @@ class One2many(_RelationalMulti):
         if self.store and is_real:
             inverse = self.inverse_name
             to_create = []                      # line vals to create
+            import_keys = []                    # source references of import commands
+            import_records = model.env.context.get('_import_records')
             to_delete = []                      # line ids to delete
             to_link = defaultdict(OrderedSet)   # {record: line_ids}
             allow_full_delete = not create
@@ -1106,6 +1108,11 @@ class One2many(_RelationalMulti):
                 if to_create:
                     # create() will add the new lines to the cache of records
                     lines = comodel.create(to_create)
+                    if import_records is not None:
+                        for key, line in zip(import_keys, lines):
+                            if key in import_records:
+                                import_records[key]['id'] = line.id
+                    import_keys.clear()
                     if len(lines.filtered_domain(comodel_domain)) < len(lines):
                         raise ValueError(f"Cannot link inaccessible records in {self} ({comodel_domain})")
                     to_create.clear()
@@ -1123,6 +1130,8 @@ class One2many(_RelationalMulti):
                 for command in (commands or ()):
                     if command[0] == Command.CREATE:
                         to_create.extend(dict(command[2], **{inverse: record.id}) for record in recs)
+                        if import_records is not None:
+                            import_keys.extend(command[1] for record in recs)
                         allow_full_delete = False
                     elif command[0] == Command.UPDATE:
                         prefetch_ids = recs[self.name]._prefetch_ids

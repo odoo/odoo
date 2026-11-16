@@ -1504,6 +1504,42 @@ class TestImageImport(TransactionCase):
         b'UklGRjoAAABXRUJQVlA4IC4AAAAwAQCdASoBAAEAAUAmJaAAA3AA/u/uY//8s//2W/7LeM///5Bj'
     )
 
+    def test_local_images_on_related_records(self):
+        wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(generate_xlsx({
+                'name': ['Parent', '', 'Other parent'],
+                'image_1920': ['main.webp', '', ''],
+                'child_ids/name': ['First', 'Second', 'Third'],
+                'child_ids/image_1920': ['first.webp', 'second.webp', 'third.webp'],
+            })),
+            'file_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        result = wizard.execute_import(
+            ['name', 'image_1920', 'child_ids/name', 'child_ids/image_1920'], [],
+            {'has_headers': True},
+        )
+        self.assertFalse(result['messages'])
+        parent, other_parent = self.env['res.partner'].browse(result['ids'])
+        self.assertEqual(result['ids'], [parent.id, other_parent.id])
+        self.assertEqual(result['record_ids']['']['ids'], [parent.id, False, other_parent.id])
+        self.assertEqual(result['binary_filenames']['child_ids/image_1920'], [
+            'first.webp', 'second.webp', 'third.webp',
+        ])
+        related = result['record_ids']['child_ids']
+        children = self.env[related['model']].browse(related['ids'])
+        self.assertEqual(children.mapped('name'), ['First', 'Second', 'Third'])
+        self.assertFalse(any(child.image_1920 for child in children))
+        image = base64.b64encode(self.webp).decode()
+        # The browser uploads the files directly to the returned co-model IDs.
+        uploaded = self.env[related['model']].load(
+            ['.id', 'image_1920'], [[str(id), image] for id in related['ids']],
+        )
+        self.assertFalse(uploaded['messages'])
+        self.assertTrue(all(child.image_1920 for child in children))
+        self.assertEqual(len(parent.child_ids), 2)
+        self.assertEqual(len(other_parent.child_ids), 1)
+
     def _import_image(self, content):
         response = unittest.mock.Mock(
             headers={},

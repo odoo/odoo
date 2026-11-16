@@ -1085,6 +1085,60 @@ class test_m2m(ImporterCase):
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 
+    def test_optional_record_ids(self):
+        result = self.import_(
+            ['const', 'value/value'], [['5', '63'], ['', '64'], ['6', ''], ['7', '65']],
+        )
+        parents = self.browse().sorted('const')
+        self.assertEqual(result, {'ids': parents.ids, 'messages': [], 'nextrow': 0})
+        first, second = parents[0].value
+        third = parents[2].value
+
+        result = self.import_(
+            ['.id', 'value/.id', 'value/value'],
+            [[str(parents[0].id), str(second.id), '70'], ['', str(first.id), '80'],
+             [str(parents[1].id), '', ''], [str(parents[2].id), str(third.id), '90']],
+            context={'import_return_record_ids': True},
+        )
+        self.assertFalse(result['messages'])
+        self.assertEqual(result['ids'], parents.ids)
+        self.assertEqual(result['record_ids'], {
+            '': {'model': self.model_name, 'ids': [parents[0].id, False, parents[1].id, parents[2].id]},
+            'value': {'model': first._name, 'ids': [second.id, first.id, False, third.id]},
+        })
+        self.assertEqual((first.value, second.value, third.value), (80, 70, 90))
+
+    def test_nested_record_ids_with_limit_and_skipped_records(self):
+        model = self.env['res.partner'].with_context(
+            import_return_record_ids=True, import_file=True, import_skip_records=['country_id'],
+        )
+        import_fields = ['name', 'country_id', 'child_ids/name', 'child_ids/child_ids/name']
+        data = [
+            ['Parent', '', 'First', 'Grandchild 1'], ['', '', '', 'Grandchild 2'],
+            ['', '', 'Second', ''], ['Skipped', 'nonexistent country', 'Skipped child', ''],
+            ['Other parent', '', 'Third', ''],
+        ]
+        result = model.load(import_fields, data, limit=1)
+        self.assertFalse(result['messages'])
+        parent = model.browse(result['ids'])
+        children = {child.name: child for child in parent.child_ids}
+        grandchildren = {child.name: child for child in parent.child_ids.child_ids}
+        self.assertEqual(result['nextrow'], 3)
+        self.assertEqual(result['record_ids']['']['ids'], [parent.id, False, False])
+        self.assertEqual(result['record_ids']['child_ids']['ids'], [
+            children['First'].id, False, children['Second'].id,
+        ])
+        self.assertEqual(result['record_ids']['child_ids/child_ids']['ids'], [
+            grandchildren['Grandchild 1'].id, grandchildren['Grandchild 2'].id, False,
+        ])
+
+        result = model.load(import_fields, data[3:])
+        self.assertFalse(result['messages'])
+        other_parent = model.browse(result['ids'])
+        self.assertEqual(other_parent.name, 'Other parent')
+        self.assertEqual(result['record_ids']['']['ids'], [False, other_parent.id])
+        self.assertEqual(result['record_ids']['child_ids']['ids'], [False, other_parent.child_ids.id])
+
     def test_display_name(self):
         s = 'Java is a DSL for taking large XML files and converting them to stack traces'
         result = self.import_(['const', 'value'], [['5', s]])

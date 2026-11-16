@@ -949,9 +949,14 @@ class BaseModel(metaclass=MetaModel):
         the same order they were extracted from the file. They can be passed
         directly to :meth:`~read`
 
+        With context ``import_return_record_ids=True``, also return ``record_ids``
+        mapping field paths to their model and identifiers aligned with input rows.
+        The empty path identifies this model. Continuation and skipped rows have
+        a False identifier.
+
         :param fields: list of fields to import, at the same index as the corresponding data
         :param data: row-major matrix of data to import
-        :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
+        :returns: {ids: list(int)|False, messages: [Message], nextrow: int}
         """
         from .fields_relational import One2many  # noqa: PLC0415
 
@@ -960,7 +965,11 @@ class BaseModel(metaclass=MetaModel):
         current_module = self.env.context.get('module', '__import__')
         noupdate = self.env.context.get('noupdate', False)
         # add current module in context for the conversion of xml ids
-        self = self.with_context(_import_current_module=current_module)
+        import_records = {} if self.env.context.get('import_return_record_ids') else None
+        self = self.with_context(  # noqa: PLW0642
+            _import_current_module=current_module, _import_records=import_records,
+            _import_row_indices=range(len(data)), _import_field_path='',
+        )
 
         if limit is None:
             limit = float('inf')
@@ -971,6 +980,7 @@ class BaseModel(metaclass=MetaModel):
 
             ids = []
             messages = []
+            loaded_data = []
 
             # list of (xid, vals, info) for records to be created in batch
             batch = []
@@ -1018,6 +1028,8 @@ class BaseModel(metaclass=MetaModel):
                     with cr.savepoint():
                         recs = self._load_records(data_list, mode == 'update')
                         ids.extend(recs.ids)
+                        if import_records is not None:
+                            loaded_data.extend(data_list)
                     return
                 except psycopg2.InternalError as e:
                     # broken transaction, exit and hope the source error was already logged
@@ -1037,6 +1049,8 @@ class BaseModel(metaclass=MetaModel):
                         rec = self._load_records([rec_data], mode == 'update')
                         cr.flush()  # make sure flush exceptions are raised here
                         ids.append(rec.id)
+                        if import_records is not None:
+                            loaded_data.append(rec_data)
                     except psycopg2.Warning as e:
                         savepoint.rollback()
                         info = rec_data['info']
@@ -1104,11 +1118,30 @@ class BaseModel(metaclass=MetaModel):
         nextrow = info['rows']['to'] + 1
         if nextrow < limit:
             nextrow = 0
-        return {
+        result = {
             'ids': ids,
             'messages': messages,
             'nextrow': nextrow,
         }
+        if import_records is None:
+            return result
+        record_ids = result['record_ids'] = {}
+        if ids:
+            row_ids = [False] * (info['rows']['to'] + 1)
+            imported_rows = set()
+            for entry in loaded_data:
+                start, end = entry['info']['rows']['from'], entry['info']['rows']['to'] + 1
+                row_ids[start] = entry['record'].id
+                imported_rows.update(range(start, end))
+            record_ids[''] = {'model': self._name, 'ids': row_ids}
+            for record in import_records.values():
+                if not record['id'] or record['row'] not in imported_rows:
+                    continue
+                related = record_ids.setdefault(record['path'], {
+                    'model': record['model'], 'ids': [False] * len(row_ids),
+                })
+                related['ids'][record['row']] = record['id']
+        return result
 
     def _extract_records(self, field_paths, data, log=lambda a: None, limit=float('inf')):
         """ Generates record dicts from the data sequence.
@@ -1126,6 +1159,9 @@ class BaseModel(metaclass=MetaModel):
         * ".id" is the Database ID for the record
         """
         fields = self._fields
+        import_records = self.env.context.get('_import_records')
+        row_indices = self.env.context.get('_import_row_indices', range(len(data)))
+        field_path = self.env.context.get('_import_field_path', '')
 
         get_o2m_values = itemgetter_tuple([
             index
@@ -1214,6 +1250,16 @@ class BaseModel(metaclass=MetaModel):
                 # return all rows which have at least one value for the
                 # subfields of relfield
                 relfield_data = [it for it in map(itemgetter_tuple(indices), record_span) if any(it)]
+                if import_records is not None:
+                    relfield_indices = [
+                        row_indices[index + offset]
+                        for offset, values in enumerate(map(itemgetter_tuple(indices), record_span))
+                        if any(values)
+                    ]
+                    comodel = comodel.with_context(
+                        _import_row_indices=relfield_indices,
+                        _import_field_path=field_path + relfield + '/',
+                    )
                 record[relfield] = [
                     subrecord
                     for subrecord, _subinfo in comodel._extract_records(subfields, relfield_data, log=log)
@@ -1226,6 +1272,12 @@ class BaseModel(metaclass=MetaModel):
                     properties.append(dict(**property_definitions[property_name], value=value))
                 record[properties_fname] = properties
 
+            if import_records is not None and field_path:
+                # Retain the source dictionary until its command has been written.
+                import_records[id(record)] = {
+                    'record': record, 'path': field_path.rstrip('/'),
+                    'model': self._name, 'row': row_indices[index], 'id': False,
+                }
             yield record, {'rows': {
                 'from': index,
                 'to': index + len(record_span) - 1,
