@@ -3,7 +3,7 @@ import { Deferred, mockFetch } from "@odoo/hoot-mock";
 import { patchTranslations } from "@web/../tests/web_test_helpers";
 
 import { download, downloadFile } from "@web/core/network/download";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, RequestEntityTooLargeError, RPCError } from "@web/core/network/rpc";
 
 describe.current.tags("headless");
 
@@ -11,6 +11,14 @@ test("handles connection error when behind a server", async () => {
     mockFetch(() => new Response("", { status: 502 }));
 
     const error = new ConnectionLostError("/some_url");
+    await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error);
+});
+
+test("handles request entity too large error when behind a server", async () => {
+    const serverError = /* xml */ `<html><body><h1>413 Request Entity Too Large</h1></body></html>`;
+    mockFetch(() => new Response(new Blob([serverError], { type: "text/html" }), { status: 413 }));
+
+    const error = new RequestEntityTooLargeError();
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error);
 });
 
