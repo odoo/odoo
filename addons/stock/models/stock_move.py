@@ -2412,6 +2412,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             ]
             if picking_type_code:
                 domain.append(('picking_type_id.code', '=', picking_type_code))
+            elif move.picking_type_id:
+                domain.append(("picking_type_id.code", "=", move.picking_type_id.code))
             rule = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
             if not rule:
                 move.procure_method = 'make_to_stock'
