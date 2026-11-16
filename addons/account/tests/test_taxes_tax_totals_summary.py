@@ -2487,3 +2487,62 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             with self.subTest(test_index=test_index):
                 invoice = self.convert_document_to_invoice(document)
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
+
+    def test_manual_tax_amount_price_include(self):
+        tax_19 = self.percent_tax(19.0, type_tax_use='purchase', price_include_override='tax_included')
+        product = self._create_product(standard_price=204.79, supplier_taxes_id=tax_19)
+
+        invoice = self._create_invoice_one_line(product_id=product, move_type='in_invoice')
+        expected_values = {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 172.09,
+            'tax_amount_currency': 32.7,
+            'total_amount_currency': 204.79,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 172.09,
+                    'tax_amount_currency': 32.7,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 172.09,
+                            'tax_amount_currency': 32.7,
+                            'display_base_amount_currency': 172.09,
+                        },
+                    ],
+                },
+            ],
+        }
+        self._assert_tax_totals_summary(invoice.tax_totals, expected_values)
+        self.assert_invoice_totals(invoice, expected_values)
+
+        # Change the tax amount from 32.7 to 32.69.
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': 32.69})]
+        invoice.invalidate_recordset()
+        expected_values = {
+            'same_tax_base': False,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 172.1,
+            'tax_amount_currency': 32.69,
+            'total_amount_currency': 204.79,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 172.1,
+                    'tax_amount_currency': 32.69,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 172.09,
+                            'tax_amount_currency': 32.69,
+                            'display_base_amount_currency': 172.09,
+                        },
+                    ],
+                },
+            ],
+        }
+        self._assert_tax_totals_summary(invoice.tax_totals, expected_values)
+        self.assert_invoice_totals(invoice, expected_values)
