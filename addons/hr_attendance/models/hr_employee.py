@@ -337,6 +337,10 @@ class HrEmployee(models.Model):
                 'employee_id': self.id,
                 'check_in': action_date,
             }
+            # the time type of the company of the employee, not the one of the current company
+            # (e.g. the kiosk of another company)
+            if work_entry_type := self.company_id.sudo().attendance_work_entry_type_id:
+                vals['work_entry_type_id'] = work_entry_type.id
             if geo_information:
                 vals.update({'in_%s' % key: geo_information[key] for key in geo_information})
 

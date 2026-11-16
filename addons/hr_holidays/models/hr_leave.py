@@ -1693,7 +1693,9 @@ class HrLeave(models.Model):
             employees_without_allocation, zero_duration_employees = real_holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
             invalid_holidays = real_holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
             holidays -= invalid_holidays
-            invalid_holidays.unlink()
+            # sudo: drop the time off just created, the creator (e.g. the time off manager of the
+            # employee) is not always allowed to delete them
+            invalid_holidays.sudo().unlink()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:

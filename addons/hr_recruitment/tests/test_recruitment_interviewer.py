@@ -162,3 +162,31 @@ class TestRecruitmentInterviewer(MailCase):
         self.job.write({'recruiter_id': new_manager_employee.id})
         self.assertEqual(ongoing_application.recruiter_id, new_manager_employee)
         self.assertEqual(hired_application.recruiter_id, self.manager_employee)
+
+    def test_officer_create_and_favorite_job(self):
+        # a recruitment officer is not always allowed to read the employees
+        officer = new_test_user(self.env, 'rec_officer',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_user',
+            name='Recruitment Officer', email='rec_officer@example.com')
+        officer_employee = officer.employee_id or self.env['hr.employee'].create({'name': 'Recruitment Officer', 'user_id': officer.id})
+        job = self.env['hr.job'].with_user(officer).create({'name': 'Officer job'})
+        self.assertEqual(job.sudo().favorite_recruiter_ids, officer_employee)
+        self.assertTrue(job.is_favorite)
+        job.is_favorite = False
+        self.assertFalse(job.sudo().favorite_recruiter_ids)
+        job.is_favorite = True
+        self.assertEqual(job.sudo().favorite_recruiter_ids, officer_employee)
+
+    def test_interviewer_talent_pool_actions_hidden(self):
+        # only the recruitment officers can use the wizards adding applicants to a pool or a job
+        action_job_add_applicants = self.env.ref('hr_recruitment.action_job_add_applicants')
+        for user, visible in ((self.interviewer_user, False), (self.manager_user, True)):
+            views = self.env['hr.applicant'].with_user(user).get_views(
+                [(False, 'list'), (False, 'kanban'), (False, 'form')], {'toolbar': True})
+            for view_type in ('list', 'kanban', 'form'):
+                arch = views['views'][view_type]['arch']
+                self.assertEqual('name="action_talent_pool_add_applicants"' in arch, visible)
+                if view_type != 'kanban':
+                    self.assertEqual('name="action_job_add_applicants"' in arch, visible)
+            toolbar_actions = views['views']['form']['toolbar'].get('action', [])
+            self.assertEqual(action_job_add_applicants.id in [action['id'] for action in toolbar_actions], visible)
