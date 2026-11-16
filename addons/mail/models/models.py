@@ -188,7 +188,7 @@ class Base(models.AbstractModel):
         return result
 
     def _mail_get_default_signature(self):
-        """ Signature (html) of the default author (see ``_mail_get_default_author``),
+        """ Signature (html) of the default author,
         to be used in template bodies so that the signature matches the sender
         when the template does not define any sender ('Send From'). Empty when
         the default author is not a user (e.g. company). """
