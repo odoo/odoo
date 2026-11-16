@@ -1,0 +1,8 @@
+// Added to the primary variables by the tests only: a default font whose
+// stylesheet and files are shipped in the code.
+$o-theme-font-configs: map-merge($o-theme-font-configs, (
+    'Testlocal': (
+        'family': ('Testlocal', sans-serif),
+        'local-url': '/website/static/tests/fonts/Testlocal/Testlocal.css',
+    ),
+));

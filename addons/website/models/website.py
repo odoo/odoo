@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
-from urllib.parse import urlparse, urlsplit
+from urllib.parse import urljoin, urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
@@ -107,6 +107,25 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'google.com.vn', 'google.vu', 'google.ws', 'google.rs', 'google.co.za', 'google.co.zm',
     'google.co.zw', 'google.cat',
 ])
+
+FONT_SUBSET_BY_LANG = {
+    **dict.fromkeys(['be', 'bg', 'mk', 'mn', 'ru', 'sr@Cyrl', 'uk'], 'cyrillic'),
+    **dict.fromkeys(['ar', 'fa'], 'arabic'),
+    **dict.fromkeys(['ja', 'ko', 'zh'], None),
+    'am': 'ethiopic',
+    'bn': 'bengali',
+    'el': 'greek',
+    'gu': 'gujarati',
+    'he': 'hebrew',
+    'hi': 'devanagari',
+    'ka': 'georgian',
+    'km': 'khmer',
+    'lo': 'lao',
+    'ml': 'malayalam',
+    'my': 'myanmar',
+    'te': 'telugu',
+    'th': 'thai',
+}
 
 
 class Website(models.CachedModel):
@@ -1386,9 +1405,102 @@ class Website(models.CachedModel):
             logger.warning("Scss export bundle compilation failed: %s", e)
             raise
 
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        api.ormcache(
+            'self.id',
+            "tuple(sorted(self.env['ir.asset']._get_asset_params().items()))",
+            cache='assets',
+        ),
+    )
     def _get_font_urls(self):
-        """Return the list of font URLs to emit as <link> tags in <head>."""
-        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        """Return the list of font URLs to emit as <link> tags in <head>.
+
+        A stylesheet stored in an attachment (font served locally) gets its
+        checksum, so that browsers cache it without revalidating it."""
+        def with_checksum(url):
+            match = re.match(r'/web/content/(\d+)/', url)
+            attachment = match and self.env['ir.attachment'].sudo().browse(int(match[1])).exists()
+            return f"{url}?unique={attachment.checksum}" if attachment else url
+        return [
+            with_checksum(url)
+            for url in re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        ]
+
+    def _get_font_faces(self, css_url):
+        """Return the font-face declarations from a local font stylesheet,
+        either stored in a public attachment or shipped in a module static
+        directory, as `{subset: {weight: font file url}}` (subset is empty for
+        the faces not preceded by a subset comment, as in the uploaded fonts
+        stylesheets). The fonts served by Google are not read."""
+        css = ''
+        try:
+            if match := re.match(r'/web/content/(\d+)/', css_url):
+                attachment = self.env['ir.attachment'].sudo().browse(int(match[1])).exists()
+                if attachment.public:
+                    css = attachment.raw.decode()
+            elif re.fullmatch(r'/\w+/static/[\w/.-]+\.css', css_url) and '..' not in css_url:
+                with tools.file_open(css_url[1:], 'r', filter_ext=('.css',)) as f:
+                    css = f.read()
+        except (UnicodeDecodeError, OSError, ValueError) as e:
+            logger.info("Font stylesheet %s could not be read, its fonts are not preloaded: %s", css_url, e)
+        faces = {}
+        font_face_re = re.compile(r'(?:/\*\s*([^*]*?)\s*\*/\s*)?@font-face\s*\{([^}]*)\}')
+        for subset, body in font_face_re.findall(css):
+            style = re.search(r'font-style:\s*(\w+)', body)
+            weight = re.search(r'font-weight:\s*(\d+)', body)
+            url = re.search(r'url\(\s*["\']?([^)"\']+)', body)
+            if url and (not style or style[1] == 'normal'):
+                # The font files of a stylesheet shipped in a module are
+                # usually referenced relatively to it.
+                faces.setdefault(subset, {})[int(weight[1]) if weight else 400] = urljoin(css_url, url[1])
+        return faces
+
+    @staticmethod
+    def _font_weight_rank(weight, face_weight):
+        """Sort key of `face_weight` when looking for `weight`, following the
+        CSS font matching algorithm.
+        https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight#fallback_weights"""
+        if 400 <= weight <= 500 and weight <= face_weight <= 500:
+            return 0, face_weight - weight
+        lighter_first = weight <= 500
+        tier = 1 if face_weight == weight or (face_weight < weight) == lighter_first else 2
+        return tier, abs(face_weight - weight)
+
+    def _get_font_preloads(self, lang=None):
+        """Return the `(url, mime_type)` of the font files to preload in <head>
+        for the script of the page language (defaults to the one of the
+        environment): the ones rendering the body, the headings and the
+        buttons (at their weight). Only the local fonts are preloaded."""
+        subset = FONT_SUBSET_BY_LANG.get((lang or self.env.lang or '').split('_')[0], 'latin')
+        if not subset:
+            return []
+        preloads = []
+        for url in self._get_font_preload_urls(subset):
+            extension = url.rpartition('.')[2].lower()
+            preloads.append((url, f'font/{extension}' if extension in ('woff2', 'woff', 'ttf', 'otf') else None))
+        return preloads
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        api.ormcache(
+            'self.id',
+            'subset',
+            "tuple(sorted(self.env['ir.asset']._get_asset_params().items()))",
+            cache='assets',
+        ),
+    )
+    def _get_font_preload_urls(self, subset):
+        urls = []
+        for css_url, weight in re.findall(r'--o-font-preload-\d+:\s*"([^"]*)"\s+(\d+)', self._get_scss_exports()):
+            faces = self._get_font_faces(css_url)
+            # The fonts without subsets are used for every script.
+            files = {**faces.get('', {}), **faces.get(subset, {})}
+            if files:
+                url = files[min(files, key=functools.partial(self._font_weight_rank, int(weight)))]
+                if url not in urls:
+                    urls.append(url)
+        return urls
 
     def _get_icon_font_family(self):
         """Return the icon font the website renders with, empty if the default

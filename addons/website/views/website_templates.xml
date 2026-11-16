@@ -433,6 +433,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
     </t>
+    <t t-foreach="website._get_font_preloads(lang)" t-as="font_preload">
+        <link rel="preload" as="font" t-att-type="font_preload[1]" t-att-href="font_preload[0]" crossorigin=""/>
+    </t>
     <t t-foreach="font_urls" t-as="url">
         <link t-att-href="url" rel="stylesheet"/>
     </t>
