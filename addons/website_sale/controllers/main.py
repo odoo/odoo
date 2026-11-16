@@ -1848,18 +1848,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         model = options.get("model", "product.template")
 
         product = self.env[model].browse(product_id)
-        if "sequence" in options:
-            sequence = options["sequence"]
-            if sequence == "top":
-                product.set_sequence_top()
-            elif sequence == "bottom":
-                product.set_sequence_bottom()
-            elif sequence == "up":
-                product.set_sequence_up()
-            elif sequence == "down":
-                product.set_sequence_down()
         if {"tag_field", "tag_ids"} <= options.keys():
             product.write({options["tag_field"]: options["tag_ids"] or False})
+
+    @route(["/shop/config/products/resequence"], type="jsonrpc", auth="user")
+    def resequence_products(self, product_ids):
+        if not self.env.user.has_group("website.group_website_restricted_editor"):
+            raise NotFound
+
+        self.env["product.template"].browse(product_ids)._website_resequence()
 
     @route(["/shop/config/attribute"], type="jsonrpc", auth="user")
     def change_attribute_config(self, attribute_id, **options):

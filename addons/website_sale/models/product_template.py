@@ -1353,47 +1353,33 @@ class ProductTemplate(models.Model):
         ]
         self.env.cr.execute_values(query, values_args)
 
-    def set_sequence_top(self):
-        min_sequence = self.sudo().search([], order="website_sequence ASC", limit=1)
-        self.website_sequence = min_sequence.website_sequence - 5
+    def _website_resequence(self):
+        """Permute the `website_sequence` values of `self` to match the recordset order.
+        Published and unpublished products are reordered separately.
+        """
+        sequences = self.mapped("website_sequence")
+        if len(set(sequences)) != len(sequences):
+            self._website_sequence_deduplicate()
+        for is_published in (True, False):
+            products = self.filtered(lambda p: p.is_published == is_published)
+            sequences = sorted(products.mapped("website_sequence"))
+            for product, sequence in zip(products, sequences):
+                if product.website_sequence != sequence:
+                    product.website_sequence = sequence
 
-    def set_sequence_bottom(self):
-        max_sequence = self.sudo().search([], order="website_sequence DESC", limit=1)
-        self.website_sequence = max_sequence.website_sequence + 5
-
-    def set_sequence_up(self):
-        previous_product_tmpl = self.sudo().search(
-            [
-                ("website_sequence", "<", self.website_sequence),
-                ("website_published", "=", self.website_published),
-            ],
-            order="website_sequence DESC",
-            limit=1,
+    @api.model
+    def _website_sequence_deduplicate(self):
+        """Make the `website_sequence` of all products unique, keeping their order on the shop."""
+        products = (
+            self
+            .sudo()
+            .with_context(active_test=False)
+            .search([], order="website_sequence, id desc")
         )
-        if previous_product_tmpl:
-            previous_product_tmpl.website_sequence, self.website_sequence = (
-                self.website_sequence,
-                previous_product_tmpl.website_sequence,
-            )
-        else:
-            self.set_sequence_top()
-
-    def set_sequence_down(self):
-        next_prodcut_tmpl = self.search(
-            [
-                ("website_sequence", ">", self.website_sequence),
-                ("website_published", "=", self.website_published),
-            ],
-            order="website_sequence ASC",
-            limit=1,
-        )
-        if next_prodcut_tmpl:
-            next_prodcut_tmpl.website_sequence, self.website_sequence = (
-                self.website_sequence,
-                next_prodcut_tmpl.website_sequence,
-            )
-        else:
-            return self.set_sequence_bottom()
+        start = products[:1].website_sequence
+        for i, product in enumerate(products):
+            if product.website_sequence != (sequence := start + 5 * i):
+                product.website_sequence = sequence
 
     def _default_website_meta(self):
         res = super()._default_website_meta()

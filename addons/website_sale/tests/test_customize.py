@@ -425,8 +425,11 @@ class TestCustomize(
             "is_published": True,
             "alternative_product_ids": product_no_alternative.ids,
         })
-        product_no_alternative.set_sequence_top()
-        product_with_alternative.set_sequence_top()
+        first_sequence = self.env["product.template"].search(
+            [], order="website_sequence ASC", limit=1
+        ).website_sequence
+        product_with_alternative.website_sequence = first_sequence - 10
+        product_no_alternative.website_sequence = first_sequence - 5
         self.start_tour(
             self.env["website"].get_client_action_url("/shop", False),
             "shop_editor_no_alternative_products_visibility_tour",
