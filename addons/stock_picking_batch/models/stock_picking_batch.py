@@ -330,11 +330,12 @@ class StockPickingBatch(models.Model):
 
         target_batch = self[:1]
         other_batches = self[1:]
-        earliest_batch = self.filtered(lambda b: b.scheduled_date).sorted(key=lambda b: b.scheduled_date)[0]
-        merged_batch_vals = earliest_batch._get_merged_batch_vals()
+        earliest_batch = self.filtered(lambda b: b.scheduled_date).sorted(key=lambda b: b.scheduled_date)[:1]
+        merged_batch_vals = earliest_batch._get_merged_batch_vals() if earliest_batch else {}
         target_batch.move_line_ids |= other_batches.move_line_ids
         target_batch.picking_ids |= other_batches.picking_ids
-        target_batch.write(merged_batch_vals)
+        if merged_batch_vals:
+            target_batch.write(merged_batch_vals)
         other_batches.unlink()
         return {
             'type': 'ir.actions.client',
