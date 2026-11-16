@@ -196,19 +196,7 @@ export class EditMenuDialog extends Component {
 
         this.state = useState({ rootMenu: {} });
 
-        onWillStart(async () => {
-            const menu = await this.orm.call(
-                "website.menu",
-                "get_tree",
-                [this.website.currentWebsite.id, this.props.rootID],
-                { context: { lang: this.website.currentWebsite.metadata.lang } }
-            );
-            await this.markPageNotFound(menu);
-            this.state.rootMenu = menu;
-            this.map = new Map();
-            this.populate(this.map, this.state.rootMenu);
-            this.toDelete = [];
-        });
+        onWillStart(() => this.loadMenus());
 
         useNestedSortable({
             ref: this.menuEditor,
@@ -234,6 +222,20 @@ export class EditMenuDialog extends Component {
             },
             preventDrag: (el) => el.querySelector(":scope > button"),
         });
+    }
+
+    async loadMenus() {
+        const menu = await this.orm.call(
+            "website.menu",
+            "get_tree",
+            [this.website.currentWebsite.id, this.props.rootID],
+            { context: { lang: this.website.currentWebsite.metadata.lang } }
+        );
+        await this.markPageNotFound(menu);
+        this.state.rootMenu = menu;
+        this.map = new Map();
+        this.populate(this.map, this.state.rootMenu);
+        this.toDelete = [];
     }
 
     populate(map, menu) {
@@ -369,6 +371,15 @@ export class EditMenuDialog extends Component {
     }
 
     async onClickSave(goToWebsite = true, url) {
+        await this.saveMenus();
+        if (this.props.save) {
+            this.props.save(url);
+        } else if (goToWebsite) {
+            this.website.goToWebsite();
+        }
+    }
+
+    async saveMenus() {
         const data = [];
         this.map.forEach((menu, id) => {
             if (this.state.rootMenu.fields["id"] !== id) {
@@ -395,15 +406,23 @@ export class EditMenuDialog extends Component {
             ],
             { context: { lang: this.website.currentWebsite.metadata.lang } }
         );
-        if (this.props.save) {
-            this.props.save(url);
-        } else if (goToWebsite) {
-            this.website.goToWebsite();
-        }
     }
 
     async createPage(id) {
-        const menu = this.map.get(id);
+        let menu = this.map.get(id);
+        if (typeof id === "string") {
+            const indexPath = [];
+            for (let menuId = id; menuId !== this.state.rootMenu.fields["id"]; ) {
+                const parentId =
+                    this.map.get(menuId).fields["parent_id"] || this.state.rootMenu.fields["id"];
+                const siblings = this.map.get(parentId).children;
+                indexPath.unshift(siblings.findIndex((m) => m.fields["id"] === menuId));
+                menuId = parentId;
+            }
+            await this.saveMenus();
+            await this.loadMenus();
+            menu = indexPath.reduce((parent, index) => parent.children[index], this.state.rootMenu);
+        }
         let url = menu.fields["url"];
         url = url.startsWith("/") ? url : "/" + url;
         this.dialogs.add(AddPageDialog, {
