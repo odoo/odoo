@@ -178,10 +178,10 @@ class HrLeave(models.Model):
         work_entries.write({'active': False})
         # Re-create attendance work entries
         vals_list = []
-        for work_entry in work_entries:
-            vals_list += work_entry.version_id._get_work_entries_values(
-                datetime.combine(work_entry.date, time.min),
-                datetime.combine(work_entry.date, time.max))
+        for version, work_entry_date in {(work_entry.version_id, work_entry.date) for work_entry in work_entries}:
+            vals_list += version._get_work_entries_values(
+                datetime.combine(work_entry_date, time.min),
+                datetime.combine(work_entry_date, time.max))
         vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
         self.env['hr.work.entry'].create(vals_list)
 
