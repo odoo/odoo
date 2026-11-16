@@ -78,10 +78,9 @@ class FleetVehicle(models.Model):
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
     order_date = fields.Date('Order Date', tracking=True)
-    acquisition_date = fields.Date('Registration Date', required=False, default=fields.Date.context_today,
-        tracking=True, help='Date of vehicle registration')
+    acquisition_date = fields.Date('Registration Date', required=False, tracking=True, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
-    contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.context_today, tracking=True)
+    contract_date_start = fields.Date(string="First Contract Date", tracking=True)
     color = fields.Char(help='Color of the vehicle', tracking=True)
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_expand_full',
