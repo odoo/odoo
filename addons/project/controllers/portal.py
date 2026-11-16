@@ -5,7 +5,7 @@ from collections import OrderedDict
 from operator import itemgetter
 from markupsafe import Markup
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -302,6 +302,10 @@ class ProjectCustomerPortal(CustomerPortal):
             'task_link_section': [],
             'preview_object': task,
         }
+        if task.date_deadline:
+            # Calendar days in the viewer's timezone, like the displayed date
+            deadline = fields.Datetime.context_timestamp(task, task.date_deadline).date()
+            values['deadline_days'] = (deadline - fields.Date.context_today(task)).days
 
         values = self._get_page_view_values(task, access_token, values, history, False, **kwargs)
         if project:

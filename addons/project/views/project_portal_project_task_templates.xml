@@ -163,142 +163,127 @@
         </xpath>
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row o_project_portal_sidebar">
+                <t t-set="sidebar_title" t-value="None"/>
+                <t t-set="sidebar_subtitle" t-value="None"/>
+                <t t-if="task.date_deadline">
+                    <t t-set="sidebar_title">
+                        <h2 class="mb-0"><t t-call="project.portal_format_date" date_record="task.date_deadline"/></h2>
+                    </t>
+                    <t t-set="sidebar_subtitle">
+                        <t t-if="task.state in ('1_done', '1_canceled') or deadline_days is None">Deadline</t>
+                        <t t-elif="deadline_days == 0">Due today</t>
+                        <t t-elif="deadline_days &gt; 0">Due in <t t-out="deadline_days"/> days</t>
+                        <span t-else="" class="text-danger"><t t-out="-deadline_days"/> days overdue</span>
+                    </t>
+                </t>
                 <t t-set="entries">
-                    <div class="d-flex flex-wrap flex-column gap-4">
-                        <div id="task-nav" class="d-flex align-items-center flex-grow-1 p-0" t-ignore="true" role="complementary">
-                            <ul class="nav flex-column">
-                                <li class="nav-item" id="nav-header">
-                                    <a class="nav-link p-0" href="#card_header">
-                                        Task
-                                    </a>
-                                </li>
-                                <li class="nav-item" id="nav-chat">
-                                    <a class="nav-link p-0" href="#task_chat">
-                                        History
-                                    </a>
-                                </li>
-                            </ul>
+                    <div class="d-none d-lg-flex flex-column mt-3">
+                        <div id="task_sidebar_buttons" class="d-flex flex-column gap-2">
+                            <a t-foreach="task_link_section" t-as="task_link" class="btn btn-light" role="button"
+                                t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')" t-out="task_link['title']"/>
                         </div>
-                        <div id="task-links" t-if="task_link_section" class="d-flex align-items-center flex-grow-1 ps-0" t-ignore="true" role="complementary">
-                            <ul class="nav flex-column">
-                                <t t-foreach="task_link_section" t-as="task_link">
-                                    <li class="nav-item">
-                                        <a class="nav-link p-0" t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')">
-                                            <t t-out="task_link['title']"/>
-                                        </a>
-                                    </li>
-                                </t>
-                            </ul>
-                        </div>
-
-                        <div t-if="task.user_ids or task.partner_id" class="d-flex flex-column gap-4 mt-3">
-                            <div t-if="task.user_ids">
-                                <h6 class="flex-basis-100"><small class="text-muted">Assignees</small></h6>
-                                <t t-foreach="task.user_ids" t-as="user">
-                                    <t t-call="portal.portal_my_contact"
-                                        _contact_no_card="True"
-                                        _spacing_class="'mb-3' if len(task.user_ids) > 1 else ''"
-                                        _contact_avatar="image_data_uri(user.avatar_128)"
-                                        _contact_name="user.name">
-                                        <div t-out="user" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
-                                    </t>
-                                </t>
-                            </div>
-                            <div class="col-12 d-flex flex-column" t-if="task.partner_id">
-                                <h6><small class="text-muted">Customer</small></h6>
-                                <t t-if="task.partner_id">
-                                    <t t-call="portal.portal_my_contact"
-                                        _contact_no_card="True"
-                                        _contact_avatar="image_data_uri(task.partner_id.avatar_512)"
-                                        _contact_name="task.partner_id.display_name">
-                                        <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
-                                    </t>
-                                </t>
-                            </div>
+                        <div t-if="task.user_ids" id="task_assignees" class="d-flex flex-column gap-1">
+                            <hr t-if="task.date_deadline or task_link_section"/>
+                            <strong class="smaller text-uppercase text-muted">Assignees</strong>
+                            <a t-foreach="task.user_ids" t-as="user" href="#discussion" class="d-flex align-items-center gap-2 py-1 text-reset text-decoration-none">
+                                <img class="o_avatar rounded" t-att-src="image_data_uri(user.avatar_128)" alt="Contact"/>
+                                <span class="small fw-semibold text-truncate" t-out="user.name"/>
+                                <i class="oi ms-auto me-2" data-icon="mail" role="img" aria-label="Send Message"/>
+                            </a>
                         </div>
                     </div>
                 </t>
                 <t t-call="portal.portal_record_sidebar"
-                    classes.f="col-lg-4 col-xxl-3 d-print-none"
+                    classes.f="col-lg-4 col-xl-3 d-none d-lg-block d-print-none order-lg-first"
+                    title="sidebar_title"
+                    subtitle="sidebar_subtitle"
                     entries="entries"/>
-                <div id="task_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
+                <div id="task_content" class="col-12 col-lg-8 col-xl-9 mt-0">
+                    <t t-set="has_task_body" t-value="not is_html_empty(task.description) or task.attachment_ids"/>
                     <div id="card">
-                        <div id="card_header" data-anchor="true">
-                            <div class="row justify-content-between mb-3">
-                                <div class="col-12 col-md-9">
-                                    <div class="d-flex gap-2">
-                                        <h3 class="my-0">
-                                            <span t-field="task.name"/>
-                                            <small class="text-muted d-none d-md-inline">(#<span t-field="task.id"/>)</small>
-                                        </h3>
+                        <div id="card_header" t-attf-class="p-3 p-lg-4 bg-100 border #{'rounded-top' if has_task_body else 'rounded'}" data-anchor="true">
+                            <div class="d-flex flex-column flex-md-row align-items-md-start gap-2">
+                                <div class="d-flex flex-column me-auto min-w-0">
+                                    <small>
+                                        <span class="text-muted">Task in</span>
+                                        <a t-if="project_accessible" class="fw-bold" t-attf-href="/my/projects/#{task.project_id.id}" t-field="task.project_id"/>
+                                        <b t-else="" t-field="task.project_id"/>
+                                    </small>
+                                    <h2 class="mb-0 text-break" t-field="task.name"/>
+                                    <div class="d-flex align-items-center gap-1 text-muted small flex-wrap">
+                                        <span>#<t t-out="task.id"/></span>
+                                        <span>·</span>
+                                        <span>Created <t t-call="project.portal_format_date" date_record="task.create_date"/></span>
                                     </div>
                                 </div>
-                                <div class="col-auto">
-                                    <small class="text-end">Stage:</small>
+                                <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                    <t t-call="project.portal_my_tasks_state_widget_template"/>
                                     <t t-call="project.portal_my_tasks_badge_widget_template"/>
                                 </div>
                             </div>
-                        </div>
-                        <div id="card_body">
-                            <div class="float-end">
-                                <t t-call="project.portal_my_tasks_state_widget_template" path.f="task"/>
-                            </div>
-                            <div class="row mb-4 container">
-                                <div class="col-12 col-md-6 flex-grow-1">
-                                    <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/projects/#{task.project_id.id}" t-field="task.project_id"/></div>
-                                    <div t-else=""><strong>Project:</strong> <a t-field="task.project_id"/></div>
-                                    <div t-if="task.milestone_id and task.allow_milestones"><strong>Milestone:</strong> <span t-field="task.milestone_id"/></div>
-                                    <div>
-                                        <strong>Priority:</strong>
-                                        <t t-call="project.portal_my_tasks_priority_widget_template"/>
-                                    </div>
-                                    <div t-if="task.date_deadline"><strong>Deadline:</strong>
+                            <hr class="my-3 my-lg-4 mx-n3 mx-lg-n4"/>
+                            <div id="informations" class="row row-cols-2 row-cols-md-4 g-3 small">
+                                <div t-if="task.milestone_id and task.allow_milestones" name="portal_my_task_milestone">
+                                    <div class="text-muted">Milestone</div>
+                                    <div class="fw-medium" t-field="task.milestone_id"/>
+                                </div>
+                                <div name="portal_my_task_priority">
+                                    <div class="text-muted">Priority</div>
+                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
+                                </div>
+                                <div t-if="task.date_deadline" name="portal_my_task_deadline">
+                                    <div class="text-muted">Deadline</div>
+                                    <div class="fw-medium">
                                         <t t-call="project.portal_format_date" date_record="task.date_deadline"/>,
                                         <span t-field="task.date_deadline" t-options='{"widget": "datetime", "time_only": True, "format": "short"}'/>
                                     </div>
-                                    <div name="portal_my_task_allocated_hours">
-                                        <strong t-if="task.allocated_hours > 0">Allocated Time:</strong>
-                                        <t t-call="project.portal_my_task_allocated_hours_template"/>
-                                    </div>
                                 </div>
-                                <div class="col-12 col-md-6 d-empty-none" name="portal_my_task_second_column"></div>
+                                <div t-if="task.allocated_hours > 0" name="portal_my_task_allocated_hours">
+                                    <div class="text-muted">Allocated Time</div>
+                                    <div class="fw-medium"><t t-call="project.portal_my_task_allocated_hours_template"/></div>
+                                </div>
+                                <div t-if="task.user_ids" class="d-lg-none" name="portal_my_task_assignees">
+                                    <div class="text-muted">Assignees</div>
+                                    <div t-foreach="task.user_ids" t-as="user" class="fw-medium" t-out="user.name"/>
+                                </div>
                             </div>
-
-                            <div class="row" t-if="task.description or task.attachment_ids">
-                                <div t-if="not is_html_empty(task.description)" class="mb-4 mb-md-0">
-                                    <h5 class="mb-1">Description</h5>
-                                    <hr class="mt-1 mb-2"/>
-                                    <div class="py-1 px-2 bg-100 small overflow-auto table-responsive mb-4" t-field="task.description"/>
-                                </div>
-                                <div t-if="task.attachment_ids" class="o_project_portal_attachments">
-                                    <h5 class="mb-1">Attachments</h5>
-                                    <hr class="mt-1 mb-2"/>
-                                    <div class="row">
-                                        <t t-foreach="task.attachment_ids" t-as="attachment">
-                                            <div class="col-md-6">
-                                                <ul class="list-unstyled">
-                                                    <li class="oe_attachments">
-                                                        <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}"
-                                                        target="_blank" data-no-post-process="" class="d-flex align-items-center rounded bg-light p-2">
-                                                            <div class='oe_attachment_embedded o_image o_image_small me-2 me-lg-3'
-                                                                t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"
-                                                                t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}">
-                                                            </div>
-                                                            <div class='oe_attachment_name text-truncate'><t t-out='attachment.name'/></div>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </t>
-                                    </div>
+                            <div t-if="task_link_section" id="task_mobile_buttons" class="d-flex d-lg-none flex-wrap gap-2 mt-3">
+                                <a t-foreach="task_link_section" t-as="task_link" class="btn btn-light btn-sm" role="button"
+                                    t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')" t-out="task_link['title']"/>
+                            </div>
+                        </div>
+                        <div t-if="has_task_body" id="card_body" class="d-flex flex-column gap-4 p-3 p-lg-4 rounded-bottom border-start border-end border-bottom">
+                            <div t-if="not is_html_empty(task.description)">
+                                <strong class="d-block smaller text-uppercase text-muted mb-2">Description</strong>
+                                <div class="overflow-auto" t-field="task.description"/>
+                            </div>
+                            <div t-if="task.attachment_ids" class="o_project_portal_attachments">
+                                <strong class="d-block smaller text-uppercase text-muted mb-2">Attachments</strong>
+                                <div class="oe_attachments d-flex flex-wrap gap-2">
+                                    <a t-foreach="task.attachment_ids" t-as="attachment"
+                                        t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}"
+                                        target="_blank" data-no-post-process=""
+                                        class="d-flex align-items-center gap-2 mw-100 rounded bg-light p-2 pe-3 small text-reset text-decoration-none">
+                                        <div class="oe_attachment_embedded o_image o_image_small flex-shrink-0"
+                                            t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"
+                                            t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}"/>
+                                        <div class="oe_attachment_name text-truncate" t-out="attachment.name"/>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <hr/>
-                    <div id="task_chat" data-anchor="true">
-                        <t t-call="portal.message_thread" token="task.access_token"/>
+                    <section t-if="task.partner_id" id="task_customer" class="p-3 p-lg-4 mt-4 rounded-3 border">
+                        <div class="mb-2">
+                            <span class="badge text-bg-info">Customer</span>
+                        </div>
+                        <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                    </section>
+
+                    <div id="task_chat" class="mt-4 p-3 p-lg-4 rounded-3 border" data-anchor="true">
+                        <h4 class="pb-1">Communication History</h4>
+                        <t t-call="portal.message_thread" token="task.access_token" hide_header="True"/>
                     </div>
                 </div>
             </div>

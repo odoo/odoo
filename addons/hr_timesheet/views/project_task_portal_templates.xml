@@ -5,31 +5,31 @@
         <xpath expr="//div[hasclass('o_project_portal_sidebar')]" position="before">
             <t t-set="show_portal_timesheets" t-value="timesheets and timesheets[0].env['account.analytic.line']._show_portal_timesheets()"/>
         </xpath>
-        <xpath expr="//div[@id='task-nav']" position="before">
-            <div t-if="timesheets and allow_timesheets and show_portal_timesheets" class="d-grid flex-grow-1" id='nav-report'>
-                <a class="btn btn-light o_print_btn o_project_timesheet_print d-block" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="View Details" role="button" target="_blank"><i class="oi" data-icon="print"/> View Details</a>
-            </div>
+        <xpath expr="//div[@id='task_sidebar_buttons']" position="inside">
+            <a t-if="timesheets and allow_timesheets and show_portal_timesheets" class="btn btn-light o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank">View Details</a>
         </xpath>
-        <xpath expr="//li[@id='nav-header']" position="after">
-            <div t-if="timesheets and allow_timesheets and show_portal_timesheets" class="nav-item">
-                <a class="nav-link p-0" href="#task_timesheets">
-                    Timesheets
-                </a>
-            </div>
+        <xpath expr="//div[@id='task_mobile_buttons']" position="attributes">
+            <attribute name="t-if">task_link_section or (timesheets and allow_timesheets and show_portal_timesheets)</attribute>
         </xpath>
-        <xpath expr="//div[@id='card_body']" position="inside">
-            <div class="container" t-if="timesheets and allow_timesheets and show_portal_timesheets">
-                <h5 id="task_timesheets" class="mt-2 mb-2" data-anchor="true">Timesheets</h5>
+        <xpath expr="//div[@id='task_mobile_buttons']" position="inside">
+            <a t-if="timesheets and allow_timesheets and show_portal_timesheets" class="btn btn-light btn-sm o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank">View Details</a>
+        </xpath>
+        <xpath expr="//div[@id='card']" position="after">
+            <section t-if="timesheets and allow_timesheets and show_portal_timesheets" id="task_timesheets" class="p-3 p-lg-4 mt-4 rounded-3 border" data-anchor="true">
+                <h4 class="pb-1">Timesheets</h4>
                 <t t-call="hr_timesheet.portal_timesheet_table_with_total"/>
-            </div>
+            </section>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="attributes">
-            <attribute name="t-if">task.env['account.analytic.line']._show_portal_timesheets()</attribute>
+            <attribute name="t-if">allow_timesheets and task.allocated_hours > 0 and task.env['account.analytic.line']._show_portal_timesheets()</attribute>
         </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="after">
-            <div t-if="task.allocated_hours > 0 and allow_timesheets and show_portal_timesheets"><strong>Progress:</strong> <span t-out="task.progress * 100" t-options='{"widget": "float", "precision": 0}'/>%</div>
+            <div t-if="task.allocated_hours > 0 and allow_timesheets and show_portal_timesheets" name="portal_my_task_progress">
+                <div class="text-muted">Progress</div>
+                <div class="fw-medium"><span t-out="task.progress * 100" t-options='{"widget": "float", "precision": 0}'/>%</div>
+            </div>
         </xpath>
-        <xpath expr="//div[@name='portal_my_task_allocated_hours']/t" position="replace">
+        <xpath expr="//t[@t-call='project.portal_my_task_allocated_hours_template']" position="replace">
             <t t-call="hr_timesheet.portal_my_task_allocated_hours_template"/>
         </xpath>
     </template>
