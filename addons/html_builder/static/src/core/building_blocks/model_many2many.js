@@ -117,7 +117,12 @@ export class ModelMany2Many extends Component {
     }
     setSelection(newSelection) {
         this.oldSelection = this.modelEdit.get(this.props.m2oField);
-        this.modelEdit.set(this.props.m2oField, newSelection);
+        this.cachedModel.setFieldValue({
+            model: this.props.baseModel,
+            recordId: this.props.recordId,
+            field: this.props.m2oField,
+            value: newSelection,
+        });
         this.callOperation(this.applyOperation.commit, {
             userInputValue: JSON.stringify(newSelection),
         });

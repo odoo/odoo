@@ -5,9 +5,8 @@ export function useCachedModel() {
 }
 
 export class ModelEdit {
-    constructor(history, model, recordId) {
+    constructor(model, recordId) {
         this.values = {};
-        this.history = history;
         this.model = model;
         this.recordId = recordId;
     }
@@ -21,16 +20,15 @@ export class ModelEdit {
         value = JSON.stringify(value);
         this.values[field] = { initial: value, current: value };
     }
+    /**
+     * Set the value of a field. This is not an undoable change: edit fields
+     * with `setFieldValue` of the cached model plugin.
+     *
+     * @param {string} field
+     * @param {any} value
+     */
     set(field, value) {
-        const previous = this.values[field].current;
-        value = JSON.stringify(value);
-        this.history.apply("cachedModel", {
-            model: this.model,
-            recordId: this.recordId,
-            field,
-            before: previous,
-            after: value,
-        });
+        this.values[field].current = JSON.stringify(value);
     }
     collect(inventory) {
         const records = inventory[this.model] || {};

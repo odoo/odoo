@@ -7,6 +7,7 @@ import { ModelEdit } from "./cached_model_utils";
  * @property { CachedModelPlugin['ormRead'] } ormRead
  * @property { CachedModelPlugin['ormSearchRead'] } ormSearchRead
  * @property { CachedModelPlugin['useModelEdit'] } useModelEdit
+ * @property { CachedModelPlugin['setFieldValue'] } setFieldValue
  */
 
 /**
@@ -21,18 +22,16 @@ import { ModelEdit } from "./cached_model_utils";
 
 export class CachedModelPlugin extends Plugin {
     static id = "cachedModel";
-    static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
+    static shared = ["ormRead", "ormSearchRead", "useModelEdit", "setFieldValue"];
     static dependencies = ["history"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         history_data_properties: {
             cached_model: {
-                apply: ({ model, recordId, field, after }) => {
-                    this.useModelEdit({ model, recordId }).values[field].current = after;
-                },
-                revert: ({ model, recordId, field, before }) => {
-                    this.useModelEdit({ model, recordId }).values[field].current = before;
-                },
+                apply: ({ model, recordId, field, after }) =>
+                    this.useModelEdit({ model, recordId }).set(field, after),
+                revert: ({ model, recordId, field, before }) =>
+                    this.useModelEdit({ model, recordId }).set(field, before),
             },
         },
         on_ready_to_save_document_handlers: this.savePendingRecords.bind(this),
@@ -47,7 +46,7 @@ export class CachedModelPlugin extends Plugin {
             JSON.stringify
         );
         this.modelEditCache = new Cache(
-            ({ model, recordId }) => new ModelEdit(this.dependencies.history, model, recordId),
+            ({ model, recordId }) => new ModelEdit(model, recordId),
             JSON.stringify
         );
     }
@@ -68,6 +67,26 @@ export class CachedModelPlugin extends Plugin {
         const modelEdit = this.modelEditCache.read({ model, recordId, field });
         // track el ?
         return modelEdit;
+    }
+    /**
+     * Set the value of a field of a record, as an undoable change.
+     *
+     * @param {Object} params
+     * @param {string} params.model
+     * @param {number} params.recordId
+     * @param {string} params.field
+     * @param {any} params.value
+     */
+    setFieldValue({ model, recordId, field, value }) {
+        this.dependencies.history.apply("cached_model", {
+            model,
+            recordId,
+            field,
+            before: this.useModelEdit({ model, recordId }).get(field),
+            // The value can come from reactive state, which cannot be cloned:
+            // keep the plain data that the record stores.
+            after: JSON.parse(JSON.stringify(value)),
+        });
     }
     async savePendingRecords() {
         const inventory = {}; // model => { recordId => { field => value } }
