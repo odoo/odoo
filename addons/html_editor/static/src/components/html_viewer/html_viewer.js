@@ -2,6 +2,7 @@ import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_ma
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
+import { unwrapContents } from "@html_editor/utils/dom";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import {
     Component,
@@ -38,6 +39,7 @@ export class HtmlViewer extends Component {
 
     setup() {
         this._cleanups = [];
+        this.tableWrappers = new WeakSet();
         this.htmlUpgradeManager = new HtmlUpgradeManager();
 
         this.state = proxy({
@@ -58,6 +60,8 @@ export class HtmlViewer extends Component {
                 }
                 if (this.showIframe) {
                     this.updateIframeContent(this.state.value);
+                } else {
+                    this.unwrapTables(this.readonlyElementRef());
                 }
             }
         });
@@ -161,7 +165,21 @@ export class HtmlViewer extends Component {
     wrapTables(container) {
         for (const table of container.querySelectorAll(".o_table")) {
             if (!table.closest(TABLE_WRAPPER_SELECTOR)) {
-                wrapTableInScrollContainer(table);
+                this.tableWrappers.add(wrapTableInScrollContainer(table));
+            }
+        }
+    }
+
+    /**
+     * Remove the wrappers added by `wrapTables`, so the template finds the
+     * nodes it rendered when it replaces them with the new value.
+     *
+     * @param {HTMLElement} container
+     */
+    unwrapTables(container) {
+        for (const wrapper of container.querySelectorAll(TABLE_WRAPPER_SELECTOR)) {
+            if (this.tableWrappers.has(wrapper)) {
+                unwrapContents(wrapper);
             }
         }
     }
