@@ -1125,6 +1125,28 @@ class TestProcurement(TestMrpCommon):
         self.assertRecordValues(mo.move_raw_ids, expected_vals)
         self.assertRecordValues(mo.picking_ids.move_ids, expected_vals)
 
+    def test_pbm_component_added_before_picking_type_change(self):
+        """ A component added to a draft MO before switching its operation type
+        to another 2-steps warehouse should be picked in that warehouse. """
+        self.warehouse_1.manufacture_steps = 'pbm'
+        # setup: creating a warehouse writes res.groups (implied_ids) via _check_multiwarehouse_group
+        warehouse_2 = self.env['stock.warehouse'].sudo().create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+            'manufacture_steps': 'pbm',
+        })
+        product = self.env['product.product'].create({'name': 'Custom product'})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        with mo_form.move_raw_ids.new() as raw_line:
+            raw_line.product_id = self.product_2
+            raw_line.product_uom_qty = 1.0
+        mo_form.picking_type_id = warehouse_2.manu_type_id
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.picking_ids.picking_type_id, warehouse_2.pbm_type_id)
+
     @freeze_time("2025-11-3")
     def test_consecutive_pickings(self):
         """ Test that when we generate several procurements for a product in a raw
