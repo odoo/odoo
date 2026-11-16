@@ -125,3 +125,16 @@ class TestDiscussThreadController(TestThreadControllerCommon):
             self._message_post(channel, {"body": "hello"}, {})
             channel.invalidate_recordset(["channel_member_ids"])
             self.assertIn(member, channel.channel_member_ids[member_field])
+
+    def test_public_channel_message_post_canned_response_ignored(self):
+        channel = self.env["discuss.channel"].create(
+            {"name": "Public Channel", "group_public_id": None}
+        )
+        canned_response = self.env["mail.canned.response"].create(
+            {"source": "hello", "substitution": "Hello"}
+        )
+        route_kw = {"canned_response_ids": canned_response.ids}
+        self._execute_message_post_subtests(
+            channel, (MessagePostSubTestData(self.user_portal, True, route_kw=route_kw),)
+        )
+        self.assertFalse(canned_response.last_used)
