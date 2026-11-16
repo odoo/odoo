@@ -463,37 +463,29 @@ class HrExpense(models.Model):
         for expense in self:
             expense.name = expense.name or expense.product_id.display_name
 
+    def _get_default_currency_rate(self, date_today):
+        self.ensure_one()
+        company_currency = self.company_currency_id or self.env.company.currency_id
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=self.currency_id or company_currency,
+            to_currency=company_currency,
+            company=self.company_id,
+            date=self.date or date_today,
+        )
+
     def _set_expense_currency_rate(self, date_today):
         for expense in self:
-            company_currency = expense.company_currency_id or self.env.company.currency_id
-            expense.currency_rate = expense.env['res.currency']._get_conversion_rate(
-                from_currency=expense.currency_id or company_currency,
-                to_currency=company_currency,
-                company=expense.company_id,
-                date=expense.date or date_today,
-            )
+            expense.currency_rate = expense._get_default_currency_rate(date_today)
 
-    @api.depends('currency_id', 'total_amount_currency', 'date')
+    @api.depends('currency_id', 'company_currency_id', 'date', 'total_amount', 'total_amount_currency')
     def _compute_currency_rate(self):
-        """
-            We want the default odoo rate when the following change:
-            - the currency of the expense
-            - the total amount in foreign currency
-            - the date of the expense
-            this will cause the rate to be recomputed twice with possible changes but we don't have the required fields
-            to store the override state in stable
-        """
         date_today = fields.Date.context_today(self)
         for expense in self:
             if expense.is_multiple_currency:
-                if (
-                        expense.currency_id != expense._origin.currency_id
-                        or expense.total_amount_currency != expense._origin.total_amount_currency
-                        or expense.date != expense._origin.date
-                ):
-                    expense._set_expense_currency_rate(date_today=date_today)
+                if expense.total_amount_currency:
+                    expense.currency_rate = expense.total_amount / expense.total_amount_currency
                 else:
-                    expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
+                    expense._set_expense_currency_rate(date_today=date_today)
             else:  # Mono-currency case computation shortcut, no need for the label if there is no conversion
                 expense.currency_rate = 1.0
                 expense.label_currency_rate = False
@@ -613,8 +605,21 @@ class HrExpense(models.Model):
                 continue
 
             if expense.is_multiple_currency:
+                # We want the default odoo rate when the following change:
+                # - the currency of the expense
+                # - the total amount in foreign currency
+                # - the date of the expense
+                # - the company of the expense
+                # otherwise total_amount is kept
+                if (
+                        expense.currency_id == expense._origin.currency_id
+                        and expense.total_amount_currency == expense._origin.total_amount_currency
+                        and expense.date == expense._origin.date
+                        and expense.company_id == expense._origin.company_id
+                ):
+                    continue
                 base_line = expense._prepare_base_line_for_taxes_computation(
-                    price_unit=expense.total_amount_currency * expense.currency_rate,
+                    price_unit=expense.total_amount_currency * expense._get_default_currency_rate(fields.Date.context_today(expense)),
                     quantity=1.0,
                     currency_id=expense.company_currency_id,
                     rate=1.0,

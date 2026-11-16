@@ -401,6 +401,26 @@ class TestExpenses(TestExpenseCommon):
             {'amount': 1000.00, 'payment_type': 'outbound', 'currency_id': foreign_currency_2.id},
         ])
 
+    def test_expense_multi_currencies_remove_taxes(self):
+        """
+        Check that removing the taxes of a saved expense in foreign currency keeps its total in company currency.
+        """
+        expense = self.create_expenses({
+            'currency_id': self.other_currency.id,  # rate is 1:2
+            'total_amount_currency': 1000.00,
+            'date': self.frozen_today,
+            'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+        })
+        self.assertRecordValues(expense, [
+            {'total_amount': 500.00, 'total_amount_currency': 1000.00, 'currency_rate': 0.50},
+        ])
+
+        with Form(expense) as expense_form:
+            expense_form.tax_ids.clear()
+        self.assertRecordValues(expense, [
+            {'total_amount': 500.00, 'total_amount_currency': 1000.00, 'currency_rate': 0.50, 'tax_amount': 0.00},
+        ])
+
     #############################################
     #  Test Corner Cases
     #############################################
