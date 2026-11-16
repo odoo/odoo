@@ -121,6 +121,20 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
         with self.assertRaises(AccessError):
             self.request_leave(self.user_employee_id, date.today() + relativedelta(days=5), 1, values)
 
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_base_user_create_first_approved_double_validation(self):
+        """ A simple user cannot create a leave already first approved when double validation is required """
+        self.lt_validation_both.leave_validation_type = 'both'
+        leave_day = date.today() + relativedelta(days=5)
+        with self.assertRaisesRegex(AccessError, 'You cannot first approve a time off'):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Hol10',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.lt_validation_both.id,
+                'request_date_from': leave_day,
+                'request_date_to': leave_day,
+                'state': 'validate1',
+            })
 
     # hr_holidays.group_hr_holidays_user
 
