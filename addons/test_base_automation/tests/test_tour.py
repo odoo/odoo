@@ -29,7 +29,7 @@ class BaseAutomationTestUi(HttpCase):
         self.assertEqual(base_automation.action_server_ids.state, "object_write")  # only one action
         self.assertEqual(base_automation.action_server_ids.model_name, "res.partner")
         self.assertEqual(base_automation.action_server_ids.update_field_id.name, "function")
-        self.assertEqual(base_automation.action_server_ids.value, "Test")
+        self.assertEqual(base_automation.action_server_ids.update_char_value, "Test")
 
     def test_base_automation_on_tag_added(self):
         self._neutralize_preexisting_automations()
@@ -214,7 +214,7 @@ class BaseAutomationTestUi(HttpCase):
             "base_automation_id": automation.id,
             "state": "object_write",
             "update_path": "active",
-            "update_boolean_value": "false",
+            "update_boolean_value": False,
             "model_id": model.id,
         }
         automation.write(

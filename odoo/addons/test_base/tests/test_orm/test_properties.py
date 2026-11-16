@@ -1704,6 +1704,18 @@ class PropertiesCase(TestPropertiesMixin):
                 'type': 'many2many',
                 'comodel': 'test_orm.partner',
                 'string': 'Color Partner',
+            },
+            {
+                'name': 'discussion_color_date',
+                'type': 'date',
+                'string': 'Color Date',
+                'definition_changed': True,
+            },
+            {
+                'name': 'discussion_color_datetime',
+                'type': 'datetime',
+                'string': 'Color Datetime',
+                'definition_changed': True,
             }],
         })
 
@@ -1715,7 +1727,7 @@ class PropertiesCase(TestPropertiesMixin):
         })
 
         action.update_path = 'attributes.discussion_color_code'
-        action.value = 'green'
+        action.update_char_value = 'green'
         self.assertEqual(email['attributes']['discussion_color_code'], 'red')
         action.with_context(active_id=email.id).run()
         self.assertEqual(email['attributes']['discussion_color_code'], 'green')
@@ -1730,6 +1742,17 @@ class PropertiesCase(TestPropertiesMixin):
         action.resource_ref = self.partner_2
         action.with_context(active_id=email.id).run()
         self.assertEqual(email['attributes']['discussion_color_partner_ids'], self.partner_2)
+
+        # dates are stored as strings in the properties JSON
+        action.update_path = 'attributes.discussion_color_date'
+        action.update_date_value = '2026-01-31'
+        action.with_context(active_id=email.id).run()
+        self.assertEqual(email['attributes']['discussion_color_date'], '2026-01-31')
+
+        action.update_path = 'attributes.discussion_color_datetime'
+        action.update_datetime_value = '2026-01-31 10:30:00'
+        action.with_context(active_id=email.id).run()
+        self.assertEqual(email['attributes']['discussion_color_datetime'], '2026-01-31 10:30:00')
 
     def test_getitem_property(self):
         # read a property that exist nowhere
