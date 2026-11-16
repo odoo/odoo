@@ -11,6 +11,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { isElementOverlappingAnyFloatingImage } from "@html_editor/utils/dom_info";
 import { ImageAlignSelector } from "./image_align_selector";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_plugin";
 
 const IMAGE_PADDING = [
     { name: _t("None"), value: 0 },
@@ -186,7 +187,7 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.imageAlignment = proxy({ displayIcon: "format_image_inline_left" });
-        this.fileViewer = this.services.fileViewer();
+        this.fileViewer = useFileViewer();
     }
 
     moveSizeAttributesToStyle() {
@@ -210,11 +211,6 @@ export class ImagePlugin extends Plugin {
                 img.removeAttribute("height");
             }
         }
-    }
-
-    destroy() {
-        this.fileViewer.close();
-        super.destroy();
     }
 
     /**

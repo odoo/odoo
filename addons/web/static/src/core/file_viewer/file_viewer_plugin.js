@@ -1,6 +1,5 @@
 import { onWillDestroy, Plugin, usePlugin } from "@odoo/owl";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { FileViewer } from "./file_viewer";
 
@@ -65,17 +64,3 @@ export function useFileViewer(ref) {
     onWillDestroy(fileViewer.close);
     return fileViewer;
 }
-
-/**
- * ----------------------------------------------------------------------------
- * @todo owl3 migration
- * Temporary - to remove when all uses of the "fileViewer" service are
- * removed
- * ----------------------------------------------------------------------------
- */
-registry.category("services").add("fileViewer", {
-    start() {
-        const plugin = usePlugin(FileViewerPlugin);
-        return plugin.createFileViewer.bind(plugin);
-    },
-});

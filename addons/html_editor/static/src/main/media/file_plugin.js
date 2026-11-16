@@ -13,6 +13,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FileModel } from "@web/core/file_viewer/file_model";
 import { downloadFile } from "@web/core/network/download";
 import { isLinkSupported } from "../link/link_plugin";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -69,7 +70,7 @@ export class FilePlugin extends Plugin {
     };
 
     setup() {
-        this.attachmentViewer = this.services.fileViewer();
+        this.attachmentViewer = useFileViewer();
         this.addDomListener(this.editable, "click", this.onClick);
         this.addDomListener(this.editable, "keydown", this.onKeyDown);
         this.addDomListener(this.document, "pointerdown", this.onPointerDown);
