@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.tools import format_amount
 
 
@@ -79,9 +80,10 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
-        domain = domain or []
+        domain = Domain(domain or [])
         # optimization for a SOL services name_search, to avoid joining on sale_order with too many lines
         if domain and ('is_service', '=', True) in domain and operator in ('like', 'ilike') and limit is not None:
+            domain = Domain('display_name', operator, name) & domain
             sols = self.search_fetch(
                 domain, ['display_name'], limit=limit, order='order_id.id DESC, sequence, id',
             )
