@@ -315,6 +315,26 @@ describe("pos_store.js", () => {
         expect(lastOrderLine.attribute_value_ids).toHaveLength(1);
         expect(lastOrderLine.attribute_value_ids[0].id).toBe(12);
         expect(lastOrderLine.attribute_value_ids[0].name).toBe("Male");
+        expect(lastOrderLine.getFullProductName()).toBe("Single attribute");
+    });
+
+    test("addLineToCurrentOrder names the line with chosen and custom attribute values", async () => {
+        const store = await setupPosEnv();
+        store.setOrder(null);
+        const cake = store.models["product.template"].get(51);
+
+        await store.addLineToCurrentOrder({
+            product_tmpl_id: cake,
+            payload: {
+                attribute_value_ids: [5, 7],
+                attribute_custom_values: { 7: "Happy birthday" },
+                price_extra: 0,
+                qty: 1,
+            },
+        });
+        expect(store.getOrder().lines[0].getFullProductName()).toBe(
+            "Cake (Chocolate, Customization: Yes: Happy birthday)"
+        );
     });
 
     test("changesToOrderNoPrepCateg", async () => {
