@@ -4,7 +4,7 @@ from freezegun import freeze_time
 import time
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user, tagged, users, warmup
 from odoo.tools import format_datetime
 
 
@@ -112,3 +112,103 @@ class TestHrAttendance(TransactionCase):
             'check_out': '2024-02-05 09:00',
         })
         self.assertEqual(attendance_id.display_name, "A - 1h")
+
+    def test_overlap_same_check_in(self):
+        """Two attendances of an employee starting at the same time overlap."""
+        self.attendance.create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-02-05 08:00:00',
+            'check_out': '2024-02-05 12:00:00',
+        })
+        with self.assertRaises(ValidationError):
+            self.attendance.create({
+                'employee_id': self.test_employee.id,
+                'check_in': '2024-02-05 08:00:00',
+                'check_out': '2024-02-05 09:00:00',
+            })
+
+    def test_overlap_within_same_batch(self):
+        """Attendances created together are checked against each other. The employee has no
+        attendance yet, as the open one of ``test_employee`` would raise on its own."""
+        employee = self.env['hr.employee'].create({'name': "Batch"})
+        for vals_list in [
+            [  # two closed attendances overlapping each other
+                {'check_in': '2024-02-05 08:00:00', 'check_out': '2024-02-05 12:00:00'},
+                {'check_in': '2024-02-05 11:00:00', 'check_out': '2024-02-05 13:00:00'},
+            ],
+            [  # two open attendances
+                {'check_in': '2024-02-05 08:00:00'},
+                {'check_in': '2024-02-06 08:00:00'},
+            ],
+        ]:
+            with self.subTest(vals_list=vals_list), self.assertRaises(ValidationError):
+                self.attendance.create([dict(vals, employee_id=employee.id) for vals in vals_list])
+
+    def test_overlap_boundaries(self):
+        """An attendance may start exactly when the previous one ends, but not a second before,
+        and may last zero seconds. The employee has no attendance yet, as the open one of
+        ``test_employee`` is always read by the check."""
+        employee = self.env['hr.employee'].create({'name': "Boundaries"})
+        self.attendance.create({
+            'employee_id': employee.id,
+            'check_in': '2024-02-05 08:00:00',
+            'check_out': '2024-02-05 12:00:00',
+        })
+        with self.assertRaises(ValidationError):
+            self.attendance.create({
+                'employee_id': employee.id,
+                'check_in': '2024-02-05 11:59:59',
+                'check_out': '2024-02-05 13:00:00',
+            })
+        self.attendance.create({
+            'employee_id': employee.id,
+            'check_in': '2024-02-05 12:00:00',
+            'check_out': '2024-02-05 13:00:00',
+        })
+        self.attendance.create({
+            'employee_id': employee.id,
+            'check_in': '2024-02-05 14:00:00',
+            'check_out': '2024-02-05 14:00:00',
+        })
+
+    def test_overlap_in_distant_periods_of_batch(self):
+        """The attendances of a batch far apart in time are each checked against their own period."""
+        self.attendance.create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2026-02-05 08:00:00',
+            'check_out': '2026-02-05 12:00:00',
+        })
+        with self.assertRaises(ValidationError):
+            self.attendance.create([{
+                'employee_id': self.test_employee.id,
+                'check_in': '2024-02-05 08:00:00',
+                'check_out': '2024-02-05 12:00:00',
+            }, {
+                'employee_id': self.test_employee.id,
+                'check_in': '2026-02-05 11:00:00',
+                'check_out': '2026-02-05 13:00:00',
+            }])
+
+
+@tagged('post_install', '-at_install')
+class TestHrAttendancePerformance(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        new_test_user(cls.env, login='hr_attendance_officer', groups='hr_attendance.group_hr_attendance_user')
+        employees = cls.env['hr.employee'].create([{'name': f"Employee {i}"} for i in range(10)])
+        cls.attendances = cls.env['hr.attendance'].create([{
+            'employee_id': employee.id,
+            'check_in': f'2024-02-0{day} 08:00:00',
+            'check_out': f'2024-02-0{day} 12:00:00',
+        } for employee in employees for day in range(1, 6)])
+
+    @users('hr_attendance_officer')
+    @warmup
+    def test_check_validity_query_count(self):
+        """The overlap check runs the same number of queries for one attendance as for a batch."""
+        for size in (1, len(self.attendances)):
+            attendances = self.env['hr.attendance'].browse(self.attendances.ids[:size])
+            with self.subTest(size=size), self.assertQueryCount(hr_attendance_officer=2):  # fetch the batch + search the conflicts
+                attendances._check_validity()
