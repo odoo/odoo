@@ -3709,6 +3709,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'TAX_WAIT',
             'code': 'TWAIT',
             'account_type': 'liability_current',
+            # Reconcilable, as the transition accounts of the charts of accounts usually are. Otherwise the
+            # reversal doesn't try to reconcile the transition lines together and the test can't fail.
+            'reconcile': True,
         })
         caba_tax = self.env['account.tax'].create({
             'name': 'cash basis 10%',
@@ -3741,6 +3744,59 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
         self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
 
+    def test_out_invoice_caba_partial_refund_reconcilable_transition_account(self):
+        """
+        The tax transition line of a partial credit note must be reconciled by its own cash basis entry,
+        not with the transition line of the reversed invoice.
+        """
+        self.env.company.tax_exigibility = True
+        transition_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        final_account = self.env['account.account'].create({
+            'name': 'TAX_FINAL',
+            'code': 'TFINAL',
+            'account_type': 'liability_current',
+        })
+        repartition_lines = [
+            Command.create({'repartition_type': 'base'}),
+            Command.create({'repartition_type': 'tax', 'account_id': final_account.id}),
+        ]
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': transition_account.id,
+            'invoice_repartition_line_ids': repartition_lines,
+            'refund_repartition_line_ids': repartition_lines,
+        })
+        invoice = self.init_invoice('out_invoice', amounts=[1000.0], taxes=caba_tax, post=True)
+
+        # Partial credit note of 150 on the invoice of 1000.
+        credit_note = invoice._reverse_moves()
+        credit_note.invoice_line_ids.price_unit = 150.0
+        credit_note.action_post()
+
+        refund_caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', credit_note.id)])
+        revenue_account = self.company_data['default_account_revenue']
+        receivable_account = self.company_data['default_account_receivable']
+        self.assertRecordValues((credit_note + refund_caba_move).line_ids, [
+            # Credit note
+            {'account_id': revenue_account.id,      'balance': 150.0},
+            {'account_id': receivable_account.id,   'balance': -165.0},
+            {'account_id': transition_account.id,   'balance': 15.0},
+            # Cash basis entry of the credit note
+            {'account_id': revenue_account.id,      'balance': -150.0},
+            {'account_id': revenue_account.id,      'balance': 150.0},
+            {'account_id': transition_account.id,   'balance': -15.0},
+            {'account_id': final_account.id,        'balance': 15.0},
+        ])
+        refund_transition_line = credit_note.line_ids.filtered(lambda l: l.account_id == transition_account)
+        self.assertEqual(refund_transition_line.full_reconcile_id.reconciled_line_ids.move_id, credit_note + refund_caba_move)
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a
