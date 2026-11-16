@@ -1,5 +1,5 @@
 import {
-    clickOnEditAndWaitEditModeInTranslatedPage,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     insertSnippet,
     goToTheme,
@@ -281,11 +281,22 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: "wait for the english version",
+            trigger: ':iframe html[lang*="en-US"]',
+        },
+        {
             content: "Check body",
             trigger:
                 ":iframe body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))",
         },
-        ...clickOnEditAndWaitEditModeInTranslatedPage(),
+        {
+            // This step is required because the button is updated later than
+            // the page (onIframeLoad), thus the previous step does not imply
+            // that the edit button is already up to date
+            content: "wait for the Edit button of the english version",
+            trigger: ".o_edit_website_container button:not(.dropdown-toggle):contains(edit)",
+        },
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "select text",
             trigger: ":iframe #wrap p",
