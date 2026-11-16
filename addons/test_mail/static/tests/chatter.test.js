@@ -1,6 +1,7 @@
 import {
     click,
     contains,
+    hover,
     inputFiles,
     listenStoreFetch,
     openFormView,
@@ -13,7 +14,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
@@ -199,4 +200,49 @@ test("opened attachment box should remain open after adding a new attachment", a
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message-body", { text: "test" });
     await waitFor(".o-mail-AttachmentBox .o-mail-AttachmentImage:count(2)");
+});
+
+test("can reply and react on a note with read access only", async () => {
+    const pyEnv = await startServer();
+    registerArchs({
+        "mail.test.multi.company.read,false,form": `
+            <form string="Simple">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>
+        `,
+    });
+    listenStoreFetch("mail.thread", {
+        async onRpc(request) {
+            const { params } = await request.json();
+            if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
+                const res = await mail_store.bind(MockServer.current)(request);
+                res["mail.thread"][0].hasWriteAccess = false;
+                return res;
+            }
+        },
+    });
+    const recordId = pyEnv["mail.test.multi.company.read"].create({ name: "Readonly record" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner B" });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Note from B",
+        model: "mail.test.multi.company.read",
+        res_id: recordId,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_note"],
+        ])[0],
+    });
+    await start();
+    await openFormView("mail.test.multi.company.read", recordId);
+    await waitStoreFetch("mail.thread");
+    await waitFor(".o-mail-Chatter-logNote:enabled:count(1)");
+    await hover(".o-mail-Message-content:text('Note from B'):count(1)");
+    await waitFor(".o-mail-ActionList button[title='Expand']:count(1)");
+    expect(".o-mail-QuickReactionMenu-toggler").toHaveCount(1);
+    await click(".o-mail-ActionList button[title='Expand']:count(1)");
+    await waitFor(".o-mail-ActionList-button[name='copy-message']:count(1)");
+    expect(".o-mail-ActionList-button[name='reply-to']").toHaveCount(1);
 });

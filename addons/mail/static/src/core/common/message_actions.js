@@ -72,7 +72,13 @@ registerMessageAction("reply-to", {
         if (message.canReplyTo) {
             return true;
         }
-        return !channel && !message.isEmpty && message.isNote && !message.isSelfAuthored;
+        return (
+            !channel &&
+            !message.isEmpty &&
+            message.isNote &&
+            !message.isSelfAuthored &&
+            message.thread?.canPostMessage
+        );
     },
     icon: "reply",
     name: _t("Reply"),

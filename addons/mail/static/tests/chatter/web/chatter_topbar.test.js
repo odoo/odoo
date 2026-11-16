@@ -360,3 +360,18 @@ test("Attach files and Pinned Messages panels are mutually exclusive", async () 
     await waitFor(".o-mail-AttachmentBox:count(1)");
     await waitForNone(".o-mail-pinnedMessages");
 });
+
+test("open composer hidden when paging to a record without post access", async () => {
+    const pyEnv = await startServer();
+    const [writableId, readonlyId] = pyEnv["res.partner"].create([
+        { name: "Writable" },
+        { name: "Readonly", hasWriteAccess: false },
+    ]);
+    await start();
+    await openFormView("res.partner", writableId, { resIds: [writableId, readonlyId] });
+    await contains(".o-mail-Chatter-logNote:enabled:count(1)").click();
+    await waitFor(".o-mail-Composer:count(1)");
+    await contains(".o_pager_next:count(1)").click();
+    await waitFor(".o_pager:text(2 / 2):count(1)");
+    await waitForNone(".o-mail-Composer");
+});

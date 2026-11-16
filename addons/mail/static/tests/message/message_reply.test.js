@@ -10,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { waitFor, waitForNone } from "@odoo/hoot-dom";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { contains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -174,6 +174,48 @@ test("can reply to logged note in chatter", async () => {
     await waitFor(".o-dropdown-item:text('Edit'):count(1)");
     await waitFor(".o-dropdown-item:contains('Delete'):count(1)");
     await waitForNone(".o-dropdown-item:contains('Reply')");
+});
+
+test("cannot reply, forward or react in chatter of a document without post access", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner B", hasWriteAccess: false });
+    const [noteSubtypeId] = pyEnv["mail.message.subtype"].search([
+        ["subtype_xmlid", "=", "mail.mt_note"],
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: partnerId,
+            body: "Note from B",
+            message_type: "comment",
+            model: "res.partner",
+            res_id: partnerId,
+            subtype_id: noteSubtypeId,
+        },
+        {
+            author_id: partnerId,
+            body: "Message from B",
+            message_type: "comment",
+            model: "res.partner",
+            res_id: partnerId,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message-content:text('Note from B'):count(1)");
+    await waitFor(".o-mail-ActionList button[title='Expand']:count(1)");
+    expect(".o-mail-QuickReactionMenu-toggler").toHaveCount(0);
+    await contains(".o-mail-ActionList button[title='Expand']:count(1)").click();
+    await waitFor(".o-mail-ActionList-button[name='copy-message']:count(1)");
+    // by action name: an action is a quick button or a menu item depending on the others shown
+    expect(".o-mail-ActionList-button[name='reply-to']").toHaveCount(0);
+    expect(".o-mail-ActionList-button[name='forward']").toHaveCount(0);
+    expect(".o-mail-ActionList-button[name='send-again']").toHaveCount(0);
+    await press("Escape");
+    await hover(".o-mail-Message-content:text('Message from B'):count(1)");
+    await contains(".o-mail-ActionList button[title='Expand']:count(1)").click();
+    await waitFor(".o-mail-ActionList-button[name='copy-message']:count(1)");
+    expect(".o-mail-ActionList-button[name='reply-all']").toHaveCount(0);
+    expect(".o-mail-ActionList-button[name='forward']").toHaveCount(0);
 });
 
 test.tags("html composer");
