@@ -152,6 +152,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         """
 
         # Setup the seller.
+        company_registry = seller.company_registry
         self.env.company.write({
             'partner_id': seller.id,
             'name': seller.name,
@@ -162,6 +163,9 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'country_id': seller.country_id.id,
         })
 
+        # Preserve the French fixture's registry when updating the company's related fields.
+        if seller.country_code == 'FR':
+            seller.company_registry = company_registry
         move_type = invoice_kwargs['move_type']
         account_move = self.env['account.move'].create({
             'partner_id': buyer.id,

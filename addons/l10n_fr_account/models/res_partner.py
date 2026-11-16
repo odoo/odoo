@@ -7,12 +7,6 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _get_peppol_endpoint_value(self, country_code, field):
-        endpoint = super()._get_peppol_endpoint_value(country_code, field)
-        if (
-            not endpoint
-            and country_code == 'FR'
-            and field == 'peppol_endpoint'
-            and not self.siret
-        ):
-            return self._l10n_fr_get_siren_from_vat()
-        return endpoint
+        # Keep this entry point for stable compatibility after moving the logic to account_edi_ubl_cii.
+        # TODO: Remove this compatibility override in master.
+        return super()._get_peppol_endpoint_value(country_code, field)  # noqa: OLS03028

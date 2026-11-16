@@ -3,7 +3,7 @@
 
 import re
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 siren_siret_re = re.compile(r'(\d{9}|\d{14})')
 
@@ -15,6 +15,14 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     siret = fields.Char(string='SIRET', size=14)
+
+    @api.depends('vat', 'siret')
+    def _compute_company_registry(self):
+        super()._compute_company_registry()
+        for partner in self:
+            if not partner.company_registry and not partner.siret:
+                if siren := partner._l10n_fr_get_siren_from_vat():
+                    partner.company_registry = siren
 
     def _deduce_country_code(self):
         if self.siret:
