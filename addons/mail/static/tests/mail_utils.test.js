@@ -1,4 +1,4 @@
-import { addLink, inlineElement, parseAndTransform } from "@mail/utils/common/format";
+import { addLink, inlineElement, parseAndTransform, parseEmail } from "@mail/utils/common/format";
 import { useSequential } from "@mail/utils/common/hooks";
 import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 import {
@@ -224,6 +224,31 @@ test("url with number in subdomain", async () => {
     await waitFor(
         ".o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/odoo):count(1)"
     );
+});
+
+test("parseEmail", () => {
+    const testCases = {
+        "": undefined,
+        "   ": ["", false],
+        '"Shrek" <shrek@example.com>': ["Shrek", "shrek@example.com"],
+        '"Gwonam \\"Squadallah\\" <CEO>" <gwonam@example.com>': [
+            'Gwonam "Squadallah" <CEO>',
+            "gwonam@example.com",
+        ],
+        "pinky<pinky@example.com>": ["pinky", "pinky@example.com"],
+        "morshu\t<morshu@example.com>": ["morshu", "morshu@example.com"],
+        '"titouan <EpicVIP>"<titouan@example.com>': ["titouan <EpicVIP>", "titouan@example.com"],
+        " <roblox@example.com>": ["roblox@example.com", "roblox@example.com"],
+        "minecraft>roblox <hey@example.com>": ["minecraft>roblox", "hey@example.com"],
+        "Barry <barry@example.com>, Adam <adam@example.com>": ["Barry", "barry@example.com"],
+        " dofus@example.com ": ["dofus@example.com", "dofus@example.com"],
+        "<voiture@example.com>": ["voiture@example.com", "voiture@example.com"],
+        "Marc Demo": ["Marc Demo", false],
+        "  Mitchell Admin  ": ["Mitchell Admin", false],
+    };
+    for (const [input, expected] of Object.entries(testCases)) {
+        expect(parseEmail(input)).toEqual(expected);
+    }
 });
 
 test("isSequential doesn't execute intermediate call.", async () => {
