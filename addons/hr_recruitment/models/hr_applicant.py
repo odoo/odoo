@@ -67,6 +67,7 @@ class HrApplicant(models.Model):
         store=True,
         tracking=True,
         index='trigram',
+        clean=lambda email: email and email.strip(),
     )
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
     partner_phone = fields.Char(
@@ -887,8 +888,6 @@ class HrApplicant(models.Model):
             vals["applicant_skill_ids"] = vals.pop("current_applicant_skill_ids", []) + vals.get("applicant_skill_ids", [])
             if vals.get('recruiter_id'):
                 vals['date_open'] = fields.Datetime.now()
-            if vals.get('email_from'):
-                vals['email_from'] = vals['email_from'].strip()
             if vals.get('job_id'):
                 job = self.env['hr.job'].browse(vals['job_id'])
                 vals['schedule_pay'] = job.payment_interval or 'monthly'

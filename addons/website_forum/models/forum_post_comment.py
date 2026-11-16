@@ -11,16 +11,12 @@ class ForumPostMessage(models.Model):
 
     _order = 'create_date ASC, id ASC'
 
-    body = fields.Html(string="Body")
+    body = fields.Html(string="Body", clean=lambda body: body and add_seo_rels_to_links(body))
     post_id = fields.Many2one("forum.post", "Post", required=True, ondelete="cascade", index=True)
     forum_id = fields.Many2one("forum.forum", "Forum", related="post_id.forum_id")
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('body'):
-                vals['body'] = add_seo_rels_to_links(vals['body'])
-
         records = super().create(vals_list)
 
         if not (self.env.su or self.env.user._is_admin()) and (message := next((record for record in records if not record.post_id.can_comment), None)):
@@ -34,9 +30,6 @@ class ForumPostMessage(models.Model):
 
         if not (self.env.su or self.env.user._is_admin()) and (message := next((record for record in self if not record.post_id.can_edit), None)):
             raise AccessError(_('%i karma required to edit a comment.', message.post_id.karma_edit))
-
-        if vals.get('body'):
-            vals['body'] = add_seo_rels_to_links(vals['body'])
 
         return super().write(vals)
 

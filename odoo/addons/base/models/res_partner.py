@@ -138,6 +138,18 @@ def _tz_get(self):
     return _tzs
 
 
+def clean_website(website):
+    """ Return the given website url with a scheme, if not empty. """
+    if not website:
+        return website
+    url = urls.url_parse(website)
+    if not url.scheme:
+        if not url.netloc:
+            url = url.replace(netloc=url.path, path='')
+        website = url.replace(scheme='http').to_url()
+    return website
+
+
 class FormatVatLabelMixin(models.AbstractModel):
     _name = 'format.vat.label.mixin'
     _description = "Country Specific VAT Label"
@@ -337,7 +349,7 @@ class ResPartner(models.Model):
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids: ResPartnerBank = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
-    website = fields.Char('Website Link')
+    website = fields.Char('Website Link', clean=clean_website)
     comment = fields.Html(string='Notes')
 
     category_id: ResPartnerCategory = fields.Many2many('res.partner.category', column1='partner_id',
@@ -935,14 +947,6 @@ class ResPartner(models.Model):
             addr_vals = self._convert_fields_to_values(address_fields)
             parent._update_address(addr_vals)
 
-    def _clean_website(self, website):
-        url = urls.url_parse(website)
-        if not url.scheme:
-            if not url.netloc:
-                url = url.replace(netloc=url.path, path='')
-            website = url.replace(scheme='http').to_url()
-        return website
-
     @api.depends('vat')
     def _compute_has_vat(self):
         for partner in self:
@@ -993,8 +997,6 @@ class ResPartner(models.Model):
                     raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
                                             'Ask an administrator to archive their associated user first.\n\n'
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
-        if vals.get('website'):
-            vals['website'] = self._clean_website(vals['website'])
         if vals.get('name'):
             for partner in self:
                 for bank in partner.bank_ids:
@@ -1047,8 +1049,6 @@ class ResPartner(models.Model):
             self._check_import_consistency(vals_list)
         for vals in vals_list:
             self._clean_additional_identifiers(vals)
-            if vals.get('website'):
-                vals['website'] = self._clean_website(vals['website'])
         create_self = self
         if 'default_user_ids' in self.env.context:
             # default_user_ids targets other models (e.g. task assignees); as

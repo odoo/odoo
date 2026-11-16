@@ -14,7 +14,7 @@ from odoo.http import request
 from odoo.modules.db import FunctionStatus
 from odoo.tools import float_round, is_html_empty, lazy
 from odoo.tools.sql import SQL, column_exists
-from odoo.tools.translate import adapt_translated_field_value, html_translate
+from odoo.tools.translate import html_translate
 
 from odoo.addons.website.tools import text_from_html
 from odoo.addons.website_sale.const import SHOP_PATH
@@ -90,6 +90,14 @@ class ProductTemplate(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
         index="trigram",
+        # Clear empty content to avoid side-effects on product pages when
+        # there is no content to display anyway.
+        clean=lambda description: (
+            ''
+            if description and is_html_empty(description)
+            and not ("media_iframe_video" in description or "data-embedded" in description)
+            else description
+        ),
     )
     dropzone_above_price = fields.Html(
         string="Drop Zone Above Price", translate=html_translate, sanitize_overridable=True
@@ -334,20 +342,6 @@ class ProductTemplate(models.Model):
         return records
 
     def write(self, vals):
-        # Clear empty ecommerce description content to avoid side-effects on product pages
-        # when there is no content to display anyway.
-        if vals.get("description_ecommerce"):
-            vals["description_ecommerce"] = adapt_translated_field_value(
-                self.env,
-                self._fields["description_ecommerce"],
-                vals["description_ecommerce"],
-                lambda lang, v: (  # noqa: ARG005
-                    ""
-                    if is_html_empty(v) and not ("media_iframe_video" in v or "data-embedded" in v)
-                    else v
-                ),
-            )
-
         res = super().write(vals)
 
         if (
