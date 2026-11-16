@@ -855,11 +855,23 @@ export class TableStrategyPlugin extends Plugin {
         const range = this.getNodeClusterRange(cluster.nodes.at(0), cluster.nodes.at(-1));
         const clusterEmailNodes = [];
         for (const childEmailNode of emailNode.children) {
-            if (
-                childEmailNode.referenceNodes.length &&
-                range.comparePoint(childEmailNode.firstReferenceNode, 0) === 0
-            ) {
-                clusterEmailNodes.push(childEmailNode);
+            const queue = [childEmailNode];
+            for (let i = 0; i < queue.length; i++) {
+                const candidate = queue[i];
+                if (candidate.firstReferenceNode) {
+                    // Simplification, to invalidate against real cases if need be:
+                    // only consider the firstReferenceNode for cluster attribution
+                    if (range.comparePoint(candidate.firstReferenceNode, 0) === 0) {
+                        clusterEmailNodes.push(childEmailNode);
+                    }
+                    // Simplification, to invalidate against real cases if need be:
+                    // assume that if a firstReferenceNode was not part of the
+                    // cluster, no firstReferenceNode from other EmailNode will
+                    break;
+                }
+                // For synthetic EmailNode without referenceNodes, consider their
+                // descendants for cluster attribution.
+                queue.push(...candidate.children);
             }
         }
         return clusterEmailNodes;

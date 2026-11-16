@@ -251,7 +251,6 @@ export class MobileOnlyLayout extends ElementLayout {
         this.setAttributes({
             classNames: "o-ci-mobile-only",
             style: {
-                "mso-hide": "all",
                 display: "none",
             },
         });
@@ -278,7 +277,6 @@ export class TextNodeLayout {
     }
 }
 
-// TODO EGGMAIL: remove?
 export class CommentNodeLayout {
     content = "";
 
@@ -308,8 +306,8 @@ export class Analysis {
             canMerge: false, // authorization to attempt merging the layout and analysis of a descendant onto oneself
             canParentMerge: false, // authorization for a parent to attempt merging the layout and analysis of oneself onto them
         };
-        this.facts = { ...(options.facts ?? {}) };
-        this.parsingFacts = { ...(options.parsingFacts ?? {}) };
+        this.facts = { ...options.facts };
+        this.parsingFacts = { ...options.parsingFacts };
         // constraints are functions: (emailNode) => ({ shouldPropagate: bool, facts: {}, constraint: (emailNode) => (...) })
         this.bottomUpConstraints = [...(options.bottomUpConstraints ?? [])];
         this.topDownConstraints = [...(options.topDownConstraints ?? [])];

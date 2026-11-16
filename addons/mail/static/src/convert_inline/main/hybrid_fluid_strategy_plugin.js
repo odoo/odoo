@@ -196,14 +196,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
             return emailNode;
         }
         const rowMeasures = this.extractRowsFromBands(emailNode.lastReferenceNode);
-        const firstRowMeasure = rowMeasures.at(0);
-        let verticalAlign;
-        if (firstRowMeasure) {
-            verticalAlign = firstRowMeasure.verticalAlign;
-        }
-        if (!verticalAlign && emailNode.analysis.facts.isResponsiveElement) {
-            verticalAlign = "top";
-        }
         return this.fillTableContainer(emailNode, rowMeasures, {
             builders: this.tableBuilders,
         });

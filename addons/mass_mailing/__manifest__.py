@@ -138,7 +138,10 @@
             ('include', 'html_editor.assets_editor'),
             ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_iframe_style_base'),
-            'mass_mailing/static/src/builder/**/*.inside.scss'
+            'mass_mailing/static/src/builder/**/*.inside.scss',
+        ],
+        'mass_mailing.assets_mail_clients': [
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
         ],
         'mass_mailing.iframe_add_dialog': [
             ('include', 'html_builder.iframe_add_dialog'),
