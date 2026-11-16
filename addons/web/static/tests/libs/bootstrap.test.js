@@ -63,4 +63,25 @@ describe("web/static/src/libs/bootstrap.js", () => {
         expect(el.isConnected).toBe(false);
         modal.dispose();
     });
+
+    test("a Modal hidden then removed before its transition ends still releases the body", async () => {
+        const el = Object.assign(document.createElement("div"), {
+            // Without `fade`, `hide()` runs `_hideModal` synchronously.
+            className: "modal fade",
+            innerHTML: `<div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div></div></div>`,
+        });
+        getFixture().append(el);
+        const modal = new window.Modal(el, { backdrop: false });
+
+        modal.show();
+        await advanceTime(1000);
+        expect(document.body).toHaveClass("modal-open");
+
+        modal.hide();
+        el.remove();
+
+        await advanceTime(1000);
+        expect(document.body).not.toHaveClass("modal-open");
+        modal.dispose();
+    });
 });
