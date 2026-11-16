@@ -64,6 +64,7 @@ class PosPrinter(models.Model):
             "'Automatic Certificate Update' option is enabled in the printer settings. "
             "It can also be the IP address of a Zebra network printer."
         ),
+        clean=lambda printer_ip: printer_ip and format_epson_certified_domain(printer_ip),
     )
     use_lna = fields.Boolean(string="Use Local Network Access")
     use_cashdrawer = fields.Boolean(string='Link Cashdrawer', help="Automatically open the cashdrawer.")
@@ -122,12 +123,6 @@ class PosPrinter(models.Model):
         for record in self:
             if record.printer_type == 'epson_epos' and not record.printer_ip:
                 raise ValidationError(_("Printer IP Address cannot be empty."))
-
-    @api.onchange("printer_ip")
-    def _onchange_printer_ip(self):
-        for rec in self:
-            if rec.printer_ip:
-                rec.printer_ip = format_epson_certified_domain(rec.printer_ip)
 
     @api.onchange('printer_type')
     def _onchange_printer_type(self):
