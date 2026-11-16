@@ -1142,6 +1142,7 @@ SERVICES_MAPPING = {
     "multi_tab": ['MultiTabPlugin', '@bus/multi_tab_plugin'],
     "orm": ['ORM', '@web/core/orm_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
+    "partner_autocomplete.companyAutocomplete": ['CompanyAutocompletePlugin', '@partner_autocomplete/js/company_autocomplete_plugin'],
     "popover": ['PopoverPlugin', '@web/core/popover/popover_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
     "reloadCompany": ['ReloadCompanyPlugin', '@web/webclient/reload_company_plugin'],
