@@ -320,6 +320,30 @@ describe("Custom button style", () => {
         );
     });
 
+    test("custom button border theme color should use the content CSS variable", async () => {
+        const { el } = await setupEditor("<p>[Hello]</p>", allowCustomOpt);
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar .fa-link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
+            confirm: false,
+        });
+        await click('select[name="link_type"]');
+        await select("custom");
+        await animationFrame();
+
+        await click("input.custom-border-size");
+        await edit("1");
+
+        await click(waitFor(".custom-border-picker"));
+        await animationFrame();
+        await click(".o_color_button[data-color='o-color-5']");
+        await animationFrame();
+
+        expect(el.querySelector("a").getAttribute("style")).toInclude(
+            "border-color: var(--o-color-5);"
+        );
+    });
+
     test("should allow target _blank on custom button", async () => {
         const { el } = await setupEditor("<p>[Hello]</p>", allowTargetBlankOpt);
         await waitFor(".o-we-toolbar");
