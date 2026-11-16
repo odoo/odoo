@@ -425,7 +425,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertFalse(move.invoice_line_ids)
         self.assertFalse(move.partner_id)
         self.assertEqual(move.amount_total, 0)
-        self.assertEqual(move.peppol_move_state, 'error')
+        self.assertEqual(move.state, 'draft')
+        self.assertEqual(move.peppol_move_state, 'done')
 
         messages = self.env['mail.message'].search([
             ('model', '=', 'account.move'),
