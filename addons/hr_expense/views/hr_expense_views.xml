@@ -502,7 +502,7 @@
                     <separator />
                     <filter string="To Submit" name="draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Waiting Approval" name="submitted" domain="[('state', '=', 'submitted')]"/>
-                    <filter string="To Post" name="approved" domain="[('state', '=', 'approved'), '|', ('account_move_id', '=', False), ('account_move_id.state', '=', 'draft')]"/>
+                    <filter string="To Post" name="approved" groups="hr_expense.group_hr_expense_team_approver" domain="[('state', '=', 'approved'), '|', ('account_move_id', '=', False), ('account_move_id.state', '=', 'draft')]"/>
                     <filter string="Waiting Reimbursement" name="to_pay" domain="[('state', 'in', ('approved', 'posted')), ('payment_mode', '=', 'own_account')]"/>
                     <separator />
                     <filter string="Expense Date" name="date" date="date"/>
