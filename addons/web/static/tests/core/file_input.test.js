@@ -22,8 +22,15 @@ async function createFileInput({ mockPost, mockAdd, props }) {
     mockService("http", {
         post: mockPost || (() => {}),
     });
-    await mountWithCleanup(FileInput, { props });
+    return await mountWithCleanup(FileInput, { props });
 }
+
+function selectFileWithoutChange(fileInput, file) {
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    fileInput.fileInputRef.el.files = transfer.files;
+}
+
 
 // -----------------------------------------------------------------------------
 // Tests
@@ -138,6 +145,28 @@ test("uploading the same file twice triggers the onChange twice", async () => {
     expect.verifySteps(["fake_file.txt"]);
 });
 
+test("uploading an empty file", async () => {
+    const file = new File([], "empty.txt", { type: "text/plain" });
+    await createFileInput({
+        props: {
+            onUpload(files) {
+                expect.step(files[0].name);
+            },
+        },
+        mockPost: (_, params) => {
+            expect(params.ufile).toEqual([file]);
+            return JSON.stringify([{ name: file.name }]);
+        },
+    });
+
+    await contains(".o_file_input input", { visible: false }).click();
+    await setInputFiles([file]);
+    await animationFrame();
+
+    expect.verifySteps(["empty.txt"]);
+    expect(".o_file_input input").toBeEnabled();
+});
+
 test("uploading a file that is too heavy will send a notification", async () => {
     patchWithCleanup(session, { max_file_upload_size: 2 });
     await createFileInput({
@@ -212,4 +241,66 @@ test("support preprocessing of files via props", async () => {
     await animationFrame();
 
     expect.verifySteps(["fake_file.txt"]);
+});
+
+test("the same file can be retried after a network error", async () => {
+    let firstAttempt = true;
+    const file = new File(["test"], "retry.txt", { type: "text/plain" });
+    const fileInput = await createFileInput({
+        props: {
+            onUpload(files) {
+                expect.step(files[0].name);
+            },
+        },
+        mockPost: (_, { ufile }) => {
+            expect(ufile).toEqual([file]);
+            if (firstAttempt) {
+                firstAttempt = false;
+                throw new Error("Network failed");
+            }
+            return JSON.stringify([{ name: file.name }]);
+        },
+    });
+
+    selectFileWithoutChange(fileInput, file);
+    await expect(fileInput.onFileInputChange()).rejects.toThrow("Network failed");
+    await animationFrame();
+    expect(fileInput.fileInputRef.el.value).toBe("");
+    expect(".o_file_input input").toBeEnabled();
+
+    await contains(".o_file_input input", { visible: false }).click();
+    await setInputFiles([file]);
+    await animationFrame();
+    expect.verifySteps(["retry.txt"]);
+});
+
+test("the same file can be retried after an upload error response", async () => {
+    let firstAttempt = true;
+    const file = new File(["test"], "retry.txt", { type: "text/plain" });
+    const fileInput = await createFileInput({
+        props: {
+            onUpload(files) {
+                expect.step(files[0].name);
+            },
+        },
+        mockPost: (_, { ufile }) => {
+            expect(ufile).toEqual([file]);
+            if (firstAttempt) {
+                firstAttempt = false;
+                return JSON.stringify({ error: "Upload failed" });
+            }
+            return JSON.stringify([{ name: file.name }]);
+        },
+    });
+
+    selectFileWithoutChange(fileInput, file);
+    await expect(fileInput.onFileInputChange()).rejects.toThrow("Upload failed");
+    await animationFrame();
+    expect(fileInput.fileInputRef.el.value).toBe("");
+    expect(".o_file_input input").toBeEnabled();
+
+    await contains(".o_file_input input", { visible: false }).click();
+    await setInputFiles([file]);
+    await animationFrame();
+    expect.verifySteps(["retry.txt"]);
 });
