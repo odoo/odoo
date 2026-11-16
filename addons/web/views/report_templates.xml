@@ -384,13 +384,13 @@
                     </div>
                 </span>
             </li>
-            <li t-if="not forced_vat">
+            <li t-if="not forced_vat" class="fw-bold">
                 <t t-if="company.vat">
                     <span t-field="company.country_id.vat_label">Tax ID</span>:
                     <span t-out="company.vat">US12345671</span>
                 </t>
             </li>
-            <li t-else="">
+            <li t-else="" class="fw-bold">
                 <span t-field="company.country_id.vat_label">Tax ID</span>:
                 <span t-out="forced_vat">US12345671</span>
             </li>
