@@ -583,6 +583,28 @@ class TestProjectSharing(TestProjectSharingCommon):
         task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
         self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')
 
+    def test_move_task_keeps_portal_collaborator_assignee(self):
+        """ A portal user assigned to a task should stay assigned when an internal user moves the task
+            to another project shared with them in edit mode, even if they do not follow that project.
+        """
+        project_horses = self.env['project.project'].create({
+            'name': 'Horses',
+            'privacy_visibility': 'portal',
+        })
+        (self.project_cows + project_horses).write({
+            'collaborator_ids': [Command.create({
+                'partner_id': self.user_portal.partner_id.id,
+                'access_mode': 'edit',
+            })],
+        })
+        self.task_cow.user_ids += self.user_portal
+        self.assertIn(self.user_portal, self.task_cow.user_ids)
+        self.assertNotIn(self.user_portal.partner_id, project_horses.message_partner_ids)
+
+        self.task_cow.project_id = project_horses
+        self.assertIn(self.user_portal, self.task_cow.user_ids,
+            "The portal user is a collaborator in edit mode of the new project, so the task can stay assigned to them.")
+
     def test_portal_user_can_change_stage_with_rating(self):
         """ Test portal user can change the stage of task to a stage with rating template email
             1) Check that a user with 'edit' access mode is correctly blocked from changing the stage.
