@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from typing import Literal
+from typing import Literal, Self
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -34,7 +34,7 @@ class ProductPricelist(models.Model):
 
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        default=_default_currency_id,
+        default=lambda self: self._default_currency_id(),
         required=True,
         tracking=1,
     )
@@ -62,11 +62,33 @@ class ProductPricelist(models.Model):
         domain=lambda self: self._domain_item_ids(),
         copy=True)
 
+    # === COMPUTE METHODS === #
+
     @api.depends('currency_id')
     def _compute_display_name(self):
         for pricelist in self:
-            pricelist_name = (pricelist.name and pricelist.name) or pricelist.env._('New')
+            pricelist_name = pricelist.name or pricelist.env._('New')
             pricelist.display_name = f'{pricelist_name} ({pricelist.currency_id.name})'
+
+    # === CRUD METHODS === #
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not vals_list:
+            return super().create(vals_list)
+
+        if all(vals.get("company_id") == vals_list[0].get("company_id") for vals in vals_list):
+            return super(
+                ProductPricelist, self.with_company(vals_list[0].get("company_id"))
+            ).create(vals_list).with_env(self.env)
+
+        created_pricelists = self.browse()
+        for vals in vals_list:
+            created_pricelists += super(
+                ProductPricelist, self.with_company(vals.get("company_id"))
+            ).create([vals])
+
+        return created_pricelists.with_env(self.env)
 
     def write(self, vals):
         res = super().write(vals)
@@ -77,6 +99,63 @@ class ProductPricelist(models.Model):
             self.item_ids._check_company()
 
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_as_rule_base(self):
+        linked_items = self.env['product.pricelist.item'].sudo().search([
+            ('base', '=', 'pricelist'),
+            ('base_pricelist_id', 'in', self.ids),
+            ('pricelist_id', 'not in', self.ids),
+        ])
+        if linked_items:
+            raise UserError(
+                self.env._(
+                    "You cannot delete pricelist(s):\n(%(pricelists)s)"
+                    "\nThey are used within pricelist(s):\n%(other_pricelists)s",
+                    pricelists="\n".join(linked_items.base_pricelist_id.mapped("display_name")),
+                    other_pricelists="\n".join(linked_items.pricelist_id.mapped("display_name")),
+                )
+            )
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': self.env._('Template for Pricelists'),
+            'template': '/product/static/xls/product_pricelist.xls'
+        }]
+
+    # === ACTION METHODS === #
+
+    @api.readonly
+    def action_open_daily_rates(self) -> dict:
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.env._("Daily Rates"),
+            "res_model": "product.pricelist.item",
+            "view_mode": "calendar,form",
+            "views": [
+                (self.env.ref("product.product_pricelist_item_calendar").id, "calendar"),
+                (False, "form"),
+            ],
+            "domain": [
+                ("pricelist_id", "=", self.id),
+                ("date_start", "!=", False),
+                ("date_end", "!=", False),
+            ],
+            "context": {"default_pricelist_id": self.id, "default_compute_price": "discount"},
+        }
+
+    @api.readonly
+    def action_open_pricelist_report(self) -> dict:
+        self.ensure_one()
+        return {
+            "name": self.env._("Pricelist Report Preview"),
+            "type": "ir.actions.client",
+            "tag": "generate_pricelist_report",
+        }
+
+    # === BUSINESS METHODS === #
 
     def _get_products_price(self, products, *args, **kwargs) -> dict[int, float]:
         """Compute the pricelist prices for the specified products, quantity & uom.
@@ -160,8 +239,7 @@ class ProductPricelist(models.Model):
         return next(iter(rule_ids), False)
 
     def _compute_price_rule(
-        self, products, quantity, *, currency=None, uom=None, date=False,
-        **kwargs
+        self, products, quantity, *, currency=None, date=False, **kwargs
     ) -> dict[int, tuple[float, list[int]]]:
         """Low-level method - Mono pricelist, multi products.
 
@@ -194,16 +272,10 @@ class ProductPricelist(models.Model):
             date = fields.Datetime.now()
 
         # Fetch all rules potentially matching specified products/templates/categories/uom and date
-        rules = self._get_applicable_rules(products, quantity, date=date, uom=uom, **kwargs)
+        rules = self._get_applicable_rules(products, quantity, date=date, **kwargs)
 
         return self._resolve_applicable_rule_and_price(
-            rules,
-            products,
-            quantity,
-            date,
-            currency=currency,
-            uom=uom,
-            **kwargs,
+            rules, products, quantity, date, currency=currency, **kwargs
         )
 
     def _resolve_applicable_rule_and_price(
@@ -335,7 +407,6 @@ class ProductPricelist(models.Model):
         :param dict _kwargs: Extra keyword arguments forwarded by callers and optional module
             overrides.
         :return: Domain matching rules potentially applicable to the inputs.
-        :rtype: Domain
         """
         self and self.ensure_one()  # self is at most one record
 
@@ -371,35 +442,10 @@ class ProductPricelist(models.Model):
 
         return domain
 
-    # Multi pricelists price|rule computation
-    def _price_get(self, product, quantity, **kwargs):
-        """ Multi pricelist, mono product - returns price per pricelist """
-        return {
-            key: price[0]
-            for key, price in self._compute_price_rule_multi(product, quantity, **kwargs)[
-                product.id
-            ].items()
-        }
+    def _get_country_pricelist_multi(self, country_ids: list[int]) -> dict[int, Self]:
+        """Retrieve the default pricelist for the given countries.
 
-    def _compute_price_rule_multi(self, products, quantity, uom=None, date=False, **kwargs):
-        """ Low-level method - Multi pricelist, multi products
-        Returns: dict{product_id: dict{pricelist_id: (price, suitable_rule)} }"""
-        if not self.ids:
-            pricelists = self.search([])
-        else:
-            pricelists = self
-        results = {}
-        for pricelist in pricelists:
-            subres = pricelist._compute_price_rule(products, quantity, uom=uom, date=date, **kwargs)
-            for product_id, price in subres.items():
-                results.setdefault(product_id, {})
-                results[product_id][pricelist.id] = (price[0], next(iter(price[1]), False))
-        return results
-
-    def _get_country_pricelist_multi(self, country_ids):
-        """ Retrieve the default pricelist for the given countries.
-
-        :param list country_ids: list of country ids
+        :param country_ids: `res.country` ids
         :return: a dict {country_id: pricelist}
         """
         company_id = self.env.company.id
@@ -432,18 +478,18 @@ class ProductPricelist(models.Model):
 
         result = {}
         for country_id in country_ids:
-            pl = self.search(Domain.AND([
-                pl_domain,
-                [('country_group_ids.country_ids', '=', country_id)],
-            ]), limit=1)
+            pl = self.search(
+                Domain.AND([pl_domain, [("country_group_ids.country_ids", "=", country_id)]]),
+                limit=1,
+            )
             result[country_id] = pl or pl_fallback
         result[False] = result[ctx_country.id] if ctx_country else pl_fallback
         return result
 
     # res.partner.property_product_pricelist field computation
     @api.model
-    def _get_partner_pricelist_multi(self, partner_ids):
-        """ Retrieve the applicable pricelist for the given partners.
+    def _get_partner_pricelist_multi(self, partner_ids: list[int]) -> dict[int, Self]:
+        """Retrieve the applicable pricelist for the given partners.
 
         It will return the first found pricelist in this order:
         First, the pricelist of the specific property (res_id set), this one
@@ -483,44 +529,14 @@ class ProductPricelist(models.Model):
 
         return result
 
-    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
-        return [
+    def _get_partner_pricelist_multi_search_domain_hook(self, company_id: int) -> Domain:
+        return Domain([
             ('active', '=', True),
             ('company_id', 'in', [company_id, False]),
-        ]
-
-    def _get_partner_pricelist_multi_filter_hook(self):
-        return self.filtered('active')
-
-    @api.model
-    def get_import_templates(self):
-        return [{
-            'label': self.env._('Template for Pricelists'),
-            'template': '/product/static/xls/product_pricelist.xls'
-        }]
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_used_as_rule_base(self):
-        linked_items = self.env['product.pricelist.item'].sudo().search([
-            ('base', '=', 'pricelist'),
-            ('base_pricelist_id', 'in', self.ids),
-            ('pricelist_id', 'not in', self.ids),
         ])
-        if linked_items:
-            raise UserError(self.env._(
-                'You cannot delete pricelist(s):\n(%(pricelists)s)\nThey are used within pricelist(s):\n%(other_pricelists)s',
-                pricelists='\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
-                other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
-            ))
 
-    @api.readonly
-    def action_open_pricelist_report(self):
-        self.ensure_one()
-        return {
-            'name': self.env._("Pricelist Report Preview"),
-            'type': 'ir.actions.client',
-            'tag': 'generate_pricelist_report',
-        }
+    def _get_partner_pricelist_multi_filter_hook(self) -> Self:
+        return self.filtered('active')
 
     def _get_related_uoms(self, product):
         """Return UoMs from applicable pricelist rules for the given product.
@@ -536,22 +552,3 @@ class ProductPricelist(models.Model):
         # filter out pricelist items without UoM
         domain += [('uom_id', '!=', False)]
         return self.env['product.pricelist.item'].search_fetch(domain, ['uom_id']).uom_id
-
-    def action_open_daily_rates(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": self.env._("Daily Rates"),
-            "res_model": "product.pricelist.item",
-            "view_mode": "calendar,form",
-            "views": [
-                (self.env.ref('product.product_pricelist_item_calendar').id, 'calendar'),
-                (False, 'form'),
-            ],
-            "domain": [
-                ("pricelist_id", "=", self.id),
-                ("date_start", "!=", False),
-                ("date_end", "!=", False),
-            ],
-            "context": {"default_pricelist_id": self.id, "default_compute_price": "discount"},
-        }

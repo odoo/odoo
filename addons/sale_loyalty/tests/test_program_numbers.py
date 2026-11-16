@@ -2356,6 +2356,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         USD_pricelist = self.env["product.pricelist"].create({
             "name": "USD pricelist",
             "company_id": JPY_company.id,
+            "currency_id": self.env.company.currency_id.id,
         })
         partner = self.env["res.partner"].create({
             "name": "Test Partner",

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from typing import Literal
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -207,12 +209,8 @@ class ProductPricelistItem(models.Model):
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
         for item in self:
-            if item.categ_id and item.applied_on == '2_product_category':
-                item.name = item.categ_id.display_name
-            elif item.product_tmpl_id and item.applied_on == '1_product':
-                item.name = item.product_tmpl_id.display_name
-            elif item.product_id and item.applied_on == '0_product_variant':
-                item.name = item.product_id.display_name
+            if record := item._get_applicable_record():
+                item.name = record.display_name
             else:
                 item.name = item.env._("All Products")
 
@@ -236,8 +234,14 @@ class ProductPricelistItem(models.Model):
         return base_str
 
     @api.depends(
-        'compute_price', 'fixed_price', 'pricelist_id', 'price_discount',
-        'price_markup', 'price_surcharge', 'base', 'base_pricelist_id',
+        "compute_price",
+        "fixed_price",
+        "pricelist_id",
+        "price_discount",
+        "price_markup",
+        "price_surcharge",
+        "base",
+        "base_pricelist_id",
     )
     def _compute_price_label(self):
         for item in self:
@@ -274,6 +278,14 @@ class ProductPricelistItem(models.Model):
                     extra=extra_fee_str,
                 )
 
+    def _get_displayed_discount(self, item):
+        if item.compute_price == 'markup':
+            return self.env._("surcharge"), self._get_integer(item.price_markup)
+        return self.env._("discount"), self._get_integer(item.price_discount)
+
+    def _get_integer(self, percentage):
+        return int(percentage) if percentage == int(percentage) else percentage
+
     @api.depends('price_discount')
     def _compute_price_markup(self):
         for item in self:
@@ -295,7 +307,9 @@ class ProductPricelistItem(models.Model):
             discount_factor = (100 - item.price_discount) / 100
             discounted_price = base_amount * discount_factor
             if item.price_round:
-                discounted_price = float_round(discounted_price, precision_rounding=item.price_round)
+                discounted_price = float_round(
+                    discounted_price, precision_rounding=item.price_round
+                )
 
             amount = format_amount(item.env, base_amount, item.currency_id)
             # %g keeps only the decimals the factor uses and rounds the float noise off.
@@ -330,14 +344,6 @@ class ProductPricelistItem(models.Model):
             Domain('price_max_margin', '=', 0),
         ])
         return plain_discount if operator == 'in' else ~plain_discount
-
-    def _get_integer(self, percentage):
-        return int(percentage) if percentage == int(percentage) else percentage
-
-    def _get_displayed_discount(self, item):
-        if item.compute_price == 'markup':
-            return self.env._("surcharge"), self._get_integer(item.price_markup)
-        return self.env._("discount"), self._get_integer(item.price_discount)
 
     #=== CONSTRAINT METHODS ===#
 
@@ -480,12 +486,24 @@ class ProductPricelistItem(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _is_discount_rule(self):
+    def _is_discount_rule(self) -> bool:
         """Whether the rule lowers the price it is based on."""
         self.ensure_one()
         return self.compute_price == 'discount' and self.price_discount > 0
 
-    def _is_applicable_for(self, product, quantity, *, uom=None, **kwargs):
+    def _get_applicable_record(self):
+        self.ensure_one()
+
+        if self.applied_on == "0_product_variant":
+            return self.product_id
+        if self.applied_on == "1_product":
+            return self.product_tmpl_id
+        if self.applied_on == "2_product_category":
+            return self.categ_id
+
+        return None
+
+    def _is_applicable_for(self, product, quantity, *, uom=None, **kwargs) -> bool:  # noqa: ARG002
         """Check whether the current rule is valid for the given product, qty and uom.
 
         Note: self.ensure_one()
@@ -494,8 +512,7 @@ class ProductPricelistItem(models.Model):
         :param float quantity: quantity of products requested (in given uom)
         :param uom: Selected unit of measure (uom.uom record)
 
-        :returns: Whether rules is valid or not
-        :rtype: bool
+        :returns: Whether the rule is valid for the given configuration.
         """
         self.ensure_one()
         product.ensure_one()
@@ -520,7 +537,7 @@ class ProductPricelistItem(models.Model):
         key = self._get_applicability_key()
         return not key or key in self._get_applicability_keys(product, (key[0],))
 
-    def _get_applicability_key(self):
+    def _get_applicability_key(self) -> tuple[str, int] | Literal[False]:
         """Return the key of the products the rule may apply to, if it is restricted to some.
 
         A rule restricted to a variant, a product or a category only applies to the products
@@ -531,19 +548,13 @@ class ProductPricelistItem(models.Model):
 
         :returns: a `(model name, record id)` pair, or `False` if the rule may apply to any
             product
-        :rtype: tuple[str, int] | bool
         """
-        self.ensure_one()
-        if self.applied_on == "0_product_variant":
-            return "product.product", self.product_id.id
-        if self.applied_on == "1_product":
-            return "product.template", self.product_tmpl_id.id
-        if self.applied_on == "2_product_category":
-            return "product.category", self.categ_id.id
+        if record := self._get_applicable_record():
+            return record._name, record.id
         return False
 
     @api.model
-    def _get_applicability_keys(self, product, key_models):
+    def _get_applicability_keys(self, product, key_models) -> list[tuple[str, int]]:
         """Return the keys of the restricted rules that may apply to the given product.
 
         See `_get_applicability_key`.
@@ -575,7 +586,9 @@ class ProductPricelistItem(models.Model):
             keys.extend(("product.category", categ_id) for categ_id in category_path_ids)
         return keys
 
-    def _compute_prices(self, products, quantity, uom, *, currency=None, depth=0, **kwargs):
+    def _compute_prices(
+        self, products, quantity, uom, *, currency=None, depth=0, **kwargs
+    ) -> dict[int, tuple[float, list]]:
         base_prices_and_rules = {}
         if self.base == 'pricelist' and self.base_pricelist_id:
             base_prices_and_rules = self.base_pricelist_id._compute_price_rule(
@@ -601,7 +614,9 @@ class ProductPricelistItem(models.Model):
 
         return results
 
-    def _compute_price(self, product, quantity, uom, *, currency=None, date=False, **kwargs):
+    def _compute_price(
+        self, product, quantity, uom, *, currency=None, date=False, **kwargs
+    ) -> float:
         """Compute the unit price of a product in the context of a pricelist application.
 
         Note: self and self.ensure_one()
@@ -615,7 +630,6 @@ class ProductPricelistItem(models.Model):
 
         :returns: price according to pricelist rule or the product price, expressed in the param
                   currency, the pricelist currency or the company currency
-        :rtype: float
         """
         self and self.ensure_one()  # self is at most one record
         product.ensure_one()
@@ -682,7 +696,7 @@ class ProductPricelistItem(models.Model):
         depth=0,
         base_price=None,
         **kwargs,
-    ):
+    ) -> float:
         """Compute the base price for a given rule.
 
         :param product: recordset of product (product.product/product.template)
@@ -693,7 +707,6 @@ class ProductPricelistItem(models.Model):
         :param int depth: Technical flag tracking the current recursion depth
 
         :returns: base price, expressed in provided pricelist currency
-        :rtype: float
         """
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
@@ -721,7 +734,7 @@ class ProductPricelistItem(models.Model):
         target_currency = currency or self.currency_id or self.env.company.currency_id
         return src_currency._convert(price, target_currency, date=date, round=False)
 
-    def _compute_price_before_discount(self, *args, **kwargs):
+    def _compute_price_before_discount(self, *args, **kwargs) -> float:
         """Compute the base price of the given rule, considering chained pricelists.
 
         :param product: recordset of product (product.product/product.template)
@@ -731,7 +744,6 @@ class ProductPricelistItem(models.Model):
         :param currency: currency in which the returned price must be expressed
 
         :returns: base price, expressed in provided pricelist currency
-        :rtype: float
         """
         pricelist_item = self
         # Find the lowest pricelist rule whose pricelist is configured to show the discount to the
