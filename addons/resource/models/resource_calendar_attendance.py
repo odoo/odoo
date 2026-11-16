@@ -19,16 +19,20 @@ class ResourceCalendarAttendance(models.Model):
     _description = "Work Detail"
     _order = 'sequence, date, dayofweek, hour_from'
 
+    # avoid negative or after midnight
     hour_from = fields.Float(string='Work from', compute="_compute_hours", store=True, default=0,
         readonly=False, required=True, index=True, precompute=True,
         help="Start and End time of working.\n"
-             "A specific value of 24:00 is interpreted as 23:59:59.999999.")
+             "A specific value of 24:00 is interpreted as 23:59:59.999999.",
+        clean=lambda hour: min(max(hour, 0.0), 23.99))
     hour_to = fields.Float(string='Work to', compute="_compute_hours", store=True, default=0,
-        readonly=False, required=True, precompute=True)
+        readonly=False, required=True, precompute=True,
+        clean=lambda hour: min(max(hour, 0.0), 24))
     # For the hour duration, the compute function is used to compute the value
     # unambiguously, while the duration in days is computed for the default
     # value but can be manually overridden.
-    duration_hours = fields.Float(compute='_compute_duration_hours', string='Hours', store=True, readonly=False)
+    duration_hours = fields.Float(compute='_compute_duration_hours', string='Hours', store=True, readonly=False,
+        clean=lambda hours: min(hours, 24))
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, index=True, ondelete='cascade')
     calendar_type = fields.Selection(related='calendar_id.calendar_type', readonly=True)
     duration_based = fields.Boolean(compute='_compute_duration_based', store=True, precompute=True)
@@ -269,18 +273,8 @@ class ResourceCalendarAttendance(models.Model):
             if attendance.date and fields.Date.to_string(attendance.date) in (attendance.recurrency_excluded_occurences or []):
                 raise UserError(self.env._("This date is excluded of the recurrency, to start a new one on this date you should create it from scratch"))
 
-    @api.onchange('hour_from')
-    def _onchange_hour_from(self):
-        # avoid negative or after midnight
-        self.hour_from = min(self.hour_from, 23.99)
-        self.hour_from = max(self.hour_from, 0.0)
-
     @api.onchange('hour_to')
     def _onchange_hour_to(self):
-        # avoid negative or after midnight
-        self.hour_to = min(self.hour_to, 24)
-        self.hour_to = max(self.hour_to, 0.0)
-
         if self.hour_from and not self.hour_to:
             self.hour_from = 0.0
 
@@ -289,7 +283,6 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.onchange('duration_hours')
     def _onchange_duration_hours(self):
-        self.duration_hours = min(self.duration_hours, 24)
         if self.hour_from or self.hour_to:
             if self.hour_from + self.duration_hours > 24:
                 self.hour_from = 24 - self.duration_hours

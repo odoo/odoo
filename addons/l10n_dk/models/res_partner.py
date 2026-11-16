@@ -51,6 +51,7 @@ class ResPartner(models.Model):
         compute="_compute_nemhandel_identifier_value", store=True, readonly=False,
         init_storage='_init_column_nemhandel_identifier',
         tracking=True,
+        clean=lambda identifier: identifier and ''.join(char for char in identifier if char.isalnum()),
     )
     nemhandel_supported_documents = fields.Json('Supported Nemhandel Documents')
     nemhandel_response_support = fields.Boolean('Nemhandel Response Service', compute='_compute_nemhandel_response_support')
