@@ -24,6 +24,10 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
  * @property {Message} message
  * @property {import("@odoo/owl").Signal<HTMLElement>} [reactionAnchorRef] when set, the anchor element for reactions
  * @property {Thread} [thread] when set, the thread the message is being viewed
+ * @property {() => void} [closeMenu] when set, closes the menu of the message that may show the
+ *   action, e.g. used by "edit"
+ * @property {() => boolean} [messageActive] when set, whether the message is active in its
+ *   rendering surface, e.g. used by the quick reactions of "reaction"
  */
 /** @typedef {import("@mail/core/common/action").ActionParams<MessageAction, UseMessageActions_Def> & MessageActionSpecificParams} MessageActionParams */
 /** @typedef {import("@mail/core/common/action").ActionDefinition<MessageActionParams, MessageAction>} MessageActionDefinition */
@@ -40,14 +44,14 @@ registerMessageAction("reaction", {
     condition: ({ message }) => message.canAddReaction,
     icon: "add_reaction",
     name: _t("Add a Reaction"),
-    onSelected({ owner, reactionAnchorRef, rootRef }) {
+    onSelected({ action, reactionAnchorRef, rootRef }) {
         const anchorEl = reactionAnchorRef
             ? reactionAnchorRef()
             : rootRef?.()?.querySelector(`[name="${this.id}"]`);
-        return owner.reactionPicker.open(() => anchorEl);
+        return action.reactionPicker.open(() => anchorEl);
     },
-    setup: ({ message, owner, thread }) =>
-        (owner.reactionPicker = useEmojiPicker(undefined, {
+    setup: ({ action, message, thread }) =>
+        (action.reactionPicker = useEmojiPicker(undefined, {
             onSelect: (emoji) => {
                 const reaction = message.reactions.find(
                     ({ content, personas }) =>
@@ -143,9 +147,9 @@ registerMessageAction("edit", {
     condition: ({ ancestors, message }) => !ancestors.inMessagingMenu && message.editable,
     icon: "edit",
     name: _t("Edit"),
-    onSelected: ({ message, owner }) => {
+    onSelected: ({ closeMenu, message }) => {
         message.enterEditMode();
-        owner.optionsDropdown?.close();
+        closeMenu?.();
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
 });
@@ -153,8 +157,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "delete",
     name: _t("Delete"),
-    onSelected: ({ ancestors, message, owner, rootRef }) =>
-        message.showDeleteConfirm(owner, rootRef, ancestors),
+    onSelected: ({ ancestors, message, rootRef }) => message.showDeleteConfirm(rootRef, ancestors),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
@@ -214,7 +217,19 @@ registerMessageAction("end-poll", {
     sequence: 115,
 });
 
+/**
+ * Message actions only use their params, which the component using them provides explicitly
+ * through `useMessageActions`. State that a definition creates in its `setup` (a picker, a
+ * service, ...) is stored on the action itself, e.g. `action.reactionPicker`.
+ *
+ * Fields added here must not reuse a name of `Action` (e.g. `isActive`): a class field shadows
+ * the getter of the same name for every message action.
+ */
 export class MessageAction extends Action {
+    /** @type {(() => void)|undefined} @see MessageActionSpecificParams.closeMenu */
+    closeMenu;
+    /** @type {(() => boolean)|undefined} @see MessageActionSpecificParams.messageActive */
+    messageActive;
     /** @type {() => Message} */
     messageFn;
     /** @type {import("@odoo/owl").Signal<HTMLElement>} */
@@ -223,12 +238,16 @@ export class MessageAction extends Action {
     threadFn;
     /**
      * @param {Object} param0
+     * @param {() => void} [param0.closeMenu] @see MessageActionSpecificParams.closeMenu
+     * @param {() => boolean} [param0.messageActive] @see MessageActionSpecificParams.messageActive
      * @param {Message|() => Message} param0.message
      * @param {import("@odoo/owl").Signal<HTMLElement>} [param0.reactionAnchorRef]
      * @param {Thread|() => Thread} [param0.thread]
      */
-    constructor({ message, reactionAnchorRef, thread }) {
+    constructor({ closeMenu, message, messageActive, reactionAnchorRef, thread }) {
         super(...arguments);
+        this.closeMenu = closeMenu;
+        this.messageActive = messageActive;
         this.messageFn = typeof message === "function" ? message : () => message;
         this.reactionAnchorRef = reactionAnchorRef;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
@@ -237,8 +256,10 @@ export class MessageAction extends Action {
     get params() {
         const thread = this.threadFn();
         return Object.assign(super.params, {
-            message: this.messageFn(),
             channel: thread?.channel,
+            closeMenu: this.closeMenu,
+            message: this.messageFn(),
+            messageActive: this.messageActive,
             reactionAnchorRef: this.reactionAnchorRef,
             thread,
         });
@@ -251,14 +272,25 @@ class UseMessageActions extends UseActions {
 }
 
 /**
- * @param {import("@mail/core/common/action").ActionRootRefParam & {message?: Message|() => Message, reactionAnchorRef?: import("@odoo/owl").Signal<HTMLElement>, thread?: Thread|() => Thread}} [params0={}]
- *   `reactionAnchorRef`: when set, the anchor element for reactions. `thread`: when set, the thread the
- *   message is being viewed.
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {closeMenu?: () => void, message?: Message|() => Message, messageActive?: () => boolean, reactionAnchorRef?: import("@odoo/owl").Signal<HTMLElement>, thread?: Thread|() => Thread}} [params0={}]
+ *   `closeMenu`: when set, closes the menu of the message that may show the actions.
+ *   `messageActive`: when set, whether the message is active in its rendering surface.
+ *   `reactionAnchorRef`: when set, the anchor element for reactions. `thread`: when set, the
+ *   thread the message is being viewed.
  * @returns {UseMessageActions_Def}
  */
-export function useMessageActions({ message, thread, reactionAnchorRef, rootRef } = {}) {
+export function useMessageActions({
+    closeMenu,
+    message,
+    messageActive,
+    reactionAnchorRef,
+    rootRef,
+    thread,
+} = {}) {
     return useAction(messageActionsRegistry, UseMessageActions, MessageAction, {
+        closeMenu,
         message,
+        messageActive,
         reactionAnchorRef,
         rootRef,
         thread,

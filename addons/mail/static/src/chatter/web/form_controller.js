@@ -45,7 +45,7 @@ patch(FormController.prototype, {
                         {
                             message,
                             onConfirm: () => {
-                                message.onShowDeleteConfirm(this);
+                                message.onShowDeleteConfirm();
                                 void this.env.services.action.doAction({
                                     type: "ir.actions.act_window_close",
                                 });

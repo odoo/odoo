@@ -166,6 +166,6 @@ export class QuickReactionMenu extends Component {
 export class QuickReactionAction extends BaseAction {
     static components = { QuickReactionMenu };
     static template = xml`
-        <QuickReactionMenu action="this.action" message="this.action.params.message" messageActive="this.action.owner.isActive?.()"/>
+        <QuickReactionMenu action="this.action" message="this.action.params.message" messageActive="this.action.params.messageActive?.()"/>
     `;
 }
