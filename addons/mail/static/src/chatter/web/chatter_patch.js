@@ -422,10 +422,11 @@ const chatterPatch = {
         }
     },
     onClickSearch() {
-        this.state.activePanel =
-            this.state.activePanel === CHATTER_PANEL.SEARCH
-                ? CHATTER_PANEL.NONE
-                : CHATTER_PANEL.SEARCH;
+        if (this.state.activePanel === CHATTER_PANEL.SEARCH) {
+            this.closeSearch();
+        } else {
+            this.state.activePanel = CHATTER_PANEL.SEARCH;
+        }
         this.state.composerType = false;
     },
     onClickSelectAttachments() {
