@@ -256,7 +256,7 @@ class SlideChannel(models.Model):
             )
         )]
 
-    @api.depends('slide_ids.is_published')
+    @api.depends('slide_ids.is_published', 'name', 'description', 'description_short', 'description_html', 'image_1920')
     def _compute_slide_last_update(self):
         self.slide_last_update = fields.Date.context_today(self)
 
