@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_pos_ui_inherit_pos_edi_ubl" model="ir.ui.view">
+        <field name="name">res.partner.form.pos.ui.inherit.pos_edi_ubl</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_form_pos_ui"/>
+        <field name="arch" type="xml">
+            <field name="invoice_edi_format" position="after">
+                <field name="routing_identifier_override"
+                       placeholder="0088:123456789..."
+                       groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+</odoo>

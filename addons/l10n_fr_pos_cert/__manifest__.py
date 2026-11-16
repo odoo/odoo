@@ -27,6 +27,7 @@ The module adds following features:
         'views/account_sale_closure.xml',
         'views/pos_inalterability_menuitem.xml',
         'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
         'report/pos_hash_integrity.xml',
         'data/account_sale_closure_cron.xml',
         'receipt/pos_order_receipt.xml',

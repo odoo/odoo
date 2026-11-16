@@ -24,7 +24,10 @@ export function makeActionAwaitable(action, config, additionalArgs) {
             ...additionalArgs,
             props: {
                 ...additionalArgs?.props,
-                onSave: (record) => {
+                onSave: (record, params) => {
+                    if (params?.type) {
+                        return;
+                    }
                     action.doAction({
                         type: "ir.actions.act_window_close",
                     });
