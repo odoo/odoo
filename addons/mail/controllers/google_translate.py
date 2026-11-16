@@ -3,6 +3,7 @@
 import babel
 import requests
 
+from odoo import _
 from odoo.http import request, route, Controller
 
 # Google Translate rejects an unlisted region instead of falling back to the language.
@@ -38,8 +39,8 @@ class GoogleTranslateController(Controller):
                     "target_lang": target_lang,
                 }
                 translation = request.env["mail.message.translation"].sudo().create(vals)
-            except requests.exceptions.HTTPError as err:
-                return {"error": err.response.json()["error"]["message"]}
+            except requests.exceptions.RequestException:
+                return {"error": _("Translation service unavailable")}
         try:
             lang_name = babel.Locale(translation.source_lang).get_display_name(request.env.user.lang)
         except babel.UnknownLocaleError:
