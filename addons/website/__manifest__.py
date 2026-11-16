@@ -290,6 +290,7 @@
         'web.assets_unit_tests': [
             'website/static/tests/page_url_field.test.js',
             'website/static/tests/website_html_editor.test.js',
+            'website/static/tests/mobile/navbar.test.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
