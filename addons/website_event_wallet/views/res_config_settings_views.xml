@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.event.wallet</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_event.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="allow_add_to_wallet_setting" position="inside">
+                <div class="content-group mt-3" invisible="not module_website_event_wallet">
+                    <div class="mb-2">
+                        <field name="allow_add_to_wallet"/>
+                        <label for="allow_add_to_wallet" string="Enable for this company"/>
+                    </div>
+                    <button name="%(certificate_event_pass_action)d" type="action"
+                            string="Configure Wallet Certificates" class="btn-link" invisible="not allow_add_to_wallet"
+                            context="{'default_scope': 'event', 'default_company_id': company_id, 'search_default_scope_event': 1, 'search_default_company_id': company_id}"/>
+                </div>
+            </setting>
+        </field>
+    </record>
+</odoo>
