@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
-from odoo.addons.mail.models.mail_alias import dot_atom_text
+from odoo.addons.mail.models.mail_alias import dot_atom_text, sanitize_alias_name
 from odoo.exceptions import UserError
 
 
@@ -19,24 +19,25 @@ class MailAliasDomain(models.Model):
 
     name = fields.Char(
         'Name', required=True,
-        copy=True,
+        copy=True, clean=lambda name: name and sanitize_alias_name(name),
         help="Email domain e.g. 'example.com' in 'odoo@example.com'")
     company_ids = fields.One2many(
         'res.company', 'alias_domain_id', string='Companies',
         help="Companies using this domain as default for sending mails")
     sequence = fields.Integer(default=10)
     bounce_alias = fields.Char(
-        'Bounce Alias', default='bounce', required=True,
+        'Bounce Alias', default='bounce', required=True, clean=lambda name: name and sanitize_alias_name(name),
         help="Local-part of email used for Return-Path used when emails bounce e.g. "
              "'bounce' in 'bounce@example.com'")
     bounce_email = fields.Char('Bounce Email', compute='_compute_bounce_email')
     catchall_alias = fields.Char(
-        'Catchall Alias', default='catchall', required=True,
+        'Catchall Alias', default='catchall', required=True, clean=lambda name: name and sanitize_alias_name(name),
         help="Local-part of email used for Reply-To to catch answers e.g. "
              "'catchall' in 'catchall@example.com'")
     catchall_email = fields.Char('Catchall Email', compute='_compute_catchall_email')
     default_from = fields.Char(
         'Default From Alias', default='notifications',
+        clean=lambda default_from: default_from and sanitize_alias_name(default_from, is_email=True),
         help="Default from when it does not match outgoing server filters. Can be either "
              "a local-part e.g. 'notifications' either a complete email address e.g. "
              "'notifications@example.com' to override all outgoing emails.")
@@ -143,10 +144,6 @@ class MailAliasDomain(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Sanitize bounce_alias / catchall_alias / default_from """
-        for vals in vals_list:
-            self._sanitize_configuration(vals)
-
         alias_domains = super().create(vals_list)
         alias_domains._check_default_from_not_used_by_users()
 
@@ -167,8 +164,6 @@ class MailAliasDomain(models.Model):
         return alias_domains
 
     def write(self, vals):
-        """ Sanitize name / bounce_alias / catchall_alias / default_from """
-        self._sanitize_configuration(vals)
         ret = super().write(vals)
         self._check_default_from_not_used_by_users()
         return ret
@@ -183,21 +178,6 @@ class MailAliasDomain(models.Model):
             for server in personal_mail_servers
         ):
             raise UserError(_("A personal mail server is using that address, you can not use it."))
-
-    @api.model
-    def _sanitize_configuration(self, config_values):
-        """ Tool sanitizing configuration values for domains """
-        if config_values.get('name'):
-            config_values['name'] = self.env['mail.alias']._sanitize_alias_name(config_values['name'])
-        if config_values.get('bounce_alias'):
-            config_values['bounce_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['bounce_alias'])
-        if config_values.get('catchall_alias'):
-            config_values['catchall_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['catchall_alias'])
-        if config_values.get('default_from'):
-            config_values['default_from'] = self.env['mail.alias']._sanitize_alias_name(
-                config_values['default_from'], is_email=True
-            )
-        return config_values
 
     @api.model
     def _find_aliases(self, email_list):

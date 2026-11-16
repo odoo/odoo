@@ -16,6 +16,36 @@ atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
 dot_atom_text = re.compile(r"^%s+(\.%s+)*$" % (atext, atext))
 
 
+def sanitize_alias_name(name, is_email=False):
+    """ Cleans and sanitizes the alias name. In some cases we want the alias
+    to be a complete email instead of just a left-part (when sanitizing
+    default.from for example). In that case we extract the right part and
+    put it back after sanitizing the left part.
+
+    :param str name: the alias name to sanitize;
+    :param bool is_email: whether to keep a right part, otherwise only
+      left part is kept;
+
+    :returns: sanitized alias name
+    :rtype: str
+    """
+    sanitized_name = name.strip() if name else ''
+    if is_email:
+        right_part = sanitized_name.lower().partition('@')[2]
+    else:
+        right_part = False
+    if sanitized_name:
+        sanitized_name = remove_accents(sanitized_name).lower().split('@')[0]
+        # cannot start and end with dot
+        sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
+        # subset of allowed characters
+        sanitized_name = re.sub(r'[^\w!#$%&\'*+\-/=?^_`{|}~.]+', '-', sanitized_name)
+        sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+    if not sanitized_name.strip():
+        return False
+    return f'{sanitized_name}@{right_part}' if is_email and right_part else sanitized_name
+
+
 class MailAlias(models.Model):
     """A Mail Alias is a mapping of an email address with a given Odoo Document
        model. It is used by Odoo's mail gateway when processing incoming emails
@@ -364,33 +394,8 @@ class MailAlias(models.Model):
 
     @api.model
     def _sanitize_alias_name(self, name, is_email=False):
-        """ Cleans and sanitizes the alias name. In some cases we want the alias
-        to be a complete email instead of just a left-part (when sanitizing
-        default.from for example). In that case we extract the right part and
-        put it back after sanitizing the left part.
-
-        :param str name: the alias name to sanitize;
-        :param bool is_email: whether to keep a right part, otherwise only
-          left part is kept;
-
-        :returns: sanitized alias name
-        :rtype: str
-        """
-        sanitized_name = name.strip() if name else ''
-        if is_email:
-            right_part = sanitized_name.lower().partition('@')[2]
-        else:
-            right_part = False
-        if sanitized_name:
-            sanitized_name = remove_accents(sanitized_name).lower().split('@')[0]
-            # cannot start and end with dot
-            sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
-            # subset of allowed characters
-            sanitized_name = re.sub(r'[^\w!#$%&\'*+\-/=?^_`{|}~.]+', '-', sanitized_name)
-            sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
-        if not sanitized_name.strip():
-            return False
-        return f'{sanitized_name}@{right_part}' if is_email and right_part else sanitized_name
+        """ See :func:`sanitize_alias_name`. """
+        return sanitize_alias_name(name, is_email=is_email)
 
     @api.model
     def _is_encodable(self, alias_name, charset='ascii'):

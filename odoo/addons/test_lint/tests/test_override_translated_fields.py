@@ -10,8 +10,6 @@ class TestMethodsOverrideTranslatedFields(RegistryLintCase):
     WRITE_CHECKED_FIELD_NAMES = {  # {module_name: [model_name.field_name, ...]}
         'base': ['res.groups.name'],
         'web_studio': ['ir.ui.menu.name'],
-        'website_sale': ['product.template.description_ecommerce'],
-        'point_of_sale': ['product.template.public_description', 'product.tag.pos_description'],
         'project': ['project.project.name'],
         'account': ['account.journal.name'],
         'documents': ['documents.document.name'],
