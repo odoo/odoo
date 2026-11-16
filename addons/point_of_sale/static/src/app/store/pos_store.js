@@ -3,7 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
-import { floatIsZero } from "@web/core/utils/numbers";
+import { floatIsZero, roundDecimals } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -35,7 +35,7 @@ import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
-import { getTaxesAfterFiscalPosition } from "../models/utils/tax_utils";
+import { adaptPriceUnit, getTaxesAfterFiscalPosition } from "../models/utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
@@ -962,6 +962,13 @@ export class PosStore extends Reactive {
 
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
 
+        if (!("price_unit" in vals)) {
+            line.set_unit_price_from_product_taxes(line.price_unit);
+        }
+        for (const comboLine of line.combo_line_ids) {
+            comboLine.set_unit_price_from_product_taxes(comboLine.price_unit);
+        }
+
         if (values.product_id.tracking === "lot") {
             const related_lines = [];
             const price = values.product_id.get_price(
@@ -975,7 +982,7 @@ export class PosStore extends Reactive {
             );
             related_lines
                 .filter((line) => line.price_type !== "manual")
-                .forEach((line) => line.set_unit_price(price));
+                .forEach((line) => line.set_unit_price_from_product_taxes(price));
         }
         line.setOptions(options);
         this.selectOrderLine(order, line);
@@ -1539,7 +1546,7 @@ export class PosStore extends Reactive {
         const currency = this.config.currency_id;
         const extraValues = { currency_id: currency };
         const priceList = this.getDefaultPricelist();
-        const priceUnit = p === false ? product.get_price(priceList, 1) : p;
+        let priceUnit = p === false ? product.get_price(priceList, 1) : p;
 
         let taxes = product.taxes_id;
 
@@ -1549,12 +1556,26 @@ export class PosStore extends Reactive {
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
 
+        const taxProduct = accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+            this.config._product_default_values,
+            product
+        );
+        if (!this.config.module_pos_restaurant) {
+            priceUnit = roundDecimals(
+                adaptPriceUnit(
+                    priceUnit,
+                    taxProduct,
+                    product.taxes_id,
+                    product.taxes_id,
+                    taxes,
+                    product.uom_id
+                ),
+                this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
+            );
+        }
         return {
             ...extraValues,
-            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                this.config._product_default_values,
-                product
-            ),
+            product_id: taxProduct,
             quantity: 1,
             price_unit: priceUnit,
             tax_ids: taxes,

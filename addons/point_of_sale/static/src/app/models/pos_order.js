@@ -9,6 +9,7 @@ import { formatCurrency, roundCurrency } from "@point_of_sale/app/models/utils/c
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { toRaw } from "@odoo/owl";
+import { adaptPriceUnit, getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
 const { DateTime } = luxon;
 
@@ -466,6 +467,44 @@ export class PosOrder extends Base {
         }
     }
 
+    set_fiscal_position(fiscalPosition) {
+        this.assert_editable();
+        if (this.fiscal_position_id?.id === fiscalPosition?.id) {
+            return;
+        }
+        const prices = this.config.module_pos_restaurant
+            ? []
+            : this.lines
+                  .filter((line) => line.isFiscalPositionPriceAdaptable())
+                  .map((line) => {
+                      const product =
+                          accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+                              this.config._product_default_values,
+                              line.product_id
+                          );
+                      const taxes = line.tax_ids;
+                      return [
+                          line,
+                          adaptPriceUnit(
+                              line.price_unit,
+                              product,
+                              taxes,
+                              getTaxesAfterFiscalPosition(
+                                  taxes,
+                                  this.fiscal_position_id,
+                                  this.models
+                              ),
+                              getTaxesAfterFiscalPosition(taxes, fiscalPosition, this.models),
+                              line.get_unit()
+                          ),
+                      ];
+                  });
+        this.update({ fiscal_position_id: fiscalPosition || false });
+        for (const [line, price] of prices) {
+            line.set_unit_price(price);
+        }
+    }
+
     set_pricelist(pricelist) {
         if (pricelist) {
             this.update({ pricelist_id: pricelist });
@@ -491,14 +530,14 @@ export class PosOrder extends Base {
                     line,
                     related_lines
                 );
-                related_lines.forEach((line) => line.set_unit_price(price));
+                related_lines.forEach((line) => line.set_unit_price_from_product_taxes(price));
             } else {
                 const newPrice = line.product_id.get_price(
                     pricelist,
                     line.get_quantity(),
                     line.get_price_extra()
                 );
-                line.set_unit_price(newPrice);
+                line.set_unit_price_from_product_taxes(newPrice);
             }
         }
 
@@ -514,7 +553,9 @@ export class PosOrder extends Base {
                         return {
                             combo_item_id: cLine.combo_item_id,
                             configuration: {
-                                attribute_value_ids: cLine.attribute_value_ids,
+                                attribute_value_ids: cLine.attribute_value_ids.map(
+                                    (value) => value.id
+                                ),
                             },
                         };
                     } else {
@@ -531,7 +572,7 @@ export class PosOrder extends Base {
             (line) => line.price_type === "original" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
-            line.set_unit_price(
+            line.set_unit_price_from_product_taxes(
                 attributes_prices[line.combo_parent_id.id].find(
                     (item) => item.combo_item_id.id === line.combo_item_id.id
                 ).price_unit
@@ -1022,8 +1063,8 @@ export class PosOrder extends Base {
             newPartnerPricelist = this.config.pricelist_id;
         }
 
+        this.set_fiscal_position(newPartnerFiscalPosition);
         this.set_pricelist(newPartnerPricelist);
-        this.update({ fiscal_position_id: newPartnerFiscalPosition });
     }
 
     /* ---- Ship later --- */

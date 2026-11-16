@@ -297,7 +297,7 @@ export class TicketScreen extends Component {
         }
 
         if (order.fiscal_position_id) {
-            destinationOrder.update({ fiscal_position_id: order.fiscal_position_id });
+            destinationOrder.set_fiscal_position(order.fiscal_position_id);
         }
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);

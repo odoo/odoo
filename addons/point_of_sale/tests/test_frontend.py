@@ -920,6 +920,61 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="pos_user")
+        order = self.env['pos.order'].search([('lines.product_id', '=', self.product.id)], limit=1)
+        self.assertEqual(len(order.lines), 1)
+        self.assertEqual(order.lines.price_unit, 100)
+        self.assertEqual(order.lines.discount, 10)
+        self.assertEqual(order.amount_total, 90)
+        order.partner_id = self.env['res.partner'].create({'name': 'Invoice Customer'})
+        order.action_pos_order_invoice()
+        invoice = order.account_move
+        self.assertEqual(invoice.state, 'posted')
+        self.assertEqual(invoice.invoice_line_ids.price_unit, 100)
+        self.assertEqual(invoice.invoice_line_ids.discount, 10)
+        self.assertFalse(invoice.invoice_line_ids.tax_ids)
+        self.assertEqual(invoice.amount_total, 90)
+
+    def test_fiscal_position_zero_rates(self):
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_customer_count', 1)
+        included = self.env['account.tax'].create({
+            'name': 'Included 6%', 'amount': 6, 'amount_type': 'percent',
+            'type_tax_use': 'sale', 'price_include_override': 'tax_included',
+        })
+        zero_included, zero_excluded = self.env['account.tax'].create([
+            {'name': 'Zero Included', 'amount': 0, 'amount_type': 'percent',
+             'type_tax_use': 'sale', 'price_include_override': 'tax_included'},
+            {'name': 'Zero Excluded', 'amount': 0, 'amount_type': 'percent',
+             'type_tax_use': 'sale', 'price_include_override': 'tax_excluded'},
+        ])
+        positions = self.env['account.fiscal.position'].create([
+            {'name': name, 'tax_ids': [(0, 0, {
+                'tax_src_id': included.id, 'tax_dest_id': tax.id,
+            })]} for name, tax in [('Zero Included', zero_included), ('Zero Excluded', zero_excluded)]
+        ])
+        self.env['product.product'].create({
+            'name': 'Six Percent Product', 'list_price': 106, 'available_in_pos': True,
+            'taxes_id': [(6, 0, included.ids)],
+        })
+        self.env['product.product'].create({
+            'name': 'Six Percent Lot Product', 'list_price': 106, 'available_in_pos': True,
+            'is_storable': True, 'tracking': 'lot', 'taxes_id': [(6, 0, included.ids)],
+        })
+        pricelist = self.env['product.pricelist'].create({'name': 'Customer Discount'})
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': pricelist.id, 'applied_on': '3_global',
+            'compute_price': 'percentage', 'percent_price': 20,
+        })
+        self.env['res.partner'].create({
+            'name': 'Zero Rate Customer', 'property_account_position_id': positions[1].id,
+            'property_product_pricelist': pricelist.id,
+        })
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, positions.ids)],
+            'use_pricelist': True, 'available_pricelist_ids': [(4, pricelist.id)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionZeroRates', login="pos_user")
 
     def test_fiscal_position_inclusive_and_exclusive_tax(self):
         """ Test the mapping of fiscal position for both Tax Inclusive ans Tax Exclusive"""
@@ -1228,6 +1283,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
         order = self.env['pos.order'].search([])
         self.assertTrue(order[0].name == order[1].name + " REFUND")
+        self.assertEqual(order[0].lines.price_unit, 86.96)
+        self.assertEqual(order[1].lines.price_unit, 86.96)
+        self.assertEqual(order[0].amount_total, -order[1].amount_total)
 
     def test_lot_refund(self):
 
@@ -1540,8 +1598,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_product_combo_change_fp(self):
         """
-        Verify than when the fiscal position is changed,
-        the price of the combo doesn't change and taxes are well taken into account
+        Verify that a fiscal position adapts the allocated combo component prices.
         """
         tax_1 = self.env['account.tax'].create({
             'name': 'Tax 10%',
@@ -1560,6 +1617,19 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         setup_product_combo_items(self)
+        color = self.env['product.attribute'].create({
+            'name': 'Color', 'create_variant': 'no_variant',
+            'value_ids': [Command.create({'name': 'Red'}), Command.create({'name': 'Blue'})],
+        })
+        product = self.desk_accessories_combo.combo_item_ids.filtered(
+            lambda item: item.product_id.name == 'Combo Product 2'
+        ).product_id
+        product.product_tmpl_id.attribute_line_ids = [Command.create({
+            'attribute_id': color.id, 'value_ids': [Command.set(color.value_ids.ids)],
+        })]
+        product.product_tmpl_id.attribute_line_ids.product_template_value_ids.filtered(
+            lambda value: value.name == 'Blue'
+        ).price_extra = 11
         self.office_combo.write({'list_price': 50, 'taxes_id': [(6, 0, [tax_1.id])]})
         for combo in self.office_combo.combo_ids:  # Set the tax to all the products of the combo
             for item in combo.combo_item_ids:
@@ -1573,9 +1643,20 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
+        exempt_position = self.env['account.fiscal.position'].create({
+            'name': 'Tax Exempt',
+            'tax_ids': [Command.create({'tax_src_id': tax_1.id})],
+        })
+
+        pricelist = self.env['product.pricelist'].create({'name': 'Combo Discount'})
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': pricelist.id, 'applied_on': '3_global',
+            'compute_price': 'percentage', 'percent_price': 10,
+        })
         self.main_pos_config.write({
+            'use_pricelist': True, 'available_pricelist_ids': [(4, pricelist.id)],
             'tax_regime_selection': True,
-            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id, exempt_position.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangeFP', login="pos_user")

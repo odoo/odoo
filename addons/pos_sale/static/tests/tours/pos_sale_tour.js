@@ -694,3 +694,19 @@ registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed"
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("SettlementFiscalPositionPrice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickFiscalPosition("Restore 6%", true),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});

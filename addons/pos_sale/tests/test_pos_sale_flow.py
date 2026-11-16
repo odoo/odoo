@@ -1651,6 +1651,47 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_quantity_updated_settle', login="accountman")
 
+    def test_settlement_price_survives_fiscal_position_change(self):
+        included = self.env['account.tax'].create({
+            'name': 'Included 6%', 'amount': 6, 'amount_type': 'percent',
+            'type_tax_use': 'sale', 'price_include_override': 'tax_included',
+        })
+        zero = self.env['account.tax'].create({
+            'name': 'Zero Included', 'amount': 0, 'amount_type': 'percent',
+            'type_tax_use': 'sale', 'price_include_override': 'tax_included',
+        })
+        exempt = self.env['account.fiscal.position'].create({
+            'name': 'Exempt 6%', 'tax_ids': [(0, 0, {
+                'tax_src_id': included.id, 'tax_dest_id': zero.id,
+            })],
+        })
+        restore = self.env['account.fiscal.position'].create({
+            'name': 'Restore 6%', 'tax_ids': [(0, 0, {
+                'tax_src_id': zero.id, 'tax_dest_id': included.id,
+            })],
+        })
+        product = self.env['product.product'].create({
+            'name': 'Settled Product', 'list_price': 106, 'available_in_pos': True,
+            'taxes_id': [(6, 0, included.ids)],
+        })
+        partner = self.env['res.partner'].create({'name': 'Settlement Customer'})
+        sale = self.env['sale.order'].create({
+            'partner_id': partner.id, 'fiscal_position_id': exempt.id,
+            'order_line': [(0, 0, {'product_id': product.id, 'product_uom_qty': 1})],
+        })
+        self.assertEqual(sale.order_line.price_unit, 100)
+        self.assertEqual(sale.order_line.tax_id, zero)
+        self.assertEqual(sale.amount_total, 100)
+        sale.action_confirm()
+        self.main_pos_config.write({
+            'tax_regime_selection': True, 'fiscal_position_ids': [(6, 0, restore.ids)],
+        })
+        self.start_pos_tour('SettlementFiscalPositionPrice', login='accountman')
+        order = self.env['pos.order'].search([('lines.sale_order_line_id', 'in', sale.order_line.ids)], limit=1)
+        self.assertEqual(order.fiscal_position_id, restore)
+        self.assertEqual(order.lines.price_unit, 100)
+        self.assertEqual(order.amount_total, 100)
+
     def test_sale_order_fp_different_from_partner_one(self):
         """
         Tests that the fiscal position of the sale order is not the same as the partner's fiscal position.

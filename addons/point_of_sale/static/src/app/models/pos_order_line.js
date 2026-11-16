@@ -5,7 +5,10 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
 import { roundCurrency, formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
-import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
+import {
+    adaptPriceUnit,
+    getTaxesAfterFiscalPosition,
+} from "@point_of_sale/app/models/utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 export class PosOrderline extends Base {
@@ -269,9 +272,9 @@ export class PosOrderline extends Base {
                     this,
                     related_lines
                 );
-                related_lines.forEach((line) => line.set_unit_price(price));
+                related_lines.forEach((line) => line.set_unit_price_from_product_taxes(price));
             } else {
-                this.set_unit_price(
+                this.set_unit_price_from_product_taxes(
                     this.product_id.get_price(
                         this.order_id.pricelist_id,
                         this.get_quantity(),
@@ -328,9 +331,12 @@ export class PosOrderline extends Base {
         const price = window.parseFloat(
             roundDecimals(this.price_unit || 0, productPriceUnit).toFixed(productPriceUnit)
         );
-        const order_line_price = orderline
-            .get_product()
-            .get_price(orderline.order_id.pricelist_id, this.get_quantity());
+        const order_line_price = orderline.priceFromProductTaxes(
+            orderline
+                .get_product()
+                .get_price(orderline.order_id.pricelist_id, this.get_quantity()) +
+                orderline.get_price_extra()
+        );
 
         const isSameCustomerNote =
             (Boolean(orderline.get_customer_note()) === false &&
@@ -347,8 +353,7 @@ export class PosOrderline extends Base {
             this.get_discount() === 0 &&
             floatIsZero(
                 roundDecimals(price, this.currency.decimal_places) -
-                    roundDecimals(order_line_price, this.currency.decimal_places) -
-                    orderline.get_price_extra(),
+                    roundDecimals(order_line_price, this.currency.decimal_places),
                 this.currency.decimal_places
             ) &&
             !this.isLotTracked() &&
@@ -413,6 +418,40 @@ export class PosOrderline extends Base {
 
     is_refund() {
         return this.qty * this.price_unit < 0;
+    }
+
+    isFiscalPositionPriceAdaptable() {
+        return ["original", "manual"].includes(this.price_type) && !this.refunded_orderline_id;
+    }
+
+    priceFromProductTaxes(price) {
+        if (this.config.module_pos_restaurant) {
+            return price;
+        }
+        const product = accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+            this.config._product_default_values,
+            this.product_id
+        );
+        price = adaptPriceUnit(
+            price,
+            product,
+            this.tax_ids,
+            this.tax_ids,
+            getTaxesAfterFiscalPosition(
+                this.tax_ids,
+                this.order_id.fiscal_position_id,
+                this.models
+            ),
+            this.get_unit()
+        );
+        return roundDecimals(
+            price,
+            this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
+        );
+    }
+
+    set_unit_price_from_product_taxes(price) {
+        this.set_unit_price(this.priceFromProductTaxes(price));
     }
 
     set_unit_price(price) {
@@ -589,7 +628,9 @@ export class PosOrderline extends Base {
     }
 
     get_lst_price() {
-        return this.product_id.get_price(this.config.pricelist_id, 1, this.price_extra);
+        return this.priceFromProductTaxes(
+            this.product_id.get_price(this.config.pricelist_id, 1, this.price_extra)
+        );
     }
 
     is_last_line() {

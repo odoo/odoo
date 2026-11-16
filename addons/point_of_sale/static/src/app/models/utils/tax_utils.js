@@ -83,3 +83,37 @@ export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {
 
     return models["account.tax"].filter((tax) => newTaxIds.includes(tax.id));
 };
+
+export const adaptPriceUnit = (
+    price,
+    product,
+    originalTaxes,
+    currentTaxes,
+    destinationTaxes,
+    product_uom
+) => {
+    const currentIds = new Set(currentTaxes.map((tax) => tax.id));
+    const destinationIds = new Set(destinationTaxes.map((tax) => tax.id));
+    if (
+        (currentIds.size === destinationIds.size &&
+            [...currentIds].every((id) => destinationIds.has(id))) ||
+        originalTaxes.some((tax) => !tax.price_include)
+    ) {
+        return price;
+    }
+    if (currentTaxes.some((tax) => !tax.price_include)) {
+        price = accountTaxHelpers.get_tax_details(currentTaxes, price, 1, {
+            rounding_method: "round_globally",
+            product,
+            product_uom,
+        }).total_excluded;
+        currentTaxes = [];
+    }
+    return accountTaxHelpers.adapt_price_unit_to_another_taxes(
+        price,
+        product,
+        currentTaxes,
+        destinationTaxes,
+        { product_uom }
+    );
+};

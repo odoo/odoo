@@ -61,16 +61,9 @@ export class ControlButtons extends Component {
             return;
         }
 
-        if (selectedFiscalPosition === "none") {
-            this.currentOrder.update({
-                fiscal_position_id: false,
-            });
-            return;
-        }
-
-        this.currentOrder.update({
-            fiscal_position_id: selectedFiscalPosition ? selectedFiscalPosition.id : false,
-        });
+        this.currentOrder.set_fiscal_position(
+            selectedFiscalPosition === "none" ? false : selectedFiscalPosition
+        );
     }
     /**
      * Create the list to be passed to the SelectionPopup on the `click` function.
