@@ -1296,9 +1296,11 @@ class ProductCategory(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
     packaging_reserve_method = fields.Selection([
         ('full', 'Reserve Only Full Packagings'),
-        ('partial', 'Reserve Partial Packagings'),], string="Reserve Packagings", default='partial',
+        ('partial', 'Reserve Partial Packagings'),
+        ('lot', 'Round Up to Whole Packagings of the Lots')], string="Reserve Packagings", default='partial',
         help="Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
-             "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved")
+             "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved\n"
+             "Round Up to Whole Packagings of the Lots: deliveries reserve whole packagings of the lots, the packaging the lot was produced or received in. If a customer orders 50 kg and the lot is packed in bags of 20 kg, then 60 kg will be reserved")
     filter_for_stock_putaway_rule = fields.Boolean('stock.putaway.rule', store=False, search='_search_filter_for_stock_putaway_rule')
 
     @api.depends('parent_id')
