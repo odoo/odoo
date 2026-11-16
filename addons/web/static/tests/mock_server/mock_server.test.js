@@ -297,6 +297,51 @@ test("onRpc: JSON-RPC error handling", async () => {
     });
 });
 
+test("onRpc: returned errors are handled like thrown ones", async () => {
+    onRpc("/boom", () => {
+        expect.step("not called");
+    });
+    onRpc("/boom", () => new Error("boom"));
+
+    await makeMockServer();
+
+    await expect(rpc("/boom")).rejects.toThrow("RPC_ERROR: boom");
+    expect.verifySteps([]);
+});
+
+test("onRpc: handlers returning undefined fall through to the next one", async () => {
+    onRpc("/get_result", () => "fallback result");
+    onRpc("/get_result", () => {
+        expect.step("route handler");
+    });
+    onRpc("res.partner", "search", () => {
+        expect.step("ORM handler");
+    });
+
+    await makeMockServer();
+
+    await expect(rpc("/get_result")).resolves.toBe("fallback result");
+    await expect(
+        ormRequest({
+            model: "res.partner",
+            method: "search",
+            kwargs: { context: { active_test: true } },
+        })
+    ).resolves.toEqual([1]);
+    expect.verifySteps(["route handler", "ORM handler"]);
+});
+
+test("onRpc: handlers returning null stop the chain with a null result", async () => {
+    onRpc("/get_result", () => "fallback result");
+    onRpc("/get_result", () => null);
+    onRpc("res.partner", "search", () => null);
+
+    await makeMockServer();
+
+    await expect(rpc("/get_result")).resolves.toBe(null);
+    await expect(ormRequest({ model: "res.partner", method: "search" })).resolves.toBe(null);
+});
+
 test("rpc: calls on mock server", async () => {
     onRpc("/route", () => "pure route response");
     onRpc("http://pure.route.com/", () => "external route response");
