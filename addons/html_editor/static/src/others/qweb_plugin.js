@@ -53,6 +53,11 @@ export class QWebPlugin extends Plugin {
         clipboard_content_processors: this.clearDataAttributes.bind(this),
         legit_empty_link_predicates: (linkEl) =>
             linkEl.getAttributeNames().some((name) => name.startsWith("t-")),
+        is_formattable_node_predicates: (node) => {
+            if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
     };
 
     setup() {

@@ -1,5 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, dblclick, queryAll, queryAllTexts, queryOne, select } from "@odoo/hoot-dom";
+import {
+    click,
+    dblclick,
+    queryAll,
+    queryAllTexts,
+    queryOne,
+    select,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -8,6 +16,7 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { dispatchCleanForSave } from "./_helpers/dispatch";
 import { setColor, setFontSize } from "./_helpers/user_actions";
 import { unformat } from "./_helpers/format";
+import { contains } from "@web/../tests/web_test_helpers";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
 describe("qweb picker", () => {
@@ -458,4 +467,24 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
             </p>
         ]`)
     );
+});
+
+test("toolbar should show bold state of a selected bold t-field and be able to unbold it", async () => {
+    const { el } = await setupEditor(
+        `<div>[<div t-field="doc.client_order_ref">SO0000</div>]</div>`,
+        { config }
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='bold']").not.toHaveClass("active");
+
+    await contains(".btn[name='bold']").click();
+    const field = el.querySelector("[t-field]");
+    expect(field.style.fontWeight).toBe("bolder");
+    await waitFor(".btn[name='bold'].active");
+    expect(".btn[name='bold']").toHaveClass("active");
+
+    await contains(".btn[name='bold']").click();
+    expect(field.style.fontWeight).toBe("");
+    await waitFor(".btn[name='bold']:not(.active)");
+    expect(".btn[name='bold']").not.toHaveClass("active");
 });

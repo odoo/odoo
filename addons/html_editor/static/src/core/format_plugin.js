@@ -266,10 +266,10 @@ export class FormatPlugin extends Plugin {
             /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
         const targetedTextNodes = targetedNodes.filter(
             (node) =>
-                isTextNode(node) &&
-                !isNonFormattedWhiteSpaces(node) &&
-                this.dependencies.selection.isNodeEditable(node) &&
-                (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
+                this.checkPredicates("is_formattable_node_predicates", node) ??
+                (isTextNode(node) &&
+                    !isNonFormattedWhiteSpaces(node) &&
+                    this.dependencies.selection.isNodeEditable(node))
         );
         return (
             targetedTextNodes.length &&
