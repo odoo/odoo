@@ -83,6 +83,14 @@ class TestPaymentMethod(PaymentCommon):
         )
         self.assertIn(self.payment_method, compatible_payment_methods)
 
+    def test_sepa_direct_debit_supports_all_sepa_zone_countries(self):
+        """ Test that the SEPA Direct Debit payment method supports all countries of the SEPA zone,
+        including the French overseas territories (e.g., La Reunion). """
+        sdd_method = self.env.ref('payment.payment_method_sepa_direct_debit')
+        sepa_countries = self.env.ref('base.sepa_zone').country_ids
+        self.assertIn(self.env.ref('base.re'), sdd_method.supported_country_ids)
+        self.assertFalse(sepa_countries - sdd_method.supported_country_ids)
+
     def test_payment_method_compatible_with_supported_currencies(self):
         """ Test that the payment method is compatible with its supported currencies. """
         self.payment_method.supported_currency_ids = [Command.set([self.currency_euro.id])]

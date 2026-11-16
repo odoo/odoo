@@ -2,7 +2,7 @@
 
 {
     'name': "Payment Engine",
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Hidden',
     'summary': "The payment engine used by payment provider modules.",
     'depends': ['onboarding', 'portal'],
