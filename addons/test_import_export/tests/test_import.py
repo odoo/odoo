@@ -627,6 +627,14 @@ class test_convert_import_data(TransactionCase):
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
 
+    def test_parse_nested_relational_fields(self):
+        import_wizard = self.env['base_import.import'].create({'res_model': 'import.complex', 'file_type': 'text/csv'})
+        options = {'date_format': '%d/%m/%Y', 'float_decimal_separator': ',', 'float_thousand_separator': '.'}
+        data = [['foo', '5,69', '12,34567', '12/10/2017']]
+        import_fields = ['c', 'parent_id/f', 'parent_id/parent_id/f', 'parent_id/parent_id/d']
+        result = import_wizard._parse_import_data(data, import_fields, options)
+        self.assertEqual([str(value) for value in result[0][1:]], ['5.69', '12.34567', '2017-10-12'])
+
     def test_parse_scientific_notation(self):
         """ Ensure that scientific notation is correctly converted to decimal """
         import_wizard = self.env['base_import.import']

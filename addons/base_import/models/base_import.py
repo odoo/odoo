@@ -1290,8 +1290,8 @@ class Import(models.TransientModel):
                 index = import_fields.index(name)
                 self._parse_date_from_data(data, index, name, field['type'], options)
             # Check if the field is in import_field and is a relational (followed by /)
-            # Also verify that the field name exactly match the import_field at the correct level.
-            elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+            # Also verify that an import_field starts with the full path of the field, at any level.
+            elif field.get('relation') and any(import_field.startswith(name + '/') for import_field in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
                 self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
