@@ -185,6 +185,18 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on Settings page to check the allow_billable checkbox',
     run: "click",
 }, {
+    trigger: 'div[name="allow_billable"] input',
+    content: 'Check the allow_billable',
+    async run(actions) {
+        if (!this.anchor.checked) {
+            await actions.click();
+        }
+    }
+}, {
+    trigger: 'div[name="partner_id"] input',
+    content: 'Focus the customer field (scrolls the form to the header)',
+    run: "click",
+}, {
     trigger: 'div[name="partner_id"] input',
     content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: "edit Brandon Freeman",
@@ -192,13 +204,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
     run: "click",
-}, {
-    trigger: 'div[name="partner_id"] input:value(Brandon Freeman)',
-    content: 'Wait until the customer is set',
-}, {
-    trigger: 'div[name="allow_billable"] input',
-    content: 'Check the allow_billable',
-    run: "check",
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
