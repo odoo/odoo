@@ -906,3 +906,423 @@ class TestEdiJson(TestEGEdiCommon):
 
         self.assertEqual(invoice._generate_l10n_eg_edi_json(is_demo=True)['documentType'], 'i')
         self.assertEqual(debit_note._generate_l10n_eg_edi_json(is_demo=True)['documentType'], 'd')
+
+    def test_13_negative_lines_as_discounts(self):
+        tax_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14')
+        tax_exempt = self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale')
+        # No ETA code: negative lines are not sent as invoice lines.
+        discount_product = self.env['product.product'].create({'name': 'Discount'})
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'quantity': 2.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': 200.0,
+                    'quantity': 1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_cm').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': -50.0,
+                    'quantity': 1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': discount_product.id,
+                    'price_unit': -100.0,
+                    'quantity': 1.0,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': discount_product.id,
+                    'price_unit': -30.0,
+                    'quantity': 1.0,
+                    'tax_ids': [Command.set(tax_exempt.ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+
+        self.assertNotIn('eg_eta_edi_lines_without_product', self.create_send_and_print(invoice, default=True).alerts)
+        eta_json = invoice._generate_l10n_eg_edi_json(is_demo=True)
+        # -50 goes on product_a, -100 is split over both 14% lines, and -30 exempt has no line with its taxes.
+        self.assertEqual(
+            [
+                (line['itemCode'], line['salesTotal'], line['discount'], line['netTotal'], line['total'])
+                for line in eta_json['invoiceLines']
+            ],
+            [
+                ('1KGS1TEST', 200.0, {'rate': 0.0, 'amount': 92.86}, 107.14, 122.14),
+                ('EG-EGS-TEST', 200.0, {'rate': 0.0, 'amount': 57.14}, 142.86, 162.86),
+            ],
+        )
+        self.assertEqual(
+            {
+                key: eta_json[key]
+                for key in (
+                    'totalSalesAmount',
+                    'totalDiscountAmount',
+                    'netAmount',
+                    'taxTotals',
+                    'extraDiscountAmount',
+                    'totalAmount',
+                )
+            },
+            {
+                'totalSalesAmount': 400.0,
+                'totalDiscountAmount': 150.0,
+                'netAmount': 250.0,
+                'taxTotals': [{'taxType': 'T1', 'amount': 35.0}],
+                'extraDiscountAmount': 30.0,
+                'totalAmount': 255.0,
+            },
+        )
+
+    def test_14_down_payment_deducted_before_taxes(self):
+        self.ensure_installed('sale')
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
+
+        sale_order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.0,
+                    'product_uom_qty': 1.0,
+                    'tax_ids': [Command.set(self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 114.0,
+        })._create_invoices(sale_order)
+        downpayment.invoice_date = '2022-03-15'
+        downpayment.action_post()
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})  # noqa: OLS03001
+        final = final_wizard._create_invoices(sale_order)
+        final.invoice_date = '2022-03-15'
+        final.action_post()
+
+        self.assertNotIn('eg_eta_edi_lines_without_product', self.create_send_and_print(final, default=True).alerts)
+        eta_json = final._generate_l10n_eg_edi_json(is_demo=True)
+        # The 100 down payment is deducted before taxes: the VAT is 14% of 900, not of 1000.
+        self.assertEqual(
+            [
+                (line['itemCode'], line['salesTotal'], line['discount'], line['netTotal'], line['total'])
+                for line in eta_json['invoiceLines']
+            ],
+            [('1KGS1TEST', 1000.0, {'rate': 0.0, 'amount': 100.0}, 900.0, 1026.0)],
+        )
+        self.assertEqual(
+            {key: eta_json[key] for key in ('netAmount', 'taxTotals', 'extraDiscountAmount', 'totalAmount')},
+            {
+                'netAmount': 900.0,
+                'taxTotals': [{'taxType': 'T1', 'amount': 126.0}],
+                'extraDiscountAmount': 0.0,
+                'totalAmount': 1026.0,
+            },
+        )
+
+    def test_15_negative_quantity_and_price_sent_positive(self):
+        tax_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14')
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': -100.0,
+                    'quantity': -1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': -50.0,
+                    'quantity': -1.0,
+                    'discount': 100.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_cm').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+
+        eta_json = invoice._generate_l10n_eg_edi_json(is_demo=True)
+        self.assertEqual(
+            [
+                (
+                    line['quantity'],
+                    line['unitValue']['amountEGP'],
+                    line['salesTotal'],
+                    line['discount'],
+                    line['netTotal'],
+                    line['total'],
+                )
+                for line in eta_json['invoiceLines']
+            ],
+            [
+                (1.0, 100.0, 100.0, {'rate': 0.0, 'amount': 0.0}, 100.0, 114.0),
+                (1.0, 50.0, 50.0, {'rate': 100.0, 'amount': 50.0}, 0.0, 0.0),
+            ],
+        )
+
+    def test_16_returned_quantity_reduces_or_removes_line(self):
+        tax_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14')
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'quantity': 3.0,
+                    'discount': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'quantity': -1.0,
+                    'discount': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': 200.0,
+                    'quantity': 1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_cm').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': 200.0,
+                    'quantity': -1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_cm').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+
+        eta_json = invoice._generate_l10n_eg_edi_json(is_demo=True)
+        self.assertEqual(
+            [
+                (
+                    line['itemCode'],
+                    line['quantity'],
+                    line['unitValue']['amountEGP'],
+                    line['salesTotal'],
+                    line['discount'],
+                    line['netTotal'],
+                    line['total'],
+                )
+                for line in eta_json['invoiceLines']
+            ],
+            [('1KGS1TEST', 2.0, 100.0, 200.0, {'rate': 10.0, 'amount': 20.0}, 180.0, 205.2)],
+        )
+        self.assertEqual(
+            {
+                key: eta_json[key]
+                for key in (
+                    'totalSalesAmount',
+                    'totalDiscountAmount',
+                    'netAmount',
+                    'taxTotals',
+                    'extraDiscountAmount',
+                    'totalAmount',
+                )
+            },
+            {
+                'totalSalesAmount': 200.0,
+                'totalDiscountAmount': 20.0,
+                'netAmount': 180.0,
+                'taxTotals': [{'taxType': 'T1', 'amount': 25.2}],
+                'extraDiscountAmount': 0.0,
+                'totalAmount': 205.2,
+            },
+        )
+
+    def test_17_final_invoice_switched_to_credit_note(self):
+        self.ensure_installed('sale')
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
+
+        sale_order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.0,
+                    'product_uom_qty': 10.0,
+                    'tax_ids': [Command.set(self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                }),
+            ],
+        })
+        self.env['sale.order.discount'].create({  # noqa: OLS03001
+            'sale_order_id': sale_order.id,
+            'discount_type': 'so_discount',
+            'discount_percentage': 0.5,
+        }).action_apply_discount()
+        sale_order.action_confirm()
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
+            'advance_payment_method': 'percentage',
+            'amount': 50.0,
+        })._create_invoices(sale_order)
+        downpayment.invoice_date = '2022-03-15'
+        downpayment.action_post()
+        # Invoice 3 of the 10 units: the down payment is then larger, so the final invoice becomes a credit note.
+        sale_order.order_line.filtered(lambda line: line.product_id == self.product_a).product_uom_qty = 3.0
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})  # noqa: OLS03001
+        credit_note = final_wizard._create_invoices(sale_order)
+        credit_note.invoice_date = '2022-03-15'
+        credit_note.action_post()
+        self.assertEqual(credit_note.move_type, 'out_refund')
+
+        # The sale discount line is positive on a credit note: it stays a line instead of being split as a discount.
+        eta_json = credit_note._generate_l10n_eg_edi_json(is_demo=True)
+        self.assertEqual(
+            [
+                (line['salesTotal'], line['discount'], line['netTotal'], line['total'])
+                for line in eta_json['invoiceLines']
+            ],
+            [
+                (5000.0, {'rate': 0.0, 'amount': 2000.0}, 3000.0, 3420.0),
+                (2500.0, {'rate': 0.0, 'amount': 1000.0}, 1500.0, 1710.0),
+            ],
+        )
+        self.assertEqual(
+            {key: eta_json[key] for key in ('netAmount', 'taxTotals', 'extraDiscountAmount', 'totalAmount')},
+            {
+                'netAmount': 4500.0,
+                'taxTotals': [{'taxType': 'T1', 'amount': 630.0}],
+                'extraDiscountAmount': 0.0,
+                'totalAmount': 5130.0,
+            },
+        )
+        # The down payment line has no product, so Odoo blocks the sending instead of ETA rejecting it.
+        self.assertIn('eg_eta_edi_lines_without_product', self.create_send_and_print(credit_note, default=True).alerts)
+
+    def test_18_negative_line_exceeding_its_product(self):
+        tax_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14')
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'quantity': 1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': -150.0,
+                    'quantity': 1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': 200.0,
+                    'quantity': 1.0,
+                    'discount': 50.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_cm').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+
+        # The -150 is more than its product_a line: it is split over every 14% line, rate 0 despite the 50% discount.
+        eta_json = invoice._generate_l10n_eg_edi_json(is_demo=True)
+        self.assertEqual(
+            [
+                (line['itemCode'], line['salesTotal'], line['discount'], line['netTotal'], line['total'])
+                for line in eta_json['invoiceLines']
+            ],
+            [
+                ('1KGS1TEST', 100.0, {'rate': 0.0, 'amount': 75.0}, 25.0, 28.5),
+                ('EG-EGS-TEST', 200.0, {'rate': 0.0, 'amount': 175.0}, 25.0, 28.5),
+            ],
+        )
+        self.assertEqual(
+            {key: eta_json[key] for key in ('netAmount', 'taxTotals', 'extraDiscountAmount', 'totalAmount')},
+            {
+                'netAmount': 50.0,
+                'taxTotals': [{'taxType': 'T1', 'amount': 7.0}],
+                'extraDiscountAmount': 0.0,
+                'totalAmount': 57.0,
+            },
+        )
+
+    def test_19_return_larger_than_its_line(self):
+        tax_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14')
+        invoice = self._create_invoice_eg(
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'quantity': 3.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'quantity': -5.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': 1000.0,
+                    'quantity': 1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_cm').id,
+                    'tax_ids': [Command.set(tax_14.ids)],
+                },
+            ],
+        )
+        invoice.action_post()
+
+        # The 2 units returned beyond the 3 sold are split as a discount on product_b.
+        eta_json = invoice._generate_l10n_eg_edi_json(is_demo=True)
+        self.assertEqual(
+            [
+                (line['itemCode'], line['salesTotal'], line['discount'], line['netTotal'], line['total'])
+                for line in eta_json['invoiceLines']
+            ],
+            [('EG-EGS-TEST', 1000.0, {'rate': 0.0, 'amount': 200.0}, 800.0, 912.0)],
+        )
+        self.assertEqual(
+            {key: eta_json[key] for key in ('netAmount', 'taxTotals', 'extraDiscountAmount', 'totalAmount')},
+            {
+                'netAmount': 800.0,
+                'taxTotals': [{'taxType': 'T1', 'amount': 112.0}],
+                'extraDiscountAmount': 0.0,
+                'totalAmount': 912.0,
+            },
+        )
