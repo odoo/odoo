@@ -4,7 +4,8 @@ import { useService } from "@web/core/utils/hooks";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { uuidv4 } from "@point_of_sale/utils";
-import { getPaymentMismatchErrorMessage } from "../utils/error_messages";
+import { getPaymentMismatchErrorMessage } from "@pos_viva_com/app/utils/error_messages";
+import { isAndroidDevice, isVivaAppEnabled } from "@pos_viva_com/app/utils/viva_app";
 
 /**
  * This hook is used to handle the Viva Wallet app integration in the POS.
@@ -21,10 +22,8 @@ export const useVivaApp = (validateCallback) => {
      *
      * @param {Object} pm - The payment method object.
      */
-    const use = (pm) => {
-        const isAndroid = navigator.userAgent.toLowerCase().includes("android");
-        return isAndroid && pm.payment_provider === "viva_com";
-    };
+    const use = (pm) =>
+        pm.payment_provider === "viva_com" && isAndroidDevice() && isVivaAppEnabled();
 
     /**
      * Since we have a new router, the vivawallet callback URL will directly
@@ -82,24 +81,6 @@ export const useVivaApp = (validateCallback) => {
         // Remove the URL parameters to avoid processing them again
         const newUrl = window.location.href.split("?")[0];
         window.history.replaceState({}, document.title, newUrl);
-    };
-
-    /**
-     * This function is used to abort a payment already sent to the
-     * Viva Wallet app through the android intention system
-     *
-     * @param {Object} line
-     */
-    const abort = async (line) => {
-        const baseUrl = window.location.origin;
-        const callbackPath = `/pos_viva_com/${pos.config.id}/abort/${line.pos_order_id.uuid}`;
-        const callbackLink = `${baseUrl}${callbackPath}`;
-        const url =
-            "vivapayclient://pay/v1" +
-            "?appId=com.odoo.mobile" +
-            "&action=abort" +
-            `&callback=${callbackLink}`;
-        window.open(url, "_self");
     };
 
     /**
@@ -163,36 +144,9 @@ export const useVivaApp = (validateCallback) => {
         }
     };
 
-    const isIntegrated = (line) => {
-        if (!line) {
-            return false;
-        }
-        const isAndroid = navigator.userAgent.toLowerCase().includes("android");
-        const usingApp = window.localStorage.getItem("vivawallet_app_answer") === "true";
-        const isVivaMethod = line.payment_method_id.payment_provider === "viva_com";
-
-        return isAndroid && usingApp && isVivaMethod;
-    };
-
-    const resetIntegration = (line) => {
-        window.localStorage.removeItem("vivawallet_app_answer");
-        abort(line);
-    };
-
-    const hasRefused = () => window.localStorage.getItem("vivawallet_app_answer") === "false";
-
-    const forgetIntegration = () => {
-        window.localStorage.removeItem("vivawallet_app_answer");
-    };
-
     return {
         use,
         process,
         start,
-        abort,
-        isIntegrated,
-        resetIntegration,
-        hasRefused,
-        forgetIntegration,
     };
 };
