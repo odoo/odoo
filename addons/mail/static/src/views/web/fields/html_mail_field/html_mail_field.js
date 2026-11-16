@@ -17,6 +17,16 @@ export class HtmlMailField extends HtmlField {
         }
         const cssRules = cssRulesByElement.get(editor.editable);
         // Insert the cloned element inside an DOM so we can get its computed style.
+        // Keep the clone invisible and out of the flow, so it does not resize its container
+        // while images load. Only its content is used, so these styles do not reach the email.
+        Object.assign(el.style, {
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: `${editor.editable.getBoundingClientRect().width}px`,
+            visibility: "hidden",
+            pointerEvents: "none",
+        });
         editor.editable.after(el);
         el.classList.remove("odoo-editor-editable");
         await toInline(el, cssRules);
