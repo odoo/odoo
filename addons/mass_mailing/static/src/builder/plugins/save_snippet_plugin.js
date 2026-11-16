@@ -1,3 +1,4 @@
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -16,6 +17,7 @@ export class SaveSnippetPlugin extends Plugin {
                     placeholderEl.before(placeholderString);
                     placeholderEl.remove();
                 });
+                escapeTextNodes(rootEl);
             }
             return rootEl;
         },
