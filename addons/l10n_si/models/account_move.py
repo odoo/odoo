@@ -2,11 +2,51 @@
 
 import re
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    l10n_si_upn_qr_purpose_code = fields.Selection(
+        selection=[
+            ('GDSV', "GDSV - Goods and services"),
+            ('GDDS', "GDDS - Goods"),
+            ('SCVE', "SCVE - Services"),
+            ('ADVA', "ADVA - Advance payment"),
+            ('RENT', "RENT - Rent"),
+            ('SUBS', "SUBS - Subscription"),
+            ('CHAR', "CHAR - Charity payment"),
+            ('OTHR', "OTHR - Other"),
+        ],
+        string="Purpose Code",
+        default='GDSV',
+        help="Purpose of the payment, written in the UPN QR code of the invoice.",
+    )
+    l10n_si_show_upn_qr_purpose_code = fields.Boolean(compute='_compute_l10n_si_show_upn_qr_purpose_code')
+
+    @api.depends('display_qr_code', 'country_code', 'partner_bank_id', 'partner_id.country_id', 'currency_id')
+    def _compute_l10n_si_show_upn_qr_purpose_code(self):
+        for move in self:
+            # Not _get_qr_code_method() as it gives nothing while there is nothing to pay,
+            # which would hide the field on a new invoice and we don't want that.
+            move.l10n_si_show_upn_qr_purpose_code = (
+                move.display_qr_code
+                and move.country_code == 'SI'
+                and not move.partner_bank_id._get_error_messages_for_qr('si_upn_qr', move.partner_id, move.currency_id)
+            )
+
+    def _generate_qr_code(self, silent_errors=False):
+        """ Pass along the data a UPN QR code holds but the generic QR-code
+        generation signature does not provide.
+        """
+        # EXTENDS account
+        self.ensure_one()
+        return super(AccountMove, self.with_context(
+            l10n_si_upn_qr_payment_deadline=self.invoice_date_due,
+            l10n_si_upn_qr_payment_purpose=self.name,
+            l10n_si_upn_qr_purpose_code=self.l10n_si_upn_qr_purpose_code,
+        ))._generate_qr_code(silent_errors)
 
     @api.depends('country_code')
     def _compute_show_taxable_supply_date(self):
