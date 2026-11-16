@@ -374,24 +374,20 @@ function parseSmartDateInput(value) {
             throw new ConversionError(_t("'%s' is not a correct date or datetime", value));
         }
 
-        try {
-            const number = parseInt(numberString, 10);
-            if (operator == "+") {
-                now = now.plus({ [field_name]: number });
-            } else if (operator == "-") {
-                now = now.minus({ [field_name]: number });
-            } else if (operator == "=") {
-                if (field_name == "seconds" || field_name == "minutes" || field_name == "hours") {
-                    now = now.startOf(field_name);
-                } else if (field_name == "weeks") {
-                    return false; // unsupported
-                } else {
-                    now = now.startOf("day");
-                }
-                now = now.set({ [field_name]: number });
+        const number = parseInt(numberString, 10);
+        if (operator == "+") {
+            now = now.plus({ [field_name]: number });
+        } else if (operator == "-") {
+            now = now.minus({ [field_name]: number });
+        } else if (operator == "=") {
+            if (field_name == "seconds" || field_name == "minutes" || field_name == "hours") {
+                now = now.startOf(field_name);
+            } else if (field_name == "weeks") {
+                return false; // unsupported
+            } else {
+                now = now.startOf("day");
             }
-        } catch {
-            return false;
+            now = now.set({ [field_name]: number });
         }
     }
 
