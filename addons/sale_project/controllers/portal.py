@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _
+from odoo.fields import Domain
 from operator import itemgetter
 
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
@@ -59,3 +60,11 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             return grouped_tasks
 
         return super()._concat_tasks(task_sudo, groupby, tasks)
+
+    def _task_get_group_domain(self, groupby, task):
+        if groupby == 'sale_line_id':
+            billed = Domain('sale_line_id', '!=', False) & Domain('sale_order_state', '=', 'sale')
+            if task.sale_line_id and task.sale_order_state == 'sale':
+                return billed & Domain('sale_line_id', '=', task.sale_line_id.id)
+            return ~billed
+        return super()._task_get_group_domain(groupby, task)

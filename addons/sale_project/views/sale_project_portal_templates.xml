@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list">
-        <xpath expr="//th[@name='groupby_name_col']" position="inside">
+        <xpath expr="//span[@name='grouped_tasks_count']" position="before">
             <t t-if="groupby == 'sale_line_id'">
                 <span t-if="tasks[0].sudo().sale_line_id and tasks[0].sudo().sale_order_state == 'sale'" class="text-truncate" t-field="tasks[0].sudo().sale_line_id"/>
                 <span t-else="">Not Billed</span>

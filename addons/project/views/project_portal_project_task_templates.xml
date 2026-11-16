@@ -24,9 +24,7 @@
         />
     </template>
     <template id="portal_my_tasks_badge_widget_template" name="badge Widget Template">
-        <span t-attf-class="badge rounded-pill o_tag o_badge_color_#{task.color}"
-            t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"
-        />
+        <span class="badge rounded-pill bg-200 text-body" t-att-title="task.stage_id.name" t-out="task.stage_id.name"/>
     </template>
 
     <template id="portal_tasks_list" name="Tasks List">
@@ -34,54 +32,56 @@
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
-                        <t t-set="grouped_tasks_colspan" t-value="3 if multiple_projects and groupby != 'project_id' else 2"/>
+                        <t t-set="grouped_tasks_colspan" t-value="4 if multiple_projects and groupby != 'project_id' else 3"/>
                         <th>Name</th>
-                        <th class="ps-5">Assignees</th>
+                        <th>Assignees</th>
+                        <th name="deadline_col">Deadline</th>
                         <th t-if="groupby != 'project_id' and multiple_projects">Project</th>
                         <th t-if="groupby != 'stage_id'" class="text-end" name="stage_id_col">Stage</th>
                     </tr>
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
-                    <tbody t-if="tasks">
-                        <tr name="grouped_tasks_groupby_columns" t-if="groupby != 'none'" class="table-light">
+                    <tbody t-if="tasks and groupby != 'none'">
+                        <tr name="grouped_tasks_groupby_columns" class="table-light">
                             <th name="groupby_name_col" t-att-colspan="grouped_tasks_colspan">
-                                <t t-if="groupby == 'project_id' and multiple_projects">
-                                    <!-- This div is necessary for documents_project_sale -->
-                                    <div name="project_name" class="d-flex w-100 align-items-center">
-                                        <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
-                                        <span t-else="">No Project</span>
-                                    </div>
-                                </t>
-                                <t t-elif="groupby == 'milestone_id'">
-                                    <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
-                                        class="text-truncate"
-                                        t-field="tasks[0].sudo().milestone_id.name"/>
-                                    <span t-else="">No Milestone</span>
-                                </t>
-                                <t t-if="groupby == 'stage_id'">
-                                    <!-- This div is necessary for documents_project_sale -->
-                                    <div name="stage_name" class="d-flex w-100 align-items-center">
-                                        <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/>
-                                    </div>
-                                </t>
-                                <t t-if="groupby == 'priority'">
-                                    <span class="text-truncate" t-field="tasks[0].sudo().priority"/>
-                                </t>
-                                <t t-if="groupby == 'state'">
-                                    <span class="text-truncate" t-field="tasks[0].sudo().state"/>
-                                </t>
-                                <t t-if="groupby == 'partner_id'">
-                                    <span t-if="tasks[0].sudo().partner_id"
-                                        class="text-truncate"
-                                        t-field="tasks[0].sudo().partner_id.name"/>
-                                    <span t-else="">No Customer</span>
-                                </t>
-                                <t t-if="groupby == 'parent_id'">
-                                    <span t-if="tasks[0].sudo().parent_id"
-                                        class="text-truncate"
-                                        t-field="tasks[0].sudo().parent_id.name"/>
-                                    <span t-else="">No Parent Task</span>
-                                </t>
+                                <div class="d-flex align-items-center gap-2 min-w-0">
+                                    <t t-if="groupby == 'project_id' and multiple_projects">
+                                        <div name="project_name" class="text-truncate">
+                                            <span t-if="tasks[0].sudo().project_id" t-field="tasks[0].sudo().project_id.name"/>
+                                            <span t-else="">No Project</span>
+                                        </div>
+                                    </t>
+                                    <t t-elif="groupby == 'milestone_id'">
+                                        <span t-if="tasks[0].sudo().milestone_id and tasks[0].sudo().allow_milestones"
+                                            class="text-truncate"
+                                            t-field="tasks[0].sudo().milestone_id.name"/>
+                                        <span t-else="">No Milestone</span>
+                                    </t>
+                                    <t t-if="groupby == 'stage_id'">
+                                        <div name="stage_name" class="text-truncate">
+                                            <span t-field="tasks[0].sudo().stage_id.name"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="groupby == 'priority'">
+                                        <span class="text-truncate" t-field="tasks[0].sudo().priority"/>
+                                    </t>
+                                    <t t-if="groupby == 'state'">
+                                        <span class="text-truncate" t-field="tasks[0].sudo().state"/>
+                                    </t>
+                                    <t t-if="groupby == 'partner_id'">
+                                        <span t-if="tasks[0].sudo().partner_id"
+                                            class="text-truncate"
+                                            t-field="tasks[0].sudo().partner_id.name"/>
+                                        <span t-else="">No Customer</span>
+                                    </t>
+                                    <t t-if="groupby == 'parent_id'">
+                                        <span t-if="tasks[0].sudo().parent_id"
+                                            class="text-truncate"
+                                            t-field="tasks[0].sudo().parent_id.name"/>
+                                        <span t-else="">No Parent Task</span>
+                                    </t>
+                                    <span name="grouped_tasks_count" class="badge rounded-pill bg-200 text-body fw-medium" t-out="grouped_tasks_count(tasks)"/>
+                                </div>
                             </th>
                             <th name="stage_id_col" t-if="groupby != 'stage_id'"/>
                         </tr>
@@ -91,17 +91,23 @@
                             <tr>
                                 <td class="text-wrap">
                                     <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-att-title="task.name" t-field="task.name"/></a>
+                                    <i t-if="task.priority != '0'" class="oi oi-filled text-warning ms-1" data-icon="star" role="img"
+                                        t-att-title="priority_labels.get(task.priority)" t-att-aria-label="priority_labels.get(task.priority)"/>
                                 </td>
-                                <td class="ps-5">
-                                    <t t-set="assignees" t-value="task.sudo().user_ids"/>
-                                    <div t-if="assignees" class="flex-nowrap">
+                                <t t-set="assignees" t-value="task.sudo().user_ids"/>
+                                <td>
+                                    <div t-if="assignees" class="d-flex align-items-center gap-2">
                                         <t t-set="assignee" t-value="assignees[:1].partner_id"/>
                                         <t t-set="avatar_128_access_token" t-value="assignee._get_avatar_128_access_token()"/>
                                         <img class="o_avatar rounded" t-attf-src="/web/image/#{assignee._name}/#{assignee.id}/avatar_128?access_token=#{avatar_128_access_token}&amp;unique=#{assignee.avatar_128.checksum}" alt="User"/>
-                                        <span class="align-middle" t-att-title="'\n'.join(assignees.mapped('name'))">
-                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
+                                        <span t-att-title="'\n'.join(assignees.mapped('name'))">
+                                            <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-200 text-body"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
                                     </div>
+                                </td>
+                                <td name="task_deadline" t-attf-class="text-nowrap #{'text-danger' if task.date_deadline and task.date_deadline &lt; datetime.datetime.now() and task.state not in ('1_done', '1_canceled') else ''}">
+                                    <span t-if="task.date_deadline and task.date_deadline &lt; datetime.datetime.now() and task.state not in ('1_done', '1_canceled')" class="visually-hidden">Overdue</span>
+                                    <t t-if="task.date_deadline" t-call="project.portal_format_date" date_record="task.date_deadline"/>
                                 </td>
                                 <td t-if="groupby != 'project_id' and multiple_projects" name="project_portal_project">
                                     <span title="Current project of the task" t-out="task.project_id.name" />

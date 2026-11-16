@@ -425,6 +425,15 @@ class ProjectCustomerPortal(CustomerPortal):
 
         return [task_sudo.concat(g) for k, g in groupbyelem(tasks, itemgetter(groupby))]
 
+    def _task_get_group_domain(self, groupby, task):
+        """Domain of the tasks that _concat_tasks lists in the group of ``task``."""
+        if groupby == 'milestone_id':
+            if task.allow_milestones and task.milestone_id:
+                return Domain('allow_milestones', '=', True) & Domain('milestone_id', '=', task.milestone_id.id)
+            return Domain('allow_milestones', '=', False) | Domain('milestone_id', '=', False)
+        value = task[groupby]
+        return Domain(groupby, '=', value.id if task._fields[groupby].type == 'many2one' else value)
+
     def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
         values = self._prepare_portal_layout_values()
 
@@ -488,6 +497,10 @@ class ProjectCustomerPortal(CustomerPortal):
                     grouped_tasks.sort(key=lambda tasks: task_states.get(tasks[0].state))
             return grouped_tasks
 
+        def get_grouped_tasks_count(tasks):
+            # The whole group, which can go on over other pages
+            return Task_sudo.search_count(domain & self._task_get_group_domain(groupby, tasks[0]))
+
         portal_page_limit = int(request.env['ir.config_parameter'].sudo().get_int(
             'project.portal_task_page_limit', default=100,
         ))
@@ -507,6 +520,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': date_begin,
             'date_end': date_end,
             'grouped_tasks': get_grouped_tasks,
+            'grouped_tasks_count': get_grouped_tasks_count,
             'allow_milestone': milestones_allowed,
             'multiple_projects': True,
             'priority_labels': dict(Task_sudo._fields['priority']._description_selection(request.env)),

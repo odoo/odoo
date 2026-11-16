@@ -32,8 +32,8 @@
                     <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
                         <t t-set="timesheets" t-value="timesheets_with_hours[0]"/>
                         <t t-set="hours_spent" t-value="timesheets_with_hours[1]"/>
-                        <tbody style="font-size: 0.8rem">
-                            <tr t-if="not groupby =='none'" class="table-light">
+                        <tbody t-if="groupby != 'none'" style="font-size: 0.8rem">
+                            <tr class="table-light">
                                 <t t-if="groupby == 'project_id'">
                                     <th colspan="5">
                                         <span t-field="timesheets[0].project_id.name"/>
@@ -95,29 +95,31 @@
     </template>
 
     <template id="portal_timesheet_table" name="Portal Timesheet Table">
-        <table class="o_portal_my_doc_table table table-sm table-striped">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Employee</th>
-                <th>Description</th>
-                <th class="text-end" name="t_label">Time Spent</th>
-              </tr>
-            </thead>
-            <tr t-foreach="timesheets" t-as="timesheet" valign="middle">
-                <t id="timesheet_line">
-                    <td>
-                        <t t-call="project.portal_format_date" date_record="timesheet.date"/>
-                    </td>
-                    <td t-attf-title="#{timesheet.employee_id.name}"><t t-out="timesheet.employee_id.name"/></td>
-                    <td class="text-wrap"><t t-out="timesheet.name"/></td>
-                    <td class="text-end">
-                        <span t-if="is_uom_day" t-out="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
-                        <span t-else="" t-out="timesheets._format_portal_hours(timesheet.unit_amount)"/>
-                    </td>
-                </t>
-            </tr>
-        </table>
+        <div class="table-responsive">
+            <table class="o_portal_my_doc_table table align-middle">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Description</th>
+                    <th class="text-end" name="t_label">Time Spent</th>
+                  </tr>
+                </thead>
+                <tr t-foreach="timesheets" t-as="timesheet" valign="middle">
+                    <t id="timesheet_line">
+                        <td>
+                            <t t-call="project.portal_format_date" date_record="timesheet.date"/>
+                        </td>
+                        <td t-attf-title="#{timesheet.employee_id.name}"><t t-out="timesheet.employee_id.name"/></td>
+                        <td class="text-wrap"><t t-out="timesheet.name"/></td>
+                        <td class="text-end">
+                            <span t-if="is_uom_day" t-out="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                            <span t-else="" t-out="timesheets._format_portal_hours(timesheet.unit_amount)"/>
+                        </td>
+                    </t>
+                </tr>
+            </table>
+        </div>
     </template>
 
     <template id="portal_timesheet_table_with_total" name="Portal Timesheet Table">
