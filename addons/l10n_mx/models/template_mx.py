@@ -51,6 +51,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_mx_income_return_discount_account_id': 'cuenta402_01',
                 'l10n_mx_income_re_invoicing_account_id': 'cuenta402_04',
                 'account_stock_valuation_id': 'cuenta115_01',
+                'account_bills_to_receive_id': 'cuenta205_06_01',
+                'account_billed_not_received_id': 'cuenta115_05',
+                'account_invoices_to_issue_id': 'cuenta107_05_01',
+                'account_invoiced_not_delivered_id': 'cuenta115_05_02',
             },
         }
 

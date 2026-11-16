@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/mexico.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['mx'],
-    'version': '2.4',
+    'version': '2.5',
     'author': 'Vauxoo',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
