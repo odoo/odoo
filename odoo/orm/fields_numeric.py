@@ -20,9 +20,14 @@ def _convert_to_decimal(value) -> Decimal:
         return value
 
     if isinstance(value, float):
-        return Decimal(str(value))
+        return round(Decimal(value), 15)
 
-    return Decimal(value)
+        # if round_after:
+        #     # format() applies an epsilon correction on floats before they get rounded.
+        #     return Decimal(format(value, '.15g'))  # float carries only about 15 significant digits.
+        # return Decimal(repr(value))
+
+    return Decimal(value or 0)
 
 
 class Integer(Field[int, int]):
@@ -169,16 +174,15 @@ class Float(Field[float, float | Decimal]):
 
         # Decimal
         if self.is_decimal and not self.company_dependent:
-            if digits and isinstance(value, float):
+            if not digits:
+                return _convert_to_decimal(value)
+
+            if isinstance(value, float):
+                # This is needed when floats have 16 or more significant digits.
                 value = float_round(value, precision_digits=digits[1])
 
-            value = _convert_to_decimal(value)
-
-            if digits:
-                exp = Decimal('1').scaleb(-digits[1])
-                return value.quantize(exp, rounding=ROUND_HALF_UP)
-
-            return value
+            exp = Decimal(1).scaleb(-digits[1])
+            return _convert_to_decimal(value).quantize(exp, rounding=ROUND_HALF_UP)
 
         # Float
         value = float(value)
@@ -214,12 +218,10 @@ class Float(Field[float, float | Decimal]):
         return value
 
     def convert_to_record(self, value, record):
-        return float(value or 0.0)
+        return value
 
     def convert_to_export(self, value, record):
-        if value or value == 0.0:
-            return float(value)
-        return ''
+        return value
 
     def convert_to_write(self, value, record):
         return self.convert_to_cache(value, record, validate=False)
@@ -229,7 +231,7 @@ class Float(Field[float, float | Decimal]):
     compare = staticmethod(float_compare)
 
 
-class Monetary(Field[float, float]):
+class Monetary(Field[float, Decimal]):
     """ Encapsulates a :class:`float` expressed in a given
     :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
 
@@ -307,18 +309,14 @@ class Monetary(Field[float, float]):
             currency = record[:1].sudo().with_context(prefetch_fields=False)[currency_field_name]
             currency = currency.with_env(record.env)
 
-        value = _convert_to_decimal(value or 0)
-
         if currency:
-            return currency.round(value)
-        return value
+            return currency.round(_convert_to_decimal(value or 0))
+        return _convert_to_decimal(value or 0)
 
     def convert_to_cache(self, value, records, validate=True):
         # cache format: Decimal | None
         if value is False or value is None:
             return None
-
-        value = _convert_to_decimal(value)
 
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
@@ -333,19 +331,17 @@ class Monetary(Field[float, float]):
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
 
             if currency:
-                return currency.round(value)
-        return value
+                return currency.round(_convert_to_decimal(value))
+        return _convert_to_decimal(value)
 
     def convert_to_record(self, value, record):
         return float(value or 0.0)
 
     def convert_to_read(self, value, record, use_display_name=True):
-        return float(value or 0.0)
+        return value
 
     def convert_to_write(self, value, record):
         return value
 
     def convert_to_export(self, value, record):
-        if value or value == 0.0:
-            return float(value)
-        return ''
+        return value

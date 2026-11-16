@@ -109,7 +109,7 @@ class TestSaleReportCurrencyRate(SaleCommon):
 
         # Needed to get conversion rates between companies.
         currency_rates = {
-            k: v[0]
+            k: float(v[0])
             for k, v in companies.mapped("currency_id")._get_rates(current_company, today).items()
         }
 

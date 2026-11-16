@@ -328,7 +328,7 @@ MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 # valid SQL aggregation functions
 READ_GROUP_AGGREGATE = {
     'sum': lambda table, expr: SQL('SUM(%s)', expr),
-    'avg': lambda table, expr: SQL('AVG(%s)', expr),
+    'avg': lambda table, expr: SQL('AVG(%s)::float', expr),
     'max': lambda table, expr: SQL('MAX(%s)', expr),
     'min': lambda table, expr: SQL('MIN(%s)', expr),
     'bool_and': lambda table, expr: SQL('BOOL_AND(%s)', expr),

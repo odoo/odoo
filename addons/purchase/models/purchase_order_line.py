@@ -448,7 +448,7 @@ class PurchaseOrderLine(models.Model):
                     render_values['product_qty'] = float_round(float(values['product_qty']), precision_digits=precision)
                 if (
                     'price_unit' in values
-                    and float_compare(line.price_unit, values['price_unit'], precision_digits=precision) != 0
+                    and float_compare(line.price_unit, float(values['price_unit']), precision_digits=precision) != 0
                 ):
                     render_values['price_unit'] = values['price_unit']
                 if render_values:

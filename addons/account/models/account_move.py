@@ -2381,12 +2381,12 @@ class AccountMove(models.Model):
                   WINDOW invoice AS (PARTITION BY this.id ORDER BY other.invoice_date DESC)
             ), stats AS (
                   SELECT id,
-                         MAX(invoice_date)          OVER invoice AS last_invoice_date,
-                         AVG(date_diff)             OVER invoice AS date_diff_mean,
-                         STDDEV_SAMP(date_diff)     OVER invoice AS date_diff_deviation,
-                         AVG(amount_total)::float   OVER invoice AS amount_mean,
-                         STDDEV_SAMP(amount_total)::float OVER invoice AS amount_deviation,
-                         ROW_NUMBER()               OVER invoice AS row_number
+                         MAX(invoice_date)                OVER invoice AS last_invoice_date,
+                         AVG(date_diff)                   OVER invoice AS date_diff_mean,
+                         STDDEV_SAMP(date_diff)           OVER invoice AS date_diff_deviation,
+                         AVG(amount_total::float)         OVER invoice AS amount_mean,
+                         STDDEV_SAMP(amount_total::float) OVER invoice AS amount_deviation,
+                         ROW_NUMBER()                     OVER invoice AS row_number
                     FROM previous_invoices
                   WINDOW invoice AS (PARTITION BY id ORDER BY invoice_date DESC)
             )
