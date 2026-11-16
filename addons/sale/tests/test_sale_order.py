@@ -1146,6 +1146,49 @@ class TestSalesTeam(SaleCommon):
             "The analytic distribution should be set to Super Account, even for confirmed orders",
         )
 
+    def test_sale_order_analytic_distribution_computed_once_per_criteria(self):
+        """Lines sharing the same criteria should look up the analytic distribution models only once."""
+        self.env.user.group_ids += self.env.ref("analytic.group_analytic_accounting")
+
+        analytic_plan = self.env["account.analytic.plan"].create({"name": "Plan Test"})
+        analytic_account_super, analytic_account_great = self.env["account.analytic.account"].create([
+            {"name": "Super Account", "plan_id": analytic_plan.id},
+            {"name": "Great Account", "plan_id": analytic_plan.id},
+        ])
+        super_product, great_product = self.env["product.product"].create([
+            {"name": "Super Product"},
+            {"name": "Great Product"},
+        ])
+        self.env["account.analytic.distribution.model"].create([
+            {"analytic_distribution": {analytic_account_super.id: 100}, "product_id": super_product.id},
+            {"analytic_distribution": {analytic_account_great.id: 100}, "product_id": great_product.id},
+        ])
+
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({"product_id": super_product.id}),
+                Command.create({"product_id": super_product.id}),
+                Command.create({"product_id": super_product.id}),
+                Command.create({"product_id": great_product.id}),
+            ],
+        })
+
+        other_partner = self.env["res.partner"].create({"name": "Other Partner"})
+
+        DistributionModel = self.registry["account.analytic.distribution.model"]
+        with patch.object(DistributionModel, "_get_distribution", autospec=True, side_effect=DistributionModel._get_distribution) as get_distribution:
+            sale_order.partner_id = other_partner
+            sale_order.flush_recordset()
+
+        self.assertEqual(get_distribution.call_count, 2, "The distribution should be looked up once per distinct criteria")
+        self.assertEqual(sale_order.order_line.mapped("analytic_distribution"), [
+            {str(analytic_account_super.id): 100},
+            {str(analytic_account_super.id): 100},
+            {str(analytic_account_super.id): 100},
+            {str(analytic_account_great.id): 100},
+        ])
+
     def test_cannot_assign_tax_of_mismatch_company(self):
         """Test that sol cannot have assigned tax belonging to a different company."""
         company_a = self.env["res.company"].sudo().create({"name": "A"})
