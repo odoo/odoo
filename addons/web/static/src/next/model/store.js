@@ -17,6 +17,7 @@ import {
     VALUES,
     composeClasses,
     getDeclaredFields,
+    getDeclaredIndexes,
 } from "./model";
 
 /**
@@ -664,7 +665,7 @@ export class Store {
     }
 
     /**
-     * Lookup through a unique index declared with `static _indexes`.
+     * Lookup through a unique index, declared with the `indexes` of a model.
      *
      * @template {typeof Model} C
      * @overload
@@ -1067,9 +1068,6 @@ export class Store {
             normalizeField(fieldName, def, index)
         );
 
-        if (!["field", "model"].includes(ModelClass._reactivity)) {
-            throw new Error(`Invalid _reactivity "${ModelClass._reactivity}" on model "${name}"`);
-        }
         // per-store subclass: holds the field getters, so that stores don't share state
         const RecordClass = class extends ModelClass {};
         /** @type {ModelMeta} */
@@ -1100,7 +1098,7 @@ export class Store {
                 },
             });
         }
-        for (const fieldName of ModelClass._indexes) {
+        for (const fieldName of getDeclaredIndexes(ModelClass)) {
             const field = model.fieldsByName[fieldName];
             if (!field || isRelational(field)) {
                 throw new Error(`Cannot index field "${name}.${fieldName}"`);

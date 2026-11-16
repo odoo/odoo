@@ -7,6 +7,35 @@ import { FIELD } from "./fields";
  */
 
 /**
+ * What `extend` takes: the description of a model, or of what an extension
+ * adds to one.
+ *
+ * - `name`: name of the model, to declare one. An extension has no name.
+ * - `fields`: field declarations, see `fields.js`.
+ * - `editable`: records are edited locally and saved back. A local write is
+ *   then kept as a change, apart from the last server value: that is what
+ *   `isDirty`, `discard`, `ack` and `toCommands` work on. When false, the
+ *   default, a write replaces the value: for data the client only mirrors.
+ * - `reactivity`: how reads subscribe. `"field"`, the default, to each field
+ *   of each record. `"model"` to the whole model: one subscription for all its
+ *   records, for large read-mostly data.
+ * - `indexes`: names of non-relational fields with a unique index, see
+ *   `store.getBy`.
+ *
+ * An extension can give `editable` and `reactivity` too, and the last one
+ * wins. Its `indexes` are added to the ones of the model.
+ *
+ * @template F
+ * @typedef {{
+ *  name?: string;
+ *  fields?: F;
+ *  editable?: boolean;
+ *  reactivity?: "field" | "model";
+ *  indexes?: string[];
+ * }} ModelParams
+ */
+
+/**
  * A record class whose records are of type `I`: what `extend` returns. It is
  * spelled out, rather than derived from `typeof Model`, so that two models
  * that reference each other are not circular for TypeScript.
@@ -23,7 +52,7 @@ import { FIELD } from "./fields";
  *  _indexes: string[];
  *  extend<C extends ModelClass<any>, F extends Record<string, any> = {}>(
  *      this: C,
- *      params?: { name?: string; fields?: F }
+ *      params?: ModelParams<F>
  *  ): ModelClass<InstanceType<C> & F>;
  * }} ModelClass
  */
@@ -81,26 +110,18 @@ export class Model {
     static _fields = {};
     /** own and true on a class returned by `extend` without a name */
     static _extension = false;
-    /**
-     * Records are edited locally and saved back: a local write is kept as a
-     * change, apart from the last server value. That is what `isDirty`,
-     * `discard`, `ack` and `toCommands` work on. When false, a write replaces
-     * the value: for data the client only mirrors.
-     */
+    // set by `extend`, from the parameters of the same name
     static _editable = false;
-    /**
-     * How reads subscribe: to each field of each record, or to the whole model
-     * (one subscription for all records, for large read-mostly data).
-     *
-     * @type {"field" | "model"}
-     */
+    /** @type {"field" | "model"} */
     static _reactivity = "field";
-    /** @type {string[]} fields with a unique index, see `store.getBy` */
+    /** @type {string[]} own on each class that declares indexes */
     static _indexes = [];
 
     /**
      * With a name, declares a model and returns its record class. Without one,
      * returns a class that adds fields to the model of this class.
+     *
+     * The parameters are described on {@link ModelParams}.
      *
      * The fields of the returned class are typed from `fields`. A relational
      * field has to be cast to the field signal of its comodel class: see the
@@ -113,10 +134,10 @@ export class Model {
      * @template {ModelClass<any>} C
      * @template {Record<string, any>} [F={}]
      * @this {C}
-     * @param {{ name?: string; fields?: F }} [params]
+     * @param {ModelParams<F>} [params]
      * @returns {ModelClass<InstanceType<C> & F>}
      */
-    static extend({ name, fields } = {}) {
+    static extend({ name, fields, editable, reactivity, indexes } = {}) {
         if (name && this._name) {
             throw new Error(
                 `Cannot declare model "${name}" from a class of model "${this._name}": omit the name to add fields to "${this._name}"`
@@ -135,6 +156,18 @@ export class Model {
         const Extended = class extends Base {};
         Object.defineProperty(Extended, "name", { value: modelName });
         Extended._fields = /** @type {Record<string, object>} */ (fields || {});
+        if (editable !== undefined) {
+            Extended._editable = editable;
+        }
+        if (reactivity !== undefined) {
+            if (!["field", "model"].includes(reactivity)) {
+                throw new Error(`Invalid reactivity "${reactivity}" on model "${modelName}"`);
+            }
+            Extended._reactivity = reactivity;
+        }
+        if (indexes) {
+            Extended._indexes = indexes;
+        }
         if (name) {
             Extended._name = name;
             Extended._extension = false;
@@ -270,4 +303,20 @@ export function getDeclaredFields(ModelClass) {
         }
     }
     return Object.assign({}, ...chain);
+}
+
+/**
+ * The indexes declared along the class chain of a model.
+ *
+ * @param {typeof Model} ModelClass
+ * @returns {string[]}
+ */
+export function getDeclaredIndexes(ModelClass) {
+    const indexes = new Set();
+    for (let cls = ModelClass; cls !== Model; cls = Object.getPrototypeOf(cls)) {
+        if (Object.hasOwn(cls, "_indexes")) {
+            cls._indexes.forEach((fieldName) => indexes.add(fieldName));
+        }
+    }
+    return [...indexes];
 }

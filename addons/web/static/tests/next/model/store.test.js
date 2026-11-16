@@ -36,6 +36,7 @@ class Tag extends Model.extend({
 
 class Order extends Model.extend({
     name: "sale.order",
+    editable: true,
     fields: {
         name: fields.Char(),
         partner_id: /** @type {Many2one<Partner>} */ (fields.Many2one("res.partner")),
@@ -45,8 +46,6 @@ class Order extends Model.extend({
         tag_ids: /** @type {Many2many<Tag>} */ (fields.Many2many("res.partner.tag")),
     },
 }) {
-    static _editable = true;
-
     get total() {
         return this.line_ids().reduce((sum, line) => sum + line.qty() * line.price(), 0);
     }
@@ -54,15 +53,14 @@ class Order extends Model.extend({
 
 class Line extends Model.extend({
     name: "sale.order.line",
+    editable: true,
     fields: {
         order_id: /** @type {Many2one<Order>} */ (fields.Many2one("sale.order")),
         product: fields.Char(),
         qty: fields.Integer({ default: 1 }),
         price: fields.Float(),
     },
-}) {
-    static _editable = true;
-}
+}) {}
 
 function makeStore(definitions) {
     return new Store({ models: [Partner, Tag, Order, Line], definitions });
@@ -199,8 +197,23 @@ describe("declarations", () => {
         expect(() => Model.extend({ name: "x.bad", fields: { count: 0 } })).toThrow(
             /not a field declaration/
         );
+        expect(() => Model.extend({ name: "x.bad", reactivity: "record" })).toThrow(
+            /Invalid reactivity "record"/
+        );
         const Other = Model.extend({ name: "res.partner", fields: {} });
         expect(() => new Store({ models: [Partner, Other] })).toThrow(/declared twice/);
+    });
+
+    test("an extension can make a model editable", () => {
+        const Thing = Model.extend({ name: "x.thing", fields: { name: fields.Char() } });
+        const EditableThing = Thing.extend({ editable: true });
+        const plain = new Store({ models: [Thing] });
+        const editable = new Store({ models: [Thing, EditableThing] });
+        const [a, b] = [plain, editable].map((store) => store.load("x.thing", { id: 1 }));
+        a.name.set("a");
+        b.name.set("b");
+        expect(plain.isDirty(a)).toBe(false);
+        expect(editable.isDirty(b)).toBe(true);
     });
 
     test("a model without subclass is a generic record class", () => {
@@ -365,12 +378,11 @@ describe("reactivity", () => {
     });
 
     test("per model: one subscription for all records of the model", () => {
-        class Product extends Model.extend({
+        const Product = Model.extend({
             name: "product.product",
+            reactivity: "model",
             fields: { name: fields.Char() },
-        }) {
-            static _reactivity = "model";
-        }
+        });
         const store = new Store({ models: [Product] });
         const [desk, chair] = store.load("product.product", [
             { id: 1, name: "Desk" },
@@ -665,13 +677,28 @@ describe("drafts", () => {
 });
 
 describe("indexes", () => {
-    test("unique indexes follow writes and deletions", () => {
-        class Product extends Model.extend({
+    test("an extension adds its indexes to the ones of the model", () => {
+        const Product = Model.extend({
             name: "product.product",
+            indexes: ["barcode"],
+            fields: { barcode: fields.Char() },
+        });
+        const StockProduct = Product.extend({
+            indexes: ["lot"],
+            fields: { lot: fields.Char() },
+        });
+        const store = new Store({ models: [Product, StockProduct] });
+        const desk = store.load(Product, { id: 1, barcode: "111", lot: "A" });
+        expect(store.getBy(Product, "barcode", "111")).toBe(desk);
+        expect(store.getBy(Product, "lot", "A")).toBe(desk);
+    });
+
+    test("unique indexes follow writes and deletions", () => {
+        const Product = Model.extend({
+            name: "product.product",
+            indexes: ["barcode"],
             fields: { name: fields.Char(), barcode: fields.Char() },
-        }) {
-            static _indexes = ["barcode"];
-        }
+        });
         const store = new Store({ models: [Product] });
         store.load("product.product", [{ id: 1, name: "Desk", barcode: "111" }]);
         const desk = store.getBy("product.product", "barcode", "111");

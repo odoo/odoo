@@ -120,11 +120,8 @@ function buildStoreParams(resModel, fields, fieldNames) {
             definitions[relation].fields.display_name ||= { type: "char" };
         }
     }
-    const models = Object.keys(definitions).map(
-        (name) =>
-            class extends RecordModel.extend({ name }) {
-                static _editable = true;
-            }
+    const models = Object.keys(definitions).map((name) =>
+        RecordModel.extend({ name, editable: true })
     );
     return { models, definitions };
 }
