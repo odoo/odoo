@@ -1967,6 +1967,71 @@ class TestPacking(TestPackingCommon):
         delivery.package_level_ids.is_done = False
         self.assertFalse(delivery.move_ids.picked)
 
+    def test_backorder_package_level_keeps_done_move_lines(self):
+        """ A package is partially processed: the backorder must not keep the done
+        move lines in its package level, otherwise a putaway on the backorder
+        changes the destination of those done lines and moves their stock. """
+        self.env.user.write({'groups_id': [
+            Command.link(self.env.ref('stock.group_stock_multi_locations').id),
+            Command.link(self.env.ref('stock.group_tracking_lot').id),
+        ]})
+        transit = self.env['stock.location'].create({
+            'name': 'Transit',
+            'usage': 'internal',
+            'location_id': self.stock_location.location_id.id,
+        })
+        shelf2 = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, transit, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, transit, 5)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': transit.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'product_uom': product.uom_id.id,
+                'location_id': transit.id,
+                'location_dest_id': self.stock_location.id,
+            }) for product in (self.productA, self.productB)],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        move_a, move_b = picking.move_ids
+        picking.action_put_in_pack()
+        package_level = picking.package_level_ids
+        self.assertEqual(package_level.move_line_ids, picking.move_line_ids)
+
+        move_a.picked = True
+        move_b.picked = False
+        action = picking.button_validate()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+        backorder = picking.backorder_ids
+        done_line = move_a.move_line_ids
+        self.assertEqual(done_line.state, 'done')
+        self.assertEqual(done_line.location_dest_id, self.stock_location)
+
+        # Reserve the rest of B in the backorder, with a putaway rule to shelf2
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.productB.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf2.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productB, transit, 5)
+        backorder.action_assign()
+
+        self.assertEqual(done_line.location_dest_id, self.stock_location)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, shelf2, allow_negative=True), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(
+            self.productA, self.stock_location, package_id=done_line.result_package_id, strict=True), 10)
+        self.assertNotIn(done_line, backorder.package_level_ids.move_line_ids)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):

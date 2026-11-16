@@ -1625,8 +1625,22 @@ class Picking(models.Model):
             if moves_to_backorder:
                 backorder_picking = picking._create_backorder_picking()
                 moves_to_backorder.write({'picking_id': backorder_picking.id, 'picked': False})
-                moves_to_backorder.move_line_ids.package_level_id.write({'picking_id': backorder_picking.id})
-                moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
+                backorder_move_lines = moves_to_backorder.move_line_ids
+                for package_level in backorder_move_lines.package_level_id:
+                    if package_level.move_line_ids <= backorder_move_lines:
+                        package_level.picking_id = backorder_picking
+                        continue
+                    # Partially processed package: the processed lines keep the
+                    # original level, the backorder gets a level of its own.
+                    self.env['stock.package_level'].with_context(from_put_in_pack=True).create({
+                        'package_id': package_level.package_id.id,
+                        'picking_id': backorder_picking.id,
+                        'location_dest_id': package_level.location_dest_id.id,
+                        'move_ids': [(6, 0, (package_level.move_ids & moves_to_backorder).ids)],
+                        'move_line_ids': [(6, 0, (package_level.move_line_ids & backorder_move_lines).ids)],
+                        'company_id': package_level.company_id.id,
+                    })
+                backorder_move_lines.write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
                 backorder_picking.user_id = False
                 picking.message_post(
