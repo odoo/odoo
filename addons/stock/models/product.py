@@ -716,7 +716,7 @@ class ProductTemplate(models.Model):
         default=False, precompute=True, help='A storable product is a product for which you manage stock.')
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
-        help="This user will be responsible of the next activities related to logistic operations for this product.")
+        help="This user will be responsible for the next activities related to logistic operations for this product.")
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
         company_dependent=True, check_company=True, domain="[('usage', '=', 'production'), '|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",

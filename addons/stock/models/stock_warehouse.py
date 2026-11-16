@@ -54,7 +54,7 @@ class Warehouse(models.Model):
         'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
         domain="[('warehouse_selectable', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help='Defaults routes through the warehouse', check_company=True, copy=False)
+        help='Default routes through the warehouse', check_company=True, copy=False)
     reception_steps = fields.Selection([
         ('one_step', 'Receive and Store (1 step)'),
         ('two_steps', 'Receive then Store (2 steps)'),
