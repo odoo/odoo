@@ -99,8 +99,15 @@ test("location picker of a work location without coordinates", async () => {
 
 test("location picker without coordinates, with the position of the device", async () => {
     mockPermission("geolocation", "granted");
+    // The real API would answer after the end of the test: the device never answers here
+    patchWithCleanup(navigator.geolocation, {
+        getCurrentPosition() {
+            expect.step("getCurrentPosition");
+        },
+    });
     await openLocationPicker({ location_latitude: 0, location_longitude: 0 });
     expect(".o_hr_location_picker .o_workplace_map").toHaveCount(1);
+    expect.verifySteps(["getCurrentPosition"]);
 
     // Nothing selected yet: nothing to save
     await contains(".o_hr_location_picker .btn-primary:contains(Set)").click();
