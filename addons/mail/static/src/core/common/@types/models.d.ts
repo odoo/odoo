@@ -71,6 +71,16 @@ declare module "models" {
     export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
+    export interface ThreadOpenOptions {
+        /** Open the chat window even when chat windows are compacted. */
+        bypassCompact?: boolean;
+        focus?: boolean;
+        fromMessagingMenu?: boolean;
+        /** Briefly highlight the chat window. */
+        highlight?: boolean;
+        /** Move an already opened chat window to the front. */
+        swapOpened?: boolean;
+    }
     export interface Volume extends VolumeClass {}
 
     type StaticMailRecord<ClassInterface, JSClassType> = Omit<JSClassType, "get" | "insert" | "records"> & {

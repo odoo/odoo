@@ -49,7 +49,7 @@
                     <ActionList t-if="this.headerQuickActions().length" actions="this.headerQuickActions" inline="true" actionComponent.bind="this.getActionComponent" panelContainer.bind="this.getPanelContainer"/>
                     <ActionList t-if="this.headerActionsList().length" actions="this.headerActionsList" inline="true" groupClass="'gap-2'" actionComponent.bind="this.getHeaderActionComponent" panelContainer.bind="this.getPanelContainer"/>
                 </div>
-                <div t-if="this.headerPanelActions().length" class="o-mail-DiscussContent-panelActions position-absolute end-0 me-2 px-1 d-flex align-items-center d-print-none" t-ref="this.panelActionsRef">
+                <div t-if="this.showActionPanelSwitcher" class="o-mail-DiscussContent-panelActions position-absolute end-0 me-2 px-1 d-flex align-items-center d-print-none" t-ref="this.panelActionsRef">
                     <ActionList actions="this.headerPanelActions" inline="true" groupClass="'o_switcher'" actionComponent.bind="this.getActionComponent" panelContainer.bind="this.getPanelContainer" switcher="true"/>
                 </div>
             </div>

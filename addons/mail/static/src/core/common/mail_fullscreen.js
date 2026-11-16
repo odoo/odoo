@@ -2,6 +2,7 @@ import { Component, Plugin, signal, t, useListener, usePlugin, useProps } from "
 
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { services } from "@web/core/services";
+import { useActiveElement } from "@web/core/ui/ui_plugin";
 
 const DEFAULT_ID = Symbol("default");
 
@@ -14,6 +15,8 @@ export class MailFullscreen extends Component {
             component: t.component(),
             props: t.record().optional(),
         });
+        this.rootRef = signal.ref(HTMLDivElement);
+        useActiveElement(this.rootRef);
     }
 }
 

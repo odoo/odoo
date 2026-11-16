@@ -79,9 +79,12 @@ registerComposerAction("add-emoji", {
     panel: {
         component: EmojiPicker,
         name: _t("Emoji"),
-        props: ({ action, owner }) => ({
+        props: ({ action, composer, owner }) => ({
             onSelect: (emoji) => owner.addEmoji(emoji),
-            onClose: () => action.closePanel(),
+            onClose: () => {
+                composer.autofocus++;
+                action.closePanel();
+            },
             storeScroll: action.emojiStoreScroll,
         }),
     },
