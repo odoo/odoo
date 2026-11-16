@@ -170,6 +170,12 @@ class RestaurantTable(models.Model):
             self.write({'parent_id': parent.id, 'parent_side': parent_side})
             if self._has_cycle('parent_id'):
                 self.write({'parent_id': old_parent.id, 'parent_side': old_side})
+            elif config.current_session_id:
+                config._notify_synchronisation(
+                    config.current_session_id.id,
+                    self.env.context.get('device_identifier', 0),
+                    {'restaurant.table': self.ids},
+                )
         return {
             'restaurant.table': self._load_pos_data_read(self, config) if config else [],
         }
