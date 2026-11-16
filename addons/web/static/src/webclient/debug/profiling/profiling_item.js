@@ -1,33 +1,53 @@
-import { Component, EventBus, t, useProps } from "@odoo/owl";
+import { Component, onWillDestroy, Plugin, usePlugin, useScope } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { render } from "@web/owl2/utils";
+import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { ProfilingPlugin } from "@web/webclient/debug/profiling/profiling_plugin";
 
 export class ProfilingItem extends Component {
     static components = { DropdownItem };
     static template = "web.DebugMenu.ProfilingItem";
-    props = useProps({
-        bus: t.instanceOf(EventBus),
-    });
     setup() {
-        this.profiling = useService("profiling");
-        useBus(this.props.bus, "UPDATE", () => render(this));
+        this.profiling = usePlugin(ProfilingPlugin);
+        this.action = useScope().pluginManager.getPluginById(ActionPlugin.id);
     }
 
     changeParam(param, ev) {
         this.profiling.setParam(param, ev.target.value);
     }
     toggleParam(param) {
-        const value = this.profiling.state.params[param];
+        const value = this.profiling.params()[param];
         this.profiling.setParam(param, !value);
     }
     openProfiles() {
-        if (this.env.services.action) {
+        if (this.action) {
             // using doAction in the backend to preserve breadcrumbs and stuff
-            this.env.services.action.doAction("base.action_menu_ir_profile");
+            this.action.doAction("base.action_menu_ir_profile");
         } else {
             // No action service means we are in the frontend.
             window.location = "/web/#action=base.action_menu_ir_profile";
         }
     }
 }
+
+class ProfilingItemPlugin extends Plugin {
+    #debugMode = usePlugin(DebugModePlugin);
+
+    setup() {
+        if (!this.#debugMode.isActive()) {
+            return;
+        }
+        const debugRegistry = registry.category("debug").category("default");
+        debugRegistry.add("profilingItem", () => ({
+            type: "component",
+            Component: ProfilingItem,
+            sequence: 570,
+            section: "tools",
+        }));
+        onWillDestroy(() => debugRegistry.remove("profilingItem"));
+    }
+}
+
+services.add(ProfilingItemPlugin);

@@ -59,8 +59,6 @@ onRpc("ir.attachment", "regenerate_assets_bundles", () => {
     return true;
 });
 beforeEach(() => {
-    // Remove this service to clear the debug menu from anything else than what the test insert into
-    registry.category("services").remove("profiling");
     clearRegistry(debugRegistry.category("default"));
     clearRegistry(debugRegistry.category("custom"));
 });
