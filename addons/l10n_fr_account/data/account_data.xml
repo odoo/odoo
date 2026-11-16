@@ -23,5 +23,20 @@
                 ref('base.state_nl_bq3'),
             ])]"/>
         </record>
+        <record id="re_only" model="res.country.group">
+            <field name="name">Reunion</field>
+            <field name="code">RE</field>
+            <field name="country_ids" eval="[Command.set([ref('base.re')])]"/>
+        </record>
+        <record id="gp_and_mq" model="res.country.group">
+            <field name="name">Guadeloupe and Martinique</field>
+            <field name="code">GP-MQ</field>
+            <field name="country_ids" eval="[Command.set([ref('base.gp'), ref('base.mq')])]"/>
+        </record>
+        <record id="gf_and_yt" model="res.country.group">
+            <field name="name">Guyanne and Mayotte</field>
+            <field name="code">GF-YT</field>
+            <field name="country_ids" eval="[Command.set([ref('base.gf'), ref('base.yt')])]"/>
+        </record>
     </data>
 </odoo>
