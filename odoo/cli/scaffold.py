@@ -39,8 +39,7 @@ class Scaffold(Command):
             {'name': args.name})
 
 builtins = lambda *args: os.path.join(
-    os.path.abspath(os.path.dirname(__file__)),
-    'templates',
+    os.environ.get('ODOO_TEMPLATES_DIR') or os.path.join(os.path.abspath(os.path.dirname(__file__)), 'templates'),
     *args)
 
 def snake(s):
