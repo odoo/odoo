@@ -326,8 +326,9 @@ class MaintenanceRequest(models.Model):
 
     def reset_equipment_request(self):
         """ Reinsert the maintenance request into the maintenance pipe in the first stage"""
-        first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
-        self.write({'state': 'normal', 'stage_id': first_stage_obj.id})
+        self.write({'state': 'normal', 'stage_id': False})
+        # put the requests back in the first stage allowed for their team
+        self._compute_stage_id()
 
     @api.constrains('schedule_date', 'schedule_end')
     def _check_schedule_interval(self):
@@ -454,10 +455,10 @@ class MaintenanceRequest(models.Model):
                 schedule_date += relativedelta(**{f"{request.repeat_unit}s": request.repeat_interval})
                 schedule_end = schedule_date + relativedelta(hours=request.duration or 1)
                 if request.repeat_type == 'forever' or schedule_date.date() <= request.repeat_until:
+                    # the stage is not copied: the copy starts in the first stage allowed for its team
                     request.copy({
                         'schedule_date': schedule_date,
                         'schedule_end': schedule_end,
-                        'stage_id': request._default_stage().id,
                     })
             self.close_date = fields.Date.today()
         elif 'state' in vals:
