@@ -229,7 +229,7 @@ patch(PosStore.prototype, {
                 "get_card_data",
                 [code, this.config.id],
                 {},
-                true,
+                false,
                 true
             );
             card = result?.["loyalty.card"]?.[0];
