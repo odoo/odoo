@@ -443,3 +443,39 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             {work_entry.work_entry_type_id: work_entry.duration for work_entry in work_entries},
             {self.work_entry_type_leave: 4.0, self.work_entry_type_unpaid: 4.0},
         )
+
+    def test_cancel_time_off_keeps_non_working_schedule_period(self):
+        """ Check that cancelling a time off over a day whose afternoon is unpaid in the working
+        schedule gives back the work entries of the working schedule once. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'tz': 'UTC',
+            'attendance_ids': [
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning', 'work_entry_type_id': self.work_entry_type.id}),
+                Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type_unpaid.id}),
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+            'date_version': date(2024, 9, 1),
+            'contract_date_start': date(2024, 9, 1),
+            'contract_date_end': date(2024, 9, 30),
+            'wage': 5000.0,
+        })
+        employee.generate_work_entries(date(2024, 9, 2), date(2024, 9, 2))
+        leave = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': self.hours_leave_type.id,
+            'request_date_from': date(2024, 9, 2),
+            'request_date_to': date(2024, 9, 2),
+        })
+        leave.action_approve()
+        leave._action_user_cancel('Cancelled')
+
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertDictEqual(
+            {work_entry.work_entry_type_id: work_entry.duration for work_entry in work_entries},
+            {self.work_entry_type: 4.0, self.work_entry_type_unpaid: 4.0},
+        )
