@@ -580,7 +580,7 @@ class PdpFlow(models.Model):
             name=name,
             views=[(view, 'list'), (False, 'form')],
             domain=[('id', 'in', moves.ids)],
-            context={'create': False, 'group_by': ['move_type']},
+            context={'create': False, 'group_by': ['move_type'], 'expand': True, 'l10n_fr_pdp_flow_id': self.id},
         )
 
     def action_view_initial(self):

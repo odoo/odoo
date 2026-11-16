@@ -63,6 +63,11 @@
             <filter name="peppol_move_state" position="attributes">
                 <attribute name="string">E-Invoicing Status</attribute>
             </filter>
+            <filter name="peppol_move_state" position="after">
+                <filter name="l10n_fr_pdp_status" string="E-Reporting Status"
+                        context="{'group_by': 'l10n_fr_pdp_status'}"
+                        invisible="not context.get('l10n_fr_pdp_flow_id')"/>
+            </filter>
         </field>
     </record>
 
@@ -101,7 +106,7 @@
         <field name="name">account.move.list.l10n.fr.pdp.move.ereporting</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" expand="context.get('expand', False)">
                 <field name="made_sequence_hole" column_invisible="True"/>
                 <field name="name" decoration-bf="1" decoration-danger="made_sequence_hole"/>
                 <field name="partner_id" string="Partner" readonly="state != 'draft'"/>
