@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -64,6 +65,24 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
 
         # check if the log service's amount is equal to the new price
         self.assertEqual(self.car_1.log_services[0].amount, self.service_line.price_unit)
+
+    def test_service_bill_other_company(self):
+        """ The service is created in the company of the bill, not in the current company of the user """
+        company_2 = self.setup_other_company()['company']
+        car = self.car_1.copy({'company_id': company_2.id})
+        bill = self.env['account.move'].with_company(company_2).create({
+            'move_type': 'in_invoice',
+            'partner_id': self.vendor.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 50.0,
+                'vehicle_id': car.id,
+            })],
+        })
+        self.assertEqual(self.env.company, self.company_data['company'])
+        bill.action_post()
+        self.assertEqual(car.log_services.company_id, company_2)
 
     def test_service_bill_deletion(self):
         service_line_2 = self.env['account.move.line'].create({
