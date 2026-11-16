@@ -170,3 +170,38 @@ class TestSyncCalendarsGoogle2Odoo(TestSyncGoogle):
                 'timeZone': 'Europe/Brussels'
             },
         }
+
+    @patch_api
+    def test_g2o_switch_account_with_previous_primary_shared(self):
+        """
+        When the user connects another Google account in which the primary calendar of the previously
+        connected account is shared, the Odoo primary calendar must follow the new account's primary
+        calendar and the previous one must be imported as a separate calendar.
+        """
+        primary_calendar = self.organizer_user.primary_calendar_id
+        # account B's calendar list: B's own primary + A's calendar shared read-only
+        google_calendars = GoogleCalendar([
+            {'id': 'other-primary', 'summary': 'other@example.com', 'primary': True, 'accessRole': 'owner'},
+            {'id': 'organizer-primary', 'summary': 'o.o@example.com', 'accessRole': 'reader'},
+        ])
+
+        self.env['calendar.calendar'].with_user(self.organizer_user)._sync_calendars_google2odoo(google_calendars)
+
+        self.assertEqual(self.organizer_user.primary_calendar_id, primary_calendar)
+        self.assertEqual(primary_calendar.google_id, 'other-primary')
+        self.assertEqual(primary_calendar.with_user(self.organizer_user).user_access_role, 'owner')
+        previous_primary = self.env['calendar.calendar'].search([('google_id', '=', 'organizer-primary')])
+        self.assertEqual(len(previous_primary), 1)
+        self.assertFalse(previous_primary.with_user(self.organizer_user).is_primary)
+        self.assertEqual(previous_primary.with_user(self.organizer_user).user_access_role, 'reader')
+
+    def test_g2o_primary_calendar_access_role_is_kept(self):
+        """ The access role of the user's primary calendar must never be lowered by the sync. """
+        primary_calendar = self.organizer_user.primary_calendar_id
+        primary_calendar.need_sync = False
+        google_calendars = GoogleCalendar([{'id': 'organizer-primary', 'summary': 'Shared', 'accessRole': 'reader'}])
+
+        self.env['calendar.calendar'].with_user(self.organizer_user)._sync_calendars_google2odoo(google_calendars)
+
+        self.assertEqual(self.organizer_user.primary_calendar_id, primary_calendar)
+        self.assertEqual(primary_calendar.with_user(self.organizer_user).user_access_role, 'owner')
