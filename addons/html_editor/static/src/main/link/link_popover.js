@@ -29,6 +29,8 @@ const formatColor = (color) => {
     return color;
 };
 
+const formatContentColor = (color) => (isCSSVariable(color) ? `var(--${color})` : color);
+
 function useContentChange(el, callback) {
     onMounted(() => {
         el.addEventListener("keyup", callback);
@@ -666,7 +668,7 @@ export class LinkPopover extends Component {
 
         const borderColor = this.customBorderColorState.selectedColor;
         customStyles += `border-width: ${this.state.customBorderSize}px; `;
-        customStyles += `border-color: ${formatColor(borderColor)}; `;
+        customStyles += `border-color: ${formatContentColor(borderColor)}; `;
         customStyles += `border-style: ${this.state.customBorderStyle}; `;
 
         return customStyles;
