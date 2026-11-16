@@ -395,6 +395,33 @@ test("activity with mail template: send mail", async () => {
     await expect.waitForSteps(["activity_send_mail"]);
 });
 
+test("email activity without mail template: send opens composer", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
+    pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    mockService("action", {
+        doAction(action) {
+            if (action?.res_model === "mail.compose.message") {
+                expect.step("do_action");
+                expect(action.context.default_model).toBe("res.partner");
+                expect(action.context.default_res_ids).toEqual([partnerId]);
+                return;
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Activity-composeEmail");
+    await expect.waitForSteps(["do_action"]);
+});
+
 test("activity click on Done", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
