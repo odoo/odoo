@@ -4,6 +4,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 
 import { status, useComponent, useEnv, useSubEnv } from "@odoo/owl";
 
+const buttonsContainerWM = new WeakMap();
 export async function executeButtonCallback(el, fct) {
     let btns = [];
     function disableButtons() {
@@ -24,8 +25,12 @@ export async function executeButtonCallback(el, fct) {
     }
 
     disableButtons();
-
-    const observer = new MutationObserver(() => {
+    let observer;
+    if (buttonsContainerWM.has(el)) {
+        observer = buttonsContainerWM.get(el);
+        observer.disconnect();
+    }
+    observer = new MutationObserver(() => {
         const newBtns = [...el.querySelectorAll("button:not([disabled])")];
         for (const btn of newBtns) {
             btn.setAttribute("disabled", "1");
@@ -33,6 +38,7 @@ export async function executeButtonCallback(el, fct) {
         btns.push(...newBtns);
     });
     observer.observe(el, { childList: true, subtree: true });
+    buttonsContainerWM.set(el, observer);
 
     let res;
     try {
