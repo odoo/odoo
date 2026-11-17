@@ -97,8 +97,8 @@ class ResUsers(models.Model):
     @api.constrains('group_ids')
     def _check_disjoint_groups(self):
         super()._check_disjoint_groups()
-        internal_users = self.env.ref('base.group_user').all_user_ids & self
-        if any(user.website_id for user in internal_users):
+        group_user = self.env.ref('base.group_user')
+        if any(user.website_id for user in self if group_user in user.all_group_ids):
             raise ValidationError(_("Remove website on related partner before they become internal user."))
 
     # The model inherits the publishing fields from res.partner, this implements
