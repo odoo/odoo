@@ -71,6 +71,7 @@ class HrLeaveAllocation(models.Model):
 
         employee_tz = ZoneInfo(self.employee_id.tz or 'UTC')
         datetime_min_time = datetime.min.time()
+        # A pytz timezone must be localized: given as tzinfo, it is the local mean time (e.g. +00:17 in Brussels)
         start_dt = datetime.combine(start_date, datetime_min_time, employee_tz).astimezone(UTC).replace(tzinfo=None)
         end_dt = datetime.combine(end_date, datetime_min_time, employee_tz).astimezone(UTC).replace(tzinfo=None)
 
