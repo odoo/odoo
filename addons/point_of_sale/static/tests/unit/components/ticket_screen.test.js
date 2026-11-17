@@ -264,6 +264,21 @@ describe("getFilteredOrderList", () => {
     });
 });
 
+test("setOrder does not open an order being cancelled", async () => {
+    const store = await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    const order = await getFilledOrder(store);
+    store.setOrder(null);
+
+    store.deletingOrders.add(order.uuid);
+    await screen.setOrder(order);
+    expect(store.getOrder()).toBe(undefined);
+
+    store.deletingOrders.delete(order.uuid);
+    await screen.setOrder(order);
+    expect(store.getOrder()).toBe(order);
+});
+
 test("isOrderDoneOrPaid", async () => {
     const store = await setupPosEnv();
     const screen = await mountWithCleanup(TicketScreen);
