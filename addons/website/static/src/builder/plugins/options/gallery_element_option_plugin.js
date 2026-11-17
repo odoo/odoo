@@ -23,16 +23,15 @@ export class GalleryElementOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => {
-            const isImageWall = editingElement.closest('[data-snippet="s_images_wall"]');
-            if (isImageWall) {
-                // Prevented disable reordering buttons for image wall.
+            const carouselEl = editingElement.closest(".carousel");
+            if (!carouselEl) {
+                // Keep reordering enabled for galleries without a carousel.
                 return {
                     hasMultiItems: true,
                     isFirstItem: false,
                     isLastItem: false,
                 };
             }
-            const carouselEl = editingElement.closest(".carousel");
             const carouselItemEls = carouselEl.querySelectorAll(".carousel-item");
             const carouselItemCount = carouselItemEls.length;
             const currentItemEl = editingElement.closest(".carousel-item");
