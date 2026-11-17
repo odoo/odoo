@@ -13,6 +13,7 @@ from odoo import http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
+from odoo.tools.image import ImageProcess
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
@@ -128,6 +129,21 @@ class WebsiteForm(http.Controller):
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())
 
+    def signature(self, field_label, field_input):
+        if not hasattr(field_input, 'read'):
+            raise ValueError("A signature must be an uploaded image")
+        try:
+            image = ImageProcess(field_input.read(), verify_resolution=True)
+            if not image.image or image.original_format not in ('PNG', 'JPEG'):
+                raise ValueError("A signature must be a PNG or JPEG image")
+            # Properties are JSON: store base64 text, not binary bytes or a data URL.
+            return base64.b64encode(image.image_quality(output_format='PNG')).decode('ascii')
+        except (UserError, OSError) as error:
+            raise ValueError("Invalid signature image") from error
+        finally:
+            # CRM extracts the form twice; do not consume the upload permanently.
+            field_input.stream.seek(0)
+
     def one2many(self, field_label, field_input):
         return [int(i) for i in field_input.split(',')]
 
@@ -158,6 +174,7 @@ class WebsiteForm(http.Controller):
         'monetary': floating,
         # Properties
         'tags': tags,
+        'signature': signature,
     }
 
     # Extract all data sent by the form and sort its on several properties
@@ -181,11 +198,12 @@ class WebsiteForm(http.Controller):
             # First decode the field_name encoded at the client side.
             field_name = re.sub('&quot;', '"', field_name)
 
-            # If the value of the field if a file
             if hasattr(field_value, 'filename'):
-                # Undo file upload field name indexing
+                # Undo file upload field name indexing.
                 field_name = field_name.split('[', 1)[0]
 
+            # Signature uploads must go through property grouping below.
+            if hasattr(field_value, 'filename') and authorized_fields.get(field_name, {}).get('type') != 'signature':
                 # If it's an actual binary field, convert the input file
                 # If it's not, we'll use attachments instead
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
@@ -203,9 +221,8 @@ class WebsiteForm(http.Controller):
                     if '_property' in authorized_fields[field_name]:
                         # Collect all properties for a given property field in
                         # a list.
-                        field_data = authorized_fields[field_name]
-                        properties_field_name = field_data['_property']['field']
-                        del field_data['_property']
+                        field_data = authorized_fields[field_name].copy()
+                        properties_field_name = field_data.pop('_property')['field']
                         properties = data['record'].setdefault(properties_field_name, [])
                         property_type = authorized_fields[field_name]['type']
                         # For properties, many2many is stored as an array of
