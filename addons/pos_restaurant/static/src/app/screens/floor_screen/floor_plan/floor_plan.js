@@ -193,6 +193,9 @@ export class FloorPlan extends FloorPlanBase {
                 );
                 return false;
             }
+            if (this.pos.isOrderDeleting(oToTrans) || this.pos.isOrderDeleting(oTarget)) {
+                return false;
+            }
 
             if (oToTrans) {
                 this.pos.mergeTableOrders(oToTrans.uuid, newTableMOParent);
