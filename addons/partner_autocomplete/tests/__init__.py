@@ -3,3 +3,4 @@
 
 from . import test_autocomplete_address_extended
 from . import test_res_company
+from . import test_res_partner

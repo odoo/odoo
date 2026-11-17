@@ -95,6 +95,20 @@ class ResPartner(models.Model):
                 return self.autocomplete_by_vat(query, query_country_id, include_branches=include_branches)
 
     @api.model
+    def _get_supported_enrichment_types(self):
+        return ['duns']
+
+    @api.model
+    def _get_enrichment_request_params(self):
+        """Use the selected company's country, not the country of the requesting database."""
+        company = self.env.context.get('enriched_company_data') or {}
+        country_id = (company.get('country_id') or {}).get('id') or self.country_id.id
+        return {
+            'query_country_code': self.env['res.country'].browse(country_id).code,
+            'supported_enrichment_types': self._get_supported_enrichment_types(),
+        }
+
+    @api.model
     def autocomplete_by_name(self, query, query_country_id, timeout=15, include_branches=False):
         if query_country_id is False:  # If it's 0, we purposely do not want to filter on the country
             query_country_id = self.env.company.country_id.id
@@ -103,6 +117,7 @@ class ResPartner(models.Model):
             'query': query,
             'query_country_code': query_country_code,
             'include_branches': include_branches,
+            'supported_enrichment_types': self._get_supported_enrichment_types(),
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -120,6 +135,7 @@ class ResPartner(models.Model):
             'query': vat,
             'query_country_code': query_country_code,
             'include_branches': include_branches,
+            'supported_enrichment_types': self._get_supported_enrichment_types(),
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -211,6 +227,7 @@ class ResPartner(models.Model):
     def enrich_by_duns(self, duns, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_duns', {
             'duns': duns,
+            **self._get_enrichment_request_params(),
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
@@ -218,6 +235,7 @@ class ResPartner(models.Model):
     def enrich_by_vat(self, vat, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_vat', {
             'vat': vat,
+            **self._get_enrichment_request_params(),
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
