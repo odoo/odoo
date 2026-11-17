@@ -845,8 +845,9 @@ class HrAttendance(models.Model):
         return res
 
     def action_validate(self):
-        """Validate the attendances, which runs the time rules on them."""
-        self.write({'state': 'validated'})
+        """Validate the attendances, with the records the time rules created from them when
+        they were reset to draft together, which runs the time rules on them."""
+        (self | self.overtime_attendance_ids.filtered(lambda a: a.state == 'draft')).write({'state': 'validated'})
 
     def action_refuse(self):
         """Refuse the attendances and the records the time rules created from them
@@ -854,8 +855,9 @@ class HrAttendance(models.Model):
         (self | self.overtime_attendance_ids).with_context(skip_time_rules=True).write({'state': 'refused'})
 
     def action_reset_to_draft(self):
-        """Set the attendances back to draft."""
-        self.write({'state': 'draft'})
+        """Set the attendances back to draft, with the records the time rules created from
+        them (``overtime_attendance_ids``), refused with them."""
+        (self | self.overtime_attendance_ids.filtered(lambda a: a.state == 'refused')).write({'state': 'draft'})
 
     def get_record_default_action(self, access_uid=None):
         """This method redirects to the suitable employee view in action menuitem according to the user access rights"""
