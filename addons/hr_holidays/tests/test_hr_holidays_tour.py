@@ -72,6 +72,8 @@ class TestHrHolidaysTour(HttpCase):
             'holiday_status_id': leave_type.id,
             'number_of_days': 1,
             'state': 'confirm',
+            # Start in the past so the dashboard date (from the browser) never precedes it
+            'date_from': '2022-01-01',
         } for leave_type in leave_types])._action_validate()
 
         self.start_tour('/odoo', 'time_off_card_new_request', login="test")
