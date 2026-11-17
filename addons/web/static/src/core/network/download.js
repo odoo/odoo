@@ -1,5 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
-import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc";
+import {
+    makeErrorFromResponse,
+    ConnectionLostError,
+    RequestEntityTooLargeError,
+} from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
@@ -554,6 +558,9 @@ export function configureBlobDownloadXHR(
         } else if (xhr.status === 502) {
             // If Odoo is behind another server (nginx)
             onFailure(new ConnectionLostError(url));
+        } else if (xhr.status === 413) {
+            // If the request content size exceeds the limit set by nginx
+            onFailure(new RequestEntityTooLargeError());
         } else {
             const decoder = new FileReader();
             decoder.onload = () => {
