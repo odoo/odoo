@@ -18,9 +18,9 @@ class AccountEdiUBLPint(models.AbstractModel):
         # https://docs.peppol.eu/poac/pint/pint/trn-invoice/semantic-model/ibt-023/
         super()._ubl_add_profile_id_node(vals)
 
-        if self._is_document(vals, 'invoice', 'credit_note'):
+        if self._is_document(vals, 'sale_invoice_kind'):
             vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:billing'
-        elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
+        elif self._is_document(vals, 'self_invoice_kind'):
             vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:selfbilling'
 
     def _ubl_add_invoice_type_code_node(self, vals):
@@ -84,14 +84,14 @@ class AccountEdiUBLPint(models.AbstractModel):
         # [ibr-sr-51]-Note (ibt-022) MUST occur maximum once
         super()._ubl_add_notes_nodes(vals)
 
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             self._ubl_add_notes_nodes_all_invoices(vals)
 
     def _ubl_add_delivery_nodes(self, vals):
         # [ibr-107]-Deliver to information (ibg-13) MUST occur maximum once.
         super()._ubl_add_delivery_nodes(vals)
 
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             document_node = vals['document_node']
             if document_node['cac:Delivery']:
                 document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
@@ -127,7 +127,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         # [ibr-sr-06]-Preceding invoice reference (ibt-025) MUST occur maximum once
         super()._ubl_add_billing_reference_nodes(vals)
 
-        if self._is_document(vals, 'credit_note', 'self_credit_note'):
+        if self._is_document(vals, 'credit_note_kind'):
             credit_note = vals['invoice']
             payment_term_lines = credit_note.line_ids.filtered(lambda line: line.account_id.account_type == 'asset_receivable')
             preceding_invoice_names = [
@@ -147,18 +147,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                         'cbc:ID': {'_text': preceding_invoice_name},
                     }
                 })
-
-    def _ubl_should_export_early_payment_discount_as_line(self, vals):
-        # Early payment discount lines should not appear as lines but as allowances/charges.
-        return False
-
-    def _ubl_should_export_global_discount_as_line(self, vals):
-        # Global discount lines should not appear as lines but as allowances/charges ([ibr-027] no negative net price).
-        return False
-
-    def _ubl_should_export_cash_rounding_as_line(self, vals):
-        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
-        return False
 
     def _ubl_get_partner_address_node(self, vals, partner):
         node = super()._ubl_get_partner_address_node(vals, partner)
@@ -297,7 +285,7 @@ class AccountEdiUBLPint(models.AbstractModel):
     def _ubl_add_payment_means_nodes(self, vals):
         super()._ubl_add_payment_means_nodes(vals)
 
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             self._ubl_add_payment_means_nodes_all_invoices(vals)
 
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
@@ -381,7 +369,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         currency = vals['currency']
         node = vals['legal_monetary_total_node']
 
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             tax_withholding_amount = vals['_ubl_values']['tax_withholding_amount']
 
             # WithholdingTaxTotal is not allowed.
@@ -404,7 +392,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             node['cbc:PrepaidAmount']['_text'] = FloatFmt(
                 node['cbc:PrepaidAmount']['_text']
                 # WithholdingTaxTotal is not allowed.
@@ -451,7 +439,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         constraints = super()._export_document_node_constraints(vals)
 
         document_node = vals['document_node']
-        is_invoice = self._is_document(vals, 'invoice', 'self_invoice')
+        is_invoice = self._is_document(vals, 'invoice_kind')
 
         # -----------------------------------------------------------------
         # 1. Specification, Process & Document Identification
@@ -627,11 +615,6 @@ class AccountEdiUBLPint(models.AbstractModel):
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------
-
-    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
-        if invoice.invoice_line_ids:
-            return invoice._reason_cannot_decode_has_invoice_lines()
-        return self._ubl_import_invoice(invoice, file_data, new=new)
 
     def _import_prepare_missing_customer_create_values(self, collected_values):
         partner_create_values = super()._import_prepare_missing_customer_create_values(collected_values)

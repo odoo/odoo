@@ -317,17 +317,57 @@ class AccountEdiCommon(models.AbstractModel):
     def _etree_to_string(self, tree):
         return etree.tostring(tree, xml_declaration=True, encoding='UTF-8')
 
-    def _define_document_type(self, vals, document_type):
+    def _define_document_types(self, vals, *document_types):
         vals['_document_type'] = {
-            'name': document_type,
             'model': self,
+            'groups': {},
+            'types': set(document_types),
         }
+
+    def _define_document_types_add(self, vals, *document_types):
+        vals['_document_type']['types'].update(set(document_types))
+
+    def _define_document_type(self, vals, document_type):
+        if document_type not in vals['_document_type']['types']:
+            raise UserError(self.env._("The document type %s is not supported.", document_type))
+        vals['_document_type']['name'] = document_type
+
+    def _define_document_group(self, vals, group, *document_types):
+        """ Define a named group of document types, to reference these document types at once in `_is_document`.
+        To call after `_define_document_type`.
+
+        :param vals:            The export values.
+        :param group:           The name of the group.
+        :param document_types:  The document types of the group.
+        """
+        vals['_document_type']['groups'][group] = set(document_types)
+
+    def _define_document_group_add(self, vals, group, *document_types):
+        """ Add document types to a group of document types, defining the group if it doesn't exist yet.
+        To call after `_define_document_type`.
+
+        :param vals:            The export values.
+        :param group:           The name of the group.
+        :param document_types:  The document types to add to the group.
+        """
+        if group in (groups := vals['_document_type']['groups']):
+            groups[group].update(document_types)
 
     def _get_document_type(self, vals):
         return vals.get('_document_type', {}).get('name')
 
     def _is_document(self, vals, *document_types):
-        return self._get_document_type(vals) in document_types
+        """ Whether the exported document is of one of the given document types.
+
+        :param vals:            The export values.
+        :param document_types:  Document types (e.g. 'invoice') or groups of document types (see `_define_document_group`).
+        """
+        document_type = self._get_document_type(vals)
+        groups = vals.get('_document_type', {}).get('groups', {})
+        return any(
+            document_type in groups.get(document_type_or_group, (document_type_or_group,))
+            for document_type_or_group in document_types
+        )
 
     def module_installed(self, module_name):
         return self.env['ir.module.module']._get(module_name).state == 'installed'

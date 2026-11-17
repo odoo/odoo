@@ -21,12 +21,20 @@ class ResPartner(models.Model):
     def _peppol_fill_participant_supported_documents(self):
         for partner in self:
             edi_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}".lower()
-            formats = [
-                self.env['res.partner']._get_edi_builder(edi_format)._get_customization_id(process_type=process_type)
-                for edi_format in self.env['res.partner']._get_peppol_formats()
-                for process_type in ('billing', 'selfbilling')
 
-            ]
+            edi_formats = self.env['res.partner']._get_peppol_formats()
+            formats = set()
+            for edi_format in edi_formats:
+                builder = self.env['res.partner']._get_edi_builder(edi_format)
+                vals = {'document_node': {}}
+                builder._ubl_add_values_document_types(vals)
+                for invoice_document_type in vals['_document_type']['groups']['account_move_kind']:
+                    sub_vals = dict(vals)
+                    builder._define_document_type(vals, invoice_document_type)
+                    builder._ubl_add_customization_id_node(sub_vals)
+                    if customization_id := sub_vals['document_node']['cbc:CustomizationID']['_text']:
+                        formats.add(customization_id)
+
             formats = [f for f in formats if f]
             formats += ['urn:fdc:peppol.eu:poacc:trns:invoice_response:3']
             format_str = ",".join(formats)

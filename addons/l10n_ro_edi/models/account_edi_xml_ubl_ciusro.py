@@ -31,10 +31,13 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_cius_ro.xml"
 
-    def _get_document_type_code_node(self, invoice, invoice_data):
+    def _ubl_get_additional_document_reference_node_from_invoice_pdf_report_values(self, vals, pdf_values):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_additional_document_reference_node_from_invoice_pdf_report_values(vals, pdf_values)
         # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
-        if invoice.move_type == 'out_refund':
-            return {'_text': '50'}
+        if self._is_document(vals, 'credit_node'):
+            node['cbc:DocumentTypeCode']['_text'] = '50'
+        return node
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates

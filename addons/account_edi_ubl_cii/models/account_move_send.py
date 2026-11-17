@@ -1,4 +1,3 @@
-import base64
 import logging
 import io
 
@@ -162,13 +161,10 @@ class AccountMoveSend(models.AbstractModel):
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if invoice.with_context(sending_method=invoice_data['sending_methods'])._need_ubl_cii_xml(invoice_data['invoice_edi_format']):
+            invoice = invoice.with_context(from_peppol='peppol' in invoice_data['sending_methods'])
             builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
-            xml_content, errors = (
-                builder
-                .with_context(from_peppol='peppol' in invoice_data['sending_methods'])
-                ._export_invoice(invoice)
-            )
-            filename = builder._export_invoice_filename(invoice)
+            ubl_values = builder._export_invoice_as_ubl_values(invoice)
+            errors = ubl_values['errors']
 
             # Failed.
             if errors:
@@ -178,16 +174,13 @@ class AccountMoveSend(models.AbstractModel):
                 }
                 invoice_data['error_but_continue'] = True
             else:
-                invoice_data['ubl_cii_xml_attachment_values'] = {
-                    'name': filename,
-                    'raw': xml_content,
-                    'mimetype': 'application/xml',
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
-                    'res_field': 'ubl_cii_xml_file',  # Binary field
-                }
+                # 'ubl_cii_xml_attachment_values' remains for backward compatibility but it must not be modified in-place.
+                # Otherwise, 'ubl_values' & 'ubl_cii_xml_attachment_values' won't match anymore and only 'ubl_values' is used
+                # to generate the file at the very end.
+                invoice_data['ubl_cii_xml_attachment_values'] = builder._export_invoice_ubl_values_as_attachment_values(ubl_values)
                 invoice_data['ubl_cii_xml_options'] = {
                     'ubl_cii_format': invoice_data['invoice_edi_format'],
+                    'values': ubl_values,
                     'builder': builder,
                 }
 
@@ -295,43 +288,22 @@ class AccountMoveSend(models.AbstractModel):
         anchor_index = tree.index(anchor_elements[0])
         pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
 
-        edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
-        doc_type_code_node = edi_model._get_document_type_code_node(invoice, invoice_data)
-        vals = {'invoice': invoice}
-        edi_model._add_invoice_config_vals(vals)
-        nsmap = edi_model._get_document_nsmap(vals)
+        edi_model = invoice_data['ubl_cii_xml_options']['builder']
+        vals = invoice_data['ubl_cii_xml_options']['values']
+        nsmap = vals['document_node']['_nsmap']
 
-        attachments_to_embed = [
-            {
-                'filename': attachment.name,
-                'raw': attachment.raw,
-                'mimetype': attachment.mimetype,
-            }
+        additional_document_reference_nodes = [
+            edi_model._ubl_get_additional_document_reference_node_from_extra_attachment(vals, attachment)
             for attachment in self._get_ubl_available_attachments(
                 invoice_data['mail_attachments_widget'],
                 invoice_data['invoice_edi_format']
             )[0]
         ] if invoice_data.get('mail_attachments_widget') else []
-        attachments_to_embed.append({
-            'filename': pdf_values['name'],
-            'raw': pdf_values['raw'],
-            'mimetype': pdf_values['mimetype'],
-            'document_type_node': doc_type_code_node,
-        })
+        additional_document_reference_nodes.append(
+            edi_model._ubl_get_additional_document_reference_node_from_invoice_pdf_report_values(vals, pdf_values)
+        )
 
-        for attachment_values in attachments_to_embed:
-            additional_document_reference_node = {
-                '_tag': 'cac:AdditionalDocumentReference',
-                'cbc:ID': {'_text': attachment_values['filename']},
-                'cbc:DocumentTypeCode': attachment_values.get('document_type_node'),
-                'cac:Attachment': {
-                    'cbc:EmbeddedDocumentBinaryObject': {
-                        '_text': base64.b64encode(attachment_values['raw']).decode(),
-                        'mimeCode': attachment_values['mimetype'],
-                        'filename': attachment_values['filename']
-                    }
-                }
-            }
+        for additional_document_reference_node in additional_document_reference_nodes:
             tree.insert(anchor_index, dict_to_xml(additional_document_reference_node, nsmap=nsmap))
 
         invoice_data['ubl_cii_xml_attachment_values']['raw'] = etree.tostring(
