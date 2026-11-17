@@ -229,7 +229,7 @@ class ResCompany(models.CachedModel):
     def _compute_logo_web(self):
         for company in self:
             img = company.partner_id.image_1920
-            company.logo_web = img and BinaryBytes(image_process(img.content, size=(180, 0)), filename='logo.png')
+            company.logo_web = img and BinaryBytes(image_process(img.content, size=(180, 0)))
 
     @api.depends('partner_id.image_1920')
     def _compute_uses_default_logo(self):

@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.tests import Command, TransactionCase, tagged, Form
+from odoo.tools import BinaryBytes
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -53,6 +54,20 @@ class TestCompany(TransactionCase):
         self.assertTrue(company.uses_default_logo)
         company.partner_id.image_1920 = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
         self.assertFalse(company.uses_default_logo)
+
+    def test_logo_web_svg_mimetype(self):
+        """An SVG company logo is stored with the SVG mimetype."""
+        company = self.env['res.company'].create({
+            'name': 'foo',
+            'logo': BinaryBytes(b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>'),
+        })
+        company.flush_recordset(['logo_web'])
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'res.company'),
+            ('res_field', '=', 'logo_web'),
+            ('res_id', '=', company.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
 
     def test_create_branch_with_default_parent_id(self):
         branch = self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'Branch Company'})
