@@ -8,6 +8,7 @@ import {
     dropFiles,
     insertText,
     listenStoreFetch,
+    onRpcAfter,
     onRpcBefore,
     openFormView,
     patchUiSize,
@@ -18,13 +19,14 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
-import { Deferred, advanceTime } from "@odoo/hoot-mock";
+import { Deferred, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import {
     asyncStep,
     defineActions,
     getService,
     mockService,
     onRpc,
+    pagerNext,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -872,4 +874,39 @@ test("Update primary email in recipient without saving", async () => {
     await insertText("div[name='email_cc'] input", "test@test.be");
     document.querySelector("div[name='email_cc'] input").blur();
     await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "test@test.be" });
+});
+
+test("late suggested recipients don't overwrite the next record's recipients", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { email: "mitchell@odoo.com" });
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "John Doe", email: "john@doe.be" },
+        { name: "Jane Doe", email: "jane@doe.be" },
+    ]);
+    const [fakeId_1, fakeId_2] = pyEnv["res.fake"].create([
+        { name: "Fake 1", partner_id: partnerId_1 },
+        { name: "Fake 2", partner_id: partnerId_2 },
+    ]);
+    const suggestions = Promise.withResolvers();
+    onRpcBefore("/mail/thread/recipients/get_suggested_recipients", async () => {
+        asyncStep("suggestions requested");
+        await suggestions.promise;
+    });
+    onRpcAfter("/mail/thread/recipients/get_suggested_recipients", () =>
+        asyncStep("suggestions returned")
+    );
+    await start();
+    await openFormView("res.fake", fakeId_1, { resIds: [fakeId_1, fakeId_2] });
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "John Doe" });
+    await click(".o_field_many2one_selection input");
+    await click(".o-autocomplete--dropdown-item", { text: "Mitchell Admin" });
+    await waitForSteps(["suggestions requested"]);
+    await pagerNext();
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "Jane Doe" });
+    suggestions.resolve();
+    await waitForSteps(["suggestions returned"]);
+    await animationFrame();
+    expect(".o-mail-RecipientsInput .o_tag_badge_text:text('Jane Doe')").toHaveCount(1);
+    expect(".o-mail-RecipientsInput .o_tag_badge_text:text('Mitchell Admin')").toHaveCount(0);
 });
