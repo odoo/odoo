@@ -5,7 +5,7 @@ from datetime import datetime, UTC
 from lxml import etree
 
 from odoo import api, models
-from odoo.tools import html2plaintext
+from odoo.tools import frozendict, html2plaintext
 
 # Far from ideal, but no better solution yet.
 COUNTRY_CODE_MAP = {
@@ -833,3 +833,42 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if not number:
             return ''  # This wouldn't happen in the file as it's caught in the validation errors, but the vals are exported before these checks are done.
         return number.replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _import_ubl_invoice_add_customer_values(self, collected_values):
+        # EXTENDS account.edi.ubl
+        super()._import_ubl_invoice_add_customer_values(collected_values)
+        # MyInvois gives the TIN of a party as an identification, not in its PartyTaxScheme.
+        party_tag = 'AccountingCustomerParty' if collected_values['odoo_document_type'] == 'sale' else 'AccountingSupplierParty'
+        if tin := collected_values['tree'].findtext(f"./{{*}}{party_tag}/{{*}}Party/{{*}}PartyIdentification/{{*}}ID[@schemeID='TIN']"):
+            collected_values['customer_values']['vat'] = tin
+
+    def _import_ubl_invoice_line_add_taxes_values(self, collected_values):
+        # EXTENDS account.edi.ubl
+        super()._import_ubl_invoice_line_add_taxes_values(collected_values)
+        line_tree = collected_values['line_tree']
+        if line_tree.find('./{*}Item/{*}ClassifiedTaxCategory') is not None:
+            return
+        # MyInvois only requires the taxes of a line in its own TaxTotal, with the rate on the subtotal.
+        tax_total_values = collected_values['tax_total_values']
+        for subtotal_tree in line_tree.iterfind('./{*}TaxTotal/{*}TaxSubtotal'):
+            percentage = subtotal_tree.findtext('./{*}Percent')
+            if percentage is None:
+                continue
+            tax_key = frozendict({
+                'category_code': subtotal_tree.findtext('./{*}TaxCategory/{*}ID'),
+                'percentage': float(percentage),
+            })
+            if global_tax_values := tax_total_values.get(tax_key):
+                tax_values = {
+                    'amount_type': global_tax_values['amount_type'],
+                    'type_tax_use': global_tax_values['type_tax_use'],
+                    'amount': global_tax_values['amount'],
+                    'ubl_cii_tax_category_code': global_tax_values['ubl_cii_tax_category_code'],
+                    '_tax_key': tax_key,
+                }
+                collected_values['taxes_values'].append(tax_values)
+                global_tax_values['related_taxes_values'].append(tax_values)
