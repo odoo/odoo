@@ -164,6 +164,14 @@ class AccountMove(models.Model):
 
         return super()._auto_init()
 
+    def _get_import_file_type(self, file_data):
+        """ Identify the MyInvois documents: their type code carries the version of the MyInvois document type. """
+        # EXTENDS 'account_edi_ubl_cii'
+        tree = file_data['xml_tree']
+        if tree is not None and tree.find('{*}InvoiceTypeCode[@listVersionID]') is not None:
+            return 'account.edi.xml.ubl_myinvois_my'
+        return super()._get_import_file_type(file_data)
+
     def write(self, vals):
         # EXTENDS 'account'
         if 'move_type' in vals and any(move.l10n_my_edi_received_document_id and move.move_type != vals['move_type'] for move in self):

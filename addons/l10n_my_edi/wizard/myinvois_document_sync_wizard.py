@@ -62,7 +62,7 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     # --------------
 
     def button_sync(self):
-        """ Sync the documents issued between the selected dates, creating the bills of the known suppliers. """
+        """ Sync the documents issued between the selected dates, and show the ones waiting for their bill. """
         self.ensure_one()
         # The journal can be set through RPC: it must be one the user has access to.
         self.journal_id.check_access('read')
@@ -83,22 +83,17 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
         documents = self.env['myinvois.document']
         documents_data = documents._myinvois_fetch_received_documents(proxy_user, date_from, date_to)
         new_documents = documents._myinvois_import_received_documents(documents_data, self.journal_id)
-        bills = new_documents.invoice_ids
-        bills_action = documents._myinvois_action_view_received_bills(bills) if bills else {'type': 'ir.actions.act_window_close'}
-        unknown_supplier_documents = new_documents.filtered(lambda d: not d.invoice_ids)
-        if bills and not unknown_supplier_documents:
-            return bills_action
+        action = self.journal_id.open_myinvois_document()
+        action['context']['search_default_filter_received_without_bill'] = True
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'type': 'warning' if unknown_supplier_documents else 'info',
-                'sticky': bool(unknown_supplier_documents),
+                'type': 'info',
                 'message': self.env._(
-                    "%(count)s new documents come from suppliers that are not in your contacts. Review them in the "
-                    "MyInvois documents, and create the bills of the ones you expect.",
-                    count=len(unknown_supplier_documents),
-                ) if unknown_supplier_documents else self.env._("No new document was received on MyInvois for the selected dates."),
-                'next': bills_action,
+                    "%(count)s new documents were received on MyInvois. Create the bills of the ones you expect.",
+                    count=len(new_documents),
+                ) if new_documents else self.env._("No new document was received on MyInvois for the selected dates."),
+                'next': action,
             },
         }

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
+import json
 import re
 import time
 from collections import defaultdict
@@ -1524,9 +1525,8 @@ class MyInvoisDocument(models.Model):
     @api.model
     def _myinvois_import_received_documents(self, documents_data, journal):
         """
-        Create a received document for each valid document of documents_data that is not in Odoo yet, with a draft
-        vendor bill when its supplier is already in Odoo. The documents already synced are updated instead, as the
-        supplier may have cancelled them.
+        Create a received document for each valid document of documents_data that is not in Odoo yet. The documents
+        already synced are updated instead, as the supplier may have cancelled them.
 
         :param documents_data: the documents as returned by _myinvois_fetch_received_documents.
         :param journal: the purchase journal of the new bills.
@@ -1602,22 +1602,17 @@ class MyInvoisDocument(models.Model):
             )
             for document in documents
         })
-        # Anyone can issue a document to the TIN of the company: the ones of unknown suppliers wait for the user.
-        documents._myinvois_create_received_bills(create_partners=False)
         return documents
 
     def _myinvois_create_received_bills(self, create_partners):
         """
         Give a bill to each received document of self that has none yet: the bill of the same supplier and reference
-        if the user entered it already, or else a new draft bill holding a single line with the total of the document,
-        to be split by the user as needed.
+        if the user entered it already, or else a new draft bill imported from the document validated by MyInvois.
 
         :param create_partners: whether to create the suppliers that are not in Odoo yet, or to skip their documents.
         :return: the bills of the documents.
         """
         documents = self.filtered(lambda d: d.myinvois_state == 'received' and not d.invoice_ids)
-        billed_documents = self.env['myinvois.document']
-        bills_vals = []
         for company, company_documents in documents.grouped('company_id').items():
             partners_per_tin = company_documents._myinvois_get_received_documents_partners(company, create_partners)
             known_documents = company_documents.filtered(lambda d: d.myinvois_supplier_tin in partners_per_tin)
@@ -1635,25 +1630,77 @@ class MyInvoisDocument(models.Model):
                 if bill := bills_per_key.pop((partners_per_tin[document.myinvois_supplier_tin], document.name, document.move_type), None):
                     document.invoice_ids = [Command.link(bill[:1].id)]
                     continue
-                billed_documents |= document
-                bills_vals.append({
-                    'move_type': document.move_type,
-                    'journal_id': document.journal_id.id,
-                    'partner_id': partners_per_tin[document.myinvois_supplier_tin].id,
-                    'ref': document.name,
-                    'invoice_date': document.myinvois_issuance_date,
-                    'currency_id': document.currency_id.id,
-                    'invoice_line_ids': [Command.create({
-                        'name': document.name,
-                        'quantity': 1,
-                        'price_unit': document.myinvois_amount_total,
-                        'tax_ids': [Command.clear()],  # The total already includes the taxes.
-                    })],
-                })
-        bills = self.env['account.move'].create(bills_vals)
-        for document, bill in zip(billed_documents, bills):
-            document.invoice_ids = [Command.link(bill.id)]
+                document._myinvois_import_received_bill(partners_per_tin[document.myinvois_supplier_tin])
+                # Keep the bills made so far if MyInvois refuses a later document: the user only retries the rest.
+                if self._can_commit():
+                    self.env.cr.commit()
         return documents.invoice_ids
+
+    def _myinvois_import_received_bill(self, partner):
+        """
+        Create the bill of the received document self from the document validated by MyInvois, with its lines and taxes.
+
+        :param partner: the supplier of the document.
+        """
+        self.ensure_one()
+        result = self.company_id.sudo().l10n_my_edi_proxy_user_id._l10n_my_edi_contact_proxy(
+            endpoint='api/l10n_my_edi/1/get_document_file',
+            params={'document_uuid': self.myinvois_external_uuid},
+        )
+        if 'error' in result:
+            raise UserError(self._myinvois_map_error(result['error']))
+        document = result['document']
+        if not document.lstrip().startswith('<'):
+            document = self._myinvois_ubl_json_to_xml(document)
+        attachment = self.env['ir.attachment'].create({
+            'name': f'{self.name}.xml',
+            'raw': document.encode(),
+        })
+        bill = self.env['account.move'].create({
+            'move_type': self.move_type,
+            'journal_id': self.journal_id.id,
+        })
+        if 'is_in_extractable_state' in bill._fields:
+            bill.is_in_extractable_state = False
+        bill._extend_with_attachments(bill._to_files_data(attachment), new=True)
+        # The UBL import looks for the supplier by Tax ID, while MyInvois gives its TIN as an identification.
+        # MyInvois documents are all invoices: the import only knows a credit note by its type code.
+        bill.write({'partner_id': partner.id, 'move_type': self.move_type})
+        self.invoice_ids = [Command.link(bill.id)]
+
+    @api.model
+    def _myinvois_ubl_json_to_xml(self, document):
+        """
+        Convert a document submitted to MyInvois in JSON to the same UBL in XML. In the UBL JSON representation, each
+        element is a list of objects: a basic component holds its value in "_" and its attributes, an aggregate holds
+        its children. The signature in UBLExtensions is left out, as the import doesn't read it.
+
+        :param document: the document as a JSON string.
+        :return: the document as an XML string.
+        """
+        data = json.loads(document)
+        aggregate_namespace, basic_namespace = data['_A'], data['_B']
+
+        def add_children(element, children):
+            for name, nodes in children.items():
+                if name == 'UBLExtensions':
+                    continue
+                for node in nodes:
+                    if '_' in node:
+                        attributes = {key: str(value) for key, value in node.items() if key != '_'}
+                        child = etree.SubElement(element, f'{{{basic_namespace}}}{name}', attributes)
+                        # json.dumps writes the booleans of UBL as true/false.
+                        child.text = node['_'] if isinstance(node['_'], str) else json.dumps(node['_'])
+                    else:
+                        add_children(etree.SubElement(element, f'{{{aggregate_namespace}}}{name}'), node)
+
+        [(root_name, [root_children])] = [(key, value) for key, value in data.items() if not key.startswith('_')]
+        root = etree.Element(
+            f'{{{data["_D"]}}}{root_name}',
+            nsmap={None: data['_D'], 'cac': aggregate_namespace, 'cbc': basic_namespace},
+        )
+        add_children(root, root_children)
+        return etree.tostring(root, encoding='unicode')
 
     def _myinvois_get_received_documents_partners(self, company, create_missing):
         """

@@ -76,7 +76,11 @@
                     <field name="is_debit_note" optional="hide" widget="boolean_toggle"/>
                     <field name="myinvois_document_type" optional="hide"/>
                     <field name="myinvois_supplier_name" optional="show"/>
+                    <field name="myinvois_supplier_tin" optional="show"/>
                     <field name="myinvois_issuance_date"/>
+                    <field name="myinvois_validation_time" optional="show"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="myinvois_amount_total" optional="show" sum="Total"/>
                     <field name="myinvois_state" widget="badge"
                            decoration-info="myinvois_state == 'in_progress'"
                            decoration-success="myinvois_state in ('valid', 'received')"

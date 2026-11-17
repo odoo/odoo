@@ -7,6 +7,7 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import new_test_user, tagged
+from odoo.tools import file_open
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -48,7 +49,7 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             'supplier_name': 'Partner A',
             'issuance_datetime': '2024-07-10T02:00:00Z',
             'validation_datetime': '2024-07-10T02:05:00Z',
-            'total': 1000.0,
+            'total': 1100.0,
             **values,
         }
 
@@ -72,8 +73,41 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             action = wizard.button_sync()
         return action, calls
 
+    def _get_documents(self, uuids):
+        return self.env['myinvois.document'].search([('myinvois_external_uuid', 'in', uuids)])
+
     def _get_received_bills(self, uuids):
-        return self.env['myinvois.document'].search([('myinvois_external_uuid', 'in', uuids)]).invoice_ids
+        return self._get_documents(uuids).invoice_ids
+
+    def _document_file(self, document):
+        """ The document as MyInvois validated it: an invoice of 2 chairs at 500.00 with 10% sales tax. """
+        with file_open('l10n_my_edi/tests/received_documents/invoice.xml') as file:
+            return file.read().format(
+                reference=document.name,
+                type_code=document.myinvois_document_type,
+                supplier_tin=document.myinvois_supplier_tin,
+                supplier_name=document.myinvois_supplier_name,
+            )
+
+    def _create_bills(self, uuids, files=None):
+        """ Create the bills of the received documents, the proxy returning their files (built from the template
+        unless given).
+
+        :return: the action returned and the uuids of the documents fetched from the proxy.
+        """
+        documents = self._get_documents(uuids)
+        files = files or {document.myinvois_external_uuid: self._document_file(document) for document in documents}
+        files = {uuid: file if isinstance(file, dict) else {'document': file} for uuid, file in files.items()}
+        fetched_uuids = []
+
+        def mock_contact_proxy(proxy_user, endpoint, params):
+            self.assertEqual(endpoint, 'api/l10n_my_edi/1/get_document_file')
+            fetched_uuids.append(params['document_uuid'])
+            return files[params['document_uuid']]
+
+        with patch(CONTACT_PROXY_METHOD, new=mock_contact_proxy):
+            action = documents.action_create_received_bills()
+        return action, fetched_uuids
 
     @freeze_time('2024-08-15 10:00:00')
     def test_received_number_does_not_change_own_sequence(self):
@@ -111,7 +145,7 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
     @freeze_time('2024-08-15 10:00:00')
     def test_received_document_cannot_be_deleted(self):
         self._sync([[self._document_data('DOC1')]])
-        document = self._get_received_bills(['DOC1']).l10n_my_edi_received_document_id
+        document = self._get_documents(['DOC1'])
         for state in ('received', 'cancelled'):
             document.myinvois_state = state
             with self.assertRaisesRegex(UserError, 'Archive it instead'):
@@ -123,7 +157,7 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
     def test_supplier_vat_does_not_override_malaysian_tin(self):
         self.partner_a.l10n_my_edi_malaysian_tin = 'C9999999999'
         self._sync([[self._document_data('DOC1')]])
-        self.env['myinvois.document'].search([('myinvois_external_uuid', '=', 'DOC1')]).action_create_received_bills()
+        self._create_bills(['DOC1'])
         supplier = self._get_received_bills(['DOC1']).partner_id
         self.assertNotEqual(supplier, self.partner_a)
         self.assertEqual(supplier._l10n_my_edi_get_tin_for_myinvois(), 'C2584563201')
@@ -150,10 +184,9 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             mock.assert_not_called()
 
     @freeze_time('2024-08-15 10:00:00')
-    def test_sync_creates_draft_bills(self):
-        """ Each new valid document of a known supplier becomes a draft bill with a single line holding its total.
-        Anyone can issue a document to the company: the ones of unknown suppliers wait for the user to create their bill.
-        """
+    def test_sync_lists_received_documents(self):
+        """ The sync lists the new valid documents for the user to create the bills of the ones they expect. """
+        partner_count = self.env['res.partner'].search_count([])
         action, calls = self._sync([[
             self._document_data('DOC1'),
             # Issued on 2024-07-11 in Malaysia, which is still the 10th in UTC.
@@ -167,47 +200,102 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             'date_to': '2024-07-31T23:59:59+08:00',
             'page': 1,
         }])
-        documents = self.env['myinvois.document'].search([('myinvois_external_uuid', 'in', ['DOC1', 'DOC2', 'DOC3'])])
-        self.assertEqual(len(documents), 2)
-        invoice = documents.invoice_ids
-        self.assertEqual(self.env['account.move'].search(action['params']['next']['domain']), invoice)
-        unknown_supplier_document = documents - invoice.l10n_my_edi_received_document_id
-        self.assertRecordValues(unknown_supplier_document, [{'name': 'IV-DOC2', 'myinvois_supplier_tin': 'C9999999999', 'myinvois_supplier_name': 'New Supplier'}])
-        self.assertFalse(self.env['res.partner'].search([('vat', '=', 'C9999999999')]))
+        documents = self._get_documents(['DOC1', 'DOC2', 'DOC3'])
+        self.assertEqual(self.env['myinvois.document'].search([('journal_id', '=', action['params']['next']['context']['journal_id'])]), documents)
+        self.assertRecordValues(documents.sorted('name'), [
+            {
+                'name': 'IV-DOC1',
+                'move_type': 'in_invoice',
+                'myinvois_supplier_tin': 'C2584563201',
+                'myinvois_issuance_date': date(2024, 7, 10),
+                'myinvois_validation_time': datetime(2024, 7, 10, 2, 5),
+                'myinvois_amount_total': 1100.0,
+                'myinvois_submission_uid': 'SUB-DOC1',
+                'myinvois_document_long_id': 'LONG-DOC1',
+                'invoice_ids': [],
+            },
+            {
+                'name': 'IV-DOC2',
+                'move_type': 'in_refund',
+                'myinvois_supplier_tin': 'C9999999999',
+                'myinvois_issuance_date': date(2024, 7, 11),
+                'myinvois_validation_time': datetime(2024, 7, 10, 2, 5),
+                'myinvois_amount_total': 50.0,
+                'myinvois_submission_uid': 'SUB-DOC2',
+                'myinvois_document_long_id': 'LONG-DOC2',
+                'invoice_ids': [],
+            },
+        ])
+        self.assertEqual(self.env['res.partner'].search_count([]), partner_count)
 
-        action = unknown_supplier_document.action_create_received_bills()
-        credit_note = unknown_supplier_document.invoice_ids
-        self.assertEqual(self.env['account.move'].search(action['domain']), credit_note)
+    @freeze_time('2024-08-15 10:00:00')
+    def test_create_bills(self):
+        """ Each bill is imported from the document as MyInvois validated it, with its lines and taxes. The supplier
+        is found by its TIN, or created if it is not in Odoo yet.
+        """
+        self._sync([[
+            self._document_data('DOC1'),
+            self._document_data('DOC2', document_type='02', supplier_tin='C9999999999', supplier_name='New Supplier'),
+        ]])
+        partner_count = self.env['res.partner'].search_count([])
+
+        action, fetched_uuids = self._create_bills(['DOC1', 'DOC2'])
+
+        self.assertEqual(sorted(fetched_uuids), ['DOC1', 'DOC2'])
+        bills = self._get_received_bills(['DOC1', 'DOC2']).sorted('ref')
+        self.assertEqual(self.env['account.move'].search(action['domain']), bills)
         new_supplier = self.env['res.partner'].search([('vat', '=', 'C9999999999')])
         self.assertRecordValues(new_supplier, [{'name': 'New Supplier', 'is_company': True}])
-        self.assertRecordValues(invoice + credit_note, [
+        self.assertEqual(self.env['res.partner'].search_count([]), partner_count + 1)
+        self.assertRecordValues(bills, [
             {
                 'move_type': 'in_invoice',
                 'state': 'draft',
                 'partner_id': self.partner_a.id,
+                'ref': 'IV-DOC1',
                 'invoice_date': date(2024, 7, 10),
-                'amount_total': 1000.0,
+                'amount_total': 1100.0,
                 'l10n_my_edi_state': 'received',
-                'l10n_my_edi_document_type': '01',
                 'l10n_my_edi_validation_time': datetime(2024, 7, 10, 2, 5),
             },
             {
                 'move_type': 'in_refund',
                 'state': 'draft',
                 'partner_id': new_supplier.id,
-                'invoice_date': date(2024, 7, 11),
-                'amount_total': 50.0,
+                'ref': 'IV-DOC2',
+                'invoice_date': date(2024, 7, 10),
+                'amount_total': 1100.0,
                 'l10n_my_edi_state': 'received',
-                'l10n_my_edi_document_type': '02',
                 'l10n_my_edi_validation_time': datetime(2024, 7, 10, 2, 5),
             },
         ])
-        self.assertRecordValues(invoice.invoice_line_ids, [{'quantity': 1.0, 'price_unit': 1000.0, 'tax_ids': []}])
-        self.assertRecordValues(invoice.l10n_my_edi_received_document_id, [{
-            'name': 'IV-DOC1',
-            'myinvois_submission_uid': 'SUB-DOC1',
-            'myinvois_document_long_id': 'LONG-DOC1',
-        }])
+        tax_10 = self.env['account.chart.template'].ref('l10n_my_tax_purchase_10')
+        self.assertRecordValues(bills.invoice_line_ids, [
+            {'name': 'Chairs', 'quantity': 2.0, 'price_unit': 500.0, 'tax_ids': tax_10.ids, 'balance': 1000.0},
+            {'name': 'Chairs', 'quantity': 2.0, 'price_unit': 500.0, 'tax_ids': tax_10.ids, 'balance': -1000.0},
+        ])
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_create_bill_from_json_document(self):
+        """ A document submitted to MyInvois in JSON is the same UBL: its bill gets its lines and taxes all the same. """
+        self._sync([[self._document_data('DOC1')]])
+        with file_open('l10n_my_edi/tests/received_documents/invoice.json') as file:
+            self._create_bills(['DOC1'], files={'DOC1': file.read()})
+
+        bill = self._get_received_bills(['DOC1'])
+        self.assertRecordValues(bill, [{'partner_id': self.partner_a.id, 'ref': 'IV-DOC1', 'invoice_date': date(2024, 7, 10), 'amount_total': 1100.0}])
+        tax_10 = self.env['account.chart.template'].ref('l10n_my_tax_purchase_10')
+        self.assertRecordValues(bill.invoice_line_ids, [{'name': 'Chairs', 'quantity': 2.0, 'price_unit': 500.0, 'tax_ids': tax_10.ids}])
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_create_bills_error(self):
+        """ A document MyInvois refuses to give gets no bill, for the user to try again. """
+        self._sync([[self._document_data('DOC1'), self._document_data('DOC2')]])
+        files = {document.myinvois_external_uuid: self._document_file(document) for document in self._get_documents(['DOC1'])}
+        files['DOC2'] = {'error': {'reference': 'rate_limit_exceeded'}}
+        with self.assertRaisesRegex(UserError, 'request limit has been reached'):
+            self._create_bills(['DOC1', 'DOC2'], files=files)
+        self.assertFalse(self.env['account.move'].search([('ref', '=', 'IV-DOC2')]))
 
     @freeze_time('2024-07-15 10:00:00')
     def test_sync_current_month_until_now(self):
@@ -220,12 +308,13 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         # DOC1 shifted to the second page as MyInvois received a new document while we were paging.
         _action, calls = self._sync([[self._document_data('DOC1')], [self._document_data('DOC1'), self._document_data('DOC2')]])
         self.assertEqual([call['page'] for call in calls], [1, 2])
-        self.assertEqual(len(self._get_received_bills(['DOC1', 'DOC2'])), 2)
+        self.assertEqual(len(self._get_documents(['DOC1', 'DOC2'])), 2)
 
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_again(self):
         """ Syncing a month again only imports the new documents, and reflects the cancellations of the supplier. """
         self._sync([[self._document_data('DOC1'), self._document_data('DOC2'), self._document_data('DOC4')]])
+        self._create_bills(['DOC1', 'DOC2', 'DOC4'])
         bills = self._get_received_bills(['DOC1', 'DOC2', 'DOC4'])
         bills.filtered(lambda b: b.ref == 'IV-DOC4').action_post()
 
@@ -249,11 +338,12 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_again_archived_document(self):
         self._sync([[self._document_data('DOC1')]])
-        bill = self._get_received_bills(['DOC1'])
-        bill.l10n_my_edi_received_document_id.action_archive()
+        document = self._get_documents(['DOC1'])
+        document.action_archive()
 
         self._sync([[self._document_data('DOC1')]])
-        self.assertEqual(self.env['account.move'].search([('ref', '=', 'IV-DOC1')]), bill)
+        self.assertFalse(self._get_documents(['DOC1']))
+        self.assertEqual(self.env['myinvois.document'].with_context(active_test=False).search([('myinvois_external_uuid', '=', 'DOC1')]), document)
 
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_in_branch(self):
@@ -286,11 +376,11 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         })
         with patch(CONTACT_PROXY_METHOD, return_value={'documents': [self._document_data('DOC1')], 'page_count': 1}):
             action = wizard.button_sync()
-        self.assertEqual(action['tag'], 'display_notification')
-        self.assertFalse(self.env['account.move'].search([('journal_id', '=', branch_journal.id)]))
+        self.assertEqual(action['params']['message'], 'No new document was received on MyInvois for the selected dates.')
+        self.assertFalse(self.env['myinvois.document'].search([('journal_id', '=', branch_journal.id)]))
 
     @freeze_time('2024-08-15 10:00:00')
-    def test_sync_links_bill_entered_by_user(self):
+    def test_create_bills_links_bill_entered_by_user(self):
         """ A bill the user entered already, for the same supplier and reference, gets the document instead of a new one. """
         bill_vals = {
             'move_type': 'in_invoice',
@@ -301,8 +391,10 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         }
         entered_bill, other_supplier_bill = self.env['account.move'].create([bill_vals, {**bill_vals, 'partner_id': self.partner_b.id}])
 
-        action, _calls = self._sync([[self._document_data('DOC1')]])
+        self._sync([[self._document_data('DOC1')]])
+        action, fetched_uuids = self._create_bills(['DOC1'])
 
+        self.assertFalse(fetched_uuids)
         self.assertEqual(self._get_received_bills(['DOC1']), entered_bill)
         self.assertEqual(self.env['account.move'].search(action['domain']), entered_bill)
         self.assertRecordValues(entered_bill + other_supplier_bill, [
@@ -311,16 +403,18 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         ])
 
     @freeze_time('2024-08-15 10:00:00')
-    def test_sync_supplier_malaysian_tin_first(self):
+    def test_create_bills_supplier_malaysian_tin_first(self):
         """ The Malaysian TIN of a partner is the one used on MyInvois; its Tax ID only when it has none. """
         self.partner_b.l10n_my_edi_malaysian_tin = self.partner_a.vat
         self._sync([[self._document_data('DOC1', supplier_tin=self.partner_a.vat)]])
+        self._create_bills(['DOC1'])
         self.assertEqual(self._get_received_bills(['DOC1']).partner_id, self.partner_b)
 
     @freeze_time('2024-08-15 10:00:00')
     def test_received_bill_is_not_sent_to_myinvois(self):
         """ The supplier already issued the e-invoice: sending the bill would issue a self-billed invoice. """
         self._sync([[self._document_data('DOC1')]])
+        self._create_bills(['DOC1'])
         bill = self._get_received_bills(['DOC1'])
         bill.action_post()
 
@@ -332,14 +426,15 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
 
     @freeze_time('2024-08-15 10:00:00')
     def test_post_received_bill_total(self):
-        """ The line of a received bill can be split, as long as the bill still matches the e-invoice. """
+        """ The lines of a received bill can be changed, as long as the bill still matches the e-invoice. """
         self._sync([[self._document_data('DOC1')]])
+        self._create_bills(['DOC1'])
         bill = self._get_received_bills(['DOC1'])
-        bill.invoice_line_ids.price_unit = 600.0
+        bill.invoice_line_ids.quantity = 1.0
         with self.assertRaisesRegex(UserError, 'no longer matches the e-invoice'):
             bill.action_post()
 
-        bill.invoice_line_ids = [Command.create({'name': 'Delivery', 'quantity': 1, 'price_unit': 400.0, 'tax_ids': []})]
+        bill.invoice_line_ids = [Command.create({'name': 'Delivery', 'quantity': 1, 'price_unit': 500.0, 'tax_ids': bill.invoice_line_ids.tax_ids.ids})]
         bill.action_post()
         self.assertEqual(bill.state, 'posted')
 
@@ -388,6 +483,7 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
     @freeze_time('2024-08-15 10:00:00')
     def test_received_bill_type_is_the_document_type(self):
         self._sync([[self._document_data('DOC1')]])
+        self._create_bills(['DOC1'])
         bill = self._get_received_bills(['DOC1'])
         with self.assertRaisesRegex(UserError, 'cannot be changed'):
             bill.action_switch_move_type()
