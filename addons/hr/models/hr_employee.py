@@ -3397,16 +3397,18 @@ class HrEmployee(models.Model):
         If a departure is already planned (not applied), returns a client action
         asking to cancel it first.
 
-        :raise UserError: if the employee is not on its latest version, if the contract of that
-            version has ended, or if the employee has already departed
+        :raise UserError: if the employee is not on its latest version, or if the employee has already
+            departed. A contract already ended is ended on its end date by default.
         """
         self.ensure_one()
         latest_version = self.employee_id.version_ids.sorted("date_version", reverse=True)[0]
         if self.version_id != latest_version:
             raise UserError(self.env._("You can only end the collaboration from the latest version of the employee."))
-        today = fields.Date.context_today(self)
-        if latest_version.contract_date_end and latest_version.contract_date_end < today:
-            raise UserError(self.env._("You can't end the collaboration of an employee without contract, archive it instead."))
+        # A contract already ended (end date set to bound the last payslip) is still ended through a departure,
+        # on its end date by default
+        ended_contract_date = latest_version.contract_date_start and latest_version.contract_date_end
+        if ended_contract_date and ended_contract_date >= fields.Date.context_today(self):
+            ended_contract_date = False
         if self.departure_id:
             if self.departure_id.apply_date:
                 raise UserError(self.env._("You can't modify the departure of an employee that has already departed."))
@@ -3431,6 +3433,7 @@ class HrEmployee(models.Model):
             'target': 'new',
             'context': {
                 'default_employee_id': self.id,
+                **({'default_dismissal_date': ended_contract_date} if ended_contract_date else {}),
             },
         }
 

@@ -184,6 +184,24 @@ class TestDeparture(MailCase, TestHrCommon):
             "The employee's contract end date should revert to False after cancelling the departure."
         )
 
+    @freeze_time('2025-11-17')
+    def test_departure_of_an_ended_contract(self):
+        # The end date was set on the contract to bound the last payslip, before ending the collaboration
+        employee = self.env['hr.employee'].create({
+            'name': 'Ended Contract Employee',
+            'date_version': date(2025, 2, 1),
+            'contract_date_start': date(2025, 2, 1),
+            'contract_date_end': date(2025, 10, 31),
+        })
+        self.assertFalse(employee.is_in_contract)
+        action = employee.action_new_departure()
+        self.assertEqual(action['context']['default_dismissal_date'], date(2025, 10, 31))
+        departure = self.env['hr.employee.departure'].with_context(**action['context']).create({
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+        })
+        self.assertEqual(departure.departure_date, date(2025, 10, 31))
+        self.assertEqual(employee.contract_date_end, date(2025, 10, 31))
+
     def assertDepartureTracked(self, title, changes):
         """ Check the departure fields are tracked in the employee chatter under the
         given title. With hr_payroll, the payroll restricted fields are logged in a
