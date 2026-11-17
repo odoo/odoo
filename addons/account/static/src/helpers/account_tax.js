@@ -2773,6 +2773,7 @@ export const accountTaxHelpers = {
                             .filter((t) => t.tax.price_include)
                             .reduce((sum, t) => sum + t.raw_tax_amount_currency, 0)) /
                     (base_line.quantity || 1.0),
+                discount: 0.0,
                 tax_details: second_tax_details,
                 _removed_tax_data: tax_data_to_remove,
             });
