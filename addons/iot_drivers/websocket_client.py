@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import requests
 import time
 import urllib.parse
@@ -11,6 +12,7 @@ from odoo.addons.iot_drivers.tools import communication, helpers, system
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
+PAYLOAD_URL_RE = re.compile(r"/iot/box/payload/\d+\?access_token=[\w-]+")
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
 
@@ -61,9 +63,41 @@ class WebsocketClient(Thread):
             if payload.get('iot_identifier') != IOT_IDENTIFIER:
                 continue
 
+            if payload_url := payload.get("payload_url"):
+                try:
+                    payload = self._fetch_payload(payload_url)
+                except (requests.exceptions.RequestException, ValueError):
+                    _logger.exception(
+                        "Could not fetch the IoT message payload for device %s (operation %s)",
+                        payload.get('device_identifier'), payload.get('session_id'),
+                    )
+                    send_to_controller({
+                        'session_id': payload.get('session_id', '0'),
+                        'iot_box_identifier': IOT_IDENTIFIER,
+                        'device_identifier': payload.get('device_identifier', IOT_IDENTIFIER),
+                        'status': 'error',
+                        'message': "ERROR_FETCH_PAYLOAD",
+                    })
+                    continue
+
             result = communication.handle_message(message_type, 'ws', **payload)
             if result:
                 send_to_controller(result)
+
+    def _fetch_payload(self, payload_url):
+        """Fetch a large message that the server sent as a URL."""
+        # Only this route: older databases do not have it, so a URL forged there gets a 404.
+        if not PAYLOAD_URL_RE.fullmatch(payload_url):
+            msg = f"Invalid payload URL: {payload_url}"
+            raise ValueError(msg)
+        response = requests.get(
+            f"{self.server_url}{payload_url}",
+            cookies={"session_id": self.session_id},
+            timeout=10,
+            allow_redirects=False,
+        )
+        response.raise_for_status()
+        return response.json()
 
     def on_close(self, ws, close_status_code, close_msg):
         _logger.warning("websocket closed with status code %s (%s)", close_status_code, close_msg)
