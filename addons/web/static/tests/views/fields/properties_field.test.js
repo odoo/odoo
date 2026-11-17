@@ -884,7 +884,7 @@ test("properties: tags", async () => {
     // Change the tag color
     await click(".o_tag:nth-child(2)", { root: popover });
     await animationFrame();
-    await click(".o_tag_popover .o_colorlist_item_color_11");
+    await click(".o_tag_popover button.o_colorlist_color_11");
     await animationFrame();
     expect(queryFirst(".o_tag:nth-child(2)", { root: popover })).toHaveClass("o_tag_color_11", {
         message: "Should have changed the tag color",
