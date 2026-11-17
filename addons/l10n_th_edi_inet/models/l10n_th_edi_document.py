@@ -332,6 +332,13 @@ class L10nThEdiDocument(models.AbstractModel):
         }
         return etree.tostring(dict_to_xml(document_node, nsmap=nsmap), xml_declaration=True, encoding='UTF-8')
 
+    def _l10n_th_edi_is_same_document(self, signed_xml, document_values):
+        """ Whether a signed document found by this document's number is this document, and not another one issued with
+        the same number. """
+        paths = ('ExchangedDocument/TypeCode', 'BuyerTradeParty/SpecifiedTaxRegistration/ID', 'GrandTotalAmount')
+        xpath = ' | '.join('//' + '/'.join(f"*[local-name()='{tag}']" for tag in path.split('/')) + '/text()' for path in paths)
+        return etree.fromstring(signed_xml).xpath(xpath) == etree.fromstring(self._l10n_th_edi_get_xml(document_values)).xpath(xpath)
+
     # -------------------------------------------------------------------------
     # SENDING
     # -------------------------------------------------------------------------

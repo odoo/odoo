@@ -125,13 +125,13 @@ class L10nThEdiInetDocument(models.AbstractModel):
             return True
         if response.get('errorCode') in INET_NOT_FOUND_ERROR_CODES:
             return False
-        self._l10n_th_edi_inet_process_response(response, document_values)
+        self._l10n_th_edi_inet_process_response(response, document_values, found_by_number=not self.l10n_th_edi_inet_transaction_code)
         return True
 
     def _l10n_th_edi_inet_format_error(self, response):
         return f"[{response.get('errorCode')}] {response.get('errorMessage')}"
 
-    def _l10n_th_edi_inet_process_response(self, response, document_values):
+    def _l10n_th_edi_inet_process_response(self, response, document_values, found_by_number=False):
         status = response.get('status')
         if status == 'OK':
             xml_content, error = self._l10n_th_edi_inet_download(response.get('xmlURL'))
@@ -140,6 +140,11 @@ class L10nThEdiInetDocument(models.AbstractModel):
             if error:
                 # The document is signed, and its status gives new download links.
                 vals = {'l10n_th_edi_state': 'processing', 'l10n_th_edi_error': error}
+            elif found_by_number and not self._l10n_th_edi_is_same_document(xml_content, document_values):
+                vals = {
+                    'l10n_th_edi_state': 'error',
+                    'l10n_th_edi_error': self.env._("INET holds another document numbered %s.", document_values['number']),
+                }
             else:
                 self._l10n_th_edi_save_signed_files(xml_content, pdf_content, document_values)
                 vals = {'l10n_th_edi_state': 'signed', 'l10n_th_edi_error': False}

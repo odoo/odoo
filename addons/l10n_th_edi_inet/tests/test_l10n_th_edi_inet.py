@@ -42,8 +42,9 @@ class TestL10nThEdiInet(AccountTestInvoicingCommon):
         })
 
     @contextmanager
-    def _mock_inet(self, *responses):
-        """ Answer INET's API calls with the given responses, in order, and collect the calls as (endpoint, fields). """
+    def _mock_inet(self, *responses, files=None):
+        """ Answer INET's API calls with the given responses, in order, and collect the calls as (endpoint, fields).
+        Files are downloaded from `files` by URL, else are their own URL. """
         responses = list(responses)
         calls = []
 
@@ -55,7 +56,7 @@ class TestL10nThEdiInet(AccountTestInvoicingCommon):
             return Mock(json=Mock(return_value=response))
 
         def get(url, timeout):
-            return Mock(content=f'signed {url}'.encode())
+            return Mock(content=(files or {}).get(url, f'signed {url}'.encode()))
 
         with (
             patch('odoo.addons.l10n_th_edi_inet.models.l10n_th_edi_inet_document.requests.post', side_effect=post),
@@ -270,10 +271,20 @@ class TestL10nThEdiInet(AccountTestInvoicingCommon):
             tax_invoice.action_l10n_th_edi_send()
         self.assertEqual(tax_invoice.l10n_th_edi_state, 'unknown')
 
+        found = {'status': 'OK', 'totalRecord': 1, 'xmlURL': ['https://inet/xml'], 'pdfURL': ['https://inet/pdf']}
+        signed_xml = tax_invoice._l10n_th_edi_get_xml(tax_invoice._l10n_th_edi_get_document_values())
+
+        # Another system issued a document with the same number.
+        with self._mock_inet(found, files={'https://inet/xml': signed_xml.replace(b'1070.00', b'2140.00')}):
+            tax_invoice.action_l10n_th_edi_send()
+        self.assertRecordValues(tax_invoice, [{
+            'l10n_th_edi_state': 'error',
+            'l10n_th_edi_error': f"INET holds another document numbered {tax_invoice.tax_invoice_number}.",
+        }])
+        tax_invoice.l10n_th_edi_state = 'unknown'
+
         # INET signed it after all.
-        with self._mock_inet({
-            'status': 'OK', 'totalRecord': 1, 'transactionCode': 'TX2', 'xmlURL': ['https://inet/xml'], 'pdfURL': ['https://inet/pdf'],
-        }) as calls:
+        with self._mock_inet(found, files={'https://inet/xml': signed_xml}) as calls:
             tax_invoice.action_l10n_th_edi_send()
         self.assertEqual(tax_invoice.l10n_th_edi_state, 'signed')
         self.assertEqual(tax_invoice.l10n_th_edi_pdf_file_id.raw.content, b'signed https://inet/pdf')
