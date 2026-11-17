@@ -14,7 +14,7 @@ declare module "plugins" {
     import { DomReferenceMapShared, serializable_descendants_processors } from "@html_editor/core/dom_reference_map_plugin";
     import { dynamic_field_label } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
-    import { HistoryShared, on_apply_history_commit_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_will_replay_history_handlers, on_history_replayed_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, on_will_collect_history_draft_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, snapshot_history_commit_data_processors, history_data_properties, history_metadata_properties } from "@html_editor/core/history_plugin";
+    import { HistoryShared, on_apply_history_commit_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_will_replay_history_handlers, on_history_replayed_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, on_will_collect_history_draft_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, history_data_properties, history_metadata_properties } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
@@ -265,7 +265,6 @@ declare module "plugins" {
         move_widget_position_processors: move_widget_position_processors;
         normalize_processors: normalize_processors;
         serializable_descendants_processors: serializable_descendants_processors;
-        snapshot_history_commit_data_processors: snapshot_history_commit_data_processors;
         targeted_nodes_processors: targeted_nodes_processors;
         to_inline_code_processors: to_inline_code_processors;
 
