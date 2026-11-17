@@ -408,3 +408,13 @@
         --o-colorlist-contrast: #{color-contrast(nth($o-colors-complete, $i))};
     }
 }
+
+/* Tones of the tags and badges, which stored messages and pages name by their
+   color classes */
+@for $i from 1 through length($o-colors-bg-subtle) {
+    .o_tag_color_#{$i - 1}, .o_badge_color_#{$i - 1} {
+        --o-colorlist-bg-subtle: #{nth($o-colors-bg-subtle, $i)};
+        --o-colorlist-border: #{nth($o-colors-border, $i)};
+        --o-colorlist-text-emphasis: #{nth($o-colors-text-emphasis, $i)};
+    }
+}
