@@ -1,9 +1,32 @@
-$font-size-base: 1rem !default;
+// This keeps the kiosk layout the same whether website is installed or not, and
+// consistent with the kiosk displayed in the PoS (pos_hr_attendance).
+$font-size-base: $o-attendance-font-size-base !default;
 $font-size-root: $o-attendance-font-size-base !default;
 $small-font-size:   .75em !default;
 
 $spacer: 1rem !default;
+$body-bg: $o-gray-200 !default;
+$theme-colors: ('primary': $o-brand-primary) !default;
 
 $border-radius: .75rem !default;
 $border-radius-lg: 1rem !default;
 $border-color: $o-gray-300 !default;
+
+$card-bg: $o-white !default;
+
+$list-group-bg: $o-white !default;
+$list-group-hover-bg: $o-gray-200 !default;
+$list-group-action-active-bg: $o-gray-400 !default;
+
+$color-contrast-dark: $o-gray-900 !default;
+$color-contrast-light: $o-white !default;
+
+$badge-color: inherit !default;
+
+$dropdown-link-hover-color: $o-black !default;
+$dropdown-link-hover-bg: rgba($o-black, 0.08) !default;
+$dropdown-link-active-color: $o-black !default;
+
+$popover-bg: $o-white !default;
+
+$modal-content-bg: $o-white !default;
