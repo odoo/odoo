@@ -1115,13 +1115,25 @@ export class PosDataPlugin extends Plugin {
         const finalizedStates = new Map(
             this.models["pos.order"].filter((o) => o.finalized).map((o) => [o.uuid, o.state])
         );
+        const cleanOrderIds = new Set(
+            this.models["pos.order"].filter((o) => o.isSynced && !o.isDirty()).map((o) => o.id)
+        );
+        let editedOrders = [];
         const result = await this.callRelated(
             "pos.order",
             "read_pos_orders",
             [domain],
             {},
             false,
-            true
+            true,
+            (data) => {
+                // Orders edited locally during the read must keep their edits
+                editedOrders = this.models["pos.order"]
+                    .readMany((data["pos.order"] || []).map((o) => o.id))
+                    .filter((o) => cleanOrderIds.has(o.id) && o.isDirty());
+                const ids = new Set(editedOrders.map((o) => o.id));
+                return ids.size ? this._withoutOrdersData(data, ids) : data;
+            }
         );
         const config = this.models["pos.config"].get(odoo.pos_config_id);
         const session = this.models["pos.session"].get(odoo.pos_session_id);
@@ -1136,7 +1148,38 @@ export class PosDataPlugin extends Plugin {
             order.config_id = config;
             order.session_id = session;
         }
-        return orders;
+        return [...orders, ...editedOrders];
+    }
+
+    _withoutOrdersData(data, orderIds) {
+        // Exclude the orders and the records they own (lines, payments, ...)
+        const excluded = { "pos.order": new Set(orderIds) };
+        const ownedModels = this.opts.cascadeDeleteModels.filter((model) => data[model]);
+        let changed = true;
+        while (changed) {
+            changed = false;
+            for (const model of ownedModels) {
+                const parentFields = Object.values(this.relations[model] || {}).filter(
+                    (rel) => rel.type === "many2one" && rel.relation !== model
+                );
+                const ids = (excluded[model] ||= new Set());
+                for (const record of data[model]) {
+                    if (
+                        !ids.has(record.id) &&
+                        parentFields.some((rel) => excluded[rel.relation]?.has(record[rel.name]))
+                    ) {
+                        ids.add(record.id);
+                        changed = true;
+                    }
+                }
+            }
+        }
+        return Object.fromEntries(
+            Object.entries(data).map(([model, records]) => [
+                model,
+                excluded[model] ? records.filter((r) => !excluded[model].has(r.id)) : records,
+            ])
+        );
     }
 
     async checkAndDeleteMissingOrders(results) {
@@ -1229,12 +1272,16 @@ export class PosDataPlugin extends Plugin {
         args = [],
         kwargs = {},
         queue = true,
-        loadMessingRecords = false
+        loadMessingRecords = false,
+        filterData = null
     ) {
         let data = await this.execute({ type: "call", model, method, args, kwargs, queue });
 
         if (loadMessingRecords) {
             data = await this.missingRecursive(data);
+        }
+        if (data && filterData) {
+            data = filterData(data);
         }
 
         if (data) {
