@@ -14,12 +14,14 @@ function cleanupWebSocketCallbacks() {
 }
 
 function cleanupWebSocketWorker() {
-    if (currentWebSocketWorker.connectTimeout) {
-        clearTimeout(currentWebSocketWorker.connectTimeout);
+    for (const worker of webSocketWorkers) {
+        if (worker.connectTimeout) {
+            clearTimeout(worker.connectTimeout);
+        }
+        worker.firstSubscribeResolver = Promise.withResolvers();
+        worker.websocket = null;
     }
-
-    currentWebSocketWorker.firstSubscribeResolver = Promise.withResolvers();
-    currentWebSocketWorker.websocket = null;
+    webSocketWorkers.length = 0;
     currentWebSocketWorker = null;
 }
 
@@ -33,20 +35,37 @@ function getWebSocketCallbacks() {
     return wsCallbacks;
 }
 
-function setupWebSocketWorker() {
-    currentWebSocketWorker = new WebsocketWorker();
+function createWebSocketWorker() {
+    const worker = new WebsocketWorker();
     // Fixed reconnect delay, longer than the mocked WebSocket's open/close ticks.
-    currentWebSocketWorker.INITIAL_RECONNECT_DELAY = 1000;
-    currentWebSocketWorker.RECONNECT_JITTER = 0;
-    currentWebSocketWorker.connectRetryDelay = 1000;
+    worker.INITIAL_RECONNECT_DELAY = 1000;
+    worker.RECONNECT_JITTER = 0;
+    worker.connectRetryDelay = 1000;
+    webSocketWorkers.push(worker);
+    return worker;
+}
 
+function setupWebSocketWorker() {
+    currentWebSocketWorker = createWebSocketWorker();
+    let currentVersion = null;
     mockWorker(function onWorkerConnected(worker) {
+        // As in a browser, another version of the bundle is another worker.
+        const url = new URL(worker.url, location.origin);
+        const version = url.pathname.endsWith("/bus/websocket_worker_bundle")
+            ? url.searchParams.get("v")
+            : null;
+        if (version && currentVersion && version !== currentVersion) {
+            currentWebSocketWorker = createWebSocketWorker();
+        }
+        currentVersion = version || currentVersion;
         currentWebSocketWorker.registerClient(worker._messageChannel.port2);
     });
 }
 
 /** @type {WebsocketWorker | null} */
 let currentWebSocketWorker = null;
+/** @type {WebsocketWorker[]} */
+const webSocketWorkers = [];
 /** @type {Map<string, (data: any) => any> | null} */
 let wsCallbacks = null;
 

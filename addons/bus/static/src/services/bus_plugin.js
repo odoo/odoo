@@ -10,7 +10,13 @@ import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
 import { WorkerPlugin } from "@bus/services/worker_plugin";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["BUS:INITIALIZED", "BUS:NOTIFICATION", "BUS:PROVIDE_LOGS"]);
+const INTERNAL_EVENTS = new Set([
+    "BUS:INITIALIZED",
+    "BUS:NOTIFICATION",
+    "BUS:PROVIDE_LOGS",
+    "BUS:WORKER_UPGRADE",
+    "BUS:LEAVE_RESPONSE",
+]);
 // Slightly delay the reconnection when coming back online as the network is not
 // ready yet and the exponential backoff would delay the reconnection by a lot.
 export const BACK_ONLINE_RECONNECT_DELAY = 5000;
@@ -122,6 +128,9 @@ export class BusPlugin extends Plugin {
             case "BUS:OUTDATED":
                 this.#multiTab.unregister();
                 break;
+            case "BUS:WORKER_UPGRADE":
+                this.#upgradeWorker(data);
+                break;
         }
         if (!INTERNAL_EVENTS.has(type)) {
             this.#bus.trigger(type, data);
@@ -137,10 +146,6 @@ export class BusPlugin extends Plugin {
         }
         ({ promise: this.#workerInitPromise, resolve: this.#resolveWorkerInit } =
             Promise.withResolvers());
-        let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
-        if (!uid && uid !== undefined) {
-            uid = false;
-        }
         const started = await this.#workerService.ensureWorkerStarted();
         if (!started) {
             console.warn(
@@ -150,6 +155,15 @@ export class BusPlugin extends Plugin {
             return;
         }
         await this.#workerService.registerHandler((ev) => this.handleMessage(ev));
+        this.#initializeConnection();
+        return this.#workerInitPromise;
+    }
+
+    #initializeConnection() {
+        let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
+        if (!uid && uid !== undefined) {
+            uid = false;
+        }
         this.#workerService.send("BUS:INITIALIZE_CONNECTION", {
             websocketURL: `${this.#params.serverURL().replace("http", "ws")}/websocket?version=${
                 session.bus_info.worker_version
@@ -159,7 +173,34 @@ export class BusPlugin extends Plugin {
             uid,
             startTs: this.startedAt.valueOf(),
         });
-        return this.#workerInitPromise;
+    }
+
+    /**
+     * @param {string} version Version of the new worker.
+     */
+    async #upgradeWorker(version) {
+        const resolveOldWorkerInit = this.#resolveWorkerInit;
+        ({ promise: this.#workerInitPromise, resolve: this.#resolveWorkerInit } =
+            Promise.withResolvers());
+        this.#workerInitPromise.then(resolveOldWorkerInit);
+        const {
+            started,
+            response: { channels, lastNotificationId },
+        } = await this.#workerService.upgrade(version, "BUS:LEAVE", "BUS:LEAVE_RESPONSE");
+        if (!started) {
+            this.#resolveWorkerInit();
+            this.#multiTab.unregister();
+            this.#bus.trigger("BUS:OUTDATED");
+            return;
+        }
+        session.bus_info.last_id = lastNotificationId ?? session.bus_info.last_id;
+        this.#initializeConnection();
+        for (const channel of channels) {
+            this.#workerService.send("BUS:ADD_CHANNEL", channel);
+        }
+        if (this.isActive()) {
+            this.#workerService.send("BUS:START");
+        }
     }
 
     addEventListener(type, listener, options) {
@@ -177,7 +218,8 @@ export class BusPlugin extends Plugin {
         this.isActive.set(true);
     }
 
-    deleteChannel(channel) {
+    async deleteChannel(channel) {
+        await this.#workerInitPromise;
         this.#workerService.send("BUS:DELETE_CHANNEL", channel);
     }
 

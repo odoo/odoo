@@ -9,10 +9,10 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { BusBus } from "./mock_server/mock_models/bus_bus";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
-import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
+import { onWebsocketEvent } from "./mock_websocket";
 
 import { BusPlugin } from "@bus/services/bus_plugin";
-import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import { WEBSOCKET_CLOSE_CODES, WebsocketWorker } from "@bus/workers/websocket_worker";
 import { runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
@@ -316,7 +316,7 @@ export async function waitNotifications(...expectedNotifications) {
  * @param {WorkerAction[]} targetActions
  */
 export function stepWorkerActions(targetActions) {
-    patchWithCleanup(getWebSocketWorker(), {
+    patchWithCleanup(WebsocketWorker.prototype, {
         _onClientMessage(_, { action }) {
             if (targetActions.includes(action)) {
                 expect.step(action);
