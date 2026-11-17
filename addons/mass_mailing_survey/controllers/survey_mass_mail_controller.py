@@ -20,8 +20,8 @@ class SurveyMassMailController(MassMailController):
 
     # Override
     def _preprocess_url(self, url, mailing_trace_id, code=None):
-        """Extend the survey URL with the recipient's email if the user is not
-        logged in, for the survey controller to create the answer with it."""
+        """Extend the URL with the mailing information linked to the survey,
+        if any, and with the recipient's email if not logged in."""
         url = super()._preprocess_url(url, mailing_trace_id, code=code)
         survey = request.env['link.tracker']._get_survey_from_url(url)
         if not survey:
@@ -30,6 +30,7 @@ class SurveyMassMailController(MassMailController):
         link = request.env['link.tracker.code'].sudo().search([('code', '=', code)], limit=1).link_id
         if not trace.email or trace.mass_mailing_id != link.mass_mailing_id:
             return url
+        url = self._add_url_params(url, {'mass_mailing_id': trace.mass_mailing_id.id})
         if request.env.user._is_public():
             url = self._add_url_params(url, {'email': trace.email})
         return url

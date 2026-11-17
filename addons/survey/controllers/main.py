@@ -210,6 +210,11 @@ class Survey(http.Controller):
     # TAKING SURVEY ROUTES
     # ------------------------------------------------------------
 
+    def _extract_answer_additional_vals(self, post):
+        """Extract any possible additional vals for the answer from the post parameters.
+           To be overridden"""
+        return {}
+
     @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
     def survey_start(self, survey_token, answer_token=None, email=False, **post):
         """ Start a survey by providing
@@ -243,7 +248,8 @@ class Survey(http.Controller):
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
         if not answer_sudo:
             try:
-                answer_sudo = survey_sudo._create_answer(user=request.env.user, email=email)
+                additional_vals = self._extract_answer_additional_vals(post)
+                answer_sudo = survey_sudo._create_answer(user=request.env.user, email=email, **additional_vals)
             except UserError:
                 answer_sudo = False
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_mailing_view_form" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.survey</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_bounced']" position="after">
+                <button name="action_view_survey_participants"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="check_box"
+                    groups="survey.group_survey_user"
+                    invisible="participants_count &lt; 1">
+                    <field string="Participants" name="participants_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
