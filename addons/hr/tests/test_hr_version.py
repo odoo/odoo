@@ -373,6 +373,12 @@ class TestHrVersion(TestHrCommon):
         self.assertTrue(employee._is_in_contract(date(2020, 1, 1)))
         self.assertFalse(employee._is_in_contract(date(2030, 1, 1)))
 
+        # Without date, today is checked at the call, not when the module was loaded
+        with freeze_time(date(2029, 6, 1)):
+            self.assertTrue(employee.version_id._is_in_contract())
+        with freeze_time(date(2030, 6, 1)):
+            self.assertFalse(employee.version_id._is_in_contract())
+
     def test_cron_update_current_version(self):
         cron = self.env.ref('hr.ir_cron_data_employee_update_current_version')
 
