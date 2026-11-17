@@ -575,12 +575,15 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.textInputContent);
+            try {
+                await cb(this.props.composer.textInputContent);
+            } finally {
+                this.state.active = true;
+            }
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
-            this.state.active = true;
             el.focus();
         } else if (attachments.some(({ uploading }) => Boolean(uploading))) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {

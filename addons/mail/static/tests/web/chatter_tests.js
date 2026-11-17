@@ -6,6 +6,7 @@ import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import {
     getFixture,
     makeDeferred,
@@ -86,6 +87,30 @@ QUnit.test("can post a message on a record thread", async (assert) => {
     await click(".o-mail-Composer button:enabled", { text: "Send" });
     await contains(".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
+});
+
+QUnit.test("composer stays usable when posting a message fails", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const postDef = makeDeferred();
+    const { openFormView } = await start({
+        async mockRPC(route) {
+            if (route === "/mail/message/post") {
+                step(route);
+                await postDef;
+                throw makeServerError({ description: "Posting failed" });
+            }
+        },
+    });
+    openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await contains(".o-mail-Composer-input[readonly]", { value: "hey" });
+    await assertSteps(["/mail/message/post"]);
+    postDef.resolve();
+    await contains(".o-mail-Composer-input:not([readonly])", { value: "hey" });
+    await contains(".o-mail-Composer button:enabled", { text: "Send" });
 });
 
 QUnit.test("can post a note on a record thread", async (assert) => {
