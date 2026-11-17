@@ -6,6 +6,7 @@
     padding: var(--ClickAndCollect__switch-padding, var(--o-bs-spacer-1));
 
     .o_wsale_collect_option {
+        position: relative;
         border-radius: var(--ClickAndCollect__option-border-radius--selected, var(--o-bs-border-radius));
 
         &:hover {
@@ -17,12 +18,12 @@
             box-shadow: var(--box-shadow-sm);
         }
 
-        &:has(input:focus-visible) {
-            position: relative;
-            z-index: 1;
-            box-shadow: var(--o-focus-ring);
-            outline: var(--o-focus-ring-outline);
-            outline-offset: -1px;
+        > input {
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+            border-radius: inherit;
+            appearance: none;
         }
     }
 }

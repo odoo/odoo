@@ -78,9 +78,9 @@
          <ul class="d-flex flex-wrap gap-2 list-unstyled flex-grow-1 mb-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
                 t-att-class="{'active': this.props.selected_attribute_value_ids.includes(ptav.id)}"
-                class="o_sale_product_configurator_ptav_pills">
+                class="o_sale_product_configurator_ptav_pills position-relative">
                 <label
-                    class="btn btn-outline-secondary"
+                    class="btn btn-outline-secondary h-100"
                     t-att-class="{ 'css_not_available': ptav.excluded }"
                     t-attf-for="ptav-{{ptav.id}}-input"
                 >
@@ -92,7 +92,6 @@
                     />
                 </label>
                 <input
-                    class="btn-check"
                     type="radio"
                     t-attf-id="ptav-{{ptav.id}}-input"
                     t-att-value="ptav.id"
@@ -156,7 +155,7 @@
                         t-att-name="'ptal-' + this.props.id"
                         t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
                         t-on-change="this.updateSelectedPTAV"
-                        class="w-100 h-100 opacity-0 cursor-pointer"
+                        class="cursor-pointer"
                     />
                 </label>
             </li>
