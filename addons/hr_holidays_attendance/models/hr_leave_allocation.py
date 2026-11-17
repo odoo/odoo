@@ -101,8 +101,9 @@ class HolidaysAllocation(models.Model):
 
         employee_tz = timezone(self.employee_id.tz or 'UTC')
         datetime_min_time = datetime.min.time()
-        start_dt = datetime.combine(start_date, datetime_min_time, employee_tz).astimezone(UTC).replace(tzinfo=None)
-        end_dt = datetime.combine(end_date, datetime_min_time, employee_tz).astimezone(UTC).replace(tzinfo=None)
+        # A pytz timezone must be localized: given as tzinfo, it is the local mean time (e.g. +00:17 in Brussels)
+        start_dt = employee_tz.localize(datetime.combine(start_date, datetime_min_time)).astimezone(UTC).replace(tzinfo=None)
+        end_dt = employee_tz.localize(datetime.combine(end_date, datetime_min_time)).astimezone(UTC).replace(tzinfo=None)
 
         # Search for any attendance overlapping the window
         attendances = self.env['hr.attendance'].sudo().search([

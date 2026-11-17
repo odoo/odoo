@@ -418,3 +418,45 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
         with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
             allocation._update_accrual()
             self.assertAlmostEqual(allocation.number_of_days, 0.7)
+
+    def test_accrual_allocation_timezone_brussels(self):
+        """The days of the accrual are the days of the employee timezone, not of its local mean time (+00:17)"""
+        self.employee_emp.tz = 'Europe/Brussels'
+        self.employee_emp.resource_calendar_id.tz = 'Europe/Brussels'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 1,
+                'added_value_type': 'hour',
+                'frequency': 'hourly',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+                'frequency_hourly_source': 'attendance'
+            })],
+        })
+        with freeze_time("2024-4-1"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+
+        # In Brussels (UTC+2): April 2, 00:30 to 01:30
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 1, 22, 30, 0),
+            'check_out': datetime.datetime(2024, 4, 1, 23, 30, 0),
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 2, 10, 0, 0)):
+            # Only April 1 in Brussels is processed, without attendance
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.0)
