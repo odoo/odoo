@@ -365,8 +365,8 @@ class HrVersion(models.Model):
             leaves = leaves_by_resource[resource.id]
             worked_leaves = worked_leaves_by_resource[resource.id]
 
-            real_attendances = expected_attendances - leaves - worked_leaves
             if version._is_fully_flexible():
+                expected_attendances = Intervals([])
                 real_leaves = leaves
             elif version._is_flexible():
                 # Flexible hours case

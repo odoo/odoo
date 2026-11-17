@@ -77,6 +77,7 @@ class TestHrContractCalendarCommon(common.TransactionCase):
                 'name': 'Fully Flexible Calendar',
                 'calendar_type': 'undefined',
                 'attendance_ids': [],
+                'hours_per_week': 0,
             },
             {
                 'name': 'Flexible Calendar',
