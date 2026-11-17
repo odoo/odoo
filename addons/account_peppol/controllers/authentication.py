@@ -12,8 +12,11 @@ class PeppolAuthentication(http.Controller):
         conn_data = http.request.env['res.company'].sudo()._peppol_decode_connect_token(connect_token)
         if not conn_data:
             _logger.warning("Invalid Peppol auth token (auth_type=%s)", auth_type)
-        elif state in ('pending', 'canceled'):
+        elif state == 'pending':
             _logger.info("Peppol callback decision %s (auth_type=%s)", state, auth_type)
+        elif state == 'canceled':
+            _logger.info("Peppol callback decision %s (auth_type=%s)", state, auth_type)
+            conn_data['company'].sudo()._peppol_clear_kyc_verification()
         elif not auth_token:
             _logger.warning("Peppol registration auth_token missing (auth_type=%s)", auth_type)
         elif conn_data['company'].sudo().account_peppol_edi_user:
@@ -24,6 +27,7 @@ class PeppolAuthentication(http.Controller):
             except Exception as e:  # noqa: BLE001
                 http.request.env.cr.rollback()
                 _logger.warning("Failed to create Peppol connection: %s", e)
+                conn_data['company'].sudo()._peppol_clear_kyc_verification()
         return http.request.redirect('/web')
 
     @http.route('/peppol/authentication/webhook', type='http', methods=['POST'], auth='public', csrf=False, save_session=False)
@@ -34,11 +38,13 @@ class PeppolAuthentication(http.Controller):
             return http.request.make_json_response({'error': 'invalid_request'}, status=400)
         company = connect_data['company']
         if company.sudo().account_peppol_edi_user:
+            company.sudo()._peppol_clear_kyc_verification()
             return http.request.make_json_response({'status': 'already_connected'})
         try:
             company.sudo().with_company(company)._peppol_create_connection(connect_data['peppol_identifier'], auth_token=auth_token)
         except Exception as e:  # noqa: BLE001
             http.request.env.cr.rollback()
             _logger.warning("Peppol webhook could not create the connection: %s", e)
+            company.sudo()._peppol_clear_kyc_verification()
             return http.request.make_json_response({'status': 'failed'})
         return http.request.make_json_response({'status': 'connected'})
