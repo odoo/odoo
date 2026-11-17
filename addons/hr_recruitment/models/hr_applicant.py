@@ -162,6 +162,7 @@ class HrApplicant(models.Model):
         compute="_compute_is_applicant_in_pool", search="_search_is_applicant_in_pool"
     )
     talent_pool_count = fields.Integer(compute="_compute_talent_pool_count")
+    has_parallel_applications = fields.Boolean(compute="_compute_has_parallel_applications")
     applicant_skill_ids = fields.One2many(
         "hr.applicant.skill", "applicant_id", string="Skills", copy=True
     )
@@ -203,6 +204,26 @@ class HrApplicant(models.Model):
         if model_name != 'hr.applicant':
             return super()._get_model_description(model_name)
         return self.env._("Application")
+
+    @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id", "job_id", "application_status")
+    def _compute_has_parallel_applications(self):
+        """
+        This method determines whether the current application has any parallel
+        applications.
+
+        An application is considered parallel if another application:
+        - Shares the same email, phone number, LinkedIn profile or pool applicant.
+        - Has a job position assigned.
+        - Has an ongoing application status.
+
+        Note: The current application itself is excluded from the comparison.
+        """
+        domain = self._get_similar_applicants_domain() & Domain([("job_id", "!=", False), ("application_status", "=", "ongoing")])
+        related_applicants_map = self._get_similar_applicants_map(domain)
+
+        for applicant in self:
+            related_applicants = related_applicants_map.get(applicant.id, set()).difference({applicant.id})
+            applicant.has_parallel_applications = bool(related_applicants) and applicant.job_id and applicant.application_status == 'ongoing'
 
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
     def _compute_talent_pool_count(self):
@@ -343,34 +364,10 @@ class HrApplicant(models.Model):
         this method will include self in the returned count
         """
         domain = self._get_similar_applicants_domain(ignore_talent=True)
-        matching_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
-
-        email_map = defaultdict(set)
-        phone_map = defaultdict(set)
-        linkedin_map = defaultdict(set)
-        pool_applicant_map = defaultdict(set)
-        for app in matching_applicants:
-            if app.email_normalized:
-                email_map[app.email_normalized].add(app.id)
-            if app.partner_phone_sanitized:
-                phone_map[app.partner_phone_sanitized].add(app.id)
-            if app.linkedin_profile:
-                linkedin_map[app.linkedin_profile].add(app.id)
-            if app.pool_applicant_id:
-                pool_applicant_map[app.pool_applicant_id].add(app.id)
+        related_applicants_map = self._get_similar_applicants_map(domain)
 
         for applicant in self:
-            related_ids = set()
-            if applicant.email_normalized:
-                related_ids.update(email_map.get(applicant.email_normalized, set()))
-            if applicant.partner_phone_sanitized:
-                related_ids.update(phone_map.get(applicant.partner_phone_sanitized, set()))
-            if applicant.linkedin_profile:
-                related_ids.update(linkedin_map.get(applicant.linkedin_profile, set()))
-            if applicant.pool_applicant_id:
-                related_ids.update(pool_applicant_map.get(applicant.pool_applicant_id, set()))
-
-            applicant.application_count = len(related_ids)
+            applicant.application_count = len(related_applicants_map.get(applicant.id, set()))
 
     @api.depends("talent_pool_ids")
     def _compute_is_pool(self):
@@ -403,6 +400,57 @@ class HrApplicant(models.Model):
         if only_talent:
             domain &= Domain("talent_pool_ids", "!=", False)
         return domain
+
+    def _get_similar_applicants_map(self, domain):
+        """
+        This method returns a mapping of applicant IDs to sets of related applicant
+        IDs that are either directly or indirectly linked to the current application(s)
+        - An application is considered directly linked if it shares the same
+          pool_applicant_id
+        - An application is considered indirectly_linked if it has the same
+          value as the current application(s) in any of the following field:
+          email, phone number or linkedin
+
+        An applicant is considered related if it shares the same value in any of
+        the above fields with the current applicant.
+
+        Args:
+            domain: Domain to filter the applicants considered for matching.
+
+        Returns:
+            A dictionary mapping each applicant ID to a set of related applicant IDs.
+        """
+
+        matching_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
+        email_map = defaultdict(set)
+        phone_map = defaultdict(set)
+        linkedin_map = defaultdict(set)
+        pool_applicant_map = defaultdict(set)
+        for app in matching_applicants:
+            if app.email_normalized:
+                email_map[app.email_normalized].add(app.id)
+            if app.partner_phone_sanitized:
+                phone_map[app.partner_phone_sanitized].add(app.id)
+            if app.linkedin_profile:
+                linkedin_map[app.linkedin_profile].add(app.id)
+            if app.pool_applicant_id:
+                pool_applicant_map[app.pool_applicant_id].add(app.id)
+
+        related_applicants_map = defaultdict(set)
+        for applicant in self:
+            related_ids = set()
+            if applicant.email_normalized:
+                related_ids.update(email_map.get(applicant.email_normalized, set()))
+            if applicant.partner_phone_sanitized:
+                related_ids.update(phone_map.get(applicant.partner_phone_sanitized, set()))
+            if applicant.linkedin_profile:
+                related_ids.update(linkedin_map.get(applicant.linkedin_profile, set()))
+            if applicant.pool_applicant_id:
+                related_ids.update(pool_applicant_map.get(applicant.pool_applicant_id, set()))
+
+            related_applicants_map[applicant.id] = related_ids
+
+        return related_applicants_map
 
     @api.depends(
         "talent_pool_ids", "pool_applicant_id", "email_normalized", "partner_phone_sanitized", "linkedin_profile"
