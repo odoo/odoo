@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import format_date
 
 
@@ -43,6 +43,13 @@ class HrEmployeeSkill(models.Model):
                 continue
             result_dict[employee.id] += filtered_emp_skill
         return result_dict
+
+    @api.model
+    def get_help_data(self, domain):
+        # used by the help view (see `hr_employee_skill_view_help`)
+        return {
+            'has_certification_skill_type': bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1)),
+        }
 
     def open_hr_employee_skill_modal(self):
         return {
