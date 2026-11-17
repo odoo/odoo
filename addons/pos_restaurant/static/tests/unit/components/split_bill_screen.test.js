@@ -160,3 +160,30 @@ test("createSplittedOrder copies preset from original order", async () => {
     expect(newOrder.preset_id).toBe(preset);
     expect(newOrder.preset_time.toISO()).toBe(order.preset_time.toISO());
 });
+
+test("createSplittedOrder keeps the backend course of the split lines", async () => {
+    const store = await setupPosEnv();
+    const models = store.models;
+    store.config.use_course_allocation = true;
+    const order = store.addNewOrder({ table_id: models["restaurant.table"].get(2) });
+    // Product 6 belongs to "Default Course 2", product 5 to "Default Course 1"
+    for (const productId of [6, 5]) {
+        const product = models["product.template"].get(productId);
+        const allocation = store.autoCourseAllocation(product);
+        const line = await store.addLineToCurrentOrder({ product_tmpl_id: product });
+        store.cleanAutoCourseAllocation(line, allocation);
+    }
+    const screen = await mountWithCleanup(SplitBillScreen, {
+        props: {
+            orderUuid: order.uuid,
+        },
+    });
+    const line = order.lines.find((l) => l.product_id.product_tmpl_id.id === 5);
+    screen.qtyTracker[line.uuid] = 1;
+    await screen.createSplittedOrder();
+    const newOrder = store.getOrder();
+    expect(newOrder.courses.map((c) => [c.name, c.course_id?.id])).toEqual([
+        ["Default Course 1", 1],
+    ]);
+    expect(newOrder.lines[0].course_id).toBe(newOrder.courses[0]);
+});

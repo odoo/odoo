@@ -7,7 +7,6 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
-import { _t } from "@web/core/l10n/translation";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
@@ -162,15 +161,15 @@ export class SplitBillScreen extends Component {
                 if (line.course_id) {
                     // Create courses in the new order
                     const { course_id: oldCourse } = line;
-                    const courseIndex = oldCourse.index;
-                    newCourse = newCourses.get(courseIndex);
+                    newCourse = newCourses.get(oldCourse.uuid);
                     if (!newCourse) {
                         newCourse = this.pos.models["restaurant.order.course"].create({
                             order_id: newOrder,
-                            index: courseIndex,
-                            name: _t("Course ") + courseIndex,
+                            index: oldCourse.index,
+                            name: oldCourse.name,
+                            course_id: oldCourse.course_id,
                         });
-                        newCourses.set(courseIndex, newCourse);
+                        newCourses.set(oldCourse.uuid, newCourse);
                     }
                 }
                 const data = { ...line.raw };
