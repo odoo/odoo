@@ -4,8 +4,6 @@ import requests
 from odoo.exceptions import UserError
 from odoo.tools.urls import urljoin
 
-from odoo.addons.account_peppol.exceptions import get_peppol_error_message
-
 _logger = logging.getLogger(__name__)
 
 TIMEOUT = 10
@@ -36,7 +34,12 @@ class PeppolIAPConnector:
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             if response_vals and 'code' in response_vals:
-                raise UserError(get_peppol_error_message(self.env, response_vals))
+                message_lines = []
+                if subject := response_vals.get('subject'):
+                    message_lines.append(subject)
+                if message := response_vals.get('message'):
+                    message_lines.append(message)
+                raise UserError("\n".join(message_lines) if message_lines else self.env._("Failed to connect to Odoo Peppol Proxy."))
             _logger.debug("Failed to connect to Odoo Peppol Proxy %s, %s", endpoint, e)
             raise UserError(self.env._("Failed to connect to Odoo Peppol Proxy."))
         return response_vals
