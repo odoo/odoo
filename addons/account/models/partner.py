@@ -21,14 +21,6 @@ from odoo.addons.base.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
 
-SQL_OPERATORS = {
-    '<': SQL('<'),
-    '=': SQL('='),
-    '>': SQL('>'),
-    '>=': SQL('>='),
-    '<=': SQL('<='),
-}
-
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -382,88 +374,50 @@ class ResPartner(models.Model):
         return '%s, %s' % (order_by_field, res) if res else order_by_field
 
     @api.depends_context('company')
-    def _credit_debit_get(self):
-        if not self.ids:
-            self.debit = False
-            self.credit = False
-            return
-        query = self.env['account.move.line']._search([
+    def _compute_debit_credit(self):
+        query = self.with_context(debit_credit_partner_ids=self.ids)._search([('id', 'in', self.ids)], active_test=False, bypass_access=True)
+        balances = {
+            partner_id: (debit, credit)
+            for partner_id, debit, credit in self.env.execute_query(
+                query.select(query.table.id, query.table.debit, query.table.credit),
+            )
+        }
+        for partner in self:
+            partner.debit, partner.credit = balances.get(partner._origin.id, (0.0, 0.0))
+
+    def _compute_sql_debit_credit(self, table, fname):
+        """ Join the receivable/payable balances of the partners, grouped by partner, so that
+        `debit` and `credit` share the same join. When computing, the `debit_credit_partner_ids`
+        context key restricts the aggregation to the partners being computed.
+        """
+        domain = Domain([
             ('parent_state', '=', 'posted'),
             ('company_id', 'child_of', self.env.company.root_id.id),
-        ], bypass_access=True)
-        self.env['account.move.line'].flush_model(
-            ['account_id', 'amount_residual', 'company_id', 'parent_state', 'partner_id', 'reconciled']
+            ('account_id.account_type', 'in', ('asset_receivable', 'liability_payable')),
+            ('reconciled', '=', False),
+        ])
+        if partner_ids := self.env.context.get('debit_credit_partner_ids'):
+            domain &= Domain('partner_id', 'in', partner_ids)
+        query = self.env['account.move.line'].sudo()._search(domain)
+        query.groupby = query.table.partner_id
+        account_type = query.table.account_id.account_type
+        balances = table._make_alias('debit_credit')
+        table._query.add_join(
+            kind='LEFT JOIN',
+            alias=balances,
+            table=query.subselect(
+                SQL("%s AS partner_id", query.table.partner_id),
+                SQL("-SUM(%s) FILTER (WHERE %s = 'liability_payable') AS debit", query.table.amount_residual, account_type),
+                SQL("SUM(%s) FILTER (WHERE %s = 'asset_receivable') AS credit", query.table.amount_residual, account_type),
+            ),
+            condition=SQL("%s = %s", balances.partner_id, table.id),
         )
-        self.env['account.account'].flush_model(['account_type'])
-        sql = SQL("""
-            SELECT account_move_line.partner_id, a.account_type, SUM(account_move_line.amount_residual)
-            FROM %s
-            LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
-            WHERE a.account_type IN ('asset_receivable','liability_payable')
-            AND account_move_line.partner_id IN %s
-            AND account_move_line.reconciled IS NOT TRUE
-            AND %s
-            GROUP BY account_move_line.partner_id, a.account_type
-            """,
-            query.from_clause,
-            tuple(self.ids),
-            query.where_clause or SQL("TRUE"),
-        )
-        treated = self.browse()
-        for pid, account_type, val in self.env.execute_query(sql):
-            partner = self.browse(pid)
-            if account_type == 'asset_receivable':
-                partner.credit = val
-                if partner not in treated:
-                    partner.debit = False
-                    treated |= partner
-            elif account_type == 'liability_payable':
-                partner.debit = -val
-                if partner not in treated:
-                    partner.credit = False
-                    treated |= partner
-        remaining = (self - treated)
-        remaining.debit = False
-        remaining.credit = False
+        return SQL("COALESCE(%s, 0)", balances[fname])
 
     @api.depends_context('company')
     def _compute_credit_to_invoice(self):
         # To be overridden in Sales
         self.credit_to_invoice = False
-
-    def _asset_difference_search(self, account_type, operator, operand):
-        operator_sql = SQL_OPERATORS.get(operator)
-        if not operator_sql:
-            return []
-        if not isinstance(operand, (float, int)):
-            return []
-        sign = 1
-        if account_type == 'liability_payable':
-            sign = -1
-        res = self.env.execute_query(SQL('''
-            SELECT aml.partner_id
-              FROM res_partner partner
-         LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
-              JOIN account_move move ON move.id = aml.move_id
-              JOIN res_company line_company ON line_company.id = aml.company_id
-        RIGHT JOIN account_account acc ON aml.account_id = acc.id
-             WHERE acc.account_type = %s
-               AND acc.active
-               AND SPLIT_PART(line_company.parent_path, '/', 1)::int = %s
-               AND move.state = 'posted'
-          GROUP BY aml.partner_id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) %s %s''',
-            account_type, self.env.company.root_id.id, sign, operator_sql, operand
-        ))
-        return [('id', 'in', [r[0] for r in res])]
-
-    @api.model
-    def _credit_search(self, operator, operand):
-        return self._asset_difference_search('asset_receivable', operator, operand)
-
-    @api.model
-    def _debit_search(self, operator, operand):
-        return self._asset_difference_search('liability_payable', operator, operand)
 
     def _invoice_total(self):
         """Compute the total amount invoiced to the partner. Multiple currencies may have been linked to the invoices, then it
@@ -547,7 +501,10 @@ class ResPartner(models.Model):
         return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
     name = fields.Char(tracking=True)
-    credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
+    credit = fields.Monetary(
+        compute='_compute_debit_credit',
+        compute_sql=lambda self, table: self._compute_sql_debit_credit(table, 'credit'),
+        compute_sudo=False,
         string='Total Receivable', help="Total amount this customer owes you.",
         groups='account.group_account_invoice,account.group_account_readonly')
     credit_to_invoice = fields.Monetary(
@@ -569,7 +526,10 @@ class ResPartner(models.Model):
         help='[(Total Receivable/Total Revenue) * number of days since the first invoice] for this customer',
         compute='_compute_days_sales_outstanding')
     debit = fields.Monetary(
-        compute='_credit_debit_get', search=_debit_search, string='Total Payable',
+        compute='_compute_debit_credit',
+        compute_sql=lambda self, table: self._compute_sql_debit_credit(table, 'debit'),
+        compute_sudo=False,
+        string='Total Payable',
         help="Total amount you have to pay to this vendor.",
         groups='account.group_account_invoice,account.group_account_readonly')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
