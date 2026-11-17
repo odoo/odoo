@@ -499,6 +499,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         move.peppol_message_uuid = FAKE_UUID[0]
         move.peppol_move_state = 'done'
         response_info = {
+            'process_condition_code': '210',
             'response_code': 'refused',
             'issue_date': self.fakenow,
             'status_infos': [{
@@ -524,6 +525,51 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertNotIn('Errors:', body)
         self.assertIn('[TRANSAC_INC] Unknown transaction', body)
         self.assertIn('Lifecycle note', body)
+
+    def test_pdp_einvoicing_inadmissible_lifecycle_forces_error(self):
+        # The 'done' status may have been fetched before the inadmissible (501) lifecycle was received
+        move = self._create_french_invoice()
+        move.action_post()
+        move.peppol_message_uuid = FAKE_UUID[0]
+        move.peppol_move_state = 'done'
+        response_info = {
+            'process_condition_code': '501',
+            'process_condition': 'Irrecevable',
+            'response_code': 'RE',
+            'issue_date': self.fakenow,
+            'status_infos': [{
+                'reason_code': 'IRR_SYNTAX',
+                'reason': 'Erreur de syntaxe',
+                'note': '',
+            }],
+        }
+        proxy_model = self.env.registry[self.proxy_user._name]
+        with (
+            patch.object(proxy_model, '_peppol_get_decoded_document', return_value=b''),
+            patch.object(proxy_model, '_pdp_extract_response_info', return_value=response_info),
+        ):
+            self.proxy_user._pdp_import_incoming_response(FAKE_UUID[1], {
+                'flow_number': '2',
+                'origin_ref_status_code': None,
+                'origin_peppol_lifecycle_uuid': None,
+                'state': 'done',
+            }, move)
+        self.env.flush_all()
+
+        self.assertEqual(move.peppol_move_state, 'error')
+        self.assertFalse(move.peppol_response_ids)
+        body = move.message_ids[0].body
+        self.assertIn('An error occurred on the receiving Access Point: "Irrecevable"', body)
+        self.assertIn('[IRR_SYNTAX] Erreur de syntaxe', body)
+
+        # The invoice can be corrected and sent again
+        move.button_draft()
+        self.env.flush_all()
+        move.action_post()
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'ready',
+            'peppol_is_sent': False,
+        }])
 
     def test_pdp_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via pdp
