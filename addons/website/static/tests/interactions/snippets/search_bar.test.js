@@ -79,6 +79,15 @@ function supportAutocomplete() {
     });
 }
 
+// Types the term supportAutocomplete answers, and waits for the debounced search.
+async function searchXyz() {
+    await click("form input[type=search]");
+    await press("x");
+    await press("y");
+    await press("z");
+    await advanceTime(400);
+}
+
 test("searchbar triggers a search when text is entered", async () => {
     supportAutocomplete();
     const { core } = await startInteractions(searchTemplate);
@@ -91,6 +100,45 @@ test("searchbar triggers a search when text is entered", async () => {
     await press("z");
     await advanceTime(400);
     expect(queryAll("form .o_search_result_item")).toHaveLength(3);
+});
+
+const iconReplacements = {
+    "replaced by an icon": `<span class="fa fa-compass"></span>`,
+    "replaced by an image": `<img class="img-fluid" src="/web/image/website.s_banner_default_image" alt=""/>`,
+    "replaced by a video": `
+        <div class="media_iframe_video">
+            <div class="media_iframe_video_size" contenteditable="false"></div>
+            <iframe frameborder="0" contenteditable="false"></iframe>
+        </div>`,
+    "replaced by a document": `<span class="o_file_box o-contenteditable-false" contenteditable="false"></span>`,
+    deleted: "",
+};
+for (const [change, newIconHTML] of Object.entries(iconReplacements)) {
+    test(`searchbar whose icon was ${change} still triggers a search`, async () => {
+        supportAutocomplete();
+        await startInteractions(
+            searchTemplate.replace(`<i class="oi oi-search"></i>`, newIconHTML)
+        );
+        await searchXyz();
+        expect(queryAll("form .o_search_result_item")).toHaveLength(3);
+        if (newIconHTML) {
+            expect("form .oe_search_button > :last-child").toHaveClass("d-none");
+        }
+    });
+}
+
+test("searchbar hides every element of its button during a search", async () => {
+    supportAutocomplete();
+    await startInteractions(
+        searchTemplate.replace(
+            `<i class="oi oi-search"></i>`,
+            `<strong>Go</strong><span class="fa fa-compass"></span>`
+        )
+    );
+    await searchXyz();
+    expect(queryAll("form .o_search_result_item")).toHaveLength(3);
+    expect("form .oe_search_button strong").toHaveClass("d-none");
+    expect("form .oe_search_button .fa-compass").toHaveClass("d-none");
 });
 
 test("searchbar selects first result on cursor down", async () => {
