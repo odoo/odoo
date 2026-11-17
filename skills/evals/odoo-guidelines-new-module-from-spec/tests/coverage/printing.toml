@@ -1,0 +1,159 @@
+# LLM judge: does the feature cover the behaviours of the spec?
+# Behaviours of /home/odoo/spec.md about printing a report to printers; one binary criterion each,
+# judged on the agent's new modules (every text file of them) and on its
+# changes to existing modules. The reference is the code the spec was written
+# from (the printer module and what stock_delivery built on it; the agent
+# never saw it): it shows one way to implement each behaviour, not the only
+# correct one. Whether the code runs is measured in tests/runtime; how it
+# follows the house rules, in tests/guidelines.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/module_source.txt", "/logs/verifier/existing_changes.diff"]
+reference = "/tests/coverage/reference.txt"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "print_goes_to_printers"
+type = "binary"
+description = """
+Printing a report that has printers, from a print menu or an automatic
+print, sends the document to printers from the browser instead of
+downloading it.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "selection_dialog"
+type = "binary"
+description = """
+The first time a user prints such a report in a browser, a dialog asks which
+of the report's printers to use, with a "Do not ask me again" option, and
+refuses an empty selection with a message.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "choice_remembered"
+type = "binary"
+description = """
+The choice is remembered in the browser, per report: with "Do not ask me
+again" the document goes to the remembered printers without asking;
+otherwise the dialog opens again with them preselected.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "closed_dialog_downloads"
+type = "binary"
+description = """
+Closing the dialog without choosing prints the report the usual way, as a
+download.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "documents_by_kind"
+type = "binary"
+description = """
+Each printer receives only the documents of its own kind, sent one after the
+other.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "zpl_printing"
+type = "binary"
+description = """
+ZPL printers get the output of text reports whose name contains ZPL, sent as
+is in an HTTP POST to http://<address>/pstprnt as text/plain in no-cors
+mode, a request that went through counting as printed.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "epos_image"
+type = "binary"
+description = """
+ePOS printers get PDF reports turned into a black and white, dithered image
+576 dots wide, in portrait (a landscape page is turned), with the report's
+relative links (barcode images) still resolving when it is rendered.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "epos_protocol"
+type = "binary"
+description = """
+The ePOS document is the ePOS-Print SOAP envelope with an image element
+(width 576, the image's height, the base64 1-bit raster where a set bit
+prints black) followed by a feed cut, POSTed to http://<address>/cgi-
+bin/epos/service.cgi?devid=local_printer, and the printer's response element
+(success, code) is read.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "errors_and_retry"
+type = "binary"
+description = """
+A printer error shows a notification with the printer's error code and
+printing goes on with the next document; ERROR_WAIT_EJECT sends the same
+document again after about a second; a printer that does not answer within
+15 seconds is given up.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""

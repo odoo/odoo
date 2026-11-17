@@ -1,0 +1,110 @@
+From df9daf5ea0b5d8f40389757cd8cdc78c81cf17d4 Mon Sep 17 00:00:00 2001
+From: djameltouati <otd@odoo.com>
+Date: Mon, 14 Sep 2026 14:18:37 +0000
+Subject: [PATCH] [FIX] mrp, mrp_account: crash in MO Overview with byproduct
+
+Steps to reproduce the bug:
+- Enable the "By-Products" feature in Settings
+- Create a Manufacturing Order for a product P1 with a component C1
+- Confirm the MO, produce it, mark it Done
+- Unlock the MO
+- Go to the "By-Products" tab, click "Add a line" and select P1
+  (the MO's own finished product, not an actual by-product) as the
+  line's product, then save
+- Click the "Overview" button on the MO
+
+Problem:
+A traceback is raised:
+
+    ValueError: Expected singleton: stock.move(550, 552)
+
+Nothing prevents a by-product line from targeting the same product as
+the MO's own finished product. When it does, `move_finished_ids` ends up
+with two `stock.move` records sharing that product. `_get_mo_summary`
+passes the result of `production.move_finished_ids.filtered(lambda m: m.product_id ==
+production.product_id)` straight to `_get_unit_cost`
+(https://github.com/odoo/odoo/blob/f84eeb3ed142/addons/mrp/report/mrp_report_mo_overview.py#L212),
+which then reads fields like `move.state` on that multi-record
+recordset, any field access on more than one record implicitly calls
+`ensure_one()` and raises.
+
+The mistake is also invisible in the UI: `move_byproduct_ids` is
+computed as `move_finished_ids.filtered(lambda m: m.product_id != order.product_id)`, so
+the offending line disappears from the By-Products tab as soon as it's saved
+(its product now equals the MO's own product), while the extra stock.move
+stays on `move_finished_ids` and keeps crashing the Overview report.
+
+Solution:
+- Exclude the MO's own product from the By-Products tab's product domain so it
+  can no longer be picked there.
+- Make `_get_mo_summary` resilient to more than one finished move matching the
+  MO's product, taking a single one instead of handing a multi-record
+  recordset to `_get_unit_cost`.
+
+opw-6567316
+
+closes odoo/odoo#293700
+
+X-original-commit: adcf98b4f78250a0fb47512a10d6196190309036
+Signed-off-by: Djamel Touati (otd) <otd@odoo.com>
+
+diff --git a/addons/mrp/report/mrp_report_mo_overview.py b/addons/mrp/report/mrp_report_mo_overview.py
+index c6e80423cc07..6376553cac9a 100644
+--- a/addons/mrp/report/mrp_report_mo_overview.py
++++ b/addons/mrp/report/mrp_report_mo_overview.py
+@@ -174,7 +174,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
+             'uom_name': production.uom_id.display_name,
+             'uom_precision': self._get_uom_precision(),
+             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
+-            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
++            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)[:1]),
+             'mo_cost': currency.round(mo_cost),
+             'cost_share': remaining_cost_share,
+             'currency_id': currency.id,
+diff --git a/addons/mrp/views/mrp_production_views.xml b/addons/mrp/views/mrp_production_views.xml
+index 5ccfd184e6d2..e75b0687bc58 100644
+--- a/addons/mrp/views/mrp_production_views.xml
++++ b/addons/mrp/views/mrp_production_views.xml
+@@ -606,7 +606,7 @@
+                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                     </control>
+                                     <field name="sequence" widget="handle"/>
+-                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('type', '=', 'consu')]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
++                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('type', '=', 'consu'), ('id', '!=', parent.product_id)]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
+                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
+                                     <field name="company_id" column_invisible="True"/>
+                                     <field name="allowed_operation_ids" column_invisible="True"/>
+diff --git a/addons/mrp_account/tests/test_mrp_account.py b/addons/mrp_account/tests/test_mrp_account.py
+index e0536941217a..f1a656ff6ef7 100644
+--- a/addons/mrp_account/tests/test_mrp_account.py
++++ b/addons/mrp_account/tests/test_mrp_account.py
+@@ -336,6 +336,26 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
+         # Both finished moves must carry the same, correct unit valuation.
+         self.assertEqual([move._get_price_unit() for move in finished_moves], [17.50, 17.50])
+ 
++    def test_finished_product_cannot_be_own_byproduct(self):
++        """ A duplicate stock move for the MO's own finished product on `move_finished_ids`
++        must not crash the MO Overview report: it must still compute a unit cost.
++        """
++        mo = self._create_mo(self.bom_1, 1)
++        mo.button_mark_done()
++        mo.action_toggle_is_locked()
++        self.assertEqual(mo.state, 'done')
++        self.env['stock.move'].create({
++            'product_id': mo.product_id.id,
++            'uom_id': mo.product_id.uom_id.id,
++            'quantity': 1.0,
++            'location_id': mo.production_location_id.id,
++            'location_dest_id': mo.location_dest_id.id,
++            'production_id': mo.id,
++        })
++        self.assertEqual(len(mo.move_finished_ids.filtered(lambda m: m.product_id == mo.product_id)), 2)
++        overview = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
++        self.assertEqual(overview['data']['summary']['unit_cost'], 718.75)
++
+ 
+ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
+ 
+-- 
+2.54.0
+

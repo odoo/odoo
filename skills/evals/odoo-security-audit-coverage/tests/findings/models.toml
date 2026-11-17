@@ -1,0 +1,78 @@
+# Findings judge, Model methods in models/.
+# One file per group: a single judge call with every criterion exceeds the
+# structured-output size the API accepts. The answer key is solution/security_review.md.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "public_discount_method"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that action_apply_discount is a public method callable over RPC with an untrusted percent and writes the rent with sudo.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "sql_injection_order_by"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that occupancy_report interpolates order_by into SQL with an f-string: SQL injection.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "raw_sql_bypasses_rules"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that occupancy_report uses raw SQL that ignores access rules and company restrictions (reads all properties and leases). Reporting that the method should use the ORM or that it bypasses record rules passes.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "returns_key_object"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that get_listing_signing_key is a public method that returns a private key object (exploitable from safe_eval or RPC), or that it reads the system-only key with sudo for any caller. Either angle passes.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "token_compared_with_eq"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that check_access_token compares the token with ==, a timing attack; consteq or a search on the token is the fix.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "mutable_default_partner_ids"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that _prepare_notify_values has a mutable default argument (partner_ids=[]) that accumulates across calls.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "markup_fstring_xss"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that _post_signed_message builds Markup with an f-string around the tenant name: unescaped content, stored XSS in the chatter.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""

@@ -1,0 +1,9 @@
+# reward: the share of the 142 seeded issues the review reports. Every
+# issue weighs the same, so each area weighs its number of issues; the
+# guidelines rank no rule above another. Each area is also its own score (the
+# recall in that area).
+# precision: reported, kept out of the reward (weight 0).
+[[reward]]
+name = "reward"
+aggregation = "weighted-mean"
+weights = { structure = 8.0, manifest = 6.0, python = 13.0, comments = 3.0, orm = 16.0, fields = 12.0, controllers = 2.0, xml = 12.0, reports = 3.0, access = 4.0, performance = 5.0, tests = 9.0, javascript = 4.0, scss = 12.0, assets = 3.0, security = 23.0, consumers = 2.0, merits = 5.0, precision = 0.0 }

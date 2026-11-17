@@ -1,0 +1,41 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Controllers.
+# Rules: odoo-guidelines guidelines/controllers.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "ct1_override_without_route"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 24:
+BookingPortal.home overrides the portal /my route without re-decorating it
+with @route() (the framework auto-decorates it with a warning).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ct2_json_route_type"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 89:
+/booking/availability uses type='json', a deprecated alias; use
+type='jsonrpc'.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

@@ -1,0 +1,28 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-review-guideline-recall"
+description = "Review of a master PR adding an equipment_booking module, seeded with one violation per rule of the odoo-guidelines, odoo-web-guidelines, odoo-security and odoo-review skills (142 issues); graded on the share found, per area."
+keywords = ["odoo", "review", "skills", "odoo-review", "odoo-guidelines", "odoo-web-guidelines", "odoo-security", "pr-review"]
+
+[metadata]
+skill = "odoo-review"
+odoo_version = "master"
+base_commit = "c8d7430e3e15acc9224c53fe6c512414107897c3"
+
+[verifier]
+timeout_sec = 1200.0
+# The verifier reads the checkout as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judges need it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+timeout_sec = 3600.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096

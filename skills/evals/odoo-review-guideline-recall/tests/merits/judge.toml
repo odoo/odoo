@@ -1,0 +1,92 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Merits pass, no guideline.
+# Rules: odoo-review skill, Merits pass.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "jg1_back_to_back_rejected"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 105:
+The overlap check compares with <= and >=, so a booking starting exactly
+when another ends is rejected as overlapping; back-to-back bookings need
+strict comparisons.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "jg2_date_compared_to_datetime"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 206:
+_cron_send_reminders compares start_datetime with a date
+(fields.Date.today() + 1 day, midnight UTC): a booking starting tomorrow at
+9:00 is not due until the next day, so the reminder comes on the day itself,
+not the day before; timezones are ignored as well.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "jg3_rounding"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 77:
+_compute_price rounds with round(..., 2) instead of the currency's rounding.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "jg4_vacuous_test"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/tests/test_booking.py`, line 58:
+test_cancel asserts that state is truthy, which it always is: the test
+passes whether or not the booking was cancelled.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "jg5_message_claim"
+type = "binary"
+description = """
+Seeded issue in the commit message:
+The commit message says cancelling a booking notifies the equipment's
+technician; action_cancel notifies no one (it only posts the reason on the
+booking).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

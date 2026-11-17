@@ -1,0 +1,46 @@
+2026-10-20 03:12:44,118 1 WARNING 128012375-20-0-all odoo.addons.base.models.ir_model: Two fields (l10n_it_country_code, country_code) of stock.picking() have the same label: Country Code. [Modules: l10n_it_stock_ddt and stock_account]
+2026-10-20 03:12:44,118 1 WARNING 128012375-20-0-all odoo.addons.base.models.ir_model: Two fields (l10n_it_country_code, country_code) of stock.picking() have the same label: Country Code. [Modules: l10n_it_stock_ddt and stock_account]
+2026-10-20 03:14:02,551 1 WARNING 128012375-20-0-all odoo.addons.base.models.ir_model: Two fields (l10n_it_country_code, country_code) of stock.picking() have the same label: Country Code. [Modules: l10n_it_stock_ddt and stock_account]
+2026-10-20 03:21:17,009 1 ERROR 128012375-20-0-all odoo.modules.loading: Failed to load registry
+Traceback (most recent call last):
+  File "/data/build/odoo/odoo/modules/module.py", line 630, in check_python_external_dependency
+    version = importlib.metadata.version(requirement.name)
+  File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 1009, in version
+    return distribution(distribution_name).version
+  File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 982, in distribution
+    return Distribution.from_name(distribution_name)
+  File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 565, in from_name
+    raise PackageNotFoundError(name)
+importlib.metadata.PackageNotFoundError: No package metadata was found for google-auth
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/data/build/odoo/odoo/addons/base/models/ir_module.py", line 542, in check_external_dependencies
+    modules.check_manifest_dependencies(terp)
+  File "/data/build/odoo/odoo/modules/module.py", line 668, in check_manifest_dependencies
+    check_python_external_dependency(pydep)
+  File "/data/build/odoo/odoo/modules/module.py", line 640, in check_python_external_dependency
+    raise MissingDependency(msg, pydep) from e
+odoo.modules.module.MissingDependency: External dependency 'google-auth' not installed: No package metadata was found for google-auth
+
+During handling of the above exception, another exception occurred:
+
+odoo.exceptions.UserError: Unable to install module "cloud_storage_google" because an external dependency is not met: External dependency 'google-auth' not installed: No package metadata was found for google-auth
+2026-10-20 03:21:17,230 1 CRITICAL 128012375-20-0-all odoo.service.server: Failed to initialize database `128012375-20-0-all`.
+
+2026-10-20 03:19:31,006 1 WARNING 128012376-20-0-l10n odoo.addons.base.models.ir_model: Two fields (l10n_it_country_code, country_code) of stock.picking() have the same label: Country Code. [Modules: l10n_it_stock_ddt and stock_account]
+2026-10-20 03:26:12,463 1 INFO 128012376-20-0-l10n odoo.modules.loading: Modules loaded.
+2026-10-20 03:26:12,472 1 INFO 128012376-20-0-l10n odoo.service.server: Starting post tests
+2026-10-20 03:27:03,398 1 ERROR 128012376-20-0-l10n odoo.addons.l10n_it_stock_ddt.tests.test_ddt: ERROR: TestDDT.test_ddt_sequence_follows_warehouse
+Traceback (most recent call last):
+  File "/data/build/odoo/addons/l10n_it_stock_ddt/tests/test_ddt.py", line 187, in test_ddt_sequence_follows_warehouse
+    picking_type.write({'sequence_code': 'MOUT', 'warehouse_id': warehouse.id})
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/build/odoo/addons/l10n_it_stock_ddt/models/stock_picking.py", line 93, in write
+    warehouse = picking_type.warehouse_id.id if 'warehouse_id' not in vals else vals['warehouse_ids']
+                                                                                ~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'warehouse_ids'
+
+2026-10-20 03:41:55,445 1 INFO 128012376-20-0-l10n odoo.tests.stats: l10n_it_stock_ddt: 7 tests 61.02s 44980 queries
+2026-10-20 03:58:40,101 1 ERROR 128012376-20-0-l10n odoo.tests.result: 0 failed, 1 error(s) of 1937 tests when loading database '128012376-20-0-l10n'

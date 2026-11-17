@@ -1,0 +1,43 @@
+[FIX] mail: fix missing arrows in email notification
+
+Bug
+===
+When notifying by email a tracking change, the arrow and parentheses
+are not rendered in the email body.
+
+Technical and Constraints
+=========================
+The class `o_track` is only set in the web client template (`mail.Message`).
+
+There's no class in the body of the email that is sent. It can be
+rendered with "notification templates" that we cannot change either
+(and they just do `t-out="message.body"`, so the body field of the
+mail message has to be properly rendered).
+
+We also need existing mail messages to be rendered correctly, and so we
+need a way to differentiate mail messages created before the fix
+from those created after it, to know when to disable the arrow
+and parentheses.
+
+So we remove the last `<br>` element which is useless, to detect
+mail messages created after the fix.
+
+Alternatives
+============
+We have tough about many solutions, this one is the best we found based
+on the constraints we have
+
+1. Add a class in 19.3, use that class to not remove the arrow on
+   previous mail message. That solution required a migration script
+   that will change all tracking messages. Because the initial migration
+   of the tracking was really slow, we wanted to avoid that.
+2. Add a class, and keep it forever. But that solution makes the body
+   of the mail messages bigger, which defeat one of the purpose of
+   the initial refactoring
+3. Change the outgoing email without changing the body of the mail message.
+   That solution was really not reliable (regex change to add the arrow,
+   and we have no clean way to target the tracking rows)
+4. During the migration create a system parameter with the date,
+   and compare with the create_date of the mail message to know if we
+   should add the arrows or not (but we will need to keep that system
+   parameter forever, and the code to support both to)

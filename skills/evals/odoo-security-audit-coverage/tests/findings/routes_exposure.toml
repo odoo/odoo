@@ -1,0 +1,58 @@
+# Findings judge, Routes in controllers/portal.py that expose data or the host.
+# One file per group: a single judge call with every criterion exceeds the
+# structured-output size the API accepts. The answer key is solution/security_review.md.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "sudo_read_any_model"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /rental/record reads any model, record and fields chosen by the request with sudo.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "public_route_exposes_data"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /rental/properties is an auth='public' route that returns owners and IBANs (internal data) to anonymous visitors.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "with_user_from_request"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /rental/lease/sign switches user with with_user on a user id taken from the request.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "open_path_traversal"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /rental/contract opens a path built from the request with the builtin open(): path traversal or arbitrary file read; file_open or a whitelist is the fix.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "pickle_loads_payload"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that /rental/listing/sync unpickles the request payload with pickle.loads: code execution.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""

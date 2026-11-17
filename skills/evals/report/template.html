@@ -1,0 +1,591 @@
+<title>Skills Eval Frontier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one column, chart first, task filter above it, per-task table below. */
+:root {
+  --bg: #f7f8f9;
+  --surface: #fcfcfb;
+  --line: #dfe1e4;
+  --grid: #eceef0;
+  --ink: #15171a;
+  --ink-2: #4f545b;
+  --ink-3: #7b8088;
+  --s-anthropic: #2a78d6;
+  --s-openai: #eb6834;
+  --s-other: #1baf7a;
+  --front: #15171a;
+  --chip: #eef1f4;
+  --chip-on: #15171a;
+  --chip-on-ink: #fcfcfb;
+  --f-body: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --f-data: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121315; --surface: #1a1a19; --line: #2e3034; --grid: #26282b;
+    --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8d8f93;
+    --s-anthropic: #3987e5; --s-openai: #d95926; --s-other: #199e70;
+    --front: #f0efec; --chip: #24262a; --chip-on: #f0efec; --chip-on-ink: #1a1a19;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121315; --surface: #1a1a19; --line: #2e3034; --grid: #26282b;
+  --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8d8f93;
+  --s-anthropic: #3987e5; --s-openai: #d95926; --s-other: #199e70;
+  --front: #f0efec; --chip: #24262a; --chip-on: #f0efec; --chip-on-ink: #1a1a19;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--f-data); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+h1 { margin: 0; font-size: 26px; line-height: 1.2; text-wrap: balance; }
+.lede { margin: 0; color: var(--ink-2); max-width: 68ch; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.controls .lbl { font-size: 13px; color: var(--ink-3); margin-right: 4px; }
+.chip { font: inherit; font-size: 13px; border: 1px solid var(--line); background: var(--chip); color: var(--ink-2); border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
+.chip:focus-visible, .toggle input:focus-visible { outline: 2px solid var(--s-anthropic); outline-offset: 2px; }
+.toggle { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--ink-2); margin-left: auto; cursor: pointer; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend svg { overflow: visible; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; }
+.tick { font-family: var(--f-data); font-size: 11px; fill: var(--ink-3); }
+.axis-title { font-size: 12px; fill: var(--ink-2); }
+.plabel, .pval { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.plabel { font-size: 13px; fill: var(--ink); }
+.plabel.dom { fill: var(--ink-2); }
+.pval { font-family: var(--f-data); font-size: 11px; fill: var(--ink-3); }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 16px rgb(0 0 0 / .12); min-width: 180px; }
+.tip b { display: block; margin-bottom: 4px; }
+.tip .row { display: flex; justify-content: space-between; gap: 16px; color: var(--ink-2); }
+.tip .row span:last-child { font-family: var(--f-data); color: var(--ink); }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th { font-weight: 700; color: var(--ink-2); font-size: 12px; }
+th:first-child, td:first-child { text-align: left; }
+td.num { font-family: var(--f-data); }
+td.off { color: var(--ink-3); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: 0; }
+.badge { font-size: 11px; border: 1px solid var(--line); border-radius: 999px; padding: 1px 7px; margin-left: 6px; color: var(--ink-2); }
+.notes { font-size: 13px; color: var(--ink-2); display: grid; gap: 4px; }
+.notes p { margin: 0; }
+.notes code { font-family: var(--f-data); font-size: 12px; }
+h2 { margin: 0; font-size: 16px; }
+.summary { margin: 0; font-size: 14px; color: var(--ink); max-width: 80ch; }
+.summary b { font-family: var(--f-data); font-weight: 600; }
+.sub { margin: 0; font-size: 13px; color: var(--ink-2); max-width: 80ch; }
+.bar-name { font-size: 13px; fill: var(--ink); }
+.bar-val { font-family: var(--f-data); font-size: 12px; font-weight: 600; fill: var(--ink); }
+.bar-sub { font-family: var(--f-data); font-size: 11px; fill: var(--ink-3); }
+.arrow-cell { color: var(--ink-3); padding: 0 3px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title">Mean reward vs. mean cost per trial</h1>
+    <p class="lede" id="lede"></p>
+  </header>
+
+  <section class="panel">
+    <div class="controls" id="view-controls">
+      <span class="lbl">View</span>
+    </div>
+    <div class="controls" id="axis-controls">
+      <span class="lbl">X-axis</span>
+    </div>
+    <div class="controls" id="controls">
+      <span class="lbl">Tasks</span>
+    </div>
+    <p class="summary" id="summary" hidden></p>
+    <div class="legend" id="legend"></div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <section class="panel" id="errors-panel">
+    <h2>Error reduction from the skills</h2>
+    <p class="sub">Error is 1 − reward: a reward of 0.90 is 10% error. The bar is the share of that error the skills remove, so going from 0.90 to 0.95 is a 50% reduction. Uses the tasks selected above.</p>
+    <div class="chart" id="bars"></div>
+  </section>
+
+  <section class="panel">
+    <h2 id="table-title">Reward per task</h2>
+    <div class="table-wrap"><table id="table"></table></div>
+  </section>
+
+  <section class="notes" id="notes"></section>
+</div>
+
+<script>
+const DATA = __DATA__;
+
+const OPEN_MODELS = ['z-ai', 'moonshotai'];
+const providerOf = m => OPEN_MODELS.includes(m.split('/')[0]) ? 'open' : m.split('/')[0];
+const SERIES = { anthropic: '--s-anthropic', openai: '--s-openai' };
+const colorVar = m => SERIES[providerOf(m)] || '--s-other';
+const PROVIDER_NAME = { anthropic: 'Anthropic', openai: 'OpenAI', open: 'Open models (OpenRouter)' };
+const VARIANT_NAME = { skills: 'With skills', none: 'Without skills' };
+
+function prettyModel(m) {
+  const id = m.split('/').pop();
+  let x = id.match(/^claude-([a-z]+)-(\d+)-(\d+)$/);
+  if (x) return `${x[1][0].toUpperCase()}${x[1].slice(1)} ${x[2]}.${x[3]}`;
+  x = id.match(/^gpt-(\d+)-([a-z]+)$/);
+  if (x) return `GPT-${x[1]} ${x[2][0].toUpperCase()}${x[2].slice(1)}`;
+  x = id.match(/^(glm|kimi)-(.+)$/);
+  if (x) return x[1] === 'glm' ? `GLM ${x[2]}` : `Kimi ${x[2].toUpperCase()}`;
+  return id;
+}
+const TASK_SHORT = t => t.replace(/^odoo-/, '');
+const fmtCost = c => c >= 1 ? `$${c.toFixed(2)}` : c >= 0.1 ? `$${c.toFixed(3)}` : `$${c.toFixed(4)}`;
+const fmtR = r => r.toFixed(3);
+const fmtD = d => `${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(3)}`;
+const fmtPct = r => `${r >= 0 ? '+' : '−'}${Math.abs(r * 100).toFixed(0)}%`;
+const fmtPCost = p => (p.est ? '≈' : '') + fmtCost(p.cost);
+const pad2 = n => String(n).padStart(2, '0');
+const fmtTime = s => s < 60 ? `${Math.round(s)}s`
+  : s < 3600 ? `${Math.floor(s / 60)}m ${pad2(Math.round(s % 60) % 60)}s`
+  : `${Math.floor(s / 3600)}h ${pad2(Math.round((s % 3600) / 60) % 60)}m`;
+const timeTicks = (lo, hi) => [5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240, 300, 420, 600, 900, 1200, 1800, 3600, 7200].filter(v => v >= lo && v <= hi);
+const METRICS = {
+  cost: { label: 'Cost', title: 'mean cost per trial', axis: 'Mean agent cost per trial (USD)', better: 'cheaper',
+    fmt: fmtPCost, ticks: (lo, hi) => logTicks(lo, hi), tick: v => `$${+v.toPrecision(3)}`,
+    steps: [1, 2, 2.5, 5].flatMap(m => [-3, -2, -1, 0, 1].map(e => m * 10 ** e)).sort((a, b) => a - b) },
+  time: { label: 'Time', title: 'mean time per trial', axis: 'Mean agent run time per trial', better: 'faster',
+    fmt: p => fmtTime(p.time), ticks: timeTicks, tick: fmtTime,
+    steps: [5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600] },
+};
+
+const variants = Object.keys(VARIANT_NAME).filter(v => DATA.trials.some(t => t.variant === v));
+const tasks = [...new Set(DATA.trials.map(t => t.task))].sort();
+const models = [...new Set(DATA.trials.map(t => t.model))].sort((a, b) =>
+  providerOf(a).localeCompare(providerOf(b)) || a.localeCompare(b));
+let view = variants.length > 1 ? 'compare' : variants[0];
+let metric = 'cost';
+let scale = 'linear';
+let selected = new Set(tasks);
+let showTrials = false;
+const comparing = () => view === 'compare';
+
+function aggregate(variant) {
+  return models.map(model => {
+    const own = DATA.trials.filter(t => t.model === model && t.variant === variant);
+    const perTask = {};
+    for (const task of tasks) {
+      const ts = own.filter(t => t.task === task);
+      if (!ts.length) continue;
+      const avg = k => ts.reduce((s, t) => s + (t[k] || 0), 0) / ts.length;
+      perTask[task] = { reward: avg('reward'), cost: avg('cost'), time: avg('time'), n: ts.length };
+    }
+    const used = tasks.filter(t => selected.has(t) && perTask[t]);
+    const mean = k => used.reduce((s, t) => s + perTask[t][k], 0) / used.length;
+    return {
+      model, variant, key: `${model}|${variant}`, name: prettyModel(model), perTask, nTasks: used.length,
+      est: own.some(t => t.estimated),
+      nTrials: used.reduce((s, t) => s + perTask[t].n, 0),
+      reward: used.length ? mean('reward') : null,
+      cost: used.length ? mean('cost') : null,
+      time: used.length ? mean('time') : null,
+    };
+  }).filter(p => p.nTasks > 0);
+}
+
+// Pairs each model's no-skills point with its skills point (compare view only).
+function pairs(base, main) {
+  const byModel = new Map(base.map(p => [p.model, p]));
+  return main.filter(p => byModel.has(p.model)).map(p => ({ model: p.model, name: p.name, without: byModel.get(p.model), with: p }));
+}
+
+function markFrontier(points) {
+  const byX = [...points].sort((a, b) => a[metric] - b[metric] || b.reward - a.reward);
+  let best = -Infinity;
+  for (const p of byX) { p.front = p.reward > best; if (p.front) best = p.reward; }
+  return byX.filter(p => p.front);
+}
+
+function logTicks(lo, hi) {
+  const out = [];
+  for (let e = Math.floor(Math.log10(lo)); e <= Math.ceil(Math.log10(hi)); e++)
+    for (const m of [1, 2, 5]) { const v = m * 10 ** e; if (v >= lo && v <= hi) out.push(v); }
+  return out;
+}
+
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent, text) {
+  const n = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (text != null) n.textContent = text;
+  parent && parent.appendChild(n);
+  return n;
+}
+
+function renderText() {
+  const m = METRICS[metric];
+  document.getElementById('title').textContent = comparing()
+    ? `What the skills change: reward vs. ${m.title}`
+    : `${VARIANT_NAME[view]}: mean reward vs. ${m.title}`;
+  document.getElementById('lede').textContent = (comparing()
+    ? 'Each arrow goes from a model without skills (hollow dot) to the same model with the skills loaded (filled dot). An arrow pointing up means the skills raised the reward; pointing right means they made the run ' +
+      (metric === 'cost' ? 'more expensive.' : 'slower.')
+    : `One dot per model. Filled dots sit on the Pareto front: no other model is both better and ${m.better}.`) +
+    ' Each task\'s trials are averaged first, then the task averages, so every task weighs the same. Up and to the left is better.';
+  document.getElementById('table-title').textContent = comparing() ? 'Change per model' : 'Reward per task';
+}
+
+function renderLegend() {
+  const provs = [...new Set(models.map(providerOf))];
+  const dot = (fill, stroke) => `<svg width="12" height="12"><circle cx="6" cy="6" r="4.5" fill="${fill}" stroke="${stroke}" stroke-width="2"></circle></svg>`;
+  document.getElementById('legend').innerHTML = provs.map(p =>
+    `<span>${dot(`var(${SERIES[p] || '--s-other'})`, `var(${SERIES[p] || '--s-other'})`)}${PROVIDER_NAME[p] || p}</span>`).join('') +
+    (comparing()
+      ? `<span>${dot('none', 'var(--ink-2)')}Without skills</span>
+         <span>${dot('var(--ink-2)', 'var(--ink-2)')}With skills</span>
+         <span><svg width="24" height="12"><line x1="1" x2="17" y1="6" y2="6" stroke="var(--ink-2)" stroke-width="2"></line><path d="M23,6 L16,2.5 L16,9.5 Z" fill="var(--ink-2)"></path></svg>Effect of the skills</span>`
+      : `<span>${dot('var(--ink-2)', 'var(--ink-2)')}On the Pareto front</span>
+         <span>${dot('none', 'var(--ink-2)')}Dominated</span>
+         <span><svg width="22" height="12"><line x1="0" x2="22" y1="6" y2="6" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="5 4"></line></svg>Frontier</span>`);
+}
+
+function renderSummary(pr) {
+  const box = document.getElementById('summary');
+  box.hidden = !comparing() || !pr.length;
+  if (box.hidden) return;
+  const up = pr.filter(q => q.with.reward > q.without.reward).length;
+  const mean = f => pr.reduce((s, q) => s + f(q), 0) / pr.length;
+  const dR = mean(q => q.with.reward - q.without.reward);
+  const dC = mean(q => q.with.cost / q.without.cost - 1);
+  const dT = mean(q => q.with.time / q.without.time - 1);
+  box.innerHTML = `With the skills, reward goes up for <b>${up} of ${pr.length}</b> models, by <b>${fmtD(dR)}</b> on average. ` +
+    `Cost changes by <b>${fmtPct(dC)}</b> and run time by <b>${fmtPct(dT)}</b> on average per model.`;
+}
+
+function render() {
+  renderText();
+  renderLegend();
+  const single = !comparing();
+  const main = aggregate(single ? view : 'skills');
+  const base = single ? [] : aggregate('none');
+  const pr = single ? [] : pairs(base, main);
+  const points = [...base, ...main];
+  const front = single ? markFrontier(main) : [];
+  renderSummary(pr);
+
+  const chart = document.getElementById('chart');
+  chart.innerHTML = '';
+  const W = 920, H = 520, M = { l: 58, r: 150, t: 16, b: 52 };
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+
+  const shownVariants = single ? [view] : variants;
+  const trialPts = showTrials
+    ? DATA.trials.filter(t => selected.has(t.task) && t[metric] > 0 && shownVariants.includes(t.variant)) : [];
+  const xs = [...points.map(p => p[metric]), ...trialPts.map(t => t[metric])].filter(c => c > 0);
+  const rewards = [...points.map(p => p.reward), ...trialPts.map(t => t.reward)];
+  const log = scale === 'log';
+  const xmax = Math.max(...xs);
+  const xstep = METRICS[metric].steps.find(st => xmax * 1.08 / st <= 7) || xmax / 5;
+  const xlo = log ? Math.min(...xs) / 1.6 : 0;
+  const xhi = log ? xmax * 1.6 : Math.ceil(xmax * 1.08 / xstep) * xstep;
+  const ylo = Math.max(0, Math.floor((Math.min(...rewards) - 0.03) * 20) / 20);
+  const yhi = 1.0;
+  const x = c => M.l + (log
+    ? (Math.log10(c) - Math.log10(xlo)) / (Math.log10(xhi) - Math.log10(xlo))
+    : (c - xlo) / (xhi - xlo)) * iw;
+  const xticks = log ? METRICS[metric].ticks(xlo, xhi)
+    : Array.from({ length: Math.round(xhi / xstep) + 1 }, (_, i) => +(i * xstep).toPrecision(6));
+  const y = r => M.t + (1 - (r - ylo) / (yhi - ylo)) * ih;
+
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img',
+    'aria-label': single
+      ? `Scatter of mean reward against ${METRICS[metric].title}, one point per model, ${VARIANT_NAME[view].toLowerCase()}`
+      : `Arrows from each model's result without skills to its result with skills, reward against ${METRICS[metric].title}` }, chart);
+
+  // grid + ticks
+  const ystep = (yhi - ylo) > 0.4 ? 0.1 : 0.05;
+  for (let v = Math.ceil(ylo / ystep - 1e-9) * ystep; v <= yhi + 1e-9; v += ystep) {
+    el('line', { x1: M.l, x2: M.l + iw, y1: y(v), y2: y(v), stroke: css('--grid'), 'stroke-width': 1 }, svg);
+    el('text', { x: M.l - 8, y: y(v) + 4, 'text-anchor': 'end', class: 'tick' }, svg, v.toFixed(2));
+  }
+  for (const v of xticks) {
+    el('line', { x1: x(v), x2: x(v), y1: M.t, y2: M.t + ih, stroke: css('--grid'), 'stroke-width': 1 }, svg);
+    el('text', { x: x(v), y: M.t + ih + 18, 'text-anchor': 'middle', class: 'tick' }, svg, METRICS[metric].tick(v));
+  }
+  el('line', { x1: M.l, x2: M.l + iw, y1: M.t + ih, y2: M.t + ih, stroke: css('--ink-3'), 'stroke-width': 1 }, svg);
+  el('text', { x: M.l + iw / 2, y: H - 8, 'text-anchor': 'middle', class: 'axis-title' }, svg,
+    `${METRICS[metric].axis}${log ? ', log scale' : ''} →`);
+  el('text', { x: 14, y: M.t + ih / 2, 'text-anchor': 'middle', class: 'axis-title',
+    transform: `rotate(-90 14 ${M.t + ih / 2})` }, svg, 'Mean reward →');
+
+  // individual trials: filled for skills, hollow without
+  for (const t of trialPts) {
+    const col = css(colorVar(t.model));
+    el('circle', { cx: x(t[metric]), cy: y(t.reward), r: 3,
+      fill: t.variant === 'skills' ? col : 'none', stroke: col, 'stroke-width': t.variant === 'skills' ? 0 : 1.2,
+      'fill-opacity': 0.3, 'stroke-opacity': 0.45 }, svg);
+  }
+
+  // frontier staircase (single view)
+  if (front.length > 1) {
+    let d = `M${x(front[0][metric])},${y(front[0].reward)}`;
+    for (let i = 1; i < front.length; i++)
+      d += ` H${x(front[i][metric])} V${y(front[i].reward)}`;
+    el('path', { d, fill: 'none', stroke: css('--front'), 'stroke-width': 1.5, 'stroke-dasharray': '5 4', opacity: 0.55 }, svg);
+  }
+
+  // arrows without -> with (compare view)
+  for (const q of pr) {
+    const x1 = x(q.without[metric]), y1 = y(q.without.reward), x2 = x(q.with[metric]), y2 = y(q.with.reward);
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    if (len < 22) continue;
+    const ux = (x2 - x1) / len, uy = (y2 - y1) / len;
+    const sx = x1 + ux * 8, sy = y1 + uy * 8, ex = x2 - ux * 11, ey = y2 - uy * 11;
+    const col = css(colorVar(q.model));
+    el('line', { x1: sx, y1: sy, x2: ex - ux * 6, y2: ey - uy * 6, stroke: col, 'stroke-width': 2, opacity: 0.75 }, svg);
+    const hx = ex - ux * 9, hy = ey - uy * 9;
+    el('path', { d: `M${ex},${ey} L${hx - uy * 4.5},${hy + ux * 4.5} L${hx + uy * 4.5},${hy - ux * 4.5} Z`, fill: col, opacity: 0.9 }, svg);
+  }
+
+  // labels on the main points: greedy placement to avoid overlaps
+  const pairOf = new Map(pr.map(q => [q.model, q]));
+  const line2 = p => {
+    const q = pairOf.get(p.model);
+    return q ? `${fmtR(p.reward)} (${fmtD(p.reward - q.without.reward)}) · ${METRICS[metric].fmt(p)}`
+      : `${fmtR(p.reward)} · ${METRICS[metric].fmt(p)}`;
+  };
+  const placed = [];
+  const LH = 30;
+  const labelPos = new Map();
+  for (const p of [...main].sort((a, b) => y(a.reward) - y(b.reward))) {
+    const px = x(p[metric]), py = y(p.reward);
+    const w = Math.max(p.name.length * 7.4, line2(p).length * 6.8);
+    let pick = null;
+    for (const side of [1, -1]) {
+      for (const dy of [-20, 18, -40, 36, 0, -56, 52]) {
+        const lx = side > 0 ? px + 12 : px - 12 - w, ly = py - 12 + dy;
+        const box = { x: lx, y: ly, w, h: LH };
+        if (lx < M.l || lx + w > W - 4 || ly < 0 || ly + LH > M.t + ih) continue;
+        if (placed.some(b => b.x < box.x + box.w && box.x < b.x + b.w && b.y < box.y + box.h && box.y < b.y + b.h)) continue;
+        if (points.some(q => q !== p && x(q[metric]) > lx - 8 && x(q[metric]) < lx + w + 8 && y(q.reward) > ly - 8 && y(q.reward) < ly + LH + 8)) continue;
+        pick = { ...box, side }; break;
+      }
+      if (pick) break;
+    }
+    pick = pick || { x: px + 12, y: py - 12, w, h: LH, side: 1 };
+    placed.push(pick);
+    labelPos.set(p.key, pick);
+  }
+
+  const tip = document.createElement('div');
+  tip.className = 'tip'; tip.hidden = true; chart.appendChild(tip);
+  const row = (k, v) => `<div class="row"><span>${k}</span><span>${v}</span></div>`;
+
+  for (const p of points) {
+    const px = x(p[metric]), py = y(p.reward), col = css(colorVar(p.model));
+    const isMain = single || p.variant === 'skills';
+    const filled = single ? p.front : p.variant === 'skills';
+    const g = el('g', { tabindex: 0, role: 'img',
+      'aria-label': `${p.name}, ${VARIANT_NAME[p.variant].toLowerCase()}: reward ${fmtR(p.reward)}, ${metric} ${METRICS[metric].fmt(p)}` }, svg);
+    el('circle', { cx: px, cy: py, r: isMain ? 9 : 7, fill: filled ? col : css('--surface'), stroke: col, 'stroke-width': isMain ? 2.5 : 2 }, g);
+    el('circle', { cx: px, cy: py, r: 18, fill: 'transparent' }, g);
+    if (isMain) {
+      const lp = labelPos.get(p.key);
+      const anchor = lp.side > 0 ? 'start' : 'end';
+      const tx = lp.side > 0 ? lp.x : lp.x + lp.w;
+      const strong = single ? p.front : true;
+      el('text', { x: tx, y: lp.y + 12, 'text-anchor': anchor, class: 'plabel' + (strong ? '' : ' dom'),
+        'font-weight': strong ? 700 : 400 }, svg, p.name);
+      el('text', { x: tx, y: lp.y + 26, 'text-anchor': anchor, class: 'pval' }, svg, line2(p));
+    }
+
+    const show = () => {
+      const q = pairOf.get(p.model);
+      let html = `<b>${p.name} · ${VARIANT_NAME[p.variant].toLowerCase()}</b>` +
+        row('Mean reward', fmtR(p.reward)) + row('Mean cost / trial', fmtPCost(p)) + row('Mean time / trial', fmtTime(p.time));
+      if (q) {
+        const other = p.variant === 'skills' ? q.without : q.with;
+        const [a, b] = p.variant === 'skills' ? [other, p] : [p, other];
+        html += row('Reward change', fmtD(b.reward - a.reward)) + row('Cost change', fmtPct(b.cost / a.cost - 1)) + row('Time change', fmtPct(b.time / a.time - 1));
+      }
+      html += row('Cost source', p.est ? 'OpenRouter list price' : 'as reported') + row('Trials', `${p.nTrials} over ${p.nTasks} tasks`);
+      if (single) html += row('Pareto front', p.front ? 'yes' : 'no');
+      tip.innerHTML = html;
+      tip.hidden = false;
+      const r = chart.getBoundingClientRect(), s = r.width / W;
+      let left = px * s + 16, top = py * s - 20;
+      if (left + 240 > r.width) left = px * s - 256;
+      tip.style.left = `${Math.max(0, left)}px`; tip.style.top = `${Math.max(0, top)}px`;
+    };
+    g.addEventListener('mouseenter', show); g.addEventListener('focus', show);
+    g.addEventListener('mouseleave', () => tip.hidden = true); g.addEventListener('blur', () => tip.hidden = true);
+  }
+
+  single ? renderTable(main) : renderCompareTable(pr);
+  const errPanel = document.getElementById('errors-panel');
+  errPanel.hidden = variants.length < 2;
+  if (!errPanel.hidden) renderErrorBars(pairs(aggregate('none'), aggregate('skills')));
+}
+
+const errRed = q => 1 - (1 - q.with.reward) / (1 - q.without.reward);
+const fmtPct1 = r => `${(r * 100).toFixed(0)}%`;
+
+function renderErrorBars(pr) {
+  const box = document.getElementById('bars');
+  box.innerHTML = '';
+  const rows = pr.filter(q => q.without.reward < 1).map(q => ({ ...q, red: errRed(q) })).sort((a, b) => b.red - a.red);
+  const RH = 36, M = { l: 120, r: 190, t: 8, b: 30 };
+  const W = 920, H = M.t + rows.length * RH + M.b, iw = W - M.l - M.r;
+  const lo = Math.min(0, Math.floor(Math.min(...rows.map(r => r.red)) * 4) / 4), hi = 1;
+  const x = v => M.l + (v - lo) / (hi - lo) * iw;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img',
+    'aria-label': 'Bar chart of the share of error each model loses with the skills' }, box);
+  for (let v = lo; v <= hi + 1e-9; v += 0.25) {
+    el('line', { x1: x(v), x2: x(v), y1: M.t, y2: H - M.b, stroke: css(v === 0 ? '--ink-3' : '--grid'), 'stroke-width': 1 }, svg);
+    el('text', { x: x(v), y: H - M.b + 18, 'text-anchor': 'middle', class: 'tick' }, svg, fmtPct1(v));
+  }
+  const tip = document.createElement('div');
+  tip.className = 'tip'; tip.hidden = true; box.appendChild(tip);
+  rows.forEach((q, i) => {
+    const cy = M.t + i * RH + RH / 2, col = css(colorVar(q.model));
+    const x0 = x(0), x1 = x(q.red), bh = 18;
+    const g = el('g', { tabindex: 0, role: 'img',
+      'aria-label': `${q.name}: error reduction ${fmtPct1(q.red)}, error ${fmtPct1(1 - q.without.reward)} to ${fmtPct1(1 - q.with.reward)}` }, svg);
+    el('rect', { x: M.l - 116, y: cy - RH / 2, width: W - 8, height: RH, fill: 'transparent' }, g);
+    el('text', { x: M.l - 12, y: cy + 4, 'text-anchor': 'end', class: 'bar-name' }, g, q.name);
+    // bar anchored at zero, rounded only at the data end
+    const left = Math.min(x0, x1), w = Math.max(Math.abs(x1 - x0), 1), r = Math.min(4, w);
+    const d = q.red >= 0
+      ? `M${left},${cy - bh / 2} H${left + w - r} Q${left + w},${cy - bh / 2} ${left + w},${cy - bh / 2 + r} V${cy + bh / 2 - r} Q${left + w},${cy + bh / 2} ${left + w - r},${cy + bh / 2} H${left} Z`
+      : `M${left + w},${cy - bh / 2} H${left + r} Q${left},${cy - bh / 2} ${left},${cy - bh / 2 + r} V${cy + bh / 2 - r} Q${left},${cy + bh / 2} ${left + r},${cy + bh / 2} H${left + w} Z`;
+    el('path', { d, fill: col }, g);
+    const tx = Math.max(x0, x1) + 8;
+    el('text', { x: tx, y: cy + 4, class: 'bar-val' }, g, fmtPct1(q.red));
+    el('text', { x: tx + 40, y: cy + 4, class: 'bar-sub' }, g,
+      `error ${fmtPct1(1 - q.without.reward)} → ${fmtPct1(1 - q.with.reward)}`);
+    const show = () => {
+      tip.innerHTML = `<b>${q.name}</b>` +
+        `<div class="row"><span>Error reduction</span><span>${(q.red * 100).toFixed(1)}%</span></div>` +
+        `<div class="row"><span>Reward without → with</span><span>${fmtR(q.without.reward)} → ${fmtR(q.with.reward)}</span></div>` +
+        `<div class="row"><span>Error without → with</span><span>${(100 * (1 - q.without.reward)).toFixed(1)}% → ${(100 * (1 - q.with.reward)).toFixed(1)}%</span></div>`;
+      tip.hidden = false;
+      const rr = box.getBoundingClientRect(), s = rr.width / W;
+      tip.style.left = `${Math.min(tx * s + 8, rr.width - 250)}px`; tip.style.top = `${Math.max(0, (cy - 10) * s)}px`;
+    };
+    g.addEventListener('mouseenter', show); g.addEventListener('focus', show);
+    g.addEventListener('mouseleave', () => tip.hidden = true); g.addEventListener('blur', () => tip.hidden = true);
+  });
+}
+
+const swatch = m => `<span class="dot" style="background:var(${colorVar(m)})"></span>`;
+
+function renderTable(points) {
+  const rows = [...points].sort((a, b) => b.reward - a.reward);
+  const head = `<tr><th>Model</th><th>Mean reward</th><th>Cost / trial</th><th>Time / trial</th>${
+    tasks.map(t => `<th>${TASK_SHORT(t)}</th>`).join('')}<th>Trials</th></tr>`;
+  const body = rows.map(p => `<tr>
+    <td>${swatch(p.model)}${p.name}${p.front ? '<span class="badge">front</span>' : ''}</td>
+    <td class="num">${fmtR(p.reward)}</td>
+    <td class="num">${fmtPCost(p)}</td>
+    <td class="num">${fmtTime(p.time)}</td>
+    ${tasks.map(t => {
+      const v = p.perTask[t];
+      return `<td class="num${selected.has(t) ? '' : ' off'}">${v ? fmtR(v.reward) : '–'}</td>`;
+    }).join('')}
+    <td class="num">${p.nTrials}</td></tr>`).join('');
+  document.getElementById('table').innerHTML = `<thead>${head}</thead><tbody>${body}</tbody>`;
+}
+
+function renderCompareTable(pr) {
+  const rows = [...pr].sort((a, b) => (b.with.reward - b.without.reward) - (a.with.reward - a.without.reward));
+  const span = (a, b) => `${a}<span class="arrow-cell">→</span>${b}`;
+  const head = `<tr><th>Model</th><th>Reward without → with</th><th>Reward change</th><th>Error reduction</th><th>Cost / trial</th><th>Time / trial</th>${
+    tasks.map(t => `<th>${TASK_SHORT(t)}<br>reward change</th>`).join('')}</tr>`;
+  const body = rows.map(q => `<tr>
+    <td>${swatch(q.model)}${q.name}</td>
+    <td class="num">${span(fmtR(q.without.reward), fmtR(q.with.reward))}</td>
+    <td class="num"><b>${fmtD(q.with.reward - q.without.reward)}</b></td>
+    <td class="num">${q.without.reward < 1 ? fmtPct1(errRed(q)) : '–'}</td>
+    <td class="num">${span(fmtPCost(q.without), fmtPCost(q.with))}</td>
+    <td class="num">${span(fmtTime(q.without.time), fmtTime(q.with.time))}</td>
+    ${tasks.map(t => {
+      const a = q.without.perTask[t], b = q.with.perTask[t];
+      return `<td class="num${selected.has(t) ? '' : ' off'}">${a && b ? fmtD(b.reward - a.reward) : '–'}</td>`;
+    }).join('')}</tr>`).join('');
+  document.getElementById('table').innerHTML = `<thead>${head}</thead><tbody>${body}</tbody>`;
+}
+
+function chipGroup(container, options, current, onPick) {
+  const chips = [];
+  for (const [key, label] of options) {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.id = `${container.id}-${key}`; b.type = 'button';
+    b.textContent = label; b.setAttribute('aria-pressed', key === current);
+    b.onclick = () => { chips.forEach(c => c.setAttribute('aria-pressed', c === b)); onPick(key); render(); };
+    chips.push(b); container.appendChild(b);
+  }
+}
+
+function setup() {
+  document.getElementById('eyebrow').textContent = DATA.jobs.map(j =>
+    `${j.name} (${j.variants.map(v => VARIANT_NAME[v].toLowerCase()).join(', ')}) ${j.stats.n_completed_trials ?? '?'}/${j.stats.n_total_trials ?? '?'} trials`
+  ).join(' · ') + ` · snapshot ${DATA.generated}`;
+
+  const viewBox = document.getElementById('view-controls');
+  if (variants.length > 1)
+    chipGroup(viewBox, [['compare', 'Compare'], ...variants.map(v => [v, VARIANT_NAME[v]])], view, k => view = k);
+  else viewBox.hidden = true;
+
+  const axis = document.getElementById('axis-controls');
+  chipGroup(axis, Object.entries(METRICS).map(([k, m]) => [k, m.label]), metric, k => metric = k);
+  const scaleLbl = document.createElement('span');
+  scaleLbl.className = 'lbl'; scaleLbl.style.marginLeft = '16px'; scaleLbl.textContent = 'Scale';
+  axis.appendChild(scaleLbl);
+  chipGroup(axis, [['linear', 'Linear'], ['log', 'Log']], scale, k => scale = k);
+
+  const controls = document.getElementById('controls');
+  for (const t of tasks) {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.id = `task-${t}`; b.type = 'button';
+    b.textContent = TASK_SHORT(t); b.setAttribute('aria-pressed', 'true');
+    b.onclick = () => {
+      if (selected.has(t) && selected.size === 1) return;
+      selected.has(t) ? selected.delete(t) : selected.add(t);
+      b.setAttribute('aria-pressed', selected.has(t)); render();
+    };
+    controls.appendChild(b);
+  }
+  const lab = document.createElement('label');
+  lab.className = 'toggle';
+  lab.innerHTML = '<input type="checkbox" id="show-trials"> Show individual trials';
+  lab.querySelector('input').onchange = e => { showTrials = e.target.checked; render(); };
+  controls.appendChild(lab);
+
+  const notes = document.getElementById('notes');
+  const byModel = {};
+  for (const e of DATA.errors) {
+    const k = `${e.model}|${e.variant}`;
+    (byModel[k] ||= { model: e.model, variant: e.variant, n: 0, reasons: new Set() });
+    byModel[k].n++; byModel[k].reasons.add(e.reason);
+  }
+  const lines = Object.values(byModel).map(v =>
+    `<p><b>${prettyModel(v.model)}</b>, ${VARIANT_NAME[v.variant].toLowerCase()}: ${v.n} errored trial${v.n > 1 ? 's' : ''} left out (<code>${[...v.reasons].join('; ')}</code>).</p>`);
+  notes.innerHTML = (lines.length ? `<p>Errored trials are left out of the averages, since they have no real reward.</p>${lines.join('')}` : '') +
+    `<p>"With skills" trials had the skills under <code>odoo/skills/</code> attached to the agent; "without skills" trials ran the same agents and tasks with none.</p>
+    <p>Cost is the agent's own spend as harbor reports it, at list prices. The judge's cost is not included.</p>
+    <p>Time is the wall-clock length of the agent's run, from harbor's <code>agent_execution</code> phase. It leaves out container setup, agent install and grading. Three trials ran at once on one machine, and API latency differs by provider, so read time differences of a few seconds as noise.</p>` +
+    (Object.keys(DATA.openrouter_rates || {}).length ? `<p>Costs marked ≈ were re-priced: Claude Code had no prices for these models and charged a placeholder rate, so their token counts are multiplied by OpenRouter's list prices instead (USD per million tokens, input / cache read / cache write / output): ${
+      Object.entries(DATA.openrouter_rates).map(([m, r]) => `<b>${prettyModel(m)}</b> <code>${r.join(' / ')}</code>`).join(', ')}. OpenRouter routes requests across providers, so the amount actually billed can differ.</p>` : '');
+  render();
+}
+
+setup();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>

@@ -1,0 +1,63 @@
+# LLM judge on the code of the fix, against the merged stable fix (odoo/odoo
+# 87e57ed44969, code only), which the agent never saw. Whether the fix works
+# without a module update is measured in tests/deploy; this judges the rest.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/change.diff"]
+reference = "/tests/fix/reference_fix.diff"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "independent_of_xml_changes"
+type = "binary"
+description = """
+The target is the released 20.0 branch: a database that is not updated keeps
+the QWeb views and data records it was installed with, here the old
+mail.mail_tracking_template. The Python code in /logs/verifier/change.diff
+must not rely on a change to an XML view or record (a new class, attribute,
+or markup in the template) to do its job. Changing the template as well is
+fine only if the email is fixed without it.
+"""
+
+[[criterion]]
+name = "chatter_not_doubled"
+type = "binary"
+description = """
+The web client adds the arrow and the parentheses with CSS pseudo-elements on
+the tracking markup. After the fix, new tracking messages must not show them
+twice in the chatter, and messages stored before the fix must still show them.
+A change that writes the separators into the stored body without adapting
+that CSS, or that drops the CSS for every message, fails.
+"""
+
+[[criterion]]
+name = "no_fragile_rewrite"
+type = "binary"
+description = """
+The separators are produced where the tracking HTML is generated. Rewriting
+outgoing emails or stored bodies after the fact with regular expressions or
+HTML parsing, or rewriting existing messages in the database, fails.
+"""
+
+[[criterion]]
+name = "minimal_change"
+type = "binary"
+description = """
+The change is strictly about this bug, as a stable fix should be: no
+refactoring, renaming, reformatting, or cleanup beyond what the fix needs.
+Updating the tests that assert the tracking markup is part of the fix.
+"""
+
+[[criterion]]
+name = "reviewer_acceptance"
+type = "likert"
+points = 5
+description = """
+Compare the change with the reference fix merged on the stable branch. Would
+an Odoo reviewer applying the stable policy (minimal, works with a pull and a
+restart, no data-model change, existing messages still displayed correctly)
+merge the agent's fix as it is? 1 = would reject it for the stable branch,
+3 = would ask for a change or two, 5 = as good as or better than the
+reference.
+"""

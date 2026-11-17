@@ -1,0 +1,57 @@
+# LLM judge on the l10n_it_stock_ddt code, against the reference stable
+# adaptation of the master patches (tests/review/reference_fix.diff), which the
+# agent never saw. What the deterministic checks measure (signatures, field
+# removal, files touched, the run on a not-updated database) is not judged
+# again; this judges what they cannot see.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/change.diff"]
+reference = "/tests/review/reference_fix.diff"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "compatible_for_existing_code"
+type = "binary"
+description = """
+The target is the released 20.0 branch: custom modules, overrides and the
+views installed on existing databases keep using l10n_it_country_code and
+keep calling _get_dtt_ir_seq_vals with a warehouse id. The change in
+/logs/verifier/change.diff keeps all of that working, with the same results
+as before, and does not change any existing translatable term (giving
+l10n_it_country_code a new label of its own is fine, changing
+stock_account's "Country Code" is not).
+"""
+
+[[criterion]]
+name = "regression_test_kept_honest"
+type = "binary"
+description = """
+The failing test, test_ddt_sequence_follows_warehouse, is kept and made to
+pass by adapting its call to the 20.0 signature (an id), with its assertions
+on the renamed sequence intact. Deleting it, skipping it, or weakening its
+assertions fails.
+"""
+
+[[criterion]]
+name = "minimal_change"
+type = "binary"
+description = """
+The change is strictly about the three issues, as stable fixes should be: no
+refactoring, renaming, reformatting, or cleanup beyond what the fixes need,
+and nothing done in code about the google-auth installation error, which is
+the build image lacking a library.
+"""
+
+[[criterion]]
+name = "reviewer_acceptance"
+type = "likert"
+points = 5
+description = """
+Compare the l10n_it_stock_ddt part of the change with the reference. Would an
+Odoo reviewer applying the stable policy (minimal, no field removal, no
+signature change, works with a pull and a restart, the failing test kept and
+green) merge the agent's change as it is? 1 = would reject it for the stable
+branch, 3 = would ask for a change or two, 5 = as good as or better than the
+reference.
+"""
