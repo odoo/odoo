@@ -2,7 +2,9 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
+from odoo.tools import float_compare, float_round
+
+MARGIN_PERCENT_PRECISION = 4
 
 
 class SaleOrderLine(models.Model):
@@ -66,7 +68,9 @@ class SaleOrderLine(models.Model):
     def _compute_margin_percent(self):
         for line in self:
             if line_subtotal := line._get_subtotal():
-                line.margin_percent = float_round(line.margin / line_subtotal, precision_digits=4)
+                line.margin_percent = float_round(
+                    line.margin / line_subtotal, precision_digits=MARGIN_PERCENT_PRECISION
+                )
             else:
                 line.margin_percent = None
 
@@ -87,8 +91,8 @@ class SaleOrderLine(models.Model):
     @api.onchange("margin_percent")
     def _onchange_margin_percent(self):
         subtotal = self._get_subtotal()
-        if not subtotal or not self.currency_id.compare_amounts(
-            self.margin_percent, self.margin / subtotal
+        if not subtotal or not float_compare(
+            self.margin_percent, self.margin / subtotal, precision_digits=MARGIN_PERCENT_PRECISION
         ):
             # Nothing to do, onchange triggered because of the compute
             return
