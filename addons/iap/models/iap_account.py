@@ -51,7 +51,8 @@ class IapAccount(models.Model):
             account.balance = f"{balance_amount} {account.service_id.unit_name or ''}"
 
     def web_read(self, *args, **kwargs):
-        self._get_account_information_from_iap()
+        if accounts := self.filtered('id'):
+            accounts._get_account_information_from_iap()
         return super().web_read(*args, **kwargs)
 
     def action_manage(self):

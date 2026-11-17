@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <list string="In-App Purchase Accounts" duplicate="false" multi_edit="1" editable="bottom">
                 <field name="name"/>
-                <field name="service_id"/>
+                <field name="service_id" readonly="service_locked"/>
                 <field name="description"/>
                 <field name="company_ids" widget="many2many_tags"/>
                 <field name="balance"/>
