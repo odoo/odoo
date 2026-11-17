@@ -914,11 +914,58 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
 
         payment.action_post()
 
+        # System rate: 100 EUR / 2.0 = 50 USD
         self.assertRecordValues(payment, [{
             'amount': 100,
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+        # Custom rate 2.5: 100 EUR / 2.5 = 40 USD
+        payment.action_draft()
+        payment.currency_rate = 2.5
+        payment.action_post()
+
+        self.assertRecordValues(payment, [{
+            'amount': 100,
+            'amount_signed': -100,
+            'amount_company_currency_signed': -40,
+        }])
+
+    def test_payment_refresh_currency_rate(self):
+        """refresh_currency_rate resets a manually-changed rate back to the
+        expected system rate and the journal entry adjusts accordingly.
+
+        EUR rates: 2017-01-01 = 2.0.
+        Custom rate 2.5 → after refresh → back to 2.0.
+        """
+        payment = self.env['account.payment'].create({
+            'amount': 300.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': fields.Date.from_string('2017-01-01'),
+        })
+
+        # Both computed fields start at the system rate.
+        self.assertAlmostEqual(payment.expected_currency_rate, 2.0)
+        self.assertAlmostEqual(payment.currency_rate, 2.0)
+
+        # Override with a custom rate.
+        payment.currency_rate = 2.5
+        self.assertNotAlmostEqual(payment.currency_rate, payment.expected_currency_rate)
+
+        # Refresh resets to the expected rate.
+        payment.refresh_currency_rate()
+        self.assertAlmostEqual(payment.currency_rate, 2.0)
+        self.assertAlmostEqual(payment.currency_rate, payment.expected_currency_rate)
+
+        # Journal entry now uses the system rate: 300 / 2.0 = 150 USD.
+        payment.action_post()
+        liquidity_lines, _counterpart_lines, _ = payment._seek_for_lines()
+        self.assertAlmostEqual(liquidity_lines.balance, 150.0)
 
     def test_payment_state_computation(self):
         def create_invoice(post=False, kwargs=None):
