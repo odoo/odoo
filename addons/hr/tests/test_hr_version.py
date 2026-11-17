@@ -373,6 +373,12 @@ class TestHrVersion(TestHrCommon):
         self.assertTrue(employee._is_in_contract(date(2020, 1, 1)))
         self.assertFalse(employee._is_in_contract(date(2030, 1, 1)))
 
+        # Without date, today is checked at the call, not when the module was loaded
+        with freeze_time(date(2029, 6, 1)):
+            self.assertTrue(employee.version_id._is_in_contract())
+        with freeze_time(date(2030, 6, 1)):
+            self.assertFalse(employee.version_id._is_in_contract())
+
     @freeze_time('2020-06-15')
     def test_default_date_is_today(self):
         """
