@@ -56,7 +56,7 @@ class PosMercadoPagoWebhook(http.Controller):
             _logger.warning('POST message received with no or malformed "external_reference" key: %s', external_reference)
             return http.Response(status=400)
 
-        session_id, payment_method_id, _ = match.groups()
+        session_id, payment_method_id, pos_order_uuid = match.groups()
 
         pos_session_sudo = request.env['pos.session'].sudo().browse(int(session_id))
         if not pos_session_sudo or pos_session_sudo.state != 'opened':
@@ -80,9 +80,12 @@ class PosMercadoPagoWebhook(http.Controller):
 
         _logger.debug('Webhook authenticated, POST message: %s', data)
 
-        # Notify the frontend that we received a message from Mercado Pago
+        # Notify the frontend that we received a message from Mercado Pago.
+        # All devices of the config get it: only the one paying this order on this terminal must react.
         pos_session_sudo.config_id._notify('MERCADO_PAGO_LATEST_MESSAGE', {
-            'config_id': pos_session_sudo.config_id.id
+            'config_id': pos_session_sudo.config_id.id,
+            'payment_method_id': payment_method_sudo.id,
+            'pos_order_uuid': pos_order_uuid,
         })
 
         # Acknowledge Mercado Pago message
